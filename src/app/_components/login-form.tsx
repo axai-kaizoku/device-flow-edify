@@ -1,0 +1,85 @@
+'use client';
+
+import { updateUserAction } from '@/server/actions';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import { useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const LoginSchema = z.object({
+	email: z.string().email().min(5, { message: 'Email is required' }),
+	password: z.string().min(8, { message: 'Password should be min 8 chars.' }),
+});
+
+export type LoginType = z.infer<typeof LoginSchema>;
+
+export default function LoginForm() {
+	const form = useForm<LoginType>({
+		resolver: zodResolver(LoginSchema),
+		mode: 'onSubmit',
+		defaultValues: { email: '', password: '' },
+	});
+
+	const [pending, startTransition] = useTransition();
+
+	const onSubmit = async (data: LoginType) => {
+		startTransition(async () => {
+			await signIn('credentials', {
+				email: form.getValues('email'),
+				password: form.getValues('password'),
+			});
+			// await updateUserAction(data);
+		});
+		form.reset();
+	};
+
+	return (
+		<div className="border p-4 w-fit rounded">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-3 p-4">
+				<h2>Login Form</h2>
+				<div className="flex flex-col gap-2 items-start">
+					<label htmlFor="email">Email</label>
+					<input
+						type="email"
+						{...form.register('email')}
+						id="email"
+						className="border p-1 rounded"
+					/>
+					{form.formState.errors?.email && (
+						<p className="text-red-400 text-sm ">
+							{form.formState.errors.email.message}
+						</p>
+					)}
+				</div>
+				<div className="flex flex-col gap-2 items-start">
+					<label htmlFor="password">Password</label>
+					<input
+						type="password"
+						id="password"
+						{...form.register('password')}
+						className="border p-1 rounded"
+					/>
+					{form.formState.errors?.password && (
+						<p className="text-red-400 text-sm ">
+							{form.formState.errors.password.message}
+						</p>
+					)}
+				</div>
+				<button
+					type="submit"
+					disabled={pending}
+					className="border rounded border-black bg-gray-50 p-3">
+					Login
+				</button>
+			</form>
+			<br />
+			<div className="border mb-4 " />
+			<div>
+				<button onClick={() => signIn('google')}>Sign In with Google</button>
+			</div>
+		</div>
+	);
+}
