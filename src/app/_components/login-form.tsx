@@ -1,9 +1,7 @@
 'use client';
 
-import { updateUserAction } from '@/server/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -21,16 +19,14 @@ export default function LoginForm() {
 		defaultValues: { email: '', password: '' },
 	});
 
-	const [pending, startTransition] = useTransition();
-
 	const onSubmit = async (data: LoginType) => {
-		startTransition(async () => {
-			await signIn('credentials', {
-				email: form.getValues('email'),
-				password: form.getValues('password'),
-			});
-			// await updateUserAction(data);
+		await signIn('credentials', {
+			email: data.email,
+			password: data.password,
+			callbackUrl: 'http://localhost:3000/dashboard',
+			redirect: true,
 		});
+
 		form.reset();
 	};
 
@@ -70,7 +66,6 @@ export default function LoginForm() {
 				</div>
 				<button
 					type="submit"
-					disabled={pending}
 					className="border rounded border-black bg-gray-50 p-3">
 					Login
 				</button>
@@ -78,7 +73,15 @@ export default function LoginForm() {
 			<br />
 			<div className="border mb-4 " />
 			<div>
-				<button onClick={() => signIn('google')}>Sign In with Google</button>
+				<button
+					onClick={() =>
+						signIn('google', {
+							callbackUrl: 'http://localhost:3000/dashboard',
+							redirect: true,
+						})
+					}>
+					Sign In with Google
+				</button>
 			</div>
 		</div>
 	);

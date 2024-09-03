@@ -17,34 +17,6 @@ export default function Login() {
 	);
 }
 
-const LoginFormOld = () => {
-	const handleSubmit = async (e: any) => {
-		e.preventDefault();
-		const email = e.target[0].value;
-		const password = e.target[1].value;
-		const res = await signIn('credentials', {
-			email,
-			password,
-		});
-		console.log(res);
-	};
-	return (
-		<div>
-			<h2>Login with email</h2>
-			<form onSubmit={handleSubmit}>
-				<input type="email" placeholder="email" />
-				<br />
-				<input type="password" placeholder="password" />
-				<br />
-				<button type="submit">submit</button>
-			</form>
-			<br />
-			<br />
-			<h2>Login with google</h2>
-		</div>
-	);
-};
-
 export const AuthBtn = () => {
 	const session = useSession();
 
