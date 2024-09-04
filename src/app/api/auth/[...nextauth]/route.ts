@@ -11,29 +11,28 @@ const handler = NextAuth({
 				email: { label: 'Email', type: 'email' },
 				password: { label: 'Password', type: 'password' },
 			},
-			async authorize(credentials, req) {
-				const res = await fetch('http://localhost:3000/api/login', {
-					method: 'POST',
-					body: JSON.stringify(credentials),
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
+			async authorize(credentials) {
+				const res = await fetch(
+					'https://api.edify.club/edifybackend/v1/auth/login',
+					{
+						method: 'POST',
+						body: JSON.stringify(credentials),
+						headers: {
+							'Content-Type': 'application/json',
+						},
 					},
-				});
-				// const email = 'akshay@gmail.com';
-				// const pass = '1234';
-				// if (credentials?.email === email && credentials.password === pass) {
-				// 	console.log(credentials);
-				// }
-				// console.log(user.user.email);
-				// console.log(res);
+				);
 
-				if (res.ok) {
-					const user = await res.json();
-					return user;
+				const body = await res.json();
+
+				if (res.status === 200) {
+					console.log(res);
+					console.log(`User Details: ${body.user.email}`);
+					return body.user;
 				} else {
-					console.log('check your credentials');
-					return null;
+					console.log(body.message);
+					return body;
+
 				}
 			},
 		}),

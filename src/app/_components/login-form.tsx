@@ -12,6 +12,21 @@ const LoginSchema = z.object({
 
 export type LoginType = z.infer<typeof LoginSchema>;
 
+export type LoginResType = {
+	message: string;
+	token: string;
+	user: {
+		_id: string;
+		first_name: string;
+		last_name: string;
+		email: string;
+		orgId: {
+			_id: string;
+			name: string;
+		};
+	};
+};
+
 export default function LoginForm() {
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -20,12 +35,13 @@ export default function LoginForm() {
 	});
 
 	const onSubmit = async (data: LoginType) => {
-		await signIn('credentials', {
+		const res = await signIn('credentials', {
 			email: data.email,
 			password: data.password,
-			callbackUrl: 'http://localhost:3000/dashboard',
-			redirect: true,
+			// callbackUrl: 'http://localhost:3000/dashboard',
+			// redirect: true,
 		});
+		console.log(res, 'res');
 
 		form.reset();
 	};
@@ -70,8 +86,7 @@ export default function LoginForm() {
 					Login
 				</button>
 			</form>
-			<br />
-			<div className="border mb-4 " />
+			<div className="border my-4 " />
 			<div>
 				<button
 					onClick={() =>
