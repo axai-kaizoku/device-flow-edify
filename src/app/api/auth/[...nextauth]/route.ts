@@ -27,12 +27,12 @@ const handler = NextAuth({
 
 				if (res.status === 200) {
 					console.log(res);
-					const body = await res.json();
 					console.log(`User Details: ${body.user.email}`);
 					return body.user;
 				} else {
 					console.log(body.message);
 					return body;
+
 				}
 			},
 		}),

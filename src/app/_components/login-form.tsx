@@ -42,6 +42,7 @@ export default function LoginForm() {
 			// redirect: true,
 		});
 		console.log(res, 'res');
+
 		form.reset();
 	};
 
