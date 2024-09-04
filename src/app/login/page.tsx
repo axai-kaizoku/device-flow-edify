@@ -4,7 +4,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import LoginForm from '../_components/login-form';
 
 export default function Login() {
-	const session = useSession();
 	return (
 		<div>
 			LOGIN PAGE
