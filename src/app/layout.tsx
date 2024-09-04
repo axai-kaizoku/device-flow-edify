@@ -20,7 +20,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={inter.className}>
 				<Providers>
-					<main className="p-40 text-center ">
+					<main>
 						<AuthBtn />
 						{children}
 					</main>

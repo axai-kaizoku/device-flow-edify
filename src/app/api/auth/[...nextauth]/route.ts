@@ -31,8 +31,7 @@ const handler = NextAuth({
 					return body.user;
 				} else {
 					console.log(body.message);
-					return body;
-
+					return null;
 				}
 			},
 		}),
