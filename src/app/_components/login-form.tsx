@@ -43,8 +43,6 @@ export default function LoginForm() {
 		const res = await signIn('credentials', {
 			email: data.email,
 			password: data.password,
-			// callbackUrl: 'http://localhost:3000/dashboard',
-			// redirect: true,
 		});
 		console.log(res, 'res');
 
@@ -60,15 +58,17 @@ export default function LoginForm() {
 	};
 
 	return (
-		<div className="border p-16 rounded bg-black flex">
-			<Image
-				src="/logo/background.png"
-				width={650}
-				height={650}
-				alt="edify-logo"
-				quality={100}
-			/>
-			<div className="bg-white flex flex-col gap-3 p-10 rounded">
+		<div className="border p-8 lg:p-16 rounded bg-black flex flex-col lg:flex-row">
+			<div className="hidden lg:block">
+				<Image
+					src="/logo/background.png"
+					width={650}
+					height={650}
+					alt="edify-logo"
+					quality={100}
+				/>
+			</div>
+			<div className="bg-white flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
 				<div className="px-2">
 					<Image
 						src="/logo/logo.png"
@@ -88,13 +88,13 @@ export default function LoginForm() {
 				</div>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="flex  flex-col gap-8 p-4">
-					<div className=" relative ">
+					className="flex flex-col gap-6 lg:gap-8 p-4">
+					<div className="relative">
 						<input
 							type="email"
 							{...form.register('email')}
 							id="email"
-							className="input border border-[#bdbdbd] py-3 px-8 h-14 w-80 rounded focus:outline-none"
+							className="input border border-[#bdbdbd] py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none"
 							placeholder=" "
 						/>
 						<label
@@ -114,7 +114,7 @@ export default function LoginForm() {
 							type={showPassword ? 'text' : 'password'}
 							{...form.register('password')}
 							id="password"
-							className="input border  py-3 px-8 h-14 w-80 rounded focus:outline-none"
+							className="input border py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none"
 							placeholder=" "
 						/>
 						<label
@@ -136,7 +136,7 @@ export default function LoginForm() {
 
 					<button
 						type="submit"
-						className="border rounded  bg-black text-white p-3">
+						className="border rounded bg-black text-white p-3">
 						LOGIN
 					</button>
 					<div className="flex text-sm underline justify-between items-center text-[#616161]">
@@ -159,7 +159,7 @@ export default function LoginForm() {
 										<path
 											d="M5.39136 10.9544L9.66065 15.318L17.1319 7.68164"
 											stroke="#212121"
-											stroke-width="1.5"
+											strokeWidth="1.5"
 										/>
 									</svg>
 								) : (
@@ -179,13 +179,13 @@ export default function LoginForm() {
 									</svg>
 								)}
 							</div>
-							Remeber Me
+							Remember Me
 						</div>
 						<div>Forgot Password?</div>
 					</div>
 					<div className="flex justify-center items-center">
-						<div className="border  border-[#E0E0E0] w-[45%]"></div>
-						<h1 className="px-3 ">Or</h1>
+						<div className="border border-[#E0E0E0] w-[45%]"></div>
+						<h1 className="px-3">Or</h1>
 						<div className="border border-[#E0E0E0] w-[45%]"></div>
 					</div>
 					<div
