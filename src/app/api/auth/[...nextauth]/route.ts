@@ -26,12 +26,16 @@ const handler = NextAuth({
 				const body = await res.json();
 
 				if (res.status === 200) {
-					console.log(res);
-					console.log(`User Details: ${body.user.email}`);
 					return body.user;
+				} else if (res.status === 400) {
+					console.log(body.message);
+					throw new Error();
+				} else if (res.status === 401) {
+					console.log(body.message);
+					throw new Error();
 				} else {
 					console.log(body.message);
-					return null;
+					throw new Error();
 				}
 			},
 		}),
