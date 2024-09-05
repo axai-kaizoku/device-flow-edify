@@ -8,6 +8,7 @@ import { z } from 'zod';
 import Image from 'next/image';
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const LoginSchema = z.object({
 	email: z.string().email().min(5, { message: 'Email is required' }),
@@ -85,17 +86,17 @@ export default function LoginForm() {
 	};
 
 	return (
-		<div className="border p-8 lg:p-16 rounded bg-black flex flex-col lg:flex-row">
-			<div className="hidden lg:block">
+		<div className="border p-8 w-full h-screen justify-evenly lg:p-16 rounded  flex flex-col lg:flex-row">
+			<div className="hidden">
 				<Image
 					src="/logo/background.png"
 					width={650}
 					height={650}
-					alt="edify-logo"
+					alt="edify-background"
 					quality={100}
 				/>
 			</div>
-			<div className="bg-white flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
+			<div className="border h-fit shadow-2xl flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
 				<div className="px-2">
 					<Image
 						src="/logo/logo.png"
@@ -135,7 +136,6 @@ export default function LoginForm() {
 							Email
 						</label>
 					</div>
-
 					<div className="flex flex-col relative gap-2 items-start">
 						<input
 							type={showPassword ? 'text' : 'password'}
@@ -169,9 +169,11 @@ export default function LoginForm() {
 							? 'Invalid Credentials. Try Again'
 							: 'LOGIN'}
 					</button>
-					<div className="flex text-sm underline justify-between items-center text-[#616161]">
-						<div className="flex justify-center items-center gap-2">
-							<div onClick={toggleRememberMe}>
+					<div className="flex text-sm underline justify-between items-center text-[#616161] dark:text-white ">
+						<div
+							className="flex justify-center items-center gap-2 cursor-pointer"
+							onClick={toggleRememberMe}>
+							<div>
 								{showTick ? (
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -211,7 +213,7 @@ export default function LoginForm() {
 							</div>
 							Remember Me
 						</div>
-						<div>Forgot Password?</div>
+						<Link href="/login/forgot-password">Forgot Password?</Link>
 					</div>
 					<div className="flex justify-center items-center">
 						<div className="border border-[#E0E0E0] w-[45%]"></div>
@@ -274,7 +276,9 @@ export default function LoginForm() {
 								/>
 							</g>
 						</svg>
-						<h1 className="text-sm text-[#616161]">Sign up with Google</h1>
+						<h1 className="text-sm text-[#616161] dark:text-white">
+							Sign up with Google
+						</h1>
 					</div>
 				</form>
 			</div>

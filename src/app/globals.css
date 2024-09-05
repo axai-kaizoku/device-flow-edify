@@ -10,20 +10,21 @@
 	padding: 0;
 	pointer-events: none;
 	transition: all 0.2s ease-in-out;
-	color: #424242;
+	color: light-dark(#424242, #fff);
 	opacity: 0.5;
 }
 
 .input:focus + .label,
 .input:not(:placeholder-shown) + .label {
 	top: 25px;
-	background-color: white;
+	background-color: light-dark(#fff, #121212);
 	left: 16px;
 	padding: 0 8px;
 	transform: translateY(-150%);
 	font-size: 18px;
 	opacity: 1;
-	color: #424242;
+	/* color: #424242; */
+	color: light-dark(#424242, #fff);
 }
 
 .input {
