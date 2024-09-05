@@ -55,10 +55,18 @@ export default function LoginForm() {
 
 			if (response?.status === 200) {
 				form.clearErrors('root');
+				form.clearErrors('email');
+				form.clearErrors('password');
 				router.push('/');
 				router.refresh();
 			} else {
 				form.setError('root', {
+					message: 'Invalid credentials',
+				});
+				form.setError('email', {
+					message: 'Invalid credentials',
+				});
+				form.setError('password', {
 					message: 'Invalid credentials',
 				});
 			}
@@ -108,17 +116,18 @@ export default function LoginForm() {
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="flex flex-col gap-6 lg:gap-8 p-4">
-					<div className="relative">
+					<div className="flex flex-col relative gap-2 items-start">
 						<input
 							type="email"
 							{...form.register('email')}
 							id="email"
 							required
-							className={`input border py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none ${
+							className={`input border ${
 								form.formState.errors.email
-									? 'border-red-500 border-2'
+									? 'border-red-500'
 									: 'border-[#bdbdbd]'
-							}`}
+							} py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none`}
+							placeholder=" "
 						/>
 						<label
 							htmlFor="email"
@@ -133,11 +142,12 @@ export default function LoginForm() {
 							{...form.register('password')}
 							id="password"
 							required
-							className={`input border py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none ${
+							className={`input border ${
 								form.formState.errors.password
-									? 'border-red-500 border-2'
+									? 'border-red-500'
 									: 'border-[#bdbdbd]'
-							}`}
+							} py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none`}
+							placeholder=" "
 						/>
 						<label
 							htmlFor="password"
