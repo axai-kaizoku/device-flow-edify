@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -43,8 +43,30 @@ export default function LoginForm() {
 		defaultValues: { email: '', password: '' },
 	});
 
+	useEffect(() => {
+		const savedEmail = localStorage.getItem('email');
+		const savedPassword = localStorage.getItem('password');
+		const rememberMe = localStorage.getItem('rememberMe') === 'true';
+
+		if (rememberMe && savedEmail && savedPassword) {
+			form.setValue('email', savedEmail);
+			form.setValue('password', savedPassword);
+			setShowTick(true);
+		}
+	}, []);
+
 	const onSubmit = async (data: LoginType) => {
 		const { email, password } = data;
+
+		if (showTick) {
+			localStorage.setItem('email', email);
+			localStorage.setItem('password', password);
+			localStorage.setItem('rememberMe', 'true');
+		} else {
+			localStorage.removeItem('email');
+			localStorage.removeItem('password');
+			localStorage.removeItem('rememberMe');
+		}
 
 		try {
 			const response = await signIn('credentials', {
@@ -52,7 +74,6 @@ export default function LoginForm() {
 				password,
 				redirect: false,
 			});
-			// console.log(response);
 
 			if (response?.status === 200) {
 				form.clearErrors('root');

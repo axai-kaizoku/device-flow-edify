@@ -17,7 +17,8 @@
 .input:focus + .label,
 .input:not(:placeholder-shown) + .label {
 	top: 25px;
-	background-color: light-dark(#fff, #121212);
+	/* background-color: light-dark(#fff, #121212; */
+	background-color: #fff;
 	left: 16px;
 	padding: 0 8px;
 	transform: translateY(-150%);
