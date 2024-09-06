@@ -1,34 +1,25 @@
 'use client';
 
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import LoginForm from '../_components/login-form';
+import Link from 'next/link';
 
 export default function Login() {
-	return (
-		<div className="w-full h-screen flex justify-center items-center">
-			<LoginForm />
-		</div>
-	);
+	return <LoginForm />;
 }
 
 const AuthBtn = () => {
 	const session = useSession();
 
 	return (
-		<div className="fixed top-10 right-10 bg-slate-100 p-4 rounded-full">
+		<div className="fixed top-10 right-10 p-2 rounded-lg border">
 			{session.data?.user && <div>{session.data.user.name} hi 💌!!</div>}
 			{session.data?.user ? (
-				<button
-					onClick={() => signOut()}
-					className="text-sm ">
+				<button onClick={() => signOut()} className="text-sm ">
 					Logout
 				</button>
 			) : (
-				<button
-					onClick={() => signIn()}
-					className="text-sm ">
-					Login
-				</button>
+				<Link href="/login">Go to login page</Link>
 			)}
 		</div>
 	);

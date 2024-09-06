@@ -1,8 +1,13 @@
 'use server';
 
-import { LoginType } from '@/app/_components/login-form';
-
-export const updateUserAction = async (data: LoginType) => {
-	await new Promise((resolve) => setTimeout(resolve, 3000));
-	console.log(data);
-};
+export async function RequestResetPass() {
+	const url =
+		'https://api.edify.club/edifybackend/v1/auth/request-password-reset';
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+	return res;
+}
