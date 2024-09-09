@@ -16,7 +16,7 @@ export const ToggleTheme = () => {
 	}
 	return (
 		<button
-			className=" fixed right-64 top-10 p-2 border  rounded-lg  "
+			className="p-2 border rounded-lg"
 			onClick={() => setTheme(isDark ? 'light' : 'dark')}>
 			{isDark ? 'Light' : 'Dark'}
 		</button>

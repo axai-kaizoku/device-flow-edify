@@ -46,30 +46,8 @@ export default function LoginForm() {
 		defaultValues: { email: '', password: '' },
 	});
 
-	useEffect(() => {
-		const savedEmail = localStorage.getItem('email');
-		const savedPassword = localStorage.getItem('password');
-		const rememberMe = localStorage.getItem('rememberMe') === 'true';
-
-		if (rememberMe && savedEmail && savedPassword) {
-			form.setValue('email', savedEmail);
-			form.setValue('password', savedPassword);
-			setShowTick(true);
-		}
-	}, []);
-
 	const onSubmit = async (data: LoginType) => {
 		const { email, password } = data;
-
-		if (showTick) {
-			localStorage.setItem('email', email);
-			localStorage.setItem('password', password);
-			localStorage.setItem('rememberMe', 'true');
-		} else {
-			localStorage.removeItem('email');
-			localStorage.removeItem('password');
-			localStorage.removeItem('rememberMe');
-		}
 
 		try {
 			const response = await signIn('credentials', {
@@ -206,49 +184,7 @@ export default function LoginForm() {
 							: 'LOGIN'}
 					</button>
 					<div className="flex text-sm underline justify-between items-center text-[#616161] dark:text-white ">
-						<div
-							className="flex justify-center items-center gap-2 cursor-pointer"
-							onClick={toggleRememberMe}>
-							<div>
-								{showTick ? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="23"
-										height="23"
-										viewBox="0 0 23 23"
-										fill="none">
-										<rect
-											x="0.499512"
-											y="0.5"
-											width="21.5243"
-											height="22"
-											stroke="#212121"
-										/>
-										<path
-											d="M5.39136 10.9544L9.66065 15.318L17.1319 7.68164"
-											stroke="#212121"
-											strokeWidth="1.5"
-										/>
-									</svg>
-								) : (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="23"
-										height="23"
-										viewBox="0 0 23 23"
-										fill="none">
-										<rect
-											x="0.499512"
-											y="0.5"
-											width="21.5243"
-											height="22"
-											stroke="#212121"
-										/>
-									</svg>
-								)}
-							</div>
-							Remember Me
-						</div>
+						<div className="opacity-0"></div>
 						<Link href="/login/forgot-password">Forgot Password?</Link>
 					</div>
 					<div className="flex justify-center items-center">
