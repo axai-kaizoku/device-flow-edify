@@ -9,6 +9,9 @@ import Image from 'next/image';
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/authSlice';
+// import { login } from '../store/authSlice';
 
 const LoginSchema = z.object({
 	email: z.string().email().min(5, { message: 'Email is required' }),
@@ -35,7 +38,7 @@ export type LoginResType = {
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showTick, setShowTick] = useState(false);
-
+	const dispatch = useDispatch();
 	const router = useRouter();
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -75,10 +78,22 @@ export default function LoginForm() {
 				redirect: false,
 			});
 
+			// console.log(response);
+			// const res = await response.
+
+			// console.log()
+
 			if (response?.status === 200) {
 				form.clearErrors('root');
 				form.clearErrors('email');
 				form.clearErrors('password');
+
+				const userData = {
+					id: 'dummyUserId',
+					name: 'dummyUserName',
+					email,
+				};
+				dispatch(login({ userData }));
 				router.push('/');
 				router.refresh();
 			} else {
