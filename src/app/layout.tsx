@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/providers';
-import { AuthBtn } from './login/page';
-import { ToggleTheme } from './_components/toggle-theme';
+import { ScreenSize } from '@/components/utils/screen-size';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,11 +20,8 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={inter.className}>
 				<Providers>
-					<main>
-						<AuthBtn />
-						<ToggleTheme />
-						{children}
-					</main>
+					<ScreenSize />
+					{children}
 				</Providers>
 			</body>
 		</html>
