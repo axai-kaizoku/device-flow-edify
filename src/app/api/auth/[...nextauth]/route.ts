@@ -23,10 +23,11 @@ const handler = NextAuth({
 					},
 				);
 
-				const body = await res.json();
+				// const body = await res.json();
 
 				if (res.status === 200) {
-					return body.user;
+					dispatchEvent();
+					return res;
 				} else if (res.status === 400) {
 					console.log(body.message);
 					throw new Error();
