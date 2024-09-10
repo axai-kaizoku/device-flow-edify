@@ -1,16 +1,17 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
-import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { login } from '@/app/store/authSlice';
+
+import InputField from '@/components/inputs/Input';
+import { Dropdown } from '@/components/dropdown/Dropdown';
+
 
 const LoginSchema = z.object({
 	email: z.string().email().min(5, { message: 'Email is required' }),
@@ -19,24 +20,8 @@ const LoginSchema = z.object({
 
 export type LoginType = z.infer<typeof LoginSchema>;
 
-export type LoginResType = {
-	message: string;
-	token: string;
-	user: {
-		_id: string;
-		first_name: string;
-		last_name: string;
-		email: string;
-		orgId: {
-			_id: string;
-			name: string;
-		};
-	};
-};
-
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
-	const [showTick, setShowTick] = useState(false);
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const { data: session } = useSession();
@@ -80,18 +65,11 @@ export default function LoginForm() {
 				router.push('/');
 				router.refresh();
 			} else {
-				form.setError('root', {
-					message: 'Invalid credentials',
-				});
-				form.setError('email', {
-					message: 'Invalid credentials',
-				});
-				form.setError('password', {
-					message: 'Invalid credentials',
-				});
+				form.setError('root', { message: 'Invalid credentials' });
+				form.setError('email', { message: 'Invalid credentials' });
+				form.setError('password', { message: 'Invalid credentials' });
 			}
 		} catch (error) {
-			// console.error('Login Failed:', error);
 			throw new Error();
 		}
 	};
@@ -100,12 +78,8 @@ export default function LoginForm() {
 		setShowPassword(!showPassword);
 	};
 
-	const toggleRememberMe = () => {
-		setShowTick(!showTick);
-	};
-
 	return (
-		<div className="border p-8 w-full h-screen justify-evenly lg:p-16 rounded  flex flex-col lg:flex-row">
+		<div className="border p-8 w-full h-screen justify-evenly lg:p-16 rounded flex flex-col lg:flex-row">
 			<div className="hidden">
 				<Image
 					src="/logo/background.png"
@@ -137,51 +111,22 @@ export default function LoginForm() {
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="flex flex-col gap-6 lg:gap-8 p-4">
-					<div className="flex flex-col relative gap-2 items-start">
-						<input
-							type="email"
-							{...form.register('email')}
-							id="email"
-							required
-							className={`input border ${
-								form.formState.errors.email
-									? 'border-red-500'
-									: 'border-[#bdbdbd]'
-							} py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none`}
-							placeholder=" "
-						/>
-						<label
-							htmlFor="email"
-							className="label transition-all duration-300 ease-in-out">
-							Email
-						</label>
-					</div>
-					<div className="flex flex-col relative gap-2 items-start">
-						<input
-							type={showPassword ? 'text' : 'password'}
-							{...form.register('password')}
-							id="password"
-							required
-							className={`input border ${
-								form.formState.errors.password
-									? 'border-red-500'
-									: 'border-[#bdbdbd]'
-							} py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none`}
-							placeholder=" "
-						/>
-						<label
-							htmlFor="password"
-							className="label transition-all duration-300 ease-in-out">
-							Password
-						</label>
-
-						<div
-							className="absolute text-[#bdbdbd] right-4 top-4 cursor-pointer"
-							onClick={togglePasswordVisibility}>
-							{showPassword ? <EyeOff /> : <Eye />}
-						</div>
-					</div>
-
+					<InputField
+						id="email"
+						label="Email"
+						type="email"
+						register={form.register('email')}
+						error={form.formState.errors.email}
+					/>
+					<InputField
+						id="password"
+						label="Password"
+						type="password"
+						register={form.register('password')}
+						error={form.formState.errors.password}
+						showPassword={showPassword}
+						togglePasswordVisibility={togglePasswordVisibility}
+					/>
 					<button
 						type="submit"
 						className="border rounded bg-black text-white p-3">
@@ -189,7 +134,7 @@ export default function LoginForm() {
 							? 'Invalid Credentials. Try Again'
 							: 'LOGIN'}
 					</button>
-					<div className="flex text-sm underline justify-between items-center text-[#616161] dark:text-white ">
+					<div className="flex text-sm underline justify-between items-center text-[#616161] dark:text-white">
 						<div className="opacity-0"></div>
 						<Link href="/login/forgot-password">Forgot Password?</Link>
 					</div>
@@ -212,6 +157,9 @@ export default function LoginForm() {
 							height="19"
 							viewBox="0 0 19 19"
 							fill="none">
+
+							
+
 							<mask
 								id="mask0_8061_14285"
 								maskUnits="userSpaceOnUse"
@@ -253,11 +201,23 @@ export default function LoginForm() {
 									fill="#1976D2"
 								/>
 							</g>
+
 						</svg>
 						<h1 className="text-sm text-[#616161] dark:text-white">
 							Sign up with Google
 						</h1>
 					</div>
+					<Dropdown
+						items={[
+							'option1',
+							'option2',
+							'option3',
+							'option4',
+							'option5',
+							'option6',
+							'option7',
+						]}
+					/>
 				</form>
 			</div>
 		</div>
