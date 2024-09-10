@@ -14,11 +14,8 @@ export const AuthBtn = () => {
 
 	return (
 		<div>
-			{session.data?.user && <div>{session.data.user.name} hi 💌!!</div>}
 			{session.data?.user ? (
-				<button
-					onClick={handleLogout}
-					className="text-sm ">
+				<button onClick={handleLogout} className="text-sm ">
 					Logout
 				</button>
 			) : (
