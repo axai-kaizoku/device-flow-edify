@@ -1,4 +1,5 @@
-import { useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -10,8 +11,6 @@ import { useDispatch } from 'react-redux';
 import { login } from '@/app/store/authSlice';
 
 import InputField from '@/components/inputs/Input';
-import { Dropdown } from '@/components/dropdown/Dropdown';
-
 
 const LoginSchema = z.object({
 	email: z.string().email().min(5, { message: 'Email is required' }),
@@ -90,7 +89,6 @@ export default function LoginForm() {
 				/>
 			</div>
 			<div className="border h-fit shadow-2xl flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
-				{JSON.stringify(session)}
 				<div className="px-2">
 					<Image
 						src="/logo/logo.png"
@@ -157,9 +155,6 @@ export default function LoginForm() {
 							height="19"
 							viewBox="0 0 19 19"
 							fill="none">
-
-							
-
 							<mask
 								id="mask0_8061_14285"
 								maskUnits="userSpaceOnUse"
@@ -201,23 +196,11 @@ export default function LoginForm() {
 									fill="#1976D2"
 								/>
 							</g>
-
 						</svg>
 						<h1 className="text-sm text-[#616161] dark:text-white">
 							Sign up with Google
 						</h1>
 					</div>
-					<Dropdown
-						items={[
-							'option1',
-							'option2',
-							'option3',
-							'option4',
-							'option5',
-							'option6',
-							'option7',
-						]}
-					/>
 				</form>
 			</div>
 		</div>
