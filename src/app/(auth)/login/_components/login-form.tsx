@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
@@ -10,8 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { login } from '../store/authSlice';
-// import { login } from '../store/authSlice';
+import { login } from '@/app/store/authSlice';
 
 const LoginSchema = z.object({
 	email: z.string().email().min(5, { message: 'Email is required' }),
@@ -40,6 +39,23 @@ export default function LoginForm() {
 	const [showTick, setShowTick] = useState(false);
 	const dispatch = useDispatch();
 	const router = useRouter();
+	const { data: session } = useSession();
+
+	useEffect(() => {
+		if (session?.user) {
+			console.log(session?.user);
+			dispatch(
+				login({
+					userData: {
+						token: session.user.token,
+						email: session.user.email,
+						userId: session.user.id,
+					},
+				}),
+			);
+		}
+	}, [session?.user, dispatch, session?.user.token]);
+
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
 		mode: 'onSubmit',
@@ -56,22 +72,30 @@ export default function LoginForm() {
 				redirect: false,
 			});
 
-			// console.log(response);
-			// const res = await response.
-
-			// console.log()
-
 			if (response?.status === 200) {
 				form.clearErrors('root');
 				form.clearErrors('email');
 				form.clearErrors('password');
+				console.log(session);
 
-				const userData = {
-					id: 'dummyUserId',
-					name: 'dummyUserName',
-					email,
-				};
-				dispatch(login({ userData }));
+				if (session) {
+					console.log('session is present');
+				} else {
+					console.log('seesion is not present');
+				}
+
+				// if (session.data?.user.token) {
+				// 	dispatch(
+				// 		login({
+				// 			userData: {
+				// 				token: session.data.user.token,
+				// 				email: session.data.user.email,
+				// 				id: session.data.user.id,
+				// 			},
+				// 		}),
+				// 	);
+				// }
+
 				router.push('/');
 				router.refresh();
 			} else {
