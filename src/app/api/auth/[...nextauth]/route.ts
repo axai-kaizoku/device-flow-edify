@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { LoginResType } from '@/app/(auth)/login/_components/login-form';
 
 const handler = NextAuth({
 	session: { strategy: 'jwt' },
@@ -44,7 +43,7 @@ const handler = NextAuth({
 		async session({ session, token }) {
 			// console.log(token, 'session token');
 			// console.log(session, 'session session');
-			if (token) {
+			if (token.token) {
 				session.user.token = token.token;
 				session.user.email = token.email;
 				session.user.id = token.id;
@@ -56,8 +55,8 @@ const handler = NextAuth({
 			// console.log(user, 'jwt user');
 			if (user) {
 				token.token = user.token;
-				token.id = user.user._id;
-				token.email = user.user.email;
+				token.id = user.id ? user.id : user.user._id;
+				token.email = user.email ? user.email : user.user.email;
 			}
 			return token;
 		},

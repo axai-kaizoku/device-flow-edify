@@ -47,14 +47,14 @@ export default function LoginForm() {
 			dispatch(
 				login({
 					userData: {
-						token: session.user.token,
-						email: session.user.email,
-						userId: session.user.id,
+						token: session?.user?.image ? '' : session.user.token,
+						email: session?.user.email,
+						userId: session?.user?.image ? '' : session.user.id,
 					},
 				}),
 			);
 		}
-	}, [session?.user, dispatch, session?.user.token]);
+	}, [session?.user, dispatch, session?.user.image]);
 
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -76,25 +76,6 @@ export default function LoginForm() {
 				form.clearErrors('root');
 				form.clearErrors('email');
 				form.clearErrors('password');
-				console.log(session);
-
-				if (session) {
-					console.log('session is present');
-				} else {
-					console.log('seesion is not present');
-				}
-
-				// if (session.data?.user.token) {
-				// 	dispatch(
-				// 		login({
-				// 			userData: {
-				// 				token: session.data.user.token,
-				// 				email: session.data.user.email,
-				// 				id: session.data.user.id,
-				// 			},
-				// 		}),
-				// 	);
-				// }
 
 				router.push('/');
 				router.refresh();
@@ -135,6 +116,7 @@ export default function LoginForm() {
 				/>
 			</div>
 			<div className="border h-fit shadow-2xl flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
+				{JSON.stringify(session)}
 				<div className="px-2">
 					<Image
 						src="/logo/logo.png"
@@ -247,26 +229,26 @@ export default function LoginForm() {
 							</mask>
 							<g mask="url(#mask0_8061_14285)">
 								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
+									fillRule="evenodd"
+									clipRule="evenodd"
 									d="M16.8536 8.03113H16.2495V8H9.49951V11H13.7381C13.1198 12.7464 11.4581 14 9.49951 14C7.01439 14 4.99951 11.9851 4.99951 9.5C4.99951 7.01488 7.01439 5 9.49951 5C10.6466 5 11.6903 5.43275 12.4849 6.13963L14.6063 4.01825C13.2668 2.76987 11.475 2 9.49951 2C5.35764 2 1.99951 5.35813 1.99951 9.5C1.99951 13.6419 5.35764 17 9.49951 17C13.6414 17 16.9995 13.6419 16.9995 9.5C16.9995 8.99713 16.9478 8.50625 16.8536 8.03113Z"
 									fill="#FFC107"
 								/>
 								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
+									fillRule="evenodd"
+									clipRule="evenodd"
 									d="M2.86426 6.00912L5.32838 7.81625C5.99513 6.1655 7.60988 5 9.49951 5C10.6466 5 11.6903 5.43275 12.4849 6.13962L14.6063 4.01825C13.2668 2.76987 11.475 2 9.49951 2C6.61876 2 4.12051 3.62637 2.86426 6.00912Z"
 									fill="#FF3D00"
 								/>
 								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
+									fillRule="evenodd"
+									clipRule="evenodd"
 									d="M9.49951 17C11.4368 17 13.197 16.2586 14.5279 15.053L12.2066 13.0888C11.4536 13.6591 10.5176 14 9.49951 14C7.54876 14 5.89238 12.7561 5.26838 11.0203L2.82263 12.9046C4.06388 15.3335 6.58463 17 9.49951 17Z"
 									fill="#4CAF50"
 								/>
 								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
+									fillRule="evenodd"
+									clipRule="evenodd"
 									d="M16.8536 8.03113H16.2495V8H9.49951V11H13.7381C13.4411 11.8389 12.9015 12.5623 12.2055 13.0891C12.2059 13.0888 12.2063 13.0887 12.2066 13.0884L14.5279 15.0526C14.3636 15.2019 16.9995 13.25 16.9995 9.5C16.9995 8.99713 16.9478 8.50625 16.8536 8.03113Z"
 									fill="#1976D2"
 								/>
