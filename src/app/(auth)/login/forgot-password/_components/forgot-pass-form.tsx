@@ -216,7 +216,9 @@ export default function ForgotPassForm() {
 
 			{next === 0 && (
 				<div className="flex justify-center items-center">
-					<Link href="/login" className="border-b">
+					<Link
+						href="/login"
+						className="border-b">
 						Back to Login
 					</Link>
 				</div>

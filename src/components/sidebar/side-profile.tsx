@@ -1,8 +1,8 @@
 'use client';
+import { logout } from '@/app/store/authSlice';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice';
 
 export const AuthBtn = () => {
 	const session = useSession();
