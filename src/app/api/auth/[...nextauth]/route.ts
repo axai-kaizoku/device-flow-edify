@@ -1,8 +1,10 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { LoginResType } from '@/app/(auth)/login/_components/login-form';
 
 const handler = NextAuth({
+	session: { strategy: 'jwt' },
 	providers: [
 		CredentialsProvider({
 			id: 'credentials',
@@ -23,20 +25,13 @@ const handler = NextAuth({
 					},
 				);
 
-				// const body = await res.json();
+				const body = await res.json();
 
 				if (res.status === 200) {
-					dispatchEvent();
-					return res;
-				} else if (res.status === 400) {
-					console.log(body.message);
-					throw new Error();
-				} else if (res.status === 401) {
-					console.log(body.message);
-					throw new Error();
+					return body;
 				} else {
 					console.log(body.message);
-					throw new Error();
+					throw new Error(body.message || 'Login failed');
 				}
 			},
 		}),
@@ -45,6 +40,28 @@ const handler = NextAuth({
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
 		}),
 	],
+	callbacks: {
+		async session({ session, token }) {
+			// console.log(token, 'session token');
+			// console.log(session, 'session session');
+			if (token) {
+				session.user.token = token.token;
+				session.user.email = token.email;
+				session.user.id = token.id;
+			}
+			return session;
+		},
+		async jwt({ token, user }) {
+			// console.log(token, 'jwt token');
+			// console.log(user, 'jwt user');
+			if (user) {
+				token.token = user.token;
+				token.id = user.user._id;
+				token.email = user.user.email;
+			}
+			return token;
+		},
+	},
 });
 
 export { handler as GET, handler as POST };
