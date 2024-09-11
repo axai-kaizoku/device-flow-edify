@@ -1,4 +1,3 @@
-import { ToggleTheme } from '../utils/toggle-theme';
 import Image from 'next/image';
 import { SIDEBAR } from '@/constants';
 import Link from 'next/link';
@@ -17,84 +16,30 @@ export default function Sidebar() {
 				/>
 			</div>
 			{SIDEBAR.MainPages.map((page, i) => (
-				<Link
+				<SidebarItem
 					href={page.path}
+					icon={page.icon}
+					label={page.label}
 					key={page.label}
-					className="w-full flex justify-between text-sm focus:outline-none">
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black' : ''
-						} w-[2%] rounded-e`}
-					/>
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black text-white' : ''
-						} p-4 rounded w-[78%] flex gap-4 items-center`}>
-						<Image
-							src={page.icon}
-							alt={page.label}
-							width={20}
-							height={20}
-							className="object-contain"
-						/>
-						<div>{page.label}</div>
-					</div>
-					<div className="w-[1%]" />
-				</Link>
+				/>
 			))}
 			<div className="h-[1px] w-full border-b" />
 			{SIDEBAR.Pages.map((page, i) => (
-				<Link
+				<SidebarItem
 					href={page.path}
+					icon={page.icon}
+					label={page.label}
 					key={page.label}
-					className="w-full flex justify-between text-sm">
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black' : ''
-						} w-[2%] rounded-e`}
-					/>
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black text-white' : ''
-						} p-4 rounded w-[78%] flex gap-4 items-center`}>
-						<Image
-							src={page.icon}
-							alt={page.label}
-							width={20}
-							height={20}
-							className="object-contain"
-						/>
-						<div>{page.label}</div>
-					</div>
-					<div className="w-[1%]" />
-				</Link>
+				/>
 			))}
 			<div className="h-[1px] w-full border-b" />
 			{SIDEBAR.Functions.map((page, i) => (
-				<Link
+				<SidebarItem
 					href={page.path}
+					icon={page.icon}
+					label={page.label}
 					key={page.label}
-					className="w-full flex justify-between text-sm">
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black' : ''
-						} w-[2%] rounded-e`}
-					/>
-					<div
-						className={`${
-							page.label === 'Dashboard' ? 'bg-black text-white' : ''
-						} p-4 rounded w-[78%] flex gap-4 items-center`}>
-						<Image
-							src={page.icon}
-							alt={page.label}
-							width={20}
-							height={20}
-							className="object-contain"
-						/>
-						<div>{page.label}</div>
-					</div>
-					<div className="w-[1%]" />
-				</Link>
+				/>
 			))}
 			<div className="w-full flex justify-between text-sm">
 				<div className={` w-[2%] rounded-e`} />
@@ -112,8 +57,38 @@ export default function Sidebar() {
 				</div>
 				<div className="w-[1%]" />
 			</div>
-
-			{/* <ToggleTheme /> */}
 		</section>
 	);
 }
+
+type SidebarItemProps = {
+	href: string;
+	label: string;
+	icon: string;
+};
+
+const SidebarItem = ({ href, label, icon }: SidebarItemProps) => {
+	return (
+		<Link href={href} className="w-full flex justify-between text-sm ">
+			<div
+				className={`${
+					label === 'Dashboard' ? 'bg-black' : ''
+				} w-[2%] rounded-e`}
+			/>
+			<div
+				className={`${
+					label === 'Dashboard' ? 'bg-black text-white' : ''
+				} p-4 rounded w-[78%] flex gap-4 items-center`}>
+				<Image
+					src={icon}
+					alt={label}
+					width={20}
+					height={20}
+					className="object-contain"
+				/>
+				<div>{label}</div>
+			</div>
+			<div className="w-[1%]" />
+		</Link>
+	);
+};

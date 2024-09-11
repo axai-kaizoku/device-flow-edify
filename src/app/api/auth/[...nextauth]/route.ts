@@ -25,6 +25,7 @@ const handler = NextAuth({
 				);
 
 				const body = await res.json();
+				// console.log(body);
 
 				if (res.status === 200) {
 					return body;
@@ -40,16 +41,6 @@ const handler = NextAuth({
 		}),
 	],
 	callbacks: {
-		async session({ session, token }) {
-			// console.log(token, 'session token');
-			// console.log(session, 'session session');
-			if (token.token) {
-				session.user.token = token.token;
-				session.user.email = token.email;
-				session.user.id = token.id;
-			}
-			return session;
-		},
 		async jwt({ token, user }) {
 			// console.log(token, 'jwt token');
 			// console.log(user, 'jwt user');
@@ -57,8 +48,25 @@ const handler = NextAuth({
 				token.token = user.token;
 				token.id = user.id ? user.id : user.user._id;
 				token.email = user.email ? user.email : user.user.email;
+				token.first_name = user.name ? '' : user.user.first_name;
+				token.last_name = user.name ? '' : user.user.last_name;
+				token.orgId = user.image ? '' : user.user.orgId._id;
 			}
 			return token;
+		},
+
+		async session({ session, token }) {
+			// console.log(token, 'session token');
+			// console.log(session, 'session session');
+			if (token.token) {
+				session.user.token = token.token;
+				session.user.email = token.email;
+				session.user.id = token.id;
+				session.user.first_name = token.first_name;
+				session.user.last_name = token.last_name;
+				session.user.orgId = token.orgId;
+			}
+			return session;
 		},
 	},
 });

@@ -5,6 +5,9 @@ declare module 'next-auth/jwt' {
 		token: string;
 		id: string;
 		email: string;
+		first_name: string;
+		last_name: string;
+		orgId: string;
 	}
 }
 
@@ -14,6 +17,9 @@ declare module 'next-auth' {
 			token: string;
 			id: string;
 			email: string;
+			first_name: string;
+			last_name: string;
+			orgId: string;
 		};
 	}
 }
@@ -24,6 +30,11 @@ declare module 'next-auth' {
 		user: {
 			_id: string;
 			email: string;
+			first_name: string;
+			last_name: string;
+			orgId: {
+				_id: string;
+			};
 		};
 	}
 }

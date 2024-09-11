@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -7,8 +8,6 @@ import { z } from 'zod';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useDispatch } from 'react-redux';
-import { login } from '@/app/store/authSlice';
 
 import InputField from '@/components/inputs/Input';
 
@@ -21,24 +20,8 @@ export type LoginType = z.infer<typeof LoginSchema>;
 
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
-	const dispatch = useDispatch();
 	const router = useRouter();
 	const { data: session } = useSession();
-
-	useEffect(() => {
-		if (session?.user) {
-			console.log(session?.user);
-			dispatch(
-				login({
-					userData: {
-						token: session?.user?.image ? '' : session.user.token,
-						email: session?.user.email,
-						userId: session?.user?.image ? '' : session.user.id,
-					},
-				}),
-			);
-		}
-	}, [session?.user, dispatch, session?.user.image]);
 
 	const form = useForm<LoginType>({
 		resolver: zodResolver(LoginSchema),
@@ -144,7 +127,7 @@ export default function LoginForm() {
 					<div
 						onClick={() =>
 							signIn('google', {
-								callbackUrl: 'http://localhost:3000/dashboard',
+								callbackUrl: 'http://localhost:3000',
 								redirect: true,
 							})
 						}

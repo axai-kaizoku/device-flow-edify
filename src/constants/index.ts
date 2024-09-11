@@ -1,6 +1,6 @@
 export const SIDEBAR = {
 	MainPages: [
-		{ label: 'Dashboard', path: '/dashboard', icon: '/sidebar/dashboard.svg' },
+		{ label: 'Dashboard', path: '/', icon: '/sidebar/dashboard.svg' },
 		{ label: 'Assets', path: '/assets', icon: '/sidebar/assets.svg' },
 		{ label: 'Users', path: '/users', icon: '/sidebar/users.svg' },
 		{ label: 'Reports', path: '/reports', icon: '/sidebar/reports.svg' },

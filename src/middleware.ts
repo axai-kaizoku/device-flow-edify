@@ -9,7 +9,6 @@ export async function middleware(req: NextRequest) {
 
 	// Define protected routes
 	const protectedRoutes = [
-		'/dashboard',
 		'/',
 		'/((?!api|_next/static|_next/image|.*\\.png$).*)',
 	];
@@ -25,10 +24,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: [
-		'/dashboard',
-		'/',
-		'/((?!api|_next/static|_next/image|.*\\.png$).*)',
-	], // Define protected routes here
-	// matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api)(.*)'],
+	matcher: ['/', '/((?!api|_next/static|_next/image|.*\\.png$).*)'], // Define protected routes here
 };
