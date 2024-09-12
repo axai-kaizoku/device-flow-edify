@@ -1,2 +1,3 @@
-export { Modal } from "./components/Modal";
-export { type ModalProps } from "./components/Modal";
+'use client';
+export { Modal } from './components/Modal';
+export { type ModalProps } from './components/Modal';

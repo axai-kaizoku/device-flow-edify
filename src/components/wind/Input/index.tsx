@@ -1,2 +1,3 @@
-export { Input } from "./components/Input";
-export { Textarea } from "./components/Textarea/Textarea";
+'use client';
+export { Input } from './components/Input';
+export { Textarea } from './components/Textarea/Textarea';

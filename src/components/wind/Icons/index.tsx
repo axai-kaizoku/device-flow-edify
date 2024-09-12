@@ -1,1 +1,2 @@
-export { Icon } from "./components/IconComponent";
+'use client';
+export { Icon } from './components/IconComponent';

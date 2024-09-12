@@ -1,1 +1,2 @@
-export { Avatar } from "./Components/Avatar";
+'use client';
+export { Avatar } from './Components/Avatar';

@@ -1,72 +1,91 @@
-import { Colors } from "./colors";
-import styled, { css } from "styled-components";
-import { BadgeProps } from "../Badge";
-import { BadgeColors } from "./BadgeColors";
+import styled, { css } from 'styled-components';
+import { Colors } from './colors';
+import { BadgeColors } from './BadgeColors';
 
 const medium = css`
-  font-size: 12px;
-  line-height: 20px;
-  height: 24px;
+	font-size: 12px;
+	line-height: 20px;
+	height: 24px;
 `;
 
 const large = css`
-  font-size: 14px;
-  line-height: 22px;
-  height: 26px;
+	font-size: 14px;
+	line-height: 22px;
+	height: 26px;
 `;
 
-const getFont = css`
-  font-family: "Inter-Medium";
-  ${({ size }: StyleProps) => {
-    switch (size) {
-      case "md":
-        return medium;
-      case "lg":
-        return large;
-      default:
-        return medium;
-    }
-  }}
+const getFont = css<StyleProps>`
+	font-family: 'Inter-Medium';
+	${({ size }) => {
+		switch (size) {
+			case 'lg':
+				return large;
+			case 'md':
+			default:
+				return medium;
+		}
+	}}
 `;
 
-const getBackground = css`
-  background-color: ${({ color }: StyleProps) =>
-    color ? BadgeColors?.[color]?.background : Colors.info_100};
+const getBackground = css<StyleProps>`
+	background-color: ${({ color }) =>
+		color && BadgeColors[color]?.background
+			? BadgeColors[color].background
+			: Colors.info_100};
 `;
 
-const getColor = css`
-  color: ${({ color }: StyleProps) =>
-    color ? BadgeColors?.[color]?.text : Colors.info_700};
+const getColor = css<StyleProps>`
+	color: ${({ color }) =>
+		color && BadgeColors[color]?.text
+			? BadgeColors[color].text
+			: Colors.info_700};
 `;
 
-const getBorder = css`
-  border-radius: ${({ border }: StyleProps) =>
-    border === "squared" ? "4px" : "20px"};
+const getBorder = css<StyleProps>`
+	border-radius: ${({ border }) => (border === 'squared' ? '4px' : '20px')};
 `;
 
-const getBorderColor = css`
-  border: ${({ color }: StyleProps) =>
-    color && BadgeColors?.[color]?.hasOwnProperty("border")
-      ? `1px solid ${BadgeColors?.[color]?.border}`
-      : ""};
+const getBorderColor = css<StyleProps>`
+	border: ${({ color }) =>
+		color && BadgeColors[color]?.border
+			? `1px solid ${BadgeColors[color].border}`
+			: 'none'};
 `;
 
-export const StyledBadge = styled.div`
-  display: flex;
-  align-items: center;
-  width: max-content;
-  padding: 2px 8px;
-  gap: ${({ hasRightIcon }: StyleProps) => (hasRightIcon ? "2px" : "6px")};
-  ${getBorder};
-  ${getFont};
-  ${getColor};
-  ${getBackground};
-  ${getBorderColor};
+export const StyledBadge = styled.div<StyleProps>`
+	display: flex;
+	align-items: center;
+	width: max-content;
+	padding: 2px 8px;
+	gap: ${({ hasRightIcon }) => (hasRightIcon ? '2px' : '6px')};
+	${getBorder};
+	${getFont};
+	${getColor};
+	${getBackground};
+	${getBorderColor};
 `;
 
 interface StyleProps {
-  hasRightIcon?: boolean;
-  color?: any;
-  size?: 'md' | 'lg';
-  border?: any;
+	hasRightIcon?: boolean;
+	color?:
+		| 'info'
+		| 'success'
+		| 'warning'
+		| 'error'
+		| 'light_blue'
+		| 'pink'
+		| 'turquoise'
+		| 'orange'
+		| 'violet'
+		| 'grey'
+		| 'yellow'
+		| 'red'
+		| 'success_dark'
+		| 'success_dark_outline'
+		| 'grey_dark'
+		| 'grey_dark_outline'
+		| 'error_dark'
+		| 'warning_dark';
+	size?: 'md' | 'lg';
+	border?: 'rounded' | 'squared';
 }
