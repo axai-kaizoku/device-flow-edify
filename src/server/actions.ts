@@ -1,46 +1,44 @@
 'use server';
 
+import { callAPI } from '@/lib/utils';
+
 type RequestOTPProps = {
 	message: string;
 	userId?: string;
 };
-
 export async function RequestOTP(email: string): Promise<RequestOTPProps> {
-	const response = await fetch(
+	const { data } = await callAPI<RequestOTPProps>(
 		'https://api.edify.club/edifybackend/v1/auth/request-password-reset',
+		'POST',
+		{ email },
 		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ email }),
+			'Content-Type': 'application/json',
 		},
 	);
-	return response.json();
+
+	return data;
 }
 
 type ResetPassProps = {
 	message: string;
 };
-
 export async function ResetPass(
 	userId: string,
 	otp: string,
 	password: string,
 ): Promise<ResetPassProps> {
-	const response = await fetch(
+	const { data } = await callAPI<ResetPassProps>(
 		'https://api.edify.club/edifybackend/v1/auth/verify-otp',
+		'POST',
 		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				userId,
-				otp,
-				newPassword: password,
-			}),
+			userId,
+			otp,
+			newPassword: password,
+		},
+		{
+			'Content-Type': 'application/json',
 		},
 	);
-	return response.json();
+
+	return data;
 }

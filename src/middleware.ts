@@ -7,10 +7,14 @@ export async function middleware(req: NextRequest) {
 	const token = await getToken({ req, secret });
 	const { pathname } = req.nextUrl;
 
-	// Define protected routes
 	const protectedRoutes = [
 		'/',
-		'/((?!api|_next/static|_next/image|.*\\.png$).*)',
+		'/assets',
+		'/teams',
+		'/devices',
+		'/users',
+		'/settings',
+		'/((?!api|_next/static|assets|_next/image|.*\\.png$).*)',
 	];
 
 	if (protectedRoutes.includes(pathname)) {
@@ -24,5 +28,13 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: ['/', '/((?!api|_next/static|_next/image|.*\\.png$).*)'], // Define protected routes here
+	matcher: [
+		'/',
+		'/assets',
+		'/teams',
+		'/devices',
+		'/users',
+		'/settings',
+		'/((?!api|_next/static|assets|_next/image|.*\\.png$).*)',
+	], // Define protected routes here
 };

@@ -4,7 +4,6 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import moment from 'moment-timezone';
 
-import Analytics from 'analytics-node';
 import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
 
 // import { PREFIX, SEGMENT_API_KEY } from './config';
@@ -29,7 +28,7 @@ export const callAPI = async <T>(
 	url: string,
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
 	body?: any,
-	headers?: AxiosRequestHeaders,
+	headers?: Record<string, string>,
 ): Promise<APIResponse<T>> => {
 	try {
 		const response: AxiosResponse<T> = await axios({
@@ -52,10 +51,6 @@ export const callAPI = async <T>(
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
-
-export const segementAnalytics = new Analytics(SEGMENT_API_KEY, {
-	host: 'https://internal-tracking.winuall.com',
-});
 
 //@ts-ignore
 export function abbreviateNumber(
@@ -194,72 +189,72 @@ export const getCurrentCountry = () => {
 	return tz === 'Asia/Calcutta' ? 'in' : 'us';
 };
 
-export function trackPageAnalytics(name: string, path: string) {
-	let organisation: any = null;
-	if (localStorage.getItem('organisation')) {
-		organisation = JSON.parse(localStorage.organisation);
-	}
-	let user: any = null;
-	if (localStorage.getItem('user')) {
-		user = JSON.parse(localStorage.user);
-	}
-	let userId = 'No user id';
-	if (user?._id) {
-		userId = `${user?._id}:${organisation?._id}`;
-	}
-	segementAnalytics.page({
-		userId,
-		name: `(Web) ${name}`,
-		properties: {
-			url: path,
-			referrer: `${window.origin}`,
-			orgId: organisation?._id,
-			userName: user?.name,
-			userPhone: user?.phone,
-			userCountryCode: user?.countryCode,
-		},
-	});
-}
+// export function trackPageAnalytics(name: string, path: string) {
+// 	let organisation: any = null;
+// 	if (localStorage.getItem('organisation')) {
+// 		organisation = JSON.parse(localStorage.organisation);
+// 	}
+// 	let user: any = null;
+// 	if (localStorage.getItem('user')) {
+// 		user = JSON.parse(localStorage.user);
+// 	}
+// 	let userId = 'No user id';
+// 	if (user?._id) {
+// 		userId = `${user?._id}:${organisation?._id}`;
+// 	}
+// 	segementAnalytics.page({
+// 		userId,
+// 		name: `(Web) ${name}`,
+// 		properties: {
+// 			url: path,
+// 			referrer: `${window.origin}`,
+// 			orgId: organisation?._id,
+// 			userName: user?.name,
+// 			userPhone: user?.phone,
+// 			userCountryCode: user?.countryCode,
+// 		},
+// 	});
+// }
 
-export function trackEvents(event: string, packageId?: string, payload?: any) {
-	const date = moment().format('LLL');
-	let isMobile = false;
-	let isWeb = true;
-	const mql = window.matchMedia('screen and (max-width: 600px)');
-	if (mql.matches) {
-		isMobile = true;
-		isWeb = false;
-	}
-	let organisation: any = null;
-	if (localStorage.getItem('organisation')) {
-		organisation = JSON.parse(localStorage.organisation);
-	}
-	let user: any = null;
-	if (localStorage.getItem('user')) {
-		user = JSON.parse(localStorage.user);
-	}
-	let userId = 'No user id';
-	if (user?._id) {
-		userId = `${user?._id}:${organisation?._id}`;
-	}
-	return segementAnalytics.track({
-		userId,
-		event: `(Web) ${event}`,
-		properties: {
-			orgId: organisation?._id,
-			userName: user?.name,
-			userPhone: user?.phone,
-			userCountryCode: user?.countryCode,
-			path: window?.location?.pathname,
-			packageId,
-			web: isWeb,
-			m_web: isMobile,
-			platform_type: isWeb ? 'web' : 'web_app',
-			date_time: date,
-			...payload,
-		},
-	});
-}
+// export function trackEvents(event: string, packageId?: string, payload?: any) {
+// 	const date = moment().format('LLL');
+// 	let isMobile = false;
+// 	let isWeb = true;
+// 	const mql = window.matchMedia('screen and (max-width: 600px)');
+// 	if (mql.matches) {
+// 		isMobile = true;
+// 		isWeb = false;
+// 	}
+// 	let organisation: any = null;
+// 	if (localStorage.getItem('organisation')) {
+// 		organisation = JSON.parse(localStorage.organisation);
+// 	}
+// 	let user: any = null;
+// 	if (localStorage.getItem('user')) {
+// 		user = JSON.parse(localStorage.user);
+// 	}
+// 	let userId = 'No user id';
+// 	if (user?._id) {
+// 		userId = `${user?._id}:${organisation?._id}`;
+// 	}
+// 	return segementAnalytics.track({
+// 		userId,
+// 		event: `(Web) ${event}`,
+// 		properties: {
+// 			orgId: organisation?._id,
+// 			userName: user?.name,
+// 			userPhone: user?.phone,
+// 			userCountryCode: user?.countryCode,
+// 			path: window?.location?.pathname,
+// 			packageId,
+// 			web: isWeb,
+// 			m_web: isMobile,
+// 			platform_type: isWeb ? 'web' : 'web_app',
+// 			date_time: date,
+// 			...payload,
+// 		},
+// 	});
+// }
 
 export function getTimeDifference() {
 	setInterval(() => {
@@ -272,15 +267,15 @@ export function getTimeDifference() {
 	}, 1000);
 }
 
-export const isNotInternalOrg = () => {
-	return (
-		PREFIX !== 'demo' &&
-		PREFIX !== 'winuall-admin' &&
-		PREFIX !== 'winuallcoaching' &&
-		PREFIX !== 'onlinestore' &&
-		PREFIX !== 'marketplace'
-	);
-};
+// export const isNotInternalOrg = () => {
+// 	return (
+// 		PREFIX !== 'demo' &&
+// 		PREFIX !== 'winuall-admin' &&
+// 		PREFIX !== 'winuallcoaching' &&
+// 		PREFIX !== 'onlinestore' &&
+// 		PREFIX !== 'marketplace'
+// 	);
+// };
 
 export const camelCaseToSentenceCase = (value: string) => {
 	const result = value.replace(/([A-Z])/g, ' $1');
@@ -312,7 +307,7 @@ export const getCurrentTimeStamp = () => {
 
 export const convertTime = (sec: any) => {
 	if (sec) {
-		let hours;
+		let hours: string | number;
 		let min;
 		hours = Math.floor(sec / 3600);
 		hours >= 1 ? (sec = sec - hours * 3600) : (hours = '00');
@@ -324,7 +319,7 @@ export const convertTime = (sec: any) => {
 		sec.toString().length === 1 ? (sec = '0' + sec) : void 0;
 
 		return (
-			(hours > 0 ? hours + ' ' + 'hr' : '') +
+			((hours as number) > 0 ? hours + ' ' + 'hr' : '') +
 			' ' +
 			min +
 			' ' +

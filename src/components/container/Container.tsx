@@ -1,7 +1,49 @@
-import React from 'react';
+type ChildrenProps = { children: React.ReactNode };
+type ContainerHeaderProps = {
+	title: string;
+	description?: string;
+};
+type CombinedContainerProps = {
+	title: string;
+	description?: string;
+	children: React.ReactNode;
+};
 
-function Container({ children }: { children: React.ReactNode }) {
-	return <div className="w-full max-w-7xl mx-auto p-4">{children}</div>;
-}
+export const InnerContainer = ({ children }: ChildrenProps) => {
+	return (
+		<section className="flex flex-col w-full p-8 overflow-hidden">
+			{children}
+		</section>
+	);
+};
 
-export default Container;
+export const OuterContainer = ({ children }: ChildrenProps) => {
+	return <div className="flex flex-col w-full h-full">{children}</div>;
+};
+
+export const ContainerHeader = ({
+	title,
+	description,
+}: ContainerHeaderProps) => {
+	return (
+		<div className="h-[16%] w-full bg-slate-50 dark:bg-slate-800 p-8 flex items-end">
+			<div className="flex flex-col gap-1">
+				<div className="text-3xl font-medium">{title}</div>
+				<div>{description}</div>
+			</div>
+		</div>
+	);
+};
+
+export const CombinedContainer = ({
+	title,
+	description,
+	children,
+}: CombinedContainerProps) => {
+	return (
+		<OuterContainer>
+			<ContainerHeader title={title} description={description} />
+			<InnerContainer>{children}</InnerContainer>
+		</OuterContainer>
+	);
+};

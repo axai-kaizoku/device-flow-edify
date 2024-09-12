@@ -7,5 +7,5 @@ export const AuthBtn = () => {
 
 export const SessionState = () => {
 	const session = useSession();
-	return <div className="w-52 h-60 bg-pink-300">{JSON.stringify(session)}</div>;
+	return <div>{JSON.stringify(session)}</div>;
 };

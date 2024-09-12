@@ -1,24 +1,16 @@
 'use client';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
 
 export const ToggleTheme = () => {
 	const { theme, setTheme } = useTheme();
 	const isDark = theme === 'dark';
-	const [mounted, setMounted] = useState(false);
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
-	if (!mounted) {
-		return null;
-	}
 	return (
 		<button
-			className="p-2 border rounded-lg"
+			className="border p-1 rounded-full fixed bottom-6 left-6 "
 			onClick={() => setTheme(isDark ? 'light' : 'dark')}>
-			{isDark ? 'Light' : 'Dark'}
+			{isDark ? <Sun size={16} /> : <Moon size={16} />}
 		</button>
 	);
 };

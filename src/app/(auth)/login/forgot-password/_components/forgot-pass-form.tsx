@@ -1,5 +1,4 @@
 'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -31,6 +30,7 @@ export default function ForgotPassForm() {
 	const [uId, setUID] = useState('');
 	const [next, setNext] = useState(0);
 	const [loading, setLoading] = useState(false);
+	const [otp, setOtp] = useState<string>('');
 
 	const form = useForm<ForgotPassType>({
 		resolver: zodResolver(ForgotPassSchema),
@@ -119,12 +119,18 @@ export default function ForgotPassForm() {
 					<>
 						<div className="flex flex-col relative gap-2 items-start">
 							<input
-								{...form.register('otp')}
 								id="otp"
+								value={otp}
+								onChange={(e) => {
+									const value = e.target.value;
+									if (/^\d{0,6}$/.test(value)) {
+										setOtp(value);
+										form.setValue('otp', value);
+									}
+								}}
 								required
 								type="text"
 								maxLength={6}
-								pattern="\d{6}"
 								className={`input border ${
 									form.formState.errors.otp
 										? 'border-red-500'
@@ -216,9 +222,7 @@ export default function ForgotPassForm() {
 
 			{next === 0 && (
 				<div className="flex justify-center items-center">
-					<Link
-						href="/login"
-						className="border-b">
+					<Link href="/login" className="border-b">
 						Back to Login
 					</Link>
 				</div>
