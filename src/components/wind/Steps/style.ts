@@ -1,3 +1,4 @@
+'use client';
 import styled, { css } from 'styled-components';
 import { Colors } from './styles/colors';
 interface Props {
@@ -46,16 +47,17 @@ export const ItemTail = styled.div<Props>`
 					width: 1px;
 					height: 100%;
 					margin-left: 16px;
-					display: ${(props) =>
-						props.index === 0 || props.index === 1 ? 'none' : 'inline-block'};
+					display: ${props.index === 0 || props.index === 1
+						? 'none'
+						: 'inline-block'};
 			  `
 			: css`
 					position: absolute;
 					left: 0;
 					width: 100%;
-					display: ${(props) => (props.lastIndex ? 'none' : 'inline-block')};
+					display: ${props.lastIndex ? 'none' : 'inline-block'};
 					top: 16px;
-					margin-left: ${(props) => (props.isFinished ? '32px' : '36px')};
+					margin-left: ${props.isFinished ? '32px' : '36px'};
 			  `};
 
 	&::after {
@@ -68,12 +70,10 @@ export const ItemTail = styled.div<Props>`
 						height: 70%;
 						border-radius: 1px;
 						width: 2px;
-						-webkit-transition: background 0.3s;
 						transition: background 0.3s;
-						background-color: ${(props) =>
-							props.notFinished
-								? `${Colors.grey_100}`
-								: `${Colors.success_500}`};
+						background-color: ${props.notFinished
+							? Colors.grey_100
+							: Colors.success_500};
 				  `
 				: css`
 						content: '';
@@ -83,10 +83,9 @@ export const ItemTail = styled.div<Props>`
 						border-radius: 1px;
 						width: 100%;
 						transition: background 0.3s;
-						background-color: ${(props) =>
-							props.notFinished
-								? `${Colors.grey_100}`
-								: `${Colors.success_500}`};
+						background-color: ${props.notFinished
+							? Colors.grey_100
+							: Colors.success_500};
 				  `}
 	}
 `;

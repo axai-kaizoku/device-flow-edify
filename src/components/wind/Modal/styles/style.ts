@@ -1,3 +1,4 @@
+'use client';
 import styled, { css } from 'styled-components';
 import { Colors } from './colors';
 import { getShadow } from './shadow';

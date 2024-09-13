@@ -21,7 +21,7 @@ const Ellipsis = css<TypographyProps>`
 	${({ lineClamp }) =>
 		lineClamp &&
 		css`
-			-webkit-line-clamp: ${({ lineClamp }) => lineClamp || 1};
+			-webkit-line-clamp: ${lineClamp};
 		`}
 	-webkit-box-orient: vertical;
 	white-space: normal;

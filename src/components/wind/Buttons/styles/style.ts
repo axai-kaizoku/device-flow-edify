@@ -1,3 +1,4 @@
+'use client';
 import { ButtonProps } from '../Button';
 import styled, { css } from 'styled-components';
 import { Colors } from './colors';
