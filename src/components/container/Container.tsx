@@ -26,7 +26,7 @@ export const ContainerHeader = ({
 	description,
 }: ContainerHeaderProps) => {
 	return (
-		<div className="h-[16%] w-full bg-slate-50 dark:bg-slate-800 p-8 flex items-end">
+		<div className="h-[16%] w-full bg-muted p-8 flex items-end">
 			<div className="flex flex-col gap-1">
 				<div className="text-3xl font-medium">{title}</div>
 				<div>{description}</div>
