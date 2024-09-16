@@ -1,26 +1,67 @@
 import { CombinedContainer } from '@/components/container/Container';
 import { SearchBarWithProfile } from '../page';
-import { SessionState } from '@/components/sidebar/side-profile';
+import { Edit, Trash } from 'lucide-react';
+import TeamForm from './_components/team-form';
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/side-sheet';
+import { fetchTeams } from '@/server/actions';
+import { cache } from 'react';
 
-export default function Teams() {
+const cachedTeams = cache(fetchTeams);
+
+export default async function Teams() {
+	const teams = await cachedTeams();
+	console.log(teams);
 	return (
 		<CombinedContainer title="Teams">
 			<SearchBarWithProfile />
 			<div className="h-10" />
-			<h1 className="text-2xl">Team List</h1>
+			<div className="flex gap-5">
+				<h1 className="text-2xl">Team List</h1>
+				<SheetDemo />
+			</div>
 			<div className="h-10" />
 			<div className="flex gap-3 items-center">
-				<TeamBadge title="Tech" size="5" />
+				{teams.map((t) => (
+					<TeamBadge key={t._id} title={t.title} size="5" />
+				))}
 			</div>
-			<SessionState />
 		</CombinedContainer>
+	);
+}
+
+export function SheetDemo() {
+	return (
+		<Sheet>
+			<SheetTrigger asChild>
+				<button className="px-2 border rounded-md">Create Team + </button>
+			</SheetTrigger>
+			<SheetContent>
+				<SheetHeader>
+					<SheetTitle>Create Team</SheetTitle>
+				</SheetHeader>
+				<TeamForm />
+			</SheetContent>
+		</Sheet>
 	);
 }
 
 const TeamBadge = ({ title, size }: { title: string; size: string }) => {
 	return (
-		<div className="w-40 p-2 rounded-full bg-muted flex justify-center items-center">
-			{`${title} (${size}) ->`}
+		<div className="w-52 p-2 rounded-full bg-muted flex gap-3 justify-center items-center">
+			<h3>{title}</h3>
+			<button className="p-2 bg-background rounded-md border">
+				<Edit size={14} />
+			</button>{' '}
+			<button className="p-2 bg-background rounded-md border">
+				<Trash size={14} />
+			</button>
 		</div>
 	);
 };
