@@ -10,8 +10,8 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/side-sheet';
-import { fetchTeams } from '@/server/actions';
 import { cache } from 'react';
+import { fetchTeams } from '@/server/teamActions';
 
 const cachedTeams = cache(fetchTeams);
 

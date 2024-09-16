@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { CreateTeam } from '@/server/actions';
+import { CreateTeam } from '@/server/teamActions';
 
 // Update schema for team form
 const TeamSchema = z.object({
