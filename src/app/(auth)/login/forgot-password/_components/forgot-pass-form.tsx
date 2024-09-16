@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { RequestOTP, ResetPass } from '@/server/actions';
+import { RequestOTP, ResetPass } from '@/server/loginActions';
 
 const ForgotPassSchema = z
 	.object({
@@ -222,7 +222,9 @@ export default function ForgotPassForm() {
 
 			{next === 0 && (
 				<div className="flex justify-center items-center">
-					<Link href="/login" className="border-b">
+					<Link
+						href="/login"
+						className="border-b">
 						Back to Login
 					</Link>
 				</div>
