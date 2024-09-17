@@ -158,8 +158,8 @@ function DeviceType() {
 	return (
 		<>
 			<div className="w-full">
-				<h1 className="text-lg font-medium mb-4">Device Type</h1>
-				<div className="grid grid-cols-2 gap-4">
+				<h1 className="text-lg font-medium my-8 ">Device Type</h1>
+				<div className="grid grid-cols-2 gap-8 mb-4">
 					{deviceList.map((device) => (
 						<div
 							key={device.id}

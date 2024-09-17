@@ -20,50 +20,53 @@ export default function Sidebar() {
 					quality={100}
 				/>
 			</div>
-			{SIDEBAR.MainPages.map((page, i) => (
-				<SidebarItem
-					href={page.path}
-					icon={page.icon}
-					label={page.label}
-					isActive={pathname === page.path}
-					key={page.label}
-				/>
-			))}
-			<div className="h-[1px] w-full border-b" />
-			{SIDEBAR.Pages.map((page, i) => (
-				<SidebarItem
-					href={page.path}
-					icon={page.icon}
-					label={page.label}
-					isActive={pathname === page.path}
-					key={page.label}
-				/>
-			))}
-			<div className="h-[1px] w-full border-b" />
-			{SIDEBAR.Functions.map((page, i) => (
-				<SidebarItem
-					href={page.path}
-					icon={page.icon}
-					label={page.label}
-					isActive={pathname === page.path}
-					key={page.label}
-				/>
-			))}
-			<div
-				onClick={() => signOut()}
-				className="w-full flex justify-between cursor-pointer text-sm">
-				<div className={` w-[2%] rounded-e`} />
-				<div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
-					<Image
-						src="/assets/sidebar/logout.svg"
-						alt="Logout"
-						width={20}
-						height={20}
-						className="object-contain"
-					/>
-					<div>Logout</div>
+			<div className="flex flex-col justify-between h-full w-full">
+				<div>
+					{SIDEBAR.MainPages.map((page, i) => (
+						<SidebarItem
+							href={page.path}
+							icon={page.icon}
+							label={page.label}
+							isActive={
+								page.path === '/' // Special case for dashboard
+									? pathname === '/'
+									: pathname.startsWith(page.path)
+							}
+							key={page.label}
+						/>
+					))}
 				</div>
-				<div className="w-[1%]" />
+				<div>
+					{SIDEBAR.Functions.map((page, i) => (
+						<SidebarItem
+							href={page.path}
+							icon={page.icon}
+							label={page.label}
+							isActive={
+								page.path === '/' // Special case for dashboard
+									? pathname === '/'
+									: pathname.startsWith(page.path)
+							}
+							key={page.label}
+						/>
+					))}
+					<div
+						onClick={() => signOut()}
+						className="w-full flex justify-between cursor-pointer text-sm">
+						<div className={` w-[2%] rounded-e`} />
+						<div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
+							<Image
+								src="/assets/sidebar/logout.svg"
+								alt="Logout"
+								width={20}
+								height={20}
+								className="object-contain"
+							/>
+							<div>Logout</div>
+						</div>
+						<div className="w-[1%]" />
+					</div>
+				</div>
 			</div>
 			<ToggleTheme />
 		</section>

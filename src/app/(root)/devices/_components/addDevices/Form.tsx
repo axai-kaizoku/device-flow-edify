@@ -146,8 +146,18 @@ import AdvanceDeviceDetails from './advanceDeviceDetails';
 import ExtraDetails from './extraDetails';
 
 function Form() {
+	const [step, setStep] = useState(1);
+
+	const handleNextStep = () => {
+		setStep((prevStep) => prevStep + 1);
+	};
+
+	const handlePrevStep = () => {
+		setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
+	};
+
 	return (
-		<div className="flex flex-col justify-center items-start pt-12 px-4 space-y-6 ">
+		<div className="flex flex-col justify-center items-start pt-12 px-4 space-y-6">
 			<div className="flex justify-start items-center gap-2 text-xl font-semibold">
 				<Icon
 					type="OutlinedLaptop"
@@ -156,66 +166,53 @@ function Form() {
 				<span>Add a Device</span>
 			</div>
 
-			<DeviceType />
-			<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-				Add Device
-				<Icon
-					type="OutlinedArrowRight"
-					color="white"
-				/>
-			</button>
-			<BasicDetails />
+			{/* Render different components based on the current step */}
+			{step === 1 && <DeviceType />}
+			{step === 2 && <BasicDetails />}
+			{step === 3 && <AdvanceDeviceDetails />}
+			{step === 4 && <ExtraDetails />}
+
+			{/* Navigation buttons */}
 			<div className="flex gap-3 w-full">
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					<Icon
-						type="OutlinedArrowLeft"
-						color="white"
-					/>
-					Back
-				</button>
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					Next
-					<Icon
-						type="OutlinedArrowRight"
-						color="white"
-					/>
-				</button>
-			</div>
-			<AdvanceDeviceDetails />
-			<div className="flex gap-3 w-full">
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					<Icon
-						type="OutlinedArrowLeft"
-						color="white"
-					/>
-					Back
-				</button>
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					Next
-					<Icon
-						type="OutlinedArrowRight"
-						color="white"
-					/>
-				</button>
-			</div>
-			<ExtraDetails />
-			<div className="flex gap-3 w-full">
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					<Icon
-						type="OutlinedArrowLeft"
-						color="white"
-					/>
-					Back
-				</button>
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
-					Submit
-					<Icon
-						type="OutlinedSuccess"
-						color="white"
-					/>
-				</button>
+				{/* Back button - only show if not on the first step */}
+				{step > 1 && (
+					<button
+						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
+						onClick={handlePrevStep}>
+						<Icon
+							type="OutlinedArrowLeft"
+							color="white"
+						/>
+						Back
+					</button>
+				)}
+
+				{/* Conditionally render Next/Submit button based on the current step */}
+				{step < 4 ? (
+					<button
+						className="flex items-center justify-center gap-2  bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
+						onClick={handleNextStep}>
+						Next
+						<Icon
+							type="OutlinedArrowRight"
+							color="white"
+						/>
+					</button>
+				) : (
+					<button
+						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
+						// You can add the submit logic here
+					>
+						Submit
+						<Icon
+							type="OutlinedSuccess"
+							color="white"
+						/>
+					</button>
+				)}
 			</div>
 		</div>
 	);
 }
+
 export default Form;
