@@ -22,7 +22,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ items = [] }) => {
 		<div className="inline-flex relative">
 			<button
 				onClick={toggleDropdown}
-				className="min-w-[200px] relative flex items-center justify-between rounded-md bg-white text-gray-800 border border-gray-300 px-4 py-2 shadow-md transition-all duration-300 ease-in-out">
+				className="min-w-[200px] w-72 relative flex items-center justify-between rounded-md bg-white text-gray-800 border border-gray-200 px-4 py-3 shadow-md transition-all duration-300 ease-in-out">
 				<span>{selectedOption || 'Select Option'}</span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -34,14 +34,14 @@ export const Dropdown: React.FC<DropdownProps> = ({ items = [] }) => {
 					strokeWidth="2"
 					strokeLinecap="round"
 					strokeLinejoin="round"
-					className={`w-6 h-auto transition-transform duration-300 ${
+					className={`w-6 h-auto transition-transform duration-500 ${
 						isOpen ? 'rotate-180' : ''
 					}`}>
 					<path d="m6 9 6 6 6-6" />
 				</svg>
 			</button>
 			{isOpen && (
-				<div className="absolute top-6 z-10 mt-[1.5rem] max-h-[150px] min-w-[200px] origin-top-right overflow-y-auto rounded-md border border-gray-100 bg-white shadow-lg custom-scrollbar">
+				<div className="absolute top-6 z-10 mt-[2rem] max-h-[150px] w-72 origin-top-right overflow-y-auto rounded-md border border-gray-100 bg-white shadow-lg custom-scrollbar">
 					{items.map((item, index) => (
 						<div
 							key={index}
