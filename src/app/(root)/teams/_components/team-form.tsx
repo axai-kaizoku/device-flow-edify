@@ -1,12 +1,26 @@
 'use client';
-
+import { Button } from '@/components/ui/button';
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/side-sheet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import { CreateTeam } from '@/server/teamActions';
 
-// Update schema for team form
 const TeamSchema = z.object({
 	title: z.string().min(3, {
 		message: 'Title is required and must be at least 3 characters.',
@@ -19,70 +33,194 @@ const TeamSchema = z.object({
 
 export type TeamType = z.infer<typeof TeamSchema>;
 
-export default function TeamForm() {
-	const router = useRouter();
-
+export function CreateTeamForm() {
 	const form = useForm<TeamType>({
 		resolver: zodResolver(TeamSchema),
 		mode: 'onSubmit',
-		defaultValues: { title: '', description: '', image: '' },
+		defaultValues: { title: '', image: '', description: '' },
 	});
 
-	const onSubmit = async (data: TeamType) => {
-		const { title, description, image } = data;
-
-		try {
-			// server action
-			const res = await CreateTeam(title, description, image);
-			if (res) {
-				form.clearErrors('root');
-				form.clearErrors('title');
-				form.clearErrors('description');
-				form.clearErrors('image');
-
-				router.refresh();
-			} else {
-				form.setError('root', { message: 'Submission failed' });
-				form.setError('title', { message: 'Invalid title' });
-				form.setError('description', { message: 'Invalid description' });
-				form.setError('image', { message: 'Invalid image URL' });
-			}
-		} catch (error) {
-			throw new Error();
-		}
+	const onSubmit = (data: TeamType) => {
+		// TeamsData(...teams, data);
+		console.log('message from form on submit');
+		form.reset();
 	};
-
 	return (
-		<div className="border p-3 rounded">
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-6 lg:gap-8 p-4">
-				<input
-					id="title"
-					type="text"
-					placeholder="Team Title"
-					{...form.register('title')}
-					className="col-span-3 border rounded p-2"
-				/>
-				<textarea
-					placeholder="Team Description"
-					{...form.register('description')}
-					className="border rounded p-2"
-				/>
-				<input
-					type="text"
-					placeholder="Image URL"
-					{...form.register('image')}
-					className="border rounded p-2"
-				/>
-				<button
-					type="submit"
-					className="border rounded bg-black text-white p-3">
-					{form.formState.errors.root
-						? 'Submission Failed. Try Again'
-						: 'SUBMIT TEAM'}
-				</button>
-			</form>
-		</div>
+		<>
+			<Sheet>
+				<SheetTrigger asChild>
+					<button className="px-2 border rounded-md">Create Team + </button>
+				</SheetTrigger>
+				<SheetContent>
+					<SheetHeader>
+						<SheetTitle>Create Team</SheetTitle>
+					</SheetHeader>
+					<div className="flex flex-col">
+						<Form {...form}>
+							<form
+								className="w-full space-y-6 rounded p-8"
+								onSubmit={form.handleSubmit(onSubmit)}>
+								<FormField
+									control={form.control}
+									name="title"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Title</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Title"
+													autoFocus
+													{...field}
+													className={
+														form.formState.errors.title
+															? 'focus-visible:ring-red-500'
+															: 'focus-visible:ring-black dark:focus-visible:ring-white'
+													}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem className="flex flex-col">
+											<FormLabel>Description</FormLabel>
+											<FormControl>
+												<textarea
+													placeholder="Team Description"
+													autoFocus
+													{...field}
+													className={`${
+														form.formState.errors.description
+															? 'focus-visible:ring-red-500 '
+															: 'focus-visible:ring-black  dark:focus-visible:ring-white'
+													} p-2 border rounded-md`}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="image"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Image Url</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Image Url"
+													autoFocus
+													{...field}
+													className={
+														form.formState.errors.image
+															? 'focus-visible:ring-red-500'
+															: 'focus-visible:ring-black dark:focus-visible:ring-white'
+													}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+								<SheetFooter>
+									<SheetClose>
+										<Button type="submit">Submit</Button>
+									</SheetClose>
+								</SheetFooter>
+							</form>
+						</Form>
+					</div>
+				</SheetContent>
+			</Sheet>
+		</>
 	);
 }
+
+export const EditTeamForm = () => {
+	const form = useForm<TeamType>({
+		resolver: zodResolver(TeamSchema),
+		mode: 'onSubmit',
+		defaultValues: { title: '', image: '', description: '' },
+	});
+
+	const onSubmit = (data: TeamType) => {
+		form.reset();
+	};
+	return (
+		<Form {...form}>
+			<form
+				className="w-full space-y-6 rounded p-8"
+				onSubmit={form.handleSubmit(onSubmit)}>
+				<FormField
+					control={form.control}
+					name="title"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Title</FormLabel>
+							<FormControl>
+								<Input
+									placeholder="Title"
+									autoFocus
+									{...field}
+									className={
+										form.formState.errors.title
+											? 'focus-visible:ring-red-500'
+											: 'focus-visible:ring-black dark:focus-visible:ring-white'
+									}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="description"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
+							<FormLabel>Description</FormLabel>
+							<FormControl>
+								<textarea
+									placeholder="Team Description"
+									autoFocus
+									{...field}
+									className={`${
+										form.formState.errors.description
+											? 'focus-visible:ring-red-500 '
+											: 'focus-visible:ring-black  dark:focus-visible:ring-white'
+									} p-2 border rounded-md`}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="image"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Image Url</FormLabel>
+							<FormControl>
+								<Input
+									placeholder="Image Url"
+									autoFocus
+									{...field}
+									className={
+										form.formState.errors.image
+											? 'focus-visible:ring-red-500'
+											: 'focus-visible:ring-black dark:focus-visible:ring-white'
+									}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<SheetFooter>
+					<SheetClose>
+						<Button type="submit">Submit</Button>
+					</SheetClose>
+				</SheetFooter>
+			</form>
+		</Form>
+	);
+};

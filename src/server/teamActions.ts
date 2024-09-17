@@ -3,15 +3,16 @@
 import { callAPIWithToken, getTokenFromSession } from './helper';
 import { redirect } from 'next/navigation';
 
-type Team = {
-	_id: string;
+export type Team = {
+	_id?: string;
 	title: string;
 	description: string;
 	image: string;
-	deleted_at: string | null;
-	createdAt: string;
-	updatedAt: string;
-	__v: number;
+	size?: string;
+	deleted_at?: string | null;
+	createdAt?: string;
+	updatedAt?: string;
+	__v?: number;
 };
 
 type TeamsResponse = Team[];

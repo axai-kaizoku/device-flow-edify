@@ -4,7 +4,6 @@ import { Colors } from './colors';
 import { getShadow } from './shadow';
 import { ModalProps } from '../components/Modal';
 import { zindex_modal, zindex_modal_backdrop } from '../../Utility';
-import { boolean } from 'zod';
 
 export const getModalWidth = css<ModalProps>`
 	@media screen and (max-width: 600px) {

@@ -1,13 +1,9 @@
-'use client';
 import { CombinedContainer } from '@/components/container/Container';
-import { CreateTeamForm } from './_components/team-form';
 
-import { Table } from '@/components/wind/Table';
-import { Team } from '@/server/teamActions';
-
-import { DropdownActions } from './_components/custom-actions';
-
-export default function Teams() {
+interface TeamPageProps {
+	params: { id: string };
+}
+export default function TeamPage({ params }: TeamPageProps) {
 	const teams = [
 		{
 			_id: '66e40351b83635490e26bda4',
@@ -59,34 +55,19 @@ export default function Teams() {
 	];
 
 	return (
-		<CombinedContainer title="Teams">
-			<div className="flex justify-end w-full">
-				<div className="flex gap-5">
-					<input
-						className="border-2 rounded-md p-2"
-						placeholder="Search Teams .."
-					/>
-					<CreateTeamForm />
-				</div>
-			</div>
-			<div className="h-10" />
-			<div className="w-full">
-				<Table
-					data={teams}
-					className="w-full"
-					columns={[
-						{ title: 'Teams', dataIndex: 'title' },
-						{ title: 'Total Employees', dataIndex: 'size' },
-						{
-							title: 'Actions',
-							render: (data: Team) => (
-								<div className="w-full flex justify-center">
-									<DropdownActions data={data} />
-								</div>
-							),
-						},
-					]}
-				/>
+		<CombinedContainer title="Teams Page">
+			Teams
+			<br />
+			{params.id}
+			<br />
+			<br />
+			<div>
+				<div className="text-2xl font-medium">Team details</div>
+				{teams
+					.filter((v) => v._id === params.id)
+					.map((v) => (
+						<p key={v._id}>{JSON.stringify(v)}</p>
+					))}
 			</div>
 		</CombinedContainer>
 	);

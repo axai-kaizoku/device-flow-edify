@@ -33,7 +33,7 @@ const InputContainerHover = css<Props>`
 		${({ focused }) =>
 			!focused &&
 			css`
-				border: 1px solid ${Colors.grey_200};
+				border: 0px solid ${Colors.grey_200};
 			`}
 	}
 `;

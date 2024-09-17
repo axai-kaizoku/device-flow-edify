@@ -27,6 +27,7 @@ export const Table = ({
 	pagination,
 	emptyTableMessage,
 	className,
+	footer,
 }: TableProps) => {
 	const [activeColumn, setActiveColumn] = useState<string>('');
 	const [initialData, setInitialData] = useState<Array<any>>([]);
@@ -399,25 +400,27 @@ export const Table = ({
 							</TableBody>
 						</TableTag>
 					</TableContainer>
-					<TableFooter>
-						{selectedRowCount > 0 && (
-							<RowSelectionText>{`${selectedRowCount} rows selected`}</RowSelectionText>
-						)}
-						{pagination && (
-							<Paginator
-								currentPage={pageNumber}
-								totalPage={
-									pagination?.totalPages
-										? pagination?.totalPages
-										: pageRange.length
-								}
-								onChangePage={(e) => {
-									setPageNumber(e);
-									pagination?.onClickPage && pagination?.onClickPage(e);
-								}}
-							/>
-						)}
-					</TableFooter>
+					{footer && (
+						<TableFooter>
+							{selectedRowCount > 0 && (
+								<RowSelectionText>{`${selectedRowCount} rows selected`}</RowSelectionText>
+							)}
+							{pagination && (
+								<Paginator
+									currentPage={pageNumber}
+									totalPage={
+										pagination?.totalPages
+											? pagination?.totalPages
+											: pageRange.length
+									}
+									onChangePage={(e) => {
+										setPageNumber(e);
+										pagination?.onClickPage && pagination?.onClickPage(e);
+									}}
+								/>
+							)}
+						</TableFooter>
+					)}
 				</div>
 			) : (
 				<EmptyTable title={emptyTableMessage || 'No Data Found'} />
@@ -429,6 +432,7 @@ export const Table = ({
 export interface TableProps {
 	data: Array<any>;
 	columns: Array<ColumnType>;
+	footer?: boolean;
 	pagination?: {
 		//Pagination is from server or client by default(client)
 		type?: 'serverSide' | 'clientSide';
