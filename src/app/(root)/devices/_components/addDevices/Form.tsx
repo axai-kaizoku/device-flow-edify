@@ -157,7 +157,7 @@ function Form() {
 			</div>
 
 			<DeviceType />
-			<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
+			<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
 				Add Device
 				<Icon
 					type="OutlinedArrowRight"
@@ -166,14 +166,14 @@ function Form() {
 			</button>
 			<BasicDetails />
 			<div className="flex gap-3 w-full">
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
+				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
 					<Icon
 						type="OutlinedArrowLeft"
 						color="white"
 					/>
 					Back
 				</button>
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
+				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
 					Next
 					<Icon
 						type="OutlinedArrowRight"
@@ -183,14 +183,14 @@ function Form() {
 			</div>
 			<AdvanceDeviceDetails />
 			<div className="flex gap-3 w-full">
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
+				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
 					<Icon
 						type="OutlinedArrowLeft"
 						color="white"
 					/>
 					Back
 				</button>
-				<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
+				<button className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800">
 					Next
 					<Icon
 						type="OutlinedArrowRight"

@@ -108,7 +108,7 @@ function AdvanceDeviceDetails() {
 					placeholder="EDIFY-1234"
 					className="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition duration-300"
 				/>
-				<p className="text-sm text-gray-500 pt-2">
+				<p className="text-sm text-gray-500 py-2">
 					Need help finding the serial number?{' '}
 					<Link
 						href="#"
@@ -126,7 +126,7 @@ function AdvanceDeviceDetails() {
 
 				{/* Clickable Upload Section */}
 				<div
-					className="flex p-4 items-center gap-2 justify-between mb-4 bg-[#cbcbcb] rounded cursor-pointer"
+					className="flex px-4 py-6 items-center gap-2 justify-between mb-4 bg-[#dddbdb] rounded cursor-pointer"
 					onClick={handleFileUploadClick}>
 					<div className="flex justify-center items-center gap-3">
 						<Icon
@@ -141,7 +141,7 @@ function AdvanceDeviceDetails() {
 							</p>
 						</div>
 					</div>
-					<h1 className="py-2 px-4 bg-black text-white rounded duration-300 hover:opacity-95">
+					<h1 className="py-4 px-6 bg-black text-white rounded duration-300 hover:opacity-95">
 						Select files
 					</h1>
 				</div>
@@ -161,19 +161,19 @@ function AdvanceDeviceDetails() {
 				/>
 
 				{/* Date Inputs for Purchase and Warranty */}
-				<div className="flex flex-wrap gap-6">
+				<div className="flex flex-wrap gap-6 py-4">
 					<div>
-						<p className="text-sm text-gray-500 mb-1">Device Purchase Date</p>
+						<p className="text-sm text-gray-500 mb-2">Device Purchase Date</p>
 						<input
 							type="date"
-							className=" py-2 px-3 border border-gray-300 rounded-lg w-72 focus:outline-none"
+							className=" py-3 px-4 border border-gray-300 rounded-lg w-80 focus:outline-none"
 						/>
 					</div>
 					<div>
-						<p className="text-sm text-gray-500 mb-1">Warranty Expiry Date</p>
+						<p className="text-sm text-gray-500 mb-2">Warranty Expiry Date</p>
 						<input
 							type="date"
-							className="w-72 py-2 px-3 border border-gray-300 rounded-lg focus:outline-none"
+							className="w-80 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none"
 						/>
 					</div>
 				</div>

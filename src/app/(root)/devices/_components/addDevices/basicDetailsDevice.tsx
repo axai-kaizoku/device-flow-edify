@@ -155,13 +155,13 @@ function BasicDetails() {
 		<>
 			<div className="flex flex-col">
 				<h1 className="text-2xl font-bold py-5">Basic Details</h1>
-				<p className="text-lg ">Operating System</p>
+				<p className="text-lg py-2">Operating System</p>
 
-				<div className="flex flex-wrap mb-4 gap-4">
+				<div className="flex flex-wrap mb-7 gap-4">
 					{operatingSystems.map((os) => (
 						<div
 							key={os.id}
-							className={`p-4 flex items-start border rounded-lg w-80 cursor-pointer ${
+							className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
 								selectedOS === os.id ? 'border-black' : 'border-gray-300'
 							}`}
 							onClick={() => setSelectedOS(os.id)}>
@@ -185,32 +185,32 @@ function BasicDetails() {
 					))}
 				</div>
 				<div>
-					<p className="text-lg ">Models</p>
+					<p className="text-lg py-2">Models</p>
 					<input
 						type="text"
 						placeholder="What is the laptop lineup "
 						className="px-2 focus:outline-none py-3 w-full rounded-lg border border-gray-200"
 					/>
-					<div className="py-4 flex justify-between flex-wrap gap-3">
+					<div className="py-6 flex justify-between flex-wrap gap-3">
 						<div className="flex flex-col">
 							<label>Processor</label>
 							<input
 								type="text"
-								className="focus:outline-none px-2 w-48 py-3 rounded-lg border border-gray-200"
+								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>
 						<div className="flex flex-col">
 							<label>RAM</label>
 							<input
 								type="text"
-								className="focus:outline-none px-2 w-48 py-3 rounded-lg border border-gray-200"
+								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>
 						<div className="flex flex-col">
 							<label>Storage</label>
 							<input
 								type="text"
-								className="focus:outline-none px-2 w-48 py-3 rounded-lg border border-gray-200"
+								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>
 					</div>

@@ -106,6 +106,14 @@
 
 // export default DeviceType;
 import { Icon } from '@/components/wind/Icons';
+import {
+	Keyboard,
+	Laptop,
+	Monitor,
+	Mouse,
+	SmartphoneCharging,
+	Star,
+} from 'lucide-react';
 import React, { useState } from 'react';
 
 function DeviceType() {
@@ -119,62 +127,32 @@ function DeviceType() {
 		{
 			id: 'laptop',
 			label: 'Laptop',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <Laptop />,
 		},
 		{
 			id: 'keyboard',
 			label: 'Keyboard',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <Keyboard />,
 		},
 		{
 			id: 'mobile',
 			label: 'Mobile',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <SmartphoneCharging />,
 		},
 		{
 			id: 'mouse',
 			label: 'Mouse',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <Mouse />,
 		},
 		{
 			id: 'monitor',
 			label: 'Monitor',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <Monitor />,
 		},
 		{
 			id: 'other',
 			label: 'Other',
-			logo: (
-				<Icon
-					type="OutlinedLaptop"
-					color="black"
-				/>
-			),
+			logo: <Star />,
 		},
 	];
 	return (
