@@ -1,91 +1,29 @@
-// import React, { useRef, useState } from 'react';
-
-// function AdvanceDeviceDetails({ data, onUpdate }: any) {
-// 	const [formData, setFormData] = useState(
-// 		data || {
-// 			serialNumber: '',
-// 			invoiceFile: null,
-// 			purchaseDate: '',
-// 			warrantyDate: '',
-// 		},
-// 	);
-// 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-// 	const handleFileUploadClick = () => {
-// 		if (fileInputRef.current) {
-// 			fileInputRef.current.click();
-// 		}
-// 	};
-
-// 	const handleChange = (e: any) => {
-// 		const { name, value } = e.target;
-// 		setFormData((prev: any) => ({ ...prev, [name]: value }));
-// 		onUpdate({ ...formData, [name]: value });
-// 	};
-
-// 	const handleFileChange = (e: any) => {
-// 		const file = e.target.files[0];
-// 		setFormData((prev: any) => ({ ...prev, invoiceFile: file }));
-// 		onUpdate({ ...formData, invoiceFile: file });
-// 	};
-
-// 	return (
-// 		<div className="flex flex-col">
-// 			<h1 className="text-2xl font-bold py-5">Advance Details</h1>
-// 			<div className="py-4">
-// 				<label>Serial Number</label>
-// 				<input
-// 					type="text"
-// 					name="serialNumber"
-// 					value={formData.serialNumber}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Purchase Date</label>
-// 				<input
-// 					type="date"
-// 					name="purchaseDate"
-// 					value={formData.purchaseDate}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Warranty Date</label>
-// 				<input
-// 					type="date"
-// 					name="warrantyDate"
-// 					value={formData.warrantyDate}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Invoice File</label>
-// 				<div
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg cursor-pointer"
-// 					onClick={handleFileUploadClick}>
-// 					{formData.invoiceFile ? formData.invoiceFile.name : 'Upload Invoice'}
-// 				</div>
-// 				<input
-// 					type="file"
-// 					ref={fileInputRef}
-// 					onChange={handleFileChange}
-// 					className="hidden"
-// 				/>
-// 			</div>
-// 		</div>
-// 	);
-// }
-
-// export default AdvanceDeviceDetails;
 import { Icon } from '@/components/wind/Icons';
 import Link from 'next/link';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
-function AdvanceDeviceDetails() {
+type FormType = {
+	serialNumber: string;
+	invoiceFile: null | File; // Changed to `File | null` for proper handling of files
+	purchaseDate: string;
+	warrantyExpiryDate: string;
+};
+
+type AdvanceDeviceDetailsProps = {
+	data: FormType;
+	setData: (newData: FormType) => void;
+};
+
+function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
+	const [formData, setFormData] = useState<FormType>(
+		data || {
+			serialNumber: '',
+			invoiceFile: null,
+			purchaseDate: '',
+			warrantyExpiryDate: '',
+		},
+	);
+
 	// Create a reference to the file input
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -93,6 +31,35 @@ function AdvanceDeviceDetails() {
 	const handleFileUploadClick = () => {
 		if (fileInputRef.current) {
 			fileInputRef.current.click(); // Trigger the file input click
+		}
+	};
+
+	// Handle input changes for text and date fields
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+		setData({
+			...formData,
+			[name]: value,
+		});
+	};
+
+	// Handle file selection
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (files && files.length > 0) {
+			const file = files[0]; // Only handle the first file for now
+			setFormData((prevData) => ({
+				...prevData,
+				invoiceFile: file,
+			}));
+			setData({
+				...formData,
+				invoiceFile: file,
+			});
 		}
 	};
 
@@ -105,6 +72,9 @@ function AdvanceDeviceDetails() {
 				<label className="block text-lg font-medium mb-2">Serial Number</label>
 				<input
 					type="text"
+					name="serialNumber"
+					value={formData.serialNumber}
+					onChange={handleChange}
 					placeholder="EDIFY-1234"
 					className="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition duration-300"
 				/>
@@ -134,10 +104,10 @@ function AdvanceDeviceDetails() {
 							color="black"
 							size="lg"
 						/>
-						<div className="flex flex-col ">
+						<div className="flex flex-col">
 							<h1>Upload Documents</h1>
 							<p className="text-xs">
-								Click here to upload any image or documents here
+								Click here to upload any image or documents
 							</p>
 						</div>
 					</div>
@@ -149,15 +119,10 @@ function AdvanceDeviceDetails() {
 				{/* Hidden File Input */}
 				<input
 					type="file"
+					name="invoiceFile"
 					ref={fileInputRef}
 					style={{ display: 'none' }}
-					onChange={(e) => {
-						// Handle file change event here
-						const files = e.target.files;
-						if (files && files.length > 0) {
-							console.log('Selected files:', files);
-						}
-					}}
+					onChange={handleFileChange} // Handle file change
 				/>
 
 				{/* Date Inputs for Purchase and Warranty */}
@@ -166,13 +131,19 @@ function AdvanceDeviceDetails() {
 						<p className="text-sm text-gray-500 mb-2">Device Purchase Date</p>
 						<input
 							type="date"
-							className=" py-3 px-4 border border-gray-300 rounded-lg w-80 focus:outline-none"
+							name="purchaseDate"
+							value={formData.purchaseDate}
+							onChange={handleChange}
+							className="py-3 px-4 border border-gray-300 rounded-lg w-80 focus:outline-none"
 						/>
 					</div>
 					<div>
 						<p className="text-sm text-gray-500 mb-2">Warranty Expiry Date</p>
 						<input
 							type="date"
+							name="warrantyExpiryDate"
+							value={formData.warrantyExpiryDate}
+							onChange={handleChange}
 							className="w-80 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none"
 						/>
 					</div>

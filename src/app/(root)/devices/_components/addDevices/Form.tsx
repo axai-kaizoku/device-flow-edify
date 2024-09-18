@@ -148,12 +148,54 @@ import ExtraDetails from './extraDetails';
 function Form() {
 	const [step, setStep] = useState(1);
 
+	const [formData, setFormData] = useState({
+		deviceType: '',
+		basicDetails: {
+			os: '',
+			model: '',
+			processor: '',
+			ram: '',
+			storage: '',
+		},
+		advanceDeviceDetails: {
+			serialNumber: '',
+			invoiceFile: null,
+			purchaseDate: '',
+			warrantyExpiryDate: '',
+		},
+		extraDetails: {
+			brand: '',
+			assignedTo: '',
+			officeLocation: '',
+			purchaseOrder: '',
+			purchaseValue: '',
+			ownership: '',
+		},
+	});
+
+	// Utility function to update nested form data
+	const updateFormData = (section: string, data: any) => {
+		setFormData((prev: any) => ({
+			...prev,
+			[section]: {
+				...prev[section],
+				...data,
+			},
+		}));
+	};
+
 	const handleNextStep = () => {
 		setStep((prevStep) => prevStep + 1);
 	};
 
 	const handlePrevStep = () => {
 		setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
+	};
+
+	const handleSubmit = () => {
+		// Handle the form submission logic here
+		console.log('Form submitted with data: ', formData);
+		// You can make an API call or any action needed here
 	};
 
 	return (
@@ -167,10 +209,32 @@ function Form() {
 			</div>
 
 			{/* Render different components based on the current step */}
-			{step === 1 && <DeviceType />}
-			{step === 2 && <BasicDetails />}
-			{step === 3 && <AdvanceDeviceDetails />}
-			{step === 4 && <ExtraDetails />}
+			{step === 1 && (
+				<DeviceType
+					data={formData.deviceType}
+					setData={(data: any) =>
+						updateFormData('deviceType', { deviceType: data })
+					}
+				/>
+			)}
+			{step === 2 && (
+				<BasicDetails
+					data={formData.basicDetails}
+					setData={(data: any) => updateFormData('basicDetails', data)}
+				/>
+			)}
+			{step === 3 && (
+				<AdvanceDeviceDetails
+					data={formData.advanceDeviceDetails}
+					setData={(data: any) => updateFormData('advanceDeviceDetails', data)}
+				/>
+			)}
+			{step === 4 && (
+				<ExtraDetails
+					data={formData.extraDetails}
+					setData={(data: any) => updateFormData('extraDetails', data)}
+				/>
+			)}
 
 			{/* Navigation buttons */}
 			<div className="flex gap-3 w-full">
@@ -201,8 +265,7 @@ function Form() {
 				) : (
 					<button
 						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						// You can add the submit logic here
-					>
+						onClick={handleSubmit}>
 						Submit
 						<Icon
 							type="OutlinedSuccess"

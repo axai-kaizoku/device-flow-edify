@@ -1,98 +1,55 @@
-// import React, { useState } from 'react';
-
-// function ExtraDetails({ data, onUpdate }: any) {
-// 	const [formData, setFormData] = useState(
-// 		data || {
-// 			brand: '',
-// 			assignedTo: '',
-// 			officeLocation: '',
-// 			purchaseOrder: '',
-// 			purchaseValue: '',
-// 			ownership: '',
-// 		},
-// 	);
-
-// 	const handleChange = (e: any) => {
-// 		const { name, value, type, checked } = e.target;
-// 		const newValue = type === 'checkbox' ? checked : value;
-// 		setFormData((prev: any) => ({ ...prev, [name]: newValue }));
-// 		onUpdate({ ...formData, [name]: newValue });
-// 	};
-
-// 	return (
-// 		<div className="flex flex-col">
-// 			<h1 className="text-2xl font-bold py-5">Extra Details</h1>
-// 			<div className="py-4">
-// 				<label>Brand</label>
-// 				<input
-// 					type="text"
-// 					name="brand"
-// 					value={formData.brand}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Assigned To</label>
-// 				<input
-// 					type="text"
-// 					name="assignedTo"
-// 					value={formData.assignedTo}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Office Location</label>
-// 				<input
-// 					type="text"
-// 					name="officeLocation"
-// 					value={formData.officeLocation}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Purchase Order</label>
-// 				<input
-// 					type="text"
-// 					name="purchaseOrder"
-// 					value={formData.purchaseOrder}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Purchase Value</label>
-// 				<input
-// 					type="number"
-// 					name="purchaseValue"
-// 					value={formData.purchaseValue}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg"
-// 				/>
-// 			</div>
-// 			<div className="py-4">
-// 				<label>Ownership</label>
-// 				<select
-// 					name="ownership"
-// 					value={formData.ownership}
-// 					onChange={handleChange}
-// 					className="px-2 py-3 w-full border border-gray-300 rounded-lg">
-// 					<option value="">Select Ownership</option>
-// 					<option value="company">Company</option>
-// 					<option value="personal">Personal</option>
-// 				</select>
-// 			</div>
-// 		</div>
-// 	);
-// }
-
-// export default ExtraDetails;
 import { Dropdown } from '@/components/dropdown/Dropdown';
-import React from 'react';
+import React, { useState } from 'react';
 
-function ExtraDetails() {
+type FormType = {
+	brand: string;
+	assignedTo: string;
+	officeLocation: string;
+	purchaseOrder: string;
+	purchaseValue: string;
+	ownership: string; // Update the type for ownership to string
+};
+
+type ExtraDetailsType = {
+	data: FormType;
+	setData: (newData: FormType) => void;
+};
+
+function ExtraDetails({ data, setData }: ExtraDetailsType) {
+	const [formData, setFormData] = useState<FormType>(
+		data || {
+			brand: '',
+			assignedTo: '',
+			officeLocation: '',
+			purchaseOrder: '',
+			purchaseValue: '',
+			ownership: '', // Initialize ownership
+		},
+	);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+		setData({
+			...formData,
+			[name]: value,
+		});
+	};
+
+	const handleOwnershipChange = (value: string) => {
+		setFormData((prevData) => ({
+			...prevData,
+			ownership: value, // Update ownership
+		}));
+		setData({
+			...formData,
+			ownership: value,
+		});
+	};
+
 	return (
 		<>
 			<div className="flex flex-col w-full">
@@ -101,6 +58,9 @@ function ExtraDetails() {
 					<div className="flex flex-col w-72 ">
 						<label>Brand</label>
 						<input
+							name="brand"
+							value={formData.brand}
+							onChange={handleChange}
 							type="text"
 							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 						/>
@@ -108,6 +68,9 @@ function ExtraDetails() {
 					<div className="flex flex-col w-72 ">
 						<label>Assigned to</label>
 						<input
+							name="assignedTo"
+							value={formData.assignedTo}
+							onChange={handleChange}
 							type="text"
 							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 						/>
@@ -115,6 +78,9 @@ function ExtraDetails() {
 					<div className="flex flex-col w-72">
 						<label>Office Location</label>
 						<input
+							name="officeLocation"
+							value={formData.officeLocation}
+							onChange={handleChange}
 							type="text"
 							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 						/>
@@ -122,6 +88,9 @@ function ExtraDetails() {
 					<div className="flex flex-col w-72">
 						<label>Purchase Order</label>
 						<input
+							name="purchaseOrder"
+							value={formData.purchaseOrder}
+							onChange={handleChange}
 							type="text"
 							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 						/>
@@ -129,24 +98,19 @@ function ExtraDetails() {
 					<div className="flex flex-col w-72">
 						<label>Purchase Value</label>
 						<input
+							name="purchaseValue"
+							value={formData.purchaseValue}
+							onChange={handleChange}
 							type="text"
 							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 						/>
 					</div>
 					<div className="flex flex-col w-72">
 						<label>Ownership</label>
-						<Dropdown items={['Rent', 'Not work', 'Rented', 'Lost']} />
-					</div>
-				</div>
-				<div className="flex flex-col py-4 w-fit">
-					<label>Recall to Inventory</label>
-					<div className="flex gap-3 py-2 w-full">
-						<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-4 rounded w-full transition duration-300 hover:bg-gray-800">
-							Pick up from office
-						</button>
-						<button className="flex items-center justify-center gap-2 bg-black text-white py-2 px-4 rounded w-full transition duration-300 hover:bg-gray-800">
-							Just assign
-						</button>
+						<Dropdown
+							items={['Rent', 'Not work', 'Rented', 'Lost']}
+							onSelect={handleOwnershipChange}
+						/>
 					</div>
 				</div>
 			</div>

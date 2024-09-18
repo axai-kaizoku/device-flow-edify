@@ -112,8 +112,56 @@
 import { Icon } from '@/components/wind/Icons';
 import React, { useState } from 'react';
 
-function BasicDetails() {
-	const [selectedOS, setSelectedOS] = useState<string | null>(null);
+type FormType = {
+	model: string;
+	processor: string;
+	ram: string;
+	storage: string;
+	os: string;
+};
+
+type BasicDetailsForm = {
+	data: FormType;
+	setData: (newData: FormType) => void;
+};
+
+function BasicDetails({ data, setData }: BasicDetailsForm) {
+	const [selectedOS, setSelectedOS] = useState<string | null>(data.os || '');
+	const [formData, setFormData] = useState<FormType>(
+		data || {
+			model: '',
+			processor: '',
+			os: '',
+			ram: '',
+			storage: '',
+		},
+	);
+
+	// Handle text inputs
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+		setData({
+			...formData,
+			[name]: value,
+		});
+	};
+
+	// Handle OS selection
+	const handleSelectOS = (os: string) => {
+		setSelectedOS(os);
+		setFormData((prevData) => ({
+			...prevData,
+			os: os,
+		}));
+		setData({
+			...formData,
+			os: os,
+		});
+	};
 
 	const operatingSystems = [
 		{
@@ -164,12 +212,12 @@ function BasicDetails() {
 							className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
 								selectedOS === os.id ? 'border-black' : 'border-gray-300'
 							}`}
-							onClick={() => setSelectedOS(os.id)}>
+							onClick={() => handleSelectOS(os.id)}>
 							<input
 								type="radio"
 								id={os.id}
 								checked={selectedOS === os.id}
-								onChange={() => setSelectedOS(os.id)}
+								onChange={() => handleSelectOS(os.id)}
 								className="mr-3 h-4 w-4 mt-1 accent-black"
 							/>
 							<label
@@ -188,7 +236,10 @@ function BasicDetails() {
 					<p className="text-lg py-2">Models</p>
 					<input
 						type="text"
-						placeholder="What is the laptop lineup "
+						name="model"
+						value={formData.model}
+						onChange={handleChange}
+						placeholder="What is the laptop lineup"
 						className="px-2 focus:outline-none py-3 w-full rounded-lg border border-gray-200"
 					/>
 					<div className="py-6 flex justify-between flex-wrap gap-3">
@@ -196,6 +247,9 @@ function BasicDetails() {
 							<label>Processor</label>
 							<input
 								type="text"
+								name="processor"
+								value={formData.processor}
+								onChange={handleChange}
 								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>
@@ -203,6 +257,9 @@ function BasicDetails() {
 							<label>RAM</label>
 							<input
 								type="text"
+								name="ram"
+								value={formData.ram}
+								onChange={handleChange}
 								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>
@@ -210,6 +267,9 @@ function BasicDetails() {
 							<label>Storage</label>
 							<input
 								type="text"
+								name="storage"
+								value={formData.storage}
+								onChange={handleChange}
 								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 							/>
 						</div>

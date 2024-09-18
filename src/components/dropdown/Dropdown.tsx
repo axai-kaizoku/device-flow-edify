@@ -3,9 +3,10 @@ import { useState } from 'react';
 
 interface DropdownProps {
 	items?: string[];
+	onSelect: (value: string) => void; // Add onSelect prop
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ items = [] }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ items = [], onSelect }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
@@ -16,6 +17,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ items = [] }) => {
 	const handleOptionClick = (val: string) => {
 		setSelectedOption(val);
 		setIsOpen(false);
+		onSelect(val); // Call onSelect when an option is selected
 	};
 
 	return (
