@@ -69,7 +69,6 @@ export function CreateTeamForm() {
 											<FormControl>
 												<Input
 													placeholder="Title"
-													autoFocus
 													{...field}
 													className={
 														form.formState.errors.title
@@ -90,7 +89,6 @@ export function CreateTeamForm() {
 											<FormControl>
 												<textarea
 													placeholder="Team Description"
-													autoFocus
 													{...field}
 													className={`${
 														form.formState.errors.description
@@ -111,7 +109,6 @@ export function CreateTeamForm() {
 											<FormControl>
 												<Input
 													placeholder="Image Url"
-													autoFocus
 													{...field}
 													className={
 														form.formState.errors.image
@@ -161,7 +158,6 @@ export const EditTeamForm = () => {
 							<FormControl>
 								<Input
 									placeholder="Title"
-									autoFocus
 									{...field}
 									className={
 										form.formState.errors.title
@@ -182,7 +178,6 @@ export const EditTeamForm = () => {
 							<FormControl>
 								<textarea
 									placeholder="Team Description"
-									autoFocus
 									{...field}
 									className={`${
 										form.formState.errors.description
@@ -203,7 +198,6 @@ export const EditTeamForm = () => {
 							<FormControl>
 								<Input
 									placeholder="Image Url"
-									autoFocus
 									{...field}
 									className={
 										form.formState.errors.image

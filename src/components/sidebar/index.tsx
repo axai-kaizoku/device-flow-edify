@@ -5,6 +5,7 @@ import { ToggleTheme } from '../utils/toggle-theme';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import SidebarItem from './sidebar-item';
+import Link from 'next/link';
 
 export default function Sidebar() {
 	const pathname = usePathname();
@@ -12,13 +13,15 @@ export default function Sidebar() {
 	return (
 		<section className="hidden w-[20%] flex-col py-4 gap-0.5 items-center sm:flex h-screen overflow-auto border-r">
 			<div className="px-2 w-24 h-14 pb-4 flex justify-center items-center">
-				<Image
-					src="/assets/logo/logo.png"
-					width={133}
-					height={43}
-					alt="edify-logo"
-					quality={100}
-				/>
+				<Link href="/">
+					<Image
+						src="/assets/logo/logo.png"
+						width={133}
+						height={43}
+						alt="edify-logo"
+						quality={100}
+					/>
+				</Link>
 			</div>
 			<div className="flex flex-col justify-between h-full w-full">
 				<div>

@@ -1,6 +1,6 @@
 'use client';
 import { CombinedContainer } from '@/components/container/Container';
-import { CreateTeamForm } from './_components/team-form';
+import { CreateTeamForm, EditTeamForm } from './_components/team-form';
 
 import { Table } from '@/components/wind/Table';
 import { Team } from '@/server/teamActions';
@@ -55,6 +55,56 @@ export default function Teams() {
 			createdAt: '2024-09-16T09:23:06.437Z',
 			updatedAt: '2024-09-16T09:23:06.437Z',
 			__v: 0,
+		},
+	];
+
+	const menuItems: any[] = [
+		{
+			type: 'Normal',
+			triggerChildren: (
+				<>
+					<div className="mr-4 h-4 w-4" />
+					<span>View Team</span>
+				</>
+			),
+			children: null, // No children since it's a normal action
+			onSelect: () => {
+				// Navigate to the team page or handle view action
+				console.log('View team clicked');
+			},
+		},
+		{
+			type: 'Sheet',
+			triggerChildren: (
+				<>
+					<div className="mr-4 h-4 w-4" />
+					<span>Edit Team</span>
+				</>
+			),
+			children: <EditTeamForm />, // Form for editing team
+			onOpenChange: (open: boolean) => console.log(`Sheet open: ${open}`),
+			onSelect: () => console.log('Edit team selected'),
+		},
+		{
+			type: 'Dialog',
+			triggerChildren: (
+				<>
+					<div className="mr-4 h-4 w-4" />
+					<span>Delete Team</span>
+				</>
+			),
+			children: (
+				<>
+					<h2 className="text-lg font-semibold">Delete Team</h2>
+					<p>
+						Are you sure you want to delete this team? This action is
+						irreversible.
+					</p>
+					<button>Confirm Delete</button>
+				</>
+			),
+			onOpenChange: (open: boolean) => console.log(`Dialog open: ${open}`),
+			onSelect: () => console.log('Delete team selected'),
 		},
 	];
 

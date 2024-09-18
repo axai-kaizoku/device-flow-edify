@@ -1,60 +1,30 @@
 import { CombinedContainer } from '@/components/container/Container';
-import { Profile } from '@/components/profile/profile';
-import { Avatar } from '@/components/wind/Avatar';
-import { Icon } from '@/components/wind/Icons';
-import { Table } from '@/components/wind/Table/index';
+
+import { SearchBarWithProfile } from './_components/search-bar-profile';
 
 export default function Dashboard() {
 	return (
-		<CombinedContainer
-			title="User Management"
-			description="Manage employees and assign IT assets">
+		<CombinedContainer title="Dashboard">
 			{/* Search Bar & Profile section */}
 			<SearchBarWithProfile />
 			<div className="h-20" />
-			<Table
-				data={[
-					{ title: '1', name: 'Ashish' },
-					{ title: '1', name: 'Ashish' },
-					{ title: '1', name: 'Ashish' },
-					{ title: '1', name: 'Ashish' },
-					{ title: '1', name: 'Ashish' },
-					{ title: '1', name: 'Ashish' },
-				]}
-				columns={[
-					{
-						title: 'Akshay',
-						dataIndex: 'title',
-					},
-					{
-						title: 'Akshay',
-						dataIndex: 'title',
-					},
-					{
-						title: 'Akshay',
-						dataIndex: 'title',
-					},
-				]}
-			/>
+			<div className="flex gap-8 flex-wrap">
+				{[...Array(8)].map((_, i) => (
+					<DashCard key={i} />
+				))}
+			</div>
 		</CombinedContainer>
 	);
 }
 
-export const SearchBarWithProfile = () => {
+const DashCard = () => {
 	return (
-		<div className=" w-full flex justify-between items-center ">
-			<div className="flex items-center gap-3">
-				<Icon type="OutlinedHamburger" />
-				<input type="search" className="border p-1" />
-			</div>
-			<div className="flex items-center gap-4">
-				<Avatar />
-				<div className="flex text-sm flex-col">
-					<Profile />
-					<span>Admin</span>
-				</div>
-				<Icon type="OutlinedDownChevron" />
-			</div>
+		<div className="w-64 h-24 rounded-md text-muted-foreground bg-muted px-10 py-4 flex justify-between items-center">
+			<div className="text-3xl font-bold">34</div>
+			<span>
+				Total Laptops
+				<br /> Used
+			</span>
 		</div>
 	);
 };
