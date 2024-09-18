@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/side-sheet';
 import { Icon } from '@/components/wind/Icons';
 import Form from './Form';
 
-function Header() {
+function Header({ button }: { button: string }) {
 	return (
 		<div>
 			<div className="flex items-center justify-between w-full pt-5">
@@ -27,7 +27,7 @@ function Header() {
 						<Sheet>
 							<SheetTrigger>
 								<button className="bg-black p-2 text-white rounded-lg hover:opacity-90 duration-300">
-									Add devices
+									{button}
 								</button>
 							</SheetTrigger>
 							<SheetContent>

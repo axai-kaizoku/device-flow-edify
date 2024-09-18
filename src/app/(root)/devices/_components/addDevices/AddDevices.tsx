@@ -3,6 +3,7 @@
 import { Icon } from '@/components/wind/Icons';
 import Header from './Header';
 import { Table } from '@/components/wind/Table';
+import { DropdownActions } from '@/app/(root)/teams/_components/custom-actions';
 
 function AddDevices() {
 	const devices = [
@@ -33,7 +34,7 @@ function AddDevices() {
 	];
 	return (
 		<div className="flex flex-col  gap-12">
-			<Header />
+			<Header button="Add Device" />
 			<Table
 				data={devices}
 				columns={[
@@ -57,10 +58,7 @@ function AddDevices() {
 						title: 'Actions',
 						render: () => (
 							<div className="flex w-full justify-center">
-								<Icon
-									type="OutlinedDotsVertical"
-									color="black"
-								/>
+								<DropdownActions />
 							</div>
 						),
 					},
