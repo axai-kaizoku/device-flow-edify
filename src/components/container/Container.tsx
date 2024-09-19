@@ -28,7 +28,7 @@ export const ContainerHeader = ({
 	return (
 		<div className="h-[16%] w-full bg-muted p-8 flex items-end">
 			<div className="flex flex-col gap-1">
-				<div className="text-3xl font-medium">{title}</div>
+				<div className="text-4xl font-black tracking-tighter">{title}</div>
 				<div>{description}</div>
 			</div>
 		</div>
