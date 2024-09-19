@@ -209,11 +209,11 @@ export const EditTeamForm = () => {
 						</FormItem>
 					)}
 				/>
-				<SheetFooter>
-					<SheetClose>
-						<Button type="submit">Submit</Button>
-					</SheetClose>
-				</SheetFooter>
+
+				<div className="flex justify-between">
+					<Button>Add team</Button>
+					<Button>Continue</Button>
+				</div>
 			</form>
 		</Form>
 	);
