@@ -20,7 +20,7 @@ export default function Onboarding() {
 	};
 
 	return (
-		<CombinedContainer title="Devices">
+		<CombinedContainer title="Onboarding">
 			<div className="flex items-center w-full gap-6">
 				<Tab
 					active={activeTab === 'add_teams'}

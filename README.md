@@ -2,8 +2,7 @@
 
 Todo:
 
-- [ ] Custom Metadata for orgs
-      🧾 Custom Metadata for users
-- [ ] Re useable Action button in table
-- [ ] Re useable form in sheet
-- [ ]
+- [ ] 📄 Custom Metadata for orgs
+- [ ] 🔄️ Reusable Action button in table
+- [ ] 🔄️ Reusable form in sheet
+- [ ] 🪪 Authorization (if user tries to access admin route, logout them)

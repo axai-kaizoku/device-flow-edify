@@ -2,7 +2,7 @@ export const SIDEBAR = {
 	MainPages: [
 		{ label: 'Dashboard', path: '/', icon: '/assets/sidebar/dashboard.svg' },
 		{ label: 'Users', path: '/users', icon: '/assets/sidebar/users.svg' },
-		{ label: 'Devices', path: '/devices', icon: '/assets/sidebar/assets.svg' },
+		{ label: 'Assets', path: '/assets', icon: '/assets/sidebar/assets.svg' },
 		{ label: 'Teams', path: '/teams', icon: '/assets/sidebar/contact.svg' },
 		{
 			label: 'Onboarding',
@@ -10,7 +10,6 @@ export const SIDEBAR = {
 			icon: '/assets/sidebar/reports.svg',
 		},
 		{ label: 'Store', path: '/store', icon: '/assets/sidebar/calender.svg' },
-		{ label: 'Assets', path: '/assets', icon: '/assets/sidebar/assets.svg' },
 	],
 	UserPages: [
 		{ label: 'Home', path: '/', icon: '/assets/sidebar/home.svg' },

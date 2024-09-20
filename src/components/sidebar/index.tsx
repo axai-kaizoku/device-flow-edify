@@ -12,6 +12,9 @@ export default function Sidebar() {
 	const pathname = usePathname();
 	const session = useSession();
 
+	// if (session.status === 'loading' || session.status === 'unauthenticated')
+	// 	return;
+
 	return (
 		<section className="hidden w-[20%] flex-col py-4 gap-0.5 items-center sm:flex h-screen overflow-auto border-r">
 			<div className="px-2 w-24 h-14 pb-4 flex justify-center items-center">
