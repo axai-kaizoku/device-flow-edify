@@ -1,4 +1,4 @@
-import { callAPI } from '@/lib/utils';
+import { callAPIWithToken } from './helper';
 type Device = {
 	userId: string;
 	orgId: string;
@@ -16,17 +16,13 @@ export const createDevices = async <Device>(
 	device_name: string,
 	os: string,
 ) => {
-	const res = await callAPI<Device>(
+	const res = await callAPIWithToken<Device>(
 		'https://api.edify.club/edifybackend/v1/devices',
 		'POST',
 		{
 			device_type: '',
 			os: '',
 			device_name: '',
-		},
-		{
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`,
 		},
 	);
 };

@@ -1,5 +1,4 @@
 import { CombinedContainer } from '@/components/container/Container';
-import { Button } from '@/components/ui/button';
 import { Filter, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -51,9 +50,9 @@ const StoreItem = () => {
 				</span>
 			</div>
 			<span className="font-bold text-xl text-slate-900 mt-2">$1,500</span>
-			<Button className="mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition">
+			<button className="p-2 mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition">
 				Add to Cart
-			</Button>
+			</button>
 		</div>
 	);
 };

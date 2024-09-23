@@ -1,7 +1,7 @@
 'use client';
 import { CombinedContainer } from '@/components/container/Container';
 import { Table } from '@/components/wind/Table';
-import { DropdownActions } from '../teams/_components/custom-actions';
+import { Icon } from '@/components/wind/Icons';
 
 export default function Users() {
 	const teams = [
@@ -63,7 +63,7 @@ export default function Users() {
 							title: 'Actions',
 							render: (data) => (
 								<div className="w-full flex justify-center">
-									<DropdownActions />
+									<Icon type="OutlinedDotsVertical" color="black" />
 								</div>
 							),
 						},

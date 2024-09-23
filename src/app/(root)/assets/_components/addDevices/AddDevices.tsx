@@ -3,7 +3,6 @@
 import { Icon } from '@/components/wind/Icons';
 import Header from './Header';
 import { Table } from '@/components/wind/Table';
-import { DropdownActions } from '@/app/(root)/teams/_components/custom-actions';
 
 function AddDevices() {
 	const devices = [
@@ -58,7 +57,7 @@ function AddDevices() {
 						title: 'Actions',
 						render: () => (
 							<div className="flex w-full justify-center">
-								<DropdownActions />
+								<Icon type="OutlinedDotsVertical" color="black" />
 							</div>
 						),
 					},

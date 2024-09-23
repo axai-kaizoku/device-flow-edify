@@ -1,11 +1,12 @@
 'use client';
 import { CombinedContainer } from '@/components/container/Container';
 import { Table } from '@/components/wind/Table';
-import { DropdownActions } from '../_components/custom-actions';
+import { Icon } from '@/components/wind/Icons';
 
 interface TeamPageProps {
 	params: { id: string };
 }
+
 export default function TeamPage({ params }: TeamPageProps) {
 	const teams = [
 		{
@@ -69,7 +70,7 @@ export default function TeamPage({ params }: TeamPageProps) {
 							title: 'Actions',
 							render: (data) => (
 								<div className="w-full flex justify-center">
-									<DropdownActions />
+									<Icon type="OutlinedDotsVertical" color="black" />
 								</div>
 							),
 						},

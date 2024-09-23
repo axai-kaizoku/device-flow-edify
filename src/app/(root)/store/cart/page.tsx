@@ -1,6 +1,5 @@
 'use client';
 import { CombinedContainer } from '@/components/container/Container';
-import { Button } from '@/components/ui/button';
 import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -40,9 +39,9 @@ export default function Cart() {
 								<span>$90,000</span>
 							</div>
 						</div>
-						<Button className="w-full mt-6 text-white bg-muted-foreground hover:bg-muted-foreground/90">
+						<button className=" p-2 rounded-md w-full mt-6 text-white bg-muted-foreground hover:bg-muted-foreground/90">
 							Proceed to Checkout
-						</Button>
+						</button>
 					</div>
 				</div>
 			</div>

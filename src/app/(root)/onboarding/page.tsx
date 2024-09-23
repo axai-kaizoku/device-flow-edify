@@ -1,11 +1,10 @@
 'use client';
 
 import { CombinedContainer } from '@/components/container/Container';
-import AddDevices from '../devices/_components/addDevices/AddDevices';
 import AddEmployee from './add_employee/addEmployee';
-import { Tab } from '../devices/_components/Tab';
 import { useState } from 'react';
 import AddTeams from './add teams/addTeams';
+import { Tab } from '../assets/_components/Tab';
 
 export default function Onboarding() {
 	const [activeTab, setActiveTab] = useState('add_teams');

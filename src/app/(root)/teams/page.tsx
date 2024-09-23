@@ -1,11 +1,11 @@
 'use client';
 import { CombinedContainer } from '@/components/container/Container';
-import { CreateTeamForm, EditTeamForm } from './_components/team-form';
 
 import { Table } from '@/components/wind/Table';
 import { Team } from '@/server/teamActions';
 
-import { DropdownActions } from './_components/custom-actions';
+import { Icon } from '@/components/wind/Icons';
+import { Button } from '@/components/wind/Buttons';
 
 export default function Teams() {
 	const teams = [
@@ -58,56 +58,6 @@ export default function Teams() {
 		},
 	];
 
-	const menuItems: any[] = [
-		{
-			type: 'Normal',
-			triggerChildren: (
-				<>
-					<div className="mr-4 h-4 w-4" />
-					<span>View Team</span>
-				</>
-			),
-			children: null, // No children since it's a normal action
-			onSelect: () => {
-				// Navigate to the team page or handle view action
-				console.log('View team clicked');
-			},
-		},
-		{
-			type: 'Sheet',
-			triggerChildren: (
-				<>
-					<div className="mr-4 h-4 w-4" />
-					<span>Edit Team</span>
-				</>
-			),
-			children: <EditTeamForm />, // Form for editing team
-			onOpenChange: (open: boolean) => console.log(`Sheet open: ${open}`),
-			onSelect: () => console.log('Edit team selected'),
-		},
-		{
-			type: 'Dialog',
-			triggerChildren: (
-				<>
-					<div className="mr-4 h-4 w-4" />
-					<span>Delete Team</span>
-				</>
-			),
-			children: (
-				<>
-					<h2 className="text-lg font-semibold">Delete Team</h2>
-					<p>
-						Are you sure you want to delete this team? This action is
-						irreversible.
-					</p>
-					<button>Confirm Delete</button>
-				</>
-			),
-			onOpenChange: (open: boolean) => console.log(`Dialog open: ${open}`),
-			onSelect: () => console.log('Delete team selected'),
-		},
-	];
-
 	return (
 		<CombinedContainer title="Teams">
 			<div className="flex justify-end w-full">
@@ -116,7 +66,13 @@ export default function Teams() {
 						className="border-2 rounded-md p-2"
 						placeholder="Search Teams .."
 					/>
-					<CreateTeamForm />
+					<Button
+						onClick={() => {}}
+						focusColor="black"
+						color="black"
+						hoverColor="gray">
+						Create Team
+					</Button>
 				</div>
 			</div>
 			<div className="h-10" />
@@ -131,7 +87,7 @@ export default function Teams() {
 							title: 'Actions',
 							render: (data: Team) => (
 								<div className="w-full flex justify-center">
-									<DropdownActions data={data} />
+									<Icon type="OutlinedDotsVertical" color="black" />
 								</div>
 							),
 						},
