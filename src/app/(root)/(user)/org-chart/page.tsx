@@ -1,9 +1,24 @@
-import { CombinedContainer } from '@/components/container/Container';
+'use client';
 
-export default function OrgChart() {
+import { useEffect, useState } from 'react';
+import OrgChart from './_components/chart';
+
+const Org = () => {
+	const [show, setShow] = useState(false);
+
+	useEffect(() => {
+		setShow(true);
+	}, []);
+
+	if (!show) {
+		return null;
+	}
+
 	return (
-		<CombinedContainer title="OrgChart" description="Organization chart">
-			OrgChart
-		</CombinedContainer>
+		<>
+			<OrgChart />
+		</>
 	);
-}
+};
+
+export default Org;
