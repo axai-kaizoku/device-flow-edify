@@ -1,11 +1,9 @@
-import { CombinedContainer } from '@/components/container/Container';
+import { CombinedContainer } from '@/components/container/container';
+import { SearchBarWithProfile } from '@/components/container/search-bar-with-profile';
 
-import { SearchBarWithProfile } from './_components/search-bar-profile';
-
-export default function Dashboard() {
+export default function AdminDashboard() {
 	return (
-		<CombinedContainer title="Dashboard">
-			{/* Search Bar & Profile section */}
+		<CombinedContainer title="Admin Dashboard">
 			<SearchBarWithProfile />
 			<div className="h-20" />
 			<div className="flex gap-8 flex-wrap">

@@ -15,6 +15,7 @@ export const Button = (props: ButtonProps) => {
 		spinnerColor,
 		disabled,
 		type = 'button',
+		className,
 	} = props;
 	return (
 		<StyledButton
@@ -23,7 +24,8 @@ export const Button = (props: ButtonProps) => {
 			size={size}
 			style={style}
 			minWidth={minWidth}
-			type={type}>
+			type={type}
+			className={className}>
 			{!disabled && (
 				<Spinner
 					isButtonLoader
@@ -43,4 +45,6 @@ export interface ButtonProps extends ButtonTypeProps {
 	focusColor?: string;
 	// If true, border will have different color (as per design system in Grey button)
 	isGreyButton?: boolean;
+	// Extra classnames for customization
+	className?: string;
 }

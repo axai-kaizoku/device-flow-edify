@@ -19,7 +19,6 @@ const InputField: FC<InputFieldProps> = ({
 	label,
 	type,
 	disabled,
-
 	register,
 	error,
 	showPassword,
@@ -27,14 +26,14 @@ const InputField: FC<InputFieldProps> = ({
 	...props
 }) => {
 	return (
-		<div className="flex flex-col relative gap-2 items-start">
+		<div className="flex flex-col relative gap-2 items-start w-full">
 			<input
 				type={type === 'password' && showPassword ? 'text' : type}
 				id={id}
 				{...register}
 				className={`input border ${
-					error ? 'border-red-500' : 'border-[#bdbdbd]'
-				} py-3 px-8 h-14 w-full lg:w-80 rounded focus:outline-none`}
+					error ? 'border-red-500' : 'border-[#bdbdbd] focus:border-black'
+				} py-3 px-8 h-14 w-full rounded  focus:outline-none`}
 				{...props}
 			/>
 			<label

@@ -1,6 +1,6 @@
 'use server';
 
-import { callAPIWithToken, getTokenFromSession } from './helper';
+import { callAPIWithToken } from './helper';
 import { redirect } from 'next/navigation';
 
 export type Team = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { CombinedContainer } from '@/components/container/Container';
+import { CombinedContainer } from '@/components/container/container';
 import AddEmployee from './add_employee/addEmployee';
 import { useState } from 'react';
 import AddTeams from './add teams/addTeams';

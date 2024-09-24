@@ -1,5 +1,5 @@
 'use client';
-import { CombinedContainer } from '@/components/container/Container';
+import { CombinedContainer } from '@/components/container/container';
 import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';

@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
 	const userRoutes = ['/people', '/org-chart', '/profile'];
 
 	// Use regex to match dynamic routes
-	const commonRoutes = ['/', '/devices', '/teams/(.*)'];
+	const commonRoutes = ['/', '/devices', '/teams/(.*)', '/teams'];
 	const adminRoutes = [
 		'/assets',
 		'/users',
@@ -44,14 +44,16 @@ export async function middleware(req: NextRequest) {
 		// Check for admin route protection
 		if (adminRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
 			if (token.email !== 'aniket.prakash@winuall.com') {
-				throw new Error('Unauthorized User');
+				const home = new URL('/error', req.url);
+				return NextResponse.redirect(home);
 			}
 		}
 
 		// Check for user route protection
 		if (userRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
 			if (token.email === 'aniket.prakash@winuall.com') {
-				throw new Error('Unauthorized Admin');
+				const home = new URL('/error', req.url);
+				return NextResponse.redirect(home);
 			}
 		}
 	}

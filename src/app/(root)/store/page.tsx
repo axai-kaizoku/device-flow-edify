@@ -1,4 +1,4 @@
-import { CombinedContainer } from '@/components/container/Container';
+import { CombinedContainer } from '@/components/container/container';
 import { Filter, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

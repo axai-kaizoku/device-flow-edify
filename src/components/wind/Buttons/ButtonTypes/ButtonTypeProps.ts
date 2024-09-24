@@ -6,7 +6,7 @@ export interface ButtonTypeProps {
 	// The color of the button. Default color is Colors.info_500. Value for color property will be taken from Color enums.
 	color?: string;
 	// The variant to use. Default variant is primary
-	variant?: 'primary' | 'secondary' | 'tertiary' | 'tertiary-wrap';
+	variant?: 'primary' | 'secondary' | 'tertiary' | 'tertiary-wrap' | 'startup';
 	// handler on button click
 	onClick: (e?: any) => void;
 	// If true, the button is disabled.

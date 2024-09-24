@@ -1,4 +1,5 @@
-import { Profile } from '@/components/profile/profile';
+import { getSession } from '@/server/helper';
+
 import { AvatarCircle } from '@/components/wind/Avatar/styles/style';
 import { Icon } from '@/components/wind/Icons';
 
@@ -13,10 +14,35 @@ export const SearchBarWithProfile = () => {
 				<AvatarCircle />
 				<div className="flex text-sm flex-col">
 					<Profile />
-					<span>Admin</span>
 				</div>
 				<Icon type="OutlinedDownChevron" />
 			</div>
+		</div>
+	);
+};
+
+export const Profile = async () => {
+	const session = await getSession();
+
+	return (
+		<div>
+			{session && (
+				<div className="whitespace-nowrap flex flex-col gap-0.5">
+					{session?.user.name ? (
+						<>
+							<span>{session?.user.name}</span>
+							<span>User</span>
+						</>
+					) : (
+						<>
+							<span>
+								{session?.user.first_name} {session?.user.last_name}
+							</span>
+							<span>Admin</span>
+						</>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

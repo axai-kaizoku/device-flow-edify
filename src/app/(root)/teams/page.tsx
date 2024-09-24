@@ -1,5 +1,5 @@
 'use client';
-import { CombinedContainer } from '@/components/container/Container';
+import { CombinedContainer } from '@/components/container/container';
 
 import { Table } from '@/components/wind/Table';
 import { Team } from '@/server/teamActions';
