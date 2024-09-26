@@ -47,7 +47,9 @@ export default function People() {
 	];
 
 	return (
-		<CombinedContainer title="People" description="Your Peers">
+		<CombinedContainer
+			title="People"
+			description="Your Peers">
 			<div className="flex justify-end w-full">
 				<div className="flex gap-5">
 					<input
@@ -77,7 +79,10 @@ export default function People() {
 							title: 'Actions',
 							render: (data) => (
 								<div className="w-full flex justify-center">
-									<Icon type="OutlinedDotsVertical" color="black" />
+									<Icon
+										type="OutlinedDotsVertical"
+										color="black"
+									/>
 								</div>
 							),
 						},
