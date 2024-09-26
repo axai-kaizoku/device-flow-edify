@@ -9,20 +9,21 @@ export default function Login() {
 					className="absolute inset-0 h-fit w-fit object-contain"
 					alt="edify-background"
 				/>
-				<div className="flex w-full h-full flex-col justify-evenly items-center">
-					<img
-						src="/assets/logo/logo.png"
-						className="w-[250px] h-[80px] object-contain"
-						alt="logo"
-					/>
-					<div />
-					<div />
-					<div className=" justify-center items-center flex flex-col gap-4">
-						<div className="text-[2.5rem] font-bold text-center leading-snug text-white">
+				<div className="flex w-full h-full flex-col justify-between items-center">
+					<div className="h-[35%] w-full flex justify-center items-center">
+						<img
+							src="/assets/logo/logo.png"
+							className="w-[250px] h-[80px] object-contain"
+							alt="logo"
+						/>
+					</div>
+					<div className="h-[15%] w-full" />
+					<div className="justify-center items-center h-[50%] w-full flex flex-col gap-4">
+						<div className="text-[2.6rem] font-bold text-center tracking-wide leading-tight text-white">
 							Partnership for
 							<br /> Business Growth
 						</div>
-						<div className="font-thin text-center text-[#BDBDBD]">
+						<div className="font-thin text-center text-lg text-[#BDBDBD]">
 							Lorem ipsum dolor sit amet, consectetur
 							<br /> adipiscing elit, sed do eiusmod tempor incididun.
 						</div>

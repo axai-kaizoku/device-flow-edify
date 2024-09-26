@@ -18,7 +18,7 @@ export const EmptyTable = ({ title }: EmptyTableProps) => {
 			}}>
 			<EmptyTableContainer>
 				<EmptyState>
-					<Icon type="OutlinedAddressBook" />
+					<Icon type="OutlinedAddressBook" color="black" />
 				</EmptyState>
 
 				<MarginVertical20 />

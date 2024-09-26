@@ -159,7 +159,7 @@ export const EmptyState = styled.div`
 	align-items: center;
 	width: 48px;
 	height: 48px;
-	background: #e0f1ff;
+	background: #f2f2f2;
 	border-radius: 96px;
 `;
 

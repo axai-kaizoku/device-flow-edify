@@ -3,5 +3,5 @@ export default function UserLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <main className="flex h-full w-full">{children}</main>;
+	return <div className="flex h-full w-full">{children}</div>;
 }

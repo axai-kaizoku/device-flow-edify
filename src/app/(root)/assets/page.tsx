@@ -1,14 +1,16 @@
 'use client';
 
 import { CombinedContainer } from '@/components/container/container';
-import { useState } from 'react';
 import AddDevices from './_components/addDevices/AddDevices';
 import Inventory from './_components/inventory/Inventory';
 import Issues from './_components/issues/Issues';
 import { Tab } from './_components/Tab';
+import { useQueryState } from 'nuqs';
 
 export default function Assets() {
-	const [activeTab, setActiveTab] = useState('devices');
+	const [activeTab, setActiveTab] = useQueryState('tab', {
+		defaultValue: 'devices',
+	});
 
 	const renderContent = () => {
 		switch (activeTab) {
