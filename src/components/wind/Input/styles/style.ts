@@ -24,7 +24,7 @@ const InputContainerFocused = css<Props>`
 			  css`
 					outline-offset: 0px;
 					outline: none;
-					border: 1px solid ${Colors.info_500};
+					border: 1px solid ${Colors.grey_900};
 			  `}
 `;
 
@@ -39,7 +39,8 @@ const InputContainerHover = css<Props>`
 `;
 export const InputContainer = styled.div<Props>`
 	box-sizing: border-box;
-	border-radius: 80px;
+	border-radius: 10px;
+
 	display: flex;
 	width: 100%;
 	min-height: 42px;
@@ -59,12 +60,15 @@ export const InputContainer = styled.div<Props>`
   gap: 12px;
 `;
 
-export const BaseInput = styled.input`
+export const BaseInput = styled.input<Props>`
 	max-width: 100%;
-	border: 0px;
+	border: none;
 	background: transparent;
 	width: 100%;
 	padding: 0;
+	box-shadow: none;
+	outline: none;
+	appearance: none;
 
 	&::placeholder {
 		color: ${(props: Props) =>
@@ -83,8 +87,8 @@ export const BaseInput = styled.input`
 			color: ${Colors.grey_300};
 		}
 	}
+
 	:focus-visible {
-		outline-offset: 0px;
 		outline: none;
 	}
 `;
@@ -98,7 +102,7 @@ export const Before = styled.span`
 	gap: 8px;
 	width: 70px;
 	background: ${Colors.white_3};
-	border-radius: 80px 0px 0px 80px;
+	border-radius: 10px 0px 0px 10px;
 `;
 
 export const After = styled.span`
@@ -110,7 +114,7 @@ export const After = styled.span`
 	gap: 8px;
 	width: 70px;
 	background: ${Colors.white_3};
-	border-radius: 0px 80px 80px 0px;
+	border-radius: 0px 10px 10px 0px;
 `;
 
 export const InputContainerItem = styled.div`
@@ -119,6 +123,7 @@ export const InputContainerItem = styled.div`
 	height: 100%;
 	position: relative;
 	flex-wrap: wrap;
+
 	align-items: center;
 	gap: 12px;
 `;
@@ -130,6 +135,7 @@ export const PrefixWrapper = styled.div<Props>`
 	gap: 12px;
 	flex-wrap: ${({ addFlexWrap }) => addFlexWrap && 'wrap'};
 	max-width: 100%;
+
 	align-items: center;
 `;
 
@@ -137,7 +143,6 @@ export const InputWrapper = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
 `;
 
 export const InfoIconWrap = styled.span`

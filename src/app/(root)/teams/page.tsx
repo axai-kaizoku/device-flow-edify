@@ -5,7 +5,9 @@ import { Table } from '@/components/wind/Table';
 import { Team } from '@/server/teamActions';
 
 import { Icon } from '@/components/wind/Icons';
-import { Button } from '@/components/wind/Buttons';
+import { Button, InfoButton } from '@/components/wind/Buttons';
+import { Form } from '@/components/wind/Form';
+import { Input, Textarea } from '@/components/wind/Input';
 
 export default function Teams() {
 	const teams = [
@@ -94,6 +96,26 @@ export default function Teams() {
 					]}
 				/>
 			</div>
+			<Input label="hey" />
+			<TeamForm />
 		</CombinedContainer>
 	);
 }
+
+const TeamForm = () => {
+	const handleSubmit = () => {
+		console.log('submit');
+	};
+	return (
+		<Form width="100%" formId="team-form" onFormSubmit={handleSubmit}>
+			<Input label="Team Name" name="team-name" type="text" />
+			<Textarea label="Team Description" name="team-description" />
+			<Input label="Team Name" name="name" type="text" />
+			<div>
+				<InfoButton onClick={() => {}} type="submit">
+					Submit
+				</InfoButton>
+			</div>
+		</Form>
+	);
+};
