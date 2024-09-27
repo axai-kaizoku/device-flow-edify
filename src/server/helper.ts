@@ -89,7 +89,7 @@ export async function callAPIWithToken<T>(
 		const response: AxiosResponse<T> = await axios({
 			url,
 			method,
-			data: method !== 'GET' ? body : undefined,
+			data: method === 'POST' || method === 'PUT' ? body : undefined,
 			headers: defaultHeaders,
 		});
 

@@ -4,10 +4,52 @@ import { Button } from '@/components/wind/Buttons';
 import { Form } from '@/components/wind/Form';
 import { Input, Textarea } from '@/components/wind/Input';
 import { Typography } from '@/components/wind/Typography';
-import { createTeam } from '@/server/teamActions';
+import { createTeam, updateTeam } from '@/server/teamActions';
+import { useRouter } from 'next/navigation';
 
-export const TeamForm = ({ closeBtn }: { closeBtn?: any }) => {
-	const handleSubmit = async () => {};
+export const TeamForm = ({
+	closeBtn,
+	isEditForm,
+	id,
+	title,
+	description,
+	image,
+}: {
+	closeBtn?: any;
+	isEditForm?: boolean;
+	id?: string;
+	title?: string;
+	description?: string;
+	image?: string;
+}) => {
+	const router = useRouter();
+
+	const data = {
+		'team-name': title ?? '',
+		'team-description': description ?? '',
+		image: image ?? '',
+	};
+
+	const handleSubmit = async (e: any) => {
+		if (isEditForm) {
+			if (e['team-name'] && e['team-description'] && e['image']) {
+				await updateTeam(
+					id!,
+					e['team-name'],
+					e['team-description'],
+					e['image'],
+				);
+				router.refresh();
+				closeBtn(false);
+			}
+		} else {
+			if (e['team-name'] && e['team-description'] && e['image']) {
+				await createTeam(e['team-name'], e['team-description'], e['image']);
+				router.refresh();
+				closeBtn(false);
+			}
+		}
+	};
 
 	return (
 		<div className="flex justify-center items-center">
@@ -16,20 +58,17 @@ export const TeamForm = ({ closeBtn }: { closeBtn?: any }) => {
 					variant="h3"
 					align="left"
 					style={{ width: '100%', padding: '0.8rem 0' }}>
-					Create a New Team
+					{isEditForm ? 'Edit Team' : 'Create a New Team'}
 				</Typography>
 				<Form
+					prefill={{
+						'team-name': data['team-name'],
+						'team-description': data['team-description'],
+						image: data.image,
+					}}
 					width="100%"
 					formId="team-form"
-					onFormSubmit={async (e) => {
-						// console.log(e);
-						await createTeam(e['team-name'], e['team-description'], e['image']);
-						//   {
-						//     "team-name": "asdfasdf",
-						//     "team-description": "asdfasdfsadfsa",
-						//     "image": "http://localhost:3000/teams"
-						// }
-					}}>
+					onFormSubmit={handleSubmit}>
 					<Input
 						label="Team Name"
 						rules={{ required: true }}
@@ -60,7 +99,7 @@ export const TeamForm = ({ closeBtn }: { closeBtn?: any }) => {
 							hoverColor="#000000"
 							type="submit"
 							color="black">
-							Submit
+							{isEditForm ? 'Edit Team' : 'Create Team'}
 						</Button>
 					</div>
 				</Form>

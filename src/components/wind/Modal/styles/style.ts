@@ -81,5 +81,4 @@ export const ModalOverlay = styled.div`
 	top: 0px;
 	left: 0px;
 	background: rgba(30, 32, 33, 0.6);
-	filter: blur(20px);
 `;
