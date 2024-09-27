@@ -1,7 +1,6 @@
 'use server';
 
 import { callAPIWithToken } from './helper';
-import { redirect } from 'next/navigation';
 
 export type Team = {
 	_id?: string;
@@ -24,13 +23,13 @@ export async function fetchTeams(): Promise<TeamsResponse> {
 			'GET',
 		);
 
-		return res;
-	} catch (e: any) {
-		redirect('/login');
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to fetch teams');
 	}
 }
 
-export async function CreateTeam(
+export async function createTeam(
 	title: string,
 	description: string,
 	image: string,
@@ -45,9 +44,9 @@ export async function CreateTeam(
 				image,
 			},
 		);
-		return res;
-	} catch (e: any) {
-		redirect('/login');
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to create team');
 	}
 }
 
@@ -58,13 +57,13 @@ export async function getTeamById<Team>(teamId: string) {
 			'GET', // HTTP method
 			null,
 		);
-		return res;
-	} catch (e: any) {
-		redirect('/login');
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to fetch team');
 	}
 }
 
-export async function UpdateTeam(
+export async function updateTeam(
 	title?: string,
 	description?: string,
 	image?: string,
@@ -79,10 +78,21 @@ export async function UpdateTeam(
 				image,
 			},
 		);
-		return res;
-	} catch (e: any) {
-		redirect('/login');
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to Update team');
 	}
 }
 
-// export async function DeleteTeam()
+export async function deleteTeam<Team>(teamId: string) {
+	try {
+		const res = await callAPIWithToken<Team>(
+			`https://api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
+			'DELETE', // HTTP method
+			null,
+		);
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to delete team');
+	}
+}

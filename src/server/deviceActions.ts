@@ -36,7 +36,7 @@ export const createDevices = async (
 ): Promise<Device | undefined> => {
 	try {
 		const deviceData = {
-			device_name: device.device_name || 'BC',
+			device_name: device.device_name || 'Default',
 			device_type: device.device_type,
 			asset_serial_no: device.asset_serial_no,
 			serial_no: device.serial_no,

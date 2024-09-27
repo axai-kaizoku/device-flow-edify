@@ -13,18 +13,18 @@ type FormType = {
 };
 
 type DeviceTypeProps = {
-	data: FormType;
-	setData: (newData: FormType) => void;
+	data: string;
+	setData: (newData: string) => void;
 };
 
 function DeviceType({ data, setData }: DeviceTypeProps) {
 	const [selectedDevice, setSelectedDevice] = useState<string | null>(
-		data.deviceType || '',
+		data || '',
 	);
 
 	const handleSelect = (device: string) => {
 		setSelectedDevice(device);
-		setData({ deviceType: device });
+		setData(device);
 	};
 
 	const deviceList = [

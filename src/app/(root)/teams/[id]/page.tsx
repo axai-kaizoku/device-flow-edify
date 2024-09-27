@@ -1,51 +1,13 @@
-'use client';
 import { CombinedContainer } from '@/components/container/container';
-import { Table } from '@/components/wind/Table';
-import { Icon } from '@/components/wind/Icons';
+import TeamTable from './_components/team-table';
+import { getTeamById, Team } from '@/server/teamActions';
 
 interface TeamPageProps {
 	params: { id: string };
 }
 
-export default function TeamPage({ params }: TeamPageProps) {
-	const teams = [
-		{
-			_id: '66e40351b83635490e26bda4',
-			name: 'Ashish',
-			role: 'Frontend Developer',
-			joining_date: '17-09-2024',
-			reporting_manager: 'Abhinav',
-			image: 'https://picsum.photos/300/300',
-			deleted_at: null,
-			createdAt: '2024-09-13T09:18:09.972Z',
-			updatedAt: '2024-09-13T09:18:09.972Z',
-			__v: 0,
-		},
-		{
-			_id: '66e40351b83635490e26bda4',
-			name: 'Akshay',
-			role: 'Frontend Developer',
-			joining_date: '10-09-2024',
-			reporting_manager: 'Abhinav',
-			image: 'https://picsum.photos/300/300',
-			deleted_at: null,
-			createdAt: '2024-09-13T09:18:09.972Z',
-			updatedAt: '2024-09-13T09:18:09.972Z',
-			__v: 0,
-		},
-		{
-			_id: '66e40351b83635490e26bda4',
-			name: 'Harsh',
-			role: 'Frontend Developer',
-			joining_date: '17-09-2024',
-			reporting_manager: 'Abhinav',
-			image: 'https://picsum.photos/300/300',
-			deleted_at: null,
-			createdAt: '2024-09-13T09:18:09.972Z',
-			updatedAt: '2024-09-13T09:18:09.972Z',
-			__v: 0,
-		},
-	];
+export default async function TeamPage({ params }: TeamPageProps) {
+	const data: Team = await getTeamById(params.id);
 
 	return (
 		<CombinedContainer
@@ -57,25 +19,21 @@ export default function TeamPage({ params }: TeamPageProps) {
 				</div>
 			</div>
 			<div className="h-10" />
-			<div className="w-full">
-				<Table
-					data={teams}
-					className="w-full"
-					columns={[
-						{ title: 'User', dataIndex: 'name' },
-						{ title: 'Role', dataIndex: 'role' },
-						{ title: 'Joining Date', dataIndex: 'joining_date' },
-						{ title: 'Reporting Manager', dataIndex: 'reporting_manager' },
-						{
-							title: 'Actions',
-							render: (data) => (
-								<div className="w-full flex justify-center">
-									<Icon type="OutlinedDotsVertical" color="black" />
-								</div>
-							),
-						},
-					]}
+			<div className="w-full py-8 flex gap-4">
+				<img
+					src={data.image}
+					alt="Image"
+					className="w-20 h-20 rounded-full ring-2 ring-muted"
 				/>
+				<div className="flex flex-col gap-2">
+					<span>{data.title}</span>
+					<span>{data.description}</span>
+				</div>
+			</div>
+			{/* <div className="break-words">{JSON.stringify(data)}</div> */}
+
+			<div className="w-full">
+				<TeamTable data={[]} />
 			</div>
 		</CombinedContainer>
 	);

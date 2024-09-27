@@ -37,7 +37,7 @@ export const StyledTextarea = styled.textarea<Props>`
 	padding: 8px 12px;
 	color: ${Colors.grey_900};
 	font-family: Inter-Regular;
-	font-size: 12px;
+	font-size: 16px;
 	line-height: 18px;
 	::placeholder {
 		color: ${Colors.grey_400};

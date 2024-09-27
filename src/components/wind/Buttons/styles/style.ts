@@ -121,7 +121,7 @@ export const StyledButton = styled.button<ButtonProps>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-radius: 80px;
+	border-radius: 0.375rem;
 	padding: ${({ variant }) =>
 		variant === 'tertiary-wrap' ? '0px !important' : 'initial'};
 	${getFont}
