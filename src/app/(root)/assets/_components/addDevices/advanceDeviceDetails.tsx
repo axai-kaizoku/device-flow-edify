@@ -1,10 +1,11 @@
+// AdvanceDeviceDetails.tsx
 import { Icon } from '@/components/wind/Icons';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react';
 
 type FormType = {
 	serialNumber: string;
-	invoiceFile: null | File; // Changed to `File | null` for proper handling of files
+	invoiceFile: null | File;
 	purchaseDate: string;
 	warrantyExpiryDate: string;
 };
@@ -12,9 +13,14 @@ type FormType = {
 type AdvanceDeviceDetailsProps = {
 	data: FormType;
 	setData: (newData: FormType) => void;
+	errors?: { [key: string]: string };
 };
 
-function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
+function AdvanceDeviceDetails({
+	data,
+	setData,
+	errors,
+}: AdvanceDeviceDetailsProps) {
 	const [formData, setFormData] = useState<FormType>(
 		data || {
 			serialNumber: '',
@@ -51,7 +57,7 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (files && files.length > 0) {
-			const file = files[0]; // Only handle the first file for now
+			const file = files[0];
 			setFormData((prevData) => ({
 				...prevData,
 				invoiceFile: file,
@@ -78,11 +84,12 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 					placeholder="EDIFY-1234"
 					className="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black transition duration-300"
 				/>
+				{errors?.serialNumber && (
+					<p className="text-red-500 text-sm">{errors.serialNumber}</p>
+				)}
 				<p className="text-sm text-gray-500 py-2">
 					Need help finding the serial number?{' '}
-					<Link
-						href="#"
-						className="text-blue-600 hover:underline">
+					<Link href="#" className="text-blue-600 hover:underline">
 						Click here
 					</Link>
 				</p>
@@ -99,11 +106,7 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 					className="flex px-4 py-6 items-center gap-2 justify-between mb-4 bg-[#dddbdb] rounded cursor-pointer"
 					onClick={handleFileUploadClick}>
 					<div className="flex justify-center items-center gap-3">
-						<Icon
-							type="OutlinedUpload"
-							color="black"
-							size="lg"
-						/>
+						<Icon type="OutlinedUpload" color="black" size="lg" />
 						<div className="flex flex-col">
 							<h1>Upload Documents</h1>
 							<p className="text-xs">
@@ -122,8 +125,11 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 					name="invoiceFile"
 					ref={fileInputRef}
 					style={{ display: 'none' }}
-					onChange={handleFileChange} // Handle file change
+					onChange={handleFileChange}
 				/>
+				{errors?.invoiceFile && (
+					<p className="text-red-500 text-sm">{errors.invoiceFile}</p>
+				)}
 
 				{/* Date Inputs for Purchase and Warranty */}
 				<div className="flex flex-wrap gap-6 py-4">
@@ -136,6 +142,9 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 							onChange={handleChange}
 							className="py-3 px-4 border border-gray-300 rounded-lg w-80 focus:outline-none"
 						/>
+						{errors?.purchaseDate && (
+							<p className="text-red-500 text-sm">{errors.purchaseDate}</p>
+						)}
 					</div>
 					<div>
 						<p className="text-sm text-gray-500 mb-2">Warranty Expiry Date</p>
@@ -146,6 +155,11 @@ function AdvanceDeviceDetails({ data, setData }: AdvanceDeviceDetailsProps) {
 							onChange={handleChange}
 							className="w-80 py-3 px-4 border border-gray-300 rounded-lg focus:outline-none"
 						/>
+						{errors?.warrantyExpiryDate && (
+							<p className="text-red-500 text-sm">
+								{errors.warrantyExpiryDate}
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

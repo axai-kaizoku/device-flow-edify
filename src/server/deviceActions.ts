@@ -79,7 +79,8 @@ export async function getAllDevices(): Promise<DeviceResponse> {
 
 		return res.data;
 	} catch (e: any) {
-		redirect('/login');
+		// redirect('/login');
+		throw new Error(e);
 	}
 }
 
@@ -112,10 +113,10 @@ export const updateDevice = async (): Promise<Device | undefined> => {
 		);
 
 		return res.data;
-	} catch (error) {
+	} catch (error: any) {
 		console.error('Error creating device:', error);
 
-		redirect('/login');
+		throw new Error(error);
 	}
 };
 
@@ -143,7 +144,7 @@ export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 	try {
 		// Call the API with multipart/form-data
 		const response = await callAPIWithToken<any>(
-			'https://api.edify.club/edifybackend/v1/devices/bulk-upload',
+			'https://api.edify.club/edifybackend/v1/devices/upload',
 			'POST',
 			formData,
 			{

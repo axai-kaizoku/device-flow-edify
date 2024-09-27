@@ -1,3 +1,4 @@
+// ExtraDetails.tsx
 import { Dropdown } from '@/components/dropdown/Dropdown';
 import React, { useState } from 'react';
 
@@ -7,15 +8,16 @@ type FormType = {
 	officeLocation: string;
 	purchaseOrder: string;
 	purchaseValue: number;
-	ownership: string; // Update the type for ownership to string
+	ownership: string;
 };
 
 type ExtraDetailsType = {
 	data: FormType;
 	setData: (newData: FormType) => void;
+	errors?: { [key: string]: string };
 };
 
-function ExtraDetails({ data, setData }: ExtraDetailsType) {
+function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 	const [formData, setFormData] = useState<FormType>(
 		data || {
 			brand: '',
@@ -23,7 +25,7 @@ function ExtraDetails({ data, setData }: ExtraDetailsType) {
 			officeLocation: '',
 			purchaseOrder: '',
 			purchaseValue: 0,
-			ownership: '', // Initialize ownership
+			ownership: '',
 		},
 	);
 
@@ -42,7 +44,7 @@ function ExtraDetails({ data, setData }: ExtraDetailsType) {
 	const handleOwnershipChange = (value: string) => {
 		setFormData((prevData) => ({
 			...prevData,
-			ownership: value, // Update ownership
+			ownership: value,
 		}));
 		setData({
 			...formData,
@@ -51,70 +53,86 @@ function ExtraDetails({ data, setData }: ExtraDetailsType) {
 	};
 
 	return (
-		<>
-			<div className="flex flex-col w-full">
-				<h1 className="text-xl py-4">Advance Details</h1>
-				<div className="flex flex-wrap gap-4">
-					<div className="flex flex-col w-72 ">
-						<label>Brand</label>
-						<input
-							name="brand"
-							value={formData.brand}
-							onChange={handleChange}
-							type="text"
-							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-						/>
-					</div>
-					<div className="flex flex-col w-72 ">
-						<label>Assigned to</label>
-						<input
-							name="assignedTo"
-							value={formData.assignedTo}
-							onChange={handleChange}
-							type="text"
-							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-						/>
-					</div>
-					<div className="flex flex-col w-72">
-						<label>Office Location</label>
-						<input
-							name="officeLocation"
-							value={formData.officeLocation}
-							onChange={handleChange}
-							type="text"
-							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-						/>
-					</div>
-					<div className="flex flex-col w-72">
-						<label>Purchase Order</label>
-						<input
-							name="purchaseOrder"
-							value={formData.purchaseOrder}
-							onChange={handleChange}
-							type="text"
-							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-						/>
-					</div>
-					<div className="flex flex-col w-72">
-						<label>Purchase Value</label>
-						<input
-							name="purchaseValue"
-							value={formData.purchaseValue}
-							onChange={handleChange}
-							type="text"
-							className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-						/>
-					</div>
-					<div className="flex flex-col w-72">
-						<label>Ownership</label>
-						<Dropdown
-							items={['Rent', 'Not work', 'Rented', 'Lost']}
-							onSelect={handleOwnershipChange}
-						/>
-					</div>
+		<div className="flex flex-col w-full">
+			<h1 className="text-xl py-4">Advance Details</h1>
+			<div className="flex flex-wrap gap-4">
+				<div className="flex flex-col w-72 ">
+					<label>Brand</label>
+					<input
+						name="brand"
+						value={formData.brand}
+						onChange={handleChange}
+						type="text"
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.brand && (
+						<p className="text-red-500 text-sm">{errors.brand}</p>
+					)}
+				</div>
+				<div className="flex flex-col w-72 ">
+					<label>Assigned to</label>
+					<input
+						name="assignedTo"
+						value={formData.assignedTo}
+						onChange={handleChange}
+						type="text"
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.assignedTo && (
+						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
+					)}
+				</div>
+				<div className="flex flex-col w-72">
+					<label>Office Location</label>
+					<input
+						name="officeLocation"
+						value={formData.officeLocation}
+						onChange={handleChange}
+						type="text"
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.officeLocation && (
+						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
+					)}
+				</div>
+				<div className="flex flex-col w-72">
+					<label>Purchase Order</label>
+					<input
+						name="purchaseOrder"
+						value={formData.purchaseOrder}
+						onChange={handleChange}
+						type="text"
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.purchaseOrder && (
+						<p className="text-red-500 text-sm">{errors.purchaseOrder}</p>
+					)}
+				</div>
+				<div className="flex flex-col w-72">
+					<label>Purchase Value</label>
+					<input
+						name="purchaseValue"
+						value={formData.purchaseValue}
+						onChange={handleChange}
+						type="number"
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.purchaseValue && (
+						<p className="text-red-500 text-sm">{errors.purchaseValue}</p>
+					)}
+				</div>
+				<div className="flex flex-col w-72">
+					<label>Ownership</label>
+					<Dropdown
+						items={['Rent', 'Not work', 'Rented', 'Lost']}
+						onSelect={handleOwnershipChange}
+					/>
+					{errors?.ownership && (
+						<p className="text-red-500 text-sm">{errors.ownership}</p>
+					)}
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 

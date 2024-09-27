@@ -6,8 +6,13 @@ import AdvanceDeviceDetails from './advanceDeviceDetails';
 import ExtraDetails from './extraDetails';
 import { createDevices, Device } from '@/server/deviceActions';
 
+type FormErrors = {
+	[key: string]: string;
+};
+
 function Form() {
 	const [step, setStep] = useState(1);
+	const [errors, setErrors] = useState<FormErrors>({});
 
 	const [formData, setFormData] = useState({
 		deviceType: '',
@@ -47,8 +52,66 @@ function Form() {
 		console.log('Updated Form Data:', formData); // Log the form data after updating
 	};
 
+	const validate = (): boolean => {
+		let currentErrors: FormErrors = {};
+
+		switch (step) {
+			case 1:
+				if (!formData.deviceType) {
+					currentErrors.deviceType = 'Please select a device type.';
+				}
+				break;
+			case 2:
+				const basic = formData.basicDetails;
+				if (!basic.os) currentErrors.os = 'Operating System is required.';
+				if (!basic.model) currentErrors.model = 'Model is required.';
+				if (!basic.processor)
+					currentErrors.processor = 'Processor is required.';
+				if (!basic.ram) currentErrors.ram = 'RAM is required.';
+				if (!basic.storage) currentErrors.storage = 'Storage is required.';
+				if (!basic.device_name)
+					currentErrors.device_name = 'Device Name is required.';
+				break;
+			case 3:
+				const advance = formData.advanceDeviceDetails;
+				if (!advance.serialNumber)
+					currentErrors.serialNumber = 'Serial Number is required.';
+				if (!advance.purchaseDate)
+					currentErrors.purchaseDate = 'Purchase Date is required.';
+				if (!advance.warrantyExpiryDate)
+					currentErrors.warrantyExpiryDate =
+						'Warranty Expiry Date is required.';
+				if (!advance.invoiceFile)
+					currentErrors.invoiceFile = 'Invoice File is required.';
+				break;
+			case 4:
+				const extra = formData.extraDetails;
+				if (!extra.brand) currentErrors.brand = 'Brand is required.';
+				if (!extra.assignedTo)
+					currentErrors.assignedTo = 'Assigned To is required.';
+				if (!extra.officeLocation)
+					currentErrors.officeLocation = 'Office Location is required.';
+				if (!extra.purchaseOrder)
+					currentErrors.purchaseOrder = 'Purchase Order is required.';
+				if (!extra.purchaseValue || extra.purchaseValue <= 0)
+					currentErrors.purchaseValue =
+						'Purchase Value must be greater than 0.';
+				if (!extra.ownership)
+					currentErrors.ownership = 'Ownership is required.';
+				break;
+			default:
+				break;
+		}
+
+		setErrors(currentErrors);
+
+		return Object.keys(currentErrors).length === 0;
+	};
+
 	const handleNextStep = () => {
-		setStep((prevStep) => prevStep + 1);
+		if (validate()) {
+			setStep((prevStep) => prevStep + 1);
+		}
 	};
 
 	const handlePrevStep = () => {
@@ -56,31 +119,34 @@ function Form() {
 	};
 
 	const handleSubmit = async () => {
-		try {
-			console.log('Form Data Before Submission:', formData); // Add this line to check the form data
+		if (validate()) {
+			try {
+				console.log('Form Data Before Submission:', formData); // Add this line to check the form data
 
-			const deviceDetails: Device = {
-				device_type: formData.deviceType,
-				device_name: formData.basicDetails.device_name,
-				os: formData.basicDetails.os,
-				custom_model: formData.basicDetails.model,
-				processor: formData.basicDetails.processor,
-				ram: formData.basicDetails.ram,
-				storage: formData.basicDetails.storage,
-				serial_no: formData.advanceDeviceDetails.serialNumber,
-				device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
-				purchase_order: formData.extraDetails.purchaseOrder,
-				warranty_expiary_date: formData.advanceDeviceDetails.warrantyExpiryDate,
-				brand: formData.extraDetails.brand,
-				ownership: formData.extraDetails.ownership,
-				purchase_value: formData.extraDetails.purchaseValue,
-				asset_serial_no: 'Asset serial no',
-			};
+				const deviceDetails: Device = {
+					device_type: formData.deviceType,
+					device_name: formData.basicDetails.device_name,
+					os: formData.basicDetails.os,
+					custom_model: formData.basicDetails.model,
+					processor: formData.basicDetails.processor,
+					ram: formData.basicDetails.ram,
+					storage: formData.basicDetails.storage,
+					serial_no: formData.advanceDeviceDetails.serialNumber,
+					device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
+					purchase_order: formData.extraDetails.purchaseOrder,
+					warranty_expiary_date:
+						formData.advanceDeviceDetails.warrantyExpiryDate,
+					brand: formData.extraDetails.brand,
+					ownership: formData.extraDetails.ownership,
+					purchase_value: formData.extraDetails.purchaseValue,
+					asset_serial_no: 'Asset serial no',
+				};
 
-			const response = await createDevices(deviceDetails);
-			console.log('Device Details', response);
-		} catch (error) {
-			console.log(error);
+				const response = await createDevices(deviceDetails);
+				console.log('Device Details', response);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 
@@ -98,24 +164,28 @@ function Form() {
 					setData={(data: any) =>
 						setFormData((prev) => ({ ...prev, deviceType: data }))
 					}
+					error={errors.deviceType}
 				/>
 			)}
 			{step === 2 && (
 				<BasicDetails
 					data={formData.basicDetails}
 					setData={(data: any) => updateFormData('basicDetails', data)}
+					errors={errors}
 				/>
 			)}
 			{step === 3 && (
 				<AdvanceDeviceDetails
 					data={formData.advanceDeviceDetails}
 					setData={(data: any) => updateFormData('advanceDeviceDetails', data)}
+					errors={errors}
 				/>
 			)}
 			{step === 4 && (
 				<ExtraDetails
 					data={formData.extraDetails}
 					setData={(data: any) => updateFormData('extraDetails', data)}
+					errors={errors}
 				/>
 			)}
 

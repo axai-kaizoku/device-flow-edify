@@ -1,3 +1,4 @@
+// BasicDetails.tsx
 import { Icon } from '@/components/wind/Icons';
 import React, { useState } from 'react';
 
@@ -13,9 +14,10 @@ type FormType = {
 type BasicDetailsForm = {
 	data: FormType;
 	setData: (newData: FormType) => void;
+	errors?: { [key: string]: string };
 };
 
-function BasicDetails({ data, setData }: BasicDetailsForm) {
+function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 	const [selectedOS, setSelectedOS] = useState<string | null>(data.os || '');
 	const [formData, setFormData] = useState<FormType>(
 		data || {
@@ -76,91 +78,106 @@ function BasicDetails({ data, setData }: BasicDetailsForm) {
 	];
 
 	return (
-		<>
-			<div className="flex flex-col">
-				<h1 className="text-2xl font-bold py-5">Basic Details</h1>
-				<p className="text-lg py-2">Operating System</p>
+		<div className="flex flex-col">
+			<h1 className="text-2xl font-bold py-5">Basic Details</h1>
+			<p className="text-lg py-2">Operating System</p>
 
-				<div className="flex flex-wrap mb-7 gap-4">
-					{operatingSystems.map((os) => (
-						<div
-							key={os.id}
-							className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
-								selectedOS === os.id ? 'border-black' : 'border-gray-300'
-							}`}
-							onClick={() => handleSelectOS(os.id)}>
-							<input
-								type="radio"
-								id={os.id}
-								checked={selectedOS === os.id}
-								onChange={() => handleSelectOS(os.id)}
-								className="mr-3 h-4 w-4 mt-1 accent-black"
-							/>
-							<label htmlFor={os.id} className="flex flex-col">
-								<p className="flex items-center font-medium gap-2">
-									{os.icon}
-									{os.name}
-								</p>
-								<span className="text-sm text-gray-500">{os.description}</span>
-							</label>
-						</div>
-					))}
-				</div>
-				<div>
-					<p className="text-lg py-2">Models</p>
-					<input
-						type="text"
-						name="model"
-						value={formData.model}
-						onChange={handleChange}
-						placeholder="What is the laptop lineup"
-						className="px-2 focus:outline-none py-3 w-full rounded-lg border border-gray-200"
-					/>
-					<div className="py-6 flex justify-between flex-wrap gap-3">
-						<div className="flex flex-col">
-							<label>Processor</label>
-							<input
-								type="text"
-								name="processor"
-								value={formData.processor}
-								onChange={handleChange}
-								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
-							/>
-						</div>
-						<div className="flex flex-col">
-							<label>RAM</label>
-							<input
-								type="text"
-								name="ram"
-								value={formData.ram}
-								onChange={handleChange}
-								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
-							/>
-						</div>
-						<div className="flex flex-col">
-							<label>Storage</label>
-							<input
-								type="text"
-								name="storage"
-								value={formData.storage}
-								onChange={handleChange}
-								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
-							/>
-						</div>
-						<div className="flex flex-col">
-							<label>Device Name</label>
-							<input
-								type="text"
-								name="device_name"
-								value={formData.device_name}
-								onChange={handleChange}
-								className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
-							/>
-						</div>
+			<div className="flex flex-wrap mb-7 gap-4">
+				{operatingSystems.map((os) => (
+					<div
+						key={os.id}
+						className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
+							selectedOS === os.id ? 'border-black' : 'border-gray-300'
+						}`}
+						onClick={() => handleSelectOS(os.id)}>
+						<input
+							type="radio"
+							id={os.id}
+							checked={selectedOS === os.id}
+							onChange={() => handleSelectOS(os.id)}
+							className="mr-3 h-4 w-4 mt-1 accent-black"
+						/>
+						<label htmlFor={os.id} className="flex flex-col">
+							<p className="flex items-center font-medium gap-2">
+								{os.icon}
+								{os.name}
+							</p>
+							<span className="text-sm text-gray-500">{os.description}</span>
+						</label>
+					</div>
+				))}
+			</div>
+			{errors?.os && <p className="text-red-500 text-sm">{errors.os}</p>}
+
+			<div>
+				<p className="text-lg py-2">Models</p>
+				<input
+					type="text"
+					name="model"
+					value={formData.model}
+					onChange={handleChange}
+					placeholder="What is the laptop lineup"
+					className="px-2 focus:outline-none py-3 w-full rounded-lg border border-gray-200"
+				/>
+				{errors?.model && (
+					<p className="text-red-500 text-sm">{errors.model}</p>
+				)}
+				<div className="py-6 flex justify-between flex-wrap gap-3">
+					<div className="flex flex-col">
+						<label>Processor</label>
+						<input
+							type="text"
+							name="processor"
+							value={formData.processor}
+							onChange={handleChange}
+							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
+						/>
+						{errors?.processor && (
+							<p className="text-red-500 text-sm">{errors.processor}</p>
+						)}
+					</div>
+					<div className="flex flex-col">
+						<label>RAM</label>
+						<input
+							type="text"
+							name="ram"
+							value={formData.ram}
+							onChange={handleChange}
+							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
+						/>
+						{errors?.ram && (
+							<p className="text-red-500 text-sm">{errors.ram}</p>
+						)}
+					</div>
+					<div className="flex flex-col">
+						<label>Storage</label>
+						<input
+							type="text"
+							name="storage"
+							value={formData.storage}
+							onChange={handleChange}
+							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
+						/>
+						{errors?.storage && (
+							<p className="text-red-500 text-sm">{errors.storage}</p>
+						)}
+					</div>
+					<div className="flex flex-col">
+						<label>Device Name</label>
+						<input
+							type="text"
+							name="device_name"
+							value={formData.device_name}
+							onChange={handleChange}
+							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
+						/>
+						{errors?.device_name && (
+							<p className="text-red-500 text-sm">{errors.device_name}</p>
+						)}
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
