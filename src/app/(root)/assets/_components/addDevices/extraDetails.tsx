@@ -6,7 +6,7 @@ type FormType = {
 	assignedTo: string;
 	officeLocation: string;
 	purchaseOrder: string;
-	purchaseValue: string;
+	purchaseValue: number;
 	ownership: string; // Update the type for ownership to string
 };
 
@@ -22,7 +22,7 @@ function ExtraDetails({ data, setData }: ExtraDetailsType) {
 			assignedTo: '',
 			officeLocation: '',
 			purchaseOrder: '',
-			purchaseValue: '',
+			purchaseValue: 0,
 			ownership: '', // Initialize ownership
 		},
 	);
