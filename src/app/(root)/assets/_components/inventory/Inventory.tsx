@@ -3,7 +3,7 @@
 import { Icon } from '@/components/wind/Icons';
 
 import { Table } from '@/components/wind/Table';
-import Header from '../addDevices/Header';
+import Header from '../addDevices/DevicesHeader';
 
 function Inventory() {
 	const devices = [

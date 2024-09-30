@@ -85,36 +85,39 @@ export async function getAllDevices(): Promise<DeviceResponse> {
 }
 
 //Update Devices
-export const updateDevice = async (): Promise<Device | undefined> => {
+export const updateDevice = async (
+	deviceId: string,
+	deviceData: Device,
+): Promise<Device | undefined> => {
 	try {
-		const deviceData = {
-			device_name: '',
-			device_type: '',
-			asset_serial_no: '',
-			serial_no: '',
-			ram: '',
-			processor: '',
-			storage: '',
-			custom_model: '',
-			brand: '',
-			warranty_status: false,
-			warranty_expiary_date: '',
-			ownership: '',
-			purchase_order: '',
-			purchase_value: '',
-			os: '',
-		};
+		// const deviceData = {
+		// 	device_name: '',
+		// 	device_type: '',
+		// 	asset_serial_no: '',
+		// 	serial_no: '',
+		// 	ram: '',
+		// 	processor: '',
+		// 	storage: '',
+		// 	custom_model: '',
+		// 	brand: '',
+		// 	warranty_status: false,
+		// 	warranty_expiary_date: '',
+		// 	ownership: '',
+		// 	purchase_order: '',
+		// 	purchase_value: '',
+		// 	os: '',
+		// };
 
 		// API call
 		const res = await callAPIWithToken<Device>(
-			'https://api.edify.club/edifybackend/v1/devices',
+			`https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
 			'PUT',
 			deviceData,
 		);
 
 		return res.data;
 	} catch (error: any) {
-		console.error('Error creating device:', error);
+		console.error('Error updating device:', error);
 
 		throw new Error(error);
 	}
@@ -157,3 +160,51 @@ export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 		throw error;
 	}
 };
+
+//search api
+export async function searchAPI(searchParams: {
+	device_name?: string;
+	brand?: string;
+	custom_model?: string;
+}): Promise<DeviceResponse> {
+	try {
+		const query = new URLSearchParams();
+
+		if (searchParams.device_name) {
+			query.append('device_name', searchParams.device_name);
+		}
+
+		if (searchParams.brand) {
+			query.append('brand', searchParams.brand);
+		}
+
+		if (searchParams.custom_model) {
+			query.append('custom_model', searchParams.custom_model);
+		}
+
+		const url = `https://api.edify.club/edifybackend/v1/devices?${query.toString()}`;
+
+		const res = await callAPIWithToken<DeviceResponse>(url, 'GET');
+
+		return res.data;
+	} catch (error: any) {
+		console.error('Error searching devices:', error);
+		throw new Error(error);
+	}
+}
+
+//getting device by id
+export async function getDeviceById<Device>(deviceId: string) {
+	try {
+		const res = await callAPIWithToken<Device>(
+			`https://api.edify.club/edifybackend/v1/devices/${deviceId}`, // API endpoint
+			'GET', // HTTP method
+			null,
+		);
+
+		return res.data;
+	} catch (e) {
+		console.log(e);
+		throw new Error('Failed to fetch device');
+	}
+}
