@@ -132,5 +132,6 @@ export const StyledButton = styled.button<ButtonProps>`
   ${disabledButton}
   &:hover {
 		cursor: pointer;
+		transition: all 0.2s ease-in-out 0.2s
 	}
 `;
