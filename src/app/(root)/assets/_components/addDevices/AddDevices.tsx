@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Header from './DevicesHeader';
+import DevicesHeader from './DevicesHeader';
 import DeviceTable from './DeviceTable';
 import { Device } from '@/server/deviceActions';
 interface AddDevicesProps {
@@ -12,7 +12,7 @@ function AddDevices({ devices }: AddDevicesProps) {
 
 	return (
 		<div className="flex flex-col gap-12">
-			<Header
+			<DevicesHeader
 				button="Add Device"
 				total={devices.length}
 				searchTerm={searchTerm}

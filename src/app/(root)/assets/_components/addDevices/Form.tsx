@@ -1,3 +1,6 @@
+// Form.tsx (final version)
+'use client';
+
 import { Icon } from '@/components/wind/Icons';
 import React, { useState } from 'react';
 import DeviceType from './deviceType';
@@ -5,15 +8,20 @@ import BasicDetails from './basicDetailsDevice';
 import AdvanceDeviceDetails from './advanceDeviceDetails';
 import ExtraDetails from './extraDetails';
 import { createDevices, Device } from '@/server/deviceActions';
+import { useRouter } from 'next/navigation';
 
 type FormErrors = {
 	[key: string]: string;
 };
 
-function Form() {
+type FormProps = {
+	closeBtn: () => void; // Define the type for closeBtn
+};
+
+function Form({ closeBtn }: FormProps) {
 	const [step, setStep] = useState(1);
 	const [errors, setErrors] = useState<FormErrors>({});
-
+	const router = useRouter();
 	const [formData, setFormData] = useState({
 		deviceType: '',
 		basicDetails: {
@@ -49,7 +57,6 @@ function Form() {
 				...data,
 			},
 		}));
-		console.log('Updated Form Data:', formData); // Log the form data after updating
 	};
 
 	const validate = (): boolean => {
@@ -121,8 +128,6 @@ function Form() {
 	const handleSubmit = async () => {
 		if (validate()) {
 			try {
-				console.log('Form Data Before Submission:', formData); // Add this line to check the form data
-
 				const deviceDetails: Device = {
 					device_type: formData.deviceType,
 					device_name: formData.basicDetails.device_name,
@@ -144,8 +149,11 @@ function Form() {
 
 				const response = await createDevices(deviceDetails);
 				console.log('Device Details', response);
+				closeBtn(); // Close the sheet after successful submission
+				router.refresh();
 			} catch (error) {
 				console.log(error);
+				// Optionally, handle the error and display a message to the user
 			}
 		}
 	};
@@ -165,6 +173,7 @@ function Form() {
 						setFormData((prev) => ({ ...prev, deviceType: data }))
 					}
 					error={errors.deviceType}
+					closeBtn={closeBtn} // Pass closeBtn to DeviceType
 				/>
 			)}
 			{step === 2 && (

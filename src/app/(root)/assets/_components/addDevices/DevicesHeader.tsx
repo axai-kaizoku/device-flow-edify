@@ -1,12 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/side-sheet';
-import { Icon } from '@/components/wind/Icons';
 import Form from './Form';
-import { searchAPI } from '@/server/deviceActions';
+import { useState } from 'react';
 
-function Header({
+function DevicesHeader({
 	button,
 	total,
 	searchTerm,
@@ -20,7 +18,9 @@ function Header({
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(event.target.value);
 	};
+	const [isOpen, setIsOpen] = useState(false);
 
+	const handleClose = () => setIsOpen(false);
 	return (
 		<div>
 			<div className="flex items-center justify-between w-full pt-5">
@@ -36,12 +36,12 @@ function Header({
 						className="border focus:outline-none rounded-3xl p-2"
 					/>
 					<div>
-						<Sheet>
+						<Sheet open={isOpen} onOpenChange={setIsOpen}>
 							<SheetTrigger className="bg-black p-2 text-white rounded-lg hover:opacity-90 duration-300">
 								{button}
 							</SheetTrigger>
 							<SheetContent>
-								<Form />
+								<Form closeBtn={handleClose} />
 							</SheetContent>
 						</Sheet>
 					</div>
@@ -51,4 +51,4 @@ function Header({
 	);
 }
 
-export default Header;
+export default DevicesHeader;

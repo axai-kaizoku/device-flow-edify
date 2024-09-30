@@ -1,3 +1,5 @@
+'use client';
+
 import { bulkUploadDevices } from '@/server/deviceActions';
 import {
 	Keyboard,
@@ -7,6 +9,7 @@ import {
 	SmartphoneCharging,
 	Star,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useState, useRef } from 'react';
 
 type FormType = {
@@ -17,20 +20,92 @@ type DeviceTypeProps = {
 	data: string;
 	setData: (newData: string) => void;
 	error?: string;
+	closeBtn: () => void;
 };
 
-function DeviceType({ data, setData, error }: DeviceTypeProps) {
+function DeviceType({ data, setData, error, closeBtn }: DeviceTypeProps) {
+	const router = useRouter();
 	const [selectedDevice, setSelectedDevice] = useState<string | null>(
 		data || '',
 	);
 	const [csvFile, setCsvFile] = useState<File | null>(null);
-	const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for hidden file input
+	const [csvError, setCsvError] = useState<string | null>(null); // Error state for CSV validation
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	// Required keys for the CSV file
+	const requiredKeys = [
+		'device_name',
+		'asset_serial_no',
+		'ram',
+		'processor',
+		'storage',
+		'warranty_expiary_date',
+		'os',
+		'price',
+		'ownership',
+		'purchase_order',
+		'device_type',
+		'brand',
+		'model',
+		'serial_no',
+		'warranty_status',
+	];
 
 	const handleCSVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files.length > 0) {
-			setCsvFile(e.target.files[0]);
-			handleBulkUpload(e.target.files[0]); // Automatically trigger upload when file is selected
+			const file = e.target.files[0];
+			setCsvFile(file);
+			validateCSV(file); // Validate before uploading
 		}
+	};
+
+	// Simple CSV parser without external libraries
+	const parseCSV = (csvText: string): { headers: string[]; data: any[] } => {
+		const lines = csvText.trim().split('\n');
+		const headers = lines[0].split(',').map((header) => header.trim());
+		const data = lines.slice(1).map((line) => {
+			const values = line.split(',').map((value) => value.trim());
+			const entry: { [key: string]: string } = {};
+			headers.forEach((header, index) => {
+				entry[header] = values[index] || '';
+			});
+			return entry;
+		});
+		return { headers, data };
+	};
+
+	// Validate CSV keys
+	const validateCSV = (file: File) => {
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			const csvText = event.target?.result as string;
+			if (!csvText) {
+				setCsvError('The file is empty or not formatted correctly.');
+				return;
+			}
+
+			try {
+				const { headers, data } = parseCSV(csvText);
+				const missingKeys = requiredKeys.filter(
+					(key) => !headers.includes(key),
+				);
+
+				if (missingKeys.length > 0) {
+					setCsvError(`Missing keys: ${missingKeys.join(', ')}`);
+				} else {
+					setCsvError(null); // No error, proceed to bulk upload
+					handleBulkUpload(file);
+				}
+			} catch (err) {
+				setCsvError('Error parsing the file. Please ensure it is a valid CSV.');
+			}
+		};
+
+		reader.onerror = () => {
+			setCsvError('Error reading the file.');
+		};
+
+		reader.readAsText(file);
 	};
 
 	const handleBulkUpload = async (file: File) => {
@@ -38,8 +113,8 @@ function DeviceType({ data, setData, error }: DeviceTypeProps) {
 		formData.append('file', file);
 		try {
 			const response = await bulkUploadDevices(formData); // Call the API
-			alert('Bulk upload successful!');
-			console.log('Bulk upload response:', response);
+			router.refresh();
+			closeBtn();
 		} catch (error) {
 			console.error('Error during bulk upload:', error);
 			alert('Bulk upload failed. Please try again.');
@@ -111,6 +186,12 @@ function DeviceType({ data, setData, error }: DeviceTypeProps) {
 						/>
 					</div>
 				</div>
+
+				{csvError && (
+					<p className="text-red-500 text-sm font-medium transition-all duration-300 mb-4">
+						{csvError}
+					</p>
+				)}
 
 				<div className="grid grid-cols-2 gap-8 mb-4">
 					{deviceList.map((device) => (

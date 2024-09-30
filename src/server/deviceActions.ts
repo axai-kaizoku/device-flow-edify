@@ -1,8 +1,8 @@
 'use server';
-import { redirect } from 'next/navigation'; // Use correct redirect import from Next.js
+import { redirect } from 'next/navigation';
 import { callAPIWithToken } from './helper';
 
-// Define the Device type
+//Device type
 export type Device = {
 	id?: string;
 	userId?: string;
@@ -90,24 +90,6 @@ export const updateDevice = async (
 	deviceData: Device,
 ): Promise<Device | undefined> => {
 	try {
-		// const deviceData = {
-		// 	device_name: '',
-		// 	device_type: '',
-		// 	asset_serial_no: '',
-		// 	serial_no: '',
-		// 	ram: '',
-		// 	processor: '',
-		// 	storage: '',
-		// 	custom_model: '',
-		// 	brand: '',
-		// 	warranty_status: false,
-		// 	warranty_expiary_date: '',
-		// 	ownership: '',
-		// 	purchase_order: '',
-		// 	purchase_value: '',
-		// 	os: '',
-		// };
-
 		// API call
 		const res = await callAPIWithToken<Device>(
 			`https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
@@ -141,7 +123,7 @@ export async function deleteDevice(
 	}
 }
 
-//upload bulk device
+//Upload bulk device
 
 export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 	try {
@@ -161,7 +143,7 @@ export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 	}
 };
 
-//search api
+//Search api
 export async function searchAPI(searchParams: {
 	device_name?: string;
 	brand?: string;
@@ -193,7 +175,7 @@ export async function searchAPI(searchParams: {
 	}
 }
 
-//getting device by id
+//Getting device by id
 export async function getDeviceById<Device>(deviceId: string) {
 	try {
 		const res = await callAPIWithToken<Device>(
