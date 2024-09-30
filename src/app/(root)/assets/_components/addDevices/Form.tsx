@@ -42,7 +42,7 @@ function Form() {
 
 	// Utility function to update nested form data
 	const updateFormData = (section: string, data: any) => {
-		setFormData((prev) => ({
+		setFormData((prev: any) => ({
 			...prev,
 			[section]: {
 				...prev[section],
