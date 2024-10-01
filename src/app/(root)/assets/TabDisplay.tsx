@@ -3,7 +3,6 @@
 import { useQueryState } from 'nuqs';
 import AddDevices from './_components/addDevices/AddDevices';
 import Inventory from './_components/inventory/Inventory';
-import Issues from './_components/issues/Issues';
 import { Tab } from './_components/Tab';
 
 function TabDisplay({ devices }: { devices: any }) {
@@ -17,8 +16,6 @@ function TabDisplay({ devices }: { devices: any }) {
 				return <AddDevices devices={devices} />;
 			case 'inventory':
 				return <Inventory />;
-			case 'issues':
-				return <Issues />;
 		}
 	};
 	return (
@@ -35,12 +32,6 @@ function TabDisplay({ devices }: { devices: any }) {
 					onClick={() => setActiveTab('inventory')}
 					iconType="OutlinedStore"
 					label="Inventory"
-				/>
-				<Tab
-					active={activeTab === 'issues'}
-					onClick={() => setActiveTab('issues')}
-					iconType="OutlinedWarning"
-					label="Reported Issues"
 				/>
 			</div>
 

@@ -10,6 +10,7 @@ export const SIDEBAR = {
 			icon: '/assets/sidebar/reports.svg',
 		},
 		{ label: 'Store', path: '/store', icon: '/assets/sidebar/calender.svg' },
+		{ label: 'Issues', path: '/issues', icon: '/assets/sidebar/calender.svg' },
 	],
 	UserPages: [
 		{ label: 'Home', path: '/', icon: '/assets/sidebar/home.svg' },
