@@ -1,6 +1,6 @@
-// BasicDetails.tsx
 import { Icon } from '@/components/wind/Icons';
-import React, { useState } from 'react';
+import { getAllDevices } from '@/server/deviceActions';
+import React, { useState, useEffect } from 'react';
 
 type FormType = {
 	model: string;
@@ -29,31 +29,49 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 			device_name: '',
 		},
 	);
+	const [deviceOptions, setDeviceOptions] = useState<string[]>([]); // Store device options
+	const [isDeviceDropdownActive, setDeviceDropdownActive] =
+		useState<boolean>(false); // Trigger fetch on focus
 
 	// Handle text inputs
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setFormData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
-		setData({
+		const updatedFormData = {
 			...formData,
 			[name]: value,
-		});
+		};
+		setFormData(updatedFormData);
+		setData(updatedFormData); // Set the data after updating formData to avoid outdated values
 	};
 
 	// Handle OS selection
 	const handleSelectOS = (os: string) => {
-		setSelectedOS(os);
-		setFormData((prevData) => ({
-			...prevData,
-			os: os,
-		}));
-		setData({
+		const updatedFormData = {
 			...formData,
 			os: os,
-		});
+		};
+		setSelectedOS(os);
+		setFormData(updatedFormData);
+		setData(updatedFormData); // Ensure you setData after updating formData
+	};
+
+	const fetchDevices = async () => {
+		try {
+			const devices = await getAllDevices(); // API call
+			// Map to just device names if the API response returns full device objects
+			const deviceNames = devices.map((device) => device.device_name);
+			setDeviceOptions(deviceNames);
+		} catch (error) {
+			console.error('Failed to fetch devices:', error);
+		}
+	};
+
+	// Trigger fetch when device_name is focused
+	const handleDeviceNameFocus = () => {
+		if (!isDeviceDropdownActive) {
+			setDeviceDropdownActive(true); // Prevent multiple calls
+			fetchDevices();
+		}
 	};
 
 	const operatingSystems = [
@@ -122,6 +140,7 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 				{errors?.model && (
 					<p className="text-red-500 text-sm">{errors.model}</p>
 				)}
+
 				<div className="py-6 flex justify-between flex-wrap gap-3">
 					<div className="flex flex-col">
 						<label>Processor</label>
@@ -164,16 +183,29 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 					</div>
 					<div className="flex flex-col">
 						<label>Device Name</label>
+						{/* Trigger fetch when focused */}
 						<input
 							type="text"
 							name="device_name"
 							value={formData.device_name}
 							onChange={handleChange}
+							onFocus={handleDeviceNameFocus}
+							list="deviceOptions"
+							placeholder="Select a device"
 							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 						/>
 						{errors?.device_name && (
 							<p className="text-red-500 text-sm">{errors.device_name}</p>
 						)}
+
+						{/* Datalist for device names */}
+						<datalist id="deviceOptions">
+							{deviceOptions.map((device, index) => (
+								<option key={index} value={device}>
+									{device}
+								</option>
+							))}
+						</datalist>
 					</div>
 				</div>
 			</div>

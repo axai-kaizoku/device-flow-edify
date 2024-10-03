@@ -15,7 +15,7 @@ function TabDisplay({ devices }: { devices: any }) {
 			case 'devices':
 				return <AddDevices devices={devices} />;
 			case 'inventory':
-				return <Inventory />;
+				return <Inventory devices={devices} />;
 		}
 	};
 	return (

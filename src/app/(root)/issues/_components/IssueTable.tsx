@@ -12,7 +12,6 @@ function IssueTable({ data }: { data: Issues[] }) {
 	};
 	return (
 		<div>
-			{JSON.stringify(data)}
 			<Table
 				data={data}
 				columns={[

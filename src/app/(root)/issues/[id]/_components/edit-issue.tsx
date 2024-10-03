@@ -22,7 +22,7 @@ function EditIssue({ data }: { data: any }) {
 	return (
 		<>
 			<div className="p-6 space-y-4">
-				<h1 className="text-2xl font-bold">Device Details</h1>
+				<h1 className="text-2xl font-bold">Issues Details</h1>
 
 				{isEditing ? (
 					<div className="flex flex-col space-y-2">
@@ -78,111 +78,7 @@ function EditIssue({ data }: { data: any }) {
 							placeholder="Created at"
 							className="border p-2"
 						/>
-						<input
-							type="text"
-							value={issueData.processor}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									processor: e.target.value,
-								})
-							}
-							placeholder="Processor"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.storage}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									storage: e.target.value,
-								})
-							}
-							placeholder="Storage"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.brand}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									brand: e.target.value,
-								})
-							}
-							placeholder="Brand"
-							className="border p-2"
-						/>
-						<input
-							type="date"
-							value={issueData.device_purchase_date}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									device_purchase_date: e.target.value,
-								})
-							}
-							placeholder="Purchase Date"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.warranty_status}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									warranty_status: e.target.value,
-								})
-							}
-							placeholder="Warranty Status"
-							className="border p-2"
-						/>
-						<input
-							type="date"
-							value={issueData.warranty_expiary_date}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									warranty_expiary_date: e.target.value,
-								})
-							}
-							placeholder="Warranty Expiary"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.ownership}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									ownership: e.target.value,
-								})
-							}
-							placeholder="Ownership"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.os}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									os: e.target.value,
-								})
-							}
-							placeholder="OS"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.custom_model}
-							onChange={(e) =>
-								setIssueData({ ...issueData, custom_model: e.target.value })
-							}
-							placeholder="Model"
-							className="border p-2"
-						/>
+
 						{/* Repeat inputs for other fields as needed */}
 
 						<button
@@ -199,45 +95,21 @@ function EditIssue({ data }: { data: any }) {
 				) : (
 					<div className="flex flex-col space-y-2">
 						<p>
-							<strong>Device Name:</strong> {issueData.device_name}
+							<strong>Raised by:</strong> {issueData.userId}
 						</p>
 						<p>
-							<strong>Model:</strong> {issueData.custom_model}
+							<strong>Org Id</strong> {issueData.orgId}
 						</p>
 						<p>
-							<strong>Brand:</strong> {issueData.brand}
+							<strong>Priority:</strong> {issueData.priority}
 						</p>
 						<p>
-							<strong>Serial Number:</strong> {issueData.serial_no}
+							<strong>Status</strong> {issueData.status}
 						</p>
 						<p>
-							<strong>OS:</strong> {issueData.os}
+							<strong>Created at:</strong> {issueData.createdAt}
 						</p>
-						<p>
-							<strong>Processor:</strong> {issueData.processor}
-						</p>
-						<p>
-							<strong>RAM:</strong> {issueData.ram}
-						</p>
-						<p>
-							<strong>Storage:</strong> {issueData.storage}
-						</p>
-						<p>
-							<strong>Warranty Status:</strong>{' '}
-							{issueData.warranty_status ? 'Active' : 'Inactive'}
-						</p>
-						<p>
-							<strong>Purchase Date:</strong> {issueData.device_purchase_date}
-						</p>
-						<p>
-							<strong>Purchase Value:</strong> {issueData.purchase_value}
-						</p>
-						<p>
-							<strong>Asset Serial Value:</strong> {issueData.asset_serial_no}
-						</p>
-						<p>
-							<strong>Purchase Order:</strong> {issueData.purchase_order}
-						</p>
+
 						{/* Buttons for Edit and Delete */}
 						<div className="space-x-4">
 							<button
