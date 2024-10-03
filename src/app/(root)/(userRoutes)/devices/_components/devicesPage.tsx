@@ -2,13 +2,22 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/side-sheet'
 import { Button } from '@/components/wind/Buttons'
 import React from 'react'
 import Form from './Form'
+import { useRouter } from 'next/navigation'
+
+
 
 const Devices = ({devices}:any) => {
+  const router = useRouter();
+
+  const handleDeviceClick = (device: any) => {
+    router.push(`devices/${device.id}`);
+  };
+
   return (
     <div className='flex flex-col gap-10'>
         {devices.map((device:any)=>(
-            <div className='flex flex-wrap justify-between items-center shadow-md rounded-xl py-5 px-8 hover:shadow-lg transition-all ease-in-out' onClick={()=>{}}>
-              <div className='flex flex-wrap justify-between items-center gap-7'>
+            <div className='flex flex-wrap justify-between items-center shadow-md rounded-xl py-5 px-8 hover:shadow-lg transition-all ease-in-out cursor-pointer'>
+              <div className='flex flex-wrap justify-between items-center gap-7' onClick={() => handleDeviceClick(device)}>
                 <div>
                     <img src={device.deviceImg} alt="Device Name" width={120} height={120}/>
                 </div>

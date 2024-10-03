@@ -1,8 +1,9 @@
-import { callAPIWithToken } from './helper';
+import { callAPIWithToken, getSession } from './helper';
 
 export type Issues = {
 	id?: string;
 	userId?: string;
+	description?: string;
 	orgId?: string;
 	title?: string;
 	status?: string;
@@ -75,3 +76,60 @@ export async function deleteIssue(
 		return undefined;
 	}
 }
+
+// Create Issue - Employee
+
+export const createIssue = async (issueData: Issues): Promise<Issues | undefined> => {
+	const sess = await getSession();
+	try {
+		if(sess?.user){
+			const issue = {
+				...issueData,
+				orgId:sess.user.orgId,
+				userId:sess.user.id,
+				email:sess.user.email,
+				createdAt: new Date().toISOString()
+			}
+			const res = await callAPIWithToken<Issues>(
+				'https://api.edify.club/edifybackend/v1/issue/',
+				'POST',
+				issue
+			);
+			return res.data;
+		}
+	} catch (error: any) {
+	  console.error('Error creating a new issue:', error);
+	  throw new Error(error);
+	}
+  };
+
+
+//  Get Issues by UserId
+
+export const getIssueByUserId = async (): Promise<IssueResponse | undefined> => {
+	const sess = await getSession(); // Fetch session details
+  
+	try {
+	  if (sess?.user && sess.user.id) {
+		const userId = sess.user.id;
+		
+		// Make the GET request to fetch issues by user ID
+		const res = await callAPIWithToken<IssueResponse>(
+		  `https://api.edify.club/edifybackend/v1/issue/${userId}`,
+		  'GET'
+		);
+		
+		// Return the list of issues
+		return res.data;
+	  } else {
+		throw new Error('No user session found');
+	  }
+	} catch (error: any) {
+	  console.error('Error fetching issues by user ID:', error);
+	  throw new Error(error);
+	}
+  };
+
+
+
+

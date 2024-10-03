@@ -9,11 +9,13 @@ const DeviceContainer = () => {
     const [activeTab, setActiveTab] = useState('devices');
     const devices = [
         {
+            id:123,
             deviceImg:"https://images.firstpost.com/wp-content/uploads/2020/11/Apple_macbook-air.jpg",
             device_name:"MacBook Air M1",
             serial_no: "EDIFY-6367"
         },
         {
+            id:124,
             deviceImg:"https://brain-images-ssl.cdn.dixons.com/2/0/10185702/u_10185702.jpg",
             device_name:"BenQ 32 inches Monitor",
             serial_no: "EDIFY-6352"
