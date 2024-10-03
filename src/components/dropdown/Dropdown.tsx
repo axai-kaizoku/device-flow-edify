@@ -4,11 +4,18 @@ import { useState } from 'react';
 interface DropdownProps {
 	items?: string[];
 	onSelect: (value: string) => void; // Add onSelect prop
+	value?: string;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ items = [], onSelect }) => {
+export const Dropdown: React.FC<DropdownProps> = ({
+	items = [],
+	onSelect,
+	value,
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedOption, setSelectedOption] = useState<string | null>(null);
+	const [selectedOption, setSelectedOption] = useState<string | null>(
+		value ?? null,
+	);
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);

@@ -7,6 +7,6 @@ export const zindex_datepicker = zindex_table_header + above;
 export const zindex_tooltip = zindex_table_header + above;
 
 //Modal
-export const zindex_modal_backdrop = 10;
+export const zindex_modal_backdrop = 100;
 export const zindex_modal = zindex_modal_backdrop + above;
 export const zindex_dropdown = zindex_modal + above;
