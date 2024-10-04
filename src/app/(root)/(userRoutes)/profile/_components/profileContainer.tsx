@@ -6,30 +6,78 @@ import Personal from "./personalSection";
 import Work from "./workSection";
 import Document from "./documentSection";
 import { Pencil } from "lucide-react";
+import { User } from "@/server/userActions";
 
 // import { Input } from "@/components/wind/Input";
 
-const ProfileContainer = () => {
+const ProfileContainer = ({user}:{user:User}) => {
     const [activeTab, setActiveTab] = useState('Personal');
     const [isEditing, setIsEditing] = useState(false); 
+    
     const [userInfo, setUserInfo] = useState({
-        firstName: "John",
-        lastName: "Doe",
-        email: "johndoe12@gmail.com",
-        phone: "9985746956",
-        city: "Bengaluru",
-        stateCountry: "Karnataka, India",
-        pincode: "208001",
-        country: "India",
-        employeeNo: 12345,
-        role: "Software Developer",
-        reportingManager: "Jay Jenkins",
-        joiningDate: "01-07-2017",
-        department: "Tech",
-        bio:"This is About me.",
-        profileImage:"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
-        adhaar:"https://indiadarpan.com/wp-content/uploads/2018/10/Aadhaar-Card-sample.png"
-    });
+        _id: "66fe83c9ced3fd24632800ec",
+        designation:"Software Developer",
+        image:"",
+        first_name: "John",
+        last_name: "Doe",
+        about: "Some details",
+        interests_and_hobbies: "Reading, Hiking",
+        date_of_birth: "1990-01-01T00:00:00.000Z",
+        gender: "Male",
+        marital_status: "Single",
+        physically_handicapped: "No",
+        password: "winuall123",
+        email: "john@winuall.come",
+        phone: "sfggffdg",
+        orgId: {
+          deleted_at: null,
+          _id: "66cdb429eca7ef02552984e7",
+          name: "Winuall",
+          legal_entity_name: "Edify by Winuall",
+          office_address: [
+            {
+              address: "Ghaziabad delhi",
+              phone: 8709139553,
+              is_primary: true,
+              image: "",
+              _id: "66cdb429eca7ef02552984e8"
+            }
+          ],
+          logo: "",
+          __v: 0,
+          email: "akshay.y@winuall.com"
+        },
+        role: "1",
+        reporting_manager: {
+          deleted_at: null,
+          _id: "66f2b4abfb1ea7c81cc967ef",
+          first_name: "Ayush",
+          last_name: "Jhanwar",
+          password: "$2b$10$a15xbHMU8TWRxaYvNjXKieeclTjCc9pl8QfFhmoRFLiu8.zBchvIK",
+          email: "ayush.jhanwar@winuall.com",
+          phone: "9659192919",
+          orgId: "66cdb429eca7ef02552984e7",
+          role: "1",
+          employment_type: "Full-time",
+          created_at: "2024-09-03T07:23:40.696Z",
+          reporting_manager: "66f2a59efb1ea7c81cc967e6",
+          __v: 0,
+          date_of_birth: "2024-10-04T00:00:00.000Z",
+          onboarding_date: "2024-10-04T00:00:00.000Z",
+          teamId: "66f657965405df8b0ca7e086",
+          updatedAt: "2024-10-03T09:29:54.704Z",
+          about: "al;sdkjf;lasdf;ljkasdf",
+          interests_and_hobbies: "asdflj",
+          marital_status: "single",
+          physically_handicapped: "no"
+        },
+        employment_type: "full-time",
+        onboarding_date: "2024-01-01T00:00:00.000Z",
+        deleted_at: null,
+        __v: 0,
+        createdAt: "2024-10-03T11:45:13.522Z",
+        updatedAt: "2024-10-03T11:45:13.522Z"
+      });
 
     // Handling input changes during edit
     const handleInputChange = (field: string, value: string) => {
@@ -46,7 +94,7 @@ const ProfileContainer = () => {
             const imageUrl = URL.createObjectURL(file);
             setUserInfo({
                 ...userInfo,
-                profileImage: imageUrl
+                image: imageUrl
             });
         }
     };
@@ -66,13 +114,13 @@ const ProfileContainer = () => {
     // For Rendering Tabs
     const renderContent = () => {
         if (activeTab === 'Personal') {
-            return <Personal isEditing={isEditing} userInfo={userInfo} onInputChange={handleInputChange} />;
+            return <Personal isEditing={isEditing} userInfo={user} onInputChange={handleInputChange} />;
         }
         else if(activeTab === 'Work') {
-            return <Work userInfo={userInfo}/>
+            return <Work userInfo={user}/>
         }
         else{
-            return <Document userInfo={userInfo}/>
+            return <Document userInfo={user}/>
         }
     };
 
@@ -99,7 +147,7 @@ const ProfileContainer = () => {
                     />
 
                     <img
-                        src={userInfo.profileImage}
+                        src={userInfo.image}
                         alt="profile image"
                         className="rounded-full object-cover object-top w-full h-full"
                     />
@@ -107,11 +155,11 @@ const ProfileContainer = () => {
 
                 <div className="user-name-container rounded-md flex flex-col text-center gap-4">
                     <div className="user-name font-bold">
-                        {userInfo.firstName} {userInfo.lastName}
+                        {user.first_name} {user.last_name}
                     </div>
 
                     <div className="designation">
-                        <h1 className="text-slate-500">Software Developer</h1>
+                        <h1 className="text-slate-500">Software Engineer</h1>
                     </div>
                 </div>
 

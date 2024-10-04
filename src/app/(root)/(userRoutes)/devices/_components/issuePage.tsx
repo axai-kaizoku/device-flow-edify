@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EmpIssueTable from './empIssueTable'
 import { getIssueByUserId, Issues } from '@/server/issueActions';
 
-const Issue = async () => {
+const Issue = () => {
   const [issues, setIssues] = useState<Issues[]>([]); // State to store the fetched issues
   const data = [
     {
@@ -44,6 +44,10 @@ const Issue = async () => {
       console.error('Error fetching user issues:', error);
     }
   }
+
+  useEffect(() => {
+    fetchUserIssues(); // Fetch issues when the component mounts
+  }, []);
 
   return (
     <div className='w-full'>

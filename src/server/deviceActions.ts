@@ -1,6 +1,6 @@
 'use server';
 import { redirect } from 'next/navigation';
-import { callAPIWithToken } from './helper';
+import { callAPIWithToken, getSession } from './helper';
 
 //Device type
 export type Device = {
@@ -28,7 +28,7 @@ export type Device = {
 	device_purchase_date: string;
 };
 
-type DeviceResponse = Device[];
+export type DeviceResponse = Device[];
 
 //Creating Devices
 export const createDevices = async (
@@ -190,3 +190,33 @@ export async function getDeviceById<Device>(deviceId: string) {
 		throw new Error('Failed to fetch device');
 	}
 }
+
+
+// Getting Devices by User ID
+
+export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
+	const sess = await getSession(); // Fetch session details
+  
+	try {
+	  if (sess?.user && sess.user.id) {
+		
+		// Make the GET request to fetch Devices of user ID
+		const res = await callAPIWithToken<DeviceResponse>(
+		`https://api.edify.club/edifybackend/v1/devices/userDetails`,
+		  'GET',
+		);
+
+		console.log(res);
+		
+		// Return the list of Devices
+		return res.data;
+	  } else {
+		throw new Error('No user session found');
+	  }
+	} catch (error: any) {
+	  console.error('Error fetching Devices of user ID:', error);
+	  throw new Error(error);
+	}
+}
+
+

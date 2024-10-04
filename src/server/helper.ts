@@ -95,7 +95,7 @@ export async function callAPIWithToken<T>(
 
 		// Return response data and status
 		return {
-			data: response.data,
+			data: response.data as T,
 			status: response.status,
 		};
 	} catch (error: any) {

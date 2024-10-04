@@ -1,21 +1,24 @@
 import { Textarea } from "@/components/wind/Input";
 import InfoDisplay from "./infoDisplay";
+import AboutDisplay from "./aboutDisplay";
 
 const Personal = ({ isEditing, userInfo, onInputChange }: any) => {
     return (
         <div className="flex flex-col py-4 gap-4 overflow-y-auto">
             <div className="flex flex-wrap justify-between">
                 <InfoDisplay 
-                    infoText={userInfo.firstName} 
+                    infoText={userInfo.first_name} 
                     infoLabel="First Name"
-                    isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('firstName', value)}
+                    isEditing={false}
+                    infoName="first_name"
+                    // onInputChange={(value: string) => onInputChange('first_name', value)}
                 />
                 <InfoDisplay 
-                    infoText={userInfo.lastName} 
+                    infoText={userInfo.last_name} 
                     infoLabel="Second Name"
-                    isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('lastName', value)}
+                    isEditing={false}
+                    infoName="last_name"
+                    // onInputChange={(value: string) => onInputChange('last_name', value)}
                 />
             </div>
 
@@ -23,11 +26,13 @@ const Personal = ({ isEditing, userInfo, onInputChange }: any) => {
                 <InfoDisplay 
                     infoText={userInfo.email} 
                     infoLabel="Email Address"
+                    infoName="email"
                     isEditing={false} // Email is read-only
                 />
                 <InfoDisplay 
                     infoText={userInfo.phone} 
                     infoLabel="Phone Number"
+                    infoName="phone"
                     isEditing={isEditing}
                     onInputChange={(value: string) => onInputChange('phone', value)}
                 />
@@ -35,52 +40,56 @@ const Personal = ({ isEditing, userInfo, onInputChange }: any) => {
 
             <div className="flex flex-wrap justify-between">
                 <InfoDisplay 
-                    infoText={userInfo.city} 
-                    infoLabel="City"
-                    isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('city', value)}
+                    infoText={userInfo.date_of_birth} 
+                    infoLabel="D.O.B"
+                    infoName="date_of_birth"
+                    isEditing={false}
+                    // onInputChange={(value: string) => onInputChange('city', value)}
                 />
                 <InfoDisplay 
-                    infoText={userInfo.stateCountry} 
-                    infoLabel="State/Country"
+                    infoText={userInfo.marital_status} 
+                    infoLabel="Marital Status"
+                    infoName="marital_status"
                     isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('stateCountry', value)}
+                    onInputChange={(value: string) => onInputChange('marital_status', value)}
                 />
             </div>
 
             <div className="flex flex-wrap justify-between">
                 <InfoDisplay 
-                    infoText={userInfo.pincode} 
-                    infoLabel="Pincode"
-                    isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('pincode', value)}
+                    infoText={userInfo.gender} 
+                    infoLabel="Gender"
+                    infoName="gender"
+                    isEditing={false}
+                    // onInputChange={(value: string) => onInputChange('gender', value)}
                 />
                 <InfoDisplay 
-                    infoText={userInfo.country} 
-                    infoLabel="Country"
+                    infoText={userInfo.physically_handicapped} 
+                    infoLabel="Physically Handicapped"
+                    infoName="physically_handicapped"
                     isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('country', value)}
+                    onInputChange={(value: string) => onInputChange('physically_handicapped', value)}
                 />
             </div>
 
             <div className="flex flex-wrap justify-between">
-                {/* <InfoDisplay 
-                    infoText={userInfo.bio} 
-                    infoLabel="Bio"
+                <InfoDisplay 
+                    infoText={userInfo.interests_and_hobbies} 
+                    infoLabel="Hobbies and Interests"
                     isEditing={isEditing}
-                    onInputChange={(value: string) => onInputChange('bio', value)}
-                /> */}
-                {/* <Textarea
-                  onChange={(event)=>{
-                    onInputChange('bio',event.target.value);
-                  }}
-                  disabled={!isEditing}
-                  placeholder="Tell Something about yourself..."
-                  style={{
-                    width: 380
-                  }}
-                  value={userInfo.bio}
-                /> */}
+                    infoName="interests_and_hobbies"
+                    onInputChange={(value: string) => onInputChange('interests_and_hobbies', value)}
+                />
+            </div>
+
+            <div className="flex flex-wrap justify-between w-full">
+                <AboutDisplay
+                    infoText={userInfo.about}
+                    infoLabel="About"
+                    isEditing={isEditing}
+                    infoName="about"
+                    onInputChange={(value: string) => onInputChange('about', value)}
+                />
             </div>
         </div>
     );
