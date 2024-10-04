@@ -1,6 +1,8 @@
 // ExtraDetails.tsx
 import { Dropdown } from '@/components/dropdown/Dropdown';
-import React, { useState } from 'react';
+import { Address, getAddress } from '@/server/addressActions';
+import { fetchUsers, User } from '@/server/userActions';
+import React, { useState, useEffect } from 'react';
 
 type FormType = {
 	brand: string;
@@ -18,6 +20,9 @@ type ExtraDetailsType = {
 };
 
 function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
+	const [assignedOptions, setAssignedOptions] = useState<string[]>([]);
+	const [locationsOptions, setLocationsOptions] = useState<string[]>([]);
+	const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
 	const [formData, setFormData] = useState<FormType>(
 		data || {
 			brand: '',
@@ -52,6 +57,28 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 		});
 	};
 
+	const fetchAPIs = async () => {
+		try {
+			const [assignedUsers, officeLocations]: [User[], Address[]] =
+				await Promise.all([fetchUsers(), getAddress()]);
+
+			const assignedUserNames = assignedUsers.map((user) => user.email);
+			const locationNames = officeLocations.map((address) => address.city);
+
+			setAssignedOptions(assignedUserNames);
+			setLocationsOptions(locationNames);
+		} catch (error) {
+			console.error('Failed to fetch data:', error);
+		}
+	};
+
+	const handleNameFocus = () => {
+		if (!isDropdownActive) {
+			setIsDropdownActive(true);
+			fetchAPIs(); // Invoke the function
+		}
+	};
+
 	return (
 		<div className="flex flex-col w-full">
 			<h1 className="text-xl py-4">Advance Details</h1>
@@ -75,18 +102,31 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 						name="assignedTo"
 						value={formData.assignedTo}
 						onChange={handleChange}
+						onFocus={handleNameFocus}
+						list="assignedOptions"
+						placeholder="Select a User"
 						type="text"
 						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
 					/>
 					{errors?.assignedTo && (
 						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
 					)}
+					<datalist id="assignedOptions">
+						{assignedOptions.map((user, index) => (
+							<option key={index} value={user}>
+								{user}
+							</option>
+						))}
+					</datalist>
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Office Location</label>
 					<input
 						name="officeLocation"
 						value={formData.officeLocation}
+						onFocus={handleNameFocus}
+						list="locationsOptions"
+						placeholder="Select a Location"
 						onChange={handleChange}
 						type="text"
 						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
@@ -94,6 +134,13 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 					{errors?.officeLocation && (
 						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
 					)}
+					<datalist id="locationsOptions">
+						{locationsOptions.map((city, index) => (
+							<option key={index} value={city}>
+								{city}
+							</option>
+						))}
+					</datalist>
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Purchase Order</label>

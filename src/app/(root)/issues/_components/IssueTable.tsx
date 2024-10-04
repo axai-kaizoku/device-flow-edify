@@ -16,24 +16,45 @@ function IssueTable({ data }: { data: Issues[] }) {
 				data={data}
 				columns={[
 					{
+						title: 'Title',
+						dataIndex: 'title',
+					},
+					{
+						title: 'Description',
+						dataIndex: 'description',
+					},
+					{
 						title: 'Raised by',
-						dataIndex: 'userId',
+						dataIndex: 'userName',
+					},
+					{
+						title: 'User Email',
+						dataIndex: 'email',
 					},
 					{
 						title: 'Priority',
 						dataIndex: 'priority',
 					},
 					{
-						title: 'Issued At ',
-						dataIndex: 'createdAt',
+						title: 'Issued At',
+						render: (data) => (
+							<div className="w-full flex justify-center">
+								<div>
+									{data.createdAt
+										? new Date(data.createdAt).toLocaleDateString()
+										: 'NULL'}
+								</div>
+							</div>
+						),
 					},
 					{
 						title: 'Status',
 						dataIndex: 'status',
 					},
+
 					{
-						title: 'Org Id',
-						dataIndex: 'orgId',
+						title: 'Serial No',
+						dataIndex: 'serial_no',
 					},
 					{
 						title: 'Actions',
