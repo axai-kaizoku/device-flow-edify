@@ -165,6 +165,18 @@ function EditDevice({ data }: { data: any }) {
 							className="border p-2"
 						/>
 						<input
+							type="date"
+							value={deviceData.city}
+							onChange={(e) =>
+								setDeviceData({
+									...deviceData,
+									city: e.target.value,
+								})
+							}
+							placeholder="Device Location"
+							className="border p-2"
+						/>
+						<input
 							type="text"
 							value={deviceData.ownership}
 							onChange={(e) =>
@@ -245,6 +257,9 @@ function EditDevice({ data }: { data: any }) {
 						</p>
 						<p>
 							<strong>Purchase Value:</strong> {deviceData.purchase_value}
+						</p>
+						<p>
+							<strong>Device Location:</strong> {deviceData.city}
 						</p>
 						<p>
 							<strong>Asset Serial Value:</strong> {deviceData.asset_serial_no}

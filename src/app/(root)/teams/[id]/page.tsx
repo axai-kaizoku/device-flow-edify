@@ -4,6 +4,7 @@ import { getTeamById, Team } from '@/server/teamActions';
 import EditTeam from './_components/edit-team';
 import { Icon } from '@/components/wind/Icons';
 import { DeleteTeam } from './_components/delete-team';
+import { getUsersByTeamId, User } from '@/server/userActions';
 
 interface TeamPageProps {
 	params: { id: string };
@@ -11,6 +12,7 @@ interface TeamPageProps {
 
 export default async function TeamPage({ params }: TeamPageProps) {
 	const data: Team = await getTeamById(params.id);
+	const users: User[] = await getUsersByTeamId(params.id);
 
 	return (
 		<CombinedContainer
@@ -71,7 +73,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 			</div>
 
 			<div className="mt-12">
-				<TeamTable data={[]} />
+				<TeamTable data={users} />
 			</div>
 		</CombinedContainer>
 	);

@@ -5,27 +5,13 @@ import { checkForDuplicates, parseCSV } from './CSVHelper';
 import { useRouter } from 'next/navigation';
 type dataProps = {
 	closeBtn: () => void;
+	requiredKeys: string[];
+	bulkApi: (formData: any) => Promise<any>;
 };
-function BulkUpload({ closeBtn }: dataProps) {
+function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
 	const [csvError, setCsvError] = useState<string | null>(null);
 	const router = useRouter();
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	const requiredKeys = [
-		'device_name',
-		'asset_serial_no',
-		'ram',
-		'processor',
-		'storage',
-		'warranty_expiary_date',
-		'os',
-		'price',
-		'ownership',
-		'purchase_order',
-		'device_type',
-		'brand',
-		'model',
-		'serial_no',
-	];
 
 	const validateCSV = (file: File) => {
 		const reader = new FileReader();
@@ -98,7 +84,7 @@ function BulkUpload({ closeBtn }: dataProps) {
 		const formData = new FormData();
 		formData.append('file', file);
 		try {
-			const response = await bulkUploadDevices(formData); // Call the API
+			const response = await bulkApi(formData); // Call the API
 			router.refresh();
 			closeBtn();
 		} catch (error) {
@@ -114,9 +100,7 @@ function BulkUpload({ closeBtn }: dataProps) {
 	};
 
 	const downloadSampleCSV = () => {
-		const csvContent =
-			'device_name,asset_serial_no,ram,processor,storage,warranty_expiary_date,os,price,ownership,purchase_order,device_type,brand,model,serial_no\n' +
-			'Sample Device,123456789,8GB,Intel i5,512GB SSD,2025-12-31,Windows 10,800,Company,PO1234,Laptop,Dell,Inspiron 15,DELL12345';
+		const csvContent = requiredKeys.join(',');
 
 		const blob = new Blob([csvContent], { type: 'text/csv' });
 		const link = document.createElement('a');
@@ -126,31 +110,28 @@ function BulkUpload({ closeBtn }: dataProps) {
 	};
 	return (
 		<div>
-			<div className="flex justify-between my-8 items-center">
-				<h1 className="text-lg font-medium">Device Type</h1>
-				<div className="mt-6 flex space-x-4">
-					<button
-						className="bg-black text-white py-2 px-4 rounded transition duration-300 hover:bg-gray-800"
-						onClick={handleFileUploadClick}>
-						Upload CSV
-					</button>
-					<button
-						className="bg-gray-200 text-black py-2 px-4 rounded transition duration-300 hover:bg-gray-400"
-						onClick={downloadSampleCSV}>
-						Download Sample CSV
-					</button>
-					<input
-						type="file"
-						accept=".csv"
-						ref={fileInputRef}
-						onChange={(e) => {
-							if (e.target.files && e.target.files.length > 0) {
-								validateCSV(e.target.files[0]);
-							}
-						}}
-						className="hidden"
-					/>
-				</div>
+			<div className="mt-6 flex space-x-4">
+				<button
+					className="bg-black text-white py-2 px-4 rounded transition duration-300 hover:bg-gray-800"
+					onClick={handleFileUploadClick}>
+					Upload CSV
+				</button>
+				<button
+					className="bg-gray-200 text-black py-2 px-4 rounded transition duration-300 hover:bg-gray-400"
+					onClick={downloadSampleCSV}>
+					Download Sample CSV
+				</button>
+				<input
+					type="file"
+					accept=".csv"
+					ref={fileInputRef}
+					onChange={(e) => {
+						if (e.target.files && e.target.files.length > 0) {
+							validateCSV(e.target.files[0]);
+						}
+					}}
+					className="hidden"
+				/>
 			</div>
 
 			{csvError && (

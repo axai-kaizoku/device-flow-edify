@@ -57,3 +57,30 @@ export const Dropdown: React.FC<DropdownProps> = ({ items = [], onSelect }) => {
 		</div>
 	);
 };
+
+export const SelectDropdown = ({
+	label,
+	name,
+	value,
+	onChange,
+	options,
+}: {
+	label: string;
+	name: string;
+	value: string;
+	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+	options: { label: string; value: string }[];
+}) => (
+	<select
+		name={name}
+		value={value}
+		onChange={onChange}
+		className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+		<option value="">Select {label}</option>
+		{options.map((option) => (
+			<option key={option.value} value={option.value}>
+				{option.label}
+			</option>
+		))}
+	</select>
+);

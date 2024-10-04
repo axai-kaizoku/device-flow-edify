@@ -8,6 +8,7 @@ export type Team = {
 	description: string;
 	image: string;
 	size?: string;
+	employees_count: string;
 	deleted_at?: string | null;
 	createdAt?: string;
 	updatedAt?: string;

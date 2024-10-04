@@ -25,7 +25,7 @@ function InventoryTable({ devices }: InventoryProps) {
 					},
 					{
 						title: 'currently At ',
-						dataIndex: 'currently_at',
+						dataIndex: 'city',
 					},
 					{
 						title: 'Ownership',

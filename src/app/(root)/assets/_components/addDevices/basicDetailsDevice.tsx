@@ -1,4 +1,3 @@
-import { Dropdown } from '@/components/dropdown/Dropdown';
 import { Icon } from '@/components/wind/Icons';
 import { getAllDevices } from '@/server/deviceActions';
 import React, { useState, useEffect } from 'react';

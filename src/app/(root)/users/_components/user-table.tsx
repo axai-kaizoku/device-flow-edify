@@ -12,8 +12,19 @@ export default function UserTable({ users }: { users: User[] }) {
 			className="w-full"
 			columns={[
 				{ title: 'User', dataIndex: 'first_name' },
-				{ title: 'Role', dataIndex: 'role' },
-				{ title: 'Joining Date', dataIndex: 'onboarding_date' },
+				{ title: 'Role', dataIndex: 'designation' },
+				{
+					title: 'Joining Date',
+					render: (data) => (
+						<div className="w-full flex justify-center">
+							<div>
+								{data.onboarding_date
+									? new Date(data.onboarding_date).toLocaleDateString()
+									: 'NULL'}
+							</div>
+						</div>
+					),
+				},
 				{
 					title: 'Reporting Manager',
 					render: (data) => (

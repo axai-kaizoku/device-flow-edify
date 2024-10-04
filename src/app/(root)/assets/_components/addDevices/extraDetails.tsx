@@ -1,8 +1,10 @@
 // ExtraDetails.tsx
-import { Dropdown } from '@/components/dropdown/Dropdown';
+import React, { useState } from 'react';
 import { Address, getAddress } from '@/server/addressActions';
 import { fetchUsers, User } from '@/server/userActions';
-import React, { useState, useEffect } from 'react';
+import { Dropdown } from '@/components/dropdown/dropdown';
+import ApiDropdown from '@/components/dropdown/api-dropdown';
+import ApiDropdownUser from './_components/dropdown.users';
 
 type FormType = {
 	brand: string;
@@ -63,7 +65,9 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 				await Promise.all([fetchUsers(), getAddress()]);
 
 			const assignedUserNames = assignedUsers.map((user) => user.email);
-			const locationNames = officeLocations.map((address) => address.city);
+			const locationNames: string[] = officeLocations
+				.map((address) => address.city)
+				.filter((city): city is string => city !== undefined);
 
 			setAssignedOptions(assignedUserNames);
 			setLocationsOptions(locationNames);
@@ -118,10 +122,14 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 							</option>
 						))}
 					</datalist>
+					{/* <ApiDropdownUser
+						onChange={handleChange}
+						value={formData.assignedTo}
+					/> */}
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Office Location</label>
-					<input
+					{/* <input
 						name="officeLocation"
 						value={formData.officeLocation}
 						onFocus={handleNameFocus}
@@ -140,7 +148,14 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 								{city}
 							</option>
 						))}
-					</datalist>
+					</datalist> */}
+					<ApiDropdown
+						fetching={getAddress}
+						name="officeLocation"
+						onChange={handleChange}
+						resName="city"
+						value={formData.officeLocation}
+					/>
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Purchase Order</label>

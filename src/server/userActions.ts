@@ -53,7 +53,9 @@ export type User = {
 	email: string;
 	phone: string;
 	orgId?: Org;
-	role: string;
+	role: number;
+	designation: string;
+	image: string;
 	teamId: Team;
 	employment_type: string;
 	created_at: string;
@@ -67,17 +69,18 @@ export type CreateUserArgs = {
 	first_name: string;
 	last_name: string;
 	gender: string;
-	marital_status: string;
-	physically_handicapped: string;
-	about: string;
-	interests_and_hobbies: string;
+	marital_status?: string;
+	physically_handicapped?: string;
+	about?: string;
+	interests_and_hobbies?: string;
 	_id?: string;
 	email: string;
 	phone: string;
-	role: string;
+	role?: number;
+	designation: string;
+	image?: string;
 	teamId: string;
 	employment_type: string;
-
 	date_of_birth: string;
 	onboarding_date: string;
 	reporting_manager: string;
@@ -162,5 +165,38 @@ export async function deleteUser<User>(userId: string) {
 		return res.data;
 	} catch (e) {
 		throw new Error('Failed to delete user');
+	}
+}
+
+export const bulkUploadUsers = async (formData: FormData): Promise<any> => {
+	try {
+		// Call the API with multipart/form-data
+		const response = await callAPIWithToken<any>(
+			'https://api.edify.club/edifybackend/v1/user/bulk-upload',
+			'POST',
+			formData,
+			{
+				'Content-Type': 'multipart/form-data',
+			},
+		);
+		return response;
+	} catch (error) {
+		console.error('Error in bulk uploading users:', error);
+		throw error;
+	}
+};
+
+export async function getUsersByTeamId<User>(teamId: string) {
+	try {
+		const res = await callAPIWithToken<User>(
+			`https://api.edify.club/edifybackend/v1/user/${teamId}/team`, // API endpoint
+			'GET', // HTTP method
+			null,
+		);
+
+		return res.data;
+	} catch (e) {
+		console.log(e);
+		throw new Error('Failed to fetch user');
 	}
 }

@@ -8,8 +8,9 @@ import {
 	SmartphoneCharging,
 	Star,
 } from 'lucide-react';
-import React, { useState, useRef } from 'react';
-import BulkUpload from './_components/bulk-upload';
+import React, { useState } from 'react';
+import { bulkUploadDevices } from '@/server/deviceActions';
+import BulkUpload from '@/components/bulk-upload';
 
 type DeviceTypeProps = {
 	data: string;
@@ -39,7 +40,29 @@ function DeviceType({ data, setData, error, closeBtn }: DeviceTypeProps) {
 
 	return (
 		<div className="w-full">
-			<BulkUpload closeBtn={closeBtn} />
+			<div className="flex justify-between my-8 items-center">
+				<h1 className="text-lg font-medium">Device Type</h1>
+				<BulkUpload
+					closeBtn={closeBtn}
+					requiredKeys={[
+						'device_name',
+						'asset_serial_no',
+						'ram',
+						'processor',
+						'storage',
+						'warranty_expiary_date',
+						'os',
+						'price',
+						'ownership',
+						'purchase_order',
+						'device_type',
+						'brand',
+						'model',
+						'serial_no',
+					]}
+					bulkApi={bulkUploadDevices}
+				/>
+			</div>
 			<div className="grid grid-cols-2 gap-8 mb-4">
 				{deviceList.map((device) => (
 					<div

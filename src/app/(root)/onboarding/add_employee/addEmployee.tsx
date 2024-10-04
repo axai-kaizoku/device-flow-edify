@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { UserForm } from '../../users/_components/user-form';
 
 // Reusable Input Field Component
 const InputField = ({
@@ -52,9 +53,7 @@ const SelectField = ({
 			className="w-full px-3 py-2 border border-gray-300 rounded-lg">
 			<option value="">Select {label}</option>
 			{options.map((option) => (
-				<option
-					key={option.value}
-					value={option.value}>
+				<option key={option.value} value={option.value}>
 					{option.label}
 				</option>
 			))}
@@ -247,5 +246,9 @@ function AddEmployee() {
 		</div>
 	);
 }
+
+export const AddUser = () => {
+	return <UserForm />;
+};
 
 export default AddEmployee;

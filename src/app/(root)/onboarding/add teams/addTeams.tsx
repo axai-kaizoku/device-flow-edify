@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TeamForm } from '../../teams/_components/team-form';
 
 // Reusable Input Field Component
 const InputField = ({
@@ -175,5 +176,9 @@ function AddTeams() {
 		</div>
 	);
 }
+
+export const AddTeam = () => {
+	return <TeamForm />;
+};
 
 export default AddTeams;

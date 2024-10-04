@@ -43,20 +43,42 @@ export default function TeamTable({ data }: { data?: any }) {
 	];
 	return (
 		<Table
-			data={teams}
+			data={data}
 			columns={[
-				{ title: 'User', dataIndex: 'name' },
-				{ title: 'Role', dataIndex: 'role' },
-				{ title: 'Joining Date', dataIndex: 'joining_date' },
-				{ title: 'Reporting Manager', dataIndex: 'reporting_manager' },
+				{ title: 'User', dataIndex: 'first_name' },
+				{ title: 'Role', dataIndex: 'designation' },
 				{
-					title: 'Actions',
-					render: () => (
+					title: 'Joining Date',
+					render: (data) => (
 						<div className="w-full flex justify-center">
-							<Icon type="OutlinedDotsVertical" color="black" />
+							<div>
+								{data.onboarding_date
+									? new Date(data.onboarding_date).toLocaleDateString()
+									: 'NULL'}
+							</div>
 						</div>
 					),
 				},
+				{
+					title: 'Reporting Manager',
+					render: (data) => (
+						<div className="w-full flex justify-center">
+							<div>
+								{data.reporting_manager?.first_name
+									? data.reporting_manager?.first_name
+									: 'NULL'}
+							</div>
+						</div>
+					),
+				},
+				// {
+				// 	title: 'Actions',
+				// 	render: () => (
+				// 		<div className="w-full flex justify-center">
+				// 			<Icon type="OutlinedDotsVertical" color="black" />
+				// 		</div>
+				// 	),
+				// },
 			]}
 		/>
 	);
