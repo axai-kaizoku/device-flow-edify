@@ -1,4 +1,4 @@
-import { callAPIWithToken } from './helper';
+import { callAPIWithToken, getSession } from './helper';
 
 export type Address = {
 	isPrimary?: boolean;
@@ -18,5 +18,55 @@ export async function getAddress(): Promise<Address[]> {
 		return res.data;
 	} catch (e: any) {
 		throw new Error(e);
+	}
+}
+
+export async function createAddress(city: string): Promise<Address> {
+	try {
+		const sess = await getSession();
+
+		const res = await callAPIWithToken<Address>(
+			'https://api.edify.club/edifybackend/v1/address', // API endpoint
+			'POST', // HTTP method
+			{
+				userId: sess?.user.id,
+				orgId: sess?.user.orgId,
+				city,
+			},
+		);
+
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to create Address');
+	}
+}
+
+export async function updateAddress(
+	id: string,
+	city: string,
+): Promise<Address> {
+	try {
+		const res = await callAPIWithToken<Address>(
+			`https://api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
+			'PUT', // HTTP method
+			{ city },
+		);
+		console.log(res);
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to Update Address');
+	}
+}
+
+export async function deleteAddress<Address>(addressId: string) {
+	try {
+		const res = await callAPIWithToken<Address>(
+			`https://api.edify.club/edifybackend/v1/address/${addressId}`, // API endpoint
+			'DELETE',
+			null,
+		);
+		return res.data;
+	} catch (e) {
+		throw new Error('Failed to delete Address');
 	}
 }

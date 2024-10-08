@@ -2,10 +2,12 @@ import { CombinedContainer } from '@/components/container/container';
 import { fetchTeams } from '@/server/teamActions';
 import CreateTeam from './_components/create-team';
 import TeamsMain from './_components/teams-main';
+import { getSession } from '@/server/helper';
 
 export default async function Teams() {
 	try {
 		const teams = await fetchTeams();
+		const sess = await getSession();
 
 		return (
 			<CombinedContainer title="Teams">
@@ -14,7 +16,7 @@ export default async function Teams() {
 						className="border rounded-lg px-4 py-2 w-[16rem] text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none transition"
 						placeholder="Search Teams..."
 					/>
-					<CreateTeam />
+					{sess?.user.role === 2 && <CreateTeam />}
 				</div>
 				<TeamsMain teams={teams} />
 			</CombinedContainer>

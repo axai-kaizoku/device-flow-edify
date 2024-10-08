@@ -16,7 +16,7 @@ export default function SidebarMain({ session }: Props) {
 	const pathname = usePathname();
 
 	return (
-		<section className="hidden w-[20%] flex-col py-4 gap-0.5 items-center sm:flex h-screen overflow-auto border-r">
+		<section className="hidden w-[20%] flex-col py-4 gap-0.5 items-center sm:flex fixed left-0 h-screen overflow-auto border-r">
 			<div className="px-2 w-24 h-14 pb-4 flex justify-center items-center">
 				<Link href="/">
 					<Image

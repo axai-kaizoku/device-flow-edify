@@ -41,6 +41,34 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	callbacks: {
+		async signIn(params) {
+			console.log(params);
+			// if (params.account?.provider === 'google') {
+			// 	const res = await fetch(
+			// 		'https://api.edify.club/edifybackend/v1/auth/login',
+			// 		{
+			// 			method: 'POST',
+			// 			headers: {
+			// 				'Content-Type': 'application/json',
+			// 			},
+			// 			body: JSON.stringify({
+			// 				email: params.user.email,
+			// 			}),
+			// 		},
+			// 	);
+
+			// 	const data = await res.json();
+			// 	// console.log(data);
+			// 	if (res.status === 200) {
+			// 		return true;
+			// 	} else {
+			// 		console.error(data.message);
+			// 		return false; // Reject the sign-in
+			// 	}
+			// }
+			return true; // Default for other providers
+		},
+
 		async jwt({ token, user }) {
 			// console.log(token, 'jwt token');
 			// console.log(user, 'jwt user');
@@ -51,6 +79,7 @@ export const authOptions: NextAuthOptions = {
 				token.first_name = user.name ? '' : user.user.first_name;
 				token.last_name = user.name ? '' : user.user.last_name;
 				token.orgId = user.image ? '' : user.user.orgId._id;
+				token.role = user.user.role;
 			}
 			return token;
 		},
@@ -65,6 +94,7 @@ export const authOptions: NextAuthOptions = {
 				session.user.first_name = token.first_name;
 				session.user.last_name = token.last_name;
 				session.user.orgId = token.orgId;
+				session.user.role = token.role;
 			}
 			return session;
 		},

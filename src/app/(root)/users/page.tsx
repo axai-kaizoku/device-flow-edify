@@ -1,8 +1,7 @@
 import { CombinedContainer } from '@/components/container/container';
-import { Input } from '@/components/wind/Input';
 import { fetchUsers } from '@/server/userActions';
-import UserTable from './_components/user-table';
-import CreateUser from './_components/create-user';
+
+import UserMain from './_components/user-main';
 
 export default async function Users() {
 	try {
@@ -10,16 +9,7 @@ export default async function Users() {
 
 		return (
 			<CombinedContainer title="Users">
-				<div className="flex justify-end w-full">
-					<div className="flex gap-5">
-						<Input placeholder="Search users" />
-						<CreateUser />
-					</div>
-				</div>
-				<div className="h-10" />
-				<div className="w-full">
-					<UserTable users={users} />
-				</div>
+				<UserMain data={users} />
 			</CombinedContainer>
 		);
 	} catch (error) {

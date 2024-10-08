@@ -4,6 +4,7 @@ import { callAPIWithToken, getSession } from './helper';
 
 //Device type
 export type Device = {
+	_id?: string;
 	id?: string;
 	userId?: string;
 	orgId?: string;

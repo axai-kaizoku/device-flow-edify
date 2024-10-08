@@ -43,7 +43,7 @@ export async function middleware(req: NextRequest) {
 
 		// Check for admin route protection
 		if (adminRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
-			if (token.email !== 'aniket.prakash@winuall.com') {
+			if (token.role !== 2) {
 				const home = new URL('/error', req.url);
 				return NextResponse.redirect(home);
 			}
@@ -51,7 +51,7 @@ export async function middleware(req: NextRequest) {
 
 		// Check for user route protection
 		if (userRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
-			if (token.email === 'aniket.prakash@winuall.com') {
+			if (token.role === 2) {
 				const home = new URL('/error', req.url);
 				return NextResponse.redirect(home);
 			}

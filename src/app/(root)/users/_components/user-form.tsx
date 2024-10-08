@@ -38,7 +38,9 @@ export const UserForm = ({
 		phone: userData ? userData.phone : '',
 		email: userData ? userData.email : '',
 		designation: userData ? userData.designation : '',
+		//@ts-ignore
 		team: userData?.teamId ? userData.teamId.name : '',
+		//@ts-ignore
 		reportM: userData?.reporting_manager ? userData.reporting_manager.name : '',
 		gender: userData ? userData.gender : '',
 		employment: userData ? userData.employment_type : '',
@@ -242,6 +244,17 @@ export const UserForm = ({
 										placeholder="Select Reporting Manager"
 									/>
 								</div>
+								{/* <div className="w-1/2">
+									<label className="text-sm font-semibold">Image</label>
+									<input
+										type="date"
+										value={formData.image}
+										onChange={(e) =>
+											setFormData({ ...formData, image: e.target.value })
+										}
+										className="p-2 border rounded-md"
+									/>
+								</div> */}
 							</div>
 
 							<div className="flex justify-end">

@@ -18,7 +18,9 @@ export const InnerContainer = ({ children }: ChildrenProps) => {
 };
 
 export const OuterContainer = ({ children }: ChildrenProps) => {
-	return <div className="flex flex-col w-full h-full">{children}</div>;
+	return (
+		<div className="flex flex-col w-full min-h-screen h-full">{children}</div>
+	);
 };
 
 export const ContainerHeader = ({

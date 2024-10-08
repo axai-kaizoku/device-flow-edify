@@ -8,6 +8,7 @@ declare module 'next-auth/jwt' {
 		first_name: string;
 		last_name: string;
 		orgId: string;
+		role: number;
 	}
 }
 
@@ -20,6 +21,7 @@ declare module 'next-auth' {
 			first_name: string;
 			last_name: string;
 			orgId: string;
+			role: number;
 		};
 	}
 }
@@ -35,6 +37,7 @@ declare module 'next-auth' {
 			orgId: {
 				_id: string;
 			};
+			role: number;
 		};
 	}
 }

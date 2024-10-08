@@ -7,8 +7,10 @@ export default function MainLayout({
 }) {
 	return (
 		<main className="flex h-full w-full">
-			<Sidebar />
-			{children}
+			<div className="w-[20%]">
+				<Sidebar />
+			</div>
+			<div className="w-[80%]">{children}</div>
 		</main>
 	);
 }

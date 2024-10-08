@@ -1,9 +1,88 @@
 import { CombinedContainer } from '@/components/container/container';
+import { getCurrentOrg, Org } from '@/server/orgActions';
+import { MapPinned } from 'lucide-react';
+import CreateAddress from './_components/create-address';
+import EditAddress from './_components/edit-address';
+import { DeleteAddress } from './_components/delete-address';
 
-export default function Settings() {
+export default async function Settings() {
+	const o: Org[] = await getCurrentOrg();
+	const org: Org = o[0];
 	return (
-		<CombinedContainer title="Settings" description="Manage your settings">
-			Settings
+		<CombinedContainer
+			title="Settings"
+			description="Manage your organization's settings">
+			<div className="flex flex-col gap-8">
+				{/* Organization Details */}
+				<div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+					<div className="flex items-center gap-4">
+						<img
+							src={org.logo || 'https://via.placeholder.com/100'}
+							alt={`${org.name} logo`}
+							className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-300"
+						/>
+						<div>
+							<h2 className="text-2xl font-semibold text-gray-700">
+								{org.name}
+							</h2>
+							<p className="text-sm text-gray-500">{org.email}</p>
+						</div>
+					</div>
+					<div className="text-right">
+						<p className="text-lg font-semibold text-gray-600">
+							Devices: {org.total_devices}
+						</p>
+						<p className="text-lg font-semibold text-gray-600">
+							Employees: {org.total_employees}
+						</p>
+					</div>
+				</div>
+
+				{/* Office Addresses */}
+				<div>
+					<h3 className="text-xl font-semibold text-gray-700 mb-4">
+						Office Addresses
+					</h3>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{org.office_address?.map((address) => (
+							<div
+								key={address._id}
+								className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+								<div className="flex items-center justify-between">
+									<h4 className="text-lg font-semibold text-gray-700">
+										City: {address.city}
+									</h4>
+									<MapPinned color="gray" />
+								</div>
+								<p className="text-sm text-gray-500 mt-2">
+									{/* Device ID: {address.deviceId} */}
+									Primary Address
+								</p>
+								<div className="mt-4 flex gap-4 justify-end">
+									<EditAddress city={address.city} id={address._id}>
+										<button className="bg-slate-500 text-white py-2 px-4 rounded-md shadow hover:bg-slate-600 transition duration-300">
+											Edit
+										</button>
+									</EditAddress>
+									<DeleteAddress id={address._id}>
+										<span className="bg-slate-800 text-white py-2 px-4 rounded-md shadow hover:bg-slate-600 transition duration-300">
+											Delete
+										</span>
+									</DeleteAddress>
+								</div>
+							</div>
+						))}
+					</div>
+					{/* Add new address button */}
+					<div className="mt-6">
+						<CreateAddress>
+							<button className="bg-gradient-to-r from-green-400 to-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+								Add New Address
+							</button>
+						</CreateAddress>
+					</div>
+				</div>
+			</div>
 		</CombinedContainer>
 	);
 }
