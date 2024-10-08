@@ -18,30 +18,33 @@ const ProfileContainer = ({user}:{user:User}) => {
     const router = useRouter()
     
     const [formData, setFormData] = useState({
-		firstN: user ? user.first_name : '',
-		lastN: user ? user.last_name : '',
-		phone: user ? user.phone : '',
-		email: user ? user.email : '',
-		designation: user ? user.designation : '',
-		team: user?.teamId ? user.teamId.name : '',
-		reportM: user?.reporting_manager ? user.reporting_manager.name : '',
-		gender: user ? user.gender : '',
-		employment: user ? user.employment_type : '',
-		dob: user ? user.date_of_birth : '',
-		onboarding: user ? user.onboarding_date : '',
-		marital_status: user ? user.marital_status : '',
-		physically_handicapped: user ? user.physically_handicapped : '',
-		interests_and_hobbies: user ? user.interests_and_hobbies : '',
-		about: user ? user.about : '',
-	});
+        first_name: user?.first_name || '',
+        last_name: user?.last_name || '',
+        phone: user?.phone || '',
+        email: user?.email || '',
+        designation: user?.designation || '',
+        teamId: user?.teamId?.name || '',
+        reporting_manager: user?.reporting_manager?.name || '',
+        gender: user?.gender || '',
+        employment_type: user?.employment_type || '',
+        date_of_birth: user?.date_of_birth || '',
+        onboarding_date: user?.onboarding_date || '',
+        marital_status: user?.marital_status || '',
+        physically_handicapped: user?.physically_handicapped || '',
+        interests_and_hobbies: user?.interests_and_hobbies || '',
+        about: user?.about || '',
+        image: user?.image || '',
+    });
+
+
 
 
     // Handling input changes during edit
     const handleInputChange = (field: string, value: string) => {
-        setFormData({
-            ...formData,
-            [field]: value
-        });
+        setFormData((prevData) => ({
+          ...prevData,
+          [field]: value,
+        }));
     };
 
     // Handle image upload
@@ -94,7 +97,7 @@ const ProfileContainer = ({user}:{user:User}) => {
     // For Rendering Tabs
     const renderContent = () => {
         if (activeTab === 'Personal') {
-            return <Personal isEditing={isEditing} userInfo={user} onInputChange={handleInputChange} />;
+            return <Personal isEditing={isEditing} userInfo={formData} onInputChange={handleInputChange} />;
         }
         else if(activeTab === 'Work') {
             return <Work userInfo={user}/>

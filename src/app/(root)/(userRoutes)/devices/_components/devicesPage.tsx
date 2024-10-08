@@ -7,6 +7,7 @@ import { Device, DeviceResponse, getDevicesByUserId } from '@/server/deviceActio
 
 
 const Devices = ({devices}:any) => {
+  const [closeBtn,setCloseBtn]=useState(false)
   // const [devices, setDevices] = useState<DeviceResponse>([]); // State to hold devices
   const router = useRouter();
 
@@ -32,14 +33,14 @@ const Devices = ({devices}:any) => {
               </div>
 
               <div>
-                <Sheet>
+                <Sheet onOpenChange={setCloseBtn} open={closeBtn}>
                   <SheetTrigger>
                     <button className="bg-black py-2 px-3 text-white rounded-lg hover:opacity-90 duration-300">
                       Report an Issue
                     </button>
                   </SheetTrigger>
                   <SheetContent>
-                    <Form device={device}/>
+                    <Form device={device} closeBtn={setCloseBtn}/>
                   </SheetContent>
                 </Sheet>
 					    </div>

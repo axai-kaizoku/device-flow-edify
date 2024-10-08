@@ -42,9 +42,7 @@ const Work = ({userInfo}:any) => {
                 />
 
                 <InfoDisplay 
-
                     infoText={userInfo.teamId?.title} 
-
                     infoLabel="Team"
                     isEditing={false}
                     infoName="team"

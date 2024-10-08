@@ -12,10 +12,16 @@ interface TeamPageProps {
 }
 
 export default async function TeamPage({ params }: TeamPageProps) {
+<<<<<<< HEAD
+	const data: Team = await getTeamById(params.id);
+	const users: User[] = await getUsersByTeamId(params.id);
+	
+=======
 	try {
 		const data: Team = await getTeamById(params.id);
 		const users: User[] = await getUsersByTeamId(params.id);
 		const sess = await getSession();
+>>>>>>> master
 
 		return (
 			<CombinedContainer
@@ -27,6 +33,41 @@ export default async function TeamPage({ params }: TeamPageProps) {
 						placeholder="Search users..."
 					/>
 				</div>
+<<<<<<< HEAD
+				{<div className="flex gap-5">
+					<EditTeam
+						_id={params.id}
+						title={data.title}
+						description={data.description}
+						image={data.image}>
+						<Icon
+							type="OutlinedEdit"
+							color="gray"
+							style={{
+								width: '1.5rem',
+								height: '1.5rem',
+								cursor: 'pointer',
+							}}
+							// className="w-6 h-6 cursor-pointer hover:text-indigo-500 transition"
+						/>
+					</EditTeam>
+					<DeleteTeam id={params.id}>
+						<Icon
+							type="OutlinedBin"
+							color="red"
+							style={{
+								width: '1.5rem',
+								height: '1.5rem',
+								cursor: 'pointer',
+							}}
+							// className="w-6 h-6 cursor-pointer hover:text-red-600 transition"
+						/>
+						{/* <Icon type="" color="grey" /> */}
+					</DeleteTeam>
+				</div>}
+			</div>
+=======
+>>>>>>> master
 
 				<div className="w-full py-8 px-8 flex justify-between items-center bg-white shadow-md rounded-lg">
 					<div className="flex gap-6 items-center">

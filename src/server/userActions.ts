@@ -86,6 +86,7 @@ export type CreateUserArgs = {
 	reporting_manager: string;
 };
 
+
 export type Reportee = {
 	_id?: string;
 	first_name?: string;
@@ -110,6 +111,8 @@ export type HierarchyUser = {
 };
 
 export type HierarchyResponse = HierarchyUser[];
+
+  
 
 type UsersResponse = User[];
 
@@ -247,10 +250,11 @@ export async function fetchUserHierarchy(): Promise<HierarchyResponse> {
 			'GET', // HTTP method
 		);
 
-		console.log(res.data);
+		console.log(res.data)
 		return res.data;
 	} catch (e) {
 		console.error('Error fetching user hierarchy:', e);
 		throw new Error('Failed to fetch user hierarchy');
 	}
 }
+

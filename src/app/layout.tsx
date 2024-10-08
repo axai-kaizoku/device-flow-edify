@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/providers';
 import { ScreenSize } from '@/components/utils/screen-size';
+import KbarWrapper from './KbarWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 	title: 'Edify for Startups',
 	description: 'A better way to manage assets in orgs',
 };
+
+
 
 export default function RootLayout({
 	children,
@@ -19,6 +22,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
+				<KbarWrapper /> {/* Render KbarWrapper here */}
 				<Providers>
 					<ScreenSize />
 					{children}
