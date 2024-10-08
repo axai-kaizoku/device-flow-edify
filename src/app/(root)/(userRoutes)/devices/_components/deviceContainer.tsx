@@ -12,7 +12,7 @@ const DeviceContainer = ({devices, issues}:any) => {
     // For Rendering Tabs
     const renderContent = () => {
         if (activeTab === 'devices') {
-            return <Devices />;
+            return <Devices devices={devices}/>;
         }
         else if(activeTab === 'issues') {
             return <Issue issues={issues}/>
