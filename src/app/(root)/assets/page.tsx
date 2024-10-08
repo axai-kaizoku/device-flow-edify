@@ -32,6 +32,8 @@ export default async function Assets({ searchParams }: AssetsProps) {
 					currentPage={devicesResponse.currentPage}
 					totalPages={devicesResponse.totalPages}
 					totalDocuments={devicesResponse.totalDocuments}
+					currentDocumentCount={devicesResponse.currentDocumentCount}
+					pageSize={devicesResponse.pageSize}
 				/>
 			</CombinedContainer>
 		);

@@ -23,6 +23,8 @@ async function Issues({ searchParams }: IssueProps) {
 					data={issueResponse.documents}
 					currentPage={issueResponse.currentPage}
 					totalPages={issueResponse.totalPages}
+					currentDocumentCount={issueResponse.currentDocumentCount}
+					pageSize={issueResponse.pageSize}
 				/>
 			</CombinedContainer>
 		);

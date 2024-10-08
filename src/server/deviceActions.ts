@@ -40,6 +40,7 @@ export type DeviceResponse = {
 	totalDocuments: number;
 	pageSize: number;
 	documentCount: number;
+	currentDocumentCount: number;
 };
 
 //Creating Devices
