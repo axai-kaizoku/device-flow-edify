@@ -14,19 +14,6 @@ const Devices = ({devices}:any) => {
     router.push(`devices/${id}`);
   };
 
-  // useEffect(() => {
-  //   // Fetch devices by user ID on component mount
-  //   const fetchDevices = async () => {
-  //     try {
-  //       const devicesData = await getDevicesByUserId(); // Call the API function
-  //       setDevices(devicesData); // Update the state with fetched devices
-  //     } catch (error) {
-  //       console.log('Failed to fetch devices');
-  //     }
-  //   };
-
-  //   fetchDevices();
-  // }, []); // Empty dependency array to call useEffect only once
 
 
   return (

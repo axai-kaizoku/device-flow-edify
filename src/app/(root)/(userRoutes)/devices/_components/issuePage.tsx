@@ -3,7 +3,7 @@ import EmpIssueTable from './empIssueTable'
 import { getIssueByUserId, Issues } from '@/server/issueActions';
 
 const Issue = ({issues}:any) => {
-  // const [issues, setIssues] = useState<Issues[]>([]); // State to store the fetched issues
+
   const data = [
     {
       "deleted_at": null,
@@ -49,9 +49,6 @@ const Issue = ({issues}:any) => {
   //   fetchUserIssues(); // Fetch issues when the component mounts
   // }, []);
 
-  useEffect(() => {
-    fetchUserIssues(); // Fetch issues when the component mounts
-  }, []);
 
   return (
     <div className='w-full'>

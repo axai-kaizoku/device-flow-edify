@@ -217,32 +217,8 @@ export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
 	} catch (error: any) {
 	  console.error('Error fetching Devices of user ID:', error);
 	  throw new Error(error);
+
 	}
 }
 
-// Getting Devices by User ID
 
-export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
-	const sess = await getSession(); // Fetch session details
-  
-	try {
-	  if (sess?.user && sess.user.id) {
-		
-		// Make the GET request to fetch Devices of user ID
-		const res = await callAPIWithToken<DeviceResponse>(
-		`https://api.edify.club/edifybackend/v1/devices/userDetails`,
-		  'GET',
-		);
-
-		console.log(res);
-		
-		// Return the list of Devices
-		return res.data;
-	  } else {
-		throw new Error('No user session found');
-	  }
-	} catch (error: any) {
-	  console.error('Error fetching Devices of user ID:', error);
-	  throw new Error(error);
-	}
-}
