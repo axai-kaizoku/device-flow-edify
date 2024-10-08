@@ -1,31 +1,19 @@
-// app/assets/TabDisplay.tsx
-
 'use client';
-
+import { Issues } from '@/server/issueActions';
+import React, { useCallback, useState } from 'react';
+import IssueTable from './IssueTable';
 import { useRouter, useSearchParams } from 'next/navigation';
-import AddDevices from './_components/addDevices/AddDevices';
-import Inventory from './_components/inventory/Inventory';
-import { Tab } from './_components/Tab';
-import { useCallback } from 'react';
-import { Device } from '@/server/deviceActions';
-import { useQueryState } from 'nuqs';
-
-interface TabDisplayProps {
-	devices: Device[];
+interface IssueTableDisplayProps {
+	data: Issues[];
 	currentPage: number;
 	totalPages: number;
-	totalDocuments: number;
 }
-
-function TabDisplay({
-	devices,
+function IssueTableDisplay({
+	data,
 	currentPage,
 	totalPages,
-	totalDocuments,
-}: TabDisplayProps) {
-	const [activeTab, setActiveTab] = useQueryState('tab', {
-		defaultValue: 'devices',
-	});
+}: IssueTableDisplayProps) {
+	const [searchTerm, setSearchTerm] = useState('');
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -33,41 +21,17 @@ function TabDisplay({
 		(page: number) => {
 			const params = new URLSearchParams(searchParams.toString());
 			params.set('page', page.toString());
-			router.push(`/assets?${params.toString()}`);
+			router.push(`/issues?${params.toString()}`);
 		},
 		[router, searchParams],
 	);
-
-	const renderContent = () => {
-		switch (activeTab) {
-			case 'devices':
-				return <AddDevices devices={devices} totalDocuments={totalDocuments} />;
-			case 'inventory':
-				return <Inventory devices={devices} />;
-			default:
-				return null;
-		}
-	};
-
 	return (
 		<>
-			<div className="flex items-center w-full gap-6">
-				<Tab
-					active={activeTab === 'devices'}
-					onClick={() => setActiveTab('devices')}
-					iconType="OutlinedLaptop"
-					label="Assigned Devices"
-				/>
-				<Tab
-					active={activeTab === 'inventory'}
-					onClick={() => setActiveTab('inventory')}
-					iconType="OutlinedStore"
-					label="Inventory"
-				/>
-			</div>
-
-			<div className="mt-4">{renderContent()}</div>
-
+			<IssueTable
+				data={data}
+				searchTerm={searchTerm}
+				setSearchTerm={setSearchTerm}
+			/>
 			{/* Pagination Controls */}
 			<div className="flex justify-center mt-6 gap-4">
 				<button
@@ -111,4 +75,4 @@ function TabDisplay({
 	);
 }
 
-export default TabDisplay;
+export default IssueTableDisplay;

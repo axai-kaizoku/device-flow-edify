@@ -6,18 +6,26 @@ export type Issues = {
 	description?: string;
 	orgId?: string;
 	title?: string;
-	status?: string;
+	status: string;
 	deleted_at?: null | string;
 	createdAt?: string;
 	updatedAt?: string;
 	priority?: string;
 	userName?: string;
 
-	serial_no?: string;
-	email?: string;
+	serial_no: string;
+	email: string;
 };
 
-export type IssueResponse = Issues[];
+export type IssueResponse = {
+	documents: Issues[]; // Changed from 'devices' to 'documents'
+	totalPages: number;
+	currentPage: number;
+	totalDocuments: number;
+	currentDocumentCount: number;
+	pageSize: number;
+	documentCount: number;
+};
 
 //get all issues-admin
 export async function getAllIssues(): Promise<IssueResponse> {
@@ -83,57 +91,70 @@ export async function deleteIssue(
 
 // Create Issue - Employee
 
-export const createIssue = async (issueData: Issues): Promise<Issues | undefined> => {
+export const createIssue = async (
+	issueData: Issues,
+): Promise<Issues | undefined> => {
 	const sess = await getSession();
 	try {
-		if(sess?.user){
+		if (sess?.user) {
 			const issue = {
 				...issueData,
-				orgId:sess.user.orgId,
-				userId:sess.user.id,
-				email:sess.user.email,
-				createdAt: new Date().toISOString()
-			}
+				orgId: sess.user.orgId,
+				userId: sess.user.id,
+				email: sess.user.email,
+				createdAt: new Date().toISOString(),
+			};
 			const res = await callAPIWithToken<Issues>(
 				'https://api.edify.club/edifybackend/v1/issue/',
 				'POST',
-				issue
+				issue,
 			);
 			return res.data;
 		}
 	} catch (error: any) {
-	  console.error('Error creating a new issue:', error);
-	  throw new Error(error);
+		console.error('Error creating a new issue:', error);
+		throw new Error(error);
 	}
-  };
-
+};
 
 //  Get Issues by UserId
 
-export const getIssueByUserId = async (): Promise<IssueResponse | undefined> => {
+export const getIssueByUserId = async (): Promise<
+	IssueResponse | undefined
+> => {
 	const sess = await getSession(); // Fetch session details
-  
+
 	try {
-	  if (sess?.user && sess.user.id) {
-		// const userId = sess.user.id;
-		
-		// Make the GET request to fetch issues by user ID
-		const res = await callAPIWithToken<IssueResponse>(
-		  `https://api.edify.club/edifybackend/v1/issue/userDetails`,
-		  'GET'
-		);
-		
-		// Return the list of issues
-		return res.data;
-	  } else {
-		throw new Error('No user session found');
-	  }
+		if (sess?.user && sess.user.id) {
+			// const userId = sess.user.id;
+
+			// Make the GET request to fetch issues by user ID
+			const res = await callAPIWithToken<IssueResponse>(
+				`https://api.edify.club/edifybackend/v1/issue/userDetails`,
+				'GET',
+			);
+
+			// Return the list of issues
+			return res.data;
+		} else {
+			throw new Error('No user session found');
+		}
 	} catch (error: any) {
-	  console.error('Error fetching issues by user ID:', error);
-	  throw new Error(error);
+		console.error('Error fetching issues by user ID:', error);
+		throw new Error(error);
 	}
-  };
+};
 
-
-
-
+//pagination
+export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
+	try {
+		const res = await callAPIWithToken<IssueResponse>(
+			`https://api.edify.club/edifybackend/v1/issue/paginated?page=${page}`,
+			'GET',
+		);
+		// console.log(res.data);
+		return res.data;
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};

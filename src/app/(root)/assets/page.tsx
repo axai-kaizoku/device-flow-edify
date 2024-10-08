@@ -1,19 +1,41 @@
-// app/assets/page.tsx
-
 import { CombinedContainer } from '@/components/container/container';
 import TabDisplay from './TabDisplay';
-import { getAllDevices } from '@/server/deviceActions';
+import { paginatedDevices, DeviceResponse } from '@/server/deviceActions';
+import { notFound } from 'next/navigation';
 
-export default async function Assets() {
+interface AssetsProps {
+	searchParams: {
+		page?: string;
+	};
+}
+
+export default async function Assets({ searchParams }: AssetsProps) {
+	const page = searchParams.page ? parseInt(searchParams.page) : 1;
+	// console.log('page:', page);
+
 	try {
-		const devices = await getAllDevices();
+		const devicesResponse: DeviceResponse = await paginatedDevices(
+			page.toString(),
+		);
+		// console.log('device response:', JSON.stringify(devicesResponse, null, 2));
+		// console.log('Response currentPage:', devicesResponse.currentPage);
+		// console.log('Devices:', devicesResponse.documents);
+
+		if (!devicesResponse.documents.length) {
+			notFound();
+		}
 
 		return (
 			<CombinedContainer title="Assets">
-				<TabDisplay devices={devices} />
+				<TabDisplay
+					devices={devicesResponse.documents} // Pass the documents array directly
+					currentPage={devicesResponse.currentPage}
+					totalPages={devicesResponse.totalPages}
+					totalDocuments={devicesResponse.totalDocuments}
+				/>
 			</CombinedContainer>
 		);
-	} catch (error) {
+	} catch (error: any) {
 		console.error('Error fetching devices:', error);
 		return (
 			<CombinedContainer title="Assets">

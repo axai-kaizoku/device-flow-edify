@@ -4,16 +4,38 @@ import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { Issues } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
+import IssueHeader from './IssueHeader';
 
-function IssueTable({ data }: { data: Issues[] }) {
+function IssueTable({
+	data,
+	searchTerm,
+	setSearchTerm,
+}: {
+	data: Issues[];
+	searchTerm: string;
+	setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+}) {
 	const router = useRouter();
+
 	const handleIssueClick = (id: string) => {
 		router.push(`/issues/${id}`);
 	};
+
+	// Filter data based on the search term
+	const filteredData = data.filter((issue) => {
+		const lowerSearchTerm = searchTerm.toLowerCase();
+		return (
+			(issue.status?.toLowerCase() || '').includes(lowerSearchTerm) ||  // Ensure status is defined
+			(issue.email?.toLowerCase() || '').includes(lowerSearchTerm) ||   // Ensure email is defined
+			(issue.serial_no?.toLowerCase() || '').includes(lowerSearchTerm)  // Ensure serial_no is defined
+		);
+	});
+
 	return (
 		<div>
+			<IssueHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 			<Table
-				data={data}
+				data={filteredData}
 				columns={[
 					{
 						title: 'Title',
@@ -51,7 +73,6 @@ function IssueTable({ data }: { data: Issues[] }) {
 						title: 'Status',
 						dataIndex: 'status',
 					},
-
 					{
 						title: 'Serial No',
 						dataIndex: 'serial_no',

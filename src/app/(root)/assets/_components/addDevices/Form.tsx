@@ -142,6 +142,7 @@ function Form({ closeBtn }: FormProps) {
 					warranty_expiary_date:
 						formData.advanceDeviceDetails.warrantyExpiryDate,
 					brand: formData.extraDetails.brand,
+					userName: formData.extraDetails.assignedTo,
 					ownership: formData.extraDetails.ownership,
 					purchase_value: formData.extraDetails.purchaseValue,
 					asset_serial_no: 'Asset serial no',

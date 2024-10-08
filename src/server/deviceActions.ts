@@ -7,8 +7,9 @@ export type Device = {
 	id?: string;
 	userId?: string;
 	orgId?: string;
-	addressId?: string;
+	addressId?: string | null;
 	device_name: string;
+	userName?: string;
 	device_type: string;
 	asset_serial_no?: string;
 	serial_no: string;
@@ -18,17 +19,27 @@ export type Device = {
 	custom_model: string;
 	brand: string;
 	warranty_status?: boolean;
-	warranty_expiary_date: string;
+	warranty_expiary_date: string | null;
 	ownership: string;
 	purchase_order: string;
 	purchase_value: number;
 	os: string;
-	deleted_at?: null | string;
-
-	device_purchase_date: string;
+	deleted_at?: string | null;
+	device_purchase_date?: string;
+	is_trending?: boolean;
+	image?: string;
+	createdAt?: string;
+	updatedAt?: string;
 };
 
-export type DeviceResponse = Device[];
+export type DeviceResponse = {
+	documents: Device[]; // Changed from 'devices' to 'documents'
+	totalPages: number;
+	currentPage: number;
+	totalDocuments: number;
+	pageSize: number;
+	documentCount: number;
+};
 
 //Creating Devices
 export const createDevices = async (
@@ -77,10 +88,15 @@ export async function getAllDevices(): Promise<DeviceResponse> {
 			'GET',
 		);
 
+		// Validate response structure
+		if (!res.data || !Array.isArray(res.data.documents)) {
+			throw new Error('Invalid API response structure');
+		}
+
 		return res.data;
 	} catch (e: any) {
-		// redirect('/login');
-		throw new Error(e);
+		// Optionally, handle specific error scenarios
+		throw new Error(e.message || 'Failed to fetch devices');
 	}
 }
 
@@ -178,47 +194,58 @@ export async function searchAPI(searchParams: {
 // Get Device by ID
 export const getDeviceById = async (deviceId: string): Promise<Device> => {
 	try {
-	  // Make the GET request to fetch a single device by ID
-	  const res = await callAPIWithToken<Device>(
-		`https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
-		'GET'
-	  );
-  
-	  // Return the fetched device
-	  return res.data;
-	} catch (error: any) {
-	  console.error('Error fetching device by ID:', error);
-	  throw new Error('Failed to fetch device by ID');
-	}
-  };
+		// Make the GET request to fetch a single device by ID
+		const res = await callAPIWithToken<Device>(
+			`https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+			'GET',
+		);
 
+		// Return the fetched device
+		return res.data;
+	} catch (error: any) {
+		console.error('Error fetching device by ID:', error);
+		throw new Error('Failed to fetch device by ID');
+	}
+};
 
 // Getting Devices by User ID
 
-export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
+export const getDevicesByUserId = async (): Promise<DeviceResponse> => {
 	const sess = await getSession(); // Fetch session details
-  
+
 	try {
-	  if (sess?.user && sess.user.id) {
-		
-		// Make the GET request to fetch Devices of user ID
-		const res = await callAPIWithToken<DeviceResponse>(
-		`https://api.edify.club/edifybackend/v1/devices/userDetails`,
-		  'GET',
-		);
+		if (sess?.user && sess.user.id) {
+			// Make the GET request to fetch Devices of user ID
+			const res = await callAPIWithToken<DeviceResponse>(
+				`https://api.edify.club/edifybackend/v1/devices/userDetails`,
+				'GET',
+			);
 
-		console.log(res);
-		
-		// Return the list of Devices
-		return res.data;
-	  } else {
-		throw new Error('No user session found');
-	  }
+			console.log(res);
+
+			// Return the list of Devices
+			return res.data;
+		} else {
+			throw new Error('No user session found');
+		}
 	} catch (error: any) {
-	  console.error('Error fetching Devices of user ID:', error);
-	  throw new Error(error);
-
+		console.error('Error fetching Devices of user ID:', error);
+		throw new Error(error);
 	}
-}
+};
 
-
+//pagination
+export const paginatedDevices = async (
+	page: string,
+): Promise<DeviceResponse> => {
+	try {
+		const res = await callAPIWithToken<DeviceResponse>(
+			`https://api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
+			'GET',
+		);
+		// console.log(res.data);
+		return res.data;
+	} catch (error: any) {
+		throw new Error(error);
+	}
+};

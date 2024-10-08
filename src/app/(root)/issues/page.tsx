@@ -1,13 +1,29 @@
-import { getAllIssues } from '@/server/issueActions';
-import IssueTable from './_components/IssueTable';
+import { IssueResponse, paginatedIssue } from '@/server/issueActions';
 import { CombinedContainer } from '@/components/container/container';
-
-async function Issues() {
+import IssueTableDisplay from './_components/IssueTableDisplay';
+import { notFound } from 'next/navigation';
+interface IssueProps {
+	searchParams: {
+		page?: string;
+	};
+}
+async function Issues({ searchParams }: IssueProps) {
+	const page = searchParams.page ? parseInt(searchParams.page) : 1;
 	try {
-		const data = await getAllIssues();
+		const issueResponse: IssueResponse = await paginatedIssue(page.toString());
+
+		if (!issueResponse.documents.length) {
+			notFound();
+		}
 		return (
 			<CombinedContainer title="Issues">
-				<IssueTable data={data} />
+				Total Issues Raised :- {issueResponse.currentDocumentCount} of{' '}
+				{issueResponse.totalDocuments}
+				<IssueTableDisplay
+					data={issueResponse.documents}
+					currentPage={issueResponse.currentPage}
+					totalPages={issueResponse.totalPages}
+				/>
 			</CombinedContainer>
 		);
 	} catch (error) {

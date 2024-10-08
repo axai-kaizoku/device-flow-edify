@@ -1,21 +1,24 @@
+// app/assets/_components/addDevices/DeviceTable.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { useRouter } from 'next/navigation';
+import { Device } from '@/server/deviceActions';
 
-export default function DeviceTable({
-	data,
-	searchTerm,
-}: {
-	data: any;
+interface DeviceTableProps {
+	data: Device[];
 	searchTerm: string;
-}) {
-	const [filteredData, setFilteredData] = useState(data);
+}
+
+export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
+	const [filteredData, setFilteredData] = useState<Device[]>(data);
 	const router = useRouter();
+
 	useEffect(() => {
-		const filtered = data.filter((device: any) => {
+		const filtered = data.filter((device: Device) => {
 			const { device_name, brand, custom_model } = device;
 			return (
 				(device_name &&
@@ -27,9 +30,11 @@ export default function DeviceTable({
 		});
 		setFilteredData(filtered);
 	}, [searchTerm, data]);
+
 	const handleDeviceClick = (id: string) => {
 		router.push(`/assets/${id}`);
 	};
+
 	return (
 		<div>
 			<Table
@@ -41,7 +46,7 @@ export default function DeviceTable({
 					},
 					{
 						title: 'Assigned to',
-						dataIndex: 'userName',
+						dataIndex: 'userName', // Ensure 'userName' exists in Device type or adjust accordingly
 					},
 					{
 						title: 'Serial Number',
@@ -49,7 +54,7 @@ export default function DeviceTable({
 					},
 					{
 						title: 'Warranty Status',
-						render: (record) => (
+						render: (record: Device) => (
 							<span>{record.warranty_status ? 'Active' : 'Inactive'}</span>
 						),
 					},
@@ -67,10 +72,11 @@ export default function DeviceTable({
 					},
 					{
 						title: 'Actions',
-						render: (record) => (
+						render: (record: any) => (
 							<div
 								className="flex w-full justify-center cursor-pointer"
-								onClick={() => handleDeviceClick(record._id)}>
+								onClick={() => handleDeviceClick(record._id || '')} // Handle undefined '_id'
+							>
 								<Icon type="OutlinedDotsVertical" color="black" />
 							</div>
 						),
