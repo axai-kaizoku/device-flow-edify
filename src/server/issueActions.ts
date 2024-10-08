@@ -17,7 +17,7 @@ export type Issues = {
 	email?: string;
 };
 
-type IssueResponse = Issues[];
+export type IssueResponse = Issues[];
 
 //get all issues-admin
 export async function getAllIssues(): Promise<IssueResponse> {

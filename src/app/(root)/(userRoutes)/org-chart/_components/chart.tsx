@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import { findOriginalNode, mapEmployeeToRawNodeDatum } from './utils';
 import { renderCustomNodeElement } from './RenderNode';
-import { orgData } from './data';
+// import { orgData } from './data';
 
-export default function OrgChart() {
+export default function OrgChart({orgData}:any) {
 	const [translate, setTranslate] = useState({ x: 0, y: 0 });
 	const [data, setData] = useState(mapEmployeeToRawNodeDatum(orgData));
 
@@ -58,6 +58,7 @@ export default function OrgChart() {
 					renderCustomNodeElement({
 						...rd3tProps,
 						toggleNode: () => handleNodeClick(rd3tProps.nodeDatum),
+						orgData
 					})
 				}
 				separation={{ siblings: 1, nonSiblings: 1 }}

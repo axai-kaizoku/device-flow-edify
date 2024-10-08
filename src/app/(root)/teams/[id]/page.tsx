@@ -13,6 +13,7 @@ interface TeamPageProps {
 export default async function TeamPage({ params }: TeamPageProps) {
 	const data: Team = await getTeamById(params.id);
 	const users: User[] = await getUsersByTeamId(params.id);
+	
 
 	return (
 		<CombinedContainer
@@ -39,7 +40,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 						<span className="text-gray-500">{data.description}</span>
 					</div>
 				</div>
-				<div className="flex gap-5">
+				{<div className="flex gap-5">
 					<EditTeam
 						_id={params.id}
 						title={data.title}
@@ -69,7 +70,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 						/>
 						{/* <Icon type="" color="grey" /> */}
 					</DeleteTeam>
-				</div>
+				</div>}
 			</div>
 
 			<div className="mt-12">

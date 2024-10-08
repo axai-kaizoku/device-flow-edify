@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import EmpIssueTable from './empIssueTable'
 import { getIssueByUserId, Issues } from '@/server/issueActions';
 
-const Issue = () => {
-  const [issues, setIssues] = useState<Issues[]>([]); // State to store the fetched issues
+const Issue = ({issues}:any) => {
+  // const [issues, setIssues] = useState<Issues[]>([]); // State to store the fetched issues
   const data = [
     {
       "deleted_at": null,
@@ -34,16 +34,20 @@ const Issue = () => {
     }
   ]
 
-  async function fetchUserIssues() {
-    try {
-      const issuesList = await getIssueByUserId();
-      if (issuesList) {
-        setIssues(issuesList); // Set the fetched issues into state
-      }
-    } catch (error) {
-      console.error('Error fetching user issues:', error);
-    }
-  }
+  // async function fetchUserIssues() {
+  //   try {
+  //     const issuesList = await getIssueByUserId();
+  //     if (issuesList) {
+  //       setIssues(issuesList); // Set the fetched issues into state
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user issues:', error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchUserIssues(); // Fetch issues when the component mounts
+  // }, []);
 
   useEffect(() => {
     fetchUserIssues(); // Fetch issues when the component mounts

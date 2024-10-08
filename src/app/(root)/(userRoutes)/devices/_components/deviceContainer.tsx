@@ -4,23 +4,10 @@ import { useState } from "react";
 import Devices from "./devicesPage";
 import Issue from "./issuePage";
 import { Tab } from "@/app/(root)/assets/_components/Tab";
+import { DeviceResponse } from "@/server/deviceActions";
 
-const DeviceContainer = () => {
+const DeviceContainer = ({devices, issues}:any) => {
     const [activeTab, setActiveTab] = useState('devices');
-    const devices = [
-        {
-            id:123,
-            deviceImg:"https://images.firstpost.com/wp-content/uploads/2020/11/Apple_macbook-air.jpg",
-            device_name:"MacBook Air M1",
-            serial_no: "EDIFY-6367"
-        },
-        {
-            id:124,
-            deviceImg:"https://brain-images-ssl.cdn.dixons.com/2/0/10185702/u_10185702.jpg",
-            device_name:"BenQ 32 inches Monitor",
-            serial_no: "EDIFY-6352"
-        }
-    ];
 
     // For Rendering Tabs
     const renderContent = () => {
@@ -28,7 +15,7 @@ const DeviceContainer = () => {
             return <Devices />;
         }
         else if(activeTab === 'issues') {
-            return <Issue />
+            return <Issue issues={issues}/>
         }
     };
 

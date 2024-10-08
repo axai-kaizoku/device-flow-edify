@@ -6,34 +6,34 @@ import { Device, DeviceResponse, getDevicesByUserId } from '@/server/deviceActio
 
 
 
-const Devices = () => {
-  const [devices, setDevices] = useState<DeviceResponse>([]); // State to hold devices
+const Devices = ({devices}:any) => {
+  // const [devices, setDevices] = useState<DeviceResponse>([]); // State to hold devices
   const router = useRouter();
 
-  const handleDeviceClick = (device: Device) => {
-    router.push(`devices/${device.id}`);
+  const handleDeviceClick = (id: string) => {
+    router.push(`devices/${id}`);
   };
 
-  useEffect(() => {
-    // Fetch devices by user ID on component mount
-    const fetchDevices = async () => {
-      try {
-        const devicesData = await getDevicesByUserId(); // Call the API function
-        setDevices(devicesData); // Update the state with fetched devices
-      } catch (error) {
-        console.log('Failed to fetch devices');
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch devices by user ID on component mount
+  //   const fetchDevices = async () => {
+  //     try {
+  //       const devicesData = await getDevicesByUserId(); // Call the API function
+  //       setDevices(devicesData); // Update the state with fetched devices
+  //     } catch (error) {
+  //       console.log('Failed to fetch devices');
+  //     }
+  //   };
 
-    fetchDevices();
-  }, []); // Empty dependency array to call useEffect only once
+  //   fetchDevices();
+  // }, []); // Empty dependency array to call useEffect only once
 
 
   return (
     <div className='flex flex-col gap-10'>
         {devices.length>0 ? ( devices.map((device:any)=>(
             <div className='flex flex-wrap justify-between items-center shadow-md rounded-xl py-5 px-8 hover:shadow-lg transition-all ease-in-out cursor-pointer'>
-              <div className='flex flex-wrap justify-between items-center gap-7' onClick={() => handleDeviceClick(device)}>
+              <div className='flex flex-wrap justify-between items-center gap-7' onClick={() => handleDeviceClick(device._id)}>
                 <div>
                     <img src={device.deviceImg} alt="Device Name" width={120} height={120}/>
                 </div>

@@ -6,83 +6,40 @@ import Personal from "./personalSection";
 import Work from "./workSection";
 import Document from "./documentSection";
 import { Pencil } from "lucide-react";
-import { User } from "@/server/userActions";
+import { updateUser, User } from "@/server/userActions";
+import { useRouter } from "next/navigation";
+
 
 // import { Input } from "@/components/wind/Input";
 
 const ProfileContainer = ({user}:{user:User}) => {
     const [activeTab, setActiveTab] = useState('Personal');
     const [isEditing, setIsEditing] = useState(false); 
+    const router = useRouter()
     
-    const [userInfo, setUserInfo] = useState({
-        _id: "66fe83c9ced3fd24632800ec",
-        designation:"Software Developer",
-        image:"",
-        first_name: "John",
-        last_name: "Doe",
-        about: "Some details",
-        interests_and_hobbies: "Reading, Hiking",
-        date_of_birth: "1990-01-01T00:00:00.000Z",
-        gender: "Male",
-        marital_status: "Single",
-        physically_handicapped: "No",
-        password: "winuall123",
-        email: "john@winuall.come",
-        phone: "sfggffdg",
-        orgId: {
-          deleted_at: null,
-          _id: "66cdb429eca7ef02552984e7",
-          name: "Winuall",
-          legal_entity_name: "Edify by Winuall",
-          office_address: [
-            {
-              address: "Ghaziabad delhi",
-              phone: 8709139553,
-              is_primary: true,
-              image: "",
-              _id: "66cdb429eca7ef02552984e8"
-            }
-          ],
-          logo: "",
-          __v: 0,
-          email: "akshay.y@winuall.com"
-        },
-        role: "1",
-        reporting_manager: {
-          deleted_at: null,
-          _id: "66f2b4abfb1ea7c81cc967ef",
-          first_name: "Ayush",
-          last_name: "Jhanwar",
-          password: "$2b$10$a15xbHMU8TWRxaYvNjXKieeclTjCc9pl8QfFhmoRFLiu8.zBchvIK",
-          email: "ayush.jhanwar@winuall.com",
-          phone: "9659192919",
-          orgId: "66cdb429eca7ef02552984e7",
-          role: "1",
-          employment_type: "Full-time",
-          created_at: "2024-09-03T07:23:40.696Z",
-          reporting_manager: "66f2a59efb1ea7c81cc967e6",
-          __v: 0,
-          date_of_birth: "2024-10-04T00:00:00.000Z",
-          onboarding_date: "2024-10-04T00:00:00.000Z",
-          teamId: "66f657965405df8b0ca7e086",
-          updatedAt: "2024-10-03T09:29:54.704Z",
-          about: "al;sdkjf;lasdf;ljkasdf",
-          interests_and_hobbies: "asdflj",
-          marital_status: "single",
-          physically_handicapped: "no"
-        },
-        employment_type: "full-time",
-        onboarding_date: "2024-01-01T00:00:00.000Z",
-        deleted_at: null,
-        __v: 0,
-        createdAt: "2024-10-03T11:45:13.522Z",
-        updatedAt: "2024-10-03T11:45:13.522Z"
-      });
+    const [formData, setFormData] = useState({
+		firstN: user ? user.first_name : '',
+		lastN: user ? user.last_name : '',
+		phone: user ? user.phone : '',
+		email: user ? user.email : '',
+		designation: user ? user.designation : '',
+		team: user?.teamId ? user.teamId.name : '',
+		reportM: user?.reporting_manager ? user.reporting_manager.name : '',
+		gender: user ? user.gender : '',
+		employment: user ? user.employment_type : '',
+		dob: user ? user.date_of_birth : '',
+		onboarding: user ? user.onboarding_date : '',
+		marital_status: user ? user.marital_status : '',
+		physically_handicapped: user ? user.physically_handicapped : '',
+		interests_and_hobbies: user ? user.interests_and_hobbies : '',
+		about: user ? user.about : '',
+	});
+
 
     // Handling input changes during edit
     const handleInputChange = (field: string, value: string) => {
-        setUserInfo({
-            ...userInfo,
+        setFormData({
+            ...formData,
             [field]: value
         });
     };
@@ -92,8 +49,8 @@ const ProfileContainer = ({user}:{user:User}) => {
         const file = event.target.files?.[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            setUserInfo({
-                ...userInfo,
+            setFormData({
+                ...formData,
                 image: imageUrl
             });
         }
@@ -101,10 +58,33 @@ const ProfileContainer = ({user}:{user:User}) => {
 
 
     // Toggle between editing and saving - Update
-    const handleEditClick = () => {
+    const handleEditClick = async () => {
         if (isEditing) {
             // When clicking 'Update', stop editing
             setIsEditing(false);
+
+            const userDetails = {
+                first_name: formData.firstN,
+                last_name: formData.lastN,
+                email: formData.email,
+                phone: formData.phone,
+                designation: formData.designation,
+                teamId: formData.team,
+                onboarding_date: formData.onboarding,
+                reporting_manager: formData.reportM,
+                employment_type: formData.employment,
+                date_of_birth: formData.dob,
+                gender: formData.gender,
+                marital_status: formData.marital_status,
+                physically_handicapped: formData.physically_handicapped,
+                interests_and_hobbies: formData.interests_and_hobbies,
+                about: formData.about,
+            };
+
+            if (user) {
+				await updateUser(user?._id!, userDetails);
+				router.refresh();
+			}
         } else {
             // Enable edit mode
             setIsEditing(true);
@@ -147,7 +127,7 @@ const ProfileContainer = ({user}:{user:User}) => {
                     />
 
                     <img
-                        src={userInfo.image}
+                        src={user?.image}
                         alt="profile image"
                         className="rounded-full object-cover object-top w-full h-full"
                     />

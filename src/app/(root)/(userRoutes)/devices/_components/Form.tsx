@@ -5,8 +5,10 @@ import { createDevices, Device } from '@/server/deviceActions';
 import { SignalHigh, SignalLow, SignalMedium } from 'lucide-react';
 import { Input, Textarea } from '@/components/wind/Input';
 import { createIssue } from '@/server/issueActions';
+import { useRouter } from 'next/navigation';
 
 function Form({device}:any) {
+    const router = useRouter();
     // console.log(session);
 
 	const [formData, setFormData] = useState({
@@ -77,6 +79,8 @@ function Form({device}:any) {
         } catch (error) {
             console.error('Error creating issue:', error);
         }
+
+        router.refresh();
     }
 
 	return (

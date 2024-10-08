@@ -175,21 +175,22 @@ export async function searchAPI(searchParams: {
 	}
 }
 
-//Getting device by id
-export async function getDeviceById<Device>(deviceId: string) {
+// Get Device by ID
+export const getDeviceById = async (deviceId: string): Promise<Device> => {
 	try {
-		const res = await callAPIWithToken<Device>(
-			`https://api.edify.club/edifybackend/v1/devices/${deviceId}`, // API endpoint
-			'GET', // HTTP method
-			null,
-		);
-
-		return res.data;
-	} catch (e) {
-		console.log(e);
-		throw new Error('Failed to fetch device');
+	  // Make the GET request to fetch a single device by ID
+	  const res = await callAPIWithToken<Device>(
+		`https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+		'GET'
+	  );
+  
+	  // Return the fetched device
+	  return res.data;
+	} catch (error: any) {
+	  console.error('Error fetching device by ID:', error);
+	  throw new Error('Failed to fetch device by ID');
 	}
-}
+  };
 
 
 // Getting Devices by User ID
@@ -219,4 +220,29 @@ export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
 	}
 }
 
+// Getting Devices by User ID
 
+export const getDevicesByUserId = async (): Promise<DeviceResponse > => {
+	const sess = await getSession(); // Fetch session details
+  
+	try {
+	  if (sess?.user && sess.user.id) {
+		
+		// Make the GET request to fetch Devices of user ID
+		const res = await callAPIWithToken<DeviceResponse>(
+		`https://api.edify.club/edifybackend/v1/devices/userDetails`,
+		  'GET',
+		);
+
+		console.log(res);
+		
+		// Return the list of Devices
+		return res.data;
+	  } else {
+		throw new Error('No user session found');
+	  }
+	} catch (error: any) {
+	  console.error('Error fetching Devices of user ID:', error);
+	  throw new Error(error);
+	}
+}

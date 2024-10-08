@@ -1,24 +1,16 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import OrgChart from './_components/chart';
+import { fetchUserHierarchy } from '@/server/userActions';
+import Org from './_components/orgChart';
+import { mapEmployeeData } from './_components/data';
 //Resolving SSR issue here
-const Org = () => {
-	const [show, setShow] = useState(false);
-
-	useEffect(() => {
-		setShow(true);
-	}, []);
-
-	if (!show) {
-		return null;
-	}
+const OrgPage = async () => {
+	const heirarchyData: any = await fetchUserHierarchy();
+	const actualData = mapEmployeeData(heirarchyData[0]);
 
 	return (
 		<>
-			<OrgChart />
+			<Org data={actualData}/>
 		</>
 	);
 };
 
-export default Org;
+export default OrgPage;

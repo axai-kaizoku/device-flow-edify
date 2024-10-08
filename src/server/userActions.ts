@@ -86,6 +86,34 @@ export type CreateUserArgs = {
 	reporting_manager: string;
 };
 
+
+export type Reportee = {
+	_id?: string;
+	first_name?: string;
+	last_name?: string;
+	email?: string;
+	designation?: string;
+	role?: number | string;
+	reporteeCount?: number;
+	reportingTo?: string | null;
+	reportees?: Reportee[];
+};
+
+export type HierarchyUser = {
+	_id?: string;
+	first_name?: string;
+	last_name?: string;
+	email?: string;
+	designation?: string;
+	reporteeCount?: number;
+	reportingTo?: string | null;
+	reportees?: Reportee[];
+};
+
+export type HierarchyResponse = HierarchyUser[];
+
+  
+
 type UsersResponse = User[];
 
 export async function fetchUsers(): Promise<UsersResponse> {
@@ -198,5 +226,22 @@ export async function getUsersByTeamId<User>(teamId: string) {
 	} catch (e) {
 		console.log(e);
 		throw new Error('Failed to fetch user');
+	}
+}
+
+
+// API function to fetch the hierarchy data
+export async function fetchUserHierarchy(): Promise<HierarchyResponse> {
+	try {
+		const res = await callAPIWithToken<HierarchyResponse>(
+			'https://api.edify.club/edifybackend/v1/user/hierarchy', // API endpoint for hierarchy
+			'GET', // HTTP method
+		);
+
+		console.log(res.data)
+		return res.data;
+	} catch (e) {
+		console.error('Error fetching user hierarchy:', e);
+		throw new Error('Failed to fetch user hierarchy');
 	}
 }
