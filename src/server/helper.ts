@@ -100,7 +100,7 @@ export async function callAPIWithToken<T>(
 		};
 	} catch (error: any) {
 		// Handle error and re-throw it for further handling
-		console.error('API call failed:', error.message);
+		console.error('API call failed:', error.response?.data || error.message);
 		throw new Error(error.response?.data?.message || 'API request failed');
 	}
 }

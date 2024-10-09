@@ -19,7 +19,6 @@ function IssueTableDisplay({
 	currentDocumentCount,
 	pageSize,
 }: IssueTableDisplayProps) {
-	const [searchTerm, setSearchTerm] = useState('');
 	const router = useRouter();
 
 	const searchParams = useSearchParams();
@@ -41,11 +40,7 @@ function IssueTableDisplay({
 
 	return (
 		<>
-			<IssueTable
-				data={data}
-				searchTerm={searchTerm}
-				setSearchTerm={setSearchTerm}
-			/>
+			<IssueTable data={data} />
 
 			{/* Pagination Controls */}
 			<div className="flex justify-between mt-6 gap-4">

@@ -24,6 +24,10 @@ function InventoryTable({ devices }: InventoryProps) {
 						dataIndex: 'device_name',
 					},
 					{
+						title: 'Assigned to',
+						dataIndex: 'userName',
+					},
+					{
 						title: 'currently At ',
 						dataIndex: 'city',
 					},

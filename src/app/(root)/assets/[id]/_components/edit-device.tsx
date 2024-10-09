@@ -52,6 +52,15 @@ function EditDevice({ data }: { data: any }) {
 						/>
 						<input
 							type="text"
+							value={deviceData.city}
+							onChange={(e) =>
+								setDeviceData({ ...deviceData, city: e.target.value })
+							}
+							placeholder="City"
+							className="border p-2"
+						/>
+						<input
+							type="text"
 							value={deviceData.device_type}
 							onChange={(e) =>
 								setDeviceData({ ...deviceData, device_type: e.target.value })
