@@ -30,13 +30,12 @@ function TabDisplay({
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	// Disable next page if the data is less than pageSize or if we've reached the last page
+	// Check if there's less data or if we're on the last page
 	const isNextDisabled =
 		currentDocumentCount < pageSize || currentPage >= totalPages;
 
 	const handlePageChange = useCallback(
 		(page: number) => {
-			// Prevent page change if conditions for disabling the next page are met
 			if (page > currentPage && isNextDisabled) return;
 
 			const params = new URLSearchParams(searchParams.toString());
@@ -77,53 +76,43 @@ function TabDisplay({
 			<div className="mt-4">{renderContent()}</div>
 
 			{/* Pagination Controls */}
-			<div className="flex justify-center mt-6 gap-4">
-				<button
-					onClick={() => handlePageChange(1)}
-					className={`px-4 py-2 rounded ${
-						currentPage === 1 ? 'bg-black text-white' : 'bg-gray-200'
-					}`}>
-					Load 20
-				</button>
+			<div className="flex justify-between mt-6 gap-4">
+				<div className="flex gap-4">
+					{/* Show this button only if currentPage is not 1 */}
+					{currentPage !== 1 && (
+						<button
+							onClick={() => handlePageChange(1)}
+							className="px-4 py-2 rounded bg-gray-200">
+							Load 20
+						</button>
+					)}
 
-				<button
-					onClick={() => handlePageChange(2)}
-					disabled={isNextDisabled}
-					className={`px-4 py-2 rounded ${
-						currentPage === 2
-							? 'bg-black text-white'
-							: isNextDisabled
-							? 'bg-gray-300 cursor-not-allowed'
-							: 'bg-gray-200'
-					}`}>
-					Load 100
-				</button>
+					{/* Show this button only if there's enough data for next page */}
+					{!isNextDisabled && currentPage === 1 && (
+						<button
+							onClick={() => handlePageChange(2)}
+							className="px-4 py-2 rounded bg-gray-200">
+							Load 100
+						</button>
+					)}
 
-				<button
-					onClick={() => handlePageChange(3)}
-					disabled={isNextDisabled}
-					className={`px-4 py-2 rounded ${
-						currentPage === 3
-							? 'bg-black text-white'
-							: isNextDisabled
-							? 'bg-gray-300 cursor-not-allowed'
-							: 'bg-gray-200'
-					}`}>
-					Load 500
-				</button>
+					{!isNextDisabled && currentPage === 2 && (
+						<button
+							onClick={() => handlePageChange(3)}
+							className="px-4 py-2 rounded bg-gray-200">
+							Load 500
+						</button>
+					)}
+				</div>
 
-				<button
-					onClick={() => handlePageChange(4)}
-					disabled={isNextDisabled}
-					className={`px-4 py-2 rounded ${
-						currentPage === 4
-							? 'bg-black text-white'
-							: isNextDisabled
-							? 'bg-gray-300 cursor-not-allowed'
-							: 'bg-gray-200'
-					}`}>
-					Load 2500
-				</button>
+				{/* Show "Load More" only if there are more pages */}
+				{!isNextDisabled && currentPage < totalPages && (
+					<button
+						onClick={() => handlePageChange(currentPage + 1)}
+						className="px-4 py-2 rounded bg-gray-200">
+						Load More
+					</button>
+				)}
 			</div>
 
 			{/* Display Current Page */}

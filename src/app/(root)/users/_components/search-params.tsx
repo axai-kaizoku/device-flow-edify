@@ -9,14 +9,16 @@ type SearchProps = {
 	onFiltered: (filteredData: any[]) => void; // Callback to return filtered data
 	queryName: string;
 	className?: string;
+	searchAPI: (query: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function SearchInput({
 	data,
 	queryName,
 	placeholder = 'Search...',
-	onFiltered,
 	className,
+	onFiltered,
+	searchAPI,
 }: SearchProps) {
 	const [searchTerm, setSearchTerm] = useQueryState(queryName); // Use `nuqs` for query state
 
@@ -30,7 +32,7 @@ export function SearchInput({
 
 	// Filter function based on the search input
 	const handleFilter = async (search: string) => {
-		const data = await userSearchAPI(search);
+		const data: any = await searchAPI(search);
 		onFiltered(data);
 	};
 

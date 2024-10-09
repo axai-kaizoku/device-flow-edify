@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@/server/userActions';
+import { User, userSearchAPI } from '@/server/userActions';
 import CreateUser from './create-user';
 import UserTable from './user-table';
 import { useState } from 'react';
@@ -19,7 +19,8 @@ export default function UserMain({ data }: { data: User[] }) {
 					<SearchInput
 						data={users}
 						onFiltered={handleFilteredData}
-						queryName="query"
+						queryName="name"
+						searchAPI={userSearchAPI}
 					/>
 					<CreateUser />
 				</div>

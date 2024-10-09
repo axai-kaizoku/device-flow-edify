@@ -32,13 +32,13 @@ function DevicesHeader({
 					</h1>
 				</div>
 				<div className="flex justify-center items-center gap-8">
-					<input
+					{/* <input
 						type="text"
 						value={searchTerm}
 						onChange={handleSearchChange}
 						placeholder="Search by Device Name, Brand, or Custom Model"
 						className="border focus:outline-none rounded-3xl p-2"
-					/>
+					/> */}
 					<div>
 						<Sheet open={isOpen} onOpenChange={setIsOpen}>
 							<SheetTrigger className="bg-black p-2 text-white rounded-lg hover:opacity-90 duration-300">

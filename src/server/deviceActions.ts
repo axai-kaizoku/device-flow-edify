@@ -162,33 +162,14 @@ export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 };
 
 //Search api
-export async function searchAPI(searchParams: {
-	device_name?: string;
-	brand?: string;
-	custom_model?: string;
-}): Promise<DeviceResponse> {
+export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 	try {
-		const query = new URLSearchParams();
-
-		if (searchParams.device_name) {
-			query.append('device_name', searchParams.device_name);
-		}
-
-		if (searchParams.brand) {
-			query.append('brand', searchParams.brand);
-		}
-
-		if (searchParams.custom_model) {
-			query.append('custom_model', searchParams.custom_model);
-		}
-
-		const url = `https://api.edify.club/edifybackend/v1/devices?${query.toString()}`;
-
+		const url = `https://api.edify.club/edifybackend/v1/devices/search?query=${query}`;
 		const res = await callAPIWithToken<DeviceResponse>(url, 'GET');
 
 		return res.data;
 	} catch (error: any) {
-		console.error('Error searching devices:', error);
+		console.error('Error searching:', error);
 		throw new Error(error);
 	}
 }

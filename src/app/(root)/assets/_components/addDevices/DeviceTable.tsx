@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { useRouter } from 'next/navigation';
-import { Device } from '@/server/deviceActions';
+import { Device, deviceSearchAPI } from '@/server/deviceActions';
+import { SearchInput } from '@/app/(root)/users/_components/search-params';
 
 interface DeviceTableProps {
 	data: Device[];
@@ -16,7 +17,10 @@ interface DeviceTableProps {
 export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
 	const [filteredData, setFilteredData] = useState<Device[]>(data);
 	const router = useRouter();
-
+	const [device, setDevice] = useState(data);
+	const handleFilteredData = (filtered: typeof data) => {
+		setDevice(filtered);
+	};
 	useEffect(() => {
 		const filtered = data.filter((device: Device) => {
 			const { device_name, brand, custom_model } = device;
@@ -37,8 +41,14 @@ export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
 
 	return (
 		<div>
+			<SearchInput
+				data={device}
+				onFiltered={handleFilteredData}
+				searchAPI={deviceSearchAPI}
+				queryName="query"
+			/>
 			<Table
-				data={filteredData}
+				data={device}
 				columns={[
 					{
 						title: 'Device',

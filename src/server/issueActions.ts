@@ -158,3 +158,16 @@ export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
 		throw new Error(error);
 	}
 };
+
+//search-api
+export async function issueSearchAPI(query: string): Promise<IssueResponse> {
+	try {
+		const url = `https://api.edify.club/edifybackend/v1/issue/search?query=${query}`;
+		const res = await callAPIWithToken<IssueResponse>(url, 'GET');
+
+		return res.data;
+	} catch (error: any) {
+		console.error('Error searching:', error);
+		throw new Error(error);
+	}
+}

@@ -1,10 +1,10 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
-import { Issues } from '@/server/issueActions';
+import { Issues, issueSearchAPI } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
-import IssueHeader from './IssueHeader';
+import { SearchInput } from '../../users/_components/search-params';
 
 function IssueTable({
 	data,
@@ -16,7 +16,10 @@ function IssueTable({
 	setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const router = useRouter();
-
+	const [issue, setIssue] = useState(data);
+	const handleFilteredData = (filtered: typeof data) => {
+		setIssue(filtered);
+	};
 	const handleIssueClick = (id: string) => {
 		router.push(`/issues/${id}`);
 	};
@@ -25,17 +28,23 @@ function IssueTable({
 	const filteredData = data.filter((issue) => {
 		const lowerSearchTerm = searchTerm.toLowerCase();
 		return (
-			(issue.status?.toLowerCase() || '').includes(lowerSearchTerm) ||  // Ensure status is defined
-			(issue.email?.toLowerCase() || '').includes(lowerSearchTerm) ||   // Ensure email is defined
-			(issue.serial_no?.toLowerCase() || '').includes(lowerSearchTerm)  // Ensure serial_no is defined
+			(issue.status?.toLowerCase() || '').includes(lowerSearchTerm) || // Ensure status is defined
+			(issue.email?.toLowerCase() || '').includes(lowerSearchTerm) || // Ensure email is defined
+			(issue.serial_no?.toLowerCase() || '').includes(lowerSearchTerm) // Ensure serial_no is defined
 		);
 	});
 
 	return (
 		<div>
-			<IssueHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+			{/* <IssueHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+			<SearchInput
+				onFiltered={handleFilteredData}
+				data={issue}
+				searchAPI={issueSearchAPI}
+				queryName="query"
+			/>
 			<Table
-				data={filteredData}
+				data={issue}
 				columns={[
 					{
 						title: 'Title',
