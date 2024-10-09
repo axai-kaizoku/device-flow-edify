@@ -6,7 +6,7 @@ import UserTable from './user-table';
 import { useState } from 'react';
 import { SearchInput } from './search-params';
 
-export default function UserMain({ data }: { data: User[] }) {
+export default function UserMain({ data, userRole }: { data: User[], userRole:number }) {
 	const [users, setUsers] = useState(data);
 	const handleFilteredData = (filtered: typeof data) => {
 		setUsers(filtered);
@@ -22,7 +22,7 @@ export default function UserMain({ data }: { data: User[] }) {
 						queryName="name"
 						searchAPI={userSearchAPI}
 					/>
-					<CreateUser />
+					{userRole===2 && <CreateUser />}
 				</div>
 			</div>
 			<div className="h-10" />

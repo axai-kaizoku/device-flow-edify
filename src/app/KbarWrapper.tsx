@@ -41,6 +41,13 @@ const adminActions = [
     perform: () => window.location.pathname = "/",
   },
   {
+    id: "org-chart",
+    name: "Org Chart",
+    shortcut: ["q"],
+    keywords: "org-chart",
+    perform: () => window.location.pathname = "/org-chart",
+  },
+  {
     id: "people",
     name: "People",
     shortcut: ["p"],
@@ -124,11 +131,11 @@ export default function KbarWrapper({userRole}:any) {
         <KBarPositioner className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <KBarAnimator className="w-full max-w-lg bg-white rounded-lg shadow-xl p-6 space-y-4 overflow-y-auto">
             <KBarSearch
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-8 overflow-y-auto"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-8"
               placeholder="Type a command..."
             />
             {/* Render all actions */}
-            <div className="h-60">
+            <div className="h-full">
               <RenderResults />
             </div>
           </KBarAnimator>

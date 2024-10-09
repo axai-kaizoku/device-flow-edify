@@ -7,7 +7,7 @@ import { Input, Textarea } from '@/components/wind/Input';
 import { createIssue } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
 
-function Form({device}:any) {
+function Form({device, closeBtn}:any) {
     const router = useRouter();
     // console.log(session);
 
@@ -81,6 +81,7 @@ function Form({device}:any) {
         }
 
         router.refresh();
+        closeBtn(false);
     }
 
 	return (
@@ -149,7 +150,9 @@ function Form({device}:any) {
                 <div className='flex items-center justify-end gap-6 my-3'>
                     <button
 						className="flex items-center justify-center gap-2 bg-white text-black py-3 px-4 border-2 border-gray-200 rounded-md transition duration-300"
-						onClick={()=>{}}>
+						onClick={()=>{
+                            closeBtn(false);
+                        }}>
 						Cancel
 					</button>
 

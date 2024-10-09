@@ -23,7 +23,7 @@ const Devices = ({devices}:any) => {
             <div className='flex flex-wrap justify-between items-center shadow-md rounded-xl py-5 px-8 hover:shadow-lg transition-all ease-in-out cursor-pointer'>
               <div className='flex flex-wrap justify-between items-center gap-7' onClick={() => handleDeviceClick(device._id)}>
                 <div>
-                    <img src={device.deviceImg} alt="Device Name" width={120} height={120}/>
+                    <img src={device.deviceImg} alt="Sample Img" width={120} height={120}/>
                 </div>
 
                 <div>

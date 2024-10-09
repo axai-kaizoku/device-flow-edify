@@ -2,6 +2,7 @@ import { CombinedContainer } from '@/components/container/container';
 import { CreateUserArgs, getUserById, User } from '@/server/userActions';
 import EditUser from './_components/edit-user';
 import { DeleteUser } from './_components/delete-user';
+import { getSession } from '@/server/helper';
 
 interface UserPageProps {
 	params: { id: string };
@@ -9,6 +10,7 @@ interface UserPageProps {
 
 export default async function UserPage({ params }: UserPageProps) {
 	const user: User = await getUserById(params.id);
+	const sess = await getSession();
 
 	if (!user) {
 		return <div>Data not found</div>;
@@ -20,12 +22,12 @@ export default async function UserPage({ params }: UserPageProps) {
 			description="User Details">
 			<div className="flex justify-end w-full">
 				<div className="flex gap-5">
-					<div className="flex gap-5">
+					{sess?.user.role === 2 && <div className="flex gap-5">
 						<EditUser userData={user as unknown as CreateUserArgs}>
 							Edit User
 						</EditUser>
 						<DeleteUser id={params.id}>Delete User</DeleteUser>
-					</div>
+					</div>}
 				</div>
 			</div>
 			<div className="h-10" />

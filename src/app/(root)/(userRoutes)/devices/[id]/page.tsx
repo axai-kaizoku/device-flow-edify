@@ -1,4 +1,3 @@
-'use client'
 import { CombinedContainer } from "@/components/container/container";
 import { Device, getDeviceById } from "@/server/deviceActions";
 import { useState } from "react";
@@ -8,10 +7,9 @@ interface DeviceParam {
 }
 
 const Page = async ({params}: DeviceParam) => {
-    const [deviceData, setDeviceData] = useState({});
+    // const [deviceData, setDeviceData] = useState({});
     const {id} = params;
-    console.log(id);
-    // const data: Device = await getDeviceById(id); // Fetch the device by ID
+    const data: Device = await getDeviceById(id); // Fetch the device by ID
 
     // const data: Device = await getDeviceById(id);
     // console.log(data);
@@ -20,47 +18,47 @@ const Page = async ({params}: DeviceParam) => {
         <CombinedContainer title="Devices">
             <div className="flex flex-col space-y-2">
 						<p>
-							<strong>Device Name:</strong> {deviceData?.device_name}
+							<strong>Device Name:</strong> {data?.device_name}
 						</p>
 						<p>
-							<strong>Model:</strong> {deviceData?.custom_model}
+							<strong>Model:</strong> {data?.custom_model}
 						</p>
 						<p>
-							<strong>Brand:</strong> {deviceData?.brand}
+							<strong>Brand:</strong> {data?.brand}
 						</p>
 						<p>
-							<strong>Serial Number:</strong> {deviceData?.serial_no}
+							<strong>Serial Number:</strong> {data?.serial_no}
 						</p>
 						<p>
-							<strong>OS:</strong> {deviceData?.os}
+							<strong>OS:</strong> {data?.os}
 						</p>
 						<p>
-							<strong>Processor:</strong> {deviceData?.processor}
+							<strong>Processor:</strong> {data?.processor}
 						</p>
 						<p>
-							<strong>RAM:</strong> {deviceData?.ram}
+							<strong>RAM:</strong> {data?.ram}
 						</p>
 						<p>
-							<strong>Storage:</strong> {deviceData?.storage}
+							<strong>Storage:</strong> {data?.storage}
 						</p>
 						<p>
 							<strong>Warranty Status:</strong>{' '}
-							{deviceData?.warranty_status ? 'Active' : 'Inactive'}
+							{data?.warranty_status ? 'Active' : 'Inactive'}
 						</p>
 						<p>
-							<strong>Purchase Date:</strong> {deviceData?.device_purchase_date}
+							<strong>Purchase Date:</strong> {data?.device_purchase_date}
 						</p>
 						<p>
-							<strong>Purchase Value:</strong> {deviceData?.purchase_value}
+							<strong>Purchase Value:</strong> {data?.purchase_value}
 						</p>
 						<p>
-							<strong>Device Location:</strong> {deviceData?.city}
+							<strong>Device Location:</strong> {data?.city}
 						</p>
 						<p>
-							<strong>Asset Serial Value:</strong> {deviceData?.asset_serial_no}
+							<strong>Asset Serial Value:</strong> {data?.asset_serial_no}
 						</p>
 						<p>
-							<strong>Purchase Order:</strong> {deviceData?.purchase_order}
+							<strong>Purchase Order:</strong> {data?.purchase_order}
 						</p>
                     </div>
         </CombinedContainer>

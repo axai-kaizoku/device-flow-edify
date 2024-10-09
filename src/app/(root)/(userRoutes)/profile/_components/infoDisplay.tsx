@@ -15,7 +15,9 @@ const InfoDisplay = ({ infoLabel, infoName, infoText, isEditing = false, onInput
       {isEditing ? (
         <input
           name={infoName}
-          className="p-2 border rounded-md border-gray-200 text-slate-500"
+          className={`p-2 border rounded-md ${
+            isEditing ? "border-black" : "border-gray-200"
+          } text-slate-500`}
           value={infoText}
           onChange={(e) => onInputChange && onInputChange(e.target.value)}
         />

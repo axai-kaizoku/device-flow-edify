@@ -3,12 +3,13 @@ import React from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { Issues } from '@/server/issueActions';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
 
 function EmpIssueTable({ data }: { data: Issues[] }) {
-	// const router = useRouter();
+	const router = useRouter();
 	const handleIssueClick = (id: string) => {
-		// router.push(`/issues/${id}`);
+		router.push(`/devices/issues/${id}`);
 	};
 	return (
 		<div>
@@ -44,9 +45,9 @@ function EmpIssueTable({ data }: { data: Issues[] }) {
 						title: 'View',
 						render: (record) => (
 							<div
-								className="flex w-full justify-center"
+								className="flex w-full justify-center cursor-pointer"
 								onClick={() => handleIssueClick(record._id)}>
-								<Icon type="OutlinedEye" color="black" />
+								<Icon type="OutlinedEye" style={{cursor:"pointer"}} color="black" />
 							</div>
 						),
 					},
