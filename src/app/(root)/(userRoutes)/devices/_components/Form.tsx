@@ -12,7 +12,7 @@ function Form({device}:any) {
     // console.log(session);
 
 	const [formData, setFormData] = useState({
-        deviceId:"60c72b2f9b1d8e3a6f8b9876",
+        deviceId:device._id,
         serial_no:device?.serial_no,
         priority:"",
         status:"Open",

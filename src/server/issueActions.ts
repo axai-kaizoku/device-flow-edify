@@ -17,7 +17,9 @@ export type Issues = {
 	email: string;
 };
 
-// export type IssueResponse = Issues[];
+export type getAllResponse = Issues[];
+
+
 export type IssueResponse = {
 	documents: Issues[]; // Changed from 'devices' to 'documents'
 	totalPages: number;
@@ -92,7 +94,7 @@ export async function deleteIssue(
 
 // Create Issue - Employee
 
-export const createIssue = async (issueData: Issues): Promise<Issues | undefined> => {
+export const createIssue = async (issueData: any): Promise<Issues | undefined> => {
 	const sess = await getSession();
 	try {
 		if(sess?.user){

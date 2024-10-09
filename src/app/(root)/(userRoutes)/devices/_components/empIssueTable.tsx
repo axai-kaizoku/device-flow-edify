@@ -25,6 +25,10 @@ function EmpIssueTable({ data }: { data: Issues[] }) {
 						dataIndex: 'title',
 					},
 					{
+						title:"Description",
+						dataIndex:"description"
+					},
+					{
 						title: 'Priority',
 						dataIndex: 'priority',
 					},
@@ -37,12 +41,12 @@ function EmpIssueTable({ data }: { data: Issues[] }) {
 						dataIndex: 'status',
 					},
 					{
-						title: 'Actions',
+						title: 'View',
 						render: (record) => (
 							<div
 								className="flex w-full justify-center"
 								onClick={() => handleIssueClick(record._id)}>
-								<Icon type="OutlinedDotsVertical" color="black" />
+								<Icon type="OutlinedEye" color="black" />
 							</div>
 						),
 					},

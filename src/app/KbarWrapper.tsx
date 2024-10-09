@@ -1,8 +1,7 @@
 "use client"; // Ensure this is a client-side component
-
 import { KBarProvider, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, KBarResults, useMatches } from 'kbar';
 
-const actions = [
+const EmpActions = [
   {
     id: "home",
     name: "Home",
@@ -33,6 +32,66 @@ const actions = [
   },
 ];
 
+const adminActions = [
+  {
+    id: "dashboard",
+    name: "Dashboard",
+    shortcut: ["h"],
+    keywords: "home homepage dashboard",
+    perform: () => window.location.pathname = "/",
+  },
+  {
+    id: "people",
+    name: "People",
+    shortcut: ["p"],
+    keywords: "people",
+    perform: () => window.location.pathname = "/people",
+  },
+  {
+    id: "onboarding",
+    name: "Onboarding",
+    shortcut: ["o"],
+    keywords: "profile",
+    perform: () => window.location.pathname = "/onboarding",
+  },
+  {
+    id: "assets",
+    name: "Assets",
+    shortcut: ["a"],
+    keywords: "assets",
+    perform: () => window.location.pathname = "/assets",
+  },
+  {
+    id: "teams",
+    name: "Teams",
+    shortcut: ["t"],
+    keywords: "teams",
+    perform: () => window.location.pathname = "/teams",
+  },
+  {
+    id: "store",
+    name: "Store",
+    shortcut: ["s"],
+    keywords: "store",
+    perform: () => window.location.pathname = "/store",
+  },
+  {
+    id: "issues",
+    name: "Issues",
+    shortcut: ["i"],
+    keywords: "issues",
+    perform: () => window.location.pathname = "/issues",
+  },
+  {
+    id: "settings",
+    name: "Settings",
+    shortcut: ["x"],
+    keywords: "settings",
+    perform: () => window.location.pathname = "/settings",
+  },
+];
+
+
 // Custom component to render the results inside the command bar
 function RenderResults() {
     const { results } = useMatches();
@@ -58,12 +117,12 @@ function RenderResults() {
     );
   }
 
-export default function KbarWrapper() {
+export default function KbarWrapper({userRole}:any) {
   return (
-    <KBarProvider actions={actions}>
+    <KBarProvider actions={userRole===1 ? EmpActions : adminActions}>
       <KBarPortal>
         <KBarPositioner className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <KBarAnimator className="w-full max-w-lg bg-white rounded-lg shadow-xl p-6 space-y-4">
+          <KBarAnimator className="w-full max-w-lg bg-white rounded-lg shadow-xl p-6 space-y-4 overflow-y-auto">
             <KBarSearch
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-8 overflow-y-auto"
               placeholder="Type a command..."
