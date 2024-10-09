@@ -8,7 +8,7 @@ const OrgPage = async () => {
 
 	return (
 		<>
-			<Org data={actualData}/>
+			<Org data={actualData} />
 		</>
 	);
 };

@@ -20,7 +20,7 @@ export default function SidebarMain({ session }: Props) {
 			<div className="px-2 w-24 h-14 pb-4 flex justify-center items-center">
 				<Link href="/">
 					<Image
-						src="/assets/logo/logo.png"
+						src="/media/logo/logo.png"
 						width={133}
 						height={43}
 						alt="edify-logo"
@@ -29,11 +29,11 @@ export default function SidebarMain({ session }: Props) {
 				</Link>
 			</div>
 
-			{session?.user.email === 'aniket.prakash@winuall.com' ? (
+			{session?.user.role === 2 ? (
 				<>
 					<div className="flex flex-col justify-between h-full w-full">
 						<div>
-							{SIDEBAR.MainPages.map((page, i) => (
+							{SIDEBAR.AdminPages.map((page, i) => (
 								<SidebarItem
 									href={page.path}
 									icon={page.icon}
@@ -67,7 +67,7 @@ export default function SidebarMain({ session }: Props) {
 								<div className={` w-[2%] rounded-e`} />
 								<div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
 									<Image
-										src="/assets/sidebar/logout.svg"
+										src="/media/sidebar/logout.svg"
 										alt="Logout"
 										width={20}
 										height={20}
@@ -105,7 +105,7 @@ export default function SidebarMain({ session }: Props) {
 								<div className={` w-[2%] rounded-e`} />
 								<div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
 									<Image
-										src="/assets/sidebar/logout.svg"
+										src="/media/sidebar/logout.svg"
 										alt="Logout"
 										width={20}
 										height={20}

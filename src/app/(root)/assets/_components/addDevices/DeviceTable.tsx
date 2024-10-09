@@ -7,7 +7,7 @@ import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { useRouter } from 'next/navigation';
 import { Device, deviceSearchAPI } from '@/server/deviceActions';
-import { SearchInput } from '@/app/(root)/users/_components/search-params';
+import { SearchInput } from '@/app/(root)/people/_components/search-params';
 
 interface DeviceTableProps {
 	data: Device[];

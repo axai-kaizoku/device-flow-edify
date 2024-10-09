@@ -4,7 +4,7 @@ export default function NotFound() {
 	return (
 		<div className="flex flex-col justify-center items-center h-[95vh] sm:h-screen -mt-10 sm:-mt-20 lg:-mt-1 w-full">
 			<img
-				src="/assets/loading-man.svg"
+				src="/media/loading-man.svg"
 				alt="404"
 				className="w-48 h-48 sm:w-60 sm:h-60 object-contain"
 			/>

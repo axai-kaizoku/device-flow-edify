@@ -49,16 +49,15 @@ export default function ApiDropdown({
 				name={name}
 				value={value}
 				onChange={onChange} // Pass the selected value to parent
-				// onFocus={handleApiNameFocus}
 				onClick={handleApiNameFocus}
 				list="apiOptions"
 				placeholder={placeholder}
 				className="focus:outline-none px-2 w-full py-2 rounded-lg border border-gray-200"
 			/>
 			<datalist id="apiOptions">
-				{apiOptions.map((option, index) => (
-					<option key={index} value={option.id}>
-						{option.name}
+				{apiOptions.map((option) => (
+					<option key={option.id} className="bg-red-100" value={option.name}>
+						{/* {option.name} */}
 					</option>
 				))}
 			</datalist>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserForm } from '../../users/_components/user-form';
+import { UserForm } from '../../people/_components/user-form';
 
 // Reusable Input Field Component
 const InputField = ({

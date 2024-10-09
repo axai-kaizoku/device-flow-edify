@@ -7,16 +7,24 @@ export async function middleware(req: NextRequest) {
 	const token = await getToken({ req, secret });
 	const { pathname } = req.nextUrl;
 
-	const userRoutes = ['/people', '/org-chart', '/profile'];
+	const userRoutes = ['/profile', '/devices', '/devices/(.*)'];
 
 	// Use regex to match dynamic routes
-	const commonRoutes = ['/', '/devices', '/teams/(.*)', '/teams'];
+	const commonRoutes = ['/', '/teams', '/teams/(.*)'];
+	// '/people',
+	// 	'/people/(.*)',
+	// '/org-chart',
 	const adminRoutes = [
 		'/assets',
-		'/users',
+		'/assets/(.*)',
+
 		'/settings',
 		'/onboarding',
 		'/store',
+		'/store/(.*)',
+		'/store/cart',
+		'/issues',
+		'/issues/(.*)',
 	];
 
 	// If already logged in redirect to home page
@@ -65,14 +73,18 @@ export const config = {
 	matcher: [
 		'/((?!login$).*)',
 		'/assets',
+		'/assets/:path*',
 		'/teams/:path*', // Protect dynamic routes under /teams/
 		'/devices',
-		'/users',
+		'/devices/:path*',
+		// '/people',
+		// '/people/:path*',
 		'/settings',
 		'/onboarding',
 		'/store',
-		'/people',
-		'/org-chart',
+		'/store/:path*',
+		'/store/cart',
+		// '/org-chart',
 		'/profile',
 		'/((?!api|_next/static|assets|_next/image|.*\\.png$).*)', // Protect all other routes
 	],

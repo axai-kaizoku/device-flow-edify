@@ -4,7 +4,7 @@ import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
 import { Issues, issueSearchAPI } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
-import { SearchInput } from '../../users/_components/search-params';
+import { SearchInput } from '../../people/_components/search-params';
 
 function IssueTable({
 	data,

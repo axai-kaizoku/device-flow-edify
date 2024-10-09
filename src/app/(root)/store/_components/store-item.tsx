@@ -15,7 +15,7 @@ export const StoreItem = ({ device }: { device: Device }) => {
 		<div className="w-full h-fit rounded-lg shadow-lg bg-white p-6 flex flex-col items-center justify-between transition-transform transform hover:scale-105 hover:shadow-xl">
 			<Link href={`/store/${device._id}`}>
 				<Image
-					src={device.image ?? '/assets/mac.jpeg'}
+					src={device.image ?? '/media/mac.jpeg'}
 					alt={device.device_name}
 					width={225}
 					height={225}

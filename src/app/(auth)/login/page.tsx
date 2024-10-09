@@ -5,14 +5,14 @@ export default function Login() {
 		<div className="w-full h-screen justify-between flex flex-col lg:flex-row">
 			<div className="w-full relative lg:block hidden bg-gradient-to-b from-white via-[#C0C0C0]  to-gray-950 lg:w-[33%] h-full">
 				<img
-					src="/assets/hands.png"
+					src="/media/hands.png"
 					className="absolute inset-0 h-fit w-fit object-contain"
 					alt="edify-background"
 				/>
 				<div className="flex w-full h-full flex-col justify-between items-center">
 					<div className="h-[35%] w-full flex justify-center items-center">
 						<img
-							src="/assets/logo/logo.png"
+							src="/media/logo/logo.png"
 							className="w-[250px] h-[80px] object-contain"
 							alt="logo"
 						/>

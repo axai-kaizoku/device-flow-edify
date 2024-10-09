@@ -12,62 +12,21 @@ interface TeamPageProps {
 }
 
 export default async function TeamPage({ params }: TeamPageProps) {
-<<<<<<< HEAD
-	const data: Team = await getTeamById(params.id);
-	const users: User[] = await getUsersByTeamId(params.id);
-	
-=======
 	try {
 		const data: Team = await getTeamById(params.id);
 		const users: User[] = await getUsersByTeamId(params.id);
 		const sess = await getSession();
->>>>>>> master
 
 		return (
 			<CombinedContainer
 				title={data.title}
 				description="Manage your team members and operations effortlessly.">
 				<div className="flex justify-end w-full mb-8">
-					<input
+					{/* <input
 						className="border rounded-lg px-4 py-2 w-[16rem] text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none transition"
 						placeholder="Search users..."
-					/>
+					/> */}
 				</div>
-<<<<<<< HEAD
-				{<div className="flex gap-5">
-					<EditTeam
-						_id={params.id}
-						title={data.title}
-						description={data.description}
-						image={data.image}>
-						<Icon
-							type="OutlinedEdit"
-							color="gray"
-							style={{
-								width: '1.5rem',
-								height: '1.5rem',
-								cursor: 'pointer',
-							}}
-							// className="w-6 h-6 cursor-pointer hover:text-indigo-500 transition"
-						/>
-					</EditTeam>
-					<DeleteTeam id={params.id}>
-						<Icon
-							type="OutlinedBin"
-							color="red"
-							style={{
-								width: '1.5rem',
-								height: '1.5rem',
-								cursor: 'pointer',
-							}}
-							// className="w-6 h-6 cursor-pointer hover:text-red-600 transition"
-						/>
-						{/* <Icon type="" color="grey" /> */}
-					</DeleteTeam>
-				</div>}
-			</div>
-=======
->>>>>>> master
 
 				<div className="w-full py-8 px-8 flex justify-between items-center bg-white shadow-md rounded-lg">
 					<div className="flex gap-6 items-center">

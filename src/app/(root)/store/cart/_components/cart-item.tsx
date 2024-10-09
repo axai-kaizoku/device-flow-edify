@@ -16,7 +16,7 @@ export const CartItem = ({ data }: { data: Device }) => {
 		router.refresh();
 	};
 
-	const handleRemoveFromCart = async (device: any) => {
+	const handleRemoveFromCart = async (device: Device) => {
 		await removeFromCart(device);
 		router.refresh();
 	};
@@ -26,7 +26,7 @@ export const CartItem = ({ data }: { data: Device }) => {
 		<div className="w-full h-fit rounded-lg text-gray-800 bg-white shadow-md p-6 flex items-center justify-between gap-6">
 			<div className="w-[6rem] h-[6rem]">
 				<Image
-					src="/assets/mac.jpeg"
+					src="/media/mac.jpeg"
 					alt="mac"
 					width={225}
 					height={225}

@@ -13,10 +13,10 @@ export const addToCart = async (device: Device) => {
 	});
 };
 
-export const removeFromCart = async (deviceId: string) => {
+export const removeFromCart = async (deviceId: Device) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			cart = cart.filter((v) => v.id === deviceId);
+			cart = cart.filter((v) => v._id === deviceId._id);
 			// cart.pop(device);
 			console.log('Device added to cart');
 			resolve(true);

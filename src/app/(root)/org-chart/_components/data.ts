@@ -5,15 +5,18 @@ export interface Employee {
 	profile: string;
 	designation: string;
 	children?: Employee[];
-  }
-  
-  // Helper function to map new data to the required structure
+}
+
+// Helper function to map new data to the required structure
 export const mapEmployeeData = (employee: any): Employee => ({
 	name: `${employee.first_name} ${employee.last_name}`,
 	role: employee.role ? employee.role.toString() : 'Unknown', // Ensure role is string
-	profile: '/assets/sidebar/profile.svg',
+	profile: '/media/sidebar/profile.svg',
 	designation: employee.designation,
-	children: employee.reportees.length > 0 ? employee.reportees.map(mapEmployeeData) : [],
+	children:
+		employee.reportees.length > 0
+			? employee.reportees.map(mapEmployeeData)
+			: [],
 });
 
 // export const orgData: Employee = {

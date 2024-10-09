@@ -3,7 +3,7 @@
 import { CombinedContainer } from '@/components/container/container';
 import AddEmployee, { AddUser } from './add_employee/addEmployee';
 import { useState } from 'react';
-import AddTeams, { AddTeam } from './add teams/addTeams';
+import AddTeams, { AddTeam } from './add_teams/addTeams';
 import { Tab } from '../assets/_components/Tab';
 
 export default function Onboarding() {

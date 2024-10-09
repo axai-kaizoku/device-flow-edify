@@ -31,14 +31,14 @@ export const Profile = async () => {
 					{session?.user.name ? (
 						<>
 							<span>{session?.user.name}</span>
-							<span>User</span>
+							<span>Employee</span>
 						</>
 					) : (
 						<>
 							<span>
 								{session?.user.first_name} {session?.user.last_name}
 							</span>
-							<span>Admin</span>
+							<span>{session.user.role === 1 ? 'Employee' : 'Admin'}</span>
 						</>
 					)}
 				</div>

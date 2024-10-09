@@ -13,7 +13,7 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 				{/* Device Image Section */}
 				<div className="lg:w-1/2 w-full flex justify-center items-center">
 					<Image
-						src={data.image ?? '/assets/mac.jpeg'}
+						src={data.image ?? '/media/mac.jpeg'}
 						alt={data.device_name}
 						width={400}
 						height={400}

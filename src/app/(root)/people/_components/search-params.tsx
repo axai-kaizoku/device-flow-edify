@@ -1,7 +1,7 @@
 'use client';
 import { userSearchAPI } from '@/server/userActions';
 import { useQueryState } from 'nuqs';
-import { InputHTMLAttributes, useEffect, useState } from 'react';
+import { InputHTMLAttributes, useEffect } from 'react';
 
 type SearchProps = {
 	data: any[];

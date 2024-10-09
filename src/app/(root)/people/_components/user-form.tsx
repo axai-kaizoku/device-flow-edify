@@ -39,9 +39,25 @@ export const UserForm = ({
 		email: userData ? userData.email : '',
 		designation: userData ? userData.designation : '',
 		//@ts-ignore
-		team: userData?.teamId ? userData.teamId.name : '',
+		team: userData?.teamId
+			? //@ts-ignore
+			  { name: userData.teamId.title, value: userData.teamId._id }
+			: {
+					name: '',
+					value: '',
+			  },
 		//@ts-ignore
-		reportM: userData?.reporting_manager ? userData.reporting_manager.name : '',
+		reportM: userData?.reporting_manager
+			? {
+					//@ts-ignore
+					name: userData.reporting_manager.first_name,
+					//@ts-ignore
+					value: userData.reporting_manager._id,
+			  }
+			: {
+					name: '',
+					value: '',
+			  },
 		gender: userData ? userData.gender : '',
 		employment: userData ? userData.employment_type : '',
 		dob: userData ? userData.date_of_birth : '',
@@ -77,9 +93,9 @@ export const UserForm = ({
 			email: formData.email,
 			phone: formData.phone,
 			designation: formData.designation,
-			teamId: formData.team,
+			teamId: formData.team.value,
 			onboarding_date: formData.onboarding,
-			reporting_manager: formData.reportM,
+			reporting_manager: formData.reportM.value,
 			employment_type: formData.employment,
 			date_of_birth: formData.dob,
 			gender: formData.gender,
@@ -237,9 +253,15 @@ export const UserForm = ({
 										fetching={fetchUsers}
 										name="reporting_manager"
 										resName="first_name"
-										value={formData.reportM}
+										value={formData.reportM.value}
 										onChange={(e: any) =>
-											setFormData({ ...formData, reportM: e.target.value })
+											setFormData({
+												...formData,
+												reportM: {
+													name: e.target.value,
+													value: e.target.value,
+												},
+											})
 										}
 										placeholder="Select Reporting Manager"
 									/>
@@ -290,9 +312,15 @@ export const UserForm = ({
 										resName="title"
 										name="team"
 										onChange={(e: any) =>
-											setFormData({ ...formData, team: e.target.value })
+											setFormData({
+												...formData,
+												team: {
+													name: e.target.value,
+													value: e.target.value,
+												},
+											})
 										}
-										value={formData.team}
+										value={formData.team.value}
 										placeholder="Select Team"
 									/>
 								</div>

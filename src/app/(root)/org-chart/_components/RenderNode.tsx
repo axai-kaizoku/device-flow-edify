@@ -3,7 +3,11 @@ import React from 'react';
 import { countTotalEmployees } from './utils';
 // import { orgData } from './data';
 
-export const renderCustomNodeElement = ({ nodeDatum, toggleNode, orgData }: any) => {
+export const renderCustomNodeElement = ({
+	nodeDatum,
+	toggleNode,
+	orgData,
+}: any) => {
 	const isCEO = nodeDatum.name === orgData.name;
 	const totalEmployees = isCEO ? countTotalEmployees(orgData) : 0;
 	const isExpanded = !!nodeDatum.children;
@@ -24,7 +28,7 @@ export const renderCustomNodeElement = ({ nodeDatum, toggleNode, orgData }: any)
 				}}>
 				<div className="bg-white shadow-lg rounded-md p-1 flex flex-col items-center justify-center border border-gray-300 hover:shadow-zinc-400 transition-shadow duration-300 ">
 					<img
-						src={nodeDatum.profile || '/assets/sidebar/profile.svg'}
+						src={nodeDatum.profile || '/media/sidebar/profile.svg'}
 						alt={nodeDatum.name}
 						className="w-6 h-6 rounded-full"
 					/>

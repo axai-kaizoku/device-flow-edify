@@ -13,7 +13,7 @@ export default async function Teams() {
 			<CombinedContainer title="Teams">
 				<div className="flex justify-between items-center w-full mb-8">
 					<input
-						className="border rounded-lg px-4 py-2 w-[16rem] text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none transition"
+						className="border rounded-lg opacity-0 pointer-events-none px-4 py-2 w-[16rem] text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none transition"
 						placeholder="Search Teams..."
 					/>
 					{sess?.user.role === 2 && <CreateTeam />}

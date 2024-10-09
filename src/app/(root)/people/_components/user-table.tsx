@@ -41,7 +41,7 @@ export default function UserTable({ users }: { users: User[] }) {
 					title: 'Actions',
 					render: (data) => (
 						<div className="w-full flex justify-center">
-							<Link href={`/users/${data._id}`}>
+							<Link href={`/people/${data._id}`}>
 								<Icon type="OutlinedDotsVertical" color="black" />
 							</Link>
 						</div>

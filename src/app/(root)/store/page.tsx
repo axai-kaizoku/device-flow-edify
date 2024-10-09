@@ -6,7 +6,7 @@ import { CartComponent } from './cart/page';
 import { Device } from '@/server/deviceActions';
 
 export default async function Store() {
-	const data: any[] = await getStoreDevices();
+	const data: any = await getStoreDevices();
 	return (
 		<CombinedContainer title="Store">
 			<div className="flex justify-between w-full ">
@@ -23,8 +23,8 @@ export default async function Store() {
 				</div>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 my-14">
-				{data.map((d: Device, i) => (
-					<StoreItem device={d} key={i} />
+				{data.map((d: Device) => (
+					<StoreItem device={d} key={d._id} />
 				))}
 			</div>
 		</CombinedContainer>
