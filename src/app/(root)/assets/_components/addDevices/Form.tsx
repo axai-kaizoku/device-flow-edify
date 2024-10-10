@@ -45,6 +45,7 @@ function Form({ closeBtn }: FormProps) {
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
+			image: '',
 		},
 	});
 
@@ -105,6 +106,8 @@ function Form({ closeBtn }: FormProps) {
 						'Purchase Value must be greater than 0.';
 				if (!extra.ownership)
 					currentErrors.ownership = 'Ownership is required.';
+
+				if (!extra.image) currentErrors.image = 'Device Image is required.';
 				break;
 			default:
 				break;
@@ -142,6 +145,7 @@ function Form({ closeBtn }: FormProps) {
 					warranty_expiary_date:
 						formData.advanceDeviceDetails.warrantyExpiryDate,
 					brand: formData.extraDetails.brand,
+					image: formData.extraDetails.image,
 					userName: formData.extraDetails.assignedTo,
 					ownership: formData.extraDetails.ownership,
 					purchase_value: formData.extraDetails.purchaseValue,

@@ -38,7 +38,7 @@ function IssueTable({ data }: { data: Issues[] }) {
 		}
 
 		// Optionally, convert to lowercase to handle case insensitivity if API requires
-		// finalFilterValue = finalFilterValue.toLowerCase();
+		finalFilterValue = finalFilterValue.toLowerCase();
 
 		// Prepare the filter
 		const filters: [string, string, string][] = [

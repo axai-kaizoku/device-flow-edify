@@ -32,7 +32,7 @@ export type Device = {
 	createdAt?: string;
 	updatedAt?: string;
 };
-
+export type getAllDevicesProp = Device[];
 export type DeviceResponse = {
 	documents: Device[]; // Changed from 'devices' to 'documents'
 	totalPages: number;
@@ -44,54 +44,77 @@ export type DeviceResponse = {
 };
 
 //Creating Devices
+// Creating Devices
 export const createDevices = async (
 	device: Device,
 ): Promise<Device | undefined> => {
 	try {
+		// Prepare device data with proper types
 		const deviceData = {
 			device_name: device.device_name || 'Default',
 			device_type: device.device_type,
-			asset_serial_no: device.asset_serial_no,
+			asset_serial_no: device.asset_serial_no || null,
 			serial_no: device.serial_no,
 			ram: device.ram,
 			processor: device.processor,
 			storage: device.storage,
 			custom_model: device.custom_model,
 			brand: device.brand,
-			warranty_status: device.warranty_status,
+			warranty_status: device.warranty_status ?? false, // Default to false if undefined
 			warranty_expiary_date: device.warranty_expiary_date,
 			ownership: device.ownership,
 			purchase_order: device.purchase_order,
-			purchase_value: device.purchase_value,
+			purchase_value: Number(device.purchase_value), // Ensure it's a number
 			os: device.os,
+			device_purchase_date: device.device_purchase_date || null,
+			image: device.image,
 		};
-		console.log(deviceData);
+
+		// console.log('Prepared Device Data:', deviceData);
+
 		// API call
+		const sess = await getSession();
+
+		// Flatten the payload
+		const payload = {
+			...deviceData,
+			orgId: sess?.user.orgId,
+			userId: sess?.user.id,
+		};
+
+		// console.log('Payload to be sent:', payload);
+
 		const res = await callAPIWithToken<Device>(
 			'https://api.edify.club/edifybackend/v1/devices',
 			'POST',
-			deviceData,
+			payload,
 		);
-		console.log('res', res);
+
+		// console.log('API Response:', res);
 
 		return res.data;
-	} catch (error) {
-		console.error('Error creating device:', error);
+	} catch (error: any) {
+		// console.error('Error creating device:', error);
 
-		redirect('/login');
+		// Redirect only if unauthorized, otherwise throw the error
+		if (error.response && error.response.status === 401) {
+			redirect('/login');
+		} else {
+			throw new Error(error.message || 'Failed to create device');
+		}
 	}
 };
 
 //Getting Devices
-export async function getAllDevices(): Promise<DeviceResponse> {
+export async function getAllDevices(): Promise<getAllDevicesProp> {
 	try {
-		const res = await callAPIWithToken<DeviceResponse>(
+		const res = await callAPIWithToken<getAllDevicesProp>(
 			'https://api.edify.club/edifybackend/v1/devices',
 			'GET',
 		);
 
 		// Validate response structure
-		if (!res.data || !Array.isArray(res.data.documents)) {
+		if (!res.data || !Array.isArray(res.data)) {
 			throw new Error('Invalid API response structure');
 		}
 

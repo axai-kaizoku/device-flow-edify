@@ -4,7 +4,6 @@ import { Address, getAddress } from '@/server/addressActions';
 import { fetchUsers, User } from '@/server/userActions';
 import { Dropdown } from '@/components/dropdown/dropdown';
 import ApiDropdown from '@/components/dropdown/api-dropdown';
-import ApiDropdownUser from './_components/dropdown.users';
 
 type FormType = {
 	brand: string;
@@ -13,6 +12,7 @@ type FormType = {
 	purchaseOrder: string;
 	purchaseValue: number;
 	ownership: string;
+	image: string;
 };
 
 type ExtraDetailsType = {
@@ -33,6 +33,7 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
+			image: null,
 		},
 	);
 
@@ -73,6 +74,21 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 			setLocationsOptions(locationNames);
 		} catch (error) {
 			console.error('Failed to fetch data:', error);
+		}
+	};
+
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files) {
+			const file = e.target.files?.[0];
+			const imageUrl = URL.createObjectURL(file);
+			setFormData((prevData) => ({
+				...prevData,
+				image: imageUrl, // Store the selected file
+			}));
+			setData({
+				...formData,
+				image: imageUrl,
+			});
 		}
 	};
 
@@ -191,6 +207,18 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 					/>
 					{errors?.ownership && (
 						<p className="text-red-500 text-sm">{errors.ownership}</p>
+					)}
+				</div>
+				{/* New image upload field */}
+				<div className="flex flex-col w-72">
+					<label>Upload Image</label>
+					<input
+						type="file"
+						onChange={handleImageChange}
+						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+					/>
+					{errors?.image && (
+						<p className="text-red-500 text-sm">{errors.image}</p>
 					)}
 				</div>
 			</div>

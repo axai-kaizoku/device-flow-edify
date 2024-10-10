@@ -58,8 +58,10 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 	const fetchDevices = async () => {
 		try {
 			const devices = await getAllDevices(); // API call
+			console.log('DEvices ' + devices);
 			// Map to just device names if the API response returns full device objects
 			const deviceNames = devices.map((device) => device.device_name);
+			console.log('deviceNames' + deviceNames);
 			setDeviceOptions(deviceNames);
 		} catch (error) {
 			console.error('Failed to fetch devices:', error);
