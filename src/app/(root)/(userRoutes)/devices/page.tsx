@@ -1,17 +1,15 @@
 import { CombinedContainer } from '@/components/container/container';
 import DeviceContainer from './_components/deviceContainer';
-import { DeviceResponse, getDevicesByUserId } from '@/server/deviceActions';
+import { getAllDevicesProp, getDevicesByUserId } from '@/server/deviceActions';
 import {
 	getAllResponse,
 	getIssueByUserId,
-	IssueResponse,
-	Issues,
 } from '@/server/issueActions';
 
 export default async function Devices() {
 	try {
-		const devicesData: DeviceResponse = await getDevicesByUserId();
-		const issueData: IssueResponse = await getIssueByUserId();
+		const devicesData: getAllDevicesProp = await getDevicesByUserId();
+		const issueData: getAllResponse = await getIssueByUserId();
 		return (
 			<CombinedContainer title="Devices">
 				<DeviceContainer devices={devicesData} issues={issueData} />

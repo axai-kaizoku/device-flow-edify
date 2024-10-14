@@ -1,6 +1,6 @@
 type Display = {
   infoLabel: string,
-  infoText: string,
+  infoText: string | undefined,
   isEditing?: boolean,
   infoName: string,
   onInputChange?: (value: string) => void

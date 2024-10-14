@@ -3,24 +3,18 @@ import React, { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/side-sheet';
 import Form from './Form';
 import { useRouter } from 'next/navigation';
+import { Device, getAllDevicesProp } from '@/server/deviceActions';
 
-type Device = {
-	_id: string;
-	device_name: string;
-	serial_no: string;
-	image: string;
-	// ... other device properties
-};
 
 type DevicesProps = {
-	devices: Device[];
+	devices: getAllDevicesProp;
 };
 
-const Devices: React.FC<DevicesProps> = ({ devices }) => {
+const Devices = ({ devices }: DevicesProps) => {
 	const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
 	const router = useRouter();
 
-	const handleDeviceClick = (id: string) => {
+	const handleDeviceClick = (id: string | undefined) => {
 		router.push(`devices/${id}`);
 	};
 
@@ -35,7 +29,7 @@ const Devices: React.FC<DevicesProps> = ({ devices }) => {
 	return (
 		<div className="flex flex-col gap-10">
 			{devices.length > 0 ? (
-				devices.map((device) => (
+				devices.map((device: Device) => (
 					<div
 						key={device._id}
 						className="flex flex-wrap justify-between items-center shadow-md rounded-xl py-5 px-8 hover:shadow-lg transition-all ease-in-out">

@@ -4,9 +4,17 @@ import { useState } from "react";
 import Devices from "./devicesPage";
 import Issue from "./issuePage";
 import { Tab } from "@/app/(root)/assets/_components/Tab";
-import { DeviceResponse } from "@/server/deviceActions";
+import {  getAllDevicesProp } from "@/server/deviceActions";
+import { getAllResponse } from "@/server/issueActions";
 
-const DeviceContainer = ({devices, issues}:any) => {
+// Define props interface
+interface DeviceContainerProps {
+    devices: getAllDevicesProp;
+    issues: getAllResponse;
+}
+
+
+const DeviceContainer = ({ devices, issues }: DeviceContainerProps) => {
     const [activeTab, setActiveTab] = useState('devices');
 
     // For Rendering Tabs

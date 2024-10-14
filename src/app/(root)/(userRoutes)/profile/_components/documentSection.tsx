@@ -1,8 +1,9 @@
 import { FileText } from "lucide-react"
 import InfoDisplay from "./infoDisplay"
 import Link from "next/link"
+import { User } from "@/server/userActions"
 
-const Document = ({userInfo}:any) => {
+const Document = ({userInfo}:{userInfo:User}) => {
   return (
     <div className="flex gap-4 flex-col mt-2">
         <div className="flex gap-4 p-3 border shadow-sm">

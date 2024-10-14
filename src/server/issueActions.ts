@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Issues = {
@@ -17,6 +18,7 @@ export type Issues = {
 	email: string;
 };
 
+
 export type getAllResponse = Issues[];
 
 export type IssueResponse = {
@@ -29,6 +31,15 @@ export type IssueResponse = {
 	documentCount: number;
 };
 
+export interface IssueData {
+	deviceId: string | undefined;            // ID of the device
+	serial_no: string;           // Serial number of the device
+	priority: string;  // Priority of the issue
+	status: string;              // Status of the issue (e.g., 'Open')
+	title: string;               // Title of the issue
+	description: string;         // Detailed description of the issue
+}
+
 //get all issues-admin
 export async function getAllIssues(): Promise<IssueResponse> {
 	try {
@@ -37,8 +48,8 @@ export async function getAllIssues(): Promise<IssueResponse> {
 			'GET',
 		);
 		return res.data;
-	} catch (error: any) {
-		throw new Error(error);
+	} catch (error) {
+		throw new Error((error as AxiosError).message);
 	}
 }
 
@@ -68,8 +79,8 @@ export const updateIssue = async (
 			issueData,
 		);
 		return res.data;
-	} catch (error: any) {
-		throw new Error(error);
+	} catch (error) {
+		throw new Error((error as AxiosError).message);
 	}
 };
 
@@ -94,7 +105,7 @@ export async function deleteIssue(
 // Create Issue - Employee
 
 export const createIssue = async (
-	issueData: any,
+	issueData: IssueData,
 ): Promise<Issues | undefined> => {
 	const sess = await getSession();
 	try {
@@ -113,15 +124,15 @@ export const createIssue = async (
 			);
 			return res.data;
 		}
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error creating a new issue:', error);
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 };
 
 //  Get Issues by UserId
 
-export const getIssueByUserId = async (): Promise<IssueResponse> => {
+export const getIssueByUserId = async (): Promise<getAllResponse> => {
 	const sess = await getSession(); // Fetch session details
 
 	try {
@@ -129,7 +140,7 @@ export const getIssueByUserId = async (): Promise<IssueResponse> => {
 			// const userId = sess.user.id;
 
 			// Make the GET request to fetch issues by user ID
-			const res = await callAPIWithToken<IssueResponse>(
+			const res = await callAPIWithToken<getAllResponse>(
 				`https://api.edify.club/edifybackend/v1/issue/userDetails`,
 				'GET',
 			);
@@ -139,9 +150,9 @@ export const getIssueByUserId = async (): Promise<IssueResponse> => {
 		} else {
 			throw new Error('No user session found');
 		}
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error fetching issues by user ID:', error);
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 };
 
@@ -154,8 +165,8 @@ export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
 		);
 		// console.log(res.data);
 		return res.data;
-	} catch (error: any) {
-		throw new Error(error);
+	} catch (error) {
+		throw new Error((error as AxiosError).message);
 	}
 };
 
@@ -166,8 +177,10 @@ export async function issueSearchAPI(query: string): Promise<IssueResponse> {
 		const res = await callAPIWithToken<IssueResponse>(url, 'GET');
 
 		return res.data;
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error searching:', error);
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 }
+
+

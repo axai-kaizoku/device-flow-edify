@@ -1,18 +1,19 @@
 'use server';
-import { DeviceResponse } from './deviceActions';
+import { AxiosError } from 'axios';
+import { DeviceResponse, getAllDevicesProp } from './deviceActions';
 import { callAPIWithToken, getSession } from './helper';
 
 //Getting Devices
-export async function getStoreDevices(): Promise<DeviceResponse> {
+export async function getStoreDevices(): Promise<getAllDevicesProp> {
 	try {
-		const res = await callAPIWithToken<DeviceResponse>(
+		const res = await callAPIWithToken<getAllDevicesProp>(
 			'https://api.edify.club/edifybackend/v1/devices/trending',
 			'GET',
 		);
 
 		return res.data;
-	} catch (e: any) {
+	} catch (e) {
 		// redirect('/login');
-		throw new Error(e);
+		throw new Error((e as AxiosError).message);
 	}
 }

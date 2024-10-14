@@ -1,7 +1,7 @@
 'use server';
-import { Device } from './deviceActions';
+import { Device, DeviceResponse, getAllDevicesProp } from './deviceActions';
 
-var cart: any[] = [];
+let cart: Device[] = [];
 
 export const addToCart = async (device: Device) => {
 	return new Promise((resolve) => {
@@ -26,7 +26,7 @@ export const removeFromCart = async (deviceId: Device) => {
 
 export const getCart = async () => {
 	console.log('Get Cart');
-	return new Promise<any[]>((resolve) => {
+	return new Promise<getAllDevicesProp>((resolve) => {
 		setTimeout(() => {
 			resolve(cart);
 		}, 100); // Simulating server delay

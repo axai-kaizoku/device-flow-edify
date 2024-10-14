@@ -52,7 +52,7 @@ export const getTokenFromSession = async () => {
 // 	}
 // }
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 interface APIResponse<T> {
 	data: T;
@@ -63,7 +63,7 @@ interface APIResponse<T> {
 export async function callAPIWithToken<T>(
 	url: string,
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-	body: any = null,
+	body: unknown = null,
 	headers: Record<string, string> = {}, // Allow passing custom headers
 ): Promise<APIResponse<T>> {
 	// Retrieve the token
@@ -98,9 +98,13 @@ export async function callAPIWithToken<T>(
 			data: response.data as T,
 			status: response.status,
 		};
-	} catch (error: any) {
-		// Handle error and re-throw it for further handling
-		console.error('API call failed:', error.response?.data || error.message);
-		throw new Error(error.response?.data?.message || 'API request failed');
+	} catch (error) {
+		// Handle Axios-specific errors
+		if (error instanceof AxiosError) {
+			console.error('API call failed:', error.response?.data || error.message);
+			throw new Error(error.response?.data?.message || error.message || 'API request failed');
+		}
+		// Handle unexpected errors
+		throw new Error('An unexpected error occurred during the API request');
 	}
 }

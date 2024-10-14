@@ -2,7 +2,32 @@ import { Textarea } from "@/components/wind/Input";
 import InfoDisplay from "./infoDisplay";
 import AboutDisplay from "./aboutDisplay";
 
-const Personal = ({ isEditing, userInfo, onInputChange }: any) => {
+
+// Define the shape of userInfo object
+interface UserInfo {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    date_of_birth: string;
+    marital_status: string;
+    gender: string;
+    physically_handicapped: string;
+    interests_and_hobbies: string;
+    about: string;
+}
+
+// Define the type for onInputChange function
+type OnInputChange = (fieldName: string, value: string) => void;
+
+// Update the component's props with appropriate types
+interface PersonalProps {
+    isEditing: boolean;
+    userInfo: UserInfo;
+    onInputChange: OnInputChange;
+}
+
+const Personal: React.FC<PersonalProps> = ({ isEditing, userInfo, onInputChange }) => {
     return (
         <div className="flex flex-col py-4 gap-4 overflow-y-auto">
             <div className="flex flex-wrap justify-between">

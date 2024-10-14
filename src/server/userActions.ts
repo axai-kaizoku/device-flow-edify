@@ -1,5 +1,6 @@
 'use server';
 
+import { AxiosError } from 'axios';
 import { callAPIWithToken, getSession } from './helper';
 import { Team } from './teamActions';
 
@@ -196,10 +197,10 @@ export async function deleteUser<User>(userId: string) {
 	}
 }
 
-export const bulkUploadUsers = async (formData: FormData): Promise<any> => {
+export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
 	try {
 		// Call the API with multipart/form-data
-		const response = await callAPIWithToken<any>(
+		const response = await callAPIWithToken<User>(
 			'https://api.edify.club/edifybackend/v1/user/bulk-upload',
 			'POST',
 			formData,
@@ -207,7 +208,7 @@ export const bulkUploadUsers = async (formData: FormData): Promise<any> => {
 				'Content-Type': 'multipart/form-data',
 			},
 		);
-		return response;
+		return response.data;
 	} catch (error) {
 		console.error('Error in bulk uploading users:', error);
 		throw error;
@@ -236,9 +237,12 @@ export async function userSearchAPI(query: string): Promise<UsersResponse> {
 		const res = await callAPIWithToken<UsersResponse>(url, 'GET');
 
 		return res.data;
-	} catch (error: any) {
-		console.error('Error searching:', error);
-		throw new Error(error);
+	} catch (error) {
+		if(error instanceof AxiosError){
+			console.error('Error searching:', error.message);
+			throw new Error(error.message || 'Failed to search users');
+		}
+		throw new Error((error as AxiosError).message);
 	}
 }
 

@@ -1,6 +1,7 @@
 'use server';
 import { redirect } from 'next/navigation';
 import { callAPIWithToken, getSession } from './helper';
+import { AxiosError } from 'axios';
 
 //Device type
 export type Device = {
@@ -93,14 +94,19 @@ export const createDevices = async (
 		// console.log('API Response:', res);
 
 		return res.data;
-	} catch (error: any) {
-		// console.error('Error creating device:', error);
-
-		// Redirect only if unauthorized, otherwise throw the error
-		if (error.response && error.response.status === 401) {
-			redirect('/login');
+	} catch (error) {
+		// Ensure the error is typed as AxiosError
+		if (error instanceof AxiosError) {
+			// Handle AxiosError specifically
+			if (error.response && error.response.status === 401) {
+				redirect('/login');
+			} else {
+				// Throw a new error with the message from AxiosError
+				throw new Error(error.message || 'Failed to create device');
+			}
 		} else {
-			throw new Error(error.message || 'Failed to create device');
+			// Handle any other unexpected errors
+			throw new Error('An unexpected error occurred');
 		}
 	}
 };
@@ -119,9 +125,9 @@ export async function getAllDevices(): Promise<getAllDevicesProp> {
 		}
 
 		return res.data;
-	} catch (e: any) {
+	} catch (e) {
 		// Optionally, handle specific error scenarios
-		throw new Error(e.message || 'Failed to fetch devices');
+		throw new Error((e as AxiosError).message || 'Failed to fetch devices');
 	}
 }
 
@@ -139,10 +145,9 @@ export const updateDevice = async (
 		);
 
 		return res.data;
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error updating device:', error);
-
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 };
 
@@ -166,10 +171,10 @@ export async function deleteDevice(
 
 //Upload bulk device
 
-export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
+export const bulkUploadDevices = async (formData: FormData): Promise<Device> => {
 	try {
 		// Call the API with multipart/form-data
-		const response = await callAPIWithToken<any>(
+		const response = await callAPIWithToken<Device>(
 			'https://api.edify.club/edifybackend/v1/devices/upload',
 			'POST',
 			formData,
@@ -177,7 +182,7 @@ export const bulkUploadDevices = async (formData: FormData): Promise<any> => {
 				'Content-Type': 'multipart/form-data',
 			},
 		);
-		return response;
+		return response.data;
 	} catch (error) {
 		console.error('Error in bulk uploading devices:', error);
 		throw error;
@@ -191,9 +196,9 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 		const res = await callAPIWithToken<DeviceResponse>(url, 'GET');
 
 		return res.data;
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error searching:', error);
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 }
 
@@ -208,21 +213,21 @@ export const getDeviceById = async (deviceId: string): Promise<Device> => {
 
 		// Return the fetched device
 		return res.data;
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error fetching device by ID:', error);
-		throw new Error('Failed to fetch device by ID');
+		throw new Error((error as AxiosError).message);
 	}
 };
 
 // Getting Devices by User ID
 
-export const getDevicesByUserId = async (): Promise<DeviceResponse> => {
+export const getDevicesByUserId = async (): Promise<getAllDevicesProp> => {
 	const sess = await getSession(); // Fetch session details
 
 	try {
 		if (sess?.user && sess.user.id) {
 			// Make the GET request to fetch Devices of user ID
-			const res = await callAPIWithToken<DeviceResponse>(
+			const res = await callAPIWithToken<getAllDevicesProp>(
 				`https://api.edify.club/edifybackend/v1/devices/userDetails`,
 				'GET',
 			);
@@ -234,9 +239,9 @@ export const getDevicesByUserId = async (): Promise<DeviceResponse> => {
 		} else {
 			throw new Error('No user session found');
 		}
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error fetching Devices of user ID:', error);
-		throw new Error(error);
+		throw new Error((error as AxiosError).message);
 	}
 };
 
@@ -251,7 +256,7 @@ export const paginatedDevices = async (
 		);
 		// console.log(res.data);
 		return res.data;
-	} catch (error: any) {
-		throw new Error(error);
+	} catch (error) {
+		throw new Error((error as AxiosError).message);
 	}
 };

@@ -1,10 +1,10 @@
-import { fetchUserHierarchy } from '@/server/userActions';
+import { fetchUserHierarchy, HierarchyResponse } from '@/server/userActions';
 import Org from './_components/orgChart';
-import { mapEmployeeData } from './_components/data';
+import { Employee, mapEmployeeData } from './_components/data';
 //Resolving SSR issue here
 const OrgPage = async () => {
-	const heirarchyData: any = await fetchUserHierarchy();
-	const actualData = mapEmployeeData(heirarchyData[0]);
+	const heirarchyData: HierarchyResponse = await fetchUserHierarchy();
+	const actualData: Employee = mapEmployeeData(heirarchyData[0]);
 
 	return (
 		<>

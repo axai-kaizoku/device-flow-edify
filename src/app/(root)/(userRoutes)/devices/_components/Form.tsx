@@ -7,7 +7,12 @@ import { Input, Textarea } from '@/components/wind/Input';
 import { createIssue } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
 
-function Form({ device, closeBtn }: any) {
+interface FormProps {
+	device: Device; 
+	closeBtn: (value: boolean) => void; 
+}
+
+function Form({ device, closeBtn }: FormProps) {
 	const router = useRouter();
 	// console.log(session);
 
@@ -22,53 +27,14 @@ function Form({ device, closeBtn }: any) {
 
 	const severityArray = ['Low', 'Medium', 'Critical'];
 
-	const changeHandler = (name: any, sev: string) => {
+	const changeHandler = (name: string, sev: string) => {
 		setFormData((prev) => ({
 			...prev,
 			[name]: sev,
 		}));
 	};
 
-	// Utility function to update nested form data
-	// const updateFormData = (section: string, data: any) => {
-	// 	setFormData((prev) => ({
-	// 		...prev,
-	// 		[section]: {
-	// 			...prev[section],
-	// 			...data,
-	// 		},
-	// 	}));
-	// 	console.log('Updated Form Data:', formData); // Log the form data after updating
-	// };
 
-	// const handleSubmit = async () => {
-	// 	try {
-	// 		console.log('Form Data Before Submission:', formData); // Add this line to check the form data
-
-	// 		// const deviceDetails: Device = {
-	// 		// 	device_type: formData.deviceType,
-	// 		// 	device_name: formData.basicDetails.device_name,
-	// 		// 	os: formData.basicDetails.os,
-	// 		// 	custom_model: formData.basicDetails.model,
-	// 		// 	processor: formData.basicDetails.processor,
-	// 		// 	ram: formData.basicDetails.ram,
-	// 		// 	storage: formData.basicDetails.storage,
-	// 		// 	serial_no: formData.advanceDeviceDetails.serialNumber,
-	// 		// 	device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
-	// 		// 	purchase_order: formData.extraDetails.purchaseOrder,
-	// 		// 	warranty_expiary_date: formData.advanceDeviceDetails.warrantyExpiryDate,
-	// 		// 	brand: formData.extraDetails.brand,
-	// 		// 	ownership: formData.extraDetails.ownership,
-	// 		// 	purchase_value: formData.extraDetails.purchaseValue,
-	// 		// 	asset_serial_no: 'Asset serial no',
-	// 		// };
-
-	// 	// 	const response = await createDevices(deviceDetails);
-	// 	// 	console.log('Device Details', response);
-	// 	// } catch (error) {
-	// 	// 	console.log(error);
-	// 	// }
-	// };
 
 	async function handleSubmit() {
 		try {

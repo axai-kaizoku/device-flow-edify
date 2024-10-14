@@ -2,11 +2,11 @@
 import React from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
-import { Issues } from '@/server/issueActions';
+import { getAllResponse, Issues } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
 
 
-function EmpIssueTable({ data }: { data: Issues[] }) {
+function EmpIssueTable({ data }: { data: getAllResponse }) {
 	const router = useRouter();
 	const handleIssueClick = (id: string) => {
 		router.push(`/devices/issues/${id}`);

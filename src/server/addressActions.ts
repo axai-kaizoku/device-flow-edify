@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Address = {
@@ -16,8 +17,8 @@ export async function getAddress(): Promise<Address[]> {
 			'GET',
 		);
 		return res.data;
-	} catch (e: any) {
-		throw new Error(e);
+	} catch (e) {
+		throw new Error((e as AxiosError).message);
 	}
 }
 

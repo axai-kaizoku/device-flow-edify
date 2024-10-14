@@ -3,10 +3,10 @@ import { Filter } from 'lucide-react';
 import { StoreItem } from './_components/store-item';
 import { getStoreDevices } from '@/server/storeActions';
 import { CartComponent } from './cart/page';
-import { Device } from '@/server/deviceActions';
+import { Device, DeviceResponse, getAllDevicesProp } from '@/server/deviceActions';
 
 export default async function Store() {
-	const data: any = await getStoreDevices();
+	const data: getAllDevicesProp = await getStoreDevices();
 	return (
 		<CombinedContainer title="Store">
 			<div className="flex justify-between w-full ">

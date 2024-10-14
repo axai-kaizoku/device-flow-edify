@@ -1,6 +1,7 @@
+import { User } from "@/server/userActions"
 import InfoDisplay from "./infoDisplay"
 
-const Work = ({userInfo}:any) => {
+const Work = ({userInfo}:{userInfo:User}) => {
   return (
         <div className="flex flex-col py-4 gap-4">
             <div className="flex flex-wrap justify-between">
@@ -35,7 +36,7 @@ const Work = ({userInfo}:any) => {
 
             <div className="flex flex-wrap justify-between">
                 <InfoDisplay 
-                    infoText={userInfo.orgId.legal_entity_name} 
+                    infoText={userInfo?.orgId?.legal_entity_name} 
                     infoLabel="Organization"
                     isEditing={false}
                     infoName="organization"
@@ -51,7 +52,7 @@ const Work = ({userInfo}:any) => {
 
             <div className="flex flex-wrap justify-between">
                 <InfoDisplay 
-                    infoText={userInfo.orgId.office_address[0].address} 
+                    infoText={userInfo?.orgId?.office_address[0].address} 
                     infoLabel="Address"
                     isEditing={false}
                     infoName="address"

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import OrgChart from './chart';
+import { Employee } from './data';
 //Resolving SSR issue here
-const Org = ({data}:any) => {
+const Org = ({data}:{data:Employee}) => {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {

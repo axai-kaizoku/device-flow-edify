@@ -1,6 +1,7 @@
 // utils.ts
 import { Employee } from './data';
 
+
 export const mapEmployeeToRawNodeDatum: any = (
 	employee: Employee,
 	level = 0,
@@ -9,7 +10,6 @@ export const mapEmployeeToRawNodeDatum: any = (
 	name: employee.name,
 	attributes: {
 		designation: employee.designation,
-		role: employee.role,
 		childrenCount: employee.children?.length || 0,
 	},
 	children:

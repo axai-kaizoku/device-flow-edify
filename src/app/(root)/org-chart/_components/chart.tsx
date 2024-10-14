@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import { findOriginalNode, mapEmployeeToRawNodeDatum } from './utils';
 import { renderCustomNodeElement } from './RenderNode';
+import { Employee } from './data';
 // import { orgData } from './data';
 
-export default function OrgChart({orgData}:any) {
+export default function OrgChart({orgData}:{orgData:Employee}) {
 	const [translate, setTranslate] = useState({ x: 0, y: 0 });
 	const [data, setData] = useState(mapEmployeeToRawNodeDatum(orgData));
 

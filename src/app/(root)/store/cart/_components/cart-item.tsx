@@ -11,7 +11,7 @@ export const CartItem = ({ data }: { data: Device }) => {
 	const router = useRouter();
 	const [qty, setQty] = useState(1);
 
-	const handleAddToCart = async (device: any) => {
+	const handleAddToCart = async (device: Device) => {
 		await addToCart(device);
 		router.refresh();
 	};
