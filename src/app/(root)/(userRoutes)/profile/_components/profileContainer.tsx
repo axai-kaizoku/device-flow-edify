@@ -6,7 +6,7 @@ import Personal from "./personalSection";
 import Work from "./workSection";
 import Document from "./documentSection";
 import { Pencil } from "lucide-react";
-import { updateUser, User } from "@/server/userActions";
+import { CreateUserArgs, updateUser, User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 
 
@@ -23,8 +23,8 @@ const ProfileContainer = ({user}:{user:User}) => {
         phone: user?.phone || '',
         email: user?.email || '',
         designation: user?.designation || '',
-        teamId: user?.teamId?.name || '',
-        reporting_manager: user?.reporting_manager?.name || '',
+        teamId: user?.teamId,
+        reporting_manager: user?.reporting_manager,
         gender: user?.gender || '',
         employment_type: user?.employment_type || '',
         date_of_birth: user?.date_of_birth || '',
@@ -64,22 +64,22 @@ const ProfileContainer = ({user}:{user:User}) => {
             // When clicking 'Update', stop editing
             setIsEditing(false);
 
-            const userDetails = {
-                first_name: formData.firstN,
-                last_name: formData.lastN,
+            const userDetails:CreateUserArgs = {
+                first_name: formData.first_name,
+                last_name: formData.last_name,
                 email: formData.email,
                 phone: formData.phone,
                 designation: formData.designation,
-                teamId: formData.team,
-                onboarding_date: formData.onboarding,
-                reporting_manager: formData.reportM,
-                employment_type: formData.employment,
-                date_of_birth: formData.dob,
+                teamId: formData.teamId._id,
+                onboarding_date: formData.onboarding_date,
+                reporting_manager: formData.reporting_manager._id,
+                employment_type: formData.employment_type,
+                date_of_birth: formData.date_of_birth,
                 gender: formData.gender,
                 marital_status: formData.marital_status,
                 physically_handicapped: formData.physically_handicapped,
                 interests_and_hobbies: formData.interests_and_hobbies,
-                about: formData.about,
+                about: formData.about
             };
 
             if (user) {
@@ -128,7 +128,7 @@ const ProfileContainer = ({user}:{user:User}) => {
                     />
 
                     <img
-                        src={user?.image}
+                        src={formData?.image}
                         alt="profile image"
                         className="rounded-full object-cover object-top w-full h-full"
                     />

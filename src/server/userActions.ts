@@ -79,7 +79,7 @@ export type CreateUserArgs = {
 	role?: number;
 	designation: string;
 	image?: string;
-	teamId: string;
+	teamId?: string;
 	employment_type: string;
 	date_of_birth: string;
 	onboarding_date: string;
@@ -176,7 +176,7 @@ export async function updateUser(
 			'PUT', // HTTP method
 			userData,
 		);
-		console.log(res);
+		// console.log(res);
 		return res.data;
 	} catch (e) {
 		throw new Error('Failed to Update user');

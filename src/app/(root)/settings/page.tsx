@@ -17,25 +17,25 @@ export default async function Settings() {
 				<div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
 					<div className="flex items-center gap-4">
 						<img
-							src={org.logo || 'https://via.placeholder.com/100'}
-							alt={`${org.name} logo`}
-							className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-300"
-						/>
+                            src={org?.logo || 'https://via.placeholder.com/100'}
+                            alt={`${org?.name || 'Organization'} logo`}
+                            className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-300"
+                        />
 						<div>
-							<h2 className="text-2xl font-semibold text-gray-700">
-								{org.name}
-							</h2>
-							<p className="text-sm text-gray-500">{org.email}</p>
-						</div>
+                            <h2 className="text-2xl font-semibold text-gray-700">
+                                {org?.name || 'Organization Name'}
+                            </h2>
+                            <p className="text-sm text-gray-500">{org?.email || 'N/A'}</p>
+                        </div>
 					</div>
 					<div className="text-right">
-						<p className="text-lg font-semibold text-gray-600">
-							Devices: {org.total_devices}
-						</p>
-						<p className="text-lg font-semibold text-gray-600">
-							Employees: {org.total_employees}
-						</p>
-					</div>
+                        <p className="text-lg font-semibold text-gray-600">
+                            Devices: {org?.total_devices || 0}
+                        </p>
+                        <p className="text-lg font-semibold text-gray-600">
+                            Employees: {org?.total_employees || 0}
+                        </p>
+                    </div>
 				</div>
 
 				{/* Office Addresses */}
@@ -44,13 +44,13 @@ export default async function Settings() {
 						Office Addresses
 					</h3>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{org.office_address?.map((address) => (
+						{org?.office_address?.map((address) => (
 							<div
-								key={address._id}
+								key={address?._id}
 								className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
 								<div className="flex items-center justify-between">
 									<h4 className="text-lg font-semibold text-gray-700">
-										City: {address.city}
+										City: {address?.city}
 									</h4>
 									<MapPinned color="gray" />
 								</div>
@@ -59,12 +59,12 @@ export default async function Settings() {
 									Primary Address
 								</p>
 								<div className="mt-4 flex gap-4 justify-end">
-									<EditAddress city={address.city} id={address._id}>
+									<EditAddress city={address?.city} id={address?._id}>
 										<button className="bg-slate-500 text-white py-2 px-4 rounded-md shadow hover:bg-slate-600 transition duration-300">
 											Edit
 										</button>
 									</EditAddress>
-									<DeleteAddress id={address._id}>
+									<DeleteAddress id={address?._id}>
 										<span className="bg-slate-800 text-white py-2 px-4 rounded-md shadow hover:bg-slate-600 transition duration-300">
 											Delete
 										</span>

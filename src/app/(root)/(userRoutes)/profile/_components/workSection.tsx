@@ -45,7 +45,7 @@ const Work = ({userInfo}:any) => {
                     infoText={userInfo.teamId?.title} 
                     infoLabel="Team"
                     isEditing={false}
-                    infoName="team"
+                    infoName="teamId"
                 />
             </div>
 
