@@ -1,40 +1,34 @@
+// basicDetailsDevice.tsx
+
 import { Icon } from '@/components/wind/Icons';
 import { getAllDevices } from '@/server/deviceActions';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {
+	BasicDetails as BasicDetailsInterface,
+	FormErrors,
+} from './_components/types';
 
-type FormType = {
-	model: string;
-	processor: string;
-	ram: string;
-	storage: string;
-	os: string;
-	device_name: string;
-};
+interface BasicDetailsProps {
+	data: BasicDetailsInterface;
+	setData: (data: Partial<BasicDetailsInterface>) => void;
+	errors: FormErrors;
+}
 
-type BasicDetailsForm = {
-	data: FormType;
-	setData: (newData: FormType) => void;
-	errors?: { [key: string]: string };
-};
-
-function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
+const BasicDetails: React.FC<BasicDetailsProps> = ({
+	data,
+	setData,
+	errors,
+}) => {
 	const [selectedOS, setSelectedOS] = useState<string | null>(data.os || '');
-	const [formData, setFormData] = useState<FormType>(
-		data || {
-			model: '',
-			processor: '',
-			os: '',
-			ram: '',
-			storage: '',
-			device_name: '',
-		},
-	);
+	const [formData, setFormData] = useState<BasicDetailsInterface>(data);
 	const [deviceOptions, setDeviceOptions] = useState<string[]>([]); // Store device options
 	const [isDeviceDropdownActive, setDeviceDropdownActive] =
 		useState<boolean>(false); // Trigger fetch on focus
 
 	// Handle text inputs
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+	) => {
 		const { name, value } = e.target;
 		const updatedFormData = {
 			...formData,
@@ -58,10 +52,10 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 	const fetchDevices = async () => {
 		try {
 			const devices = await getAllDevices(); // API call
-			console.log('DEvices ' + devices);
+			console.log('Devices:', devices);
 			// Map to just device names if the API response returns full device objects
 			const deviceNames = devices.map((device) => device.device_name);
-			console.log('deviceNames' + deviceNames);
+			console.log('Device Names:', deviceNames);
 			setDeviceOptions(deviceNames);
 		} catch (error) {
 			console.error('Failed to fetch devices:', error);
@@ -213,6 +207,6 @@ function BasicDetails({ data, setData, errors }: BasicDetailsForm) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default BasicDetails;

@@ -6,13 +6,13 @@ import { getSession } from '@/server/helper';
 
 export default async function Users() {
 	const session = await getSession();
-	const userRole = session?.user.role;
+	const userRole = session?.user.role || 0;
 	try {
 		const users = await fetchUsers();
 
 		return (
 			<CombinedContainer title="Users">
-				<UserMain data={users} userRole={userRole}/>
+				<UserMain data={users} userRole={userRole} />
 			</CombinedContainer>
 		);
 	} catch (error) {

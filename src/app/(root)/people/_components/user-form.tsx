@@ -19,16 +19,18 @@ import {
 } from '@/server/userActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
-export const UserForm = ({
-	closeBtn,
-	isEditForm,
-	userData,
-}: {
-	closeBtn?: any;
+import {
+	bulkUploadKeys,
+	designations,
+	employments,
+	genders,
+} from './helper/utils';
+interface UserFormProps {
+	closeBtn?: (state: boolean) => void;
 	isEditForm?: boolean;
 	userData?: CreateUserArgs | User;
-}) => {
+}
+export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 	const router = useRouter();
 	const [next, setNext] = useState(0);
 
@@ -67,26 +69,15 @@ export const UserForm = ({
 		interests_and_hobbies: userData ? userData.interests_and_hobbies : '',
 		about: userData ? userData.about : '',
 	});
-
-	const designations = [
-		{ label: 'Frontend Developer', value: 'frontend-developer' },
-		{ label: 'Backend Developer', value: 'backend-developer' },
-		{ label: 'QC', value: 'qc' },
-	];
-
-	const genders = [
-		{ label: 'Male', value: 'male' },
-		{ label: 'Female', value: 'female' },
-	];
-
-	const employments = [
-		{ label: 'Full Time', value: 'full_time' },
-		{ label: 'Internship', value: 'internship' },
-		{ label: 'Part Time', value: 'part_time' },
-		{ label: 'Contract', value: 'contract' },
-	];
-
-	const handleSubmit = async (e: any) => {
+	const handleChange =
+		(field: keyof typeof formData) =>
+		(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+			setFormData((prev) => ({
+				...prev,
+				[field]: e.target.value,
+			}));
+		};
+	const handleSubmit = async () => {
 		const user = {
 			first_name: formData.firstN,
 			last_name: formData.lastN,
@@ -109,14 +100,14 @@ export const UserForm = ({
 			if (user) {
 				await updateUser(userData?._id!, user);
 				router.refresh();
-				closeBtn(false);
+				closeBtn?.(false);
 			}
 		} else {
 			if (user) {
 				await createUser(user);
-				console.log(user);
+				console.log('Front-end', user);
 				router.refresh();
-				closeBtn(false);
+				closeBtn?.(false);
 			}
 		}
 	};
@@ -137,22 +128,7 @@ export const UserForm = ({
 							<BulkUpload
 								bulkApi={bulkUploadUsers}
 								closeBtn={closeBtn}
-								requiredKeys={[
-									'first_name',
-									'last_name',
-									'email',
-									'password',
-									'phone',
-									'reporting_manager',
-									'employment_type',
-									'about',
-									'interests_and_hobbies',
-									'date_of_birth',
-									'gender',
-									'marital_status',
-									'physically_handicapped',
-									'onboarding_date',
-								]}
+								requiredKeys={bulkUploadKeys}
 							/>
 						</div>
 					) : (
@@ -236,9 +212,7 @@ export const UserForm = ({
 									<SelectDropdown
 										value={formData.gender}
 										label="gender"
-										onChange={(e) =>
-											setFormData({ ...formData, gender: e.target.value })
-										}
+										onChange={handleChange('gender')}
 										options={genders}
 										name="Gender"
 									/>
@@ -254,14 +228,14 @@ export const UserForm = ({
 										name="reporting_manager"
 										resName="first_name"
 										value={formData.reportM.value}
-										onChange={(e: any) =>
-											setFormData({
-												...formData,
+										onChange={(e: { target: { value: string } }) =>
+											setFormData((prev) => ({
+												...prev,
 												reportM: {
 													name: e.target.value,
 													value: e.target.value,
 												},
-											})
+											}))
 										}
 										placeholder="Select Reporting Manager"
 									/>
@@ -298,9 +272,7 @@ export const UserForm = ({
 									<SelectDropdown
 										label="designation"
 										name="designation"
-										onChange={(e) =>
-											setFormData({ ...formData, designation: e.target.value })
-										}
+										onChange={handleChange('designation')}
 										options={designations}
 										value={formData.designation}
 									/>
@@ -311,14 +283,11 @@ export const UserForm = ({
 										fetching={fetchTeams}
 										resName="title"
 										name="team"
-										onChange={(e: any) =>
-											setFormData({
-												...formData,
-												team: {
-													name: e.target.value,
-													value: e.target.value,
-												},
-											})
+										onChange={(e: { target: { value: string } }) =>
+											setFormData((prev) => ({
+												...prev,
+												team: { name: e.target.value, value: e.target.value },
+											}))
 										}
 										value={formData.team.value}
 										placeholder="Select Team"
@@ -334,9 +303,7 @@ export const UserForm = ({
 									<SelectDropdown
 										label="employment type"
 										name="employment_type"
-										onChange={(e) =>
-											setFormData({ ...formData, employment: e.target.value })
-										}
+										onChange={handleChange('employment')}
 										options={employments}
 										value={formData.employment}
 									/>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 type ApiDropdownProps = {
 	fetching: () => Promise<any[]>; // API call to fetch the dropdown options

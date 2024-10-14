@@ -2,8 +2,8 @@ import ApiDropdown from '@/components/dropdown/api-dropdown';
 import { fetchUsers } from '@/server/userActions';
 
 type ApiDropdownUserProps = {
-	onChange: any;
-	value: any;
+	onChange: () => void;
+	value: string;
 };
 
 export default function ApiDropdownUser({

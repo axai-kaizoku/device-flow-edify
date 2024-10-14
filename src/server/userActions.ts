@@ -87,7 +87,6 @@ export type CreateUserArgs = {
 	reporting_manager: string;
 };
 
-
 export type Reportee = {
 	_id?: string;
 	first_name?: string;
@@ -113,8 +112,6 @@ export type HierarchyUser = {
 
 export type HierarchyResponse = HierarchyUser[];
 
-  
-
 type UsersResponse = User[];
 
 export async function fetchUsers(): Promise<UsersResponse> {
@@ -138,16 +135,23 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 			password: 'winuall123',
 			orgId: sess?.user.orgId,
 		};
-		console.log(user);
+		console.log('Session', sess);
+		console.log('User', user);
 
 		const res = await callAPIWithToken<User>(
 			'https://api.edify.club/edifybackend/v1/user', // API endpoint
 			'POST', // HTTP method
 			user,
 		);
-
+		console.log('Response Data:', res.data);
 		return res.data;
 	} catch (e) {
+		if (e instanceof AxiosError && e.response) {
+			console.error('API Error:', e.response.data);
+			throw new Error(
+				(e.response.data as any).message || 'Failed to create user',
+			);
+		}
 		throw new Error('Failed to create user');
 	}
 }
@@ -238,7 +242,7 @@ export async function userSearchAPI(query: string): Promise<UsersResponse> {
 
 		return res.data;
 	} catch (error) {
-		if(error instanceof AxiosError){
+		if (error instanceof AxiosError) {
 			console.error('Error searching:', error.message);
 			throw new Error(error.message || 'Failed to search users');
 		}
@@ -254,11 +258,10 @@ export async function fetchUserHierarchy(): Promise<HierarchyResponse> {
 			'GET', // HTTP method
 		);
 
-		console.log(res.data)
+		console.log(res.data);
 		return res.data;
 	} catch (e) {
 		console.error('Error fetching user hierarchy:', e);
 		throw new Error('Failed to fetch user hierarchy');
 	}
 }
-

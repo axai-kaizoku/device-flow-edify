@@ -1,6 +1,6 @@
 'use client';
 import { Issues } from '@/server/issueActions';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import IssueTable from './IssueTable';
 import { useRouter, useSearchParams } from 'next/navigation';
 

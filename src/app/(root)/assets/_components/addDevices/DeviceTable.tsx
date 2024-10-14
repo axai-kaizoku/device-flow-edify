@@ -14,26 +14,12 @@ interface DeviceTableProps {
 	searchTerm: string;
 }
 
-export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
-	const [filteredData, setFilteredData] = useState<Device[]>(data);
+export default function DeviceTable({ data }: DeviceTableProps) {
 	const router = useRouter();
 	const [device, setDevice] = useState(data);
 	const handleFilteredData = (filtered: typeof data) => {
 		setDevice(filtered);
 	};
-	useEffect(() => {
-		const filtered = data.filter((device: Device) => {
-			const { device_name, brand, custom_model } = device;
-			return (
-				(device_name &&
-					device_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-				(brand && brand.toLowerCase().includes(searchTerm.toLowerCase())) ||
-				(custom_model &&
-					custom_model.toLowerCase().includes(searchTerm.toLowerCase()))
-			);
-		});
-		setFilteredData(filtered);
-	}, [searchTerm, data]);
 
 	const handleDeviceClick = (id: string) => {
 		router.push(`/assets/${id}`);
@@ -45,7 +31,7 @@ export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
 				data={device}
 				onFiltered={handleFilteredData}
 				searchAPI={deviceSearchAPI}
-				queryName="query"
+				queryName="search"
 			/>
 			<Table
 				data={device}
@@ -82,11 +68,10 @@ export default function DeviceTable({ data, searchTerm }: DeviceTableProps) {
 					},
 					{
 						title: 'Actions',
-						render: (record: any) => (
+						render: (record: Device) => (
 							<div
 								className="flex w-full justify-center cursor-pointer"
-								onClick={() => handleDeviceClick(record._id || '')} // Handle undefined '_id'
-							>
+								onClick={() => handleDeviceClick(record._id || '')}>
 								<Icon type="OutlinedDotsVertical" color="black" />
 							</div>
 						),

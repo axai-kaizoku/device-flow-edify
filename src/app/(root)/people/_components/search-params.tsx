@@ -1,25 +1,24 @@
 'use client';
-import { userSearchAPI } from '@/server/userActions';
 import { useQueryState } from 'nuqs';
 import { InputHTMLAttributes, useEffect } from 'react';
 
-type SearchProps = {
-	data: any[];
+type SearchProps<T> = {
+	data: T[];
 	placeholder?: string; // Optional placeholder for the input
-	onFiltered: (filteredData: any[]) => void; // Callback to return filtered data
+	onFiltered: (filteredData: T[]) => void; // Callback to return filtered data
 	queryName: string;
 	className?: string;
-	searchAPI: (query: string) => void;
+	searchAPI: (query: string) => Promise<T[]>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function SearchInput({
+export function SearchInput<T>({
 	data,
 	queryName,
 	placeholder = 'Search...',
 	className,
 	onFiltered,
 	searchAPI,
-}: SearchProps) {
+}: SearchProps<T>) {
 	const [searchTerm, setSearchTerm] = useQueryState(queryName); // Use `nuqs` for query state
 
 	useEffect(() => {
@@ -32,7 +31,7 @@ export function SearchInput({
 
 	// Filter function based on the search input
 	const handleFilter = async (search: string) => {
-		const data: any = await searchAPI(search);
+		const data = await searchAPI(search);
 		onFiltered(data);
 	};
 

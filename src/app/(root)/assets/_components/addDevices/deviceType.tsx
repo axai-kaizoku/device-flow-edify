@@ -19,7 +19,12 @@ type DeviceTypeProps = {
 	closeBtn: () => void;
 };
 
-function DeviceType({ data, setData, error, closeBtn }: DeviceTypeProps) {
+const DeviceType: React.FC<DeviceTypeProps> = ({
+	data,
+	setData,
+	error,
+	closeBtn,
+}) => {
 	const [selectedDevice, setSelectedDevice] = useState<string | null>(
 		data || '',
 	);
@@ -97,6 +102,6 @@ function DeviceType({ data, setData, error, closeBtn }: DeviceTypeProps) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default DeviceType;

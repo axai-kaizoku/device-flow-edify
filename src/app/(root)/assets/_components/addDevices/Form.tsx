@@ -1,28 +1,33 @@
-// Form.tsx (final version)
+// Form.tsx
+
 'use client';
 
 import { Icon } from '@/components/wind/Icons';
 import React, { useState } from 'react';
 import DeviceType from './deviceType';
+
+import { createDevices, Device } from '@/server/deviceActions';
+import { useRouter } from 'next/navigation';
 import BasicDetails from './basicDetailsDevice';
 import AdvanceDeviceDetails from './advanceDeviceDetails';
 import ExtraDetails from './extraDetails';
-import { createDevices, Device } from '@/server/deviceActions';
-import { useRouter } from 'next/navigation';
-
-type FormErrors = {
-	[key: string]: string;
-};
-
+import {
+	FormData,
+	FormErrors,
+	BasicDetails as BasicDetailsInterface,
+	AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
+	ExtraDetails as ExtraDetailsInterface,
+} from './_components/types';
 type FormProps = {
 	closeBtn: () => void; // Define the type for closeBtn
 };
 
 function Form({ closeBtn }: FormProps) {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState<number>(1);
 	const [errors, setErrors] = useState<FormErrors>({});
 	const router = useRouter();
-	const [formData, setFormData] = useState({
+
+	const [formData, setFormData] = useState<FormData>({
 		deviceType: '',
 		basicDetails: {
 			os: '',
@@ -49,17 +54,19 @@ function Form({ closeBtn }: FormProps) {
 		},
 	});
 
-	// Utility function to update nested form data
-	const updateFormData = (section: string, data: any) => {
-		setFormData((prev: any) => ({
+	// Utility function to update nested form data with better type safety
+	const updateFormData = <K extends keyof FormData>(
+		section: K,
+		data: Partial<FormData[K]>,
+	) => {
+		setFormData((prev) => ({
 			...prev,
 			[section]: {
-				...prev[section],
+				...(prev[section] as object),
 				...data,
 			},
 		}));
 	};
-
 	const validate = (): boolean => {
 		let currentErrors: FormErrors = {};
 
@@ -101,12 +108,11 @@ function Form({ closeBtn }: FormProps) {
 					currentErrors.officeLocation = 'Office Location is required.';
 				if (!extra.purchaseOrder)
 					currentErrors.purchaseOrder = 'Purchase Order is required.';
-				if (!extra.purchaseValue || extra.purchaseValue <= 0)
+				if (extra.purchaseValue <= 0)
 					currentErrors.purchaseValue =
 						'Purchase Value must be greater than 0.';
 				if (!extra.ownership)
 					currentErrors.ownership = 'Ownership is required.';
-
 				if (!extra.image) currentErrors.image = 'Device Image is required.';
 				break;
 			default:
@@ -149,7 +155,7 @@ function Form({ closeBtn }: FormProps) {
 					userName: formData.extraDetails.assignedTo,
 					ownership: formData.extraDetails.ownership,
 					purchase_value: formData.extraDetails.purchaseValue,
-					asset_serial_no: 'Asset serial no',
+					asset_serial_no: 'Asset serial no', // Consider making this dynamic if needed
 				};
 
 				const response = await createDevices(deviceDetails);
@@ -157,7 +163,7 @@ function Form({ closeBtn }: FormProps) {
 				closeBtn(); // Close the sheet after successful submission
 				router.refresh();
 			} catch (error) {
-				console.log(error);
+				console.error('Error submitting form:', error);
 				// Optionally, handle the error and display a message to the user
 			}
 		}
@@ -174,31 +180,37 @@ function Form({ closeBtn }: FormProps) {
 			{step === 1 && (
 				<DeviceType
 					data={formData.deviceType}
-					setData={(data: any) =>
+					setData={(data: string) =>
 						setFormData((prev) => ({ ...prev, deviceType: data }))
 					}
 					error={errors.deviceType}
-					closeBtn={closeBtn} // Pass closeBtn to DeviceType
+					closeBtn={closeBtn}
 				/>
 			)}
 			{step === 2 && (
 				<BasicDetails
 					data={formData.basicDetails}
-					setData={(data: any) => updateFormData('basicDetails', data)}
+					setData={(data: Partial<BasicDetailsInterface>) =>
+						updateFormData('basicDetails', data)
+					}
 					errors={errors}
 				/>
 			)}
 			{step === 3 && (
 				<AdvanceDeviceDetails
 					data={formData.advanceDeviceDetails}
-					setData={(data: any) => updateFormData('advanceDeviceDetails', data)}
+					setData={(data: Partial<AdvanceDeviceDetailsInterface>) =>
+						updateFormData('advanceDeviceDetails', data)
+					}
 					errors={errors}
 				/>
 			)}
 			{step === 4 && (
 				<ExtraDetails
 					data={formData.extraDetails}
-					setData={(data: any) => updateFormData('extraDetails', data)}
+					setData={(data: Partial<ExtraDetailsInterface>) =>
+						updateFormData('extraDetails', data)
+					}
 					errors={errors}
 				/>
 			)}
@@ -218,13 +230,15 @@ function Form({ closeBtn }: FormProps) {
 				{/* Conditionally render Next/Submit button based on the current step */}
 				{step < 4 ? (
 					<button
-						className="flex items-center justify-center gap-2  bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
+						type="button"
+						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
 						onClick={handleNextStep}>
 						Next
 						<Icon type="OutlinedArrowRight" color="white" />
 					</button>
 				) : (
 					<button
+						type="button"
 						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
 						onClick={handleSubmit}>
 						Submit

@@ -6,23 +6,28 @@ import UserTable from './user-table';
 import { useState } from 'react';
 import { SearchInput } from './search-params';
 
-export default function UserMain({ data, userRole }: { data: User[], userRole:number }) {
-	const [users, setUsers] = useState(data);
-	const handleFilteredData = (filtered: typeof data) => {
+interface UserMainProps {
+	data: User[];
+	userRole: number;
+}
+
+export default function UserMain({ data, userRole }: UserMainProps) {
+	const [users, setUsers] = useState<User[]>(data); // Explicit User[] type
+	const handleFilteredData = (filtered: User[]) => {
 		setUsers(filtered);
 	};
+
 	return (
 		<>
 			<div className="flex justify-end w-full">
 				<div className="flex gap-5">
-					{/* <Input placeholder="Search users" /> */}
 					<SearchInput
 						data={users}
 						onFiltered={handleFilteredData}
 						queryName="name"
 						searchAPI={userSearchAPI}
 					/>
-					{userRole===2 && <CreateUser />}
+					{userRole === 2 && <CreateUser />}
 				</div>
 			</div>
 			<div className="h-10" />

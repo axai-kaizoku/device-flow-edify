@@ -37,7 +37,7 @@ export default async function Assets({ searchParams }: AssetsProps) {
 				/>
 			</CombinedContainer>
 		);
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error fetching devices:', error);
 		return (
 			<CombinedContainer title="Assets">

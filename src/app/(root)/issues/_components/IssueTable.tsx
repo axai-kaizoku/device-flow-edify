@@ -62,7 +62,7 @@ function IssueTable({ data }: { data: Issues[] }) {
 			}
 
 			setShowFilter(false); // Close the filter modal
-		} catch (error: any) {
+		} catch (error) {
 			console.error('Error applying filters:', error);
 			alert('Failed to apply filters. Please try again.');
 		}
@@ -160,7 +160,7 @@ function IssueTable({ data }: { data: Issues[] }) {
 			)}
 
 			{/* Table displaying the issues */}
-			{issue.length > 0 ? (
+			{issue && issue.length > 0 ? (
 				<Table
 					data={issue}
 					columns={[

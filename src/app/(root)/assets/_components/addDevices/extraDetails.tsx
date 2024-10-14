@@ -1,31 +1,30 @@
-// ExtraDetails.tsx
+// extraDetails.tsx
+
 import React, { useState } from 'react';
 import { Address, getAddress } from '@/server/addressActions';
 import { fetchUsers, User } from '@/server/userActions';
 import { Dropdown } from '@/components/dropdown/dropdown';
 import ApiDropdown from '@/components/dropdown/api-dropdown';
+import {
+	ExtraDetails as ExtraDetailsInterface,
+	FormErrors,
+} from './_components/types';
 
-type FormType = {
-	brand: string;
-	assignedTo: string;
-	officeLocation: string;
-	purchaseOrder: string;
-	purchaseValue: number;
-	ownership: string;
-	image: string;
-};
+interface ExtraDetailsProps {
+	data: ExtraDetailsInterface;
+	setData: (data: Partial<ExtraDetailsInterface>) => void;
+	errors?: FormErrors;
+}
 
-type ExtraDetailsType = {
-	data: FormType;
-	setData: (newData: FormType) => void;
-	errors?: { [key: string]: string };
-};
-
-function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
+const ExtraDetails: React.FC<ExtraDetailsProps> = ({
+	data,
+	setData,
+	errors,
+}) => {
 	const [assignedOptions, setAssignedOptions] = useState<string[]>([]);
 	const [locationsOptions, setLocationsOptions] = useState<string[]>([]);
 	const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
-	const [formData, setFormData] = useState<FormType>(
+	const [formData, setFormData] = useState<ExtraDetailsInterface>(
 		data || {
 			brand: '',
 			assignedTo: '',
@@ -33,7 +32,7 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
-			image: null,
+			image: '',
 		},
 	);
 
@@ -79,7 +78,7 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
-			const file = e.target.files?.[0];
+			const file = e.target.files[0];
 			const imageUrl = URL.createObjectURL(file);
 			setFormData((prevData) => ({
 				...prevData,
@@ -101,9 +100,9 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 
 	return (
 		<div className="flex flex-col w-full">
-			<h1 className="text-xl py-4">Advance Details</h1>
+			<h1 className="text-xl py-4">Extra Details</h1>
 			<div className="flex flex-wrap gap-4">
-				<div className="flex flex-col w-72 ">
+				<div className="flex flex-col w-72">
 					<label>Brand</label>
 					<input
 						name="brand"
@@ -116,7 +115,7 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 						<p className="text-red-500 text-sm">{errors.brand}</p>
 					)}
 				</div>
-				<div className="flex flex-col w-72 ">
+				<div className="flex flex-col w-72">
 					<label>Assigned to</label>
 					<input
 						name="assignedTo"
@@ -224,6 +223,6 @@ function ExtraDetails({ data, setData, errors }: ExtraDetailsType) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default ExtraDetails;

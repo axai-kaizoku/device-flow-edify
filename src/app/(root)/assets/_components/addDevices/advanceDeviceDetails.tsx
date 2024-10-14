@@ -1,36 +1,25 @@
-// AdvanceDeviceDetails.tsx
+// advanceDeviceDetails.tsx
+
 import { Icon } from '@/components/wind/Icons';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react';
+import {
+	AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
+	FormErrors,
+} from './_components/types';
 
-type FormType = {
-	serialNumber: string;
-	invoiceFile: null | File;
-	purchaseDate: string;
-	warrantyExpiryDate: string;
-};
+interface AdvanceDeviceDetailsProps {
+	data: AdvanceDeviceDetailsInterface;
+	setData: (data: Partial<AdvanceDeviceDetailsInterface>) => void;
+	errors?: FormErrors;
+}
 
-type AdvanceDeviceDetailsProps = {
-	data: FormType;
-	setData: (newData: FormType) => void;
-	errors?: { [key: string]: string };
-};
-
-function AdvanceDeviceDetails({
+const AdvanceDeviceDetails: React.FC<AdvanceDeviceDetailsProps> = ({
 	data,
 	setData,
 	errors,
-}: AdvanceDeviceDetailsProps) {
-	const [formData, setFormData] = useState<FormType>(
-		data || {
-			serialNumber: '',
-			invoiceFile: null,
-			purchaseDate: '',
-			warrantyExpiryDate: '',
-		},
-	);
-
-	// Create a reference to the file input
+}) => {
+	const [formData, setFormData] = useState<AdvanceDeviceDetailsInterface>(data);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 	// Function to handle clicking on the upload area
@@ -165,6 +154,6 @@ function AdvanceDeviceDetails({
 			</div>
 		</div>
 	);
-}
+};
 
 export default AdvanceDeviceDetails;
