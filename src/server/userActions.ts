@@ -77,7 +77,7 @@ export type CreateUserArgs = {
 	_id?: string;
 	email: string;
 	phone: string;
-	role?: number;
+	role: number;
 	designation: string;
 	image?: string;
 	teamId?: string;
@@ -93,7 +93,7 @@ export type Reportee = {
 	last_name?: string;
 	email?: string;
 	designation?: string;
-	role?: number | string;
+	role: number | string;
 	reporteeCount?: number;
 	reportingTo?: string | null;
 	reportees?: Reportee[];
@@ -149,10 +149,10 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 		if (e instanceof AxiosError && e.response) {
 			console.error('API Error:', e.response.data);
 			throw new Error(
-				(e.response.data as any).message || 'Failed to create user',
+				(e.response.data).message || 'Failed to create user',
 			);
 		}
-		throw new Error('Failed to create user');
+		throw new Error((e as AxiosError).message);
 	}
 }
 

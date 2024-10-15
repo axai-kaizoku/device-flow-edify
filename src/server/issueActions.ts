@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Issues = {
-	_id?: string;
+	_id: string;
 	userId?: string;
 	description?: string;
 	orgId?: string;

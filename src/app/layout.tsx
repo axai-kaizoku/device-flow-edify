@@ -22,7 +22,7 @@ export default async function RootLayout({
 }>) {
 
 	const session = await getSession();
-  	const userRole = session?.user.role;
+  	const userRole : number | undefined= session?.user.role;
 
 	return (
 		<html lang="en">

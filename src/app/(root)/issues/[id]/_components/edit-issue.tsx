@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { DeleteIssues } from './delete-issue';
-import { updateIssue } from '@/server/issueActions';
+import { Issues, updateIssue } from '@/server/issueActions';
+import { useRouter } from 'next/navigation';
 
 // import { useSearchParams } from 'next/navigation';
-function EditIssue({ data }: { data: any }) {
+function EditIssue({ data }: { data: Issues }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [issueData, setIssueData] = useState(data);
+	const router = useRouter();
 
 	// Handle Edit Save
 	const handleSave = async () => {
@@ -16,6 +18,7 @@ function EditIssue({ data }: { data: any }) {
 			alert('Issue updated successfully');
 			setIsEditing(false);
 			setIssueData(updatedIssue);
+			router.refresh();
 		}
 	};
 

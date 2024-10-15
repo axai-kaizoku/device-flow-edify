@@ -124,7 +124,7 @@ function RenderResults() {
     );
   }
 
-export default function KbarWrapper({userRole}:any) {
+export default function KbarWrapper({userRole}:{userRole : number | undefined}) {
   return (
     <KBarProvider actions={userRole===1 ? EmpActions : adminActions}>
       <KBarPortal>

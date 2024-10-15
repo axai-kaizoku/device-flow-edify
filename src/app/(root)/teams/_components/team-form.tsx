@@ -7,6 +7,12 @@ import { Typography } from '@/components/wind/Typography';
 import { createTeam, updateTeam } from '@/server/teamActions';
 import { useRouter } from 'next/navigation';
 
+interface TeamFormData {
+	'team-name': string;
+	'team-description': string;
+	image: string;
+}
+
 export const TeamForm = ({
 	closeBtn,
 	isEditForm,
@@ -15,7 +21,7 @@ export const TeamForm = ({
 	description,
 	image,
 }: {
-	closeBtn?: any;
+	closeBtn: (value: boolean) => void;
 	isEditForm?: boolean;
 	id?: string;
 	title?: string;
@@ -30,7 +36,7 @@ export const TeamForm = ({
 		image: image ?? '',
 	};
 
-	const handleSubmit = async (e: any) => {
+	const handleSubmit = async (e: TeamFormData) => {
 		if (isEditForm) {
 			if (e['team-name'] && e['team-description'] && e['image']) {
 				await updateTeam(

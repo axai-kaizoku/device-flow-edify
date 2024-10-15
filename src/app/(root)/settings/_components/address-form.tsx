@@ -13,7 +13,7 @@ export const AddressForm = ({
 	id,
 	city,
 }: {
-	closeBtn?: any;
+	closeBtn: (value: boolean) => void;
 	isEditForm?: boolean;
 	id?: string;
 	city?: string;
@@ -24,7 +24,11 @@ export const AddressForm = ({
 		city: city ?? '',
 	};
 
-	const handleSubmit = async (e: any) => {
+	interface AddressFormData {
+		city: string;
+	}
+
+	const handleSubmit = async (e: AddressFormData) => {
 		if (isEditForm) {
 			if (e.city) {
 				await updateAddress(id!, e.city);

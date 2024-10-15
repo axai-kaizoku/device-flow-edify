@@ -15,7 +15,7 @@ export type Team = {
 	__v?: number;
 };
 
-type TeamsResponse = Team[];
+export type TeamsResponse = Team[];
 
 export async function fetchTeams(): Promise<TeamsResponse> {
 	try {
