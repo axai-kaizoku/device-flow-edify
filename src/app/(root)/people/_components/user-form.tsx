@@ -1,4 +1,4 @@
-//// @ts-nocheck
+// @ts-nocheck
 'use client';
 
 import BulkUpload from '@/components/bulk-upload';
@@ -25,11 +25,13 @@ import {
 	employments,
 	genders,
 } from './helper/utils';
+
 interface UserFormProps {
 	closeBtn?: (state: boolean) => void;
 	isEditForm?: boolean;
 	userData?: CreateUserArgs | User;
 }
+
 export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 	const router = useRouter();
 	const [next, setNext] = useState(0);
@@ -40,26 +42,15 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 		phone: userData ? userData.phone : '',
 		email: userData ? userData.email : '',
 		designation: userData ? userData.designation : '',
-		//@ts-ignore
 		team: userData?.teamId
-			? //@ts-ignore
-			  { name: userData.teamId.title, value: userData.teamId._id }
-			: {
-					name: '',
-					value: '',
-			  },
-		//@ts-ignore
+			? { name: userData.teamId.title, value: userData.teamId._id }
+			: { name: '', value: '' },
 		reportM: userData?.reporting_manager
 			? {
-					//@ts-ignore
 					name: userData.reporting_manager.first_name,
-					//@ts-ignore
 					value: userData.reporting_manager._id,
 			  }
-			: {
-					name: '',
-					value: '',
-			  },
+			: { name: '', value: '' },
 		gender: userData ? userData.gender : '',
 		employment: userData ? userData.employment_type : '',
 		dob: userData ? userData.date_of_birth : '',
@@ -69,6 +60,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 		interests_and_hobbies: userData ? userData.interests_and_hobbies : '',
 		about: userData ? userData.about : '',
 	});
+
 	const handleChange =
 		(field: keyof typeof formData) =>
 		(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -77,6 +69,20 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 				[field]: e.target.value,
 			}));
 		};
+
+	const handleApiChange =
+		(field: 'team' | 'reportM') =>
+		(e: React.ChangeEvent<HTMLSelectElement>) => {
+			const selectedOption = e.target.options[e.target.selectedIndex];
+			setFormData((prev) => ({
+				...prev,
+				[field]: {
+					name: selectedOption.text,
+					value: e.target.value,
+				},
+			}));
+		};
+
 	const handleSubmit = async () => {
 		const user = {
 			first_name: formData.firstN,
@@ -96,19 +102,18 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 			about: formData.about,
 		};
 
-		if (isEditForm) {
-			if (user) {
+		try {
+			if (isEditForm) {
 				await updateUser(userData?._id!, user);
-				router.refresh();
-				closeBtn?.(false);
-			}
-		} else {
-			if (user) {
+			} else {
 				await createUser(user);
 				console.log('Front-end', user);
-				router.refresh();
-				closeBtn?.(false);
 			}
+			router.refresh();
+			closeBtn?.(false);
+		} catch (error) {
+			console.error('Error submitting form:', error);
+			// Optionally, display an error message to the user
 		}
 	};
 
@@ -228,15 +233,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 										name="reporting_manager"
 										resName="first_name"
 										value={formData.reportM.value}
-										onChange={(e: { target: { value: string } }) =>
-											setFormData((prev) => ({
-												...prev,
-												reportM: {
-													name: e.target.value,
-													value: e.target.value,
-												},
-											}))
-										}
+										onChange={handleApiChange('reportM')}
 										placeholder="Select Reporting Manager"
 									/>
 								</div>
@@ -257,7 +254,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 								<Button
 									onClick={() => setNext(1)}
 									hoverColor="#000000"
-									type="submit"
+									type="button" // Changed to "button" to prevent form submission
 									color="black">
 									Next
 								</Button>
@@ -283,12 +280,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 										fetching={fetchTeams}
 										resName="title"
 										name="team"
-										onChange={(e: { target: { value: string } }) =>
-											setFormData((prev) => ({
-												...prev,
-												team: { name: e.target.value, value: e.target.value },
-											}))
-										}
+										onChange={handleApiChange('team')}
 										value={formData.team.value}
 										placeholder="Select Team"
 									/>
@@ -334,9 +326,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 									Previous
 								</Button>
 								<Button
-									onClick={() => {}}
+									onClick={handleSubmit} // Trigger form submission here
 									hoverColor="#000000"
-									type={next === 1 ? 'submit' : 'button'}
+									type="button" // Changed to "button" to handle submission manually
 									color="black">
 									{isEditForm ? 'Edit User' : 'Create User'}
 								</Button>

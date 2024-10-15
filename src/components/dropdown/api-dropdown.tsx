@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type ApiDropdownProps = {
 	fetching: () => Promise<any[]>; // API call to fetch the dropdown options
 	name: string; // Name for the input field
-	value: string; // Current value of the input
-	onChange: any; // Function to handle input change
+	value: string; // Current value of the input (id)
+	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; // Function to handle input change
 	placeholder?: string; // Optional placeholder text
-	resName: string;
+	resName: string; // The field name to display (e.g., "first_name" or "title")
 };
 
 export default function ApiDropdown({
@@ -19,14 +19,23 @@ export default function ApiDropdown({
 	placeholder = 'Select an option',
 	resName,
 }: ApiDropdownProps) {
-	const [apiOptions, setApiOptions] = useState<any[]>([]);
+	const [apiOptions, setApiOptions] = useState<{ name: string; id: string }[]>(
+		[],
+	);
 	const [isApiDropdownActive, setIsApiDropdownActive] = useState(false);
+
+	useEffect(() => {
+		if (isApiDropdownActive) {
+			fetchApi();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isApiDropdownActive]);
 
 	const fetchApi = async () => {
 		try {
 			const apiRes = await fetching(); // Fetch the data
-			const apiResNames = apiRes.map((val) => ({
-				name: val[`${resName}`],
+			const apiResNames = apiRes.map((val: any) => ({
+				name: val[resName],
 				id: val._id,
 			}));
 			setApiOptions(apiResNames);
@@ -38,29 +47,24 @@ export default function ApiDropdown({
 	const handleApiNameFocus = () => {
 		if (!isApiDropdownActive) {
 			setIsApiDropdownActive(true);
-			fetchApi(); // Fetch data only on first focus
 		}
 	};
 
 	return (
 		<div>
-			<input
-				type="text"
+			<select
 				name={name}
 				value={value}
-				onChange={onChange} // Pass the selected value to parent
-				onClick={handleApiNameFocus}
-				list="apiOptions"
-				placeholder={placeholder}
-				className="focus:outline-none px-2 w-full py-2 rounded-lg border border-gray-200"
-			/>
-			<datalist id="apiOptions">
+				onChange={onChange}
+				onFocus={handleApiNameFocus}
+				className="focus:outline-none px-2 w-full py-2 rounded-lg border border-gray-200">
+				<option value="">{placeholder}</option>
 				{apiOptions.map((option) => (
-					<option key={option.id} className="bg-red-100" value={option.name}>
-						{/* {option.name} */}
+					<option key={option.id} value={option.id}>
+						{option.name}
 					</option>
 				))}
-			</datalist>
+			</select>
 		</div>
 	);
 }

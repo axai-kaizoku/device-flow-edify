@@ -2,6 +2,7 @@
 
 // Define the structure for each section of the form
 export interface BasicDetails {
+	_id?: string;
 	os: string;
 	model: string;
 	processor: string;
@@ -11,6 +12,7 @@ export interface BasicDetails {
 }
 
 export interface AdvanceDeviceDetails {
+	_id?: string;
 	serialNumber: string;
 	invoiceFile: File | null;
 	purchaseDate: string;
@@ -18,6 +20,7 @@ export interface AdvanceDeviceDetails {
 }
 
 export interface ExtraDetails {
+	_id?: string;
 	brand: string;
 	assignedTo: string;
 	officeLocation: string;

@@ -209,7 +209,7 @@ function IssueTable({ data }: { data: Issues[] }) {
 							render: (record: Issues) => (
 								<div
 									className="flex w-full justify-center cursor-pointer"
-									onClick={() => handleIssueClick(record.id || '')}>
+									onClick={() => handleIssueClick(record._id || '')}>
 									<Icon type="OutlinedDotsVertical" color="black" />
 								</div>
 							),

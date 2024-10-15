@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Issues = {
-	id?: string;
+	_id?: string;
 	userId?: string;
 	description?: string;
 	orgId?: string;
@@ -18,7 +18,6 @@ export type Issues = {
 	email: string;
 };
 
-
 export type getAllResponse = Issues[];
 
 export type IssueResponse = {
@@ -32,12 +31,12 @@ export type IssueResponse = {
 };
 
 export interface IssueData {
-	deviceId: string | undefined;            // ID of the device
-	serial_no: string;           // Serial number of the device
-	priority: string;  // Priority of the issue
-	status: string;              // Status of the issue (e.g., 'Open')
-	title: string;               // Title of the issue
-	description: string;         // Detailed description of the issue
+	deviceId: string | undefined; // ID of the device
+	serial_no: string; // Serial number of the device
+	priority: string; // Priority of the issue
+	status: string; // Status of the issue (e.g., 'Open')
+	title: string; // Title of the issue
+	description: string; // Detailed description of the issue
 }
 
 //get all issues-admin
@@ -182,5 +181,3 @@ export async function issueSearchAPI(query: string): Promise<IssueResponse> {
 		throw new Error((error as AxiosError).message);
 	}
 }
-
-
