@@ -242,7 +242,7 @@ export async function userSearchAPI(query: string): Promise<UsersResponse> {
 
 		return res.data;
 	} catch (error) {
-		if (error instanceof AxiosError) {
+		if(error instanceof AxiosError){
 			console.error('Error searching:', error.message);
 			throw new Error(error.message || 'Failed to search users');
 		}

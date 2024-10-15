@@ -171,9 +171,7 @@ export async function deleteDevice(
 
 //Upload bulk device
 
-export const bulkUploadDevices = async (
-	formData: FormData,
-): Promise<Device> => {
+export const bulkUploadDevices = async (formData: FormData): Promise<Device> => {
 	try {
 		// Call the API with multipart/form-data
 		const response = await callAPIWithToken<Device>(
