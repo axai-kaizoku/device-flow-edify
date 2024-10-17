@@ -28,7 +28,10 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 		data || {
 			brand: '',
 			assignedTo: '',
-			officeLocation: '',
+			officeLocation: {
+				name: '',
+				value: ''
+			},
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
@@ -47,6 +50,19 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 			[name]: value,
 		});
 	};
+
+	const handleApiChange =
+		(field: string) =>
+		(e: React.ChangeEvent<HTMLSelectElement>) => {
+			const selectedOption = e.target.options[e.target.selectedIndex];
+			setFormData((prev) => ({
+				...prev,
+				[field]: {
+					name: selectedOption.text,
+					value: e.target.value,
+				},
+			}));
+		};
 
 	const handleOwnershipChange = (value: string) => {
 		setFormData((prevData) => ({
@@ -117,60 +133,39 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Assigned to</label>
-					<input
-						name="assignedTo"
-						value={formData.assignedTo}
-						onChange={handleChange}
-						onFocus={handleNameFocus}
-						list="assignedOptions"
-						placeholder="Select a User"
-						type="text"
-						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
+
+					<ApiDropdown
+						fetching={fetchUsers}
+						name="userId"
+						resName="first_name"
+						value={formData.assignedTo.value}
+						onChange={handleApiChange('assignedTo')}
+						placeholder="Select a User to Assign"
 					/>
+
 					{errors?.assignedTo && (
 						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
 					)}
-					<datalist id="assignedOptions">
-						{assignedOptions.map((user, index) => (
-							<option key={index} value={user}>
-								{user}
-							</option>
-						))}
-					</datalist>
-					{/* <ApiDropdownUser
-						onChange={handleChange}
-						value={formData.assignedTo}
-					/> */}
+					
 				</div>
+
+
 				<div className="flex flex-col w-72">
 					<label>Office Location</label>
-					{/* <input
-						name="officeLocation"
-						value={formData.officeLocation}
-						onFocus={handleNameFocus}
-						list="locationsOptions"
-						placeholder="Select a Location"
-						onChange={handleChange}
-						type="text"
-						className="focus:outline-none px-2 py-3 rounded-lg border border-gray-200"
-					/>
-					{errors?.officeLocation && (
-						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
-					)}
-					<datalist id="locationsOptions">
-						{locationsOptions.map((city, index) => (
-							<option key={index} value={city}>
-								{city}
-							</option>
-						))}
-					</datalist> */}
+
 					<ApiDropdown
 						fetching={getAddress}
-						name="officeLocation"
-						onChange={handleChange}
+						name="addressId"
 						resName="city"
-						value={formData.officeLocation}
+						value={formData.officeLocation.value}
+						onChange={handleApiChange('officeLocation')}
+						placeholder="Select a Location"
 					/>
+
+					{errors?.assignedTo && (
+						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
+					)}
+				
 				</div>
 				<div className="flex flex-col w-72">
 					<label>Purchase Order</label>

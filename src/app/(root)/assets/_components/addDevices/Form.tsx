@@ -45,8 +45,14 @@ function Form({ closeBtn }: FormProps) {
 		},
 		extraDetails: {
 			brand: '',
-			assignedTo: '',
-			officeLocation: '',
+			assignedTo: {
+				name:'',
+				value:''
+			},
+			officeLocation: {
+				name:'',
+				value:''
+			},
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
@@ -152,12 +158,13 @@ function Form({ closeBtn }: FormProps) {
 						formData.advanceDeviceDetails.warrantyExpiryDate,
 					brand: formData.extraDetails.brand,
 					image: formData.extraDetails.image,
-					userName: formData.extraDetails.assignedTo,
+					userId: formData.extraDetails.assignedTo.value,
 					ownership: formData.extraDetails.ownership,
 					purchase_value: formData.extraDetails.purchaseValue,
 					asset_serial_no: 'Asset serial no', // Consider making this dynamic if needed
+					addressId: formData.extraDetails.officeLocation.value
 				};
-
+				console.log(formData.extraDetails);
 				const response = await createDevices(deviceDetails);
 				console.log('Device Details', response);
 				closeBtn(); // Close the sheet after successful submission

@@ -75,7 +75,9 @@ const Personal: React.FC<PersonalProps> = ({ isEditing, userInfo, onInputChange 
                     infoText={userInfo.marital_status} 
                     infoLabel="Marital Status"
                     infoName="marital_status"
+                    inputType="select"
                     isEditing={isEditing}
+                    selectOptions={['Single', 'Married']} // Dropdown options
                     onInputChange={(value: string) => onInputChange('marital_status', value)}
                 />
             </div>
@@ -93,6 +95,8 @@ const Personal: React.FC<PersonalProps> = ({ isEditing, userInfo, onInputChange 
                     infoLabel="Physically Handicapped"
                     infoName="physically_handicapped"
                     isEditing={isEditing}
+                    inputType="select"
+                    selectOptions={['Yes', 'No']} // Dropdown options
                     onInputChange={(value: string) => onInputChange('physically_handicapped', value)}
                 />
             </div>

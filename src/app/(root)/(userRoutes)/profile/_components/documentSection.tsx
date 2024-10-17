@@ -1,28 +1,78 @@
-import { FileText } from "lucide-react"
-import InfoDisplay from "./infoDisplay"
-import Link from "next/link"
-import { User } from "@/server/userActions"
+import { FileText } from "lucide-react";
+import { useState } from "react";
+import InfoDisplay from "./infoDisplay";
+import Link from "next/link";
+import { User } from "@/server/userActions";
 
-const Document = ({userInfo}:{userInfo:User}) => {
+type DocumentType = {
+  label: string;
+  name: string;
+  fileUrl?: string; 
+};
+
+const Document = ({ userInfo }: { userInfo: User }) => {
+  const [documents, setDocuments] = useState<DocumentType[]>([
+    { label: "Aadhaar Card", name: "aadhaarCard", fileUrl: "" },
+    { label: "PAN Card", name: "panCard", fileUrl: "" },
+    { label: "ID Card", name: "idCard", fileUrl: "" },
+  ]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+    if (e.target.files && e.target.files[0]) {
+      const updatedDocs = documents.map((doc) =>
+        doc.name === name ? { ...doc, fileUrl: URL.createObjectURL(e.target.files![0]) } : doc
+      );
+      setDocuments(updatedDocs);
+    }
+  };
+
   return (
-    <div className="flex gap-4 flex-col mt-2">
-        <div className="flex gap-4 p-3 border shadow-sm">
-            <FileText />
-            <Link className="hover:underline" target="_blank" href="https://indiadarpan.com/wp-content/uploads/2018/10/Aadhaar-Card-sample.png"><h1>Adhaar Card</h1></Link>
-        </div>
+    <div className="flex flex-col gap-6 mt-4">
+      {documents.map((document) => (
+        <div key={document.name} className="flex flex-col gap-2 p-4 border shadow-sm rounded-md">
+          <div className="flex items-center gap-2">
+            <FileText className="text-gray-600" />
+            <h1 className="font-medium text-lg">{document.label}</h1>
+          </div>
 
-        <div className="flex gap-4 p-3 border shadow-sm">
-            <FileText />
-            <Link className="hover:underline" target="_blank" href="https://www.thestatesman.com/wp-content/uploads/2019/07/pan-card.jpg"><h1>Pan Card</h1></Link>
+          {/* File Input */}
+          <div className="mt-2">
+            {document.fileUrl ? (
+              <div className="flex items-center gap-4">
+                <Link href={document.fileUrl} target="_blank" className="text-blue-500 hover:underline cursor-pointer">
+                  View Uploaded File
+                </Link>
+                <button
+                  onClick={() =>
+                    setDocuments(
+                      documents.map((doc) =>
+                        doc.name === document.name ? { ...doc, fileUrl: "" } : doc
+                      )
+                    )
+                  }
+                  className="text-red-500 hover:underline cursor-pointer"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <input
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg"
+                className="block w-full text-sm text-gray-600
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700
+                  hover:file:bg-blue-100 cursor-pointer"
+                onChange={(e) => handleFileChange(e, document.name)}
+              />
+            )}
+          </div>
         </div>
-
-        <div className="flex gap-4 p-3 border shadow-sm">
-            <FileText />
-            <h1>Adhaar Card</h1>
-        </div>
-
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default Document
+export default Document;

@@ -185,23 +185,13 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
 							name="device_name"
 							value={formData.device_name}
 							onChange={handleChange}
-							onFocus={handleDeviceNameFocus}
-							list="deviceOptions"
-							placeholder="Select a device"
+							placeholder="Give a Device Name"
 							className="focus:outline-none px-2 w-52 py-3 rounded-lg border border-gray-200"
 						/>
 						{errors?.device_name && (
 							<p className="text-red-500 text-sm">{errors.device_name}</p>
 						)}
 
-						{/* Datalist for device names */}
-						<datalist id="deviceOptions">
-							{deviceOptions.map((device, index) => (
-								<option key={index} value={device}>
-									{device}
-								</option>
-							))}
-						</datalist>
 					</div>
 				</div>
 			</div>

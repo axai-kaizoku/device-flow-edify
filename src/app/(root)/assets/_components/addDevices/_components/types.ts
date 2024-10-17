@@ -19,11 +19,16 @@ export interface AdvanceDeviceDetails {
 	warrantyExpiryDate: string;
 }
 
+interface assignedToObj {
+    name: string;
+    value: string;
+}
+
 export interface ExtraDetails {
 	_id?: string;
 	brand: string;
-	assignedTo: string;
-	officeLocation: string;
+	assignedTo: assignedToObj;
+	officeLocation: assignedToObj;
 	purchaseOrder: string;
 	purchaseValue: number;
 	ownership: string;

@@ -69,6 +69,8 @@ export const createDevices = async (
 			os: device.os,
 			device_purchase_date: device.device_purchase_date || null,
 			image: device.image,
+			userId: device.userId,
+			addressId: device.addressId
 		};
 
 		// console.log('Prepared Device Data:', deviceData);
@@ -80,7 +82,6 @@ export const createDevices = async (
 		const payload = {
 			...deviceData,
 			orgId: sess?.user.orgId,
-			userId: sess?.user.id,
 		};
 
 		// console.log('Payload to be sent:', payload);
