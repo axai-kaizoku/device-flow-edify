@@ -24,7 +24,7 @@ function AddDevices({ devices, totalDocuments }: AddDevicesProps) {
 				searchTerm={searchTerm}
 				setSearchTerm={setSearchTerm}
 			/>
-			<DeviceTable data={devices} searchTerm={searchTerm} />
+			<DeviceTable data={devices} />
 		</div>
 	);
 }

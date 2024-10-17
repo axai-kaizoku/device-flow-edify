@@ -35,7 +35,7 @@ export type Device = {
 };
 export type getAllDevicesProp = Device[];
 export type DeviceResponse = {
-	documents: Device[]; // Changed from 'devices' to 'documents'
+	devices: Device[]; // Changed from 'devices' to 'documents'
 	totalPages: number;
 	currentPage: number;
 	totalDocuments: number;
@@ -171,7 +171,9 @@ export async function deleteDevice(
 
 //Upload bulk device
 
-export const bulkUploadDevices = async (formData: FormData): Promise<Device> => {
+export const bulkUploadDevices = async (
+	formData: FormData,
+): Promise<Device> => {
 	try {
 		// Call the API with multipart/form-data
 		const response = await callAPIWithToken<Device>(
