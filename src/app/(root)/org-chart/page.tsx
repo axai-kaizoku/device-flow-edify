@@ -3,14 +3,23 @@ import Org from './_components/orgChart';
 import { Employee, mapEmployeeData } from './_components/data';
 //Resolving SSR issue here
 const OrgPage = async () => {
-	const heirarchyData: HierarchyResponse = await fetchUserHierarchy();
-	const actualData: Employee = mapEmployeeData(heirarchyData[0]);
+	try {
+		const heirarchyData: HierarchyResponse = await fetchUserHierarchy();
+		const actualData: Employee = mapEmployeeData(heirarchyData[0]);
 
-	return (
-		<>
-			<Org data={actualData} />
-		</>
-	);
+		return (
+			<>
+				<Org data={actualData} />
+			</>
+		);
+	} catch (error) {
+		console.error('Error fetching data:', error);
+		return (
+			<div className="text-red-500">
+				Failed to load data. Please try again later.
+			</div>
+		);
+	}
 };
 
 export default OrgPage;

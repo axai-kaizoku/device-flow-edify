@@ -7,7 +7,7 @@ import { callAPIWithToken, getSession } from './helper';
 export async function getStoreDevices(): Promise<getAllDevicesProp> {
 	try {
 		const res = await callAPIWithToken<getAllDevicesProp>(
-			'https://api.edify.club/edifybackend/v1/devices/trending',
+			'https://api.edify.club/edifybackend/v1/devices/assets',
 			'GET',
 		);
 

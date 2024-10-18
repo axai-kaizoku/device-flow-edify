@@ -1,12 +1,11 @@
-// src/server/filterActions.tsx
 import { Device } from './deviceActions';
 import { callAPIWithToken } from './helper';
 
 interface FilterDeviceParams {
-	filters: string[];
-	fields: string[];
+	filters?: any[][];
+	fields?: string[];
 	searchQuery?: string;
-	pageLength: number;
+	pageLength?: number;
 }
 export const devicesFields = [
 	'device_name',
@@ -25,31 +24,30 @@ export const devicesFields = [
 	'warranty_expiary_date',
 	'warranty_status',
 ];
-export async function filterDevice<FilterDeviceParams>(
-	filters, // No default, required
+export async function filterDevice({
+	filters = [],
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 20,
-): Promise<any> {
+}: FilterDeviceParams = {}): Promise<any> {
 	try {
 		const payload = {
 			fields,
-			filters: filters ? [filters] : [],
+			filters: filters.length > 0 ? filters : [],
 			page_length: pageLength,
 		};
 
-		// Log the payload for debugging
-		console.log('Filter Payload:', JSON.stringify(payload, null, 2));
-
 		// Construct the URL with an optional search query
-		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter?searchQuery=${searchQuery}`;
+		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
 
 		// API call
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
-
+		console.log(apiUrl, payload);
 		// Check if response has data
 		if (res && res.data) {
-			console.log('Filtered Data:', res.data);
+			// console.log('Filtered Data:', res.data);
 			return res.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');

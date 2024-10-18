@@ -1,14 +1,18 @@
 import { CombinedContainer } from '@/components/container/container';
 import { CartItem } from './_components/cart-item';
+import Link from 'next/link';
+import { ShoppingCart } from 'lucide-react';
+import { getCart } from '@/server/mockedCart';
 
 export default async function Cart() {
 	const cart = await getCart();
 
 	const { subtotal, gst, total } = cart.reduce(
 		(acc, item) => {
-			acc.subtotal += item.purchase_value;
-			acc.gst += item.purchase_value * 0.05;
-			acc.total += item.purchase_value * 1.05;
+			const itemTotal = item.purchase_value * item.qty!; // Multiply by qty
+			acc.subtotal += itemTotal;
+			acc.gst += itemTotal * 0.05;
+			acc.total += itemTotal * 1.05;
 			return acc;
 		},
 		{ subtotal: 0, gst: 0, total: 0 },
@@ -35,7 +39,11 @@ export default async function Cart() {
 						<div className="space-y-2 text-gray-700">
 							<div className="flex justify-between">
 								<span>Quantity</span>
-								<span>{cart.length}</span>
+								<span>
+									{cart.reduce((acc, item) => acc + item.qty!, 0)}
+								</span>{' '}
+								{/* Total quantity */}
+								{/* <span>{cart.length}</span> */}
 							</div>
 							<div className="flex justify-between">
 								<span>Subtotal</span>
@@ -60,16 +68,13 @@ export default async function Cart() {
 	);
 }
 
-import Link from 'next/link';
-import { ShoppingCart } from 'lucide-react';
-import { getCart } from '@/server/mockedCart';
-
 export const CartComponent = async () => {
 	const cart = await getCart();
+	const totalQty = cart.reduce((acc, item) => acc + item.qty!, 0);
 	return (
 		<Link href="/store/cart" className="relative p-2 rounded-full">
 			<div className="w-4 h-4 absolute top-1 right-0 rounded-full bg-slate-600 text-white flex justify-center items-center text-xs">
-				{cart.length}
+				{totalQty}
 			</div>
 			<ShoppingCart className="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition" />
 		</Link>
