@@ -1,5 +1,6 @@
 import { Device } from './deviceActions';
 import { callAPIWithToken } from './helper';
+import { Issues } from './issueActions';
 
 interface FilterDeviceParams {
 	filters?: any[][];
@@ -24,8 +25,68 @@ export const devicesFields = [
 	'warranty_expiary_date',
 	'warranty_status',
 ];
+<<<<<<< HEAD:src/server/filterActions.tsx
+
+export const issuesFields = [
+	'status',
+	'description',
+	'title',
+	'priority',
+	'serial_no'
+];
+
+export async function filterIssue(
+	filters=[], // No default, required
+	fields = issuesFields,
+	searchQuery = '',
+	pageLength = 20,
+): Promise<FilterDeviceParams> {
+	try {
+		const payload = {
+			fields,
+			filters: filters.length>0 ? [filters] : [],
+			page_length: pageLength,
+		};
+
+		// Log the payload for debugging
+		console.log('Filter Payload:', JSON.stringify(payload, null, 2));
+
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter?searchQuery=${searchQuery}`;
+
+		// API call
+		const res = await callAPIWithToken<Issues[]>(apiUrl, 'POST', payload);
+
+		// Check if response has data
+		if (res && res.data) {
+			console.log('Filtered Data:', res.data);
+			return res.data; // Return the filtered data
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering issues:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter issues. Please try again later.',
+		);
+	}
+}
+
+
+
+export async function filterDevice<FilterDeviceParams>(
+	filters, // No default, required
+=======
 export async function filterDevice({
 	filters = [],
+>>>>>>> master:src/server/filterActions.ts
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 20,
@@ -66,3 +127,6 @@ export async function filterDevice({
 		);
 	}
 }
+
+
+

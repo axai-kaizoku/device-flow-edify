@@ -114,14 +114,27 @@ export type HierarchyResponse = HierarchyUser[];
 
 type UsersResponse = User[];
 
-export async function fetchUsers(): Promise<UsersResponse> {
-	try {
-		const res = await callAPIWithToken<UsersResponse>(
-			'https://api.edify.club/edifybackend/v1/user',
-			'GET',
-		);
+export type newAllUserResponse = {
+	users:User[],
+}
 
-		return res.data;
+export async function fetchUsers(): Promise<newAllUserResponse> {
+	try {
+
+		const requestBody = {
+			fields: ['first_name'],  // Specify fields to be fetched
+			filters: [],  // You can add filters here as per requirement
+			page_length: 20  // Number of users to fetch per page
+		};
+
+		const res = await callAPIWithToken<newAllUserResponse>(
+			'https://api.edify.club/edifybackend/v1/user/filter',
+			'POST',  // Changed to POST as the new API requires it
+			requestBody  // Pass the request body
+		);
+		console.log(res.data)
+
+		return res.data.users;
 	} catch (e) {
 		throw new Error('Failed to fetch users');
 	}
