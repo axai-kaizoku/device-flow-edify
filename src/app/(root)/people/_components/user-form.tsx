@@ -35,7 +35,7 @@ interface UserFormProps {
 export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 	const router = useRouter();
 	const [next, setNext] = useState(0);
-
+	const [error, setError] = useState('');
 	const [formData, setFormData] = useState({
 		firstN: userData ? userData.first_name : '',
 		lastN: userData ? userData.last_name : '',
@@ -61,6 +61,29 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 		about: userData ? userData.about : '',
 	});
 
+	// Function to validate required fields
+	const validateFormData = () => {
+		return (
+			formData.firstN &&
+			formData.lastN &&
+			formData.phone &&
+			formData.email &&
+			formData.dob &&
+			formData.gender &&
+			formData.reportM.value
+		);
+	};
+
+	// Function to validate step 2 fields
+	const validateStepTwo = () => {
+		return (
+			formData.designation &&
+			formData.team.value &&
+			formData.employment &&
+			formData.onboarding
+		);
+	};
+
 	const handleChange =
 		(field: keyof typeof formData) =>
 		(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -84,6 +107,12 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 		};
 
 	const handleSubmit = async () => {
+		// Validation before submitting
+		if (!validateFormData() || !validateStepTwo()) {
+			setError('Please fill all the fields.');
+			return;
+		}
+
 		const user = {
 			first_name: formData.firstN,
 			last_name: formData.lastN,
@@ -105,15 +134,35 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 		try {
 			if (isEditForm) {
 				await updateUser(userData?._id!, user);
+				router.refresh();
+				closeBtn?.(false);
 			} else {
 				await createUser(user);
-				console.log('Front-end', user);
+
+				router.push('/people');
+				router.refresh();
+				closeBtn?.(false);
 			}
-			router.refresh();
-			closeBtn?.(false);
+
+			setFormData({
+				firstN: '',
+				lastN: '',
+				phone: '',
+				email: '',
+				designation: '',
+				team: { name: '', value: '' },
+				reportM: { name: '', value: '' },
+				gender: '',
+				employment: '',
+				dob: '',
+				onboarding: '',
+				marital_status: '',
+				physically_handicapped: '',
+				interests_and_hobbies: '',
+				about: '',
+			});
 		} catch (error) {
 			console.error('Error submitting form:', error);
-			// Optionally, display an error message to the user
 		}
 	};
 
@@ -136,12 +185,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 								requiredKeys={bulkUploadKeys}
 							/>
 						</div>
-					) : (
-						<></>
-					)
-				) : (
-					<></>
-				)}
+					) : null
+				) : null}
 
 				<Form width="100%" formId="user-form" onFormSubmit={handleSubmit}>
 					{next === 0 ? (
@@ -173,9 +218,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 							<div className="w-full flex items-center gap-6">
 								<Input
 									label="Email"
-									rules={{
-										required: true,
-									}}
+									rules={{ required: true }}
 									value={formData.email}
 									onChange={(e) =>
 										setFormData({ ...formData, email: e.target.value })
@@ -186,9 +229,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 								/>
 								<Input
 									label="Phone"
-									rules={{
-										required: true,
-									}}
+									rules={{ required: true }}
 									value={formData.phone}
 									onChange={(e) =>
 										setFormData({ ...formData, phone: e.target.value })
@@ -237,72 +278,47 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 										placeholder="Select Reporting Manager"
 									/>
 								</div>
-								{/* <div className="w-1/2">
-									<label className="text-sm font-semibold">Image</label>
-									<input
-										type="date"
-										value={formData.image}
-										onChange={(e) =>
-											setFormData({ ...formData, image: e.target.value })
-										}
-										className="p-2 border rounded-md"
-									/>
-								</div> */}
 							</div>
-
+							{error && <span className="w-full text-red-400">{error}</span>}
 							<div className="flex justify-end">
 								<Button
-									onClick={() => setNext(1)}
-									hoverColor="#000000"
-									type="button" // Changed to "button" to prevent form submission
-									color="black">
+									onClick={() => {
+										if (!validateFormData()) {
+											setError('Please fill all required fields.');
+											return;
+										}
+										setError('');
+										setNext(1);
+									}}>
 									Next
 								</Button>
 							</div>
 						</>
-					) : (
+					) : next === 1 ? (
 						<>
 							<div className="w-full flex items-center gap-6">
 								<div className="w-1/2">
-									<label className="text-sm font-semibold">Designation</label>
-									<br />
 									<SelectDropdown
-										label="designation"
-										name="designation"
+										label="Designation"
+										value={formData.designation}
 										onChange={handleChange('designation')}
 										options={designations}
-										value={formData.designation}
+										name="Designation"
 									/>
 								</div>
-								<div className="flex flex-col w-1/2">
-									<label>Team</label>
+								<div className="w-1/2">
 									<ApiDropdown
 										fetching={fetchTeams}
-										resName="title"
 										name="team"
-										onChange={handleApiChange('team')}
+										resName="title"
 										value={formData.team.value}
+										onChange={handleApiChange('team')}
 										placeholder="Select Team"
 									/>
 								</div>
 							</div>
 							<div className="w-full flex items-center gap-6">
 								<div className="w-1/2">
-									<label className="text-sm font-semibold">
-										Employment Type
-									</label>
-									<br />
-									<SelectDropdown
-										label="employment type"
-										name="employment_type"
-										onChange={handleChange('employment')}
-										options={employments}
-										value={formData.employment}
-									/>
-								</div>
-							</div>
-							<div className="w-[48%] flex items-center gap-6">
-								<div>
 									<label className="text-sm font-semibold">
 										Onboarding Date
 									</label>
@@ -316,25 +332,29 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 										className="p-2 border rounded-md"
 									/>
 								</div>
+								<div className="w-1/2">
+									<label className="text-sm font-semibold">
+										Employment Type
+									</label>
+									<br />
+									<SelectDropdown
+										value={formData.employment}
+										label="employment"
+										onChange={handleChange('employment')}
+										options={employments}
+										name="Employment"
+									/>
+								</div>
 							</div>
-							<div className="flex gap-4 justify-end">
-								<Button
-									onClick={() => setNext(0)}
-									hoverColor="#000000"
-									type="button"
-									color="black">
-									Previous
-								</Button>
-								<Button
-									onClick={handleSubmit} // Trigger form submission here
-									hoverColor="#000000"
-									type="button" // Changed to "button" to handle submission manually
-									color="black">
-									{isEditForm ? 'Edit User' : 'Create User'}
+							<div className="flex justify-between w-full mt-4">
+								<Button onClick={() => setNext(0)}>Previous</Button>
+								<Button onClick={handleSubmit} disabled={!validateStepTwo()}>
+									{isEditForm ? 'Save Changes' : 'Submit'}
 								</Button>
 							</div>
+							{error && <span className="w-full text-red-400">{error}</span>}
 						</>
-					)}
+					) : null}
 				</Form>
 			</div>
 		</div>

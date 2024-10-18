@@ -13,7 +13,6 @@ export type Issues = {
 	updatedAt?: string;
 	priority?: string;
 	userName?: string;
-
 	serial_no: string;
 	email: string;
 };
@@ -21,13 +20,9 @@ export type Issues = {
 export type getAllResponse = Issues[];
 
 export type IssueResponse = {
-	documents: Issues[]; // Changed from 'devices' to 'documents'
-	totalPages: number;
-	currentPage: number;
-	totalDocuments: number;
-	currentDocumentCount: number;
-	pageSize: number;
-	documentCount: number;
+	issues: Issues[]; // Changed from 'devices' to 'documents'
+	total_count: number;
+	page_size: number;
 };
 
 export interface IssueData {

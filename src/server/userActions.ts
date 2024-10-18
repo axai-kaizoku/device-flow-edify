@@ -113,7 +113,7 @@ export type HierarchyUser = {
 export type HierarchyResponse = HierarchyUser[];
 
 export type UserResponse = {
-	users: User[]; // Changed from 'devices' to 'documents'
+	users: User[];
 	totalPages: number;
 	currentPage: number;
 	totalDocuments: number;
@@ -123,24 +123,23 @@ export type UserResponse = {
 };
 
 export type newAllUserResponse = {
-	users:User[],
-}
+	users: User[];
+};
 
 export async function fetchUsers(): Promise<UserResponse> {
 	try {
-
 		const requestBody = {
-			fields: ['first_name'],  // Specify fields to be fetched
-			filters: [],  // You can add filters here as per requirement
-			page_length: 20  // Number of users to fetch per page
+			fields: ['first_name'], // Specify fields to be fetched
+			filters: [], // You can add filters here as per requirement
+			page_length: 20, // Number of users to fetch per page
 		};
 
 		const res = await callAPIWithToken<UserResponse>(
 			'https://api.edify.club/edifybackend/v1/user/filter',
-			'POST',  // Changed to POST as the new API requires it
-			requestBody  // Pass the request body
+			'POST', // Changed to POST as the new API requires it
+			requestBody, // Pass the request body
 		);
-		console.log(res.data.users)
+		console.log(res.data.users);
 
 		return res.data.users;
 	} catch (e) {
@@ -169,9 +168,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 	} catch (e) {
 		if (e instanceof AxiosError && e.response) {
 			console.error('API Error:', e.response.data);
-			throw new Error(
-				(e.response.data).message || 'Failed to create user',
-			);
+			throw new Error(e.response.data.message || 'Failed to create user');
 		}
 		throw new Error((e as AxiosError).message);
 	}
@@ -256,14 +253,14 @@ export async function getUsersByTeamId<User>(teamId: string) {
 }
 
 //Search api
-export async function userSearchAPI(query: string): Promise<UsersResponse> {
+export async function userSearchAPI(query: string): Promise<UserResponse> {
 	try {
 		const url = `https://api.edify.club/edifybackend/v1/user/search?query=${query}`;
-		const res = await callAPIWithToken<UsersResponse>(url, 'GET');
+		const res = await callAPIWithToken<UserResponse>(url, 'GET');
 
 		return res.data;
 	} catch (error) {
-		if(error instanceof AxiosError){
+		if (error instanceof AxiosError) {
 			console.error('Error searching:', error.message);
 			throw new Error(error.message || 'Failed to search users');
 		}

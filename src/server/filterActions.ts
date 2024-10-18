@@ -3,7 +3,7 @@ import { callAPIWithToken } from './helper';
 import { Issues } from './issueActions';
 import { User } from './userActions';
 
-interface FilterDeviceParams {
+export interface FilterApiParams {
 	filters?: any[][];
 	fields?: string[];
 	searchQuery?: string;
@@ -50,7 +50,7 @@ export async function filterUsers({
 	fields = usersFields,
 	searchQuery = '',
 	pageLength = 20,
-}: FilterDeviceParams={}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> {
 	try {
 		const payload = {
 			fields,
@@ -86,15 +86,14 @@ export async function filterUsers({
 				'Failed to filter Users. Please try again later.',
 		);
 	}
-};
-
+}
 
 export async function filterDevice({
 	filters = [],
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 20,
-}: FilterDeviceParams = {}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> {
 	try {
 		const payload = {
 			fields,
@@ -109,7 +108,6 @@ export async function filterDevice({
 
 		// API call
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
 		// Check if response has data
 		if (res && res.data) {
 			// console.log('Filtered Data:', res.data);
@@ -132,5 +130,57 @@ export async function filterDevice({
 	}
 }
 
+export const issueFields = [
+	'description',
+	'title',
+	'status',
+	'createdAt',
+	'updatedAt',
+	'priority',
+	'userName',
+	'serial_no',
+	'email',
+];
 
+export async function filterIssues({
+	filters = [],
+	fields = issueFields,
+	searchQuery = '',
+	pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+	try {
+		const payload = {
+			fields,
+			filters: filters.length > 0 ? filters : [],
+			page_length: pageLength,
+		};
 
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<Issues[]>(apiUrl, 'POST', payload);
+		console.log(apiUrl, payload);
+		// Check if response has data
+		if (res && res.data) {
+			// console.log('Filtered Data:', res.data);
+			return res.data; // Return the filtered data
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering issues:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter issues. Please try again later.',
+		);
+	}
+}

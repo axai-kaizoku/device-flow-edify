@@ -83,7 +83,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 	};
 
 	const handleInputChange = (index: number, key: string, value: string) => {
-		const updatedFilters = [...filterInputs];
+		const updatedFilters: any = [...filterInputs];
 		updatedFilters[index][key] = value;
 		setFilterInputs(updatedFilters);
 	};
@@ -93,7 +93,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 		const newFilters = filterInputs
 			.filter((f) => f.field && f.operator && f.value)
 			.map((f) => {
-				let finalValue = f.value.trim();
+				let finalValue: any = f.value.trim();
 				if (f.operator === 'Like') finalValue = `%${finalValue}%`;
 				if (f.field === 'purchase_value') finalValue = parseInt(finalValue);
 				return [f.field, f.operator, finalValue];
@@ -257,7 +257,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 								onClick={() => {
 									router.push(`/assets/${record._id}`);
 								}}>
-								<Icon name="Open" />
+								<Icon type="OutlinedRightChevron" />
 							</div>
 						),
 					},

@@ -1,5 +1,5 @@
 import { CombinedContainer } from '@/components/container/container';
-import { fetchUsers, UserResponse } from '@/server/userActions';
+import { UserResponse } from '@/server/userActions';
 
 import UserMain from './_components/user-main';
 import { getSession } from '@/server/helper';
@@ -9,7 +9,7 @@ export default async function Users() {
 	const session = await getSession();
 	const userRole = session?.user.role || 0;
 	try {
-		const userResponse: UserResponse  = await filterUsers();
+		const userResponse: UserResponse = await filterUsers();
 
 		return (
 			<CombinedContainer title="Users">
@@ -19,7 +19,7 @@ export default async function Users() {
 	} catch (error) {
 		console.error('Error fetching data:', error);
 		return (
-			<CombinedContainer title="Users">
+			<CombinedContainer title="People">
 				<div className="text-red-500">
 					Failed to load data. Please try again later.
 				</div>

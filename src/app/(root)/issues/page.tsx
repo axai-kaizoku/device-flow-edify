@@ -2,6 +2,7 @@ import { IssueResponse, paginatedIssue } from '@/server/issueActions';
 import { CombinedContainer } from '@/components/container/container';
 import IssueTableDisplay from './_components/IssueTableDisplay';
 import { notFound } from 'next/navigation';
+import { filterIssues } from '@/server/filterActions';
 interface IssueProps {
 	searchParams: {
 		page?: string;
@@ -10,22 +11,16 @@ interface IssueProps {
 async function Issues({ searchParams }: IssueProps) {
 	const page = searchParams.page ? parseInt(searchParams.page) : 1;
 	try {
-		const issueResponse: IssueResponse = await paginatedIssue(page.toString());
+		const issueResponse: IssueResponse = await filterIssues();
 
-		if (!issueResponse.documents.length) {
+		if (!issueResponse.issues) {
 			notFound();
 		}
 		return (
 			<CombinedContainer title="Issues">
-				Total Issues Raised :- {issueResponse.currentDocumentCount} of{' '}
-				{issueResponse.totalDocuments}
-				<IssueTableDisplay
-					data={issueResponse.documents}
-					currentPage={issueResponse.currentPage}
-					totalPages={issueResponse.totalPages}
-					currentDocumentCount={issueResponse.currentDocumentCount}
-					pageSize={issueResponse.pageSize}
-				/>
+				Total Issues Raised :- {issueResponse.issues.length} of{' '}
+				{issueResponse.total_count}
+				<IssueTableDisplay data={issueResponse.issues} />
 			</CombinedContainer>
 		);
 	} catch (error) {

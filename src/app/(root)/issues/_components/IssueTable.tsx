@@ -1,226 +1,280 @@
-// src/components/IssueTable.tsx
 'use client';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
-import { Issues, issueSearchAPI } from '@/server/issueActions';
+import { Issues } from '@/server/issueActions';
 import { useRouter } from 'next/navigation';
-import { SearchInput } from '../../people/_components/search-params';
-import { filterUsers } from '@/server/filterActions'; // Updated import
+import { issueFields, filterIssues } from '@/server/filterActions';
+import { useQueryState } from 'nuqs';
 
-function IssueTable({ data }: { data: Issues[] }) {
+const numericFields = ['updatedAt', 'createdAt'];
+const numericOperators = ['>=', '<=', '>', '<', 'Equals'];
+const generalOperators = ['Equals', 'Not Equals', 'Like', 'In', 'Not In', 'Is'];
+
+export default function IssueTable({ data }: { data: Issues[] }) {
 	const router = useRouter();
-	const [issue, setIssue] = useState<Issues[]>(data);
-	const [showFilter, setShowFilter] = useState(false); // State to show/hide filter modal
-	const [filterField, setFilterField] = useState<string>('status'); // Default field to filter
-	const [filterType, setFilterType] = useState<string>('like'); // Default filter type
-	const [filterValue, setFilterValue] = useState<string>(''); // Filter value input
+	const [issue, setIssue] = useState(data);
+	const [searchTerm, setSearchTerm] = useQueryState('searchQuery');
+	const [openFilter, setOpenFilter] = useState(false);
+	const [filters, setFilters] = useState<any[]>([]); // Store applied filters
+	const [pageLength, setPageLength] = useState(20); // Default is 20
+	const [filterInputs, setFilterInputs] = useState([
+		{ field: '', operator: '', value: '' },
+	]); // Store dynamic filter fields
+	const [availableOperators, setAvailableOperators] =
+		useState(generalOperators);
 
-	const handleFilteredData = (filtered: Issues[]) => {
-		setIssue(filtered);
+	const handleSearchAndFilter = async () => {
+		// Combine search term and filters
+		const query = {
+			searchQuery: searchTerm || '',
+			filters: filters.length > 0 ? filters : [],
+			pageLength: pageLength,
+		};
+
+		try {
+			const res = await filterIssues(query);
+			setIssue(res.issues);
+		} catch (error) {
+			console.error('Error fetching issues:', error);
+			alert('Failed to fetch data. Please try again.');
+		}
 	};
 
-	const handleIssueClick = (id: string) => {
-		router.push(`/issues/${id}`);
+	// Trigger search and filter on searchTerm, filters, or pageLength change
+	useEffect(() => {
+		handleSearchAndFilter();
+	}, [searchTerm, filters, pageLength]);
+
+	// Add a new filter input row
+	const addFilter = () => {
+		setFilterInputs([...filterInputs, { field: '', operator: '', value: '' }]);
 	};
 
-	const handleFilterApply = async () => {
-		if (!filterField || !filterType || !filterValue) {
+	// Remove a specific filter input row
+	const removeFilter = (index: number) => {
+		const updatedFilters = [...filterInputs];
+		updatedFilters.splice(index, 1);
+		setFilterInputs(updatedFilters);
+	};
+
+	// Update available operators based on the selected field
+	const handleFieldChange = (index: number, field: string) => {
+		const updatedFilters = [...filterInputs];
+		updatedFilters[index].field = field;
+		setFilterInputs(updatedFilters);
+
+		if (numericFields.includes(field)) {
+			setAvailableOperators(numericOperators);
+		} else {
+			setAvailableOperators(generalOperators);
+		}
+	};
+
+	const handleInputChange = (index: number, key: string, value: string) => {
+		const updatedFilters: any = [...filterInputs];
+		updatedFilters[index][key] = value;
+		setFilterInputs(updatedFilters);
+	};
+
+	const handleApplyFilters = () => {
+		// Validate and create filters
+		const newFilters = filterInputs
+			.filter((f) => f.field && f.operator && f.value)
+			.map((f) => {
+				let finalValue = f.value.trim();
+				if (f.operator === 'Like') finalValue = `%${finalValue}%`;
+				return [f.field, f.operator, finalValue];
+			});
+
+		if (newFilters.length === 0) {
 			alert('Please fill in all filter fields.');
 			return;
 		}
 
-		let finalFilterValue = filterValue.trim();
+		setFilters(newFilters); // Set the new filters
+		setOpenFilter(false); // Close filter modal
+	};
 
-		// Handle 'like' operator by adding wildcards
-		if (filterType === 'like') {
-			finalFilterValue = `%${finalFilterValue}%`;
-		}
-
-		// Optionally, convert to lowercase to handle case insensitivity if API requires
-		finalFilterValue = finalFilterValue.toLowerCase();
-
-		// Prepare the filter
-		const filters: [string, string, string][] = [
-			[filterField, filterType, finalFilterValue],
-		];
-
-		console.log('Applying Filter:', { modelName: 'Issue', filters });
-
-		try {
-			// Call the search API with the filter, passing modelName as 'Issue'
-			const filteredIssues = await filterUsers({ modelName: 'Issue', filters });
-			console.log('Filtered Issues:', filteredIssues); // Verify the response
-
-			if (filteredIssues && Array.isArray(filteredIssues.documents)) {
-				setIssue(filteredIssues.documents); // Update the table data
-			} else if (filteredIssues && Array.isArray(filteredIssues)) {
-				setIssue(filteredIssues); // If API returns an array directly
-			} else {
-				console.error('Invalid response structure:', filteredIssues);
-				alert('Unexpected response from the server.');
-			}
-
-			setShowFilter(false); // Close the filter modal
-		} catch (error) {
-			console.error('Error applying filters:', error);
-			alert('Failed to apply filters. Please try again.');
-		}
+	const handleResetFilters = () => {
+		setFilters([]); // Clear all filters
+		setSearchTerm('');
+		setFilterInputs([{ field: '', operator: '', value: '' }]); // Reset filters
 	};
 
 	return (
-		<div>
-			{/* Search Input Component */}
-			<SearchInput
-				onFiltered={handleFilteredData}
-				data={issue}
-				searchAPI={issueSearchAPI}
-				queryName="query"
+		<div className="flex flex-col gap-2">
+			<input
+				className="border p-2"
+				value={searchTerm || ''}
+				onChange={(e) => setSearchTerm(e.target.value)}
+				placeholder="Search issues..."
 			/>
-
-			{/* Filter Button */}
-			<button
-				className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-				onClick={() => setShowFilter(!showFilter)}>
-				Filter
-			</button>
-
-			{/* Filter Modal */}
-			{showFilter && (
-				<div className="bg-white shadow-lg p-4 mt-4 rounded">
-					<h3 className="text-lg font-bold">Apply Filters</h3>
-					<div className="mt-4 flex flex-col gap-4">
-						{/* Field Dropdown */}
-						<div>
-							<label
-								htmlFor="filterField"
-								className="block text-sm font-medium text-gray-700">
-								Field
-							</label>
-							<select
-								id="filterField"
-								className="mt-1 block w-full border p-2 rounded"
-								value={filterField}
-								onChange={(e) => setFilterField(e.target.value)}>
-								<option value="title">Title</option>
-								<option value="description">Description</option>
-								<option value="userName">Raised by</option>
-								<option value="email">User Email</option>
-								<option value="priority">Priority</option>
-								<option value="status">Status</option>
-								<option value="serial_no">Serial No</option>
-							</select>
-						</div>
-
-						{/* Filter Type Dropdown */}
-						<div>
-							<label
-								htmlFor="filterType"
-								className="block text-sm font-medium text-gray-700">
-								Filter Type
-							</label>
-							<select
-								id="filterType"
-								className="mt-1 block w-full border p-2 rounded"
-								value={filterType}
-								onChange={(e) => setFilterType(e.target.value)}>
-								<option value="equals">Equals</option>
-								<option value="not equals">Not Equals</option>
-								<option value="like">Like</option>
-								<option value=">">Greater Than</option>
-								<option value="<">Less Than</option>
-							</select>
-						</div>
-
-						{/* Filter Value Input */}
-						<div>
-							<label
-								htmlFor="filterValue"
-								className="block text-sm font-medium text-gray-700">
-								Value
-							</label>
-							<input
-								id="filterValue"
-								className="mt-1 block w-full border p-2 rounded"
-								type="text"
-								placeholder="Enter value"
-								value={filterValue}
-								onChange={(e) => setFilterValue(e.target.value)}
-							/>
-						</div>
-
-						{/* Apply Filter Button */}
+			<div className="flex gap-4 w-full">
+				<button
+					className="bg-gray-400 p-2 rounded text-black w-40"
+					onClick={() => setOpenFilter(!openFilter)}>
+					Filter
+				</button>
+				{filters.length > 0 && (
+					<button
+						className="bg-red-400 p-2 rounded text-white w-10"
+						onClick={handleResetFilters}>
+						X
+					</button>
+				)}
+			</div>
+			{openFilter && (
+				<div className="py-4">
+					<div className="flex flex-col gap-4">
+						{/* Dynamically render filter inputs */}
+						{filterInputs.map((filter, index) => (
+							<div key={index} className="flex gap-2">
+								<select
+									value={filter.field}
+									onChange={(e) => handleFieldChange(index, e.target.value)}
+									className="border w-60 rounded p-2 outline-none focus:ring-2">
+									<option value="">Select Field</option>
+									{issueFields.map((key) => (
+										<option key={key} value={key}>
+											{key}
+										</option>
+									))}
+								</select>
+								<select
+									value={filter.operator}
+									onChange={(e) =>
+										handleInputChange(index, 'operator', e.target.value)
+									}
+									className="border w-60 rounded p-2 outline-none focus:ring-2">
+									<option value="">Select Operator</option>
+									{availableOperators.map((operator) => (
+										<option key={operator} value={operator}>
+											{operator}
+										</option>
+									))}
+								</select>
+								<input
+									type="text"
+									value={filter.value}
+									onChange={(e) =>
+										handleInputChange(index, 'value', e.target.value)
+									}
+									className="border w-60 rounded p-2 outline-none focus:ring-2"
+									placeholder="Enter filter value"
+								/>
+								{index > 0 && (
+									<button
+										className="bg-red-500 p-2 rounded text-white"
+										onClick={() => removeFilter(index)}>
+										Remove
+									</button>
+								)}
+							</div>
+						))}
 						<button
-							className="bg-green-500 text-white px-4 py-2 rounded"
-							onClick={handleFilterApply}>
-							Apply Filters
+							className="bg-green-500 p-2 rounded text-white"
+							onClick={addFilter}>
+							Add Filter
 						</button>
+						<div className="flex gap-4">
+							<button
+								className="bg-blue-500 p-2 rounded text-white"
+								onClick={handleApplyFilters}>
+								Apply Filters
+							</button>
+							<button
+								className="bg-gray-400 p-2 rounded text-black"
+								onClick={handleResetFilters}>
+								Reset Filters
+							</button>
+						</div>
 					</div>
 				</div>
 			)}
-
-			{/* Table displaying the issues */}
-			{issue && issue.length > 0 ? (
-				<Table
-					data={issue}
-					columns={[
-						{
-							title: 'Title',
-							dataIndex: 'title',
-						},
-						{
-							title: 'Description',
-							dataIndex: 'description',
-						},
-						{
-							title: 'Raised by',
-							dataIndex: 'userName',
-						},
-						{
-							title: 'User Email',
-							dataIndex: 'email',
-						},
-						{
-							title: 'Priority',
-							dataIndex: 'priority',
-						},
-						{
-							title: 'Issued At',
-							render: (data: Issues) => (
-								<div className="w-full flex justify-center">
-									<div>
-										{data.createdAt
-											? new Date(data.createdAt).toLocaleDateString()
-											: 'NULL'}
-									</div>
-								</div>
-							),
-						},
-						{
-							title: 'Status',
-							dataIndex: 'status',
-						},
-						{
-							title: 'Serial No',
-							dataIndex: 'serial_no',
-						},
-						{
-							title: 'Actions',
-							render: (record: Issues) => (
-								<div
-									className="flex w-full justify-center cursor-pointer"
-									onClick={() => handleIssueClick(record._id || '')}>
-									<Icon type="OutlinedDotsVertical" color="black" />
-								</div>
-							),
-						},
-					]}
-				/>
-			) : (
-				<div className="text-center text-gray-500 mt-4">No issues found.</div>
+			{filters.length > 0 && (
+				<div className="mt-4">
+					<h4>Applied Filters:</h4>
+					<ul>
+						{filters.map((filter, index) => (
+							<li key={index} className="flex items-center">
+								<span>{`${filter[0]} ${filter[1]} ${filter[2]}`}</span>
+							</li>
+						))}
+					</ul>
+				</div>
 			)}
+			<Table
+				data={issue}
+				columns={[
+					{
+						title: 'Title',
+						dataIndex: 'title',
+					},
+					{
+						title: 'Description',
+						dataIndex: 'description',
+					},
+					{
+						title: 'Raised by',
+						dataIndex: 'userName',
+					},
+					{
+						title: 'User Email',
+						dataIndex: 'email',
+					},
+					{
+						title: 'Priority',
+						dataIndex: 'priority',
+					},
+					{
+						title: 'Issued At',
+						render: (data: Issues) => (
+							<div className="w-full flex justify-center">
+								<div>
+									{data.createdAt
+										? new Date(data.createdAt).toLocaleDateString()
+										: 'NULL'}
+								</div>
+							</div>
+						),
+					},
+					{
+						title: 'Status',
+						dataIndex: 'status',
+					},
+					{
+						title: 'Serial No',
+						dataIndex: 'serial_no',
+					},
+					{
+						title: 'Actions',
+						render: (record: Issues) => (
+							<div
+								className="flex w-full justify-center cursor-pointer"
+								onClick={() => {
+									router.push(`/issues/${record._id}`);
+								}}>
+								<Icon type="OutlinedDotsVertical" color="black" />
+							</div>
+						),
+					},
+				]}
+			/>
+			{/* Pagination Control */}
+			<div className="flex w-full justify-center items-center gap-4 mt-4">
+				<button
+					className="bg-gray-200 p-2"
+					onClick={() => setPageLength((prev) => Math.max(prev - 10, 10))}>
+					-
+				</button>
+				<p className="font-bold">{pageLength}</p>
+				<button
+					className="bg-gray-200 p-2"
+					onClick={() => setPageLength((prev) => prev + 10)}>
+					+
+				</button>
+			</div>
 		</div>
 	);
 }
-
-export default IssueTable;

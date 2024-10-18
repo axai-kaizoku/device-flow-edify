@@ -1,5 +1,6 @@
 'use server';
 
+import { FilterApiParams } from './filterActions';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Team = {
@@ -15,18 +16,60 @@ export type Team = {
 	__v?: number;
 };
 
-export type TeamsResponse = Team[];
+export type TeamsResponse = {
+	issues: Team[]; // Changed from 'devices' to 'documents'
+	total_count: number;
+	page_size: number;
+};
 
-export async function fetchTeams(): Promise<TeamsResponse> {
+const teamFields = [
+	'title',
+	'description',
+	'createdAt',
+	'updatedAt',
+	'image',
+	'employees_count',
+];
+
+export async function fetchTeams({
+	filters = [],
+	fields = teamFields,
+	searchQuery = '',
+	pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
 	try {
-		const res = await callAPIWithToken<TeamsResponse>(
-			'https://api.edify.club/edifybackend/v1/teams',
-			'GET',
+		const payload = {
+			fields,
+			filters: filters.length > 0 ? filters : [],
+			page_length: pageLength,
+		};
+
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<Team[]>(apiUrl, 'POST', payload);
+		console.log(apiUrl, payload);
+		// Check if response has data
+		if (res && res.data) {
+			return res.data.teams;
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering teams:',
+			error.response?.data || error.message,
 		);
 
-		return res.data;
-	} catch (e) {
-		throw new Error('Failed to fetch teams');
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter teams. Please try again later.',
+		);
 	}
 }
 

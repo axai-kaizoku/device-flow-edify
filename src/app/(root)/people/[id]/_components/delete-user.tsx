@@ -43,7 +43,7 @@ export const DeleteUser = ({
 							if (id) {
 								await deleteUser(id);
 								setOpen(false);
-								router.push('/users');
+								router.push('/people');
 								router.refresh();
 							}
 						}}>
