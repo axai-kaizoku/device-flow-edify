@@ -1,6 +1,7 @@
 import { Device } from './deviceActions';
 import { callAPIWithToken } from './helper';
 import { Issues } from './issueActions';
+import { User } from './userActions';
 
 interface FilterDeviceParams {
 	filters?: any[][];
@@ -8,6 +9,7 @@ interface FilterDeviceParams {
 	searchQuery?: string;
 	pageLength?: number;
 }
+
 export const devicesFields = [
 	'device_name',
 	'device_type',
@@ -25,41 +27,48 @@ export const devicesFields = [
 	'warranty_expiary_date',
 	'warranty_status',
 ];
-<<<<<<< HEAD:src/server/filterActions.tsx
 
-export const issuesFields = [
-	'status',
-	'description',
-	'title',
-	'priority',
-	'serial_no'
+export const usersFields = [
+	'first_name',
+	'last_name',
+	'gender',
+	'marital_status',
+	'physically_handicapped',
+	'about',
+	'interests_and_hobbies',
+	'role',
+	'designation',
+	'employment_type',
+	'onboarding_date',
+	'reporting_manager',
+	'email',
+	'phone',
 ];
 
-export async function filterIssue(
-	filters=[], // No default, required
-	fields = issuesFields,
+export async function filterUsers({
+	filters = [],
+	fields = usersFields,
 	searchQuery = '',
 	pageLength = 20,
-): Promise<FilterDeviceParams> {
+}: FilterDeviceParams={}): Promise<any> {
 	try {
 		const payload = {
 			fields,
-			filters: filters.length>0 ? [filters] : [],
+			filters: filters.length > 0 ? filters : [],
 			page_length: pageLength,
 		};
 
-		// Log the payload for debugging
-		console.log('Filter Payload:', JSON.stringify(payload, null, 2));
-
 		// Construct the URL with an optional search query
-		const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter?searchQuery=${searchQuery}`;
+		const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
 
 		// API call
-		const res = await callAPIWithToken<Issues[]>(apiUrl, 'POST', payload);
-
+		const res = await callAPIWithToken<User[]>(apiUrl, 'POST', payload);
+		console.log(apiUrl, payload);
 		// Check if response has data
 		if (res && res.data) {
-			console.log('Filtered Data:', res.data);
+			// console.log('Filtered Data:', res.data);
 			return res.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
@@ -67,26 +76,21 @@ export async function filterIssue(
 	} catch (error: any) {
 		// Enhanced error logging
 		console.error(
-			'Error filtering issues:',
+			'Error filtering users:',
 			error.response?.data || error.message,
 		);
 
 		// Throw more specific error message
 		throw new Error(
 			error.response?.data?.message ||
-				'Failed to filter issues. Please try again later.',
+				'Failed to filter Users. Please try again later.',
 		);
 	}
-}
+};
 
 
-
-export async function filterDevice<FilterDeviceParams>(
-	filters, // No default, required
-=======
 export async function filterDevice({
 	filters = [],
->>>>>>> master:src/server/filterActions.ts
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 20,

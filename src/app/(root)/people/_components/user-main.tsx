@@ -11,28 +11,19 @@ interface UserMainProps {
 	userRole: number;
 }
 
-export default function UserMain({ data, userRole }: UserMainProps) {
-	const [users, setUsers] = useState<User[]>(data); // Explicit User[] type
-	const handleFilteredData = (filtered: User[]) => {
-		setUsers(filtered);
-	};
+export default function UserMain({ data, userRole }: UserMainProps) {	
 
 	return (
 		<>
 			<div className="flex justify-end w-full">
 				<div className="flex gap-5">
-					<SearchInput
-						data={users}
-						onFiltered={handleFilteredData}
-						queryName="name"
-						searchAPI={userSearchAPI}
-					/>
+					
 					{userRole === 2 && <CreateUser />}
 				</div>
 			</div>
 			<div className="h-10" />
 			<div className="w-full">
-				<UserTable users={users} />
+				<UserTable users={data} />
 			</div>
 		</>
 	);

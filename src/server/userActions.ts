@@ -112,13 +112,21 @@ export type HierarchyUser = {
 
 export type HierarchyResponse = HierarchyUser[];
 
-type UsersResponse = User[];
+export type UserResponse = {
+	users: User[]; // Changed from 'devices' to 'documents'
+	totalPages: number;
+	currentPage: number;
+	totalDocuments: number;
+	pageSize: number;
+	documentCount: number;
+	currentDocumentCount: number;
+};
 
 export type newAllUserResponse = {
 	users:User[],
 }
 
-export async function fetchUsers(): Promise<newAllUserResponse> {
+export async function fetchUsers(): Promise<UserResponse> {
 	try {
 
 		const requestBody = {
@@ -127,12 +135,12 @@ export async function fetchUsers(): Promise<newAllUserResponse> {
 			page_length: 20  // Number of users to fetch per page
 		};
 
-		const res = await callAPIWithToken<newAllUserResponse>(
+		const res = await callAPIWithToken<UserResponse>(
 			'https://api.edify.club/edifybackend/v1/user/filter',
 			'POST',  // Changed to POST as the new API requires it
 			requestBody  // Pass the request body
 		);
-		console.log(res.data)
+		console.log(res.data.users)
 
 		return res.data.users;
 	} catch (e) {

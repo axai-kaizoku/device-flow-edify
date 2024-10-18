@@ -110,7 +110,7 @@ export default async function UserPage({ params }: UserPageProps) {
 								<span className="block font-semibold text-gray-800">{`${user.reporting_manager.first_name} ${user.reporting_manager.last_name}`}</span>
 								<span className="text-gray-500">
 									{user.reporting_manager.email}
-								</span>
+								</span><br />
 								<span className="text-gray-500">
 									{user.reporting_manager.phone}
 								</span>

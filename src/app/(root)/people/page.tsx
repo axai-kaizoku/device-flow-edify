@@ -1,18 +1,19 @@
 import { CombinedContainer } from '@/components/container/container';
-import { fetchUsers } from '@/server/userActions';
+import { fetchUsers, UserResponse } from '@/server/userActions';
 
 import UserMain from './_components/user-main';
 import { getSession } from '@/server/helper';
+import { filterUsers } from '@/server/filterActions';
 
 export default async function Users() {
 	const session = await getSession();
 	const userRole = session?.user.role || 0;
 	try {
-		const users = await fetchUsers();
+		const userResponse: UserResponse  = await filterUsers();
 
 		return (
 			<CombinedContainer title="Users">
-				<UserMain data={users} userRole={userRole} />
+				<UserMain data={userResponse.users} userRole={userRole} />
 			</CombinedContainer>
 		);
 	} catch (error) {
