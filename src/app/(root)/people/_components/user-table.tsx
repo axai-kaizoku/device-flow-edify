@@ -215,8 +215,8 @@ export default function UserTable({ users }: { users: User[] }) {
 						render: (data) => (
 							<div className="w-full flex justify-center">
 								<div>
-									{data.reporting_manager_details?.first_name
-										? data.reporting_manager_details?.first_name
+									{data.reporting_manager?.first_name
+										? data.reporting_manager?.first_name
 										: 'NULL'}
 								</div>
 							</div>

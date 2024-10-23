@@ -129,15 +129,15 @@ export default function KbarWrapper({userRole}:{userRole : number | undefined}) 
     <KBarProvider actions={userRole===1 ? EmpActions : adminActions}>
       <KBarPortal>
         <KBarPositioner className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <KBarAnimator className="w-full max-w-lg bg-white rounded-lg shadow-xl p-6 space-y-4 overflow-y-auto">
+          <KBarAnimator className="w-full max-w-lg min-h-max bg-white rounded-lg shadow-xl p-6 space-y-4">
             <KBarSearch
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-8"
               placeholder="Type a command..."
             />
-            {/* Render all actions */}
-            <div className="h-full">
-              <RenderResults />
-            </div>
+            {/* Rendering all actions */}
+
+            <RenderResults />
+            
           </KBarAnimator>
         </KBarPositioner>
       </KBarPortal>

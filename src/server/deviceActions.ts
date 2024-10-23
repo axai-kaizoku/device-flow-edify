@@ -10,6 +10,7 @@ export type Device = {
 	userId?: string;
 	orgId?: string;
 	addressId?: string | null;
+	city?: string;
 	device_name: string;
 	userName?: string;
 	device_type: string;
