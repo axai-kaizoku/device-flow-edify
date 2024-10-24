@@ -172,6 +172,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 				<Typography
 					variant="h3"
 					align="left"
+					className='dark:text-white'
 					style={{ width: '100%', padding: '0.8rem 0' }}>
 					{isEditForm ? 'Edit User' : 'Create a New User'}
 				</Typography>
@@ -281,7 +282,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 							</div>
 							{error && <span className="w-full text-red-400">{error}</span>}
 							<div className="flex justify-end">
-								<Button
+								<Button className='dark:bg-blue-500 dark:hover:bg-blue-600'
 									onClick={() => {
 										if (!validateFormData()) {
 											setError('Please fill all required fields.');

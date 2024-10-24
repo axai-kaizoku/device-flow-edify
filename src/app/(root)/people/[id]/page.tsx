@@ -22,12 +22,14 @@ export default async function UserPage({ params }: UserPageProps) {
 			description="User Details">
 			<div className="flex justify-end w-full">
 				<div className="flex gap-5">
-					{sess?.user.role === 2 && <div className="flex gap-5">
-						<EditUser userData={user as unknown as CreateUserArgs}>
-							Edit User
-						</EditUser>
-						<DeleteUser id={params.id}>Delete User</DeleteUser>
-					</div>}
+					{sess?.user.role === 2 && (
+						<div className="flex gap-5">
+							<EditUser userData={user as unknown as CreateUserArgs}>
+								Edit User
+							</EditUser>
+							<DeleteUser id={params.id}>Delete User</DeleteUser>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="h-10" />
@@ -36,23 +38,27 @@ export default async function UserPage({ params }: UserPageProps) {
 					<img
 						src={user.orgId?.logo || 'https://via.placeholder.com/150'}
 						alt={`${user.orgId?.name} logo`}
-						className="w-20 h-20 object-cover rounded-full ring-4 ring-indigo-500"
+						className="w-20 h-20 object-cover rounded-full ring-4 ring-indigo-500 dark:ring-indigo-300"
 					/>
 					<div>
-						<h1 className="text-3xl font-semibold text-gray-800">{`${user.first_name} ${user.last_name}`}</h1>
-						<span className="text-gray-500">{user.email}</span>
+						<h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">
+							{`${user.first_name} ${user.last_name}`}
+						</h1>
+						<span className="text-gray-500 dark:text-gray-400">{user.email}</span>
 					</div>
 				</div>
-				<span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm">
+				<span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm">
 					{user.designation}
 				</span>
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{/* General Information */}
-				<div className="bg-white shadow-lg rounded-lg p-6">
-					<h2 className="text-xl font-semibold mb-4">General Information</h2>
-					<ul className="text-gray-700 space-y-2">
+				<div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+					<h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+						General Information
+					</h2>
+					<ul className="text-gray-700 dark:text-gray-300 space-y-2">
 						<li>
 							<strong>Email:</strong> {user.email}
 						</li>
@@ -74,11 +80,11 @@ export default async function UserPage({ params }: UserPageProps) {
 				</div>
 
 				{/* Organization Information */}
-				<div className="bg-white shadow-lg rounded-lg p-6">
-					<h2 className="text-xl font-semibold mb-4">
+				<div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+					<h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
 						Organization Information
 					</h2>
-					<ul className="text-gray-700 space-y-2">
+					<ul className="text-gray-700 dark:text-gray-300 space-y-2">
 						<li>
 							<strong>Organization:</strong> {user.orgId?.name}
 						</li>
@@ -98,8 +104,10 @@ export default async function UserPage({ params }: UserPageProps) {
 
 				{/* Reporting Manager */}
 				{user.reporting_manager && (
-					<div className="bg-white shadow-lg rounded-lg p-6">
-						<h2 className="text-xl font-semibold mb-4">Reporting Manager</h2>
+					<div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+						<h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+							Reporting Manager
+						</h2>
 						<div className="flex items-center gap-4">
 							<img
 								src="https://via.placeholder.com/100"
@@ -107,11 +115,13 @@ export default async function UserPage({ params }: UserPageProps) {
 								className="w-16 h-16 object-cover rounded-full"
 							/>
 							<div>
-								<span className="block font-semibold text-gray-800">{`${user.reporting_manager.first_name} ${user.reporting_manager.last_name}`}</span>
-								<span className="text-gray-500">
+								<span className="block font-semibold text-gray-800 dark:text-gray-200">
+									{`${user.reporting_manager.first_name} ${user.reporting_manager.last_name}`}
+								</span>
+								<span className="text-gray-500 dark:text-gray-400">
 									{user.reporting_manager.email}
 								</span><br />
-								<span className="text-gray-500">
+								<span className="text-gray-500 dark:text-gray-400">
 									{user.reporting_manager.phone}
 								</span>
 							</div>

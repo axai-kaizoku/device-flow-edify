@@ -12,7 +12,7 @@ export const StoreItem = ({ device }: { device: Device }) => {
 		router.refresh();
 	};
 	return (
-		<div className="w-full h-fit rounded-lg shadow-lg bg-white p-6 flex flex-col items-center justify-between transition-transform transform hover:scale-105 hover:shadow-xl">
+		<div className="w-full h-fit rounded-lg shadow-lg bg-white dark:bg-gray-800 p-6 flex flex-col items-center justify-between transition-transform transform hover:scale-105 hover:shadow-xl dark:hover:shadow-gray-700">
 			<Link href={`/store/${device._id}`}>
 				<Image
 					src={device.image ?? '/media/mac.jpeg'}
@@ -24,20 +24,20 @@ export const StoreItem = ({ device }: { device: Device }) => {
 			</Link>
 
 			<div className="flex flex-col gap-2 text-center mt-4">
-				<span className="text-lg font-medium text-gray-800">
+				<span className="text-lg font-medium text-gray-800 dark:text-gray-100">
 					{device.device_name}
 				</span>
-				<span className="text-sm text-gray-500">
+				<span className="text-sm text-gray-500 dark:text-gray-400">
 					{device.custom_model} {device.brand}
 				</span>
 			</div>
-			<span className="font-bold text-xl text-slate-900 mt-2">
+			<span className="font-bold text-xl text-slate-900 dark:text-slate-100 mt-2">
 				${device.purchase_value}
 			</span>
 
 			<button
 				onClick={handleAddToCart}
-				className="p-2 mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition">
+				className="p-2 mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition dark:bg-blue-500 dark:hover:bg-blue-600">
 				Add to Cart
 			</button>
 		</div>

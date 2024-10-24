@@ -10,7 +10,7 @@ export type Device = {
 	userId?: string;
 	orgId?: string;
 	addressId?: string | null;
-	city?: string;
+	city: string;
 	device_name: string;
 	userName?: string;
 	device_type: string;
@@ -74,7 +74,7 @@ export const createDevices = async (
 			addressId: device.addressId
 		};
 
-		// console.log('Prepared Device Data:', deviceData);
+		console.log('Prepared Device Data:', deviceData);
 
 		// API call
 		const sess = await getSession();

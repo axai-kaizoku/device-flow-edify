@@ -14,25 +14,25 @@ export default async function Settings() {
 			description="Manage your organization's settings">
 			<div className="flex flex-col gap-8">
 				{/* Organization Details */}
-				<div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+				<div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 p-6 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
 					<div className="flex items-center gap-4">
 						<img
                             src={org?.logo || 'https://via.placeholder.com/100'}
                             alt={`${org?.name || 'Organization'} logo`}
-                            className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-300"
+                            className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-300 dark:ring-gray-600"
                         />
 						<div>
-                            <h2 className="text-2xl font-semibold text-gray-700">
+                            <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                                 {org?.name || 'Organization Name'}
                             </h2>
-                            <p className="text-sm text-gray-500">{org?.email || 'N/A'}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{org?.email || 'N/A'}</p>
                         </div>
 					</div>
 					<div className="text-right">
-                        <p className="text-lg font-semibold text-gray-600">
+                        <p className="text-lg font-semibold text-gray-600 dark:text-gray-300">
                             Devices: {org?.total_devices || 0}
                         </p>
-                        <p className="text-lg font-semibold text-gray-600">
+                        <p className="text-lg font-semibold text-gray-600 dark:text-gray-300">
                             Employees: {org?.total_employees || 0}
                         </p>
                     </div>
@@ -40,21 +40,21 @@ export default async function Settings() {
 
 				{/* Office Addresses */}
 				<div>
-					<h3 className="text-xl font-semibold text-gray-700 mb-4">
+					<h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
 						Office Addresses
 					</h3>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{org?.office_address?.map((address) => (
 							<div
 								key={address?._id}
-								className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+								className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
 								<div className="flex items-center justify-between">
-									<h4 className="text-lg font-semibold text-gray-700">
+									<h4 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
 										City: {address?.city}
 									</h4>
 									<MapPinned color="gray" />
 								</div>
-								<p className="text-sm text-gray-500 mt-2">
+								<p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
 									{/* Device ID: {address.deviceId} */}
 									Primary Address
 								</p>

@@ -32,4 +32,5 @@ export interface TypographyProps {
 	style?: React.CSSProperties;
 	isEllipsis?: boolean;
 	lineClamp?: number;
+	className?:string;
 }

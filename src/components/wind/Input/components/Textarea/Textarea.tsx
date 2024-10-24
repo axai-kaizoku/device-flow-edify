@@ -67,6 +67,7 @@ export const Textarea = ({
             style={labelStyle}
             variant="body-text2"
             type="semi-bold"
+            className="dark:text-white"
           >
             {label}
             {markMandatory ? <Mandatory>*</Mandatory> : ""}
@@ -103,6 +104,7 @@ export const Textarea = ({
           minLength={rules?.minLength}
           maxLength={rules?.maxLength}
           ref={textareaRef}
+          className="dark:text-white"
         />
         {helperText || hasError() ? (
           <Typography

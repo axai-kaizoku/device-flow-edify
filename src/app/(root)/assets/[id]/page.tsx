@@ -2,6 +2,7 @@ import { CombinedContainer } from '@/components/container/container';
 import { Device, getDeviceById } from '@/server/deviceActions';
 import React from 'react';
 import EditDevice from './_components/edit-device';
+import { useRouter } from 'next/navigation';
 interface DevicePageProps {
 	params: { id: string };
 }

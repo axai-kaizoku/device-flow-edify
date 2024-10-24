@@ -22,8 +22,9 @@ export const CartItem = ({ data }: { data: Device }) => {
 	};
 
 	useEffect(() => {}, []);
+
 	return (
-		<div className="w-full h-fit rounded-lg text-gray-800 bg-white shadow-md p-6 flex items-center justify-between gap-6">
+		<div className="w-full h-fit rounded-lg text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 shadow-md p-6 flex items-center justify-between gap-6">
 			<div className="w-[6rem] h-[6rem]">
 				<Image
 					src="/media/mac.jpeg"
@@ -34,14 +35,14 @@ export const CartItem = ({ data }: { data: Device }) => {
 				/>
 			</div>
 			<div className="flex flex-col gap-1">
-				<span className="font-medium text-gray-900">{data.device_name}</span>
-				<span className="text-sm text-gray-500">
+				<span className="font-medium text-gray-900 dark:text-gray-100">{data.device_name}</span>
+				<span className="text-sm text-gray-500 dark:text-gray-400">
 					{data.custom_model} {data.brand}
 				</span>
 			</div>
 			<div className="flex items-center gap-2">
 				<Minus
-					className="w-5 h-5 cursor-pointer text-gray-600 hover:text-gray-800 transition"
+					className="w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition"
 					onClick={() => {
 						setQty(qty > 1 ? qty - 1 : 1);
 						handleRemoveFromCart(data);
@@ -49,19 +50,19 @@ export const CartItem = ({ data }: { data: Device }) => {
 				/>
 				<input
 					type="text"
-					className="bg-gray-100 p-2 w-10 h-8 text-center rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+					className="bg-gray-100 dark:bg-gray-700 p-2 w-10 h-8 text-center rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400"
 					value={`${qty}`}
 					readOnly
 				/>
 				<Plus
-					className="w-5 h-5 cursor-pointer text-gray-600 hover:text-gray-800 transition"
+					className="w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition"
 					onClick={() => {
 						setQty(qty + 1);
 						handleAddToCart(data);
 					}}
 				/>
 			</div>
-			<span className="text-right text-gray-900 font-semibold">
+			<span className="text-right text-gray-900 dark:text-gray-100 font-semibold">
 				${qty * data.purchase_value}
 			</span>
 		</div>

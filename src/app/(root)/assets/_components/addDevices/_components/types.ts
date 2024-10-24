@@ -19,7 +19,7 @@ export interface AdvanceDeviceDetails {
 	warrantyExpiryDate: string;
 }
 
-interface assignedToObj {
+export interface assignedToObj {
     name: string;
     value: string;
 }

@@ -112,7 +112,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
 		<div>
 			<div className="mt-6 flex space-x-4">
 				<button
-					className="bg-black text-white py-2 px-4 rounded transition duration-300 hover:bg-gray-800"
+					className="bg-black text-white py-2 px-4 rounded transition duration-300 dark:bg-gray-800 hover:bg-gray-800"
 					onClick={handleFileUploadClick}>
 					Upload CSV
 				</button>

@@ -13,8 +13,8 @@ export default async function DeviceDetail({ params }: TeamPageProps) {
 
 		return (
 			<CombinedContainer title={data.device_name}>
-				<div className="flex justify-end w-full ">
-					<div className="flex gap-4 items-center ">
+				<div className="flex justify-end w-full">
+					<div className="flex gap-4 items-center">
 						<CartComponent />
 					</div>
 				</div>
@@ -25,7 +25,7 @@ export default async function DeviceDetail({ params }: TeamPageProps) {
 		console.error('Error fetching data:', error);
 		return (
 			<CombinedContainer title="Device">
-				<div className="text-red-500">
+				<div className="text-red-500 dark:text-red-400">
 					Failed to load data. Please try again later.
 				</div>
 			</CombinedContainer>

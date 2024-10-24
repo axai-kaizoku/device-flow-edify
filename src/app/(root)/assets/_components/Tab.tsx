@@ -12,7 +12,7 @@ export function Tab({ active, onClick, iconType, label }: TabProps) {
 	return (
 		<div
 			className={`flex justify-center items-center gap-2 cursor-pointer p-2 transition-all duration-300 ${
-				active ? 'bg-black text-white rounded' : 'text-black bg-white'
+				active ? 'bg-black text-white rounded dark:text-black dark:bg-white' : 'text-black bg-white dark:bg-black dark:text-white'
 			}`}
 			onClick={onClick}>
 			<Icon

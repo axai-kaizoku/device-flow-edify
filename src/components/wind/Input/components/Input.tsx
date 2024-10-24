@@ -109,7 +109,8 @@ export const Input = ({
 						style={labelStyle}
 						variant="body-text2"
 						type="semi-bold"
-						align={labelAlign}>
+						align={labelAlign}
+						className='dark:text-white'>
 						{label}
 						{markMandatory ? <Mandatory>*</Mandatory> : ''}
 					</Typography>
@@ -135,6 +136,7 @@ export const Input = ({
 					style={style}
 					error={hasError()}
 					focused={focused}
+					className='dark:focus:ring-indigo-400'
 					isPaddingBefore={addOnBefore ? false : true}
 					isPaddingAfter={addOnAfter ? false : true}>
 					<InputContainerItem onClick={() => focus()}>

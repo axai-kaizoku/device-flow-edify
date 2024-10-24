@@ -3,11 +3,26 @@ import React, { useState } from 'react';
 import { deleteDevice, updateDevice } from '@/server/deviceActions';
 import { useRouter } from 'next/navigation';
 import { FileEdit, Trash } from 'lucide-react';
+import { getAddress } from '@/server/addressActions';
+import ApiDropdown from '@/components/dropdown/api-dropdown';
+import { fetchUsers } from '@/server/userActions';
 
 function EditDevice({ data }: { data: any }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [deviceData, setDeviceData] = useState(data);
 	const navigate = useRouter();
+	const router = useRouter();
+
+	const [formData, setFormData] = useState({
+		officeLocation:{
+			name: deviceData.city ,
+			value: deviceData.addressId
+		},
+		assignedTo:{
+			name: deviceData.userName ,
+			value: deviceData.userId
+		}
+	});
 
 	const handleDelete = async () => {
 		const confirmed = confirm('Are you sure you want to delete this device?');
@@ -24,9 +39,39 @@ function EditDevice({ data }: { data: any }) {
 		if (updatedDevice) {
 			alert('Device updated successfully');
 			console.log(updatedDevice);
-			setIsEditing(false);
 			setDeviceData(updatedDevice);
+			setIsEditing(false);
 		}
+		router.refresh();
+	};
+
+
+	const handleApiChange =
+		(field: string) =>
+		(e: React.ChangeEvent<HTMLSelectElement>) => {
+			const selectedOption = e.target.options[e.target.selectedIndex];
+			setFormData((prev) => ({
+				...prev,
+				[field]: {
+					name: selectedOption.text,
+					value: e.target.value,
+				},
+			}));
+
+			if(field === 'officeLocation'){
+				setDeviceData({
+					...deviceData,
+					addressId: e.target.value,
+					city: selectedOption.text
+				});
+			}
+			else{
+				setDeviceData({
+					...deviceData,
+					userId: e.target.value,
+					city: selectedOption.text
+				});
+			}
 	};
 
 	return (
@@ -98,6 +143,18 @@ function EditDevice({ data }: { data: any }) {
 									placeholder="Asset Serial Number"
 									className="border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
 								/>
+
+								{/* Yahan resName mein email likh do first_name ki jagah */}
+								<ApiDropdown
+									fetching={fetchUsers}
+									name="userId"
+									resName="first_name"
+									value={formData.assignedTo.value}
+									onChange={handleApiChange('assignedTo')}
+									placeholder="Select a User to Assign"
+								/>
+								
+
 							</div>
 						</div>
 
@@ -230,7 +287,17 @@ function EditDevice({ data }: { data: any }) {
 								Location & Ownership
 							</h2>
 							<div className="grid grid-cols-2 gap-4">
-								<input
+								
+								<ApiDropdown
+									fetching={getAddress}
+									name="addressId"
+									resName="city"
+									value={formData.officeLocation.value}
+									onChange={handleApiChange('officeLocation')}
+									placeholder="Select a Location"
+								/>
+
+								{/* <input
 									type="text"
 									value={deviceData.city}
 									onChange={(e) =>
@@ -238,7 +305,8 @@ function EditDevice({ data }: { data: any }) {
 									}
 									placeholder="City"
 									className="border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-								/>
+								/> */}
+
 								<input
 									type="text"
 									value={deviceData.ownership}
@@ -287,6 +355,10 @@ function EditDevice({ data }: { data: any }) {
 							<p>
 								<strong>Asset Serial Number:</strong>{' '}
 								{deviceData.asset_serial_no}
+							</p>
+							<p>
+								<strong>Assigned To:</strong> {' '}
+								{deviceData.userName || formData.assignedTo.name}
 							</p>
 						</div>
 
@@ -339,7 +411,7 @@ function EditDevice({ data }: { data: any }) {
 								Location & Ownership
 							</h2>
 							<p>
-								<strong>City:</strong> {deviceData.addressId}
+								<strong>City:</strong> {deviceData.city || formData.officeLocation.name}
 							</p>
 							<p>
 								<strong>Ownership:</strong> {deviceData.ownership}
