@@ -142,10 +142,6 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 						onChange={handleApiChange('assignedTo')}
 						placeholder="Select a User to Assign"
 					/>
-
-					{errors?.assignedTo && (
-						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
-					)}
 					
 				</div>
 

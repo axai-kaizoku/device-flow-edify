@@ -9,8 +9,8 @@ export type Device = {
 	id?: string;
 	userId?: string;
 	orgId?: string;
-	addressId?: string | null;
-	city: string;
+	addressId: string | null;
+	city?: string;
 	device_name: string;
 	userName?: string;
 	device_type: string;
@@ -70,8 +70,8 @@ export const createDevices = async (
 			os: device.os,
 			device_purchase_date: device.device_purchase_date || null,
 			image: device.image,
-			userId: device.userId,
-			addressId: device.addressId
+			addressId: device.addressId,
+			...(device.userId !== '' && { userId: device.userId }),
 		};
 
 		console.log('Prepared Device Data:', deviceData);

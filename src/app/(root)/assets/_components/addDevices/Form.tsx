@@ -108,8 +108,6 @@ function Form({ closeBtn }: FormProps) {
 			case 4:
 				const extra = formData.extraDetails;
 				if (!extra.brand) currentErrors.brand = 'Brand is required.';
-				if (!extra.assignedTo)
-					currentErrors.assignedTo = 'Assigned To is required.';
 				if (!extra.officeLocation)
 					currentErrors.officeLocation = 'Office Location is required.';
 				if (!extra.purchaseOrder)
