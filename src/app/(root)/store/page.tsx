@@ -8,10 +8,17 @@ import {
 	DeviceResponse,
 	getAllDevicesProp,
 } from '@/server/deviceActions';
+import { DeviceWithQty, getCart } from '@/server/mockedCart';
 
 export default async function Store() {
 	try {
 		const data: getAllDevicesProp = await getStoreDevices();
+		const cart = await getCart();
+
+		const findItemById = (itemId: string) => {
+			return cart.items.find((item: DeviceWithQty) => item._id === itemId);
+		};
+
 		return (
 			<CombinedContainer title="Store">
 				<div className="flex justify-between w-full">
@@ -28,9 +35,10 @@ export default async function Store() {
 					</div>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 my-14">
-					{data.map((d: Device) => (
-						<StoreItem device={d} key={d._id} />
-					))}
+					{data.map((d: Device) => {
+						const result = findItemById(d._id);
+						return <StoreItem result={result} device={d} key={d._id} />
+					})}
 				</div>
 			</CombinedContainer>
 		);

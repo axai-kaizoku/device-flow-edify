@@ -4,8 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import AddDevices from './_components/addDevices/AddDevices';
 import Inventory from './_components/inventory/Inventory';
 import { Tab } from './_components/Tab';
-import { Device } from '@/server/deviceActions';
+import { Device, updateDevice } from '@/server/deviceActions';
 import { useQueryState } from 'nuqs';
+import AddPaybleField from './_components/addPaybleField';
 
 interface TabDisplayProps {
 	devices: Device[];
@@ -60,6 +61,7 @@ function TabDisplay({
 				return null;
 		}
 	};
+
 
 	return (
 		<>

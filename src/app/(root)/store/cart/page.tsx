@@ -2,14 +2,14 @@ import { CombinedContainer } from '@/components/container/container';
 import { CartItem } from './_components/cart-item';
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
-import { getCart } from '@/server/mockedCart';
+import { DeviceWithQty, getCart } from '@/server/mockedCart';
 
 export default async function Cart() {
 	const cart = await getCart();
 
-	const { subtotal, gst, total } = cart.reduce(
-		(acc, item) => {
-			const itemTotal = item.purchase_value * item.qty!; // Multiply by qty
+	const { subtotal, gst, total } = cart.items.reduce(
+		(acc, item:DeviceWithQty) => {
+			const itemTotal = item.purchase_value * item.quantity!; // Multiply by qty
 			acc.subtotal += itemTotal;
 			acc.gst += itemTotal * 0.05;
 			acc.total += itemTotal * 1.05;
@@ -27,8 +27,8 @@ export default async function Cart() {
 			<div className="h-10" />
 			<div className="flex sm:flex-row flex-col w-full h-full justify-evenly">
 				<div className="flex sm:w-[60%] w-full flex-col gap-6">
-					{cart.length > 0 ? (
-						cart.map((data, i) => <CartItem key={i} data={data} />)
+					{cart.items.length > 0 ? (
+						cart.items.map((data:DeviceWithQty, i) => <CartItem key={i} data={data} />)
 					) : (
 						<div className="text-gray-700 dark:text-gray-300">No items in cart :(</div>
 					)}
@@ -40,20 +40,16 @@ export default async function Cart() {
 							<div className="flex justify-between">
 								<span>Quantity</span>
 								<span>
-									{cart.reduce((acc, item) => acc + item.qty!, 0)}
+									{cart.items.reduce((acc, item:DeviceWithQty) => acc + item.quantity!, 0)}
 								</span>
 							</div>
 							<div className="flex justify-between">
 								<span>Subtotal</span>
 								<span>${subtotal.toFixed(2)}</span>
 							</div>
-							<div className="flex justify-between">
-								<span>GST</span>
-								<span>${gst.toFixed(2)}</span>
-							</div>
 							<div className="border-t mt-4 pt-2 flex justify-between font-semibold dark:text-gray-100">
 								<span>Total</span>
-								<span>${total.toFixed(2)}</span>
+								<span>${cart.totalPrice/100}</span>
 							</div>
 						</div>
 						<button className="p-2 rounded-md w-full mt-6 text-white bg-muted-foreground dark:bg-blue-600 hover:bg-muted-foreground/90 dark:hover:bg-blue-700">
@@ -68,7 +64,7 @@ export default async function Cart() {
 
 export const CartComponent = async () => {
 	const cart = await getCart();
-	const totalQty = cart.reduce((acc, item) => acc + item.qty!, 0);
+	const totalQty = cart.items.reduce((acc, item:DeviceWithQty) => acc + item.quantity!, 0);
 	return (
 		<Link href="/store/cart" className="relative p-2 rounded-full">
 			<div className="w-4 h-4 absolute top-1 right-0 rounded-full bg-slate-600 text-white flex justify-center items-center text-xs">

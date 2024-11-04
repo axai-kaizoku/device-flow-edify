@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 
 //Device type
 export type Device = {
-	_id?: string;
+	_id: string;
 	id?: string;
 	userId?: string;
 	orgId?: string;
@@ -33,6 +33,7 @@ export type Device = {
 	image?: string;
 	createdAt?: string;
 	updatedAt?: string;
+	payable: number
 };
 export type getAllDevicesProp = Device[];
 export type DeviceResponse = {

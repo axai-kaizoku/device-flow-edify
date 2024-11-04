@@ -62,7 +62,7 @@ interface APIResponse<T> {
 // Main function using axios
 export async function callAPIWithToken<T>(
 	url: string,
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
 	body: unknown = null,
 	headers: Record<string, string> = {}, // Allow passing custom headers
 ): Promise<APIResponse<T>> {
@@ -89,7 +89,7 @@ export async function callAPIWithToken<T>(
 		const response: AxiosResponse<T> = await axios({
 			url,
 			method,
-			data: method === 'POST' || method === 'PUT' ? body : undefined,
+			data: method === 'POST' || method === 'PUT' || method === 'PATCH' ? body : undefined,
 			headers: defaultHeaders,
 		});
 

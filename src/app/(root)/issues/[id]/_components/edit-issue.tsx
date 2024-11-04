@@ -11,6 +11,8 @@ function EditIssue({ data }: { data: Issues }) {
 	const [issueData, setIssueData] = useState(data);
 	const router = useRouter();
 
+	console.log(data);
+
 	// Handle Edit Save
 	const handleSave = async () => {
 		const updatedIssue = await updateIssue(data._id, issueData);
@@ -25,141 +27,77 @@ function EditIssue({ data }: { data: Issues }) {
 	return (
 		<>
 			<div className="p-6 space-y-4">
-				<h1 className="text-2xl font-bold">Issues Details</h1>
 
-				{isEditing ? (
-					<div className="flex flex-col space-y-2">
-						{/* Editable Form */}
-						<input
-							type="text"
-							value={issueData.title}
-							onChange={(e) =>
-								setIssueData({ ...issueData, title: e.target.value })
-							}
-							placeholder="Title"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.description}
-							onChange={(e) =>
-								setIssueData({ ...issueData, description: e.target.value })
-							}
-							placeholder="Description"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.status}
-							onChange={(e) =>
-								setIssueData({ ...issueData, status: e.target.value })
-							}
-							placeholder="Status"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.priority}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									priority: e.target.value,
-								})
-							}
-							placeholder="Priority"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.createdAt}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									createdAt: e.target.value,
-								})
-							}
-							placeholder="Created at"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.userName}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									userName: e.target.value,
-								})
-							}
-							placeholder="User Name"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.email}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									email: e.target.value,
-								})
-							}
-							placeholder="Email"
-							className="border p-2"
-						/>
-						<input
-							type="text"
-							value={issueData.serial_no}
-							onChange={(e) =>
-								setIssueData({
-									...issueData,
-									serial_no: e.target.value,
-								})
-							}
-							placeholder="Serial No"
-							className="border p-2"
-						/>
+				<div className="bg-white p-6 rounded-lg shadow-md space-y-6">
+						{/* Header */}
+						<div className="flex justify-between items-center border-b pb-4 mb-4">
+							<h2 className="text-2xl font-bold text-gray-800">
+								{data?.title}
+							</h2>
+							<div className={`text-sm font-semibold px-3 py-1 rounded-lg ${
+								data?.priority === 'Critical' ? ('bg-red-100 text-red-700') : (
+								data?.priority === 'Medium' ? ('bg-yellow-100 text-yellow-700') : (
+									'bg-green-100 text-green-700'
+								))
+							}`}>
+								Priority: {data?.priority}
+							</div>
+						</div>
 
-						{/* Repeat inputs for other fields as needed */}
+						{/* Issue Details */}
+						<div className="space-y-4">
+							<p>
+								<strong className="font-medium text-gray-700">Raised by:</strong>{' '}
+								<span className="text-gray-600">{data?.userName}</span>
+							</p>
+							{!isEditing ? (
+								<p>
+									<strong className="font-medium text-gray-700">Status:</strong>{' '}
+									<span
+										className={`font-semibold px-2 py-1 rounded-md ${
+											data?.status === 'Open'
+												? 'bg-green-100 text-green-700'
+												: 'bg-gray-100 text-gray-700'
+										}`}
+									>
+										{data?.status}
+									</span>
+								</p>
+							) : (
+								<p>
+									<strong className="font-medium text-gray-700">Status:</strong>{' '}
+									<input
+										id='status'
+										type="text"
+										value={issueData.status}
+										onChange={(e) =>
+											setIssueData({ ...issueData, status: e.target.value })
+										}
+										placeholder="Status"
+										className="border p-2"
+									/>
 
-						<button
-							onClick={handleSave}
-							className="bg-gray-500 text-white p-2 rounded">
-							Save Changes
-						</button>
-						<button
-							onClick={() => setIsEditing(false)}
-							className="bg-gray-500 text-white p-2 rounded">
-							Cancel
-						</button>
-					</div>
-				) : (
-					<div className="flex flex-col space-y-2">
-						<p>
-							<strong>Raised by:</strong> {issueData.userName}
-						</p>
-						<p>
-							<strong>Title</strong> {issueData.title}
-						</p>
-						<p>
-							<strong>Priority:</strong> {issueData.priority}
-						</p>
-						<p>
-							<strong>Status</strong> {issueData.status}
-						</p>
-						<p>
-							<strong>Created at:</strong> {issueData.createdAt}
-						</p>
-						<p>
-							<strong>Description:</strong> {issueData.description}
-						</p>
-						<p>
-							<strong>Serial Number:</strong> {issueData.serial_no}
-						</p>
-						<p>
-							<strong>Email:</strong> {issueData.email}
-						</p>
-
-						{/* Buttons for Edit and Delete */}
-						<div className="space-x-4">
+								</p>
+								)
+							}
+							<p>
+								<strong className="font-medium text-gray-700">Created at:</strong>{' '}
+								<span className="text-gray-600">{data?.createdAt}</span>
+							</p>
+							<p>
+								<strong className="font-medium text-gray-700">Description:</strong>
+								<span className="block mt-1 text-gray-600">{data?.description}</span>
+							</p>
+							<p>
+								<strong className="font-medium text-gray-700">Serial Number:</strong>{' '}
+								<span className="text-gray-600">{data?.serial_no}</span>
+							</p>
+							<p>
+								<strong className="font-medium text-gray-700">Email:</strong>{' '}
+								<span className="text-gray-600">{data?.email}</span>
+							</p>
+						</div>
+						{!isEditing ? (<div className="space-x-4">
 							<button
 								onClick={() => setIsEditing(true)}
 								className="bg-slate-400 text-white p-2 rounded">
@@ -168,9 +106,23 @@ function EditIssue({ data }: { data: Issues }) {
 							<DeleteIssues id={data._id}>
 								<button className="bg-red-500 p-2 rounded">Delete</button>
 							</DeleteIssues>
-						</div>
+						</div>) :
+						(
+							<div className='flex gap-20'>
+								<button
+									onClick={handleSave}
+									className="bg-gray-500 text-white p-2 rounded">
+									Save Changes
+								</button>
+								<button
+									onClick={() => setIsEditing(false)}
+									className="bg-gray-500 text-white p-2 rounded">
+									Cancel
+								</button>
+							</div>
+						) 
+						}
 					</div>
-				)}
 			</div>
 		</>
 	);
