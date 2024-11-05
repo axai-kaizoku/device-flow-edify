@@ -1,6 +1,9 @@
 'use client';
-import { Device } from '@/server/deviceActions';
-import { addItemToCart, DeviceWithQty, updateCartItemQuantity } from '@/server/mockedCart';
+import {
+	addItemToCart,
+	DeviceWithQty,
+	updateCartItemQuantity,
+} from '@/server/cartActions';
 import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface StoreItemProps {
-	result: DeviceWithQty;  
+	result: DeviceWithQty;
 	device: DeviceWithQty;
 }
 
@@ -17,7 +20,7 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 	const [quantity, setQuantity] = useState<number>(result?.quantity);
 
 	const handleAddToCart = async () => {
-		await addItemToCart(device._id,1,device?.addressId);
+		await addItemToCart(device._id, 1, device?.addressId);
 		setQuantity(1);
 		router.refresh();
 	};
@@ -30,7 +33,7 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 	};
 
 	const handleDecrease = async (device: DeviceWithQty) => {
-		const newQuantity: number = quantity > 1 ? quantity - 1 : 0; 
+		const newQuantity: number = quantity > 1 ? quantity - 1 : 0;
 		setQuantity(newQuantity); // Update local quantity first
 		await updateCartItemQuantity(device._id, newQuantity); // Call API to update quantity
 		// console.log(newQuantity);
@@ -62,8 +65,8 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 			</span>
 
 			{quantity > 0 ? (
-                <div className="flex items-center justify-between mt-4 w-full">
-                    <Minus
+				<div className="flex items-center justify-between mt-4 w-full">
+					<Minus
 						className="w-5 h-5 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition"
 						onClick={() => {
 							handleDecrease(device);
@@ -81,14 +84,14 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 							handleIncrease(device);
 						}}
 					/>
-                </div>
-            ) : (
-                <button
-                    onClick={handleAddToCart}
-                    className="p-2 mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition dark:bg-blue-500 dark:hover:bg-blue-600">
-                    Add to Cart
-                </button>
-            )}
+				</div>
+			) : (
+				<button
+					onClick={handleAddToCart}
+					className="p-2 mt-4 w-full text-black dark:text-white bg-muted hover:bg-muted/95 transition dark:bg-blue-500 dark:hover:bg-blue-600">
+					Add to Cart
+				</button>
+			)}
 		</div>
 	);
 };

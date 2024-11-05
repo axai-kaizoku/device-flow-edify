@@ -1,6 +1,6 @@
 'use client';
+import { addItemToCart } from '@/server/cartActions';
 import { Device } from '@/server/deviceActions';
-import { addToCart } from '@/server/mockedCart';
 import { Heart, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -48,7 +48,9 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 							<strong>Warranty Status:</strong>{' '}
 							<span
 								className={
-									data.warranty_status ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+									data.warranty_status
+										? 'text-green-600 dark:text-green-400'
+										: 'text-red-600 dark:text-red-400'
 								}>
 								{data.warranty_status ? 'Active' : 'Expired'}
 							</span>
@@ -59,7 +61,7 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 					<div className="flex gap-4 mt-6">
 						<button
 							onClick={async () => {
-								await addToCart(data);
+								await addItemToCart(data._id, 1);
 								router.refresh();
 							}}
 							className="flex items-center justify-center bg-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">

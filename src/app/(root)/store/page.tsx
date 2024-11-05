@@ -3,12 +3,8 @@ import { Filter } from 'lucide-react';
 import { StoreItem } from './_components/store-item';
 import { getStoreDevices } from '@/server/storeActions';
 import { CartComponent } from './cart/page';
-import {
-	Device,
-	DeviceResponse,
-	getAllDevicesProp,
-} from '@/server/deviceActions';
-import { DeviceWithQty, getCart } from '@/server/mockedCart';
+import { Device, getAllDevicesProp } from '@/server/deviceActions';
+import { DeviceWithQty, getCart } from '@/server/cartActions';
 
 export default async function Store() {
 	try {
@@ -37,7 +33,7 @@ export default async function Store() {
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 my-14">
 					{data.map((d: Device) => {
 						const result = findItemById(d._id);
-						return <StoreItem result={result} device={d} key={d._id} />
+						return <StoreItem result={result} device={d} key={d._id} />;
 					})}
 				</div>
 			</CombinedContainer>
