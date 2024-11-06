@@ -1,4 +1,4 @@
-'use server';
+// 'use server';
 import { AxiosError } from 'axios';
 import { DeviceResponse, getAllDevicesProp } from './deviceActions';
 import { callAPIWithToken, getSession } from './helper';

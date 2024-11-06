@@ -47,21 +47,25 @@ function TabDisplay({
 	);
 
 	const assignedDevices = devices.filter(
-		(device) => device.userName !== '' && device.userId
+		(device) => device.userName !== '' && device.userId,
 	);
-	console.log(assignedDevices);
+	// console.log(assignedDevices);
 
 	const renderContent = () => {
 		switch (activeTab) {
 			case 'devices':
-				return <AddDevices devices={assignedDevices} totalDocuments={totalDocuments} />;
+				return (
+					<AddDevices
+						devices={assignedDevices}
+						totalDocuments={totalDocuments}
+					/>
+				);
 			case 'inventory':
 				return <Inventory devices={devices} />;
 			default:
 				return null;
 		}
 	};
-
 
 	return (
 		<>

@@ -4,6 +4,7 @@ import {
 	DeviceWithQty,
 	updateCartItemQuantity,
 } from '@/server/cartActions';
+import { Device } from '@/server/deviceActions';
 import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,7 +13,7 @@ import { useState } from 'react';
 
 interface StoreItemProps {
 	result: DeviceWithQty;
-	device: DeviceWithQty;
+	device: Device;
 }
 
 export const StoreItem = ({ result, device }: StoreItemProps) => {
@@ -60,9 +61,14 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 					{device.custom_model} {device.brand}
 				</span>
 			</div>
-			<span className="font-bold text-xl text-slate-900 dark:text-slate-100 mt-2">
-				${device.purchase_value}
-			</span>
+			<div className="flex gap-2 items-baseline">
+				<span className="font-bold text-xl text-slate-900 dark:text-slate-100">
+					₹{device.payable}
+				</span>
+				<sub className=" text-base text-slate-700 dark:text-slate-300">
+					<del>₹{device.purchase_value}</del>
+				</sub>
+			</div>
 
 			{quantity > 0 ? (
 				<div className="flex items-center justify-between mt-4 w-full">

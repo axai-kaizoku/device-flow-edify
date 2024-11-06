@@ -7,17 +7,6 @@ import { DeviceWithQty, getCart } from '@/server/cartActions';
 export default async function Cart() {
 	const cart = await getCart();
 
-	const { subtotal, gst, total } = cart.items.reduce(
-		(acc, item: DeviceWithQty) => {
-			const itemTotal = item.purchase_value * item.quantity!; // Multiply by qty
-			acc.subtotal += itemTotal;
-			acc.gst += itemTotal * 0.05;
-			acc.total += itemTotal * 1.05;
-			return acc;
-		},
-		{ subtotal: 0, gst: 0, total: 0 },
-	);
-
 	return (
 		<CombinedContainer title="Cart">
 			<h1 className="text-2xl font-semibold tracking-wide text-gray-800 dark:text-gray-200">
@@ -63,11 +52,11 @@ export default async function Cart() {
 							</div>
 							<div className="flex justify-between">
 								<span>Subtotal</span>
-								<span>${subtotal.toFixed(2)}</span>
+								<span>₹{cart.totalPrice}</span>
 							</div>
 							<div className="border-t mt-4 pt-2 flex justify-between font-semibold dark:text-gray-100">
 								<span>Total</span>
-								<span>${cart.totalPrice / 100}</span>
+								<span>₹{cart.totalPrice}</span>
 							</div>
 						</div>
 						{cart.items.length !== 0 && (

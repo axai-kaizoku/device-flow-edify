@@ -35,9 +35,9 @@ export default async function Checkout() {
 							Order Summary
 						</h2>
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mt-4">
-							{cart.items.map((item, index) => (
+							{cart.items.map((item: any, i: any) => (
 								<div
-									key={index}
+									key={i}
 									className="border-b border-gray-200 dark:border-gray-700 py-4">
 									<h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
 										{item.device_name} - {item.device_type}
@@ -79,10 +79,6 @@ export default async function Checkout() {
 							<PaymentMethods data={payments} price={cart.totalPrice} />
 						</div>
 					</div>
-				</div>
-
-				<div className="flex mt-8 bg-gray-200 h-[80vh] w-full" id="payment">
-					ORDER ID
 				</div>
 			</CombinedContainer>
 		);

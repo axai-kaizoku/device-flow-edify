@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
-import { Device } from '@/server/deviceActions';
 import { DeviceWithQty, updateCartItemQuantity } from '@/server/cartActions';
 import { useRouter } from 'next/navigation';
 
@@ -69,9 +68,14 @@ export const CartItem = ({ data }: { data: DeviceWithQty }) => {
 							}}
 						/>
 					</div>
-					<span className="text-right text-gray-900 dark:text-gray-100 font-semibold">
-						${quantity * data.purchase_value}
-					</span>
+					<div className="flex flex-col items-end gap-1">
+						<del className="text-gray-500 dark:text-gray-400 font-normal text-sm">
+							₹{quantity * data.purchase_value}
+						</del>
+						<span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+							₹{quantity * data.payable}
+						</span>
+					</div>
 				</div>
 			)}
 		</>

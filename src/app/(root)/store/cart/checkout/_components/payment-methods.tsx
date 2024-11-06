@@ -16,11 +16,12 @@ export default function PaymentMethods({
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const method = formData.get('payment'); // Get the selected payment method
-		const res = await createOrderId(price, method);
+		const res: any = await createOrderId(price, method as string);
 		console.log(res);
 		const razorpayOrderId = res.cart.razorpay_order_id;
+		const razorpayPrice = res.cart.totalPrice;
 
-		handlePayment(razorpayOrderId, price);
+		handlePayment(razorpayOrderId, razorpayPrice);
 		router.refresh();
 	};
 
@@ -54,7 +55,7 @@ export default function PaymentMethods({
 				color: '#F37254',
 			},
 		};
-
+		//@ts-ignore
 		const rzp1 = new window.Razorpay(options);
 		rzp1.open();
 	};
@@ -70,7 +71,9 @@ export default function PaymentMethods({
 							value={payments[key].paymentOption}
 							id={key}
 						/>
-						<label htmlFor={key} className="text-gray-700 dark:text-gray-300">
+						<label
+							htmlFor={key}
+							className="text-gray-700 w-full rounded p-2 ring-[0.8px] ring-neutral-200 dark:text-gray-300">
 							{payments[key].displayString}
 						</label>
 					</div>
@@ -80,7 +83,7 @@ export default function PaymentMethods({
 				<button
 					type="submit"
 					className="p-4 rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
-					Pay ₹{(price / 100).toFixed(2)}
+					Pay ₹{price}
 				</button>
 			</div>
 		</form>

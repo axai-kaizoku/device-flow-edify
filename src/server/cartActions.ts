@@ -1,4 +1,4 @@
-'use server';
+// 'use server';
 import { AxiosError } from 'axios';
 import { Device } from './deviceActions';
 import { callAPIWithToken, getSession } from './helper';
@@ -31,7 +31,7 @@ export const getCart = async () => {
 				'GET',
 			);
 
-			// console.log('Fetched Cart:', response.data);
+			console.log('Fetched Cart:', response.data);
 			return response.data; // Return the cart data
 		} else {
 			throw new Error('No user session found');
@@ -120,8 +120,9 @@ export async function createOrderId(amount: number, paymentOption: string) {
 
 		const response = await callAPIWithToken(apiUrl, 'POST', payload);
 		console.log('OrderID Created', response.data);
-		// return response.data;
+		//@ts-ignore
 		const orderId = response.data.orderId;
+		//@ts-ignore
 		const paymentMethod = response.data.paymentOption;
 
 		const checkoutPayload = {
