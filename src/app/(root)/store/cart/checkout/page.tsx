@@ -3,11 +3,14 @@ import { getCart, getPaymentMethods } from '@/server/cartActions';
 import Link from 'next/link';
 import PaymentMethods from './_components/payment-methods';
 import { CheckCircle } from 'lucide-react';
+import AddressSection from './_components/addressSection';
+import { Address, getAddress } from '@/server/addressActions';
 
 export default async function Checkout() {
 	try {
 		const cart: any = await getCart();
 		const payments: any = await getPaymentMethods(cart.totalPrice);
+		const allAddresses: Address[] = await getAddress();
 
 		return (
 			<CombinedContainer title="Checkout">
@@ -60,17 +63,7 @@ export default async function Checkout() {
 					{/* Payment Methods & Address */}
 					<div className="w-1/3 flex flex-col gap-6">
 						{/* Address Details */}
-						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-							<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-								Shipping Address
-							</h2>
-							<p className="mt-4 text-gray-700 dark:text-gray-300">
-								City: {cart.addressDetails.city}
-							</p>
-							<p className="text-gray-700 dark:text-gray-300">
-								Is Primary: {cart.addressDetails.isPrimary ? 'Yes' : 'No'}
-							</p>
-						</div>
+						<AddressSection cart={cart} allAddresses={allAddresses}/>
 						{/* Payment Methods */}
 						<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
 							<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">

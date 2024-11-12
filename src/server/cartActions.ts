@@ -143,3 +143,25 @@ export async function createOrderId(amount: number, paymentOption: string) {
 		throw new Error(error.response || 'Failed to create orderID.');
 	}
 }
+
+// Update Cart Address
+
+export const updateCartAddress = async (
+	addressId: string,
+): Promise<void> => {
+	try {
+		const response = await callAPIWithToken<any>(
+			`https://api.edify.club/edifybackend/v1/cart/address`,
+			'PATCH',
+			{ addressId },
+		);
+		console.log(
+			`Updated cart Address!`,
+			response.data,
+		);
+		return response.data;
+	} catch (error) {
+		console.error('Error updating item quantity in cart:', error);
+		throw new Error((error as AxiosError).message);
+	}
+};

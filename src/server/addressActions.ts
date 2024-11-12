@@ -4,7 +4,7 @@ import { callAPIWithToken, getSession } from './helper';
 export type Address = {
 	isPrimary?: boolean;
 	deleted_at?: string;
-	_id?: string;
+	_id: string;
 	city?: string;
 	deviceId?: string;
 	orgId?: string;
