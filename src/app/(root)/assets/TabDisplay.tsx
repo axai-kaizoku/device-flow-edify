@@ -6,7 +6,6 @@ import Inventory from './_components/inventory/Inventory';
 import { Tab } from './_components/Tab';
 import { Device, updateDevice } from '@/server/deviceActions';
 import { useQueryState } from 'nuqs';
-import AddPaybleField from './_components/addPaybleField';
 
 interface TabDisplayProps {
 	devices: Device[];
@@ -49,7 +48,11 @@ function TabDisplay({
 	const assignedDevices = devices.filter(
 		(device) => device.userName !== '' && device.userId,
 	);
-	// console.log(assignedDevices);
+
+	const invenotryDevices = devices.filter(
+		(device) => device?.userName?.trim() === '' && !device.userId,
+	);
+	console.log(devices);
 
 	const renderContent = () => {
 		switch (activeTab) {
@@ -61,7 +64,7 @@ function TabDisplay({
 					/>
 				);
 			case 'inventory':
-				return <Inventory devices={devices} />;
+				return <Inventory devices={invenotryDevices} />;
 			default:
 				return null;
 		}
