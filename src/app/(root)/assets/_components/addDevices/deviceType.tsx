@@ -47,6 +47,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
 		<div className="w-full">
 			<div className="flex justify-between my-8 items-center">
 				<h1 className="text-lg font-medium">Device Type</h1>
+
 				<BulkUpload
 					closeBtn={closeBtn}
 					requiredKeys={[

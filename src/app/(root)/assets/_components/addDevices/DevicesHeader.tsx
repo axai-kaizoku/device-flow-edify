@@ -27,10 +27,9 @@ function DevicesHeader({
 		<div>
 			<div className="flex items-center justify-between w-full pt-5">
 				<div>
-					<h1 className="text-xl">
-						{total} Devices of {totalDocuments}
-					</h1>
+					<h1 className="text-xl">{totalDocuments} 🖥️</h1>
 				</div>
+
 				<div className="flex justify-center items-center gap-8">
 					{/* <input
 						type="text"

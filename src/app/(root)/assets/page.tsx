@@ -1,6 +1,6 @@
 import { CombinedContainer } from '@/components/container/container';
 import TabDisplay from './TabDisplay';
-import { paginatedDevices, DeviceResponse } from '@/server/deviceActions';
+import { DeviceResponse } from '@/server/deviceActions';
 import { notFound } from 'next/navigation';
 import { filterDevice } from '@/server/filterActions';
 
@@ -15,7 +15,6 @@ export default async function Assets() {
 
 	try {
 		const devicesResponse: DeviceResponse = await filterDevice();
-
 		if (!devicesResponse) {
 			notFound();
 		}
@@ -26,7 +25,7 @@ export default async function Assets() {
 					devices={devicesResponse.devices} // Pass the documents array directly
 					currentPage={devicesResponse.currentPage}
 					totalPages={devicesResponse.totalPages}
-					totalDocuments={devicesResponse.totalDocuments}
+					totalDocuments={devicesResponse.totalCount}
 					currentDocumentCount={devicesResponse.currentDocumentCount}
 					pageSize={devicesResponse.pageSize}
 				/>

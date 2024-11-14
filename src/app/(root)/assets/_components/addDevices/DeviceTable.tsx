@@ -245,10 +245,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 						title: 'Brand',
 						dataIndex: 'brand',
 					},
-					{
-						title: 'Model',
-						dataIndex: 'custom_model',
-					},
+
 					{
 						title: 'Actions',
 						render: (record: Device) => (

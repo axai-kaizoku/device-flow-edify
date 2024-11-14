@@ -1,9 +1,7 @@
-// extraDetails.tsx
-
 import React, { useState } from 'react';
-import { Address, getAddress } from '@/server/addressActions';
+import { getAddress } from '@/server/addressActions';
 import { fetchUsers, User } from '@/server/userActions';
-import { Dropdown } from '@/components/dropdown/dropdown';
+import { Dropdown } from '@/components/dropdown/Dropdown';
 import ApiDropdown from '@/components/dropdown/api-dropdown';
 import {
 	ExtraDetails as ExtraDetailsInterface,
@@ -21,17 +19,11 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 	setData,
 	errors,
 }) => {
-	const [assignedOptions, setAssignedOptions] = useState<string[]>([]);
-	const [locationsOptions, setLocationsOptions] = useState<string[]>([]);
-	const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
 	const [formData, setFormData] = useState<ExtraDetailsInterface>(
 		data || {
 			brand: '',
-			assignedTo: '',
-			officeLocation: {
-				name: '',
-				value: ''
-			},
+			assignedTo: { name: '', value: '' },
+			officeLocation: { name: '', value: '' },
 			purchaseOrder: '',
 			purchaseValue: 0,
 			ownership: '',
@@ -52,7 +44,7 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 	};
 
 	const handleApiChange =
-		(field: string) =>
+		(field: 'assignedTo' | 'officeLocation' | 'ownership') =>
 		(e: React.ChangeEvent<HTMLSelectElement>) => {
 			const selectedOption = e.target.options[e.target.selectedIndex];
 			setFormData((prev) => ({
@@ -62,6 +54,13 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 					value: e.target.value,
 				},
 			}));
+			setData({
+				...formData,
+				[field]: {
+					name: selectedOption.text,
+					value: e.target.value,
+				},
+			});
 		};
 
 	const handleOwnershipChange = (value: string) => {
@@ -74,31 +73,31 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 			ownership: value,
 		});
 	};
-
-	const fetchAPIs = async () => {
-		try {
-			const [assignedUsers, officeLocations]: [User[], Address[]] =
-				await Promise.all([fetchUsers(), getAddress()]);
-
-			const assignedUserNames = assignedUsers.map((user) => user.email);
-			const locationNames: string[] = officeLocations
-				.map((address) => address.city)
-				.filter((city): city is string => city !== undefined);
-
-			setAssignedOptions(assignedUserNames);
-			setLocationsOptions(locationNames);
-		} catch (error) {
-			console.error('Failed to fetch data:', error);
-		}
+	const handleClearForm = () => {
+		setFormData({
+			brand: '',
+			assignedTo: {
+				name: '',
+				value: '',
+			},
+			officeLocation: {
+				name: '',
+				value: '',
+			},
+			purchaseOrder: '',
+			purchaseValue: 0,
+			ownership: '',
+			image: '',
+		});
+		setData({});
 	};
-
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
 			const file = e.target.files[0];
 			const imageUrl = URL.createObjectURL(file);
 			setFormData((prevData) => ({
 				...prevData,
-				image: imageUrl, // Store the selected file
+				image: imageUrl,
 			}));
 			setData({
 				...formData,
@@ -106,18 +105,12 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 			});
 		}
 	};
-
-	const handleNameFocus = () => {
-		if (!isDropdownActive) {
-			setIsDropdownActive(true);
-			fetchAPIs(); // Invoke the function
-		}
-	};
-
+	const ownershipValue = ['Rent', 'Not work', 'Rented', 'Lost'];
 	return (
 		<div className="flex flex-col w-full">
 			<h1 className="text-xl py-4">Extra Details</h1>
 			<div className="flex flex-wrap gap-4">
+				{/* Brand */}
 				<div className="flex flex-col w-72">
 					<label>Brand</label>
 					<input
@@ -131,38 +124,58 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 						<p className="text-red-500 text-sm">{errors.brand}</p>
 					)}
 				</div>
+
+				{/* Assigned To */}
 				<div className="flex flex-col w-72">
 					<label>Assigned to</label>
-
-					<ApiDropdown
-						fetching={fetchUsers}
-						name="userId"
-						resName="first_name"
-						value={formData.assignedTo.value}
-						onChange={handleApiChange('assignedTo')}
-						placeholder="Select a User to Assign"
-					/>
-					
+					{formData.assignedTo.value ? (
+						<input
+							name="assignedTo"
+							value={formData.assignedTo.name}
+							disabled
+							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
+						/>
+					) : (
+						<ApiDropdown
+							fetching={fetchUsers}
+							name="userId"
+							resName="first_name"
+							value={formData.assignedTo.value}
+							onChange={handleApiChange('assignedTo')}
+							placeholder="Select a User to Assign"
+						/>
+					)}
+					{errors?.assignedTo && (
+						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
+					)}
 				</div>
 
-
+				{/* Office Location */}
 				<div className="flex flex-col w-72">
 					<label>Office Location</label>
-
-					<ApiDropdown
-						fetching={getAddress}
-						name="addressId"
-						resName="city"
-						value={formData.officeLocation.value}
-						onChange={handleApiChange('officeLocation')}
-						placeholder="Select a Location"
-					/>
-
-					{errors?.assignedTo && (
+					{formData.officeLocation.value ? (
+						<input
+							name="officeLocation"
+							value={formData.officeLocation.name}
+							disabled
+							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
+						/>
+					) : (
+						<ApiDropdown
+							fetching={getAddress}
+							name="addressId"
+							resName="city"
+							value={formData.officeLocation.value}
+							onChange={handleApiChange('officeLocation')}
+							placeholder="Select a Location"
+						/>
+					)}
+					{errors?.officeLocation && (
 						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
 					)}
-				
 				</div>
+
+				{/* Purchase Order */}
 				<div className="flex flex-col w-72">
 					<label>Purchase Order</label>
 					<input
@@ -176,6 +189,8 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 						<p className="text-red-500 text-sm">{errors.purchaseOrder}</p>
 					)}
 				</div>
+
+				{/* Purchase Value */}
 				<div className="flex flex-col w-72">
 					<label>Purchase Value</label>
 					<input
@@ -189,17 +204,25 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 						<p className="text-red-500 text-sm">{errors.purchaseValue}</p>
 					)}
 				</div>
+
+				{/* Ownership */}
 				<div className="flex flex-col w-72">
 					<label>Ownership</label>
-					<Dropdown
-						items={['Rent', 'Not work', 'Rented', 'Lost']}
-						onSelect={handleOwnershipChange}
-					/>
+					{formData.ownership ? (
+						<input
+							name="ownership"
+							value={formData.ownership}
+							disabled
+							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
+						/>
+					) : (
+						<Dropdown items={ownershipValue} onSelect={handleOwnershipChange} />
+					)}
 					{errors?.ownership && (
 						<p className="text-red-500 text-sm">{errors.ownership}</p>
 					)}
 				</div>
-				{/* New image upload field */}
+				{/* Image Upload */}
 				<div className="flex flex-col w-72">
 					<label>Upload Image</label>
 					<input
@@ -210,6 +233,14 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 					{errors?.image && (
 						<p className="text-red-500 text-sm">{errors.image}</p>
 					)}
+				</div>
+				{/* Clear Form Button */}
+				<div className="flex justify-end w-full mt-4">
+					<button
+						onClick={handleClearForm}
+						className="bg-red-500 text-white px-4 py-2 rounded-lg">
+						Clear Form
+					</button>
 				</div>
 			</div>
 		</div>

@@ -33,14 +33,14 @@ export type Device = {
 	image?: string;
 	createdAt?: string;
 	updatedAt?: string;
-	payable: number
+	payable: number;
 };
 export type getAllDevicesProp = Device[];
 export type DeviceResponse = {
 	devices: Device[]; // Changed from 'devices' to 'documents'
 	totalPages: number;
 	currentPage: number;
-	totalDocuments: number;
+	totalCount: number;
 	pageSize: number;
 	documentCount: number;
 	currentDocumentCount: number;

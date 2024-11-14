@@ -3,7 +3,7 @@
 'use client';
 
 import { Icon } from '@/components/wind/Icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DeviceType from './deviceType';
 
 import { createDevices, Device } from '@/server/deviceActions';
@@ -18,6 +18,7 @@ import {
 	AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
 	ExtraDetails as ExtraDetailsInterface,
 } from './_components/types';
+import Spinner from '@/components/Spinner';
 type FormProps = {
 	closeBtn: () => void; // Define the type for closeBtn
 };
@@ -25,6 +26,7 @@ type FormProps = {
 function Form({ closeBtn }: FormProps) {
 	const [step, setStep] = useState<number>(1);
 	const [errors, setErrors] = useState<FormErrors>({});
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
 	const [formData, setFormData] = useState<FormData>({
@@ -46,12 +48,12 @@ function Form({ closeBtn }: FormProps) {
 		extraDetails: {
 			brand: '',
 			assignedTo: {
-				name:'',
-				value:''
+				name: '',
+				value: '',
 			},
 			officeLocation: {
-				name:'',
-				value:''
+				name: '',
+				value: '',
 			},
 			purchaseOrder: '',
 			purchaseValue: 0,
@@ -84,7 +86,9 @@ function Form({ closeBtn }: FormProps) {
 				break;
 			case 2:
 				const basic = formData.basicDetails;
-				if (!basic.os) currentErrors.os = 'Operating System is required.';
+				if (!basic.os && formData.deviceType === 'laptop') {
+					currentErrors.os = 'Operating System is required.';
+				}
 				if (!basic.model) currentErrors.model = 'Model is required.';
 				if (!basic.processor)
 					currentErrors.processor = 'Processor is required.';
@@ -124,7 +128,6 @@ function Form({ closeBtn }: FormProps) {
 		}
 
 		setErrors(currentErrors);
-
 		return Object.keys(currentErrors).length === 0;
 	};
 
@@ -140,6 +143,7 @@ function Form({ closeBtn }: FormProps) {
 
 	const handleSubmit = async () => {
 		if (validate()) {
+			setIsLoading(true);
 			try {
 				const deviceDetails: Device = {
 					device_type: formData.deviceType,
@@ -160,7 +164,7 @@ function Form({ closeBtn }: FormProps) {
 					ownership: formData.extraDetails.ownership,
 					purchase_value: formData.extraDetails.purchaseValue,
 					asset_serial_no: 'Asset serial no', // Consider making this dynamic if needed
-					addressId: formData.extraDetails.officeLocation.value
+					addressId: formData.extraDetails.officeLocation.value,
 				};
 				console.log(formData.extraDetails);
 				const response = await createDevices(deviceDetails);
@@ -169,6 +173,7 @@ function Form({ closeBtn }: FormProps) {
 				router.refresh();
 			} catch (error) {
 				console.error('Error submitting form:', error);
+				setIsLoading(false);
 				// Optionally, handle the error and display a message to the user
 			}
 		}
@@ -194,6 +199,7 @@ function Form({ closeBtn }: FormProps) {
 			)}
 			{step === 2 && (
 				<BasicDetails
+					deviceType={formData.deviceType}
 					data={formData.basicDetails}
 					setData={(data: Partial<BasicDetailsInterface>) =>
 						updateFormData('basicDetails', data)
@@ -221,33 +227,46 @@ function Form({ closeBtn }: FormProps) {
 			)}
 
 			{/* Navigation buttons */}
+
 			<div className="flex gap-3 w-full">
-				{/* Back button - only show if not on the first step */}
 				{step > 1 && (
 					<button
 						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handlePrevStep}>
-						<Icon type="OutlinedArrowLeft" color="white" />
+						onClick={handlePrevStep}
+						disabled={isLoading}>
+						{isLoading ? (
+							<Spinner />
+						) : (
+							<Icon type="OutlinedArrowLeft" color="white" />
+						)}
 						Back
 					</button>
 				)}
-
-				{/* Conditionally render Next/Submit button based on the current step */}
 				{step < 4 ? (
 					<button
 						type="button"
 						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handleNextStep}>
+						onClick={handleNextStep}
+						disabled={isLoading}>
+						{isLoading ? (
+							<Spinner />
+						) : (
+							<Icon type="OutlinedArrowRight" color="white" />
+						)}
 						Next
-						<Icon type="OutlinedArrowRight" color="white" />
 					</button>
 				) : (
 					<button
 						type="button"
 						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handleSubmit}>
+						onClick={handleSubmit}
+						disabled={isLoading}>
+						{isLoading ? (
+							<Spinner />
+						) : (
+							<Icon type="OutlinedSuccess" color="white" />
+						)}
 						Submit
-						<Icon type="OutlinedSuccess" color="white" />
 					</button>
 				)}
 			</div>

@@ -12,12 +12,14 @@ interface BasicDetailsProps {
 	data: BasicDetailsInterface;
 	setData: (data: Partial<BasicDetailsInterface>) => void;
 	errors: FormErrors;
+	deviceType: string;
 }
 
 const BasicDetails: React.FC<BasicDetailsProps> = ({
 	data,
 	setData,
 	errors,
+	deviceType,
 }) => {
 	const [selectedOS, setSelectedOS] = useState<string | null>(data.os || '');
 	const [formData, setFormData] = useState<BasicDetailsInterface>(data);
@@ -97,29 +99,35 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
 			<p className="text-lg py-2">Operating System</p>
 
 			<div className="flex flex-wrap mb-7 gap-4">
-				{operatingSystems.map((os) => (
-					<div
-						key={os.id}
-						className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
-							selectedOS === os.id ? 'border-black' : 'border-gray-300'
-						}`}
-						onClick={() => handleSelectOS(os.id)}>
-						<input
-							type="radio"
-							id={os.id}
-							checked={selectedOS === os.id}
-							onChange={() => handleSelectOS(os.id)}
-							className="mr-3 h-4 w-4 mt-1 accent-black"
-						/>
-						<label htmlFor={os.id} className="flex flex-col">
-							<p className="flex items-center font-medium gap-2">
-								{os.icon}
-								{os.name}
-							</p>
-							<span className="text-sm text-gray-500">{os.description}</span>
-						</label>
-					</div>
-				))}
+				{deviceType === 'laptop' && // Only show OS selection for laptops
+					operatingSystems.map((os) => (
+						<div
+							key={os.id}
+							className={`px-4 py-6 flex items-start border rounded-lg w-80 cursor-pointer ${
+								selectedOS === os.id ? 'border-black' : 'border-gray-300'
+							}`}
+							onClick={() => handleSelectOS(os.id)}>
+							<input
+								type="radio"
+								id={os.id}
+								checked={selectedOS === os.id}
+								onChange={() => handleSelectOS(os.id)}
+								className="mr-3 h-4 w-4 mt-1 accent-black"
+							/>
+							<label htmlFor={os.id} className="flex flex-col">
+								<p className="flex items-center font-medium gap-2">
+									{os.icon}
+									{os.name}
+								</p>
+								<span className="text-sm text-gray-500">{os.description}</span>
+							</label>
+						</div>
+					))}
+				{deviceType !== 'laptop' && ( // Disable OS selection for non-laptops
+					<p className="text-sm text-gray-500">
+						Operating System selection is disabled for this device type.
+					</p>
+				)}
 			</div>
 			{errors?.os && <p className="text-red-500 text-sm">{errors.os}</p>}
 
@@ -179,7 +187,6 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
 					</div>
 					<div className="flex flex-col">
 						<label>Device Name</label>
-						{/* Trigger fetch when focused */}
 						<input
 							type="text"
 							name="device_name"
@@ -191,7 +198,6 @@ const BasicDetails: React.FC<BasicDetailsProps> = ({
 						{errors?.device_name && (
 							<p className="text-red-500 text-sm">{errors.device_name}</p>
 						)}
-
 					</div>
 				</div>
 			</div>

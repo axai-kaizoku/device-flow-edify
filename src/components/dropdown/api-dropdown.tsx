@@ -25,10 +25,9 @@ export default function ApiDropdown({
 	const [isApiDropdownActive, setIsApiDropdownActive] = useState(false);
 
 	useEffect(() => {
-		if (isApiDropdownActive) {
+		if (isApiDropdownActive && apiOptions.length === 0) {
 			fetchApi();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isApiDropdownActive]);
 
 	const fetchApi = async () => {
@@ -56,7 +55,7 @@ export default function ApiDropdown({
 				name={name}
 				value={value}
 				onChange={onChange}
-				onFocus={handleApiNameFocus}
+				onFocus={() => setIsApiDropdownActive(true)}
 				className="focus:outline-none px-2 w-full py-2 rounded-lg border border-gray-200">
 				<option value="">{placeholder}</option>
 				{apiOptions.map((option) => (

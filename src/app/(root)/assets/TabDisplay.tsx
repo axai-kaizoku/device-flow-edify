@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import AddDevices from './_components/addDevices/AddDevices';
 import Inventory from './_components/inventory/Inventory';
 import { Tab } from './_components/Tab';
-import { Device, updateDevice } from '@/server/deviceActions';
+import { Device } from '@/server/deviceActions';
 import { useQueryState } from 'nuqs';
 
 interface TabDisplayProps {
@@ -48,7 +48,7 @@ function TabDisplay({
 	const assignedDevices = devices.filter(
 		(device) => device.userName !== '' && device.userId,
 	);
-
+	console.log(assignedDevices.length);
 	const invenotryDevices = devices.filter(
 		(device) => device?.userName?.trim() === '' && !device.userId,
 	);
@@ -88,51 +88,6 @@ function TabDisplay({
 			</div>
 
 			<div className="mt-4">{renderContent()}</div>
-
-			{/* Pagination Controls */}
-			<div className="flex justify-between mt-6 gap-4">
-				<div className="flex gap-4">
-					{/* Show this button only if currentPage is not 1 */}
-					{currentPage !== 1 && (
-						<button
-							onClick={() => handlePageChange(1)}
-							className="px-4 py-2 rounded bg-gray-200">
-							Load 20
-						</button>
-					)}
-
-					{/* Show this button only if there's enough data for next page */}
-					{!isNextDisabled && currentPage === 1 && (
-						<button
-							onClick={() => handlePageChange(2)}
-							className="px-4 py-2 rounded bg-gray-200">
-							Load 100
-						</button>
-					)}
-
-					{!isNextDisabled && currentPage === 2 && (
-						<button
-							onClick={() => handlePageChange(3)}
-							className="px-4 py-2 rounded bg-gray-200">
-							Load 500
-						</button>
-					)}
-				</div>
-
-				{/* Show "Load More" only if there are more pages */}
-				{!isNextDisabled && currentPage < totalPages && (
-					<button
-						onClick={() => handlePageChange(currentPage + 1)}
-						className="px-4 py-2 rounded bg-gray-200">
-						Load More
-					</button>
-				)}
-			</div>
-
-			{/* Display Current Page */}
-			<div className="flex justify-center mt-2 text-gray-600">
-				Page {currentPage}
-			</div>
 		</>
 	);
 }

@@ -14,7 +14,7 @@ interface AddDevicesProps {
 
 function AddDevices({ devices, totalDocuments }: AddDevicesProps) {
 	const [searchTerm, setSearchTerm] = useState('');
-
+	console.log(devices);
 	return (
 		<div className="flex flex-col gap-12">
 			<DevicesHeader
