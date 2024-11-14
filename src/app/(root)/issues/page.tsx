@@ -28,7 +28,10 @@ async function Issues({ searchParams }: IssueProps) {
 		return (
 			<CombinedContainer title="Issues">
 				<div className="text-red-500">
-					Failed to load data. Please try again later.
+					Failed to load data. Please try again later. <br />{' '}
+					<a href="/" className="underline text-blue-500">
+						Back to home
+					</a>
 				</div>
 			</CombinedContainer>
 		);

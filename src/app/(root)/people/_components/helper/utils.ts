@@ -22,13 +22,8 @@ export const bulkUploadKeys = [
 	'email',
 	'password',
 	'phone',
-	'reporting_manager',
 	'employment_type',
-	'about',
-	'interests_and_hobbies',
 	'date_of_birth',
 	'gender',
-	'marital_status',
-	'physically_handicapped',
 	'onboarding_date',
 ];

@@ -17,7 +17,6 @@ export async function middleware(req: NextRequest) {
 	const adminRoutes = [
 		'/assets',
 		'/assets/(.*)',
-
 		'/settings',
 		'/onboarding',
 		'/store',

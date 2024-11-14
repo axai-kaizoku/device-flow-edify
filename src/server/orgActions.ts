@@ -5,6 +5,7 @@ import { callAPIWithToken, getSession } from './helper';
 type OfficeAddress = {
 	_id: string;
 	city: string;
+	isPrimary: boolean;
 	deviceId: string;
 	orgId: string;
 };
@@ -41,7 +42,7 @@ export type Org = {
 	email?: string;
 	office_address?: OfficeAddress[];
 	total_devices?: number;
-	total_employees?: number;
+	total_users?: number;
 	upcoming_joinee?: Joinee[];
 };
 

@@ -197,7 +197,7 @@ export default function UserTable({ users }: { users: User[] }) {
 				className="w-full"
 				columns={[
 					{ title: 'User', dataIndex: 'first_name' },
-					{ title: 'Role', dataIndex: 'designation' },
+					{ title: 'Designation', dataIndex: 'designation' },
 					{
 						title: 'Joining Date',
 						render: (data) => (

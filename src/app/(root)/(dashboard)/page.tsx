@@ -6,6 +6,7 @@ export default async function Dashboard() {
 	const sess = await getSession();
 	return (
 		<>
+			{/* {JSON.stringify(sess, null, 2)} */}
 			{sess?.user.email === 'aniket.prakash@winuall.com' ? (
 				<AdminDashboard />
 			) : (

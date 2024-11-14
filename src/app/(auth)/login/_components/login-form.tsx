@@ -88,14 +88,15 @@ export default function LoginForm() {
 				<Link href="/login/forgot-password">Forgot Password?</Link>
 			</div>
 			<div className="w-full pointer-events-none" />
-			<div
+			<button
+				disabled
 				onClick={() =>
 					signIn('google', {
 						callbackUrl: 'http://localhost:3000',
 						redirect: true,
 					})
 				}
-				className="gap-12 cursor-pointer ring-2 ring-muted outline-none h-12 flex items-center px-5 justify-center rounded">
+				className="gap-12 cursor-default opacity-0 ring-2 ring-muted outline-none h-12 flex items-center px-5 justify-center rounded">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="19"
@@ -141,7 +142,7 @@ export default function LoginForm() {
 				<h1 className="text-sm text-[#616161] dark:text-white">
 					Sign up with Google
 				</h1>
-			</div>
+			</button>
 		</form>
 	);
 }

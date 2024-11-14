@@ -26,7 +26,10 @@ export default async function Teams() {
 		return (
 			<CombinedContainer title="Teams">
 				<div className="text-red-500 dark:text-red-400">
-					Failed to load data. Please try again later.
+					Failed to load data. Please try again later. <br />{' '}
+					<a href="/" className="underline text-blue-500">
+						Back to home
+					</a>
 				</div>
 			</CombinedContainer>
 		);

@@ -1,7 +1,7 @@
 'use client';
 import { addItemToCart } from '@/server/cartActions';
 import { Device } from '@/server/deviceActions';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -42,9 +42,6 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 							<strong>Operating System:</strong> {data.os}
 						</li>
 						<li>
-							<strong>Purchase Value:</strong> ${data.purchase_value}
-						</li>
-						<li>
 							<strong>Warranty Status:</strong>{' '}
 							<span
 								className={
@@ -57,8 +54,18 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 						</li>
 					</ul>
 
-					{/* Action Buttons */}
-					<div className="flex gap-4 mt-6">
+					{/* Pricing Section */}
+					<div className="mt-4">
+						<span className="text-gray-500 line-through text-lg mr-2">
+							${data.purchase_value}
+						</span>
+						<span className="text-xl font-semibold text-blue-600 dark:text-blue-400">
+							${data.payable}
+						</span>
+					</div>
+
+					{/* Action Button */}
+					<div className="mt-6">
 						<button
 							onClick={async () => {
 								await addItemToCart(data._id, 1);
@@ -68,15 +75,11 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 							<ShoppingCart className="mr-2 w-5 h-5" />
 							Add to Cart
 						</button>
-
-						<button className="flex items-center justify-center bg-gray-200 text-gray-700 py-3 px-6 rounded-lg shadow-lg hover:bg-gray-300 transition duration-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
-							<Heart className="mr-2 w-5 h-5" />
-							Favorite
-						</button>
 					</div>
 				</div>
 			</div>
 
+			{/* Device Creation Date */}
 			<div className="mt-12">
 				<p className="text-gray-500 dark:text-gray-400">
 					Device added on: {new Date(data.createdAt!).toLocaleDateString()}

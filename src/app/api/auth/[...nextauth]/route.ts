@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { NextAuthOptions, User } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -35,58 +35,67 @@ export const authOptions: NextAuthOptions = {
 				}
 			},
 		}),
+
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID ?? '',
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+			async profile(profile, tokens) {
+				console.log('profile google', profile);
+				console.log('tokens google', tokens);
+
+				const res = await fetch(
+					'https://api.edify.club/edifybackend/v1/auth/login',
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							email: profile.email,
+						}),
+					},
+				);
+
+				const data = await res.json();
+				console.log('google api data', data);
+
+				const returnData = {
+					id: profile.sub,
+					user: data.user,
+				};
+
+				if (res.status === 200) {
+					return returnData as User;
+				} else {
+					console.log(data.message);
+					throw new Error(data.message || 'Login failed');
+				}
+			},
 		}),
 	],
 	callbacks: {
-		async signIn(params) {
-			console.log(params);
-			// if (params.account?.provider === 'google') {
-			// 	const res = await fetch(
-			// 		'https://api.edify.club/edifybackend/v1/auth/login',
-			// 		{
-			// 			method: 'POST',
-			// 			headers: {
-			// 				'Content-Type': 'application/json',
-			// 			},
-			// 			body: JSON.stringify({
-			// 				email: params.user.email,
-			// 			}),
-			// 		},
-			// 	);
-
-			// 	const data = await res.json();
-			// 	// console.log(data);
-			// 	if (res.status === 200) {
-			// 		return true;
-			// 	} else {
-			// 		console.error(data.message);
-			// 		return false; // Reject the sign-in
-			// 	}
-			// }
-			return true; // Default for other providers
-		},
-
 		async jwt({ token, user }) {
-			// console.log(token, 'jwt token');
-			// console.log(user, 'jwt user');
+			// console.log('jwt token:', token);
+			// console.log('jwt user:', user);
+
 			if (user) {
 				token.token = user.token;
-				token.id = user.id ? user.id : user.user._id;
-				token.email = user.email ? user.email : user.user.email;
-				token.first_name = user.name ? '' : user.user.first_name;
-				token.last_name = user.name ? '' : user.user.last_name;
-				token.orgId = user.image ? '' : user.user.orgId._id;
+				token.id = user.user._id; // Ensure you're correctly referencing the user object
+				token.email = user.user.email;
+				token.first_name = user.user.first_name;
+				token.last_name = user.user.last_name;
+				token.orgId = user.user.orgId._id; // Ensure orgId is available
 				token.role = user.user.role;
 			}
+
+			// console.log('jwt token only:', token);
 			return token;
 		},
 
 		async session({ session, token }) {
-			// console.log(token, 'session token');
-			// console.log(session, 'session session');
+			// console.log('session token:', token);
+			// console.log('session session:', session);
+
 			if (token.token) {
 				session.user.token = token.token;
 				session.user.email = token.email;
@@ -96,6 +105,8 @@ export const authOptions: NextAuthOptions = {
 				session.user.orgId = token.orgId;
 				session.user.role = token.role;
 			}
+
+			// console.log('session only:', session);
 			return session;
 		},
 	},

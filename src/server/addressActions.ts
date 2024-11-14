@@ -22,7 +22,10 @@ export async function getAddress(): Promise<Address[]> {
 	}
 }
 
-export async function createAddress(city: string): Promise<Address> {
+export async function createAddress(
+	city: string,
+	isPrimary: boolean,
+): Promise<Address> {
 	try {
 		const sess = await getSession();
 
@@ -33,6 +36,7 @@ export async function createAddress(city: string): Promise<Address> {
 				userId: sess?.user.id,
 				orgId: sess?.user.orgId,
 				city,
+				isPrimary,
 			},
 		);
 
@@ -45,12 +49,13 @@ export async function createAddress(city: string): Promise<Address> {
 export async function updateAddress(
 	id: string,
 	city: string,
+	isPrimary: boolean,
 ): Promise<Address> {
 	try {
 		const res = await callAPIWithToken<Address>(
 			`https://api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
 			'PUT', // HTTP method
-			{ city },
+			{ city, isPrimary },
 		);
 		console.log(res);
 		return res.data;

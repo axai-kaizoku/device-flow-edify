@@ -13,21 +13,18 @@ export const metadata: Metadata = {
 	description: 'A better way to manage assets in orgs',
 };
 
-
-
 export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-
 	const session = await getSession();
-  	const userRole : number | undefined= session?.user.role;
+	const userRole: number | undefined = session?.user.role;
 
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<KbarWrapper userRole={userRole}/> {/* Render KbarWrapper here */}
+				<KbarWrapper userRole={userRole} /> {/* Render KbarWrapper here */}
 				<Providers>
 					<ScreenSize />
 					{children}

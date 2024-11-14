@@ -39,7 +39,9 @@ export default async function TeamPage({ params }: TeamPageProps) {
 							<span className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
 								{data.title}
 							</span>
-							<span className="text-gray-500 dark:text-gray-400">{data.description}</span>
+							<span className="text-gray-500 dark:text-gray-400">
+								{data.description}
+							</span>
 						</div>
 					</div>
 					{sess?.user.role === 2 && (
@@ -84,7 +86,10 @@ export default async function TeamPage({ params }: TeamPageProps) {
 		return (
 			<CombinedContainer title="Teams">
 				<div className="text-red-500 dark:text-red-400">
-					Failed to load data. Please try again later.
+					Failed to load data. Please try again later. <br />{' '}
+					<a href="/" className="underline text-blue-500">
+						Back to home
+					</a>
 				</div>
 			</CombinedContainer>
 		);
