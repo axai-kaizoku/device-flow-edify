@@ -50,7 +50,7 @@ export default async function Checkout() {
 									</p>
 									<p className="text-gray-500 dark:text-gray-400">
 										Quantity: {item.quantity} | Price: ₹
-										{item.payable.toLocaleString()}
+										{(item.payable * item.quantity).toLocaleString()}
 									</p>
 								</div>
 							))}

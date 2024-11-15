@@ -101,6 +101,7 @@ export async function filterDevice({
 			page_length: pageLength,
 		};
 
+		console.log(payload)
 		// Construct the URL with an optional search query
 		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
 			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
