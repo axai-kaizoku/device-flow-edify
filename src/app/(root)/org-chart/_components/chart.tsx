@@ -6,64 +6,64 @@ import { renderCustomNodeElement } from './RenderNode';
 import { Employee } from './data';
 
 export default function OrgChart({ orgData }: { orgData: Employee }) {
-    const [translate, setTranslate] = useState({ x: 0, y: 0 });
-    const [data, setData] = useState(mapEmployeeToRawNodeDatum(orgData));
+	const [translate, setTranslate] = useState({ x: 0, y: 0 });
+	const [data, setData] = useState(mapEmployeeToRawNodeDatum(orgData));
 
-    useEffect(() => {
-        const dimensions = document
-            .getElementById('treeWrapper')
-            ?.getBoundingClientRect();
-        if (dimensions) {
-            setTranslate({ x: dimensions.width / 2, y: 100 });
-        }
-    }, []);
+	useEffect(() => {
+		const dimensions = document
+			.getElementById('treeWrapper')
+			?.getBoundingClientRect();
+		if (dimensions) {
+			setTranslate({ x: dimensions.width / 2, y: 100 });
+		}
+	}, []);
 
-    const handleNodeClick = (nodeDatum: any) => {
-        const updatedData = JSON.parse(JSON.stringify(data)); // Deep clone the data
+	const handleNodeClick = (nodeDatum: any) => {
+		const updatedData = JSON.parse(JSON.stringify(data)); // Deep clone the data
 
-        const toggleNode = (node: any) => {
-            if (node.name === nodeDatum.name) {
-                if (node.children) {
-                    node.children = undefined;
-                } else {
-                    const originalNode = findOriginalNode(orgData, node.name);
-                    if (originalNode) {
-                        node.children = originalNode.children
-                            ? originalNode.children.map(mapEmployeeToRawNodeDatum)
-                            : [];
-                    }
-                }
-            }
-            node.children?.forEach(toggleNode);
-        };
+		const toggleNode = (node: any) => {
+			if (node.name === nodeDatum.name) {
+				if (node.children) {
+					node.children = undefined;
+				} else {
+					const originalNode = findOriginalNode(orgData, node.name);
+					if (originalNode) {
+						node.children = originalNode.children
+							? originalNode.children.map(mapEmployeeToRawNodeDatum)
+							: [];
+					}
+				}
+			}
+			node.children?.forEach(toggleNode);
+		};
 
-        toggleNode(updatedData);
-        setData(updatedData);
-    };
+		toggleNode(updatedData);
+		setData(updatedData);
+	};
 
-    return (
-        <div
-            id="treeWrapper"
-            className="w-full h-screen p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors">
-            <Tree
-                data={data}
-                translate={translate}
-                orientation="vertical"
-                collapsible={false}
-                pathFunc="diagonal"
-                enableLegacyTransitions={true}
-                transitionDuration={300}
-                renderCustomNodeElement={(rd3tProps) =>
-                    renderCustomNodeElement({
-                        ...rd3tProps,
-                        toggleNode: () => handleNodeClick(rd3tProps.nodeDatum),
-                        orgData,
-                    })
-                }
-                separation={{ siblings: 1, nonSiblings: 1 }}
-                zoomable={true}
-                scaleExtent={{ min: 0.5, max: 2 }}
-            />
-        </div>
-    );
+	return (
+		<div
+			id="treeWrapper"
+			className="w-full h-screen p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors">
+			<Tree
+				data={data}
+				translate={translate}
+				orientation="vertical"
+				collapsible={false}
+				pathFunc="step"
+				enableLegacyTransitions={true}
+				transitionDuration={300}
+				renderCustomNodeElement={(rd3tProps) =>
+					renderCustomNodeElement({
+						...rd3tProps,
+						toggleNode: () => handleNodeClick(rd3tProps.nodeDatum),
+						orgData,
+					})
+				}
+				separation={{ siblings: 1, nonSiblings: 1 }}
+				zoomable={true}
+				scaleExtent={{ min: 0.5, max: 2 }}
+			/>
+		</div>
+	);
 }

@@ -1,6 +1,5 @@
 'use client';
-import { useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+
 import AddDevices from './_components/addDevices/AddDevices';
 import Inventory from './_components/inventory/Inventory';
 import { Tab } from './_components/Tab';
@@ -27,44 +26,13 @@ function TabDisplay({
 	const [activeTab, setActiveTab] = useQueryState('tab', {
 		defaultValue: 'devices',
 	});
-	const router = useRouter();
-	const searchParams = useSearchParams();
-
-	// Check if there's less data or if we're on the last page
-	const isNextDisabled =
-		currentDocumentCount < pageSize || currentPage >= totalPages;
-
-	const handlePageChange = useCallback(
-		(page: number) => {
-			if (page > currentPage && isNextDisabled) return;
-
-			const params = new URLSearchParams(searchParams.toString());
-			params.set('page', page.toString());
-			router.push(`/assets?${params.toString()}`);
-		},
-		[router, searchParams, currentPage, isNextDisabled],
-	);
-
-	const assignedDevices = devices.filter(
-		(device) => device.userName !== '' && device.userId,
-	);
-	console.log(assignedDevices.length);
-	const invenotryDevices = devices.filter(
-		(device) => device?.userName?.trim() === '' && !device.userId,
-	);
-	console.log(devices);
 
 	const renderContent = () => {
 		switch (activeTab) {
 			case 'devices':
-				return (
-					<AddDevices
-						devices={assignedDevices}
-						totalDocuments={totalDocuments}
-					/>
-				);
+				return <AddDevices devices={devices} totalDocuments={totalDocuments} />;
 			case 'inventory':
-				return <Inventory devices={invenotryDevices} />;
+				return <Inventory devices={devices} />;
 			default:
 				return null;
 		}

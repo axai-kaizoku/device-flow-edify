@@ -34,7 +34,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 	]); // Store dynamic filter fields
 	const [availableOperators, setAvailableOperators] =
 		useState(generalOperators);
-
+	const assignedDevice = device.filter((device) => device.userId);
 	const handleSearchAndFilter = async () => {
 		// Combine search term and filters
 		const query = {
@@ -217,7 +217,7 @@ export default function DeviceTable({ data }: DeviceTableProps) {
 				</div>
 			)}
 			<Table
-				data={device}
+				data={assignedDevice}
 				columns={[
 					{
 						title: 'Device',
