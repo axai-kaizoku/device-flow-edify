@@ -129,13 +129,38 @@ export type newAllUserResponse = {
 export async function fetchUsers(): Promise<UserResponse> {
 	try {
 		const requestBody = {
-			fields: ['first_name'], // Specify fields to be fetched
+			fields: ['first_name', 'email'], // Specify fields to be fetched
 			filters: [], // You can add filters here as per requirement
-			page_length: 20, // Number of users to fetch per page
+			page_length: 10, // Number of users to fetch per page
 		};
 
 		const res = await callAPIWithToken<UserResponse>(
 			'https://api.edify.club/edifybackend/v1/user/filter',
+			'POST', // Changed to POST as the new API requires it
+			requestBody, // Pass the request body
+		);
+		console.log(res.data.users);
+
+		return res.data.users;
+	} catch (e) {
+		throw new Error('Failed to fetch users');
+	}
+}
+
+export async function searchUsers(searchQuery: string): Promise<UserResponse> {
+	try {
+		const requestBody = {
+			fields: ['first_name', 'email'], // Specify fields to be fetched
+			filters: [], // You can add filters here as per requirement
+			page_length: 10, // Number of users to fetch per page
+		};
+
+		const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		const res = await callAPIWithToken<UserResponse>(
+			apiUrl,
 			'POST', // Changed to POST as the new API requires it
 			requestBody, // Pass the request body
 		);

@@ -1,16 +1,19 @@
 import { CombinedContainer } from '@/components/container/container';
 import { SearchBarWithProfile } from '@/components/container/search-bar-with-profile';
+import { AdminMain } from './admin-main';
 
 export default function AdminDashboard() {
 	return (
 		<CombinedContainer title="Admin Dashboard">
 			<SearchBarWithProfile />
 			<div className="h-20" />
+			<AdminMain />
 			<div className="flex gap-8 flex-wrap">
 				{[...Array(8)].map((_, i) => (
 					<DashCard key={i} />
 				))}
 			</div>
+			
 		</CombinedContainer>
 	);
 }

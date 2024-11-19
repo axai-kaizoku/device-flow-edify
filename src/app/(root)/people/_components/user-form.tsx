@@ -1,9 +1,7 @@
-// @ts-nocheck
+// //@ts-nocheck
 'use client';
 
 import BulkUpload from '@/components/bulk-upload';
-import ApiDropdown from '@/components/dropdown/api-dropdown';
-import { SelectDropdown } from '@/components/dropdown/dropdown';
 import { Button } from '@/components/wind/Buttons';
 import { Form } from '@/components/wind/Form';
 import { Input } from '@/components/wind/Input';
@@ -14,6 +12,7 @@ import {
 	createUser,
 	CreateUserArgs,
 	fetchUsers,
+	searchUsers,
 	updateUser,
 	User,
 } from '@/server/userActions';
@@ -25,6 +24,8 @@ import {
 	employments,
 	genders,
 } from './helper/utils';
+import { SelectInput } from '../../(dashboard)/_components/select-input';
+import { SelectDropdown } from '@/components/dropdown/select-dropdown';
 
 interface UserFormProps {
 	closeBtn?: (state: boolean) => void;
@@ -47,7 +48,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 			: { name: '', value: '' },
 		reportM: userData?.reporting_manager
 			? {
-					name: userData.reporting_manager.first_name,
+					name: userData.reporting_manager.email,
 					value: userData.reporting_manager._id,
 			  }
 			: { name: '', value: '' },
@@ -93,18 +94,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 			}));
 		};
 
-	const handleApiChange =
-		(field: 'team' | 'reportM') =>
-		(e: React.ChangeEvent<HTMLSelectElement>) => {
-			const selectedOption = e.target.options[e.target.selectedIndex];
-			setFormData((prev) => ({
-				...prev,
-				[field]: {
-					name: selectedOption.text,
-					value: e.target.value,
-				},
-			}));
-		};
 
 	const handleSubmit = async () => {
 		// Validation before submitting
@@ -172,7 +161,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 				<Typography
 					variant="h3"
 					align="left"
-					className='dark:text-white'
+					className="dark:text-white"
 					style={{ width: '100%', padding: '0.8rem 0' }}>
 					{isEditForm ? 'Edit User' : 'Create a New User'}
 				</Typography>
@@ -270,19 +259,26 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 									<label className="text-sm font-semibold">
 										Reporting Manager
 									</label>
-									<ApiDropdown
-										fetching={fetchUsers}
-										name="reporting_manager"
-										resName="first_name"
-										value={formData.reportM.value}
-										onChange={handleApiChange('reportM')}
-										placeholder="Select Reporting Manager"
+									<SelectInput
+										value={formData.reportM.name || ''}
+										fetchOptions={searchUsers}
+										initialOptions={fetchUsers}
+										onSelect={(data: any) => {
+											setFormData((prev) => ({
+												...prev,
+												reportM: { name: data.email, value: data._id },
+											}));
+											console.log({ data });
+										}}
+										createOptionText="Create a new user"
+										createOptionUrl="/onboarding?tab=create_user"
 									/>
 								</div>
 							</div>
 							{error && <span className="w-full text-red-400">{error}</span>}
 							<div className="flex justify-end">
-								<Button className='dark:bg-blue-500 dark:hover:bg-blue-600'
+								<Button
+									className="dark:bg-blue-500 dark:hover:bg-blue-600"
 									onClick={() => {
 										if (!validateFormData()) {
 											setError('Please fill all required fields.');
@@ -308,13 +304,31 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 									/>
 								</div>
 								<div className="w-1/2">
-									<ApiDropdown
+									{/* <ApiDropdown
 										fetching={fetchTeams}
 										name="team"
 										resName="title"
 										value={formData.team.value}
 										onChange={handleApiChange('team')}
 										placeholder="Select Team"
+									/> */}
+									<SelectInput
+										value={formData.team.name || ''}
+										fetchOptions={async(query) => {
+											const data = await fetchTeams()
+											const filtered = data.filter((obj:any) => obj.title.toLowerCase().includes(query.toLowerCase()))
+											return filtered
+										}}
+										initialOptions={fetchTeams}
+										onSelect={(data: any) => {
+											setFormData((prev) => ({
+												...prev,
+												team: { name: data.title, value: data._id },
+											}));
+											console.log({ data });
+										}}
+										createOptionText="Create a new team"
+										createOptionUrl="/teams"
 									/>
 								</div>
 							</div>
@@ -355,7 +369,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 							</div>
 							{error && <span className="w-full text-red-400">{error}</span>}
 						</>
-					) : null}
+					) : (
+						<></>
+					)}
 				</Form>
 			</div>
 		</div>

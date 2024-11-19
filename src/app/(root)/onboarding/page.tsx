@@ -5,9 +5,12 @@ import { AddUser } from './add_employee/addEmployee';
 import { useState } from 'react';
 import { AddTeam } from './add_teams/addTeams';
 import { Tab } from '../assets/_components/Tab';
+import { useQueryState } from 'nuqs';
 
 export default function Onboarding() {
-	const [activeTab, setActiveTab] = useState('add_teams');
+	const [activeTab, setActiveTab] = useQueryState('tab', {
+		defaultValue: 'add_teams',
+	});
 
 	const renderContent = () => {
 		switch (activeTab) {

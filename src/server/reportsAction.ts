@@ -3,17 +3,16 @@ import { Device } from './deviceActions';
 // Get the Assigned Devices
 
 export type DeviceReport = {
-    devices: Device[]
-} 
-import { callAPIWithToken } from "./helper";
+	devices: Device[];
+};
+import { callAPIWithToken } from './helper';
 import { User } from './userActions';
 
-
 // Get the Assigned Devices
-export async function getDeviceReport(status:string): Promise<DeviceReport> {
+export async function getDeviceReport(status: string): Promise<DeviceReport> {
 	try {
 		const res = await callAPIWithToken<DeviceReport>(
-			`https://3ee0-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/user?status=${status}`,
+			`https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/user?status=${status}`,
 			'GET',
 		);
 
@@ -28,7 +27,7 @@ export async function getDeviceReport(status:string): Promise<DeviceReport> {
 export async function getSoldInventoryReport(): Promise<any> {
 	try {
 		const res = await callAPIWithToken<any>(
-			`https://3ee0-13-235-211-22.ngrok-free.app/edifybackend/v1/soldInventory/org`,
+			`https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/soldInventory/org`,
 			'GET',
 		);
 
@@ -39,57 +38,56 @@ export async function getSoldInventoryReport(): Promise<any> {
 	}
 }
 
-
 // Get the Users based on Date
 
-const usersFields =  [
-    "first_name",
-    "last_name",
-    "email",
-    "phone",
-    "password",
-    "teamId",
-    "orgId",
-    "role",
-    "designation",
-    "reporting_manager",
-    "employment_type",
-    "about",
-    "interests_and_hobbies",
-    "date_of_birth",
-    "image",
-    "gender",
-    "marital_status",
-    "physically_handicapped",
-    "deleted_at",
-    "onboarding_date",
-    "createdAt",
-    "updatedAt"
-]
+const usersFields = [
+	'first_name',
+	'last_name',
+	'email',
+	'phone',
+	'password',
+	'teamId',
+	'orgId',
+	'role',
+	'designation',
+	'reporting_manager',
+	'employment_type',
+	'about',
+	'interests_and_hobbies',
+	'date_of_birth',
+	'image',
+	'gender',
+	'marital_status',
+	'physically_handicapped',
+	'deleted_at',
+	'onboarding_date',
+	'createdAt',
+	'updatedAt',
+];
 
 const devicesFields = [
-	"device_name",
-    "device_type",
-    "os",
-    "brand",
-    "custom_model",
-    "asset_serial_no",
-    "ownership",
-    "processor",
-    "purchase_order",
-    "purchase_value",
-    "ram",
-    "serial_no",
-    "storage",
-    "warranty_expiary_date",
-    "device_purchase_date",
-    "payable",
-    "assigned_at",
-    "warranty_status"
-]
+	'device_name',
+	'device_type',
+	'os',
+	'brand',
+	'custom_model',
+	'asset_serial_no',
+	'ownership',
+	'processor',
+	'purchase_order',
+	'purchase_value',
+	'ram',
+	'serial_no',
+	'storage',
+	'warranty_expiary_date',
+	'device_purchase_date',
+	'payable',
+	'assigned_at',
+	'warranty_status',
+];
 
 export async function getUserReports({
-	filters=[],
+	filters = [],
 	fields = usersFields,
 	searchQuery = '',
 	pageLength = 20,
@@ -101,10 +99,10 @@ export async function getUserReports({
 			page_length: pageLength,
 		};
 
-		console.log("payload for user report -> ", payload)
+		console.log('payload for user report -> ', payload);
 
 		// Construct the URL with an optional search query
-		const apiUrl = `https://3ee0-13-235-211-22.ngrok-free.app/edifybackend/v1/user/filter${
+		const apiUrl = `https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/user/filter${
 			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
 		}`;
 
@@ -135,7 +133,7 @@ export async function getUserReports({
 
 // Get Assigned Devices
 export async function getAssignedDevicesReport({
-	filters=[],
+	filters = [],
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 1000,
@@ -147,10 +145,10 @@ export async function getAssignedDevicesReport({
 			page_length: pageLength,
 		};
 
-		console.log("payload for Device report -> ", payload)
+		console.log('payload for Device report -> ', payload);
 
 		// Construct the URL with an optional search query
-		const apiUrl = `https://3ee0-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/filter${
+		const apiUrl = `https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/filter${
 			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
 		}`;
 

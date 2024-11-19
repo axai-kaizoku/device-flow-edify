@@ -11,7 +11,8 @@ const Reports = () => {
 		},
 		{
 			title: 'Assigned Devices Report',
-			description: 'Get All the devices that are assigned based on Assigned Date',
+			description:
+				'Get All the devices that are assigned based on Assigned Date',
 		},
 		{
 			title: 'Devices Report',
@@ -36,7 +37,7 @@ const Reports = () => {
 			<div className="flex items-start justify-center min-h-screen">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6 max-w-6xl w-full">
 					{reportData.map((report, index) => (
-						<AllReports report={report} index={index}/>
+						<AllReports report={report} index={report.title} />
 					))}
 				</div>
 			</div>

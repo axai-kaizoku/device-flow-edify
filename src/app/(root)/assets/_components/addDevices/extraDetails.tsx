@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { getAddress } from '@/server/addressActions';
-import { fetchUsers, User } from '@/server/userActions';
-import { Dropdown } from '@/components/dropdown/Dropdown';
+import { fetchUsers, searchUsers, User } from '@/server/userActions';
+import { Dropdown } from '@/components/dropdown/select-dropdown';
 import ApiDropdown from '@/components/dropdown/api-dropdown';
 import {
 	ExtraDetails as ExtraDetailsInterface,
 	FormErrors,
 } from './_components/types';
+import { SelectInput } from '@/app/(root)/(dashboard)/_components/select-input';
 
 interface ExtraDetailsProps {
 	data: ExtraDetailsInterface;
@@ -128,7 +129,7 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 				{/* Assigned To */}
 				<div className="flex flex-col w-72">
 					<label>Assigned to</label>
-					{formData.assignedTo.value ? (
+					{/* {formData.assignedTo.value ? (
 						<input
 							name="assignedTo"
 							value={formData.assignedTo.name}
@@ -136,15 +137,30 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
 						/>
 					) : (
-						<ApiDropdown
-							fetching={fetchUsers}
-							name="userId"
-							resName="first_name"
-							value={formData.assignedTo.value}
-							onChange={handleApiChange('assignedTo')}
-							placeholder="Select a User to Assign"
-						/>
-					)}
+						 <ApiDropdown
+						 	fetching={fetchUsers}
+						 	name="userId"
+						 	resName="first_name"
+						 	value={formData.assignedTo.value}
+						 	onChange={handleApiChange('assignedTo')}
+						 	placeholder="Select a User to Assign"
+						 /> 
+						)}  */}
+						<SelectInput
+										value={formData.assignedTo.name || ''}
+										fetchOptions={searchUsers}
+										initialOptions={fetchUsers}
+										onSelect={(data: any) => {
+											setFormData((prev) => ({
+												...prev,
+												assignedTo: { name: data.email, value: data._id },
+											}));
+											console.log({ data });
+										}}
+										createOptionText="Create a new user"
+										createOptionUrl="/onboarding?tab=create_user"
+									/>
+					
 					{errors?.assignedTo && (
 						<p className="text-red-500 text-sm">{errors.assignedTo}</p>
 					)}
@@ -153,7 +169,7 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 				{/* Office Location */}
 				<div className="flex flex-col w-72">
 					<label>Office Location</label>
-					{formData.officeLocation.value ? (
+					{/* {formData.officeLocation.value ? (
 						<input
 							name="officeLocation"
 							value={formData.officeLocation.name}
@@ -169,7 +185,25 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 							onChange={handleApiChange('officeLocation')}
 							placeholder="Select a Location"
 						/>
-					)}
+					)} */}
+					<SelectInput
+										value={formData.officeLocation.name || ''}
+										fetchOptions={async(query) => {
+											const dat = await getAddress()
+											const filtered = dat.filter((obj:any) => obj.city.toLowerCase().includes(query.toLowerCase()))
+											return filtered
+										}}
+										initialOptions={getAddress}
+										onSelect={(data: any) => {
+											setFormData((prev) => ({
+												...prev,
+												officeLocation: { name: data.city, value: data._id },
+											}));
+											console.log({ data });
+										}}
+										createOptionText="Create an address"
+										createOptionUrl="/settings"
+									/>
 					{errors?.officeLocation && (
 						<p className="text-red-500 text-sm">{errors.officeLocation}</p>
 					)}
