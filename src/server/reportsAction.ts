@@ -12,7 +12,7 @@ import { User } from './userActions';
 export async function getDeviceReport(status: string): Promise<DeviceReport> {
 	try {
 		const res = await callAPIWithToken<DeviceReport>(
-			`https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/user?status=${status}`,
+			`https://api.edify.club/edifybackend/v1/devices/userStatus?status=${status}`,
 			'GET',
 		);
 
@@ -27,7 +27,7 @@ export async function getDeviceReport(status: string): Promise<DeviceReport> {
 export async function getSoldInventoryReport(): Promise<any> {
 	try {
 		const res = await callAPIWithToken<any>(
-			`https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/soldInventory/org`,
+			`https://api.edify.club/edifybackend/v1/soldInventory/org`,
 			'GET',
 		);
 
@@ -102,7 +102,7 @@ export async function getUserReports({
 		console.log('payload for user report -> ', payload);
 
 		// Construct the URL with an optional search query
-		const apiUrl = `https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/user/filter${
+		const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
 			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
 		}`;
 
@@ -148,7 +148,7 @@ export async function getAssignedDevicesReport({
 		console.log('payload for Device report -> ', payload);
 
 		// Construct the URL with an optional search query
-		const apiUrl = `https://1675-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/filter${
+		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
 			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
 		}`;
 

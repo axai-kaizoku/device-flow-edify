@@ -259,13 +259,14 @@ function InventoryTable({ devices }: InventoryProps) {
 			<div className="flex w-full justify-center items-center gap-4 mt-4">
 				<button
 					className="bg-gray-200 p-2"
-					onClick={() => setPageLength((prev) => Math.max(prev - 10, 10))}>
+
+					onClick={() => setPageLength((prev) => Math.max(prev - 20, 20))}>
 					Prev
 				</button>
 				<p className="font-bold">Pages</p>
 				<button
 					className="bg-gray-200 p-2"
-					onClick={() => setPageLength((prev) => prev + 10)}>
+					onClick={() => setPageLength((prev) => prev + 20)}>
 					Next
 				</button>
 			</div>

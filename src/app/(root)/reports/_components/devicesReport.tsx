@@ -44,13 +44,13 @@ const DevicesReport = () => {
         }
     };
   return (
-        <div>
-            <div className="flex items-center gap-4 mb-6">
+        <div className='w-full'>
+            <div className="flex flex-col items-start gap-4 my-4">
                 <label className="text-gray-700 font-medium text-lg">
                     Select Status:
                 </label>
                 <select
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+                    className="w-full mb-8 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                 >
@@ -60,8 +60,17 @@ const DevicesReport = () => {
                 </select>
             </div>
 
+            <div className="mb-8">
+                <label className="text-gray-700 font-medium text-lg">File Format :</label>  
+                <input type='text'
+                className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200'
+                value="CSV"
+                readOnly
+                />  
+            </div>
+
             <button
-                className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+                className="w-full my-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
                 onClick={handleDownloadReport}
             >
                 Download Report

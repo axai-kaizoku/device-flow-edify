@@ -38,9 +38,9 @@ const AssignedDevicesReport = () => {
     };
   return (
     <div>
-        <label className="block text-gray-700 font-medium mb-2">Operator:</label>
+        <label className="block text-gray-700 font-medium text-lg my-4">Select an Operator:</label>
         <select
-            className="w-full mb-4 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+            className="w-full mb-8 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
             value={operator}
             onChange={(e) => setOperator(e.target.value)}
         >
@@ -50,7 +50,7 @@ const AssignedDevicesReport = () => {
         </select>
 
         {operator === 'between' ? (
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-8 mb-8">
                 <div>
                     <label className="text-gray-600">From:</label>
                     <input
@@ -61,7 +61,7 @@ const AssignedDevicesReport = () => {
                     />
                 </div>
                 <div>
-                    <label className="text-gray-600">To:</label>
+                    <label className="text-gray-700 font-medium text-lg">To:</label>
                     <input
                         type="date"
                         className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
@@ -71,8 +71,8 @@ const AssignedDevicesReport = () => {
                 </div>
             </div>
         ) : (
-            <div className="mb-4">
-                <label className="text-gray-600">Date:</label>
+            <div className="mb-8">
+                <label className="text-gray-700 font-medium text-lg">Date:</label>
                 <input
                     type="date"
                     className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
@@ -81,6 +81,15 @@ const AssignedDevicesReport = () => {
                 />
             </div>
         )}
+
+        <div className="mb-8">
+            <label className="text-gray-700 font-medium text-lg">File Format :</label>  
+            <input type='text'
+             className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200'
+             value="CSV"
+             readOnly
+            />  
+        </div>
 
         <button
             className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"

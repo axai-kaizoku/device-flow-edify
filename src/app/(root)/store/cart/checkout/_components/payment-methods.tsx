@@ -45,6 +45,10 @@ export default function PaymentMethods({
 			order_id: orderId, // Razorpay order ID from query parameter
 			handler: function (response: any) {
 				console.log(response); // Handle payment success response
+				if (response.razorpay_payment_id){
+					console.log("Success");
+					router.refresh();
+				}
 			},
 			prefill: {
 				name: 'Gaurav Kumar',

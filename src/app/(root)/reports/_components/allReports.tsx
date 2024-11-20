@@ -24,10 +24,8 @@ const AllReports = ({ index, report }: any) => {
 	};
 
 	return (
-		<div
-			key={index}
-			className="bg-white border border-gray-300 rounded-xl shadow-lg p-6 transition transform  hover:scale-105 hover:shadow-2xl hover:bg-blue-50 max-w-md mx-auto">
-			<h2 className="text-2xl font-semibold text-gray-800 mb-4 tracking-tight">
+		<div key={index} className="flex flex-col pt-12 px-4 space-y-4">
+			<h2 className="text-2xl flex justify-start items-center gap-2 font-semibold">
 				{report.title}
 			</h2>
 			<p className="text-gray-600 mb-5 leading-relaxed">{report.description}</p>
@@ -36,11 +34,23 @@ const AllReports = ({ index, report }: any) => {
 			) : report.title === 'Employee Report' ? (
 				<EmployeeReport />
 			) : report.title === 'Inventory Devices Report' ? (
-				<button
-					className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
-					onClick={handleDownloadInventoryReport}>
-					Download Report
-				</button>
+				<div className='flex flex-col'>
+					<div className="my-4">
+						<label className="text-gray-700 font-medium text-lg">File Format :</label>  
+						<input type='text'
+						className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200'
+						value="CSV"
+						readOnly
+						required={true}
+						/>  
+					</div>
+
+					<button
+						className="w-full my-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+						onClick={handleDownloadInventoryReport}>
+						Download Report
+					</button>
+				</div>
 			) : report.title === 'Assigned Devices Report' ? (
 				<AssignedDevicesReport />
 			) : (
