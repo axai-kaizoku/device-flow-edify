@@ -4,7 +4,7 @@ import { PreviousOrder } from '@/server/orderActions';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-interface OrdersProps {
+export interface OrdersProps {
     data: Array<PreviousOrder & { item: Device }>;
 }
 
@@ -32,7 +32,7 @@ const Orders: React.FC<OrdersProps> = ({ data }) => {
                                 <p className="text-gray-500 mb-1">Order ID: {order._id}</p>
                                 <p className="text-gray-500 mb-1">Quantity: {order.quantity}</p>
                                 <p className="text-gray-700 font-semibold mb-1">
-                                    Price: ₹ {order.item.payable / 100}
+                                    Price: ₹ {order.item.payable}
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Ordered on: {new Date(order.createdAt).toLocaleDateString()}

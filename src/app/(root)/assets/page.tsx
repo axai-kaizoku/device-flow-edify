@@ -1,8 +1,9 @@
 import { CombinedContainer } from '@/components/container/container';
 import TabDisplay from './TabDisplay';
-import { DeviceResponse } from '@/server/deviceActions';
+import { DeviceResponse, getDeviceById } from '@/server/deviceActions';
 import { notFound } from 'next/navigation';
 import { filterDevice } from '@/server/filterActions';
+import { getPreviousOrders } from '@/server/orderActions';
 
 interface AssetsProps {
 	searchParams: {
@@ -15,6 +16,14 @@ export default async function Assets() {
 
 	try {
 		const devicesResponse: DeviceResponse = await filterDevice();
+		const prevOrders = await getPreviousOrders();
+		const orderDetails = await Promise.all(
+			prevOrders.map(async (order) => {
+				const itemDetails = await getDeviceById(order.itemId);
+				return { ...order, item: itemDetails };
+			}),
+		);
+
 		if (!devicesResponse) {
 			notFound();
 		}
@@ -28,6 +37,7 @@ export default async function Assets() {
 					totalDocuments={devicesResponse.totalCount}
 					currentDocumentCount={devicesResponse.currentDocumentCount}
 					pageSize={devicesResponse.pageSize}
+					prevOrders = {orderDetails.reverse()}
 				/>
 			</CombinedContainer>
 		);

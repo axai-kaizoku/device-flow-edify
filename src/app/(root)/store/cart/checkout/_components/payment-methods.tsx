@@ -47,6 +47,7 @@ export default function PaymentMethods({
 				console.log(response); // Handle payment success response
 				if (response.razorpay_payment_id){
 					console.log("Success");
+					router.push('/store/cart/checkout/payment-success');
 					router.refresh();
 				}
 			},

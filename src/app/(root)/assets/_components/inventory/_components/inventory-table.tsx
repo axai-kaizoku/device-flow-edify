@@ -33,7 +33,7 @@ function InventoryTable({ devices }: InventoryProps) {
 	]); // Store dynamic filter fields
 	const [availableOperators, setAvailableOperators] =
 		useState(generalOperators);
-	const inventoryDevice = device.filter((device) => !device.userId);
+	// const inventoryDevice = device.filter((device) => !device.userId);
 	const handleSearchAndFilter = async () => {
 		// Combine search term and filters
 		const query = {
@@ -44,8 +44,8 @@ function InventoryTable({ devices }: InventoryProps) {
 
 		try {
 			const res = await filterDevice(query);
-			const filterDevices = res.devices.filter((device:Device) => !device?.userId) 
-			setDevice(filterDevices);
+			// const filterDevices = res.devices.filter((device:Device) => !device?.userId) 
+			setDevice(res.devices);
 		} catch (error) {
 			console.error('Error fetching devices:', error);
 			alert('Failed to fetch data. Please try again.');
@@ -125,7 +125,7 @@ function InventoryTable({ devices }: InventoryProps) {
 				onChange={(e) => setSearchTerm(e.target.value)}
 				placeholder="Search devices..."
 			/>
-			<div className="flex gap-4 w-full">
+			{/* <div className="flex gap-4 w-full">
 				<button
 					className="bg-gray-400 p-2 rounded text-black w-40"
 					onClick={() => setOpenFilter(!openFilter)}>
@@ -138,7 +138,7 @@ function InventoryTable({ devices }: InventoryProps) {
 						X
 					</button>
 				)}
-			</div>
+			</div> */}
 			{openFilter && (
 				<div className="py-4">
 					<div className="flex flex-col gap-4">
@@ -221,7 +221,7 @@ function InventoryTable({ devices }: InventoryProps) {
 			)}
 
 			<Table
-				data={inventoryDevice}
+				data={device}
 				columns={[
 					{
 						title: 'Device',
@@ -263,7 +263,7 @@ function InventoryTable({ devices }: InventoryProps) {
 					onClick={() => setPageLength((prev) => Math.max(prev - 20, 20))}>
 					Prev
 				</button>
-				<p className="font-bold">Pages</p>
+				<p className="font-bold">{pageLength}</p>
 				<button
 					className="bg-gray-200 p-2"
 					onClick={() => setPageLength((prev) => prev + 20)}>
