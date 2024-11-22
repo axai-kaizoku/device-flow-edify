@@ -3,18 +3,18 @@ import { OrdersProps } from '@/app/(root)/orders/components/orderPage';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-const NewDeviceTable = ({ data }: { data: OrdersProps }) => {
+const NewDeviceTable: React.FC<OrdersProps> = ({ data }) => {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
     // Devices purchased within the last 7 days
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
     const filteredData = data.filter(order => {
         const orderDate = new Date(order.createdAt);
-        return orderDate >= oneWeekAgo;
+        return orderDate >= twoDaysAgo;
     });
 
     

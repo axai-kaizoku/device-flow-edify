@@ -15,7 +15,7 @@ interface TabDisplayProps {
 	totalDocuments: number;
 	currentDocumentCount: number;
 	pageSize: number;
-	prevOrders : OrdersProps;
+	prevOrders : {data : OrdersProps};
 }
 
 function TabDisplay({
