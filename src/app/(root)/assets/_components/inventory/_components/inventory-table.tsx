@@ -33,7 +33,7 @@ function InventoryTable({ devices }: InventoryProps) {
 	]); // Store dynamic filter fields
 	const [availableOperators, setAvailableOperators] =
 		useState(generalOperators);
-	// const inventoryDevice = device.filter((device) => !device.userId);
+	
 	const handleSearchAndFilter = async () => {
 		// Combine search term and filters
 		const query = {
