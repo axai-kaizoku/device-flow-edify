@@ -39,7 +39,7 @@ const Devices = ({ devices }: DevicesProps) => {
 							onClick={() => handleDeviceClick(device._id)}>
 							<div>
 								<img
-									src={device.image}
+									src={device.image || "https://th.bing.com/th/id/R.d589fbf35245e2db2929bb113c0b1547?rik=fhPXY3J%2ff4BmSw&riu=http%3a%2f%2fwww.tracyandmatt.co.uk%2fwp%2fwp-content%2fuploads%2f2013%2f11%2fcomputer-laptop.png&ehk=GBtBE3fo5fsbw6lTC9D4mX%2fXwJRRolFdXxhiHPufbSg%3d&risl=&pid=ImgRaw&r=0"}
 									alt={device.device_name}
 									width={120}
 									height={120}

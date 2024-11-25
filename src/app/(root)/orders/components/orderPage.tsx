@@ -10,6 +10,7 @@ export interface OrdersProps {
 
 const Orders: React.FC<OrdersProps> = ({ data }) => {
     const router = useRouter();
+    console.log(data)
     return (
         <div className="bg-gray-50 min-h-screen py-8 px-4">
             <h1 className="text-3xl font-bold text-gray-800 mb-10">Your Orders</h1>
@@ -32,7 +33,7 @@ const Orders: React.FC<OrdersProps> = ({ data }) => {
                                 <p className="text-gray-500 mb-1">Order ID: {order._id}</p>
                                 <p className="text-gray-500 mb-1">Quantity: {order.quantity}</p>
                                 <p className="text-gray-700 font-semibold mb-1">
-                                    Price: ₹ {order.item.payable}
+                                    Price: ₹ {order.price}
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Ordered on: {new Date(order.createdAt).toLocaleDateString()}

@@ -57,7 +57,7 @@ function Form({ device, closeBtn }: FormProps) {
 
 			<div className="w-full flex flex-wrap justify-start items-center gap-7 bg-gray-200 py-3 px-4 rounded-lg shadow-sm">
 				<div>
-					<img src={device.image} alt="Device Name" width={80} height={80} />
+					<img src={device.image || "https://th.bing.com/th/id/R.d589fbf35245e2db2929bb113c0b1547?rik=fhPXY3J%2ff4BmSw&riu=http%3a%2f%2fwww.tracyandmatt.co.uk%2fwp%2fwp-content%2fuploads%2f2013%2f11%2fcomputer-laptop.png&ehk=GBtBE3fo5fsbw6lTC9D4mX%2fXwJRRolFdXxhiHPufbSg%3d&risl=&pid=ImgRaw&r=0"} alt="Device Name" width={80} height={80} />
 				</div>
 
 				<div>
