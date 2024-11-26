@@ -49,7 +49,7 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 					alt={device.device_name}
 					width={225}
 					height={225}
-					className="rounded-lg object-cover"
+					className="rounded-lg object-contain h-40"
 				/>
 			</Link>
 
@@ -61,7 +61,7 @@ export const StoreItem = ({ result, device }: StoreItemProps) => {
 					{device.custom_model} {device.brand}
 				</span>
 			</div>
-			<div className="flex gap-2 items-baseline">
+			<div className="flex gap-2 w-full  justify-between">
 				<span className="font-bold text-xl text-slate-900 dark:text-slate-100">
 					₹{device.payable}
 				</span>

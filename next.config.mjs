@@ -9,6 +9,9 @@ const nextConfig = {
 	compiler: {
     styledComponents: true,
   },
+	images:{
+		domains:["www.apple.com"]
+	}
 };
 
 export default nextConfig;

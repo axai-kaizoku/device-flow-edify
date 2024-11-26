@@ -44,6 +44,7 @@ export type Org = {
 	total_devices?: number;
 	total_users?: number;
 	upcoming_joinee?: Joinee[];
+	total_purchased?:number
 };
 
 export async function getAllOrgs(): Promise<Org[]> {

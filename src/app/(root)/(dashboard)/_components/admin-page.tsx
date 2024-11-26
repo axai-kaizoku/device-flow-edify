@@ -27,11 +27,7 @@ export default async function AdminDashboard() {
     </h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-            { 
-                title: 'Name', 
-                value: organisationById?.name || 'N/A',
-                icon: '🏢'
-            },
+            
             { 
                 title: 'Total Devices', 
                 value: organisationById?.total_devices || '0',
@@ -42,6 +38,12 @@ export default async function AdminDashboard() {
                 value: organisationById?.total_users || '0',
                 icon: '👥'
             },
+            {title: 'Total Purchase',
+            value: organisationById?.total_purchased
+                ? `₹ ${new Intl.NumberFormat('en-IN').format(organisationById.total_purchased)}`
+                : 'N/A',
+            icon: '💰',
+        },
             {
                 title: 'Primary Address',
                 value: organisationById?.office_address?.find((addr) => addr.isPrimary)?.city || 'N/A',
