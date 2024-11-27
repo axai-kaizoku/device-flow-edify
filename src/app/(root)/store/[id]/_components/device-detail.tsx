@@ -57,10 +57,10 @@ export default function StoreDeviceMain({ data }: { data: Device }) {
 					{/* Pricing Section */}
 					<div className="mt-4">
 						<span className="text-gray-500 line-through text-lg mr-2">
-							${data.purchase_value}
+							₹{data.purchase_value}
 						</span>
 						<span className="text-xl font-semibold text-blue-600 dark:text-blue-400">
-							${data.payable}
+							₹{data.payable}
 						</span>
 					</div>
 

@@ -41,6 +41,20 @@ const adminActions = [
     perform: () => window.location.pathname = "/",
   },
   {
+    id: "reports",
+    name: "Reports",
+    shortcut: ["r"],
+    keywords: "reports",
+    perform: () => window.location.pathname = "/reports",
+  },
+  {
+    id: "orders",
+    name: "Orders",
+    shortcut: ["w"],
+    keywords: "reports",
+    perform: () => window.location.pathname = "/orders",
+  },
+  {
     id: "org-chart",
     name: "Org Chart",
     shortcut: ["q"],
