@@ -3,17 +3,30 @@ import { UserResponse } from '@/server/userActions';
 
 import UserMain from './_components/user-main';
 import { getSession } from '@/server/helper';
-import { filterUsers } from '@/server/filterActions';
+import { deletedUsers, filterUsers } from '@/server/filterActions';
+import TabDisplay from './TabDisplay';
 
 export default async function Users() {
 	const session = await getSession();
 	const userRole = session?.user.role || 0;
 	try {
 		const userResponse: UserResponse = await filterUsers();
+		const deletedUserResponse: UserResponse = await deletedUsers();
+		console.log(deletedUserResponse)
 
 		return (
 			<CombinedContainer title="Users">
-				<UserMain data={userResponse.users} userRole={userRole} />
+				<TabDisplay
+					users={userResponse.users} // Pass the documents array directly
+					currentPage={userResponse.currentPage}
+					totalPages={userResponse.totalPages}
+					totalDocuments={userResponse.totalDocuments}
+					currentDocumentCount={userResponse.currentDocumentCount}
+					pageSize={userResponse.pageSize}
+					userRole={userRole}
+					deletedUserResponse = {deletedUserResponse}
+				/>
+				{/* <UserMain data={userResponse.users} userRole={userRole} /> */}
 			</CombinedContainer>
 		);
 	} catch (error) {

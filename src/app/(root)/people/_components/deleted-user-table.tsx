@@ -2,19 +2,19 @@
 
 import { Table } from '@/components/wind/Table';
 import { Icon } from '@/components/wind/Icons';
-import { deleteUser, User } from '@/server/userActions';
+import { CreateUserArgs, updateUser, User } from '@/server/userActions';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { filterUsers, usersFields } from '@/server/filterActions';
+import { deletedUsers, filterUsers, usersFields } from '@/server/filterActions';
 
 const numericFields = ['onboarding_date', 'date_of_birth'];
 
 const numericOperators = ['>=', '<=', '>', '<', 'Equals'];
 const generalOperators = ['Equals', 'Not Equals', 'Like', 'In', 'Not In', 'Is'];
 
-export default function UserTable({ users }: { users: User[] }) {
+export default function DeletedUserTable({ users }: { users: User[] }) {
 	const [user, setUser] = useState(users);
 	const router = useRouter();
 	const [searchTerm, setSearchTerm] = useQueryState('searchQuery');
@@ -36,7 +36,7 @@ export default function UserTable({ users }: { users: User[] }) {
 		};
 
 		try {
-			const res = await filterUsers(query);
+			const res = await deletedUsers(query);
 			setUser(res.users);
 		} catch (error) {
 			console.error('Error fetching users:', error);
@@ -94,17 +94,23 @@ export default function UserTable({ users }: { users: User[] }) {
 		setOpenFilter(false); // Close filter modal
 	};
 
-	const softDelete = async (data:any)=>{
-		await deleteUser(data._id);
-		router.refresh();
-		alert("User Deleted!");
-	}
-
 	const handleResetFilters = () => {
 		setFilters([]); // Clear all filters
 		setSearchTerm('');
 		setFilterInputs([{ field: '', operator: '', value: '' }]); // Reset filters
 	};
+
+    const permanantDelete = async (data:any) =>{
+        alert("This User will be Deleted Permanantly. Are You Sure you want to delete?");
+        await updateUser(data._id, {...data, orgId:null});
+        router.refresh();
+    }
+
+    const restoreUser = async (data:any) =>{
+        alert("Are You Sure you want to Restore the User?");
+        await updateUser(data._id, {...data, deleted_at:null});
+        router.refresh();
+    }
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -238,8 +244,12 @@ export default function UserTable({ users }: { users: User[] }) {
                                     </Link>
                                 </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{softDelete(data)}}>
+                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{permanantDelete(data)}}>
                                     <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
+                                </div>
+
+                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{restoreUser(data)}}>
+                                    <Icon type="OutlinedReset" color="black"  style={{cursor:"pointer"}} />
                                 </div>
 							</div>
 						),

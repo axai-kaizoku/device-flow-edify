@@ -43,7 +43,52 @@ export const usersFields = [
 	'reporting_manager',
 	'email',
 	'phone',
+	'deleted_at'
 ];
+
+export async function deletedUsers({
+	filters = [],
+	fields = usersFields,
+	searchQuery = '',
+	pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+	try {
+		const payload = {
+				fields,
+				filters: filters.length > 0 ? filters : [],
+				page_length: pageLength,
+				isDeleted:true
+		}
+
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<User[]>(apiUrl, 'POST', payload);
+		// console.log(apiUrl, payload);
+		// Check if response has data
+		if (res && res.data) {
+			// console.log('Filtered Data:', res.data);
+			return res.data; // Return the filtered data
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering users:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter Users. Please try again later.',
+		);
+	}
+}
 
 export async function filterUsers({
 	filters = [],
@@ -65,7 +110,7 @@ export async function filterUsers({
 
 		// API call
 		const res = await callAPIWithToken<User[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
+		// console.log(apiUrl, payload);
 		// Check if response has data
 		if (res && res.data) {
 			// console.log('Filtered Data:', res.data);
@@ -163,7 +208,7 @@ export async function filterIssues({
 
 		// API call
 		const res = await callAPIWithToken<Issues[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
+		// console.log(apiUrl, payload);
 		// Check if response has data
 		if (res && res.data) {
 			// console.log('Filtered Data:', res.data);

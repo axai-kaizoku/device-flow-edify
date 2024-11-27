@@ -74,8 +74,9 @@ export type CreateUserArgs = {
 	physically_handicapped?: string;
 	about?: string;
 	interests_and_hobbies?: string;
-	_id?: string;
+	_id: string;
 	email: string;
+	deleted_at: string;
 	phone: string;
 	role: number;
 	designation: string;
@@ -85,6 +86,7 @@ export type CreateUserArgs = {
 	date_of_birth: string;
 	onboarding_date: string;
 	reporting_manager: string;
+	orgId:string | null;
 };
 
 export type Reportee = {
