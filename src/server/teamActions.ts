@@ -4,7 +4,7 @@ import { FilterApiParams } from './filterActions';
 import { callAPIWithToken, getSession } from './helper';
 
 export type Team = {
-	_id?: string;
+	_id: string;
 	title: string;
 	description: string;
 	image: string;
@@ -13,6 +13,7 @@ export type Team = {
 	deleted_at?: string | null;
 	createdAt?: string;
 	updatedAt?: string;
+	orgId:string | null;
 	__v?: number;
 };
 
@@ -29,6 +30,8 @@ const teamFields = [
 	'updatedAt',
 	'image',
 	'employees_count',
+	'orgId',
+	'deletedAt'
 ];
 
 export async function fetchTeams({
@@ -42,6 +45,50 @@ export async function fetchTeams({
 			fields,
 			filters: filters.length > 0 ? filters : [],
 			page_length: pageLength,
+		};
+
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<Team[]>(apiUrl, 'POST', payload);
+		console.log(apiUrl, payload);
+		// Check if response has data
+		if (res && res.data) {
+			return res.data.teams;
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering teams:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter teams. Please try again later.',
+		);
+	}
+}
+
+
+export async function fetchDeletedTeams({
+	filters = [],
+	fields = teamFields,
+	searchQuery = '',
+	pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+	try {
+		const payload = {
+			fields,
+			filters: filters.length > 0 ? filters : [],
+			page_length: pageLength,
+			isDeleted:true
 		};
 
 		// Construct the URL with an optional search query
@@ -115,18 +162,14 @@ export async function getTeamById<Team>(teamId: string) {
 
 export async function updateTeam(
 	id: string,
-	title: string,
-	description: string,
-	image: string,
+	team:Team
 ): Promise<Team> {
 	try {
 		const res = await callAPIWithToken<Team>(
 			`https://api.edify.club/edifybackend/v1/teams/${id}`, // API endpoint
 			'PUT', // HTTP method
 			{
-				title,
-				description,
-				image,
+				...team
 			},
 		);
 		console.log(res);
@@ -144,7 +187,7 @@ export async function deleteTeam<Team>(teamId: string) {
 			null,
 		);
 		return res.data;
-	} catch (e) {
-		throw new Error('Failed to delete team');
-	}
+	} catch (e: any) {
+        throw e;
+    }
 }

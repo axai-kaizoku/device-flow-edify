@@ -1,15 +1,33 @@
+'use client'
 import { Team } from '@/server/teamActions';
 import Link from 'next/link';
+import CreateTeam from './create-team';
 
-export default function TeamsMain({ teams }: { teams: Team[] }) {
+interface TeamsMainProps {
+    teams:Team[],
+    sess:any
+}
+
+export default function TeamsMain({ teams, sess }: TeamsMainProps) {
+    // const sess = await getSession();
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-            {teams.map((team) => (
-                <Link key={team._id} href={`/teams/${team._id}`} className="no-underline">
-                    <TeamCard {...team} />
-                </Link>
-            ))}
-        </div>
+        <>
+            <div className="flex justify-between items-center w-full mb-6 sm:mb-8">
+					<input
+						className="border rounded-lg px-4 py-2 w-[16rem] sm:w-[18rem] text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 outline-none transition-opacity duration-300 opacity-50 focus:opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600 dark:focus:ring-indigo-400"
+						placeholder="Search Teams..."
+					/>
+					{sess?.user.role === 2 && <CreateTeam />}
+			</div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+                {teams.map((team) => (
+                    <Link key={team._id} href={`/teams/${team._id}`} className="no-underline">
+                        <TeamCard {...team} />
+                    </Link>
+                ))}
+            </div>        
+        </>
     );
 }
 

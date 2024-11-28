@@ -1,9 +1,27 @@
 'use client';
 import { Icon } from '@/components/wind/Icons';
 import { Table } from '@/components/wind/Table';
-import { User } from '@/server/userActions';
+import { updateUser, User } from '@/server/userActions';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function TeamTable({ data }: { data: User[] }) {
+	const router = useRouter();
+
+	const handleRemoveUser = async (data: any) => {
+		const confirmDelete = confirm(
+			"This User will be Removed from the Team. Are you sure you want to Remove?"
+		);
+		if (!confirmDelete) return;
+	
+		try {
+			await updateUser(data._id, { ...data, teamId: null });
+			router.refresh();
+		} catch (error) {
+			console.error("Error deleting user:", error);
+			alert("Failed to delete the user. Please try again.");
+		}
+	};
 	
 	return (
 		<Table
@@ -35,14 +53,22 @@ export default function TeamTable({ data }: { data: User[] }) {
 						</div>
 					),
 				},
-				// {
-				// 	title: 'Actions',
-				// 	render: () => (
-				// 		<div className="w-full flex justify-center">
-				// 			<Icon type="OutlinedDotsVertical" color="black" />
-				// 		</div>
-				// 	),
-				// },
+				{
+					title: 'Actions',
+					render: (data) => (
+						<div className="w-full flex justify-center gap-4">
+							<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100'>
+                                <Link href={`/people/${data._id}`}>
+                                    <Icon type="OutlinedEye" color="black"  style={{cursor:"pointer"}} />
+                                </Link>
+                            </div>
+
+							<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{handleRemoveUser(data)}}>
+                                <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
+                            </div>
+						</div>
+					),
+				},
 			]}
 		/>
 	);
