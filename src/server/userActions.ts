@@ -234,17 +234,18 @@ export async function updateUser(
 }
 
 export async function deleteUser<User>(userId: string) {
-	try {
-		const res = await callAPIWithToken<User>(
-			`https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
-			'DELETE',
-			null,
-		);
-		return res.data;
-	} catch (e) {
-		throw new Error('Failed to delete user');
-	}
+    try {
+        const res = await callAPIWithToken<User>(
+            `https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
+            'DELETE',
+            null
+        );
+        return res.data;
+    } catch (e: any) {
+        throw e;
+    }
 }
+
 
 export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
 	try {

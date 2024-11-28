@@ -94,11 +94,25 @@ export default function UserTable({ users }: { users: User[] }) {
 		setOpenFilter(false); // Close filter modal
 	};
 
-	const softDelete = async (data:any)=>{
-		await deleteUser(data._id);
-		router.refresh();
-		alert("User Deleted!");
-	}
+
+
+	const softDelete = async (data: any) => {
+		const confirmDelete = confirm(
+			"Are you sure you want to delete?"
+		);
+		if (!confirmDelete) return;
+
+		try {
+			await deleteUser(data._id);
+			setUser((prevUsers) => prevUsers.filter((user) => user._id !== data._id));
+			alert("User Deleted!");
+		} catch (e: any) {
+			// Check if the error has a message from the API response
+			const errorMessage = e.response?.data?.message || e.message || "Failed to delete user.";
+			alert(errorMessage);
+		}
+	};
+	
 
 	const handleResetFilters = () => {
 		setFilters([]); // Clear all filters
@@ -232,13 +246,13 @@ export default function UserTable({ users }: { users: User[] }) {
 						title: 'Actions',
 						render: (data) => (
 							<div className="w-full flex gap-4 justify-center">
-								<div className='border rounded-md p-2 cursor-pointer'>
+								<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100'>
                                     <Link href={`/people/${data._id}`}>
                                         <Icon type="OutlinedEye" color="black"  style={{cursor:"pointer"}} />
                                     </Link>
                                 </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{softDelete(data)}}>
+                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{softDelete(data)}}>
                                     <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
                                 </div>
 							</div>

@@ -100,17 +100,40 @@ export default function DeletedUserTable({ users }: { users: User[] }) {
 		setFilterInputs([{ field: '', operator: '', value: '' }]); // Reset filters
 	};
 
-    const permanantDelete = async (data:any) =>{
-        alert("This User will be Deleted Permanantly. Are You Sure you want to delete?");
-        await updateUser(data._id, {...data, orgId:null});
-        router.refresh();
-    }
+    const permanantDelete = async (data: any) => {
+		const confirmDelete = confirm(
+			"This User will be deleted permanently. Are you sure you want to delete?"
+		);
+		if (!confirmDelete) return;
+	
+		try {
+			await updateUser(data._id, { ...data, orgId: null });
+	
+			setUser((prevUsers) => prevUsers.filter((user) => user._id !== data._id));
+		} catch (error) {
+			console.error("Error deleting user:", error);
+			alert("Failed to delete the user. Please try again.");
+		}
+	};
 
-    const restoreUser = async (data:any) =>{
-        alert("Are You Sure you want to Restore the User?");
-        await updateUser(data._id, {...data, deleted_at:null});
-        router.refresh();
-    }
+    const restoreUser = async (data: any) => {
+		const confirmRestore = confirm("Are you sure you want to restore the user?");
+		if (!confirmRestore) return;
+	
+		try {
+			await updateUser(data._id, { ...data, deleted_at: null });
+	
+			// Update the user list to reflect the restored user
+			setUser((prevUsers) =>
+				prevUsers.filter((user) =>
+					user._id !== data._id 
+				)
+			);
+		} catch (error) {
+			console.error("Error restoring user:", error);
+			alert("Failed to restore the user. Please try again.");
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -238,17 +261,17 @@ export default function DeletedUserTable({ users }: { users: User[] }) {
 						title: 'Actions',
 						render: (data) => (
 							<div className="w-full flex gap-4 justify-center">
-								<div className='border rounded-md p-2 cursor-pointer'>
+								<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100'>
                                     <Link href={`/people/${data._id}`}>
                                         <Icon type="OutlinedEye" color="black"  style={{cursor:"pointer"}} />
                                     </Link>
                                 </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{permanantDelete(data)}}>
+                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{permanantDelete(data)}}>
                                     <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
                                 </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer' onClick={()=>{restoreUser(data)}}>
+                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{restoreUser(data)}}>
                                     <Icon type="OutlinedReset" color="black"  style={{cursor:"pointer"}} />
                                 </div>
 							</div>
