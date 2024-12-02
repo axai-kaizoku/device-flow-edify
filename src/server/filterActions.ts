@@ -26,6 +26,7 @@ export const devicesFields = [
 	'storage',
 	'warranty_expiary_date',
 	'warranty_status',
+	'deleted_at'
 ];
 
 export const usersFields = [
@@ -133,6 +134,7 @@ export async function filterUsers({
 	}
 }
 
+
 export async function filterDevice({
 	filters = [],
 	fields = devicesFields,
@@ -175,6 +177,52 @@ export async function filterDevice({
 		);
 	}
 }
+
+export async function deletedDevices({
+	filters = [],
+	fields = devicesFields,
+	searchQuery = '',
+	pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+	try {
+		const payload = {
+			fields,
+			filters: filters.length > 0 ? filters : [],
+			page_length: pageLength,
+			isDeleted:true
+		};
+
+		console.log(payload)
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
+		// Check if response has data
+		if (res && res.data) {
+			// console.log('Filtered Data:', res.data);
+			return res.data; // Return the filtered data
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering devices:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter devices. Please try again later.',
+		);
+	}
+}
+
+
 
 export const issueFields = [
 	'description',

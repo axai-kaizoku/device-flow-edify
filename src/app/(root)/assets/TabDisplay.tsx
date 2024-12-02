@@ -2,6 +2,7 @@
 
 import { OrdersProps } from '../orders/components/orderPage';
 import AddDevices from './_components/addDevices/AddDevices';
+import DeletedDevices from './_components/DeletedDevice/deleted-devices';
 import Inventory from './_components/inventory/Inventory';
 import NewDevicesTab from './_components/newDevices/newDevicesTab';
 import { Tab } from './_components/Tab';
@@ -16,6 +17,7 @@ interface TabDisplayProps {
 	currentDocumentCount: number;
 	pageSize: number;
 	prevOrders : {data : OrdersProps};
+	deletedDevices: Device[];
 }
 
 function TabDisplay({
@@ -25,7 +27,8 @@ function TabDisplay({
 	totalDocuments,
 	currentDocumentCount,
 	pageSize,
-	prevOrders
+	prevOrders,
+	deletedDevices
 }: TabDisplayProps) {
 	const [activeTab, setActiveTab] = useQueryState('tab', {
 		defaultValue: 'devices',
@@ -39,6 +42,8 @@ function TabDisplay({
 				return <Inventory devices={devices} />;
 			case 'new': 
 				return <NewDevicesTab data={prevOrders} />
+			case 'deleted':
+				return <DeletedDevices data={deletedDevices} />
 			default:
 				return null;
 		}
@@ -48,22 +53,28 @@ function TabDisplay({
 		<>
 			<div className="flex items-center w-full gap-6">
 				<Tab
-					active={activeTab === 'devices'}
-					onClick={() => setActiveTab('devices')}
-					iconType="OutlinedLaptop"
-					label="Assigned Devices"
-				/>
-				<Tab
 					active={activeTab === 'inventory'}
 					onClick={() => setActiveTab('inventory')}
 					iconType="OutlinedStore"
 					label="Inventory"
 				/>
 				<Tab
+					active={activeTab === 'devices'}
+					onClick={() => setActiveTab('devices')}
+					iconType="OutlinedLaptop"
+					label="Assigned Devices"
+				/>
+				<Tab
 					active={activeTab === 'new'}
 					onClick={() => setActiveTab('new')}
 					iconType="OutlinedStore"
 					label="Newly Added Devices"
+				/>
+				<Tab
+					active={activeTab === 'deleted'}
+					onClick={() => setActiveTab('deleted')}
+					iconType="OutlinedLaptop"
+					label="Deleted Devices"
 				/>
 			</div>
 

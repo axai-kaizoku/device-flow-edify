@@ -165,11 +165,9 @@ export async function deleteDevice(
 		);
 
 		return deleletedDevice.data;
-	} catch (error) {
-		console.error('Error deleting device:', error);
-
-		return undefined;
-	}
+	} catch (e: any) {
+        throw e;
+    }
 }
 
 //Upload bulk device

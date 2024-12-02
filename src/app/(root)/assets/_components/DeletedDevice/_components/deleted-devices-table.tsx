@@ -1,30 +1,22 @@
 'use client';
-import { Icon } from '@/components/wind/Icons';
+
 import { Table } from '@/components/wind/Table';
-import { deleteDevice, Device } from '@/server/deviceActions';
-import { devicesFields, filterDevice } from '@/server/filterActions';
+import { Icon } from '@/components/wind/Icons';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import React, { useEffect, useState } from 'react';
-interface InventoryProps {
-	devices: Device[];
-}
+import { deletedDevices, devicesFields, } from '@/server/filterActions';
+import { Device, updateDevice } from '@/server/deviceActions';
 
-const numericFields = [
-	'purchase_value',
-	'warranty_expiry_date',
-	'ram',
-	'storage',
-];
+const numericFields = ['onboarding_date', 'date_of_birth'];
+
 const numericOperators = ['>=', '<=', '>', '<', 'Equals'];
 const generalOperators = ['Equals', 'Not Equals', 'Like', 'In', 'Not In', 'Is'];
 
-
-function InventoryTable({ devices }: InventoryProps) {
-	const router = useRouter();
+export default function DeletedDevicesTable({ devices }: { devices: Device[] }) {
 	const [device, setDevice] = useState(devices);
-
+	const router = useRouter();
 	const [searchTerm, setSearchTerm] = useQueryState('searchQuery');
 	const [openFilter, setOpenFilter] = useState(false);
 	const [filters, setFilters] = useState<any[]>([]); // Store applied filters
@@ -34,7 +26,7 @@ function InventoryTable({ devices }: InventoryProps) {
 	]); // Store dynamic filter fields
 	const [availableOperators, setAvailableOperators] =
 		useState(generalOperators);
-	
+
 	const handleSearchAndFilter = async () => {
 		// Combine search term and filters
 		const query = {
@@ -44,8 +36,7 @@ function InventoryTable({ devices }: InventoryProps) {
 		};
 
 		try {
-			const res = await filterDevice(query);
-			// const filterDevices = res.devices.filter((device:Device) => !device?.userId) 
+			const res = await deletedDevices(query);
 			setDevice(res.devices);
 		} catch (error) {
 			console.error('Error fetching devices:', error);
@@ -75,12 +66,7 @@ function InventoryTable({ devices }: InventoryProps) {
 		const updatedFilters = [...filterInputs];
 		updatedFilters[index].field = field;
 		setFilterInputs(updatedFilters);
-
-		if (numericFields.includes(field)) {
-			setAvailableOperators(numericOperators);
-		} else {
-			setAvailableOperators(generalOperators);
-		}
+		setAvailableOperators(generalOperators);
 	};
 
 	const handleInputChange = (index: number, key: string, value: string) => {
@@ -94,9 +80,8 @@ function InventoryTable({ devices }: InventoryProps) {
 		const newFilters = filterInputs
 			.filter((f) => f.field && f.operator && f.value)
 			.map((f) => {
-				let finalValue: any = f.value.trim();
+				let finalValue = f.value.trim();
 				if (f.operator === 'Like') finalValue = `%${finalValue}%`;
-				if (f.field === 'purchase_value') finalValue = parseInt(finalValue);
 				return [f.field, f.operator, finalValue];
 			});
 
@@ -115,35 +100,50 @@ function InventoryTable({ devices }: InventoryProps) {
 		setFilterInputs([{ field: '', operator: '', value: '' }]); // Reset filters
 	};
 
-	const softDelete = async (data: any) => {
+    const permanantDelete = async (data: any) => {
 		const confirmDelete = confirm(
-			"Are you sure you want to delete?"
+			"This Device will be deleted permanently. Are you sure you want to delete?"
 		);
 		if (!confirmDelete) return;
-
+	
 		try {
-			await deleteDevice(data._id);
+			await updateDevice(data._id, { ...data, orgId: null });
+	
 			setDevice((prevDevice) => prevDevice.filter((device) => device._id !== data._id));
-			alert("Device Deleted!");
-		} catch (e: any) {
-			// Check if the error has a message from the API response
-			const errorMessage = e.response?.data?.message || e.message || "Failed to delete Device.";
-			alert(errorMessage);
+		} catch (error) {
+			console.error("Error deleting Device:", error);
+			alert("Failed to delete the Device. Please try again.");
 		}
 	};
 
-	const handleClick = (id: string) => {
-		router.push(`/assets/${id}`);
+    const restoreDevice = async (data: any) => {
+		const confirmRestore = confirm("Are you sure you want to restore the Device?");
+		if (!confirmRestore) return;
+	
+		try {
+			await updateDevice(data._id, { ...data, deleted_at: null });
+	
+			// Update the Device list to reflect the restored Device
+			setDevice((prevDevice) =>
+				prevDevice.filter((device) =>
+					device._id !== data._id 
+				)
+			);
+		} catch (error) {
+			console.error("Error restoring Device:", error);
+			alert("Failed to restore the Device. Please try again.");
+		}
 	};
+
 	return (
 		<div className="flex flex-col gap-2">
 			<input
 				className="border p-2"
 				value={searchTerm || ''}
 				onChange={(e) => setSearchTerm(e.target.value)}
-				placeholder="Search devices..."
+				placeholder="Search People..."
 			/>
-			{/* <div className="flex gap-4 w-full">
+			<div className="flex gap-4 w-full">
 				<button
 					className="bg-gray-400 p-2 rounded text-black w-40"
 					onClick={() => setOpenFilter(!openFilter)}>
@@ -156,7 +156,8 @@ function InventoryTable({ devices }: InventoryProps) {
 						X
 					</button>
 				)}
-			</div> */}
+			</div>
+
 			{openFilter && (
 				<div className="py-4">
 					<div className="flex flex-col gap-4">
@@ -225,21 +226,10 @@ function InventoryTable({ devices }: InventoryProps) {
 					</div>
 				</div>
 			)}
-			{filters.length > 0 && (
-				<div className="mt-4">
-					<h4>Applied Filters:</h4>
-					<ul>
-						{filters.map((filter, index) => (
-							<li key={index} className="flex items-center">
-								<span>{`${filter[0]} ${filter[1]} ${filter[2]}`}</span>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
 
 			<Table
 				data={device}
+				className="w-full"
 				columns={[
 					{
 						title: 'Device',
@@ -250,53 +240,61 @@ function InventoryTable({ devices }: InventoryProps) {
 						dataIndex: 'userName',
 					},
 					{
-						title: 'currently At ',
-						dataIndex: 'city',
-					},
-					{
-						title: 'Ownership',
-						dataIndex: 'ownership',
-					},
-					{
 						title: 'Serial Number',
 						dataIndex: 'serial_no',
 					},
 					{
+						title: 'Warranty Status',
+						render: (record: Device) => (
+							<span>{record.warranty_status ? 'Active' : 'Inactive'}</span>
+						),
+					},
+					{
+						title: 'Price',
+						dataIndex: 'purchase_value',
+					},
+					{
+						title: 'Brand',
+						dataIndex: 'brand',
+					},
+
+					{
 						title: 'Actions',
-						render: (record) => (
+						render: (data) => (
 							<div className="w-full flex gap-4 justify-center">
 								<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100'>
-                                    <Link href={`/assets/${record._id}`}>
+                                    <Link href={`/assets/${data._id}`}>
                                         <Icon type="OutlinedEye" color="black"  style={{cursor:"pointer"}} />
                                     </Link>
                                 </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{softDelete(record)}}>
+                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{permanantDelete(data)}}>
                                     <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
                                 </div>
-							</div>
 
+                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{restoreDevice(data)}}>
+                                    <Icon type="OutlinedReset" color="black"  style={{cursor:"pointer"}} />
+                                </div>
+							</div>
 						),
 					},
 				]}
 			/>
+
 			{/* Pagination Control */}
 			<div className="flex w-full justify-center items-center gap-4 mt-4">
 				<button
 					className="bg-gray-200 p-2"
-
-					onClick={() => setPageLength((prev) => Math.max(prev - 20, 20))}>
-					Prev
+					onClick={() => setPageLength((prev) => Math.max(prev - 10, 10))}>
+					-
 				</button>
 				<p className="font-bold">{pageLength}</p>
 				<button
 					className="bg-gray-200 p-2"
-					onClick={() => setPageLength((prev) => prev + 20)}>
-					Next
+					onClick={() => setPageLength((prev) => prev + 10)}>
+					+
 				</button>
 			</div>
 		</div>
 	);
 }
-
-export default InventoryTable;
