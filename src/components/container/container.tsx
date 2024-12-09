@@ -44,7 +44,6 @@ export const CombinedContainer = ({
 }: CombinedContainerProps) => {
 	return (
 		<OuterContainer>
-			<ContainerHeader title={title} description={description} />
 			<InnerContainer>{children}</InnerContainer>
 		</OuterContainer>
 	);
