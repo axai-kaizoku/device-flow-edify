@@ -1,62 +1,115 @@
-'use client';
+"use client";
 
-import { OrdersProps } from '../orders/components/orderPage';
-import { Device } from '@/server/deviceActions';
-import { useQueryState } from 'nuqs';
-import { User, UserResponse } from '@/server/userActions';
-import { Tab } from './_components/Tab';
-import { Team } from '@/server/teamActions';
-import TeamsMain from './_components/teams-main';
-import DeletedTeams from './_components/deleted-teams';
+import { useQueryState } from "nuqs";
+import { Tab } from "./_components/Tab";
+import { Team } from "@/server/teamActions";
+import TeamsMain from "./_components/teams-main";
+import DeletedTeams from "./_components/deleted-teams";
+import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
+import CreateTeam from "./_components/create-team";
+import { useState, useEffect } from "react";
+import Spinner from "@/components/Spinner";
 
 interface TabDisplayProps {
-    sess:any
-	teams: Team[];
-    deletedTeams:Team[]
+  sess: any;
+  teams: Team[];
+  deletedTeams: Team[];
 }
 
-function TabDisplay({
-    sess,
-	teams,
-    deletedTeams
-}: TabDisplayProps) {
-	const [activeTab, setActiveTab] = useQueryState('tab', {
-		defaultValue: 'active',
-	});
+function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: "active",
+  });
+  const [loading, setLoading] = useState(false);
 
-	const renderContent = () => {
-		switch (activeTab) {
-			case 'active':
-				return  <TeamsMain teams={teams} sess={sess} />;
-			case 'deleted':
-				return <DeletedTeams teams={deletedTeams}/>;
-			default:
-				return null;
-		}
-	};
+  // Function to handle tab change with loading state
+  const handleTabChange = (tab: string) => {
+    setLoading(true); // Set loading to true before fetching data
+    setActiveTab(tab);
+  };
 
-	return (
-		<>
-			<div className="flex items-center w-full gap-6">
-				<Tab
-					active={activeTab === 'active'}
-					onClick={() => setActiveTab('active')}
-					iconType="OutlinedAdmissions"
-					label="Active Teams"
-				/>
+  useEffect(() => {
+    // When the active tab changes, simulate a delay to show loading
+    const timer = setTimeout(() => {
+      setLoading(false); // Set loading to false once the content is ready
+    }, 500); // Adjust time as needed
 
-                <Tab
-					active={activeTab === 'deleted'}
-					onClick={() => setActiveTab('deleted')}
-					iconType="OutlinedAdmissions"
-					label="Deleted Teams"
-				/>
-				
-			</div>
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
-			<div className="mt-4">{renderContent()}</div>
-		</>
-	);
+  const renderContent = () => {
+    switch (activeTab) {
+      case "active":
+        return <TeamsMain teams={teams} sess={sess} />;
+      case "deleted":
+        return <DeletedTeams teams={deletedTeams} />;
+      case "people":
+        return <DeletedTeams teams={deletedTeams} />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <div className="flex flex-col ">
+        <h1 className="text-gray-400 font-semibold text-lg">Teams</h1>
+        <h1 className="text-2xl font-bold ">Manage Teams & Employee</h1>
+        <div className="flex items-center justify-between ">
+          <div className="flex items-center w-full gap-6">
+            <Tab
+              active={activeTab === "active"}
+              onClick={() => handleTabChange("active")}
+              label="Active Teams"
+            />
+
+            <Tab
+              active={activeTab === "deleted"}
+              onClick={() => handleTabChange("deleted")}
+              label="Deleted Teams"
+            />
+            <Tab
+              active={activeTab === "people"}
+              onClick={() => handleTabChange("people")}
+              label="People"
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Search size={16} /> {/* Lucide icon for search */}
+              <input
+                className="text-sm bg-transparent font-medium whitespace-nowrap focus:outline-none"
+                placeholder="Search teams"
+              />
+            </div>
+
+            <div className="flex items-center relative gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Plus size={16} /> {/* Lucide icon for add */}
+              <span className="text-sm font-medium whitespace-nowrap">
+                <CreateTeam />
+              </span>
+            </div>
+
+            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Download size={16} /> {/* Lucide icon for download */}
+              <span className="text-sm font-medium">Download</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="border mt-2"></div>
+
+      {/* Show loading spinner while fetching */}
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="mt-4">{renderContent()}</div>
+      )}
+    </>
+  );
 }
 
 export default TabDisplay;

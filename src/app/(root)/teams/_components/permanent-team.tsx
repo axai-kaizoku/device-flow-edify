@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteTeam } from "@/server/teamActions";
+import { updateTeam } from "@/server/teamActions";
 import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 
-export const DeleteTeam = ({
+export const PermanentTeamDelete = ({
   id,
   children,
 }: {
@@ -43,8 +43,7 @@ export const DeleteTeam = ({
 
         {/* Description */}
         <DialogDescription className="p-1 text-sm text-gray-600">
-          Are you sure you want to delete this? Assigned assets will be moved to
-          the unassigned section.
+          Are you sure you want to delete this? This can't be undone.
         </DialogDescription>
 
         {/* Footer Buttons */}
@@ -62,9 +61,9 @@ export const DeleteTeam = ({
             onClick={async () => {
               if (id) {
                 try {
-                  await deleteTeam(id);
+                  updateTeam(id!, { orgId: null });
                   setOpen(false);
-                  router.push("/teams");
+
                   router.refresh();
                 } catch (e: any) {
                   const errorMessage =

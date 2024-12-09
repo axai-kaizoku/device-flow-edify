@@ -7,8 +7,8 @@ export default function CreateTeam() {
 	const [open, setOpen] = useState(false);
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
-			<SheetTrigger className="focus:outline-none ring-2 py-2 hover:ring-muted-foreground ring-muted px-2 rounded-md">
-				Create Team
+			<SheetTrigger>
+				Add team
 			</SheetTrigger>
 			<SheetContent>
 				<TeamForm closeBtn={setOpen} />

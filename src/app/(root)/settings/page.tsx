@@ -7,8 +7,8 @@ import { DeleteAddress } from './_components/delete-address';
 
 export default async function Settings() {
 	try {
-		const o: Org[] = await getCurrentOrg();
-		const org: Org = o[0];
+		const org: Org = await getCurrentOrg();
+		
 
 		return (
 			<CombinedContainer

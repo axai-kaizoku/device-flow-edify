@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { FormWrap } from "./styles/style";
+import { Device } from "@/server/deviceActions";
 
 export const Form = ({
   children,
@@ -76,7 +77,7 @@ export interface FormProps {
   // The content of the Form.
   children: React.ReactElement | React.ReactElement[];
   // form submit handler which is only triggered if form is valid
-  onFormSubmit: (formData) => void;
+  onFormSubmit: (formData:Device[]) => void;
   // to patch form values
   prefill?: PrefillData;
   // width of the form

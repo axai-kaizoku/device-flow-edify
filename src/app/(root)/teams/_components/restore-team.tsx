@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteTeam } from "@/server/teamActions";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
+import { updateTeam } from "@/server/teamActions";
+import { TriangleAlert } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 
-export const DeleteTeam = ({
+export const RestoreTeam = ({
   id,
   children,
 }: {
@@ -23,7 +23,7 @@ export const DeleteTeam = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [initText, setInitText] = useState("Are you sure?");
+  const [initText, setInitText] = useState("Restore Team");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -31,8 +31,8 @@ export const DeleteTeam = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center ">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <AlertCircle className="w-6 h-6" /> {/* Lucide-react icon */}
+          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50 ring-8 ring-yellow-100 text-yellow-400">
+            <TriangleAlert className="w-6 h-6" /> {/* Lucide-react icon */}
           </div>
         </div>
 
@@ -43,26 +43,24 @@ export const DeleteTeam = ({
 
         {/* Description */}
         <DialogDescription className="p-1 text-sm text-gray-600">
-          Are you sure you want to delete this? Assigned assets will be moved to
-          the unassigned section.
+          Do you want to restore the deleted item?
         </DialogDescription>
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
             variant="secondary"
-            className="w-1/2 rounded-[0.60rem]"
+            className="w-1/2 rounded-[0.60rem] "
             onClick={() => setOpen(false)}
           >
-            Cancel
+            Discard
           </Button>
           <Button
-            className="w-1/2 rounded-[0.60rem]"
-            variant="destructive"
+            className="w-1/2 rounded-[0.60rem] bg-green-500"
             onClick={async () => {
               if (id) {
                 try {
-                  await deleteTeam(id);
+                  await updateTeam(id!, { deleted_at: null });
                   setOpen(false);
                   router.push("/teams");
                   router.refresh();
@@ -76,7 +74,7 @@ export const DeleteTeam = ({
               }
             }}
           >
-            Delete
+            Restore
           </Button>
         </DialogFooter>
       </DialogContent>

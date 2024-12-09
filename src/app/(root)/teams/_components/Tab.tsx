@@ -1,25 +1,28 @@
-import { Icon } from '@/components/wind/Icons';
-import { IconsType } from '@/components/wind/Icons/components/icons/interface';
-
 interface TabProps {
-	active: boolean;
-	onClick: () => void;
-	iconType: IconsType;
-	label: string;
+  active: boolean;
+  onClick: () => void;
+  label: string;
 }
 
-export function Tab({ active, onClick, iconType, label }: TabProps) {
-	return (
-		<div
-			className={`flex justify-center items-center gap-2 cursor-pointer p-2 transition-all duration-300 ${
-				active ? 'bg-black text-white rounded dark:text-black dark:bg-white' : 'text-black bg-white dark:bg-black dark:text-white'
-			}`}
-			onClick={onClick}>
-			<Icon
-				type={iconType}
-				color={active ? 'white' : 'black'}
-			/>
-			{label}
-		</div>
-	);
+export function Tab({ active, onClick, label }: TabProps) {
+  return (
+    <div
+      className={`flex justify-center items-center cursor-pointer transition-all duration-300 ${
+        active
+          ? "text-black dark:text-white"
+          : "text-gray-500 dark:text-gray-400"
+      }`}
+      onClick={onClick}
+    >
+      <span
+        className={`relative text-sm font-medium after:content-[''] after:absolute after:left-0 after:top-[37px] after:w-full after:h-[2px] after:transition-all after:duration-300 ${
+          active
+            ? "after:bg-black dark:after:bg-white after:scale-x-100"
+            : "after:bg-gray-300 dark:after:bg-gray-600 after:scale-x-0"
+        }`}
+      >
+        {label}
+      </span>
+    </div>
+  );
 }
