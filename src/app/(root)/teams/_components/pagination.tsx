@@ -14,7 +14,7 @@ const Pagination = ({
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
-    <div className="flex items-center justify-center gap-2 fixed bottom-2 w-full max-w-6xl mx-auto">
+    <div className="flex items-center justify-center gap-2  w-full ">
       <button
         className="size-8 flex justify-center items-center rounded-full border border-gray-300 hover:border-black disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={() => onPageChange(1)}

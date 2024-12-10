@@ -5,9 +5,9 @@ import { Team } from "@/server/teamActions";
 
 import Pagination from "./pagination";
 import { DeleteTeam } from "../[id]/_components/delete-team";
-import { PencilLine, Trash2 } from "lucide-react";
 import EditTeam from "../[id]/_components/edit-team";
 import { TeamCard } from "./team-card";
+import { Icons } from "@/components/icons";
 
 interface TeamsMainProps {
   teams: Team[];
@@ -28,36 +28,41 @@ export default function TeamsMain({ teams, sess }: TeamsMainProps) {
   };
 
   return (
-    <>
-      <div className="grid bg-white  p-[22px] rounded-[48px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
+    <div className="bg-white p-[29px] rounded-[65px] w-full my-10">
+      {/* Grid of Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
         {currentTeams.map((team) => (
           <TeamCard
             key={team._id}
             {...team}
             buttons={
               <>
-                <EditTeam {...team}>
-                  <div className="group hover:border-blue-400 size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                    <PencilLine className="size-5 text-black group-hover:text-blue-400 cursor-pointer" />
-                  </div>
-                </EditTeam>
                 <DeleteTeam id={team._id!}>
-                  <div className="group size-10 border-gray-300 hover:border-red-500 rounded-full justify-center items-center flex border">
-                    <Trash2 className="size-5 text-black group-hover:text-red-400 cursor-pointer" />
+                  <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
+                    <Icons.trashUpper />
+                    <Icons.trash className="size-4 cursor-pointer" />
                   </div>
                 </DeleteTeam>
+                <EditTeam {...team}>
+                  <div className="group duration-300 hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
+                    <Icons.edit className="w-5 h-5 text-gray-600 group-hover:text-black cursor-pointer" />
+                  </div>
+                </EditTeam>
               </>
             }
           />
         ))}
       </div>
 
-      <Pagination
-        totalItems={totalTeams}
-        itemsPerPage={ITEMS_PER_PAGE}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
-    </>
+      {/* Pagination */}
+      <div className="mt-8 flex justify-center">
+        <Pagination
+          totalItems={totalTeams}
+          itemsPerPage={ITEMS_PER_PAGE}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    </div>
   );
 }

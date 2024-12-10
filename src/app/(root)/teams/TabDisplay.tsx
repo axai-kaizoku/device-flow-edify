@@ -43,8 +43,6 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
         return <TeamsMain teams={teams} sess={sess} />;
       case "deleted":
         return <DeletedTeams teams={deletedTeams} />;
-      case "people":
-        return <DeletedTeams teams={deletedTeams} />;
       default:
         return null;
     }
@@ -54,9 +52,9 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
     <>
       <div className="flex flex-col ">
         <h1 className="text-gray-400 font-semibold text-lg">Teams</h1>
-        <h1 className="text-2xl font-bold ">Manage Teams & Employee</h1>
+        <h1 className="text-3xl font-bold py-4">Manage Teams & Employee</h1>
         <div className="flex items-center justify-between ">
-          <div className="flex items-center w-full gap-6">
+          <div className="flex items-center w-full gap-12">
             <Tab
               active={activeTab === "active"}
               onClick={() => handleTabChange("active")}
@@ -68,15 +66,10 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
               onClick={() => handleTabChange("deleted")}
               label="Deleted Teams"
             />
-            <Tab
-              active={activeTab === "people"}
-              onClick={() => handleTabChange("people")}
-              label="People"
-            />
           </div>
 
           <div className="flex gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <div className="flex items-center gap-2.5 pl-2 pr-20 py-3 ext-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Search size={16} /> {/* Lucide icon for search */}
               <input
                 className="text-sm bg-transparent font-medium whitespace-nowrap focus:outline-none"
@@ -84,14 +77,14 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
               />
             </div>
 
-            <div className="flex items-center relative gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <div className="flex items-center relative gap-2 px-4 py-3 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Plus size={16} /> {/* Lucide icon for add */}
               <span className="text-sm font-medium whitespace-nowrap">
                 <CreateTeam />
               </span>
             </div>
 
-            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={16} /> {/* Lucide icon for download */}
               <span className="text-sm font-medium">Download</span>
             </button>

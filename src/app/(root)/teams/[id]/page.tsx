@@ -1,11 +1,11 @@
 import { CombinedContainer } from "@/components/container/container";
 import TeamTable from "./_components/team-table";
 import { getTeamById, Team } from "@/server/teamActions";
-import EditTeam from "./_components/edit-team";
-import { Icon } from "@/components/wind/Icons";
 import { DeleteTeam } from "./_components/delete-team";
 import { getUsersByTeamId, User } from "@/server/userActions";
 import { getSession } from "@/server/helper";
+import { Plus, Search, Trash2 } from "lucide-react";
+import CreateTeam from "../_components/create-team";
 
 interface TeamPageProps {
   params: { id: string };
@@ -15,78 +15,75 @@ export default async function TeamPage({ params }: TeamPageProps) {
   try {
     const data: Team = await getTeamById(params.id);
     const users: User[] = await getUsersByTeamId(params.id);
-    const sess = await getSession();
 
     return (
-      <CombinedContainer
-        title={data.title}
-        description="Manage your team members and operations effortlessly."
-      >
-        <div className="flex justify-end w-full mb-8"></div>
-
-        <div className="w-full py-8 px-8 flex justify-between items-center bg-white shadow-md rounded-lg dark:bg-gray-800 dark:shadow-lg">
-          <div className="flex gap-6 items-center">
-            <img
-              src={data.image}
-              alt="team-image"
-              className="w-24 h-24 object-cover rounded-full ring-4 ring-indigo-500 dark:ring-indigo-600"
-            />
-            <div className="flex flex-col gap-1">
-              <span className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-                {data.title}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400">
-                {data.description}
-              </span>
+      <CombinedContainer title="Teams">
+        <div className="bg-white p-8 my-6 mx-8 rounded-3xl shadow-lg">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-5 items-center">
+              <img
+                src={data?.image}
+                alt="team-image"
+                className="w-24 h-24 object-cover rounded-full"
+              />
+              <div>
+                <h1 className="text-2xl flex gap-6 items-center font-semibold text-black">
+                  {data?.title}
+                  <span className=" py-1 px-3 text-sm bg-green-100 text-green-600 rounded-full">
+                    Active
+                  </span>
+                </h1>
+                <p className="text-[#7C7C7C] text-lg font-medium">
+                  {data?.description}
+                </p>
+                <p className="text-sm font-medium text-[#ADADAC]">
+                  Reporting Manager:{" "}
+                  <span className="font-semibold text-xl text-black">
+                    Abhinav Prakash
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
-          {sess?.user.role === 2 && (
-            <div className="flex gap-5">
-              <EditTeam
-                _id={params.id}
-                title={data.title}
-                description={data.description}
-                image={data.image}
-              >
-                <Icon
-                  type="OutlinedEdit"
-                  color="gray"
-                  style={{
-                    width: "1.5rem",
-                    height: "1.5rem",
-                    cursor: "pointer",
-                  }}
+            <div className="flex gap-4">
+              <div className="flex items-center gap-2 pl-3 pr-12 py-2 border rounded-full text-gray-600 hover:text-black hover:border-black">
+                <Search size={18} />
+                <input
+                  type="text"
+                  placeholder="Search teams"
+                  className="focus:outline-none bg-transparent text-sm"
                 />
-              </EditTeam>
-              <DeleteTeam id={params.id}>
-                <Icon
-                  type="OutlinedBin"
-                  color="red"
-                  style={{
-                    width: "1.5rem",
-                    height: "1.5rem",
-                    cursor: "pointer",
-                  }}
-                />
+              </div>
+              <div className="flex cursor-pointer items-center gap-2 px-4 py-2 border rounded-full text-gray-600 hover:text-black hover:border-black">
+                <Plus size={18} />
+                Add member
+              </div>
+              <DeleteTeam id={data._id!}>
+                <button className="flex items-center gap-2 px-4 py-2 border  rounded-full text-gray-600 hover:text-black hover:border-black">
+                  <Trash2 size={18} />
+                  Delete Team
+                </button>
               </DeleteTeam>
             </div>
-          )}
-        </div>
-
-        <div className="mt-12">
-          <TeamTable data={users ?? []} />
+          </div>
+          <div className=" p-4 border rounded-3xl flex flex-col gap-4 ">
+            <div className="flex gap-3 p-6 items-center">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Team Members
+              </h2>
+              <span className="bg-purple-100 text-purple-700 text-sm px-3 py-1 rounded-full">
+                {users?.length} Members
+              </span>
+            </div>
+            <TeamTable data={users} />
+          </div>
         </div>
       </CombinedContainer>
     );
   } catch (error) {
-    console.error("Error fetching data:", error);
     return (
       <CombinedContainer title="Teams">
-        <div className="text-red-500 dark:text-red-400">
-          Failed to load data. Please try again later. <br />{" "}
-          <a href="/" className="underline text-blue-500">
-            Back to home
-          </a>
+        <div className="text-red-500">
+          Failed to load data. Try again later.
         </div>
       </CombinedContainer>
     );

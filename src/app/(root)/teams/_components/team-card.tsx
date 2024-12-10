@@ -27,11 +27,11 @@ const MemberIcon = ({
 );
 
 interface TeamCardProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image?: string;
-  employees_count: number;
-  _id: string;
+  employees_count?: number;
+  _id?: string;
   buttons?: React.ReactNode; // Allow passing custom buttons as a prop
 }
 
@@ -59,10 +59,13 @@ export const TeamCard = ({
   };
 
   return (
-    <div className="relative rounded-[31px] shadow-md w-90 border border-gray-300 p-6 flex flex-col  transition-all ">
+    <div
+      className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
+ relative rounded-[35px]  w-90   p-6 flex flex-col  transition-all "
+    >
       <Link
         href={`/teams/${_id}`}
-        className="flex flex-col gap-[10px] cursor-pointer"
+        className="flex flex-col gap-6 cursor-pointer"
       >
         {/* Header Section */}
         <div className="flex justify-between items-center">
@@ -73,23 +76,23 @@ export const TeamCard = ({
               className="w-12 h-12 object-cover rounded-full border-2 border-white "
             />
             <div>
-              <h1 className=" text-base font-normal">Aniket Prakash</h1>
-              <p className="text-sm text-gray-600">Manager</p>
+              <h1 className=" text-base font-semibold">Aniket Prakash</h1>
+              <p className="text-sm font-medium text-[#7C7C7C]">Manager</p>
             </div>
           </div>
         </div>
 
         {/* Description Section */}
         <div>
-          <p className="font-normal text-2xl line-clamp-2">{title}</p>
-          <p className="text-gray-600 text-base font-normal line-clamp-2">
+          <p className="font-semibold text-2xl line-clamp-2">{title}</p>
+          <p className="text-[#7C7C7C] text-base font-medium line-clamp-2">
             {description}
           </p>
         </div>
 
         {/* Members Section */}
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-medium text-gray-600">
+          <h1 className="text-sm font-medium text-[#7C7C7C]">
             {employees_count === 0
               ? "No Members Yet"
               : `${employees_count} Active Members`}
@@ -100,7 +103,7 @@ export const TeamCard = ({
 
       {/* Buttons Section */}
       {buttons && (
-        <div className="absolute flex-col flex gap-2 right-4">{buttons}</div>
+        <div className="absolute  flex-col flex gap-2 right-4">{buttons}</div>
       )}
     </div>
   );

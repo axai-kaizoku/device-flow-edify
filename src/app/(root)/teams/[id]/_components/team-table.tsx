@@ -1,21 +1,30 @@
 "use client";
-import { Icon } from "@/components/wind/Icons";
 import { Table } from "@/components/wind/Table";
 import { updateUser, User } from "@/server/userActions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Pagination from "../../_components/pagination";
+import { useState } from "react";
+import { Team } from "@/server/teamActions";
+import { Icons } from "@/components/icons";
 
+const ITEMS_PER_PAGE = 6;
 export default function TeamTable({ data }: { data: User[] }) {
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleRemoveUser = async (data: any) => {
-    const confirmDelete = confirm(
-      "This User will be Removed from the Team. Are you sure you want to Remove?"
-    );
-    if (!confirmDelete) return;
+  const totalTeams = data?.length || 0;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentTeams = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => setCurrentPage(page);
+
+  const handleRemoveUser = async (data: Team) => {
+    if (!confirm("Are you sure you want to remove this user from the team?"))
+      return;
 
     try {
-      await updateUser(data._id, { ...data, teamId: null });
+      await updateUser(data._id!, { ...data, teamId: null });
       router.refresh();
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -24,71 +33,89 @@ export default function TeamTable({ data }: { data: User[] }) {
   };
 
   return (
-    <Table
-      data={data}
-      checkboxSelection={{
-        uniqueField: "_id",
-        onSelectionChange: (e) => {
-          console.log(e);
-        },
-      }}
-      columns={[
-        { title: "User", dataIndex: "first_name" },
-        { title: "Role", dataIndex: "designation" },
-        {
-          title: "Joining Date",
-          render: (data) => (
-            <div className="w-full flex justify-center">
-              <div>
-                {data.onboarding_date
+    <>
+      <Table
+        data={currentTeams}
+        checkboxSelection={{
+          uniqueField: "_id",
+          //logic yet to be done
+          onSelectionChange: (e) => console.log(e),
+        }}
+        columns={[
+          {
+            title: "Name",
+            render: (data) => (
+              <div className="flex items-center gap-3">
+                <img
+                  src={data?.image || "/placeholder-image.png"} // Default image if no profile_image exists
+                  alt={`${data?.first_name || "User"}'s Profile`}
+                  className="w-10 h-10 rounded-full border object-cover"
+                />
+                <span>{data?.first_name || "N/A"}</span>
+              </div>
+            ),
+          },
+          { title: "Email", dataIndex: "email" },
+          {
+            title: "Role",
+            render: (data) => (
+              <div className="truncate  max-w-[150px]">
+                {data?.designation || "N/A"}
+              </div>
+            ),
+          },
+
+          {
+            title: "Joining Date",
+            render: (data) => (
+              <div className="text-center">
+                {data?.onboarding_date
                   ? new Date(data.onboarding_date).toLocaleDateString()
-                  : "NULL"}
+                  : "N/A"}
               </div>
-            </div>
-          ),
-        },
-        {
-          title: "Reporting Manager",
-          render: (data) => (
-            <div className="w-full flex justify-center">
-              <div>
-                {data.reporting_manager?.first_name
-                  ? data.reporting_manager?.first_name
-                  : "NULL"}
+            ),
+          },
+          {
+            title: "Reporting Manager",
+            render: (data) => (
+              <div className="text-center">
+                {data?.reporting_manager?.first_name || "N/A"}
               </div>
-            </div>
-          ),
-        },
-        {
-          title: "Actions",
-          render: (data) => (
-            <div className="w-full flex justify-center gap-4">
-              <div className="border rounded-md p-2 cursor-pointer hover:bg-slate-100">
+            ),
+          },
+          {
+            title: "Assets assigned",
+            render: (data) => (
+              <div className="text-center rounded-lg bg-green-200 text-green-400">
+                {`${data?.reporting_manager?.first_name || "N/A"} assigned`}
+              </div>
+            ),
+          },
+
+          {
+            title: "Actions",
+            render: (data) => (
+              <div className="flex justify-center items-center gap-5">
+                <button
+                  className="flex flex-col "
+                  onClick={() => handleRemoveUser(data)}
+                >
+                  <Icons.table_delete className="size-6" />
+                </button>
                 <Link href={`/people/${data._id}`}>
-                  <Icon
-                    type="OutlinedEye"
-                    color="black"
-                    style={{ cursor: "pointer" }}
-                  />
+                  <Icons.table_edit className="size-5" />
                 </Link>
               </div>
-
-              <div
-                className="border rounded-md p-2 cursor-pointer hover:bg-slate-100"
-                onClick={() => {
-                  handleRemoveUser(data);
-                }}
-              >
-                <Icon
-                  type="OutlinedBin"
-                  color="black"
-                  style={{ cursor: "pointer" }}
-                />
-              </div>
-            </div>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+        ]}
+      />
+      <Pagination
+        currentPage={currentPage}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={handlePageChange}
+        totalItems={totalTeams}
+      />
+    </>
   );
 }
