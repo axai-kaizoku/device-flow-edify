@@ -7,6 +7,9 @@ import Pagination from "../../_components/pagination";
 import { useState } from "react";
 import { Team } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
+import EditUser from "@/app/(root)/people/[id]/_components/edit-user";
+import { DeleteUser } from "@/app/(root)/people/[id]/_components/delete-user";
+// Import EditUser component
 
 const ITEMS_PER_PAGE = 6;
 export default function TeamTable({ data }: { data: User[] }) {
@@ -45,7 +48,10 @@ export default function TeamTable({ data }: { data: User[] }) {
           {
             title: "Name",
             render: (data) => (
-              <div className="flex items-center gap-3">
+              <div
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() => router.push(`/people/${data._id}`)}
+              >
                 <img
                   src={data?.image || "/placeholder-image.png"} // Default image if no profile_image exists
                   alt={`${data?.first_name || "User"}'s Profile`}
@@ -59,12 +65,11 @@ export default function TeamTable({ data }: { data: User[] }) {
           {
             title: "Role",
             render: (data) => (
-              <div className="truncate  max-w-[150px]">
+              <div className="truncate max-w-[150px]">
                 {data?.designation || "N/A"}
               </div>
             ),
           },
-
           {
             title: "Joining Date",
             render: (data) => (
@@ -91,20 +96,22 @@ export default function TeamTable({ data }: { data: User[] }) {
               </div>
             ),
           },
-
           {
             title: "Actions",
             render: (data) => (
               <div className="flex justify-center items-center gap-5">
-                <button
-                  className="flex flex-col "
+                {/* <button
+                  className="flex flex-col"
                   onClick={() => handleRemoveUser(data)}
                 >
                   <Icons.table_delete className="size-6" />
-                </button>
-                <Link href={`/people/${data._id}`}>
+                </button> */}
+                <DeleteUser id={data?._id}>
+                  <Icons.table_delete className="size-6" />
+                </DeleteUser>
+                <EditUser userData={data}>
                   <Icons.table_edit className="size-5" />
-                </Link>
+                </EditUser>
               </div>
             ),
           },
