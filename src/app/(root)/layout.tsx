@@ -19,7 +19,7 @@ export default function MainLayout({
         </div>
 
         {/* Main Content */}
-        <div className="ml-36  w-full ">{children}</div>
+        <div className="ml-36 mt-4 w-full ">{children}</div>
       </div>
     </div>
   );

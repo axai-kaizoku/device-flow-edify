@@ -56,7 +56,7 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
 
         {/* Tooltip */}
         {isHovered && (
-          <div className="absolute left-12 top-1/2 -translate-y-1/2 bg-black z-30 text-white text-sm rounded-full py-1 px-2 shadow-lg whitespace-nowrap">
+          <div className="absolute left-12 top-1/2 -translate-y-1/2 bg-black z-100 text-white text-sm rounded-full py-1 px-2 shadow-lg whitespace-nowrap">
             {label}
           </div>
         )}

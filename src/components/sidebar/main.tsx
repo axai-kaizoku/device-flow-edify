@@ -19,7 +19,7 @@ export default function SidebarMain({ session }: Props) {
     <section className="flex flex-col relative mx-auto items-center justify-start min-h-screen bg-transparent">
       {session?.user.role === 2 ? (
         <>
-          <div className="absolute top-7 flex flex-col mx-auto justify-between gap-8 w-full cursor-pointer">
+          <div className="absolute top-3 flex flex-col mx-auto justify-between gap-8 w-full cursor-pointer">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
@@ -67,7 +67,7 @@ export default function SidebarMain({ session }: Props) {
               <ToggleTheme />
             </div>
             {/* <div>
-							<div
+						    <div
 								onClick={() => signOut()}
 								className="w-full flex justify-between cursor-pointer text-sm">
 								<div className={` w-[2%] rounded-e`} />
