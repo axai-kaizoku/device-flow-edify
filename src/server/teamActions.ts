@@ -161,7 +161,7 @@ export async function getTeamById<Team>(teamId: string) {
 
 export async function updateTeam(
   id: string,
-  team: { deleted_at?: string | null; orgId?: string | null }
+  team: Team | { deleted_at?: string | null; orgId?: string | null }
 ): Promise<Team> {
   try {
     const res = await callAPIWithToken<Team>(

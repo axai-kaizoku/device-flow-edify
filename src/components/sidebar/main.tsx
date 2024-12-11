@@ -105,23 +105,17 @@ export default function SidebarMain({ session }: Props) {
               ))}
             </div>
             {/* <div>
-							<div
-								onClick={() => signOut()}
-								className="w-full flex justify-between cursor-pointer text-sm">
-								<div className={` w-[2%] rounded-e`} />
-								<div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
-									<Image
-										src="/media/sidebar/logout.svg"
-										alt="Logout"
-										width={20}
-										height={20}
-										className="object-contain"
-									/>
-									<div>Logout</div>
-								</div>
-								<div className="w-[1%]" />
-							</div>
-						</div> */}
+              <div
+                onClick={() => signOut()}
+                className="w-full flex justify-between bg-black cursor-pointer text-sm"
+              >
+                <div className={` w-[2%] rounded-e`} />
+                <div className={` p-4 rounded w-[78%] flex gap-4 items-center`}>
+                  <div>Logout</div>
+                </div>
+                <div className="w-[1%]" />
+              </div>
+            </div> */}
           </div>
         </>
       )}

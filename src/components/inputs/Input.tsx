@@ -1,55 +1,21 @@
-import { FC } from 'react';
-import { UseFormRegisterReturn, FieldError } from 'react-hook-form';
-import { Eye, EyeOff } from 'lucide-react';
+import * as React from "react";
 
-type InputFieldProps = {
-	id: string;
-	label: string;
-	type: string;
+import { cn } from "@/lib/utils";
 
-	register: UseFormRegisterReturn;
-	error?: FieldError;
-	disabled?: boolean;
-	showPassword?: boolean;
-	togglePasswordVisibility?: () => void;
-};
-
-const InputField: FC<InputFieldProps> = ({
-	id,
-	label,
-	type,
-	disabled,
-	register,
-	error,
-	showPassword,
-	togglePasswordVisibility,
-	...props
-}) => {
-	return (
-		<div className="flex flex-col relative gap-2 items-start w-full">
-			<input
-				type={type === 'password' && showPassword ? 'text' : type}
-				id={id}
-				{...register}
-				className={`input border ${
-					error ? 'border-red-500' : 'border-[#bdbdbd] focus:border-black'
-				} py-3 px-8 h-14 w-full rounded  focus:outline-none`}
-				{...props}
-			/>
-			<label
-				htmlFor={id}
-				className="label transition-all duration-300 ease-in-out">
-				{label}
-			</label>
-			{type === 'password' && (
-				<div
-					className="absolute text-[#bdbdbd] right-4 top-4 cursor-pointer"
-					onClick={togglePasswordVisibility}>
-					{showPassword ? <EyeOff /> : <Eye />}
-				</div>
-			)}
-		</div>
-	);
-};
-
-export default InputField;
+export const Input = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input">
+>(({ className, type, ...props }, ref) => {
+  return (
+    <input
+      type={type}
+      className={cn(
+        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary  disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+Input.displayName = "Input";
