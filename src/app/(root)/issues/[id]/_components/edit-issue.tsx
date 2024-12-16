@@ -26,7 +26,7 @@ function EditIssue({ data }: { data: Issues }) {
 
 	return (
 		<>
-			<div className="p-6 space-y-4">
+			<div className="space-y-4">
 
 				<div className="bg-white p-6 rounded-lg shadow-md space-y-6">
 						{/* Header */}

@@ -4,7 +4,7 @@ import { callAPIWithToken, getSession } from './helper';
 export type Issues = {
 	_id: string;
 	userId?: string;
-	description?: string;
+	description: string;
 	orgId?: string;
 	title?: string;
 	status: string;

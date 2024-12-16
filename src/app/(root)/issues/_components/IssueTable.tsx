@@ -11,7 +11,12 @@ const numericFields = ['updatedAt', 'createdAt'];
 const numericOperators = ['>=', '<=', '>', '<', 'Equals'];
 const generalOperators = ['Equals', 'Not Equals', 'Like', 'In', 'Not In', 'Is'];
 
-export default function IssueTable({ data }: { data: Issues[] }) {
+interface IssueTableProps {
+	data:Issues[];
+	tag: string;
+}
+
+export default function IssueTable({ data, tag }: IssueTableProps) {
 	const router = useRouter();
 	const [issue, setIssue] = useState(data);
 	const [searchTerm, setSearchTerm] = useQueryState('searchQuery');
@@ -23,6 +28,8 @@ export default function IssueTable({ data }: { data: Issues[] }) {
 	]); // Store dynamic filter fields
 	const [availableOperators, setAvailableOperators] =
 		useState(generalOperators);
+	const openedIssues = issue.filter((issue) => issue.status.toLowerCase() === 'open');
+	const closedIssues = issue.filter((issue) => issue.status.toLowerCase() !== 'open');
 
 	const handleSearchAndFilter = async () => {
 		// Combine search term and filters
@@ -104,12 +111,12 @@ export default function IssueTable({ data }: { data: Issues[] }) {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<input
+			{/* <input
 				className="border p-2"
 				value={searchTerm || ''}
 				onChange={(e) => setSearchTerm(e.target.value)}
 				placeholder="Search issues..."
-			/>
+			/> */}
 			<div className="flex gap-4 w-full">
 				<button
 					className="bg-gray-400 p-2 rounded text-black w-40"
@@ -205,7 +212,7 @@ export default function IssueTable({ data }: { data: Issues[] }) {
 				</div>
 			)}
 			<Table
-				data={issue}
+				data={tag === 'open' ? openedIssues : closedIssues}
 				columns={[
 					{
 						title: 'Title',

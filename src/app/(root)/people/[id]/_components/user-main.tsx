@@ -41,9 +41,9 @@ const UserGrid = ({user}:{user:User}) => {
 
 							<div className='flex flex-col'>
 								<h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-									{`${user.first_name} ${user.last_name}`}
+									{`${user?.first_name} ${user?.last_name}`}
 								</h1>
-								<p className="text-[#7C7C7C] text-base font-medium">{user.designation} . {user.teamId?.title || "Tech"}</p>
+								<p className="text-[#7C7C7C] text-base font-medium">{user?.designation} . {user?.teamId?.title || "Tech"}</p>
 								<div className='flex gap-2 mt-2'>
 									<div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#ECFDF3]">
 										<span className="text-center text-[#027A48] font-inter text-[12.435px] font-medium leading-[18.652px]">
@@ -53,7 +53,7 @@ const UserGrid = ({user}:{user:User}) => {
 
 									<div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#FFE8D6]">
 										<span className="text-center text-[#E89F02] font-inter text-[12.435px] font-medium leading-[18.652px]">
-											{user.employment_type}
+											{user?.employment_type}
 										</span>
 									</div>
 
@@ -74,7 +74,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Email</div>
-									<div className='font-semibold'>{user.email}</div>
+									<div className='font-semibold'>{user?.email}</div>
 								</div>
 							</div>
 
@@ -84,7 +84,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Phone</div>
-									<div className='font-semibold'>{user.phone}</div>
+									<div className='font-semibold'>{user?.phone}</div>
 								</div>
 							</div>
 
@@ -94,7 +94,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Date of Birth</div>
-									<div className='font-semibold'>{new Date(user.date_of_birth).toLocaleDateString()}</div>
+									<div className='font-semibold'>{new Date(user?.date_of_birth).toLocaleDateString()}</div>
 								</div>
 							</div>
 
@@ -104,7 +104,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Joining Date</div>
-									<div className='font-semibold'>{new Date(user.onboarding_date).toLocaleDateString()}</div>
+									<div className='font-semibold'>{new Date(user?.onboarding_date).toLocaleDateString()}</div>
 								</div>
 							</div>
 						</div>
@@ -129,13 +129,13 @@ const UserGrid = ({user}:{user:User}) => {
 
 								<div className='flex flex-col relative w-full'>
 									<h1 className="text-xl font-semibold dark:text-gray-200">
-										{`${user.reporting_manager.first_name} ${user.reporting_manager.last_name}`}
+										{`${user?.reporting_manager?.first_name} ${user?.reporting_manager?.last_name}`}
 									</h1>
                                     <div className='absolute text-[#CDCDCD] text-xs top-1 -right-3 cursor-pointer' onClick={()=>{
                                         router.push(`/people/${user?.reporting_manager?._id}`);
                                     }}><ChevronRight/></div>
 
-									<p className="text-gray-500 font-medium text-sm">{user.reporting_manager.email}</p>
+									<p className="text-gray-500 font-medium text-sm">{user?.reporting_manager?.email}</p>
 									<div className='flex gap-2 mt-2 justify-start items-center'>
 										<div className="flex justify-start items-center">
 											<div className="flex -space-x-5">{renderMembers()}</div>
@@ -166,7 +166,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Company</div>
-									<div className='font-semibold'>{user.orgId?.legal_entity_name}</div>
+									<div className='font-semibold'>{user?.orgId?.legal_entity_name}</div>
 								</div>
 							</div>
 
@@ -176,7 +176,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Org Contact</div>
-									<div className='font-semibold'>{user.orgId?.office_address[0].phone}</div>
+									<div className='font-semibold'>Here is the Contact</div>
 								</div>
 							</div>
 
@@ -186,7 +186,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Email</div>
-									<div className='font-semibold'>{user.orgId?.email}</div>
+									<div className='font-semibold'>{user?.orgId?.email}</div>
 								</div>
 							</div>
 
@@ -196,7 +196,7 @@ const UserGrid = ({user}:{user:User}) => {
 								</div>
 								<div className='flex flex-col'>
 									<div className='text-base text-gray-500 font-semibold'>Address</div>
-									<div className='font-semibold'>{user.orgId?.office_address[0].address}</div>
+									<div className='font-semibold'>Here is the Address</div>
 								</div>
 							</div>
 						</div>
@@ -207,7 +207,7 @@ const UserGrid = ({user}:{user:User}) => {
 				<div className="flex flex-col gap-6">
 					{/* First Row (Reversed Order) */}
 					<div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[50px] p-6">
-						<AssetsSection/>
+						<AssetsSection user={user}/>
 					</div>
 
 					{/* Second Row */}

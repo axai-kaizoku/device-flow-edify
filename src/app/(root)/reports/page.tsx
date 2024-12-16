@@ -13,41 +13,41 @@ export interface report {
 const Reports = () => {
   const reportData = [
     {
-      title: 'Employee Report',
-      description: 'Get the List of all the Employees based on the Onboarding Date.',
+      title: 'Total Members',
+      description: 'Total Members',
       tag: 'people',
     },
     {
-      title: 'Assigned Devices Report',
-      description: 'Get All the devices that are assigned based on Assigned Date',
-      tag: 'devices',
+      title: 'Active Members',
+      description: 'Active Members',
+      tag: 'people',
     },
     {
-      title: 'Devices Report',
-      description: 'Summary of Current Devices Assigned Status.',
-      tag: 'devices',
+      title: 'Deleted Members',
+      description: 'Deleted Members',
+      tag: 'people',
     },
     {
-      title: 'Inventory Devices Report',
-      description: 'Overview of devices sold/inventory.',
-      tag: 'devices',
+      title: 'Total Assets',
+      description: 'Total Assets',
+      tag: 'assets',
     },
     {
-      title: 'Expense Report',
-      description: 'Breakdown of all expenses incurred.',
-      tag: 'money',
+      title: 'Active Assets',
+      description: 'Active Assets',
+      tag: 'assets',
     },
     {
-      title: 'Profit Report',
-      description: 'Analysis of profit and margin over time.',
-      tag: 'money',
+      title: 'Deleted Assets',
+      description: 'Deleted Assets',
+      tag: 'assets',
     },
   ];
 
 
   return (
     <CombinedContainer title="Reports">
-      <div className="min-h-screen ">
+      <div className="w-full overflow-hidden h-full">
         <ReportSection reportData={reportData}/>
       </div>
     </CombinedContainer>

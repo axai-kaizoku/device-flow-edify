@@ -3,6 +3,7 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { Team } from "./teamActions";
+import { Device } from "./deviceActions";
 
 type Address = {
   address: string;
@@ -64,6 +65,7 @@ export type User = {
   date_of_birth: string;
   onboarding_date: string;
   reporting_manager: Manager;
+  devices: Device[]
 };
 
 export type CreateUserArgs = {

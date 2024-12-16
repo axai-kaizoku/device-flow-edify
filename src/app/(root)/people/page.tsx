@@ -17,12 +17,12 @@ export default async function Users() {
 		return (
 			<CombinedContainer title="Users">
 				<TabDisplay
-					users={userResponse.users} // Pass the documents array directly
-					currentPage={userResponse.currentPage}
-					totalPages={userResponse.totalPages}
-					totalDocuments={userResponse.totalDocuments}
-					currentDocumentCount={userResponse.currentDocumentCount}
-					pageSize={userResponse.pageSize}
+					users={userResponse?.users} // Pass the documents array directly
+					currentPage={userResponse?.currentPage}
+					totalPages={userResponse?.totalPages}
+					totalDocuments={userResponse?.totalDocuments}
+					currentDocumentCount={userResponse?.currentDocumentCount}
+					pageSize={userResponse?.pageSize}
 					userRole={userRole}
 					deletedUserResponse = {deletedUserResponse}
 				/>
