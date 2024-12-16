@@ -226,7 +226,7 @@ export const Icons = {
       </defs>
     </svg>
   ),
-<<<<<<< HEAD
+
   settings_employee_info: (props: LucideProps) => (
     <svg
       {...props}
@@ -470,8 +470,6 @@ export const Icons = {
     </svg>
   ),
 
-=======
->>>>>>> master
   dropdown: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -481,14 +479,8 @@ export const Icons = {
       fill="none"
       {...props}
     >
-<<<<<<< HEAD
       <path d="M12 15L6 9H18L12 15Z" fill="white" />
-=======
-      <path
-        d="M12 15L6 9H18L12 15Z"
-        fill="white"
-      />
->>>>>>> master
+      <path d="M12 15L6 9H18L12 15Z" fill="white" />
     </svg>
   ),
 };
