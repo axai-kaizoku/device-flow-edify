@@ -123,3 +123,12 @@
 	background-color: light-dark(#edf2f7, #2d3748); /* Adjust for dark mode */
 	border-radius: 10px;
 }
+
+.custom-link {
+	stroke: #D7D7D7;
+	stroke-width: 0.25px;
+}
+
+.custom-link path {
+	transform: translateY(-67.5px) translateX(-88px); /* Adjust offsets to match your card size */
+}

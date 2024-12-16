@@ -9,7 +9,7 @@ export const ToggleTheme = () => {
 	return (
 		<button
 			className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
-					w-10 h-10 flex items-center justify-center rounded-full p-2 mb-4"
+					w-10 h-10 flex items-center justify-center rounded-full p-2"
 					style={{ marginLeft: 'auto', marginRight: 'auto' }}
 			onClick={() => setTheme(isDark ? 'light' : 'dark')}>
 			{isDark ? <Sun size={16} /> : <Moon size={16} />}

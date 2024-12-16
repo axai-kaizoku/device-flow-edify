@@ -1,9 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
-import { findOriginalNode, mapEmployeeToRawNodeDatum } from './utils';
+import {findOriginalNode, mapEmployeeToRawNodeDatum, nodeStyles } from './utils';
 import { renderCustomNodeElement } from './RenderNode';
 import { Employee } from './data';
+import { ChevronUp, Download, Link } from 'lucide-react';
 
 export default function OrgChart({ orgData }: { orgData: Employee }) {
 	const [translate, setTranslate] = useState({ x: 0, y: 0 });
@@ -42,28 +43,52 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
 	};
 
 	return (
-		<div
-			id="treeWrapper"
-			className="w-full h-screen p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors">
-			<Tree
-				data={data}
-				translate={translate}
-				orientation="vertical"
-				collapsible={false}
-				pathFunc="step"
-				enableLegacyTransitions={true}
-				transitionDuration={300}
-				renderCustomNodeElement={(rd3tProps) =>
-					renderCustomNodeElement({
-						...rd3tProps,
-						toggleNode: () => handleNodeClick(rd3tProps.nodeDatum),
-						orgData,
-					})
-				}
-				separation={{ siblings: 1, nonSiblings: 1 }}
-				zoomable={true}
-				scaleExtent={{ min: 0.5, max: 2 }}
-			/>
-		</div>
+		<>
+			<div className="flex flex-col w-full pt-8 pr-8 overflow-hidden h-full gap-3">
+				<div className='flex justify-between items-center'>
+					<h1 className="text-[#7F7F7F] font-semibold text-lg">Organisation Chart</h1>
+					<div className='flex gap-2'>
+						<div className='flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer'>
+							<ChevronUp className='w-5 h-5'/>
+							<div>Top of chart</div>
+						</div>
+						<div className='flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer'>
+							<Link className='w-5 h-5'/>
+							<div>Group by department</div>
+						</div>
+						<div className='flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer'>
+							<Download className='w-5 h-5'/>
+							<div>Download</div>
+						</div>
+					</div>
+				</div>
+				<div
+					id="treeWrapper"
+					className="w-full rounded-[49px] h-[calc(80vh-60px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]">
+					<Tree
+						data={data}
+						translate={translate}
+						orientation="vertical"
+						collapsible={false}
+						pathFunc="step"
+						enableLegacyTransitions={true}
+						transitionDuration={300}
+						renderCustomNodeElement={(rd3tProps) =>
+							renderCustomNodeElement({
+								...rd3tProps,
+								toggleNode: () => handleNodeClick(rd3tProps.nodeDatum),
+								orgData,
+							})
+						}
+						separation={{ siblings: 2, nonSiblings: 3 }}
+						zoomable={true}
+						scaleExtent={{ min: 0.3, max: 4 }}
+						initialDepth={300}
+						depthFactor={300}
+						pathClassFunc={() => 'custom-link'}
+					/>
+				</div>
+			</div>
+		</>
 	);
 }

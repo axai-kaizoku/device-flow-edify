@@ -4,8 +4,9 @@ import Image from 'next/image';
 import { Icon } from '../wind/Icons';
 import { Bell, CircleHelp, Plus, RefreshCw, Settings, UserRound } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Props } from '@/app/(root)/layout';
 
-export default function Header() {
+export default function Header({session}:Props) {
 	const router = useRouter();
 	const pathname = usePathname();
 	return (
@@ -20,7 +21,9 @@ export default function Header() {
 					className="mr-4"
 				/>
 
-				{pathname === '/' ? 
+				{pathname === '/' && (session?.user.role === 1) ? 
+					<div className='border-0 border-l-2 pl-4'>Home</div> :
+				pathname === '/' && (session?.user.role === 2) ?
 					<div className='border-0 border-l-2 pl-4'>Dashboard</div> :
 				 pathname === '/assets' ?
 				 	<div className='border-0 border-l-2 pl-4'>Assets</div> :

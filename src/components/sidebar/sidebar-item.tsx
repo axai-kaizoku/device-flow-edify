@@ -49,6 +49,12 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
             (<Bug className='w-5 h-5'/>) :
           label === 'Settings' ?
             (<Wrench className='w-5 h-5'/>) :
+          label === 'Profile' ?
+            (<UserRound className='w-5 h-5'/>) :
+          label === 'Devices' ?
+            (<Smartphone className='w-5 h-5'/>) :
+          label === 'Home' ?
+            (<LayoutDashboard className='w-5 h-5'/>) :
           (<div/>)
           
         }

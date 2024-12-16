@@ -39,3 +39,11 @@ export const findOriginalNode = (node: any, name: string): any => {
 	}
 	return null;
 };
+
+
+export const nodeStyles = {
+	links: {
+		stroke: '#D7D7D7', // Set the branch color  // Adjust branch thickness if needed
+	},
+};
+
