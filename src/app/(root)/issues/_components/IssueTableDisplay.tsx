@@ -3,12 +3,13 @@ import IssueTable from './IssueTable';
 
 interface IssueTableDisplayProps {
 	data: Issues[];
+	tag:string
 }
 
-function IssueTableDisplay({ data }: IssueTableDisplayProps) {
+function IssueTableDisplay({ data, tag }: IssueTableDisplayProps) {
 	return (
 		<>
-			<IssueTable data={data} />
+			<IssueTable data={data} tag={tag}/>
 		</>
 	);
 }

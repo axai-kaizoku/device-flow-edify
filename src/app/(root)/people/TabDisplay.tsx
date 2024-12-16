@@ -38,7 +38,7 @@ function TabDisplay({
 			case 'active':
 				return  <UserMain data={users} userRole={userRole}/>;
 			case 'deleted':
-				return <DeletedUser data={deletedUserResponse.users}/>;
+				return <DeletedUser data={deletedUserResponse?.users}/>;
 			default:
 				return null;
 		}
