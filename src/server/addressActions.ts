@@ -1,78 +1,84 @@
-import { AxiosError } from 'axios';
-import { callAPIWithToken, getSession } from './helper';
+import { AxiosError } from "axios";
+import { callAPIWithToken, getSession } from "./helper";
 
 export type Address = {
-	isPrimary?: boolean;
-	deleted_at?: string;
-	_id: string;
-	city?: string;
-	deviceId?: string;
-	orgId?: string;
+  isPrimary?: boolean;
+  deleted_at?: string;
+  _id?: string;
+  city?: string;
+  deviceId?: string;
+
+  title?: string;
+  phone?: string;
+  landmark?: string;
+  address?: string;
+  state?: string;
+  pinCode?: string;
 };
 
 export async function getAddress(): Promise<Address[]> {
-	try {
-		const res = await callAPIWithToken<Address[]>(
-			'https://api.edify.club/edifybackend/v1/address',
-			'GET',
-		);
-		return res.data;
-	} catch (e) {
-		throw new Error((e as AxiosError).message);
-	}
+  try {
+    const res = await callAPIWithToken<Address[]>(
+      "https://api.edify.club/edifybackend/v1/address",
+      "GET"
+    );
+    return res.data;
+  } catch (e) {
+    throw new Error((e as AxiosError).message);
+  }
 }
 
-export async function createAddress(
-	city: string,
-	isPrimary: boolean,
-): Promise<Address> {
-	try {
-		const sess = await getSession();
+export async function createAddress(address: Address): Promise<Address> {
+  try {
+    const sess = await getSession();
 
-		const res = await callAPIWithToken<Address>(
-			'https://api.edify.club/edifybackend/v1/address', // API endpoint
-			'POST', // HTTP method
-			{
-				userId: sess?.user.id,
-				orgId: sess?.user.orgId,
-				city,
-				isPrimary,
-			},
-		);
+    const res = await callAPIWithToken<Address>(
+      "https://api.edify.club/edifybackend/v1/address", // API endpoint
+      "POST", // HTTP method
+      {
+        userId: sess?.user.id,
+        orgId: sess?.user.orgId,
+        ...address,
+      }
+    );
 
-		return res.data;
-	} catch (e) {
-		throw new Error('Failed to create Address');
-	}
+    return res.data;
+  } catch (e) {
+    throw new Error("Failed to create Address");
+  }
 }
 
 export async function updateAddress(
-	id: string,
-	city: string,
-	isPrimary: boolean,
+  id: string,
+  address: Address
 ): Promise<Address> {
-	try {
-		const res = await callAPIWithToken<Address>(
-			`https://api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
-			'PUT', // HTTP method
-			{ city, isPrimary },
-		);
-		console.log(res);
-		return res.data;
-	} catch (e) {
-		throw new Error('Failed to Update Address');
-	}
+  try {
+    const sess = await getSession();
+    console.log("updating", address);
+
+    const res = await callAPIWithToken<Address>(
+      `https://api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
+      "PUT", // HTTP method
+      {
+        ...address,
+      }
+    );
+    console.log(res.data, "final data");
+    return res.data;
+  } catch (e) {
+    throw new Error("Failed to Update Address");
+  }
 }
 
 export async function deleteAddress<Address>(addressId: string) {
-	try {
-		const res = await callAPIWithToken<Address>(
-			`https://api.edify.club/edifybackend/v1/address/${addressId}`, // API endpoint
-			'DELETE',
-			null,
-		);
-		return res.data;
-	} catch (e) {
-		throw new Error('Failed to delete Address');
-	}
+  try {
+    const res = await callAPIWithToken<Address>(
+      `https://api.edify.club/edifybackend/v1/address/${addressId}`, // API endpoint
+      "DELETE",
+      null
+    );
+    return res.data;
+  } catch (e) {
+    throw new Error("Failed to delete Address");
+  }
 }

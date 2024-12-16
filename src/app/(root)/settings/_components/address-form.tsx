@@ -1,121 +1,219 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/wind/Buttons';
-import { Form } from '@/components/wind/Form';
-import { Input } from '@/components/wind/Input';
-import { Typography } from '@/components/wind/Typography';
-import { createAddress, updateAddress } from '@/server/addressActions';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Button } from "@/components/buttons/Button";
+import { Icons } from "@/components/icons";
+import { createAddress, updateAddress } from "@/server/addressActions";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
+import { PrimarySelector } from "./primary-selector";
+import { FormField } from "./form-field";
 
 export const AddressForm = ({
-	closeBtn,
-	isEditForm,
-	id,
-	city,
-	isPrimary = false, // Optional prop to indicate if the address is primary
+  closeBtn,
+  isEditForm,
+  _id,
+  title = "",
+  phone = "",
+  address = "",
+  city = "",
+  state = "",
+  pinCode = "",
+  landmark = "",
+  isPrimary = false,
 }: {
-	closeBtn: (value: boolean) => void;
-	isEditForm?: boolean;
-	id?: string;
-	city?: string;
-	isPrimary?: boolean;
+  closeBtn: (value: boolean) => void;
+  isEditForm?: boolean;
+  _id?: string;
+  title?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  pinCode?: string;
+  landmark?: string;
+  isPrimary?: boolean;
 }) => {
-	const router = useRouter();
-	const [primaryStatus, setPrimaryStatus] = useState(isPrimary);
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
-	const data = {
-		city: city ?? '',
-		isPrimary,
-	};
+  const [formData, setFormData] = useState({
+    title,
+    phone,
+    address,
+    city,
+    state,
+    pinCode,
+    landmark,
+    isPrimary,
+  });
 
-	interface AddressFormData {
-		city: string;
-		isPrimary: boolean;
-	}
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const validateAddressForm = (formData: {
+    title: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    pinCode: string;
+  }) => {
+    const errors: Record<string, string> = {};
 
-	const handleSubmit = async (e: AddressFormData) => {
-		if (isEditForm) {
-			if (e.city) {
-				await updateAddress(id!, e.city, primaryStatus);
-				router.refresh();
-				closeBtn(false);
-			}
-		} else {
-			if (e.city) {
-				await createAddress(e.city, primaryStatus);
-				router.refresh();
-				closeBtn(false);
-			}
-		}
-	};
+    if (!formData.title) errors.title = "Title is required";
+    if (!formData.phone) errors.phone = "Phone number is required";
+    if (!formData.address) errors.address = "Address is required";
+    if (!formData.city) errors.city = "City is required";
+    if (!formData.state) errors.state = "State is required";
+    if (!formData.pinCode) errors.pinCode = "Pin code is required";
 
-	return (
-		<div className="flex justify-center items-center bg-gray-50 p-6 rounded-lg shadow-lg">
-			<div className="flex flex-col w-[90%] h-[80%] justify-start items-center">
-				<Typography
-					variant="h3"
-					align="left"
-					style={{ width: '100%', padding: '0.8rem 0', color: '#333' }}>
-					{isEditForm ? 'Edit Address' : 'Create a New Address'}
-				</Typography>
-				<Form
-					prefill={{
-						city: data.city,
-					}}
-					width="100%"
-					formId="address-form"
-					onFormSubmit={handleSubmit}>
-					<Input
-						label="City"
-						rules={{ required: true }}
-						width="100%"
-						name="city"
-						type="text"
-					/>
+    return errors;
+  };
 
-					<Typography
-						variant="body-text1"
-						align="left"
-						style={{ paddingTop: '1rem', paddingBottom: '0.5rem' }}>
-						Set as Primary Address
-					</Typography>
-					<div className="flex gap-4">
-						<label className="flex items-center">
-							<input
-								type="radio"
-								name="isPrimary"
-								value="yes"
-								checked={primaryStatus}
-								onChange={() => setPrimaryStatus(true)}
-								className="mr-2 accent-blue-500"
-							/>
-							Yes
-						</label>
-						<label className="flex items-center">
-							<input
-								type="radio"
-								name="isPrimary"
-								value="no"
-								checked={!primaryStatus}
-								onChange={() => setPrimaryStatus(false)}
-								className="mr-2 accent-blue-500"
-							/>
-							No
-						</label>
-					</div>
+  const handleSubmit = async () => {
+    const newErrors = validateAddressForm(formData);
+    setErrors(newErrors);
 
-					<div className="flex justify-end mt-4">
-						<Button
-							onClick={() => {}}
-							hoverColor="#000000"
-							type="submit"
-							color="black">
-							{isEditForm ? 'Edit Address' : 'Create Address'}
-						</Button>
-					</div>
-				</Form>
-			</div>
-		</div>
-	);
+    if (Object.values(newErrors).some((err) => err)) return;
+
+    setLoading(true);
+    if (isEditForm) {
+      await updateAddress(_id!, formData);
+    } else {
+      await createAddress(formData);
+    }
+    setLoading(false);
+    router.refresh();
+    closeBtn(false);
+  };
+
+  return (
+    <div className="flex justify-center items-center">
+      <div className="flex flex-col h-[80%]">
+        <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
+        <h3 className="text-3xl font-semibold mb-2">
+          {isEditForm ? "Edit Address" : "Add New Address"}
+        </h3>
+        <p className="text-slate-500 mb-10">
+          Please provide the address details to be used for delivery or billing
+          purposes.
+        </p>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          className="flex flex-col gap-8"
+        >
+          {/* Primary/Secondary Selection */}
+          <PrimarySelector
+            isPrimary={formData?.isPrimary}
+            onSelect={(value) =>
+              setFormData((prev) => ({ ...prev, isPrimary: value }))
+            }
+          />
+
+          {/* Form Fields */}
+          <FormField
+            label="Address Title"
+            id="title"
+            value={formData?.title}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
+            type="text"
+            error={errors?.title}
+            placeholder="eg: Home, Office"
+          />
+
+          <FormField
+            label="Phone Number"
+            id="phone"
+            type="text"
+            value={formData?.phone}
+            onChange={(e) => {
+              if (/^\d{0,10}$/.test(e.target.value))
+                setFormData((prev) => ({ ...prev, phone: e.target.value }));
+            }}
+            maxLength={10}
+            error={errors?.phone}
+            placeholder="eg: 1234567890"
+          />
+
+          <FormField
+            label="Address"
+            id="address"
+            value={formData?.address}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, address: e.target.value }))
+            }
+            type="text"
+            error={errors?.address}
+            placeholder="eg: 123 Street, City"
+          />
+
+          <FormField
+            label="City"
+            id="city"
+            value={formData?.city}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, city: e.target.value }))
+            }
+            type="text"
+            error={errors?.city}
+            placeholder="eg: New York"
+          />
+
+          <FormField
+            label="State"
+            id="state"
+            value={formData?.state}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, state: e.target.value }))
+            }
+            type="text"
+            error={errors?.state}
+            placeholder="eg: NY"
+          />
+
+          <FormField
+            label="Pin Code"
+            id="pinCode"
+            value={formData?.pinCode}
+            maxLength={6}
+            onChange={(e) => {
+              if (/^\d{0,6}$/.test(e.target.value))
+                setFormData((prev) => ({ ...prev, pinCode: e.target.value }));
+            }}
+            error={errors?.pinCode}
+            placeholder="eg: 10001"
+          />
+
+          {/* Submit and Cancel Buttons */}
+          <div className="flex space-x-3 w-full pt-2 justify-between items-center">
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-full w-1/2"
+              onClick={() => closeBtn(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="rounded-full border w-1/2 bg-primary text-primary-foreground"
+            >
+              {loading ? (
+                <Spinner className={spinnerVariants({ size: "sm" })} />
+              ) : (
+                <>
+                  {isEditForm ? "Edit Address" : "Submit"}
+                  <Icons.arrowRight className="size-5" />
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };

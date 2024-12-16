@@ -226,6 +226,252 @@ export const Icons = {
       </defs>
     </svg>
   ),
+<<<<<<< HEAD
+  settings_employee_info: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="55"
+      height="53"
+      viewBox="0 0 55 53"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="0.550476"
+        y="0.19873"
+        width="54.2124"
+        height="51.8793"
+        rx="17"
+        fill="#F0FFF4"
+      />
+      <rect
+        x="4.44407"
+        y="3.92476"
+        width="46.4252"
+        height="44.4273"
+        rx="17"
+        fill="#DAFFE5"
+      />
+      <path
+        d="M27.6567 23.3062C30.0029 23.3062 31.9048 21.4043 31.9048 19.0581C31.9048 16.712 30.0029 14.8101 27.6567 14.8101C25.3106 14.8101 23.4086 16.712 23.4086 19.0581C23.4086 21.4043 25.3106 23.3062 27.6567 23.3062Z"
+        stroke="#00A735"
+        stroke-width="2.27108"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M30.4888 27.5547H24.8246C21.6964 27.5547 19.1605 30.0907 19.1605 33.2188C19.1605 35.565 21.0625 37.4669 23.4086 37.4669H31.9048C34.251 37.4669 36.1529 35.565 36.1529 33.2188C36.1529 30.0907 33.6169 27.5547 30.4888 27.5547Z"
+        stroke="#00A735"
+        stroke-width="2.27108"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
+  company_logo: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="155"
+      height="155"
+      viewBox="0 0 155 155"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+    >
+      <circle
+        cx="77.4897"
+        cy="77.4895"
+        r="77.0373"
+        fill="url(#pattern0_2052_10610)"
+      />
+      <defs>
+        <pattern
+          id="pattern0_2052_10610"
+          patternContentUnits="objectBoundingBox"
+          width="1"
+          height="1"
+        >
+          <use
+            xlinkHref="#image0_2052_10610"
+            transform="matrix(0.00909536 0 0 0.00897232 -0.0302524 -0.0694688)"
+          />
+        </pattern>
+        <image
+          id="image0_2052_10610"
+          width="334"
+          height="151"
+          xlinkHref="data:image/png;base64,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"
+        />
+      </defs>
+    </svg>
+  ),
+  settings_edit: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="46"
+      height="45"
+      viewBox="0 0 46 45"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <ellipse
+        cx="22.8741"
+        cy="22.8536"
+        rx="22.3956"
+        ry="22.1035"
+        fill="#FCFCFC"
+      />
+      <path
+        d="M40.5708 22.8536C40.5708 32.4802 32.6601 40.3065 22.8741 40.3065C13.088 40.3065 5.17734 32.4802 5.17734 22.8536C5.17734 13.227 13.088 5.40076 22.8741 5.40076C32.6601 5.40076 40.5708 13.227 40.5708 22.8536Z"
+        fill="#FCFCFC"
+        stroke="#004DFF"
+        stroke-width="2"
+      />
+      <path
+        d="M28.4189 20.0913L20.3428 28.1674C19.6216 28.8954 17.4648 29.2287 16.9409 28.7456C16.4171 28.2626 16.7981 26.1058 17.5192 25.3778L25.5953 17.3018C25.9682 16.9466 26.4653 16.7513 26.9802 16.7576C27.4951 16.7639 27.9871 16.9712 28.3513 17.3354C28.7154 17.6995 28.9228 18.1916 28.929 18.7065C28.9354 19.2214 28.74 19.7184 28.3849 20.0913H28.4189Z"
+        stroke="#004CFF"
+        stroke-width="1.02057"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M28.9975 28.977H22.8741"
+        stroke="#004CFF"
+        stroke-width="1.02057"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
+  settings_assets: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="55"
+      height="53"
+      viewBox="0 0 55 53"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="0.550537"
+        y="0.19873"
+        width="54.2124"
+        height="51.8793"
+        rx="17"
+        fill="#F0FFF4"
+      />
+      <rect
+        x="4.54449"
+        y="4.0208"
+        width="46.2247"
+        height="44.2354"
+        rx="12"
+        fill="#DAFFE5"
+      />
+      <path
+        d="M33.9817 11.3026H21.3319C19.8139 11.3026 18.5648 12.5517 18.5648 14.0697V36.2069C18.5648 37.7249 19.8139 38.9741 21.3319 38.9741H33.9817C35.4997 38.9741 36.7489 37.7249 36.7489 36.2069V14.0697C36.7489 12.5517 35.4997 11.3026 33.9817 11.3026ZM34.377 36.2069C34.377 36.4283 34.2031 36.6022 33.9817 36.6022H21.3319C21.1105 36.6022 20.9366 36.4283 20.9366 36.2069V14.0697C20.9366 13.8483 21.1105 13.6744 21.3319 13.6744H33.9817C34.2031 13.6744 34.377 13.8483 34.377 14.0697V36.2069ZM29.2381 31.4632C29.2381 32.3329 28.5265 33.0444 27.6568 33.0444C26.7871 33.0444 26.0756 32.3329 26.0756 31.4632C26.0756 30.5935 26.7871 29.882 27.6568 29.882C28.5265 29.882 29.2381 30.5935 29.2381 31.4632Z"
+        fill="#00A735"
+      />
+    </svg>
+  ),
+  settings_download: (props: LucideProps) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="23"
+      height="24"
+      viewBox="0 0 23 24"
+      fill="none"
+    >
+      <path
+        d="M3.11275 15.0692C3.11275 17.7313 3.11275 19.0623 3.93975 19.8893C4.76675 20.7164 6.09779 20.7164 8.75986 20.7164H14.407C17.069 20.7164 18.4001 20.7164 19.2271 19.8893C20.0541 19.0623 20.0541 17.7313 20.0541 15.0692"
+        stroke="black"
+        stroke-width="1.41178"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M11.5834 3.77501V16.0104M11.5834 16.0104L15.3482 11.8927M11.5834 16.0104L7.81868 11.8927"
+        stroke="black"
+        stroke-width="1.41178"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
+  settings_green_location: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="72"
+      height="70"
+      viewBox="0 0 72 70"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="0.862793"
+        y="0.429688"
+        width="71"
+        height="68.8248"
+        rx="23.1407"
+        fill="#F2FFF7"
+      />
+      <rect
+        x="7.86279"
+        y="7.42969"
+        width="57.2777"
+        height="55.523"
+        rx="17"
+        fill="#D8FFE7"
+      />
+      <path
+        d="M36.3593 19.8002C30.2807 19.8002 25.3325 24.7484 25.3325 30.8269C25.3325 41.5226 35.7376 49.6538 35.7376 49.6538C35.9153 49.7956 36.1357 49.8727 36.363 49.8727C36.5902 49.8727 36.8107 49.7956 36.9883 49.6538C36.9883 49.6538 47.3935 41.5226 47.3934 30.8269C47.3934 24.7484 42.4379 19.8002 36.3593 19.8002ZM36.3593 21.8057C41.3542 21.8057 45.3879 25.832 45.3879 30.8269C45.3879 39.5769 37.4647 46.4899 36.3667 47.4263C35.2739 46.4946 27.3381 39.5803 27.3381 30.8269C27.3381 25.832 31.3643 21.8057 36.3593 21.8057Z"
+        fill="#027A47"
+      />
+      <path
+        d="M36.3593 25.817C33.6028 25.817 31.3491 28.0707 31.3491 30.8272C31.3491 33.5837 33.6027 35.8447 36.3593 35.8447C39.1158 35.8447 41.3768 33.5837 41.3768 30.8272C41.3768 28.0707 39.1158 25.817 36.3593 25.817ZM36.3593 27.8226C38.0322 27.8226 39.3713 29.1543 39.3713 30.8272C39.3713 32.5001 38.0322 33.8392 36.3593 33.8392C34.6863 33.8392 33.3546 32.5001 33.3547 30.8272C33.3547 29.1543 34.6864 27.8226 36.3593 27.8226Z"
+        fill="#027A47"
+      />
+    </svg>
+  ),
+  settings_orange_location: (props: LucideProps) => (
+    <svg
+      {...props}
+      width="72"
+      height="70"
+      viewBox="0 0 72 70"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="0.820312"
+        y="0.429688"
+        width="71"
+        height="68.8248"
+        rx="23.1407"
+        fill="#FDFCEE"
+      />
+      <rect
+        x="7.68164"
+        y="7.07458"
+        width="57.2777"
+        height="55.523"
+        rx="17"
+        fill="#FFFCD3"
+      />
+      <path
+        d="M36.3168 19.7997C30.2382 19.7997 25.29 24.7479 25.29 30.8265C25.29 41.5221 35.6952 49.6534 35.6952 49.6534C35.8728 49.7951 36.0933 49.8723 36.3205 49.8723C36.5477 49.8723 36.7682 49.7951 36.9458 49.6534C36.9458 49.6534 47.351 41.5221 47.351 30.8265C47.3509 24.7479 42.3954 19.7997 36.3168 19.7997ZM36.3168 21.8053C41.3118 21.8053 45.3454 25.8315 45.3454 30.8265C45.3454 39.5764 37.4223 46.4895 36.3242 47.4258C35.2314 46.4942 27.2956 39.5798 27.2956 30.8265C27.2956 25.8315 31.3218 21.8053 36.3168 21.8053Z"
+        fill="#FDC200"
+      />
+      <path
+        d="M36.3168 25.8166C33.5603 25.8166 31.3066 28.0702 31.3066 30.8267C31.3066 33.5833 33.5603 35.8443 36.3168 35.8443C39.0733 35.8443 41.3343 33.5833 41.3343 30.8267C41.3343 28.0702 39.0733 25.8166 36.3168 25.8166ZM36.3168 27.8221C37.9897 27.8221 39.3288 29.1538 39.3288 30.8267C39.3288 32.4996 37.9897 33.8387 36.3168 33.8387C34.6439 33.8387 33.3122 32.4996 33.3122 30.8267C33.3122 29.1538 34.6439 27.8221 36.3168 27.8221Z"
+        fill="#FDC200"
+      />
+    </svg>
+  ),
+
+=======
+>>>>>>> master
   dropdown: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -235,10 +481,14 @@ export const Icons = {
       fill="none"
       {...props}
     >
+<<<<<<< HEAD
+      <path d="M12 15L6 9H18L12 15Z" fill="white" />
+=======
       <path
         d="M12 15L6 9H18L12 15Z"
         fill="white"
       />
+>>>>>>> master
     </svg>
   ),
 };

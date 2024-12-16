@@ -45,7 +45,7 @@ const config: Config = {
         },
         info: {
           DEFAULT: "#6941C6",
-          foreground: "#F9F5FF",
+          foreground: "#F4E7FF",
         },
         success: {
           DEFAULT: "#01D019",
