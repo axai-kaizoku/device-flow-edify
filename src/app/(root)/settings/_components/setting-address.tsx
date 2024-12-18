@@ -11,7 +11,7 @@ function SettingAddress({ data }: { data: Org }) {
   return (
     <div className="flex flex-col my-6">
       <div className="flex justify-between mb-6">
-        <h1 className="font-semibold text-2xl text-secondary">
+        <h1 className="font-medium text-xl text-secondary">
           Office Address ({data?.office_address?.length || 0})
         </h1>
         <CreateAddress>
@@ -35,7 +35,7 @@ function SettingAddress({ data }: { data: Org }) {
               )}
               <div>
                 <div className="flex gap-8">
-                  <h1 className="text-xl text-primary font-semibold">
+                  <h1 className="text-xl text-primary font-medium">
                     {address?.isPrimary ? "Primary Office" : "Secondary Office"}
                   </h1>
                   <h1
@@ -43,7 +43,7 @@ function SettingAddress({ data }: { data: Org }) {
                       address?.isPrimary
                         ? "text-success-second bg-success-foreground"
                         : "text-alert bg-alert-foreground"
-                    } flex justify-center rounded-full font-semibold items-center px-2`}
+                    } flex justify-center rounded-full font-medium items-center px-2`}
                   >
                     {address?.isPrimary ? "Primary" : "Secondary"}
                   </h1>

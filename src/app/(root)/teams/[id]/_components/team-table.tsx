@@ -22,19 +22,6 @@ export default function TeamTable({ data }: { data: User[] }) {
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
-  const handleRemoveUser = async (data: Team) => {
-    if (!confirm("Are you sure you want to remove this user from the team?"))
-      return;
-
-    try {
-      await updateUser(data._id!, { ...data, teamId: null });
-      router.refresh();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("Failed to delete the user. Please try again.");
-    }
-  };
-
   return (
     <>
       <Table
