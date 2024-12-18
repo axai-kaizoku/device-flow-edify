@@ -19,8 +19,8 @@ const EmployeeReport = () => {
       }
 
       const data = await getUserReports({ filters });
-      if (data && data.users && data.users.length > 0) {
-        const csv = convertToCSV(data.users);
+      if (data && data?.users && data?.users?.length > 0) {
+        const csv = convertToCSV(data?.users);
 
         downloadCSV(csv, `user_report.csv`);
       } else {
@@ -56,7 +56,7 @@ const EmployeeReport = () => {
             <label className="text-gray-700 font-medium text-lg">From:</label>
             <input
               type="date"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
             />
@@ -65,7 +65,7 @@ const EmployeeReport = () => {
             <label className="text-gray-700 font-medium text-lg">To:</label>
             <input
               type="date"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
             />
@@ -76,31 +76,36 @@ const EmployeeReport = () => {
           <label className="text-gray-700 font-medium text-lg">Date:</label>
           <input
             type="date"
-            className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+            className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
       )}
 
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <label className="text-gray-700 font-medium text-lg">
           File Format :
         </label>
         <input
           type="text"
-          className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+          className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
           value="CSV"
           readOnly
         />
-      </div>
+      </div> */}
 
-      <button
-        className="w-full my-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
-        onClick={handleDownloadClick}
-      >
-        Download Report
-      </button>
+      <div className="flex gap-2">
+        <button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+          Cancel
+        </button>
+        <button
+          className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+          onClick={handleDownloadClick}
+        >
+          Download
+        </button>
+      </div>
     </div>
   );
 };

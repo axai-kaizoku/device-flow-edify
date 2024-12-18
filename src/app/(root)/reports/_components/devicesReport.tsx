@@ -13,9 +13,9 @@ const DevicesReport = () => {
             if(status === 'all'){
                 const data = await filterDevice({pageLength:1000});
 
-                if (data.devices && data.devices.length > 0) {
+                if (data?.devices && data?.devices?.length > 0) {
                 
-                    const csv = convertToCSV(data.devices);
+                    const csv = convertToCSV(data?.devices);
             
                     
                     downloadCSV(csv, `Device_Report_${status}.csv`);
@@ -27,9 +27,9 @@ const DevicesReport = () => {
             } else { 
                 const data = await getDeviceReport(status);
             
-                if (data && data.devices && data.devices.length > 0) {
+                if (data && data?.devices && data?.devices?.length > 0) {
                     
-                    const csv = convertToCSV(data.devices);
+                    const csv = convertToCSV(data?.devices);
             
                     
                     downloadCSV(csv, `Device_Report_${status}.csv`);
@@ -60,21 +60,19 @@ const DevicesReport = () => {
                 </select>
             </div>
 
-            <div className="mb-8">
+            {/* <div className="mb-8">
                 <label className="text-gray-700 font-medium text-lg">File Format :</label>  
                 <input type='text'
                 className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200'
                 value="CSV"
                 readOnly
                 />  
-            </div>
+            </div> */}
 
-            <button
-                className="w-full my-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
-                onClick={handleDownloadReport}
-            >
-                Download Report
-            </button>
+            <div className='flex gap-2'>
+                <button className='flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]'>Cancel</button>
+                <button className='flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5' onClick={handleDownloadReport}>Download</button>
+            </div>
         </div>
   )
 }

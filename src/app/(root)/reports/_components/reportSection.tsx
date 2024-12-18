@@ -25,17 +25,17 @@ const ReportSection = ({ reportData }: { reportData: report[] }) => {
 
             {/* Reports Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {reports.map((report, index) => (
-                <Sheet key={index}>
+              {reports?.map((report, index) => (
+                <div key={index}>
                   {/* Card */}
-                  <ReportCard report={report} />
+                  <ReportCard report={report} index={index}/>
                   {/* Sheet Content */}
-                  <SheetContent>
+                  {/* <SheetContent>
                     <div className="pt-12 px-4">
                       <AllReports report={report} index={index} />
                     </div>
-                  </SheetContent>
-                </Sheet>
+                  </SheetContent> */}
+                </div>
               ))}
             </div>
           </div>
