@@ -76,6 +76,7 @@ const devicesFields = [
 	'processor',
 	'purchase_order',
 	'purchase_value',
+	'deleted_at',
 	'ram',
 	'serial_no',
 	'storage',
@@ -137,6 +138,52 @@ export async function getAssignedDevicesReport({
 	fields = devicesFields,
 	searchQuery = '',
 	pageLength = 1000,
+}: any): Promise<any> {
+	try {
+		const payload = {
+			fields,
+			filters: filters && filters.length > 0 ? filters : [],
+			page_length: pageLength,
+		};
+
+		console.log('payload for Device report -> ', payload);
+
+		// Construct the URL with an optional search query
+		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+			searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ''
+		}`;
+
+		// API call
+		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
+		console.log(apiUrl, payload);
+		// Check if response has data
+		if (res && res.data) {
+			// console.log('Filtered Data:', res.data);
+			return res.data; // Return the filtered data
+		} else {
+			throw new Error('No data received from the API');
+		}
+	} catch (error: any) {
+		// Enhanced error logging
+		console.error(
+			'Error filtering Devices:',
+			error.response?.data || error.message,
+		);
+
+		// Throw more specific error message
+		throw new Error(
+			error.response?.data?.message ||
+				'Failed to filter Devices. Please try again later.',
+		);
+	}
+}
+
+
+export async function getDeletedDevicesReport({
+	filters = [],
+	fields = devicesFields,
+	searchQuery = '',
+	pageLength = 100000,
 }: any): Promise<any> {
 	try {
 		const payload = {

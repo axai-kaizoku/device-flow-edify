@@ -4,14 +4,25 @@ import AssignedDevicesReport from './assignedDevicesReport';
 import DevicesReport from './devicesReport';
 import EmployeeReport from './employeeReport';
 import { convertToCSV, downloadCSV } from './util';
+import { report } from '../page';
+import AllAssets from './AllAssets';
+import DeletedAssetsReport from './DeletedAssetsReport';
+import UnassignedReport from './unassignedAssets';
+import DeletedUserReports from './DeletedUserReports';
+import AllUsers from './AllUsers';
 
-const AllReports = ({ index, report }: any) => {
+interface reportsForm {
+	report:report;
+	index:number;
+}
+
+const AllReports = ({ index, report }: reportsForm) => {
 	const handleDownloadInventoryReport = async () => {
 		try {
 			const data = await getSoldInventoryReport();
 
-			if (data && data.soldInventory && data.soldInventory.length > 0) {
-				const csv = convertToCSV(data.soldInventory);
+			if (data && data?.soldInventory && data?.soldInventory?.length > 0) {
+				const csv = convertToCSV(data?.soldInventory);
 
 				downloadCSV(csv, `Sold_Inventory_report.csv`);
 			} else {
@@ -24,35 +35,50 @@ const AllReports = ({ index, report }: any) => {
 	};
 
 	return (
-		<div key={index} className="flex flex-col pt-12 px-4 space-y-4">
-			<h2 className="text-2xl flex justify-start items-center gap-2 font-semibold">
-				{report.title}
+		<div key={index} className="flex flex-col space-y-4">
+			<h2 className="text-3xl flex justify-start items-center gap-2 font-semibold">
+				{report?.title}
 			</h2>
-			<p className="text-gray-600 mb-5 leading-relaxed">{report.description}</p>
-			{report.title === 'Devices Report' ? (
-				<DevicesReport />
-			) : report.title === 'Employee Report' ? (
+			{/* <p className="text-gray-600 mb-5 leading-relaxed">{report.description}</p> */}
+			{report?.title === 'Total Assets' ? (
+				// <DevicesReport />
+				<AllAssets/>
+			) : report?.title === 'Assigned Members' ? (
 				<EmployeeReport />
-			) : report.title === 'Inventory Devices Report' ? (
+			) : report?.title === 'Inventory Devices Report' ? (
 				<div className='flex flex-col'>
-					<div className="my-4">
+					{/* <div className="my-4">
 						<label className="text-gray-700 font-medium text-lg">File Format :</label>  
 						<input type='text'
-						className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200'
+						className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200'
 						value="CSV"
 						readOnly
 						required={true}
 						/>  
-					</div>
+					</div> */}
 
-					<button
-						className="w-full my-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
-						onClick={handleDownloadInventoryReport}>
-						Download Report
-					</button>
+					<div className="flex gap-2">
+						<button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+						Cancel
+						</button>
+						<button
+						className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+						onClick={handleDownloadInventoryReport}
+						>
+						Download
+						</button>
+					</div>
 				</div>
-			) : report.title === 'Assigned Devices Report' ? (
+			) : report?.title === 'Assigned Assets' ? (
 				<AssignedDevicesReport />
+			) : report?.title === 'Deleted Assets' ? (
+				<DeletedAssetsReport />
+			) : report?.title === 'Unassigned Assets' ? (
+				<UnassignedReport />
+			) : report?.title === 'Deleted Members' ? (
+				<DeletedUserReports />
+			) : report?.title === 'Total Members' ? (
+				<AllUsers />
 			) : (
 				<div className="text-gray-500 italic">
 					No action available right now
