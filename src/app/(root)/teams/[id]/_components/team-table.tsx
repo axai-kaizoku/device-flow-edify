@@ -26,6 +26,7 @@ export default function TeamTable({ data }: { data: User[] }) {
     <>
       <Table
         data={currentTeams}
+        
         checkboxSelection={{
           uniqueField: "_id",
           //logic yet to be done

@@ -16,10 +16,10 @@ export const TableHeader = styled.thead`
 export const TableHeadRow = styled.tr`
 	height: 44px;
 	padding: 12px 24px;
-	border: 1px solid ${Colors.grey_50};
-	font-family: 'Inter-Medium';
-	font-size: 12px;
-	background: ${Colors.white_3};
+	border-bottom: 1.036px solid #EAECF0;
+	font-size: 13px;
+	font-weight: 400;
+	background: #F9FAFB;
 	color: ${Colors.grey_500};
 `;
 

@@ -7,10 +7,10 @@ interface TeamMembersProps {
 
 const TeamMembers: React.FC<TeamMembersProps> = ({ users }) => {
   return (
-    <div className="p-4 border rounded-3xl flex flex-col gap-4">
+    <div className="rounded-3xl flex flex-col gap-4" style={{border: '1px solid #F6F6F6'}}>
       <div className="flex gap-3 p-6 items-center">
         <h2 className="text-lg font-semibold text-gray-800">Team Members</h2>
-        <span className="bg-purple-100 text-purple-700 text-sm px-3 py-1 rounded-full">
+        <span className="bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full">
           {users?.length ?? "N/A"} Members
         </span>
       </div>

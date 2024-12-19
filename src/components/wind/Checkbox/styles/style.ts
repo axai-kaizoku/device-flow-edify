@@ -6,17 +6,25 @@ const handleSizeType = (size) => {
     case "md":
       return {
         IndicatorOuterDiv: `width: 14px ; 
-                      height: 14px ;`,
+                      height: 14px ;
+                      border: 1px solid #D0D5DD;
+                      border-radius: 6px;
+                      `,
       };
     case "lg":
       return {
         IndicatorOuterDiv: `width: 17px ; 
+                      border: 1px solid #D0D5DD;
+                      border-radius: 6px;
                       height: 17px ;`,
       };
     default:
       return {
         IndicatorOuterDiv: `width: 14px ; 
-                      height: 14px ;`,
+                      height: 14px ;
+                      border: 1px solid #D0D5DD;
+                      border-radius: 6px;
+                      `,
       };
   }
 };

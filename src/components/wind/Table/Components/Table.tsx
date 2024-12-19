@@ -273,6 +273,7 @@ export const Table = ({
 						<TableCell>
 							<Checkbox
 								value="master"
+								size='lg'
 								checked={record?.isChecked}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 									handleCheckBox(
@@ -323,6 +324,7 @@ export const Table = ({
 										<TableCell>
 											<Checkbox
 												value="master"
+												size='lg'
 												checked={handleHeaderCheckBoxState()}
 												onChange={(e) =>
 													handleHeaderCheckBox(e.target.checked)
@@ -331,7 +333,7 @@ export const Table = ({
 									)}
 									<>
 										{columnData?.map((header: ColumnWithSortingType, index) => (
-											<TableCell key={index} width={header?.width}>
+											<TableCell style={{fontSize: 12, color: '#667085', fontWeight: 500}} key={index} width={header?.width}>
 												<SortIconTextContainer
 													disableCursor={!header?.sortBy}
 													headAlign={header.headAlign}
