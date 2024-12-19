@@ -7,7 +7,6 @@ export type Props = {
   session: Session | null;
 };
 
-
 export default async function MainLayout({
   children,
 }: {
@@ -18,15 +17,15 @@ export default async function MainLayout({
     <div className="flex flex-col h-full min-h-screen bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed">
       {/* Header Section */}
 
-      <div className="absolute inset-0 bg-white opacity-50 backdrop-blur-lg z-[-1]" />
+      <div className="absolute inset-0 bg-white opacity-70 backdrop-blur-lg z-[-1]" />
 
-      <Header session={session}/>
+      <Header session={session} />
 
       {/* Main Content Section */}
       <div className="flex flex-grow mt-16">
         {/* Sidebar */}
         <div className="fixed mt-14 left-0 w-36 h-[calc(100vh-4rem)] bg-transparent">
-          <Sidebar session={session}/>
+          <Sidebar session={session} />
         </div>
 
         {/* Main Content */}

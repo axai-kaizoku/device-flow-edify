@@ -27,10 +27,10 @@ export default function PaginatedList({
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   return (
-    <div className="bg-white p-[29px] rounded-[65px] w-full my-10">
+    <div className="bg-white p-[29px] rounded-[54px] w-full my-2">
       {/* Grid of Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
-        {currentTeams.map(
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {currentTeams?.map(
           (team) =>
             team && (
               <TeamCard

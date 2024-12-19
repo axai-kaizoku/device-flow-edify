@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@/components/icons";
 import Link from "next/link";
 
 const MemberIcon = ({
@@ -10,12 +11,12 @@ const MemberIcon = ({
   isPlaceholder: boolean;
 }) => (
   <div
-    className={`size-9 rounded-full border-2 border-white flex items-center justify-center ${
+    className={`w-10 h-10 rounded-full border-2 border-white flex items-center justify-center ${
       isPlaceholder ? "bg-gray-200 text-gray-500" : ""
     }`}
   >
     {isPlaceholder ? (
-      "+"
+      <Icons.team_no_memeber_logo className="w-4 h-4" />
     ) : (
       <img
         src={src}
@@ -32,7 +33,9 @@ interface TeamCardProps {
   image?: string;
   employees_count?: number;
   _id?: string;
-  buttons?: React.ReactNode; // Allow passing custom buttons as a prop
+  active_manager?: { _id: string; first_name: string; image?: string }[];
+  active_employees?: { _id: string; first_name: string; image?: string }[];
+  buttons?: React.ReactNode;
 }
 
 export const TeamCard = ({
@@ -41,27 +44,40 @@ export const TeamCard = ({
   image,
   employees_count,
   _id,
+  active_manager,
+  active_employees,
   buttons,
 }: TeamCardProps) => {
+  const defaultImage =
+    "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
+
   const renderMembers = () => {
-    if (employees_count === 0) {
-      return Array(3)
-        .fill(null)
-        .map((_, index) => <MemberIcon key={index} isPlaceholder={true} />);
-    }
-    return (
-      <>
-        <MemberIcon src="https://picsum.photos/300/300" isPlaceholder={false} />
-        <MemberIcon src="https://picsum.photos/301/300" isPlaceholder={false} />
-        <MemberIcon src="https://picsum.photos/302/300" isPlaceholder={false} />
-      </>
-    );
+    const members = active_employees || [];
+    const maxMembersToShow = 3;
+
+    // Render up to 3 members, including placeholders for missing ones
+    return Array.from({ length: maxMembersToShow }, (_, index) => {
+      const member = members[index];
+      if (member) {
+        // Render a member with an image (or default fallback)
+        return (
+          <MemberIcon
+            key={member?._id || index}
+            src={member?.image || defaultImage}
+            isPlaceholder={!member?.image}
+          />
+        );
+      } else {
+        // Render a placeholder if no member exists for this slot
+        return <MemberIcon key={`placeholder-${index}`} isPlaceholder={true} />;
+      }
+    });
   };
 
   return (
     <div
       className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
- relative rounded-[35px]  w-90   p-6 flex flex-col  transition-all "
+ relative rounded-[25px] w-96 2xl:w-[402px] p-5 flex flex-col transition-all"
     >
       <Link
         href={`/teams/${_id}`}
@@ -71,28 +87,34 @@ export const TeamCard = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img
-              src={image || "https://picsum.photos/300/300"}
-              alt="team-icon"
-              className="w-12 h-12 object-cover rounded-full border-2 border-white "
+              src={active_manager?.[0]?.image || defaultImage}
+              alt="manager-icon"
+              className="w-14 h-14 object-cover rounded-full"
             />
-            <div>
-              <h1 className=" text-base font-semibold">Aniket Prakash</h1>
-              <p className="text-sm font-medium text-[#7C7C7C]">Manager</p>
+            <div className="-mt-1 flex-col flex">
+              <h1 className="text-lg 2xl:text-xl font-semibold">
+                {active_manager?.[0]?.first_name || "No Manager"}
+              </h1>
+              <p className="text-base font-medium text-[#7C7C7C] -mt-1">
+                Manager
+              </p>
             </div>
           </div>
         </div>
 
         {/* Description Section */}
         <div>
-          <p className="font-semibold text-2xl line-clamp-2">{title}</p>
-          <p className="text-[#7C7C7C] text-base font-medium line-clamp-2">
+          <p className="font-semibold text-2xl 2xl:text-3xl line-clamp-2">
+            {title}
+          </p>
+          <p className="text-[#7C7C7C] text-lg 2xl:text-xl font-medium line-clamp-2">
             {description}
           </p>
         </div>
 
         {/* Members Section */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-sm font-medium text-[#7C7C7C]">
+        <div className="flex -mt-3 items-center justify-between">
+          <h1 className="text-base 2xl:text-lg font-medium text-[#7C7C7C]">
             {employees_count === 0
               ? "No Members Yet"
               : `${employees_count} Active Members`}
@@ -103,7 +125,7 @@ export const TeamCard = ({
 
       {/* Buttons Section */}
       {buttons && (
-        <div className="absolute  flex-col flex gap-2 right-4">{buttons}</div>
+        <div className="absolute flex-col flex gap-2 right-5">{buttons}</div>
       )}
     </div>
   );

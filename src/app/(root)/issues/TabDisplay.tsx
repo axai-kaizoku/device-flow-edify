@@ -5,6 +5,7 @@ import { useQueryState } from "nuqs";
 import { ArrowUpDown, Check, Download, Plus, Search } from "lucide-react";
 import { Tab } from "../teams/_components/Tab";
 import IssueTableDisplay from "./_components/IssueTableDisplay";
+import ClosedIssueTable from "./_components/ClosedIssues";
 
 interface TabDisplayProps {
   issues: Issues[];
@@ -22,7 +23,7 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
       case "open":
         return <IssueTableDisplay data={issues} />;
       case "closed":
-        return <IssueTableDisplay data={issues} />;
+        return <ClosedIssueTable data={issues} />;
       default:
         return null;
     }
@@ -31,7 +32,7 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   return (
     <>
       <div className="flex items-center justify-between ">
-        <div className="flex items-center w-full gap-12">
+        <div className="flex items-center -mb-9  w-full gap-12">
           <Tab
             active={activeTab === "open"}
             onClick={() => {

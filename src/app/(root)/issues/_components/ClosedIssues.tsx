@@ -1,14 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Icon } from "@/components/wind/Icons";
 import { Table } from "@/components/wind/Table";
 import { Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
 import { issueFields, filterIssues } from "@/server/filterActions";
 import { useQueryState } from "nuqs";
 import Pagination from "../../teams/_components/pagination";
-import { IssueConfirmation } from "./issue-closed";
 import { IssueReOpen } from "./issue-reopen";
+import IssueClosedHeader from "./issue-closed-header";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -232,76 +231,79 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
           </ul>
         </div>
       )}
-      <Table
-        data={currentIssues}
-        checkboxSelection={{
-          uniqueField: "_id",
-          //logic yet to be done
-          onSelectionChange: (e) => console.log(e),
-        }}
-        columns={[
-          {
-            title: "Device",
-            render: (data: Issues) => (
-              <div
-                className="w-full flex justify-center items-center gap-1 cursor-pointer"
-                onClick={() => router.push(`/issues/${data?._id}`)}
-              >
-                <img
-                  src=""
-                  alt="Device Logo"
-                  className="border size-10 rounded-full"
-                />
-                <div>Device Name</div>
-              </div>
-            ),
-          },
-
-          {
-            title: "Serial number",
-            dataIndex: "serial_no",
-          },
-          {
-            title: "Issued Id",
-            dataIndex: "_id",
-          },
-          {
-            title: "Raised by",
-            dataIndex: "userName",
-          },
-          {
-            title: "Closed",
-            dataIndex: "userName",
-          },
-          {
-            title: "Issue Type",
-            dataIndex: "description",
-          },
-
-          {
-            title: "Status",
-            dataIndex: "status",
-          },
-
-          {
-            title: "Actions",
-            render: (record: Issues) => (
-              <IssueReOpen id={record?._id!} issueData={data}>
-                <div className="rounded-full bg-primary text-base whitespace-nowrap px-2 text-white font-medium">
-                  Reopen
+      <div className="rounded-[33px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 px-4 flex flex-col">
+        <IssueClosedHeader data={data} />
+        <Table
+          data={currentIssues}
+          checkboxSelection={{
+            uniqueField: "_id",
+            //logic yet to be done
+            onSelectionChange: (e) => console.log(e),
+          }}
+          columns={[
+            {
+              title: "Device",
+              render: (data: Issues) => (
+                <div
+                  className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                  onClick={() => router.push(`/issues/${data?._id}`)}
+                >
+                  <img
+                    src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                    alt="Device Logo"
+                    className="border size-10 rounded-full"
+                  />
+                  <div>Device Name</div>
                 </div>
-              </IssueReOpen>
-            ),
-          },
-        ]}
-      />
-      {/* Pagination Control */}
-      <Pagination
-        currentPage={currentPage}
-        itemsPerPage={ITEMS_PER_PAGE}
-        totalItems={ClosedIssues.length}
-        onPageChange={handlePageChange}
-      />
+              ),
+            },
+
+            {
+              title: "Serial number",
+              dataIndex: "serial_no",
+            },
+            {
+              title: "Issued Id",
+              dataIndex: "_id",
+            },
+            {
+              title: "Raised by",
+              dataIndex: "userName",
+            },
+            {
+              title: "Closed",
+              dataIndex: "userName",
+            },
+            {
+              title: "Issue Type",
+              dataIndex: "description",
+            },
+
+            {
+              title: "Status",
+              dataIndex: "status",
+            },
+
+            {
+              title: "Actions",
+              render: (record: Issues) => (
+                <IssueReOpen id={record?._id!} issueData={data}>
+                  <div className="rounded-full bg-primary text-base whitespace-nowrap px-2 text-white font-medium">
+                    Reopen
+                  </div>
+                </IssueReOpen>
+              ),
+            },
+          ]}
+        />
+        {/* Pagination Control */}
+        <Pagination
+          currentPage={currentPage}
+          itemsPerPage={ITEMS_PER_PAGE}
+          totalItems={ClosedIssues?.length}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 }

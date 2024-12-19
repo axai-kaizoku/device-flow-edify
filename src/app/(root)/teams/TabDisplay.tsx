@@ -54,7 +54,7 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
         <h1 className="text-gray-400 font-semibold text-lg">Teams</h1>
         <h1 className="text-3xl font-bold py-4">Manage Teams & Employee</h1>
         <div className="flex items-center justify-between ">
-          <div className="flex items-center w-full gap-12">
+          <div className="flex items-center w-full -mb-9 gap-12">
             <Tab
               active={activeTab === "active"}
               onClick={() => handleTabChange("active")}
