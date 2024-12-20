@@ -1,11 +1,9 @@
+ 
 // Form.tsx
-
 "use client";
-
 import { Icon } from "@/components/wind/Icons";
 import React, { useEffect, useState } from "react";
 import DeviceType from "./deviceType";
-
 import { createDevices, Device } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import AdvanceDeviceDetails from "./advanceDeviceDetails";
@@ -33,14 +31,12 @@ import { createPayload } from "./_components/createPayload";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
-
 function Form({ closeBtn }: FormProps) {
   const [step, setStep] = useState<number>(0);
   const [totalStep, setTotalStep] = useState<number>(1);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-
   const [formData, setFormData] = useState<FormData>({
     deviceType: "",
     keyboardDetails: {
@@ -100,7 +96,6 @@ function Form({ closeBtn }: FormProps) {
       warrantyExpiryDate: "",
     },
   });
-
   // Utility function to update nested form data with better type safety
   const updateFormData = <K extends keyof FormData>(
     section: K,
@@ -124,7 +119,6 @@ function Form({ closeBtn }: FormProps) {
     const monitor = formData?.monitorDetails;
     const keyboard = formData?.keyboardDetails;
     const mouse = formData?.mouseDetails;
-
     switch (step) {
       case 0:
         if (!formData?.deviceType) {
@@ -207,22 +201,18 @@ function Form({ closeBtn }: FormProps) {
       default:
         break;
     }
-
     setErrors(currentErrors);
     return Object.keys(currentErrors).length === 0;
   };
-
   const handleNextStep = () => {
     if (validate()) {
       
       setStep((prevStep) => prevStep + 1);
     }
   };
-
   const handlePrevStep = () => {
     setStep((prevStep) => (prevStep >= 1 ? prevStep - 1 : prevStep));
   };
-
   const handleSubmit = async () => {
     if (validate()) {
       setIsLoading(true);
@@ -230,7 +220,6 @@ function Form({ closeBtn }: FormProps) {
         const payload: any = createPayload(formData);
         
         // const deviceDetails: Device = {
-
           // {formData.deviceType === 'laptop' && {}}
           // device_type: formData.deviceType, //fixed
           // device_name: formData.laptopPage1.device_name,
@@ -262,10 +251,8 @@ function Form({ closeBtn }: FormProps) {
       }
     }
   };
-
   return (
     <div className="flex flex-col justify-start items-start pt-2 px-3 space-y-4 gap-1 h-full">
-
       <div className="flex justify-start items-center gap-4 text-2xl font-semibold">
         <div className="bg-black rounded-full p-2 flex justify-center items-center">
           <Monitor color="white" className="size-5" />
@@ -274,17 +261,14 @@ function Form({ closeBtn }: FormProps) {
           Add a {formData?.deviceType ? formData?.deviceType : "Device"}
         </span>
       </div>
-
       <div className="w-full flex flex-col gap-1">
         <div className="font-semibold text-lg text-black">
           Step {step} of {totalStep}
         </div>
         <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
       </div>
-
       {/* Render different components based on the current step */}
       
-
       {step === 0 && (
         <DeviceType
           data={formData?.deviceType}
@@ -363,11 +347,8 @@ function Form({ closeBtn }: FormProps) {
       ): (
         <></>
       )}
-
       <div className="flex-grow"></div>    
-
       {/* Navigation buttons */}
-
       <div className="flex gap-3 w-full mt-auto">
         {step >= 1 ? (
           <button
@@ -417,5 +398,11 @@ function Form({ closeBtn }: FormProps) {
     </div>
   );
 }
-
 export default Form;
+
+
+
+
+
+
+

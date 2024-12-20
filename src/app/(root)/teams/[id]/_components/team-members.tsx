@@ -15,7 +15,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ users }) => {
         <h2 className="text-lg font-gilroySemiBold text-gray-800">
           Team Members
         </h2>
+
         <span className="bg-[#F9F5FF] text-[#6941C6] text-sm px-3 py-1 rounded-full">
+
           {users?.length ?? "N/A"} Members
         </span>
       </div>
