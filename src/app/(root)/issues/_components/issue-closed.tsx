@@ -39,7 +39,7 @@ export const IssueConfirmation = ({
         </div>
 
         {/* Title */}
-        <DialogTitle className="text-lg font-semibold text-gray-900">
+        <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
           Are you sure?
         </DialogTitle>
 

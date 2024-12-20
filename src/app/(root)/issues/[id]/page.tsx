@@ -16,7 +16,9 @@ async function SignleIssue({ params }: IssuePageProps) {
     <CombinedContainer title="Issue Details">
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-center">
-          <div className="text-[#7F7F7F] font-semibold text-lg">Issues</div>
+          <div className="text-[#7F7F7F] font-gilroySemiBold text-lg">
+            Issues
+          </div>
           <div className="flex gap-3">
             <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
               <ChevronLeft className="text-[#6C6C6C]" />
@@ -27,7 +29,7 @@ async function SignleIssue({ params }: IssuePageProps) {
           </div>
         </div>
 
-		<IssueSection data={data}/>
+        <IssueSection data={data} />
         {/* <EditIssue data={data} /> */}
       </div>
     </CombinedContainer>

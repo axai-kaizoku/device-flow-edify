@@ -8,6 +8,7 @@ export const FormField = ({
   onChange,
   error,
   placeholder,
+  className,
   ...props
 }: {
   label: string;
@@ -17,10 +18,10 @@ export const FormField = ({
   error?: string;
   placeholder: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) => (
-  <div className="group relative">
+  <div className="group relative w-full">
     <label
       htmlFor={id}
-      className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-medium text-foreground"
+      className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
     >
       {label}
     </label>
@@ -29,7 +30,8 @@ export const FormField = ({
       className={cn(
         error
           ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-          : "h-12"
+          : "h-12 rounded-xl border border-[#5F5F5F]",
+        className
       )}
       value={value}
       onChange={onChange} // Fix: Re-enabled onChange

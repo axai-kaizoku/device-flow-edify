@@ -11,54 +11,74 @@ export const metadata: Metadata = {
   description: "A better way to manage assets in orgs",
 };
 
-const gilroy = localFont({
-  src: [
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Thin.ttf",
-      weight: "100", // font-thin
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-UltraLight.ttf",
-      weight: "200", // font-extralight
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Light.ttf",
-      weight: "300", // font-light
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Regular.ttf",
-      weight: "400", // font-normal
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Medium.ttf",
-      weight: "500", // font-medium
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-SemiBold.ttf",
-      weight: "600", // font-semibold
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Bold.ttf",
-      weight: "700", // font-bold
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-ExtraBold.ttf",
-      weight: "800", // font-extrabold
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/gilroy/Gilroy-Heavy.ttf",
-      weight: "900", // font-black
-      style: "normal",
-    },
-  ],
+const gilroyThin = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Thin.ttf",
+  // weight: "100",
+  display: "block",
+  variable: "--font-gilroy-thin",
+});
+
+const gilroyExtraLight = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-UltraLight.ttf",
+  // weight: "200",
+  display: "block",
+
+  variable: "--font-gilroy-extralight",
+});
+
+const gilroyLight = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Light.ttf",
+  // weight: "300",
+  display: "block",
+
+  variable: "--font-gilroy-light",
+});
+
+const gilroyRegular = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Regular.ttf",
+  // weight: "400",
+  display: "block",
+
+  variable: "--font-gilroy-regular",
+});
+
+const gilroyMedium = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Medium.ttf",
+  // weight: "500",
+  display: "block",
+
+  variable: "--font-gilroy-medium",
+});
+
+const gilroySemiBold = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-SemiBold.ttf",
+  // weight: "100 1000",
+  display: "block",
+  variable: "--font-gilroy-semibold",
+});
+
+const gilroyBold = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Bold.ttf",
+  // weight: "700",
+  display: "block",
+
+  variable: "--font-gilroy-bold",
+});
+
+const gilroyExtraBold = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-ExtraBold.ttf",
+  // weight: "800",
+  display: "block",
+
+  variable: "--font-gilroy-extrabold",
+});
+
+const gilroyBlack = localFont({
+  src: "../../public/fonts/gilroy2/Gilroy-Heavy.ttf",
+  // weight: "900",
+  display: "block",
+
+  variable: "--font-gilroy-black",
 });
 
 export default async function RootLayout({
@@ -71,7 +91,19 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={gilroy.className}>
+      <body
+        className={`
+          ${gilroyThin.variable} 
+          ${gilroyExtraLight.variable} 
+          ${gilroyLight.variable} 
+          ${gilroyRegular.variable} 
+          ${gilroyMedium.variable} 
+          ${gilroySemiBold.variable} 
+          ${gilroyBold.variable} 
+          ${gilroyExtraBold.variable} 
+          ${gilroyBlack.variable}
+        `}
+      >
         <KbarWrapper userRole={userRole} /> {/* Render KbarWrapper here */}
         <Providers>
           <ScreenSize />

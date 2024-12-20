@@ -4,7 +4,6 @@ import { convertToCSV, downloadCSV } from "./util";
 import { filterUsers } from "@/server/filterActions";
 
 const AllUsers = () => {
-
   const handleDownloadReport = async () => {
     try {
       const data = await filterUsers({ pageLength: 1000 });
@@ -28,7 +27,7 @@ const AllUsers = () => {
       </div>
 
       {/* <div className="mb-8">
-        <label className="text-gray-700 font-medium text-lg">
+        <label className="text-gray-700 font-gilroyMedium text-lg">
           File Format :
         </label>
         <input
@@ -40,11 +39,11 @@ const AllUsers = () => {
       </div> */}
 
       <div className="flex gap-2">
-        <button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+        <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
           Cancel
         </button>
         <button
-          className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+          className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
           onClick={handleDownloadReport}
         >
           Download

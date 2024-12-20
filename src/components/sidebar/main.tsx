@@ -4,17 +4,15 @@ import { ToggleTheme } from "../utils/toggle-theme";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import SidebarItem from "./sidebar-item";
-import { Session } from "next-auth";
 import { ChevronLeft, LogOut } from "lucide-react";
 import { Props } from "@/app/(root)/layout";
-
 
 export default function SidebarMain({ session }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
   return (
-    <section className="flex flex-col relative mx-auto items-center justify-start min-h-screen bg-transparent">
+    <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen bg-transparent">
       {session?.user.role === 2 ? (
         <>
           <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full cursor-pointer">
@@ -65,9 +63,10 @@ export default function SidebarMain({ session }: Props) {
               <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                onClick={() => signOut()}>
-                <LogOut className="w-5 h-5"/>
+                style={{ marginLeft: "auto", marginRight: "auto" }}
+                onClick={() => signOut()}
+              >
+                <LogOut className="w-5 h-5" />
               </button>
 
               <ToggleTheme />
@@ -113,12 +112,12 @@ export default function SidebarMain({ session }: Props) {
               <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                onClick={() => signOut()}>
-                <LogOut className="w-5 h-5"/>
+                style={{ marginLeft: "auto", marginRight: "auto" }}
+                onClick={() => signOut()}
+              >
+                <LogOut className="w-5 h-5" />
               </button>
             </div>
-            
           </div>
         </>
       )}

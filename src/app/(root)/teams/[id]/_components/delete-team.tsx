@@ -37,7 +37,7 @@ export const DeleteTeam = ({
         </div>
 
         {/* Title */}
-        <DialogTitle className="text-lg font-semibold text-gray-900">
+        <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
           Are you sure?
         </DialogTitle>
 
@@ -50,15 +50,13 @@ export const DeleteTeam = ({
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
-            variant="secondary"
-            className="w-1/2 rounded-[0.60rem]"
+            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            className="w-1/2 rounded-[0.60rem]"
-            variant="destructive"
+            className="w-1/2 rounded-md bg-[#D92D20] text-white"
             onClick={async () => {
               if (id) {
                 try {

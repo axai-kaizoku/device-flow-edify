@@ -71,7 +71,9 @@ export default function ForgotPassForm() {
   return (
     <div className="border h-fit shadow-2xl flex flex-col gap-3 p-6 lg:p-10 rounded w-full lg:w-auto">
       <div className="px-4">
-        <h1 className="text-start text-xl font-semibold">Reset Password</h1>
+        <h1 className="text-start text-xl font-gilroySemiBold">
+          Reset Password
+        </h1>
       </div>
 
       <div className="flex flex-col gap-3 lg:gap-4 p-4">

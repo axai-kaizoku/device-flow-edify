@@ -51,8 +51,10 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
   return (
     <>
       <div className="flex flex-col ">
-        <h1 className="text-gray-400 font-semibold text-lg">Teams</h1>
-        <h1 className="text-3xl font-bold py-4">Manage Teams & Employee</h1>
+        <h1 className="text-gray-400 font-gilroySemiBold text-lg">Teams</h1>
+        <h1 className="text-3xl font-gilroyBold py-4">
+          Manage Teams & Employee
+        </h1>
         <div className="flex items-center justify-between ">
           <div className="flex items-center w-full -mb-9 gap-12">
             <Tab
@@ -72,21 +74,21 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
             <div className="flex items-center gap-2.5 pl-2 pr-20 py-3 ext-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Search size={16} /> {/* Lucide icon for search */}
               <input
-                className="text-sm bg-transparent font-medium whitespace-nowrap focus:outline-none"
+                className="text-sm bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
                 placeholder="Search teams"
               />
             </div>
 
             <div className="flex items-center relative gap-2 px-4 py-3 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Plus size={16} /> {/* Lucide icon for add */}
-              <span className="text-sm font-medium whitespace-nowrap">
+              <span className="text-sm font-gilroyMedium whitespace-nowrap">
                 <CreateTeam />
               </span>
             </div>
 
             <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={16} /> {/* Lucide icon for download */}
-              <span className="text-sm font-medium">Download</span>
+              <span className="text-sm font-gilroyMedium">Download</span>
             </button>
           </div>
         </div>

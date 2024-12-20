@@ -25,14 +25,13 @@ const DeletedAssetsReport = () => {
   };
   return (
     <>
-
       <div>Get All the Deleted Assets</div>
       <div className="flex gap-2">
-        <button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+        <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
           Cancel
         </button>
         <button
-          className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+          className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
           onClick={handleDownloadDeletedAssetsReport}
         >
           Download

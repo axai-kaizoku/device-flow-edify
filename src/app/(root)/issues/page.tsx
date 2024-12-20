@@ -20,8 +20,8 @@ async function Issues({ searchParams }: IssueProps) {
     return (
       <CombinedContainer title="Issues">
         <div className="flex flex-col ">
-          <h1 className="text-gray-400 font-semibold text-lg">Issues</h1>
-          <h1 className="text-3xl font-bold py-4">Manage Issues</h1>
+          <h1 className="text-gray-400 font-gilroySemiBold text-lg">Issues</h1>
+          <h1 className="text-3xl font-gilroyBold py-4">Manage Issues</h1>
           <TabDisplay
             issues={issueResponse?.issues} // Pass the documents array directly
             totalDocuments={issueResponse?.total_count}

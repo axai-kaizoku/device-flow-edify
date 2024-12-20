@@ -11,13 +11,13 @@ function SettingAddress({ data }: { data: Org }) {
   return (
     <div className="flex flex-col my-6">
       <div className="flex justify-between mb-6">
-        <h1 className="font-medium text-xl text-secondary">
+        <h1 className="font-gilroyMedium text-xl 2xl:text-2xl text-secondary">
           Office Address ({data?.office_address?.length || 0})
         </h1>
         <CreateAddress>
           <button className="rounded-full text-secondary flex items-center gap-2 px-4 py-2 border border-secondary bg-white hover:bg-gray-100 transition-shadow shadow-sm">
             <MapPin size={18} />
-            <h1 className="font-semibold text-sm">Add Address</h1>
+            <h1 className="font-gilroySemiBold text-sm">Add Address</h1>
           </button>
         </CreateAddress>
       </div>
@@ -35,7 +35,7 @@ function SettingAddress({ data }: { data: Org }) {
               )}
               <div>
                 <div className="flex gap-8">
-                  <h1 className="text-xl text-primary font-medium">
+                  <h1 className="text-xl text-primary font-gilroyMedium">
                     {address?.isPrimary ? "Primary Office" : "Secondary Office"}
                   </h1>
                   <h1
@@ -43,12 +43,12 @@ function SettingAddress({ data }: { data: Org }) {
                       address?.isPrimary
                         ? "text-success-second bg-success-foreground"
                         : "text-alert bg-alert-foreground"
-                    } flex justify-center rounded-full font-medium items-center px-2`}
+                    } flex justify-center rounded-full font-gilroyMedium items-center px-2`}
                   >
                     {address?.isPrimary ? "Primary" : "Secondary"}
                   </h1>
                 </div>
-                <h1 className="text-base   w-40 text-secondary font-medium mt-1">
+                <h1 className="text-base   w-40 text-secondary font-gilroyMedium mt-1">
                   {address?.title}
                 </h1>
               </div>
@@ -56,11 +56,11 @@ function SettingAddress({ data }: { data: Org }) {
             <div className="flex justify-between items-center  pt-4 w-full">
               <div className="space-y-2">
                 <div>
-                  <h1 className="text-secondary text-sm font-semibold mb-0">
+                  <h1 className="text-secondary text-sm font-gilroySemiBold mb-0">
                     Address:
                   </h1>
                 </div>
-                <div className="text-primary text-sm font-semibold max-w-full overflow-hidden">
+                <div className="text-primary text-sm font-gilroySemiBold max-w-full overflow-hidden">
                   <p className="block">
                     {address?.city}, {address?.landmark},
                   </p>
@@ -73,14 +73,14 @@ function SettingAddress({ data }: { data: Org }) {
 
               <div className="flex gap-2 mt-4">
                 <EditAddress address={address}>
-                  <button className="rounded-full text-sm text-secondary flex items-center gap-2 p-2 border border-secondary bg-white hover:border-primary hover:text-primary transition-shadow shadow-sm">
+                  <span className="rounded-full text-sm text-secondary flex items-center gap-2 p-2 border border-secondary bg-white hover:border-primary hover:text-primary transition-shadow shadow-sm">
                     <Pencil size={18} />
-                  </button>
+                  </span>
                 </EditAddress>
                 <DeleteAddress id={address?._id!}>
-                  <button className="rounded-full text-sm text-secondary flex items-center gap-2 p-2 border border-secondary  hover:border-primary hover:text-primary transition-shadow shadow-sm">
+                  <span className="rounded-full text-sm text-secondary flex items-center gap-2 p-[0.58rem] border border-secondary  hover:border-primary hover:text-primary transition-shadow shadow-sm">
                     <Trash2 size={16} />
-                  </button>
+                  </span>
                 </DeleteAddress>
               </div>
             </div>

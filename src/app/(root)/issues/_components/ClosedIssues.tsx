@@ -288,7 +288,7 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
               title: "Actions",
               render: (record: Issues) => (
                 <IssueReOpen id={record?._id!} issueData={data}>
-                  <div className="rounded-full bg-primary text-base whitespace-nowrap px-2 text-white font-medium">
+                  <div className="rounded-full bg-primary text-base whitespace-nowrap px-2 text-white font-gilroyMedium">
                     Reopen
                   </div>
                 </IssueReOpen>

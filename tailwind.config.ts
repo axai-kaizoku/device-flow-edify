@@ -9,6 +9,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        gilroyThin: ["var(--font-gilroy-thin)", "sans-serif"],
+        gilroyExtraLight: ["var(--font-gilroy-extralight)", "sans-serif"],
+        gilroyLight: ["var(--font-gilroy-light)", "sans-serif"],
+        gilroyRegular: ["var(--font-gilroy-regular)", "sans-serif"],
+        gilroyMedium: ["var(--font-gilroy-medium)", "sans-serif"],
+        gilroySemiBold: ["var(--font-gilroy-semibold)", "sans-serif"],
+        gilroyBold: ["var(--font-gilroy-bold)", "sans-serif"],
+        gilroyExtraBold: ["var(--font-gilroy-extrabold)", "sans-serif"],
+        gilroyBlack: ["var(--font-gilroy-black)", "sans-serif"],
+      },
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": {

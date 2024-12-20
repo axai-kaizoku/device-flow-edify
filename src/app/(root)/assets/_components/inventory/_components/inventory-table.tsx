@@ -1,149 +1,149 @@
-'use client';
-import { Icon } from '@/components/wind/Icons';
-import { Table } from '@/components/wind/Table';
-import { deleteDevice, Device } from '@/server/deviceActions';
-import { devicesFields, filterDevice } from '@/server/filterActions';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useQueryState } from 'nuqs';
-import React, { useEffect, useState } from 'react';
+"use client";
+import { Icon } from "@/components/wind/Icons";
+import { Table } from "@/components/wind/Table";
+import { deleteDevice, Device } from "@/server/deviceActions";
+import { devicesFields, filterDevice } from "@/server/filterActions";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useQueryState } from "nuqs";
+import React, { useEffect, useState } from "react";
 interface InventoryProps {
-	devices: Device[];
+  devices: Device[];
 }
 
 const numericFields = [
-	'purchase_value',
-	'warranty_expiry_date',
-	'ram',
-	'storage',
+  "purchase_value",
+  "warranty_expiry_date",
+  "ram",
+  "storage",
 ];
-const numericOperators = ['>=', '<=', '>', '<', 'Equals'];
-const generalOperators = ['Equals', 'Not Equals', 'Like', 'In', 'Not In', 'Is'];
-
+const numericOperators = [">=", "<=", ">", "<", "Equals"];
+const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
 
 function InventoryTable({ devices }: InventoryProps) {
-	const router = useRouter();
-	const [device, setDevice] = useState(devices);
+  const router = useRouter();
+  const [device, setDevice] = useState(devices);
 
-	const [searchTerm, setSearchTerm] = useQueryState('searchQuery');
-	const [openFilter, setOpenFilter] = useState(false);
-	const [filters, setFilters] = useState<any[]>([]); // Store applied filters
-	const [pageLength, setPageLength] = useState(20); // Default is 20
-	const [filterInputs, setFilterInputs] = useState([
-		{ field: '', operator: '', value: '' },
-	]); // Store dynamic filter fields
-	const [availableOperators, setAvailableOperators] =
-		useState(generalOperators);
-	
-	const handleSearchAndFilter = async () => {
-		// Combine search term and filters
-		const query = {
-			searchQuery: searchTerm || '',
-			filters: filters.length > 0 ? filters : [],
-			pageLength: pageLength,
-		};
+  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filters, setFilters] = useState<any[]>([]); // Store applied filters
+  const [pageLength, setPageLength] = useState(20); // Default is 20
+  const [filterInputs, setFilterInputs] = useState([
+    { field: "", operator: "", value: "" },
+  ]); // Store dynamic filter fields
+  const [availableOperators, setAvailableOperators] =
+    useState(generalOperators);
 
-		try {
-			const res = await filterDevice(query);
-			// const filterDevices = res.devices.filter((device:Device) => !device?.userId) 
-			setDevice(res.devices);
-		} catch (error) {
-			console.error('Error fetching devices:', error);
-			alert('Failed to fetch data. Please try again.');
-		}
-	};
+  const handleSearchAndFilter = async () => {
+    // Combine search term and filters
+    const query = {
+      searchQuery: searchTerm || "",
+      filters: filters.length > 0 ? filters : [],
+      pageLength: pageLength,
+    };
 
-	// Trigger search and filter on searchTerm, filters, or pageLength change
-	useEffect(() => {
-		handleSearchAndFilter();
-	}, [searchTerm, filters, pageLength]);
+    try {
+      const res = await filterDevice(query);
+      // const filterDevices = res.devices.filter((device:Device) => !device?.userId)
+      setDevice(res.devices);
+    } catch (error) {
+      console.error("Error fetching devices:", error);
+      alert("Failed to fetch data. Please try again.");
+    }
+  };
 
-	// Add a new filter input row
-	const addFilter = () => {
-		setFilterInputs([...filterInputs, { field: '', operator: '', value: '' }]);
-	};
+  // Trigger search and filter on searchTerm, filters, or pageLength change
+  useEffect(() => {
+    handleSearchAndFilter();
+  }, [searchTerm, filters, pageLength]);
 
-	// Remove a specific filter input row
-	const removeFilter = (index: number) => {
-		const updatedFilters = [...filterInputs];
-		updatedFilters.splice(index, 1);
-		setFilterInputs(updatedFilters);
-	};
+  // Add a new filter input row
+  const addFilter = () => {
+    setFilterInputs([...filterInputs, { field: "", operator: "", value: "" }]);
+  };
 
-	// Update available operators based on the selected field
-	const handleFieldChange = (index: number, field: string) => {
-		const updatedFilters = [...filterInputs];
-		updatedFilters[index].field = field;
-		setFilterInputs(updatedFilters);
+  // Remove a specific filter input row
+  const removeFilter = (index: number) => {
+    const updatedFilters = [...filterInputs];
+    updatedFilters.splice(index, 1);
+    setFilterInputs(updatedFilters);
+  };
 
-		if (numericFields.includes(field)) {
-			setAvailableOperators(numericOperators);
-		} else {
-			setAvailableOperators(generalOperators);
-		}
-	};
+  // Update available operators based on the selected field
+  const handleFieldChange = (index: number, field: string) => {
+    const updatedFilters = [...filterInputs];
+    updatedFilters[index].field = field;
+    setFilterInputs(updatedFilters);
 
-	const handleInputChange = (index: number, key: string, value: string) => {
-		const updatedFilters: any = [...filterInputs];
-		updatedFilters[index][key] = value;
-		setFilterInputs(updatedFilters);
-	};
+    if (numericFields.includes(field)) {
+      setAvailableOperators(numericOperators);
+    } else {
+      setAvailableOperators(generalOperators);
+    }
+  };
 
-	const handleApplyFilters = () => {
-		// Validate and create filters
-		const newFilters = filterInputs
-			.filter((f) => f.field && f.operator && f.value)
-			.map((f) => {
-				let finalValue: any = f.value.trim();
-				if (f.operator === 'Like') finalValue = `%${finalValue}%`;
-				if (f.field === 'purchase_value') finalValue = parseInt(finalValue);
-				return [f.field, f.operator, finalValue];
-			});
+  const handleInputChange = (index: number, key: string, value: string) => {
+    const updatedFilters: any = [...filterInputs];
+    updatedFilters[index][key] = value;
+    setFilterInputs(updatedFilters);
+  };
 
-		if (newFilters.length === 0) {
-			alert('Please fill in all filter fields.');
-			return;
-		}
+  const handleApplyFilters = () => {
+    // Validate and create filters
+    const newFilters = filterInputs
+      .filter((f) => f.field && f.operator && f.value)
+      .map((f) => {
+        let finalValue: any = f.value.trim();
+        if (f.operator === "Like") finalValue = `%${finalValue}%`;
+        if (f.field === "purchase_value") finalValue = parseInt(finalValue);
+        return [f.field, f.operator, finalValue];
+      });
 
-		setFilters(newFilters); // Set the new filters
-		setOpenFilter(false); // Close filter modal
-	};
+    if (newFilters.length === 0) {
+      alert("Please fill in all filter fields.");
+      return;
+    }
 
-	const handleResetFilters = () => {
-		setFilters([]); // Clear all filters
-		setSearchTerm('');
-		setFilterInputs([{ field: '', operator: '', value: '' }]); // Reset filters
-	};
+    setFilters(newFilters); // Set the new filters
+    setOpenFilter(false); // Close filter modal
+  };
 
-	const softDelete = async (data: any) => {
-		const confirmDelete = confirm(
-			"Are you sure you want to delete?"
-		);
-		if (!confirmDelete) return;
+  const handleResetFilters = () => {
+    setFilters([]); // Clear all filters
+    setSearchTerm("");
+    setFilterInputs([{ field: "", operator: "", value: "" }]); // Reset filters
+  };
 
-		try {
-			await deleteDevice(data._id);
-			setDevice((prevDevice) => prevDevice.filter((device) => device._id !== data._id));
-			alert("Device Deleted!");
-		} catch (e: any) {
-			// Check if the error has a message from the API response
-			const errorMessage = e.response?.data?.message || e.message || "Failed to delete Device.";
-			alert(errorMessage);
-		}
-	};
+  const softDelete = async (data: any) => {
+    const confirmDelete = confirm("Are you sure you want to delete?");
+    if (!confirmDelete) return;
 
-	const handleClick = (id: string) => {
-		router.push(`/assets/${id}`);
-	};
-	return (
-		<div className="flex flex-col gap-2">
-			<input
-				className="border p-2"
-				value={searchTerm || ''}
-				onChange={(e) => setSearchTerm(e.target.value)}
-				placeholder="Search devices..."
-			/>
-			{/* <div className="flex gap-4 w-full">
+    try {
+      await deleteDevice(data._id);
+      setDevice((prevDevice) =>
+        prevDevice.filter((device) => device._id !== data._id)
+      );
+      alert("Device Deleted!");
+    } catch (e: any) {
+      // Check if the error has a message from the API response
+      const errorMessage =
+        e.response?.data?.message || e.message || "Failed to delete Device.";
+      alert(errorMessage);
+    }
+  };
+
+  const handleClick = (id: string) => {
+    router.push(`/assets/${id}`);
+  };
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        className="border p-2"
+        value={searchTerm || ""}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search devices..."
+      />
+      {/* <div className="flex gap-4 w-full">
 				<button
 					className="bg-gray-400 p-2 rounded text-black w-40"
 					onClick={() => setOpenFilter(!openFilter)}>
@@ -157,146 +157,165 @@ function InventoryTable({ devices }: InventoryProps) {
 					</button>
 				)}
 			</div> */}
-			{openFilter && (
-				<div className="py-4">
-					<div className="flex flex-col gap-4">
-						{/* Dynamically render filter inputs */}
-						{filterInputs.map((filter, index) => (
-							<div key={index} className="flex gap-2">
-								<select
-									value={filter.field}
-									onChange={(e) => handleFieldChange(index, e.target.value)}
-									className="border w-60 rounded p-2 outline-none focus:ring-2">
-									<option value="">Select Field</option>
-									{devicesFields.map((key) => (
-										<option key={key} value={key}>
-											{key}
-										</option>
-									))}
-								</select>
-								<select
-									value={filter.operator}
-									onChange={(e) =>
-										handleInputChange(index, 'operator', e.target.value)
-									}
-									className="border w-60 rounded p-2 outline-none focus:ring-2">
-									<option value="">Select Operator</option>
-									{availableOperators.map((operator) => (
-										<option key={operator} value={operator}>
-											{operator}
-										</option>
-									))}
-								</select>
-								<input
-									type="text"
-									value={filter.value}
-									onChange={(e) =>
-										handleInputChange(index, 'value', e.target.value)
-									}
-									className="border w-60 rounded p-2 outline-none focus:ring-2"
-									placeholder="Enter filter value"
-								/>
-								{index > 0 && (
-									<button
-										className="bg-red-500 p-2 rounded text-white"
-										onClick={() => removeFilter(index)}>
-										Remove
-									</button>
-								)}
-							</div>
-						))}
-						<button
-							className="bg-green-500 p-2 rounded text-white"
-							onClick={addFilter}>
-							Add Filter
-						</button>
-						<div className="flex gap-4">
-							<button
-								className="bg-blue-500 p-2 rounded text-white"
-								onClick={handleApplyFilters}>
-								Apply Filters
-							</button>
-							<button
-								className="bg-gray-400 p-2 rounded text-black"
-								onClick={handleResetFilters}>
-								Reset Filters
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
-			{filters.length > 0 && (
-				<div className="mt-4">
-					<h4>Applied Filters:</h4>
-					<ul>
-						{filters.map((filter, index) => (
-							<li key={index} className="flex items-center">
-								<span>{`${filter[0]} ${filter[1]} ${filter[2]}`}</span>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
+      {openFilter && (
+        <div className="py-4">
+          <div className="flex flex-col gap-4">
+            {/* Dynamically render filter inputs */}
+            {filterInputs.map((filter, index) => (
+              <div key={index} className="flex gap-2">
+                <select
+                  value={filter.field}
+                  onChange={(e) => handleFieldChange(index, e.target.value)}
+                  className="border w-60 rounded p-2 outline-none focus:ring-2"
+                >
+                  <option value="">Select Field</option>
+                  {devicesFields.map((key) => (
+                    <option key={key} value={key}>
+                      {key}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={filter.operator}
+                  onChange={(e) =>
+                    handleInputChange(index, "operator", e.target.value)
+                  }
+                  className="border w-60 rounded p-2 outline-none focus:ring-2"
+                >
+                  <option value="">Select Operator</option>
+                  {availableOperators.map((operator) => (
+                    <option key={operator} value={operator}>
+                      {operator}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  value={filter.value}
+                  onChange={(e) =>
+                    handleInputChange(index, "value", e.target.value)
+                  }
+                  className="border w-60 rounded p-2 outline-none focus:ring-2"
+                  placeholder="Enter filter value"
+                />
+                {index > 0 && (
+                  <button
+                    className="bg-red-500 p-2 rounded text-white"
+                    onClick={() => removeFilter(index)}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              className="bg-green-500 p-2 rounded text-white"
+              onClick={addFilter}
+            >
+              Add Filter
+            </button>
+            <div className="flex gap-4">
+              <button
+                className="bg-blue-500 p-2 rounded text-white"
+                onClick={handleApplyFilters}
+              >
+                Apply Filters
+              </button>
+              <button
+                className="bg-gray-400 p-2 rounded text-black"
+                onClick={handleResetFilters}
+              >
+                Reset Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {filters.length > 0 && (
+        <div className="mt-4">
+          <h4>Applied Filters:</h4>
+          <ul>
+            {filters.map((filter, index) => (
+              <li key={index} className="flex items-center">
+                <span>{`${filter[0]} ${filter[1]} ${filter[2]}`}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-			<Table
-				data={device}
-				columns={[
-					{
-						title: 'Device',
-						dataIndex: 'device_name',
-					},
-					{
-						title: 'Assigned to',
-						dataIndex: 'userName',
-					},
-					{
-						title: 'currently At ',
-						dataIndex: 'city',
-					},
-					{
-						title: 'Ownership',
-						dataIndex: 'ownership',
-					},
-					{
-						title: 'Serial Number',
-						dataIndex: 'serial_no',
-					},
-					{
-						title: 'Actions',
-						render: (record) => (
-							<div className="w-full flex gap-4 justify-center">
-								<div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100'>
-                                    <Link href={`/assets/${record._id}`}>
-                                        <Icon type="OutlinedEye" color="black"  style={{cursor:"pointer"}} />
-                                    </Link>
-                                </div>
+      <Table
+        data={device}
+        columns={[
+          {
+            title: "Device",
+            dataIndex: "device_name",
+          },
+          {
+            title: "Assigned to",
+            dataIndex: "userName",
+          },
+          {
+            title: "currently At ",
+            dataIndex: "city",
+          },
+          {
+            title: "Ownership",
+            dataIndex: "ownership",
+          },
+          {
+            title: "Serial Number",
+            dataIndex: "serial_no",
+          },
+          {
+            title: "Actions",
+            render: (record) => (
+              <div className="w-full flex gap-4 justify-center">
+                <div className="border rounded-md p-2 cursor-pointer hover:bg-slate-100">
+                  <Link href={`/assets/${record._id}`}>
+                    <Icon
+                      type="OutlinedEye"
+                      color="black"
+                      style={{ cursor: "pointer" }}
+                    />
+                  </Link>
+                </div>
 
-                                <div className='border rounded-md p-2 cursor-pointer hover:bg-slate-100' onClick={()=>{softDelete(record)}}>
-                                    <Icon type="OutlinedBin" color="black"  style={{cursor:"pointer"}} />
-                                </div>
-							</div>
-
-						),
-					},
-				]}
-			/>
-			{/* Pagination Control */}
-			<div className="flex w-full justify-center items-center gap-4 mt-4">
-				<button
-					className="bg-gray-200 p-2"
-
-					onClick={() => setPageLength((prev) => Math.max(prev - 20, 20))}>
-					Prev
-				</button>
-				<p className="font-bold">{pageLength}</p>
-				<button
-					className="bg-gray-200 p-2"
-					onClick={() => setPageLength((prev) => prev + 20)}>
-					Next
-				</button>
-			</div>
-		</div>
-	);
+                <div
+                  className="border rounded-md p-2 cursor-pointer hover:bg-slate-100"
+                  onClick={() => {
+                    softDelete(record);
+                  }}
+                >
+                  <Icon
+                    type="OutlinedBin"
+                    color="black"
+                    style={{ cursor: "pointer" }}
+                  />
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      />
+      {/* Pagination Control */}
+      <div className="flex w-full justify-center items-center gap-4 mt-4">
+        <button
+          className="bg-gray-200 p-2"
+          onClick={() => setPageLength((prev) => Math.max(prev - 20, 20))}
+        >
+          Prev
+        </button>
+        <p className="font-gilroyBold">{pageLength}</p>
+        <button
+          className="bg-gray-200 p-2"
+          onClick={() => setPageLength((prev) => prev + 20)}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default InventoryTable;

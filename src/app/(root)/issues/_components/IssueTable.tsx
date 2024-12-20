@@ -255,19 +255,19 @@ export default function IssueTable({ data }: { data: Issues[] }) {
               <div className="w-full flex justify-center">
                 <div>
                   {data?.priority === "Critical" ? (
-                    <h1 className="px-2 justify-center items-center font-medium flex text-sm rounded-full bg-alert-foreground text-failure">
+                    <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-alert-foreground text-failure">
                       Critical
                     </h1>
                   ) : data?.priority === "Medium" ? (
-                    <h1 className="px-2 justify-center items-center font-medium flex text-sm rounded-full bg-[#FFFACB] text-[#FF8000]">
+                    <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-[#FFFACB] text-[#FF8000]">
                       Medium
                     </h1>
                   ) : data?.priority === "Low" ? (
-                    <h1 className="px-2 justify-center items-center font-medium flex text-sm rounded-full bg-success-foreground text-success-second">
+                    <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-success-foreground text-success-second">
                       Low
                     </h1>
                   ) : (
-                    <h1 className="px-2 justify-center items-center font-medium flex text-sm rounded-full bg-gray-300 text-gray-700">
+                    <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-gray-300 text-gray-700">
                       Unknown
                     </h1>
                   )}
@@ -310,7 +310,7 @@ export default function IssueTable({ data }: { data: Issues[] }) {
             title: "Actions",
             render: (record: Issues) => (
               <IssueConfirmation id={record?._id!} issueData={data}>
-                <div className="rounded-full bg-[#027A14] text-base whitespace-nowrap px-2 text-white font-medium">
+                <div className="rounded-full bg-[#027A14] text-base whitespace-nowrap px-2 text-white font-gilroyMedium">
                   Mark as resolved
                 </div>
               </IssueConfirmation>

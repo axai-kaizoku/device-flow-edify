@@ -92,10 +92,10 @@ export const TeamCard = ({
               className="w-14 h-14 object-cover rounded-full"
             />
             <div className="-mt-1 flex-col flex">
-              <h1 className="text-lg 2xl:text-xl font-semibold">
+              <h1 className="text-lg 2xl:text-xl font-gilroySemiBold">
                 {active_manager?.[0]?.first_name || "No Manager"}
               </h1>
-              <p className="text-base font-medium text-[#7C7C7C] -mt-1">
+              <p className="text-base font-gilroyMedium text-[#7C7C7C] -mt-1">
                 Manager
               </p>
             </div>
@@ -104,17 +104,15 @@ export const TeamCard = ({
 
         {/* Description Section */}
         <div>
-          <p className="font-semibold text-2xl 2xl:text-3xl line-clamp-2">
-            {title}
-          </p>
-          <p className="text-[#7C7C7C] text-lg 2xl:text-xl font-medium line-clamp-2">
+          <p className="font-gilroySemiBold text-2xl line-clamp-2">{title}</p>
+          <p className="text-[#7C7C7C] text-base font-gilroyMedium line-clamp-2">
             {description}
           </p>
         </div>
 
         {/* Members Section */}
         <div className="flex -mt-3 items-center justify-between">
-          <h1 className="text-base 2xl:text-lg font-medium text-[#7C7C7C]">
+          <h1 className="text-base 2xl:text-lg font-gilroyMedium text-[#7C7C7C]">
             {employees_count === 0
               ? "No Members Yet"
               : `${employees_count} Active Members`}

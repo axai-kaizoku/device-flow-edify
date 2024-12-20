@@ -1,18 +1,18 @@
-import { CombinedContainer } from '@/components/container/container';
-import { Device, getDeviceById } from '@/server/deviceActions';
-import React from 'react';
-import EditDevice from './_components/edit-device';
-import { useRouter } from 'next/navigation';
+import { CombinedContainer } from "@/components/container/container";
+import { Device, getDeviceById } from "@/server/deviceActions";
+import React from "react";
+import EditDevice from "./_components/edit-device";
+import { useRouter } from "next/navigation";
 interface DevicePageProps {
-	params: { id: string };
+  params: { id: string };
 }
 async function SingleDevice({ params }: DevicePageProps) {
-	const data: Device = await getDeviceById(params.id);
+  const data: Device = await getDeviceById(params.id);
 
-	return (
-		<CombinedContainer title="Devices">
-			{/* <div className="p-6 space-y-4">
-				<h1 className="text-2xl font-bold">Device Details</h1>
+  return (
+    <CombinedContainer title="Devices">
+      {/* <div className="p-6 space-y-4">
+				<h1 className="text-2xl font-gilroyBold">Device Details</h1>
 				<div className="flex flex-col space-y-2">
 					<p>
 						<strong>Device Name:</strong> {data.device_name}
@@ -56,9 +56,9 @@ async function SingleDevice({ params }: DevicePageProps) {
 					</p>
 				</div>
 			</div> */}
-			<EditDevice data={data} />
-		</CombinedContainer>
-	);
+      <EditDevice data={data} />
+    </CombinedContainer>
+  );
 }
 
 export default SingleDevice;

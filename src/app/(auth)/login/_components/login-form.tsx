@@ -51,7 +51,7 @@ export default function LoginForm() {
       className="flex h-fit w-full flex-col gap-5 sm:gap-6 lg:gap-8 p-4"
     >
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium">
+        <label htmlFor="email" className="text-sm font-gilroyMedium">
           Email
         </label>
         <input
@@ -66,7 +66,7 @@ export default function LoginForm() {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium">
+        <label htmlFor="password" className="text-sm font-gilroyMedium">
           Password
         </label>
         <div className="relative">

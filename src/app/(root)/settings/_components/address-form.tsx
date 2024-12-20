@@ -90,7 +90,7 @@ export const AddressForm = ({
     <div className="flex justify-center items-center">
       <div className="flex flex-col h-[80%]">
         <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
-        <h3 className="text-3xl font-semibold mb-2">
+        <h3 className="text-3xl font-gilroySemiBold mb-2">
           {isEditForm ? "Edit Address" : "Add New Address"}
         </h3>
         <p className="text-slate-500 mb-10">

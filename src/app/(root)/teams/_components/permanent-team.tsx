@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { updateTeam } from "@/server/teamActions";
 import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
+import { Icons } from "@/components/icons";
 
 export const PermanentTeamDelete = ({
   id,
@@ -32,12 +33,12 @@ export const PermanentTeamDelete = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <AlertCircle className="w-6 h-6" /> {/* Lucide-react icon */}
+            <Icons.warning_delete />
           </div>
         </div>
 
         {/* Title */}
-        <DialogTitle className="text-lg font-semibold text-gray-900">
+        <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
           Are you sure?
         </DialogTitle>
 
@@ -49,15 +50,13 @@ export const PermanentTeamDelete = ({
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
-            variant="secondary"
-            className="w-1/2 rounded-[0.60rem]"
+            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            className="w-1/2 rounded-[0.60rem]"
-            variant="destructive"
+            className="w-1/2 rounded-md bg-[#D92D20] text-white"
             onClick={async () => {
               if (id) {
                 try {

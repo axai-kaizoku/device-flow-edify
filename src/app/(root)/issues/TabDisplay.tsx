@@ -54,7 +54,7 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
             <Search size={"20px"} color="#7F7F7F" />{" "}
             {/* Lucide icon for search */}
             <input
-              className="text-sm bg-transparent font-medium whitespace-nowrap focus:outline-none"
+              className="text-sm bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
               placeholder="Search Issues"
               style={{ color: "#7F7F7F" }}
             />
@@ -63,19 +63,23 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
           {activeTab !== "open" && (
             <div className="flex items-center relative gap-2 px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Check className="text-[#7F7F7F]" />
-              <div className="font-medium text-base text-[#7F7F7F]">Reopen</div>
+              <div className="font-gilroyMedium text-base text-[#7F7F7F]">
+                Reopen
+              </div>
             </div>
           )}
 
           <div className="flex justify-between items-center gap-2 text-nowrap px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full">
             <ArrowUpDown className="text-[#7F7F7F] size-6" />
-            <div className="font-medium text-base text-[#7F7F7F]">Sort By</div>
+            <div className="font-gilroyMedium text-base text-[#7F7F7F]">
+              Sort By
+            </div>
           </div>
 
           <button className="flex items-center gap-2 px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full hover:text-black hover:border-black transition-all duration-300">
             <Download className="size-6 text-[#7F7F7F]" />{" "}
             {/* Lucide icon for download */}
-            <span className="text-base font-medium text-[#7F7F7F]">
+            <span className="text-base font-gilroyMedium text-[#7F7F7F]">
               Download
             </span>
           </button>

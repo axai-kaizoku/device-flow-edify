@@ -41,7 +41,7 @@ export default function TeamTable({ data }: { data: User[] }) {
                 onClick={() => router.push(`/people/${data._id}`)}
               >
                 <img
-                  src={data?.image || "/placeholder-image.png"} // Default image if no profile_image exists
+                  src={data?.image || "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"} // Default image if no profile_image exists
                   alt={`${data?.first_name || "User"}'s Profile`}
                   className="w-10 h-10 rounded-full border object-cover"
                 />
@@ -78,9 +78,9 @@ export default function TeamTable({ data }: { data: User[] }) {
           },
           {
             title: "Assets assigned",
-            render: (data) => (
-              <div className="text-center rounded-lg bg-green-200 text-green-400">
-                {`${data?.reporting_manager?.first_name || "N/A"} assigned`}
+            render: (data:User) => (
+              <div className="text-center rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                {data?.devices?.length > 0 ? `${data.devices.length} Assigned` : "N/A"}
               </div>
             ),
           },

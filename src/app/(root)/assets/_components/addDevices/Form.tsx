@@ -1,277 +1,421 @@
 // Form.tsx
 
-'use client';
+"use client";
 
-import { Icon } from '@/components/wind/Icons';
-import React, { useEffect, useState } from 'react';
-import DeviceType from './deviceType';
+import { Icon } from "@/components/wind/Icons";
+import React, { useEffect, useState } from "react";
+import DeviceType from "./deviceType";
 
-import { createDevices, Device } from '@/server/deviceActions';
-import { useRouter } from 'next/navigation';
-import BasicDetails from './basicDetailsDevice';
-import AdvanceDeviceDetails from './advanceDeviceDetails';
-import ExtraDetails from './extraDetails';
+import { createDevices, Device } from "@/server/deviceActions";
+import { useRouter } from "next/navigation";
+import AdvanceDeviceDetails from "./advanceDeviceDetails";
+import ExtraDetails from "./extraDetails";
 import {
-	FormData,
-	FormErrors,
-	BasicDetails as BasicDetailsInterface,
-	AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
-	ExtraDetails as ExtraDetailsInterface,
-} from './_components/types';
-import Spinner from '@/components/Spinner';
+  FormData,
+  FormErrors,
+  DevicePage1 as DevicePage1,
+  AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
+  ExtraDetails as ExtraDetailsInterface,
+  KeyboardDetailsInterface,
+  DevicePage2,
+} from "./_components/types";
+import Spinner from "@/components/Spinner";
+import { ChevronLeft, ChevronRight, Laptop, Monitor } from "lucide-react";
+import KeyboardForm from "./keyBoardForm";
+import MouseForm from "./mouseForm";
+import LaptopForm from "./laptopForm";
+import LaptopForm2 from "./laptopForm2";
+import MobileForm from "./MobileForm";
+import MobileForm2 from "./MobileForm2";
+import MonitorForm from "./MonitorForm";
+import { createPayload } from "./_components/createPayload";
+// import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
-	closeBtn: () => void; // Define the type for closeBtn
+  closeBtn: () => void; // Define the type for closeBtn
 };
 
 function Form({ closeBtn }: FormProps) {
-	const [step, setStep] = useState<number>(1);
-	const [errors, setErrors] = useState<FormErrors>({});
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
+  const [step, setStep] = useState<number>(0);
+  const [totalStep, setTotalStep] = useState<number>(1);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
-	const [formData, setFormData] = useState<FormData>({
-		deviceType: '',
-		basicDetails: {
-			os: '',
-			model: '',
-			processor: '',
-			ram: '',
-			storage: '',
-			device_name: '',
-		},
-		advanceDeviceDetails: {
-			serialNumber: '',
-			invoiceFile: null,
-			purchaseDate: '',
-			warrantyExpiryDate: '',
-		},
-		extraDetails: {
-			brand: '',
-			assignedTo: {
-				name: '',
-				value: '',
-			},
-			officeLocation: {
-				name: '',
-				value: '',
-			},
-			purchaseOrder: '',
-			purchaseValue: 0,
-			ownership: '',
-			image: '',
-		},
-	});
+  const [formData, setFormData] = useState<FormData>({
+    deviceType: "",
+    keyboardDetails: {
+      model: "",
+      invoiceFile: null,
+      serialNumber: "",
+      purchaseDate: "",
+      warrantyExpiryDate: "",
+      brand: "",
+    },
+    monitorDetails:{
+      model: "",
+      invoiceFile: null,
+      serialNumber: "",
+      purchaseDate: "",
+      warrantyExpiryDate: "",
+      brand: "",
+    },
+    mouseDetails: {
+      model: "",
+      invoiceFile: null,
+      serialNumber: "",
+      purchaseDate: "",
+      warrantyExpiryDate: "",
+      brand: "",
+    },
+    laptopPage1: {
+      os: "",
+      model: "",
+      processor: "",
+      ram: "",
+      storage: "",
+      device_name: "",
+      brand:"",
+      condition:"",
+    },
+    laptopPage2: {
+      serialNumber: "",
+      invoiceFile: null,
+      purchaseDate: "",
+      warrantyExpiryDate: "",
+    },
+    mobilePage1: {
+      os: "",
+      model: "",
+      processor: "",
+      ram: "",
+      storage: "",
+      device_name: "",
+      brand:"",
+      condition:"",
+    },
+    mobilePage2: {
+      serialNumber: "",
+      invoiceFile: null,
+      purchaseDate: "",
+      warrantyExpiryDate: "",
+    },
+  });
 
-	// Utility function to update nested form data with better type safety
-	const updateFormData = <K extends keyof FormData>(
-		section: K,
-		data: Partial<FormData[K]>,
-	) => {
-		setFormData((prev) => ({
-			...prev,
-			[section]: {
-				...(prev[section] as object),
-				...data,
-			},
-		}));
-	};
-	const validate = (): boolean => {
-		let currentErrors: FormErrors = {};
+  // Utility function to update nested form data with better type safety
+  const updateFormData = <K extends keyof FormData>(
+    section: K,
+    data: Partial<FormData[K]>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...(prev[section] as object),
+        ...data,
+      },
+    }));
+  };
+  const validate = (): boolean => {
+    let currentErrors: FormErrors = {};
+    const device1 = formData?.laptopPage1
+    const m1 = formData?.mobilePage1;
+    const device2 = formData?.laptopPage2
+    const m2 = formData?.mobilePage2;
+    const device3 = formData?.keyboardDetails || formData?.monitorDetails || formData?.mouseDetails;
+    const monitor = formData?.monitorDetails;
+    const keyboard = formData?.keyboardDetails;
+    const mouse = formData?.mouseDetails;
 
-		switch (step) {
-			case 1:
-				if (!formData.deviceType) {
-					currentErrors.deviceType = 'Please select a device type.';
-				}
-				break;
-			case 2:
-				const basic = formData.basicDetails;
-				if (!basic.os && formData.deviceType === 'laptop') {
-					currentErrors.os = 'Operating System is required.';
-				}
-				if (!basic.model) currentErrors.model = 'Model is required.';
-				if (!basic.processor)
-					currentErrors.processor = 'Processor is required.';
-				if (!basic.ram) currentErrors.ram = 'RAM is required.';
-				if (!basic.storage) currentErrors.storage = 'Storage is required.';
-				if (!basic.device_name)
-					currentErrors.device_name = 'Device Name is required.';
-				break;
-			case 3:
-				const advance = formData.advanceDeviceDetails;
-				if (!advance.serialNumber)
-					currentErrors.serialNumber = 'Serial Number is required.';
-				if (!advance.purchaseDate)
-					currentErrors.purchaseDate = 'Purchase Date is required.';
-				if (!advance.warrantyExpiryDate)
-					currentErrors.warrantyExpiryDate =
-						'Warranty Expiry Date is required.';
-				if (!advance.invoiceFile)
-					currentErrors.invoiceFile = 'Invoice File is required.';
-				break;
-			case 4:
-				const extra = formData.extraDetails;
-				if (!extra.brand) currentErrors.brand = 'Brand is required.';
-				if (!extra.officeLocation)
-					currentErrors.officeLocation = 'Office Location is required.';
-				if (!extra.purchaseOrder)
-					currentErrors.purchaseOrder = 'Purchase Order is required.';
-				if (extra.purchaseValue <= 0)
-					currentErrors.purchaseValue =
-						'Purchase Value must be greater than 0.';
-				if (!extra.ownership)
-					currentErrors.ownership = 'Ownership is required.';
-				if (!extra.image) currentErrors.image = 'Device Image is required.';
-				break;
-			default:
-				break;
-		}
+    switch (step) {
+      case 0:
+        if (!formData?.deviceType) {
+          currentErrors.deviceType = "Please select a device type.";
+        }
+        break;
+      case 1:
+        if (formData?.deviceType === 'laptop'){
+          if (!device1?.os) {
+            currentErrors.os = "Operating System is required.";
+          }
+          if (!device1?.brand) currentErrors.brand = "Brand is required.";
+          if (!device1?.model) currentErrors.model = "Model is required.";
+          if (!device1?.processor)
+            currentErrors.processor = "Processor is required.";
+          if (!device1?.ram) currentErrors.ram = "RAM is required.";
+          if (!device1?.storage) currentErrors.storage = "Storage is required.";
+          if (!device1?.condition)
+            currentErrors.condition = "Device Condition is required.";
+        }
+        else if (formData?.deviceType === 'mobile'){
+          if (!m1?.os) {
+            currentErrors.os = "Operating System is required.";
+          }
+          if (!m1?.brand) currentErrors.brand = "Brand is required.";
+          if (!m1?.model) currentErrors.model = "Model is required.";
+          if (!m1?.processor)
+            currentErrors.processor = "Processor is required.";
+          if (!m1?.ram) currentErrors.ram = "RAM is required.";
+          if (!m1?.storage) currentErrors.storage = "Storage is required.";
+          if (!m1?.condition)
+            currentErrors.condition = "Device Condition is required.";
+          if (!m1?.device_name) currentErrors.device_name = "Device Name is required.";
+        }
+        else if (formData?.deviceType === 'monitor'){
+          // if(!monitor?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
+          if(!monitor?.model) currentErrors.model = "Model is required.";
+          if (!monitor?.brand) currentErrors.brand = "Brand is required.";
+          if (!monitor?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
+          if (!monitor?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
+          if (!monitor?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+        }
+        else if (formData?.deviceType === 'mouse'){
+          // if(!mouse?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
+          if(!mouse?.model) currentErrors.model = "Model is required.";
+          if (!mouse?.brand) currentErrors.brand = "Brand is required.";
+          if (!mouse?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
+          if (!mouse?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
+          if (!mouse?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+        }
+        else if (formData?.deviceType === 'keyboard'){
+          // if(!keyboard?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
+          if(!keyboard?.model) currentErrors.model = "Model is required.";
+          if (!keyboard?.brand) currentErrors.brand = "Brand is required.";
+          if (!keyboard?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
+          if (!keyboard?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
+          if (!keyboard?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+        }
+        break;
+      case 2:
+        if (formData?.deviceType === 'laptop'){
+          if (!device2?.serialNumber) {
+            currentErrors.serialNumber = "Serial Number is required";
+          }
+          if (!device2?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
+          if (!device2?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+          // if (!device2.invoiceFile)
+          //   currentErrors.invoiceFile = "Incoice File is required.";
+        }
+        else if (formData?.deviceType === 'mobile'){
+          if (!m2?.serialNumber) {
+            currentErrors.serialNumber = "Serial Number is required";
+          }
+          if (!m2?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
+          if (!m2?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+          // if (!device2.invoiceFile)
+          //   currentErrors.invoiceFile = "Incoice File is required.";
+        }
+        break;
+      default:
+        break;
+    }
 
-		setErrors(currentErrors);
-		return Object.keys(currentErrors).length === 0;
-	};
+    setErrors(currentErrors);
+    return Object.keys(currentErrors).length === 0;
+  };
 
-	const handleNextStep = () => {
-		if (validate()) {
-			setStep((prevStep) => prevStep + 1);
-		}
-	};
+  const handleNextStep = () => {
+    if (validate()) {
+      
+      setStep((prevStep) => prevStep + 1);
+    }
+  };
 
-	const handlePrevStep = () => {
-		setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
-	};
+  const handlePrevStep = () => {
+    setStep((prevStep) => (prevStep >= 1 ? prevStep - 1 : prevStep));
+  };
 
-	const handleSubmit = async () => {
-		if (validate()) {
-			setIsLoading(true);
-			try {
-				const deviceDetails: Device = {
-					device_type: formData.deviceType,
-					device_name: formData.basicDetails.device_name,
-					os: formData.basicDetails.os,
-					custom_model: formData.basicDetails.model,
-					processor: formData.basicDetails.processor,
-					ram: formData.basicDetails.ram,
-					storage: formData.basicDetails.storage,
-					serial_no: formData.advanceDeviceDetails.serialNumber,
-					device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
-					purchase_order: formData.extraDetails.purchaseOrder,
-					warranty_expiary_date:
-						formData.advanceDeviceDetails.warrantyExpiryDate,
-					brand: formData.extraDetails.brand,
-					image: formData.extraDetails.image,
-					userId: formData.extraDetails.assignedTo.value,
-					ownership: formData.extraDetails.ownership,
-					purchase_value: formData.extraDetails.purchaseValue,
-					asset_serial_no: 'Asset serial no', // Consider making this dynamic if needed
-					addressId: formData.extraDetails.officeLocation.value,
-				};
-				console.log(formData.extraDetails);
-				const response = await createDevices(deviceDetails);
-				console.log('Device Details', response);
-				closeBtn(); // Close the sheet after successful submission
-				router.refresh();
-			} catch (error) {
-				console.error('Error submitting form:', error);
-				setIsLoading(false);
-				// Optionally, handle the error and display a message to the user
-			}
-		}
-	};
+  const handleSubmit = async () => {
+    if (validate()) {
+      setIsLoading(true);
+      try {
+        const payload: any = createPayload(formData);
+        
+        // const deviceDetails: Device = {
 
-	return (
-		<div className="flex flex-col justify-center items-start pt-12 px-4 space-y-6">
-			<div className="flex justify-start items-center gap-2 text-xl font-semibold">
-				<Icon type="OutlinedLaptop" color="black" />
-				<span>Add a Device</span>
-			</div>
+          // {formData.deviceType === 'laptop' && {}}
+          // device_type: formData.deviceType, //fixed
+          // device_name: formData.laptopPage1.device_name,
+          // os: formData.laptopPage1.os,
+          // custom_model: formData.laptopPage1.model,
+          // processor: formData.laptopPage1.processor,
+          // ram: formData.laptopPage1.ram,
+          // storage: formData.laptopPage1.storage,
+          // serial_no: formData.advanceDeviceDetails.serialNumber,
+          // device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
+          // purchase_order: formData.extraDetails.purchaseOrder,
+          // warranty_expiary_date:
+          //   formData.advanceDeviceDetails.warrantyExpiryDate,
+          // brand: formData.extraDetails.brand,
+          // image: formData.extraDetails.image,
+          // userId: formData.extraDetails.assignedTo.value,
+          // ownership: formData.extraDetails.ownership,
+          // purchase_value: formData.extraDetails.purchaseValue,
+          // asset_serial_no: "Asset serial no", // Consider making this dynamic if needed
+          // addressId: formData.extraDetails.officeLocation.value,
+        // };
+    
+        const response = await createDevices(payload);
+        closeBtn(); // Close the sheet after successful submission
+        router.refresh();
+      } catch (error) {
+        setIsLoading(false);
+        // Optionally, handle the error and display a message to the user
+      }
+    }
+  };
 
-			{/* Render different components based on the current step */}
-			{step === 1 && (
-				<DeviceType
-					data={formData.deviceType}
-					setData={(data: string) =>
-						setFormData((prev) => ({ ...prev, deviceType: data }))
-					}
-					error={errors.deviceType}
-					closeBtn={closeBtn}
-				/>
-			)}
-			{step === 2 && (
-				<BasicDetails
-					deviceType={formData.deviceType}
-					data={formData.basicDetails}
-					setData={(data: Partial<BasicDetailsInterface>) =>
-						updateFormData('basicDetails', data)
-					}
-					errors={errors}
-				/>
-			)}
-			{step === 3 && (
-				<AdvanceDeviceDetails
-					data={formData.advanceDeviceDetails}
-					setData={(data: Partial<AdvanceDeviceDetailsInterface>) =>
-						updateFormData('advanceDeviceDetails', data)
-					}
-					errors={errors}
-				/>
-			)}
-			{step === 4 && (
-				<ExtraDetails
-					data={formData.extraDetails}
-					setData={(data: Partial<ExtraDetailsInterface>) =>
-						updateFormData('extraDetails', data)
-					}
-					errors={errors}
-				/>
-			)}
+  return (
+    <div className="flex flex-col justify-start items-start pt-2 px-3 space-y-4 gap-1 h-full">
 
-			{/* Navigation buttons */}
+      <div className="flex justify-start items-center gap-4 text-2xl font-semibold">
+        <div className="bg-black rounded-full p-2 flex justify-center items-center">
+          <Monitor color="white" className="size-5" />
+        </div>
+        <span>
+          Add a {formData?.deviceType ? formData?.deviceType : "Device"}
+        </span>
+      </div>
 
-			<div className="flex gap-3 w-full">
-				{step > 1 && (
-					<button
-						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handlePrevStep}
-						disabled={isLoading}>
-						{isLoading ? (
-							<Spinner />
-						) : (
-							<Icon type="OutlinedArrowLeft" color="white" />
-						)}
-						Back
-					</button>
-				)}
-				{step < 4 ? (
-					<button
-						type="button"
-						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handleNextStep}
-						disabled={isLoading}>
-						{isLoading ? (
-							<Spinner />
-						) : (
-							<Icon type="OutlinedArrowRight" color="white" />
-						)}
-						Next
-					</button>
-				) : (
-					<button
-						type="button"
-						className="flex items-center justify-center gap-2 bg-black text-white py-4 px-6 rounded w-full transition duration-300 hover:bg-gray-800"
-						onClick={handleSubmit}
-						disabled={isLoading}>
-						{isLoading ? (
-							<Spinner />
-						) : (
-							<Icon type="OutlinedSuccess" color="white" />
-						)}
-						Submit
-					</button>
-				)}
-			</div>
-		</div>
-	);
+      <div className="w-full flex flex-col gap-1">
+        <div className="font-semibold text-lg text-black">
+          Step {step} of {totalStep}
+        </div>
+        <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
+      </div>
+
+      {/* Render different components based on the current step */}
+      
+
+      {step === 0 && (
+        <DeviceType
+          data={formData?.deviceType}
+          setData={(data: string) =>
+            setFormData((prev) => ({ ...prev, deviceType: data }))
+          }
+          error={errors?.deviceType}
+          closeBtn={closeBtn}
+          setTotalSteps={(steps: number) => {
+            setTotalStep(steps);
+          }}
+        />
+        // <AssignAssetsForm/>
+      )}
+      {step === 1 && formData?.deviceType === "keyboard" ? (
+        <KeyboardForm
+          data={formData?.keyboardDetails}
+          setData={(data: Partial<KeyboardDetailsInterface>) =>
+            updateFormData("keyboardDetails", data)
+          }
+          errors={errors}
+        />
+      ) : step === 1 && formData?.deviceType === "mouse" ? (
+        <MouseForm
+          data={formData?.mouseDetails}
+          setData={(data: Partial<KeyboardDetailsInterface>) =>
+            updateFormData("mouseDetails", data)
+          }
+          errors={errors}
+        />
+      ) : step === 1 && formData.deviceType === "laptop" ? (
+        <LaptopForm
+          data={formData?.laptopPage1}
+          setData={(data: Partial<DevicePage1>) =>
+            updateFormData("laptopPage1", data)
+          }
+          errors={errors}
+          deviceType={formData?.deviceType}
+        />
+      ) : step === 1 && formData?.deviceType === "mobile" ? (
+        <MobileForm
+          data={formData?.mobilePage1}
+          setData={(data: Partial<DevicePage1>) =>
+            updateFormData("mobilePage1", data)
+          }
+          errors={errors}
+          deviceType={formData?.deviceType}
+        />
+      ) : step === 1 && formData?.deviceType === "monitor" ? (
+        <MonitorForm
+          data={formData?.monitorDetails}
+          setData={(data: Partial<KeyboardDetailsInterface>) =>
+            updateFormData("monitorDetails", data)
+          }
+          errors={errors}
+        />
+      ): (
+        <></>
+      )}
+      {step === 2 && formData?.deviceType === "laptop" ? (
+        <LaptopForm2 
+          data={formData?.laptopPage2}
+          setData={(data: Partial<DevicePage2>) =>
+            updateFormData("laptopPage2", data)
+          }
+          errors={errors}
+        />
+      ) : step === 2 && formData?.deviceType === "mobile" ? (
+        <MobileForm2 
+          data={formData.mobilePage2}
+          setData={(data: Partial<DevicePage2>) =>
+            updateFormData("mobilePage2", data)
+          }
+          errors={errors}
+        />
+      ): (
+        <></>
+      )}
+
+      <div className="flex-grow"></div>    
+
+      {/* Navigation buttons */}
+
+      <div className="flex gap-3 w-full mt-auto">
+        {step >= 1 ? (
+          <button
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300 border border-black text-center"
+            onClick={handlePrevStep}
+            disabled={isLoading}
+          >
+            Back
+          </button>
+        ) : (
+          <button
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300 border border-black text-center"
+            onClick={() => {
+              closeBtn();
+            }}
+            disabled={isLoading}
+          >
+            Cancel
+          </button>
+        )}
+        {step < totalStep ? (
+          <button
+            type="button"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300"
+            onClick={handleNextStep}
+            disabled={isLoading}
+          >
+            <div className="flex items-center gap-2">
+              <span>Next</span>
+              {isLoading ? <Spinner /> : <ChevronRight color="white" />}
+            </div>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300"
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
+            <div className="flex items-center gap-2">
+              <span>Submit</span>
+              {isLoading ? <Spinner /> : <ChevronRight color="white" />}
+            </div>
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Form;

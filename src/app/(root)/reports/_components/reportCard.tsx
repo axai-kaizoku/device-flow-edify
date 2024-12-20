@@ -18,18 +18,18 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         <div className="flex justify-start items-center gap-3.5">
           <RenderIcon report={report} />
 
-          <h3 className="text-xl font-semibold text-black">
+          <h3 className="text-xl font-gilroySemiBold text-black">
             {report?.title}
           </h3>
         </div>
 
-        <div className="text-[#737373] font-semibold text-[15px] mb-1">
+        <div className="text-[#737373] font-gilroySemiBold text-[15px] mb-1">
           {report?.description}
         </div>
 
         {/* Button as Sheet Trigger */}
         <button
-          className="bg-black text-white rounded-[49px] py-2.5 px-20 font-semibold text-lg"
+          className="bg-black text-white rounded-[49px] py-2.5 px-20 font-gilroySemiBold text-lg"
           onClick={handleOpenModal}
         >
           Download

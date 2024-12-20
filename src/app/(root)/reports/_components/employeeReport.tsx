@@ -37,7 +37,7 @@ const EmployeeReport = () => {
   };
   return (
     <div>
-      <label className="block text-gray-700 font-medium text-lg my-4">
+      <label className="block text-gray-700 font-gilroyMedium text-lg my-4">
         Select an Operator:
       </label>
       <select
@@ -53,7 +53,9 @@ const EmployeeReport = () => {
       {operator === "between" ? (
         <div className="grid grid-cols-2 gap-8 mb-8">
           <div>
-            <label className="text-gray-700 font-medium text-lg">From:</label>
+            <label className="text-gray-700 font-gilroyMedium text-lg">
+              From:
+            </label>
             <input
               type="date"
               className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
@@ -62,7 +64,9 @@ const EmployeeReport = () => {
             />
           </div>
           <div>
-            <label className="text-gray-700 font-medium text-lg">To:</label>
+            <label className="text-gray-700 font-gilroyMedium text-lg">
+              To:
+            </label>
             <input
               type="date"
               className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
@@ -73,7 +77,9 @@ const EmployeeReport = () => {
         </div>
       ) : (
         <div className="mb-8">
-          <label className="text-gray-700 font-medium text-lg">Date:</label>
+          <label className="text-gray-700 font-gilroyMedium text-lg">
+            Date:
+          </label>
           <input
             type="date"
             className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
@@ -84,7 +90,7 @@ const EmployeeReport = () => {
       )}
 
       {/* <div className="mb-8">
-        <label className="text-gray-700 font-medium text-lg">
+        <label className="text-gray-700 font-gilroyMedium text-lg">
           File Format :
         </label>
         <input
@@ -96,11 +102,11 @@ const EmployeeReport = () => {
       </div> */}
 
       <div className="flex gap-2">
-        <button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+        <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
           Cancel
         </button>
         <button
-          className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+          className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
           onClick={handleDownloadClick}
         >
           Download

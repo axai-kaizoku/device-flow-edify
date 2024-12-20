@@ -71,7 +71,7 @@ export const LogoCompanyModal = ({
           <DialogTitle>New profile picture</DialogTitle>
           <DialogDescription>
             <div className="flex flex-col gap-1.5">
-              <label className="font-medium">Upload team image</label>
+              <label className="font-gilroyMedium">Upload team image</label>
               <div
                 className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
                 onClick={() => fileInputRef.current?.click()}

@@ -106,7 +106,7 @@ export const TeamForm = ({
     <div className="flex justify-center items-center">
       <div className="flex flex-col w-[98%] h-[80%] justify-start items-start">
         <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
-        <h3 className="text-3xl font-semibold mb-2">
+        <h3 className="text-3xl font-gilroySemiBold mb-2">
           {isEditForm ? "Edit Team" : "Let's work together"}
         </h3>
         <p className="text-slate-500 mb-10">
@@ -123,7 +123,7 @@ export const TeamForm = ({
           <div className="group relative">
             <label
               htmlFor="team-name"
-              className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-medium text-foreground"
+              className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
             >
               Team Name
             </label>
@@ -147,7 +147,7 @@ export const TeamForm = ({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="font-medium">Upload team image</label>
+            <label className="font-gilroyMedium">Upload team image</label>
             <div
               className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
               onClick={() => fileInputRef.current?.click()}
@@ -172,7 +172,7 @@ export const TeamForm = ({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="font-medium my-1">Choose Department</label>
+            <label className="font-gilroyMedium my-1">Choose Department</label>
             <div className="flex flex-wrap gap-x-5 gap-y-3">
               {DEPARTMENT_OPTIONS.map((preLabel) => (
                 <button
