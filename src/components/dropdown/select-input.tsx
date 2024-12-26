@@ -20,6 +20,7 @@ type SelectInputProps = {
   initialOptions: () => Promise<Option[]>;
   onSelect: (data: Option) => void;
   label: string;
+  className?: string;
 };
 
 export const SelectInput = ({
@@ -28,6 +29,7 @@ export const SelectInput = ({
   initialOptions,
   onSelect,
   label,
+  className,
 }: SelectInputProps) => {
   const [query, setQuery] = useState(value);
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -143,7 +145,7 @@ export const SelectInput = ({
         <div className="relative">
           <Input
             id={label}
-            className={cn("pr-10")} // Add padding-right to avoid overlapping the icon
+            className={cn("pr-10 cursor-pointer", className)} // Add padding-right to avoid overlapping the icon
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -151,7 +153,7 @@ export const SelectInput = ({
               setHighlightedIndex(null);
             }}
             onFocus={() => setIsDropdownOpen(true)}
-            placeholder="Search or select..."
+            placeholder="Choose"
             type="text"
           />
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">

@@ -33,7 +33,7 @@ export default async function UserPage({ params }: UserPageProps) {
 
   return (
     <CombinedContainer
-      title={`${user.first_name} ${user.last_name}`}
+      title={`${user?.first_name} ${user?.last_name ?? ""}`}
       description="User Details"
     >
       <div className="flex justify-between w-full items-center">
@@ -54,7 +54,7 @@ export default async function UserPage({ params }: UserPageProps) {
                 </EditUser>
               </div>
               <div className="border rounded-full py-2 px-6 border-gray-500">
-                <DeleteUser id={params.id}>
+                <DeleteUser id={params.id ?? ""}>
                   <p className="text-[#6C6C6C] font-gilroyMedium text-md">
                     Delete
                   </p>

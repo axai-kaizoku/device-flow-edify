@@ -1,13 +1,17 @@
+import { cn } from "@/lib/utils";
+
 interface TabProps {
   active: boolean;
   onClick: () => void;
   label: string;
+
+  className?: string; // Optional width for the line
 }
 
-export function Tab({ active, onClick, label }: TabProps) {
+export function Tab({ active, onClick, label, className }: TabProps) {
   return (
     <div
-      className={`flex justify-center items-center cursor-pointer transition-all duration-300 ${
+      className={`flex justify-center items-center pl-8 cursor-pointer transition-all duration-300 ${
         active
           ? "text-black dark:text-white"
           : "text-gray-500 dark:text-gray-400"
@@ -15,11 +19,13 @@ export function Tab({ active, onClick, label }: TabProps) {
       onClick={onClick}
     >
       <span
-        className={`relative text-lg font-gilroyMedium after:content-[''] after:absolute after:left-0 after:top-7 after:w-full after:h-[2px] after:transition-all after:duration-300 ${
+        className={cn(
+          "relative text-lg font-gilroyMedium after:content-[''] after:absolute after:top-[100%]  after:left-[-30%]  after:w-[160%] after:h-[2px] after:transition-all after:duration-300 ",
           active
             ? "after:bg-black dark:after:bg-white after:scale-x-100"
-            : "after:bg-gray-300 dark:after:bg-gray-600 after:scale-x-0"
-        }`}
+            : "after:bg-gray-300 dark:after:bg-gray-600 after:scale-x-0",
+          className
+        )}
       >
         {label}
       </span>

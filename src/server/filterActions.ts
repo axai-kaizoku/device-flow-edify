@@ -2,7 +2,7 @@ import { Device } from "./deviceActions";
 import { callAPIWithToken } from "./helper";
 import { Issues } from "./issueActions";
 import { User } from "./userActions";
-import { cache } from 'react';
+import { cache } from "react";
 
 export interface FilterApiParams {
   filters?: any[][];
@@ -141,7 +141,6 @@ export async function filterUsers({
   }
 }
 
-
 export const filterDevice = cache(async function ({
   filters = [],
   fields = devicesFields,
@@ -180,7 +179,6 @@ export const filterDevice = cache(async function ({
     );
   }
 });
-
 
 export const deletedDevices = cache(async function ({
   filters = [],

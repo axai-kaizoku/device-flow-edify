@@ -5,8 +5,10 @@ import { Colors } from "./colors";
 export const TableCell = styled.td`
   width: ${(props) => (props?.width ? `${props?.width}px` : "")};
   padding: 12px 24px;
+  font-family: var(--font-gilroy-medium), sans-serif;
   text-align: left;
 `;
+
 // text-align: ${(props) => props?.align};
 
 export const TableHeader = styled.thead`

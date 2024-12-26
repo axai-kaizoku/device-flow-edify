@@ -42,53 +42,55 @@ type Manager = {
 };
 
 export type User = {
-  deleted_at: null;
-  _id: string;
-  first_name: string;
-  last_name: string;
-  gender: string;
-  marital_status: string;
-  physically_handicapped: string;
-  about: string;
-  interests_and_hobbies: string;
-  password: string;
-  email: string;
-  phone: string;
-  orgId?: Org;
-  role: number;
-  designation: string;
-  image: string;
-  teamId: Team;
-  employment_type: string;
-  created_at: string;
-  __v: number;
-  date_of_birth: string;
-  onboarding_date: string;
-  reporting_manager: Manager;
-  devices: Device[]
-};
-
-export type CreateUserArgs = {
-  first_name: string;
-  last_name: string;
-  gender: string;
+  deleted_at?: null;
+  _id?: string;
+  first_name?: string;
+  offerLetter?: string;
+  last_name?: string;
+  gender?: string;
   marital_status?: string;
   physically_handicapped?: string;
   about?: string;
   interests_and_hobbies?: string;
-  _id: string;
-  email: string;
-  deleted_at: string;
-  phone: string;
-  role: number;
-  designation: string;
+  password?: string;
+  email?: string;
+  phone?: string;
+  orgId?: Org;
+  role?: number;
+  designation?: string;
+  image?: string;
+  teamId?: Team;
+  employment_type?: string;
+  created_at?: string;
+  __v?: number;
+  date_of_birth?: string;
+  onboarding_date?: string;
+  reporting_manager?: Manager;
+  devices?: Device[];
+};
+
+export type CreateUserArgs = {
+  first_name?: string;
+  last_name?: string;
+  offerLetter?: string;
+  gender?: string;
+  marital_status?: string;
+  physically_handicapped?: string;
+  about?: string;
+  interests_and_hobbies?: string;
+  _id?: string;
+  email?: string;
+  deleted_at?: string | null;
+  phone?: string;
+  role?: number;
+  designation?: string;
   image?: string;
   teamId?: string | null;
-  employment_type: string;
-  date_of_birth: string;
-  onboarding_date: string;
-  reporting_manager: string;
-  orgId: string | null;
+  employment_type?: string;
+  date_of_birth?: string;
+  onboarding_date?: string;
+  reporting_manager?: string;
+  orgId?: string | null;
 };
 
 export type Reportee = {

@@ -1,29 +1,29 @@
 export const designations = [
-	{ label: 'Frontend Developer', value: 'frontend-developer' },
-	{ label: 'Backend Developer', value: 'backend-developer' },
-	{ label: 'QC', value: 'qc' },
+  { label: "Frontend Developer", value: "Frontend Developer" },
+  { label: "Backend Developer", value: "Backend Developer" },
+  { label: "QC", value: "QC" },
 ];
 
 export const genders = [
-	{ label: 'Male', value: 'male' },
-	{ label: 'Female', value: 'female' },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
 ];
 
 export const employments = [
-	{ label: 'Full Time', value: 'full_time' },
-	{ label: 'Internship', value: 'internship' },
-	{ label: 'Part Time', value: 'part_time' },
-	{ label: 'Contract', value: 'contract' },
+  { label: "Full Time", value: "Full Time" },
+  { label: "Internship", value: "Internship" },
+  { label: "Part Time", value: "Part Time" },
+  { label: "Contract", value: "Contract" },
 ];
 
 export const bulkUploadKeys = [
-	'first_name',
-	'last_name',
-	'email',
-	'password',
-	'phone',
-	'employment_type',
-	'date_of_birth',
-	'gender',
-	'onboarding_date',
+  "first_name",
+  "last_name",
+  "email",
+  "password",
+  "phone",
+  "employment_type",
+  "date_of_birth",
+  "gender",
+  "onboarding_date",
 ];

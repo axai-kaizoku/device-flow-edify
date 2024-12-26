@@ -1,11 +1,7 @@
-// //@ts-nocheck
 "use client";
 
 import BulkUpload from "@/components/bulk-upload";
-import { Button } from "@/components/wind/Buttons";
-import { Form } from "@/components/wind/Form";
-import { Input } from "@/components/wind/Input";
-import { Typography } from "@/components/wind/Typography";
+import { Button } from "@/components/buttons/Button";
 import { fetchTeams } from "@/server/teamActions";
 import {
   bulkUploadUsers,
@@ -16,8 +12,8 @@ import {
   updateUser,
   User,
 } from "@/server/userActions";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { notFound, useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import {
   bulkUploadKeys,
   designations,
@@ -26,9 +22,13 @@ import {
 } from "./helper/utils";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
+import { FormField } from "../../settings/_components/form-field";
+import { Icons } from "@/components/icons";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface UserFormProps {
-  closeBtn?: (state: boolean) => void;
+  closeBtn: (state: boolean) => void;
   isEditForm?: boolean;
   userData?: CreateUserArgs | User;
 }
@@ -36,12 +36,11 @@ interface UserFormProps {
 export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const router = useRouter();
   const [next, setNext] = useState(0);
-  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstN: userData ? userData.first_name : "",
-    lastN: userData ? userData.last_name : "",
     phone: userData ? userData.phone : "",
     email: userData ? userData.email : "",
+    image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
     team: userData?.teamId
       ? { name: userData.teamId.title, value: userData.teamId._id }
@@ -53,215 +52,332 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
         }
       : { name: "", value: "" },
     gender: userData ? userData.gender : "",
+    offerLetter: userData ? userData.offerLetter : "",
     employment: userData ? userData.employment_type : "",
     dob: userData ? userData.date_of_birth : "",
     onboarding: userData ? userData.onboarding_date : "",
-    marital_status: userData ? userData.marital_status : "",
-    physically_handicapped: userData ? userData.physically_handicapped : "",
-    interests_and_hobbies: userData ? userData.interests_and_hobbies : "",
-    about: userData ? userData.about : "",
   });
 
-  // Function to validate required fields
-  const validateFormData = () => {
-    return (
-      formData.firstN &&
-      formData.lastN &&
-      formData.phone &&
-      formData.email &&
-      formData.dob &&
-      formData.gender &&
-      formData.reportM.value
-    );
+  const [errors, setErrors] = useState({
+    firstN: "",
+    phone: "",
+    email: "",
+    image: "",
+    designation: "",
+    team: "",
+    reportM: "",
+    gender: "",
+    offerLetter: "",
+    employment: "",
+    dob: "",
+    onboarding: "",
+  });
+
+  const validateStepOne = () => {
+    const newErrors = {
+      firstN: formData.firstN ? "" : "Name is required",
+      image: formData.image ? "" : "Image is required",
+      dob: formData.dob ? "" : "Date of birth is required",
+      gender: formData.gender ? "" : "Gender is required",
+      email: formData.email ? "" : "Email is required",
+      phone: formData.phone ? "" : "Phone number is required",
+    };
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+    return !Object.values(newErrors).some((err) => err);
   };
 
-  // Function to validate step 2 fields
   const validateStepTwo = () => {
-    return (
-      formData.designation &&
-      formData.team.value &&
-      formData.employment &&
-      formData.onboarding
-    );
+    const newErrors = {
+      designation: formData.designation ? "" : "Designation is required",
+      team: formData.team.value ? "" : "Team is required",
+      reportM: formData.reportM.value ? "" : "Reporting Manager is required",
+      employment: formData.employment ? "" : "Employment type is required",
+      offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
+      onboarding: formData.onboarding ? "" : "Onboarding date is required",
+    };
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+    return !Object.values(newErrors).some((err) => err);
   };
 
-  // const handleChange = (field: keyof typeof formData) => (e: any) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [field]: e.value,
-  //   }));
-  // };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    // Clear previous errors
+    setErrors({});
 
-  const handleSubmit = async () => {
     // Validation before submitting
-    if (!validateFormData() || !validateStepTwo()) {
-      setError("Please fill all the fields.");
+    const isStepOneValid = validateStepOne();
+    const isStepTwoValid = validateStepTwo();
+
+    if (!isStepOneValid && !isStepTwoValid) {
       return;
     }
 
     const user = {
       first_name: formData.firstN,
-      last_name: formData.lastN,
       email: formData.email,
       phone: formData.phone,
+      image: formData.image,
       designation: formData.designation,
       teamId: formData.team.value,
       onboarding_date: formData.onboarding,
       reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
+      // offerLetter: formData.offerLetter,
       date_of_birth: formData.dob,
       gender: formData.gender,
-      marital_status: formData.marital_status,
-      physically_handicapped: formData.physically_handicapped,
-      interests_and_hobbies: formData.interests_and_hobbies,
-      about: formData.about,
     };
 
     try {
       if (isEditForm) {
         await updateUser(userData?._id!, user);
         router.refresh();
-        closeBtn?.(false);
+        closeBtn(false);
       } else {
-        await createUser(user);
-
+        try {
+          const res = await createUser(user);
+        } catch (error) {}
         router.push("/people");
         router.refresh();
-        closeBtn?.(false);
+        closeBtn(false);
       }
 
+      // Reset form data after successful submission
       setFormData({
         firstN: "",
-        lastN: "",
         phone: "",
         email: "",
+        image: "",
         designation: "",
         team: { name: "", value: "" },
         reportM: { name: "", value: "" },
         gender: "",
         employment: "",
+        offerLetter: "",
         dob: "",
         onboarding: "",
-        marital_status: "",
-        physically_handicapped: "",
-        interests_and_hobbies: "",
-        about: "",
       });
     } catch (error) {
-      console.error("Error submitting form:", error);
+      notFound();
+    }
+  };
+
+  const fileImageRef = useRef<HTMLInputElement | null>(null);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file.name }));
+    }
+  };
+
+  const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
+  const handleOfferLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, offerLetter: file.name }));
     }
   };
 
   return (
     <div className="flex justify-center items-center">
       <div className="flex flex-col w-[90%] h-[80%] justify-start items-center">
-        <Typography
-          variant="h3"
-          align="left"
-          className="dark:text-white"
-          style={{ width: "100%", padding: "0.8rem 0" }}
-        >
-          {isEditForm ? "Edit User" : "Create a New User"}
-        </Typography>
+        <div className="flex flex-col gap-5 pb-5 w-full">
+          <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-semibold">
+            <div className="bg-black rounded-full  size-14 p-2 flex justify-center items-center">
+              <Icons.user_form_icon />
+            </div>
+            <span className="font-gilroySemiBold text-2xl">
+              {isEditForm ? "Edit Employee " : "Add a Employee"}
+            </span>
+          </div>
+          <div className="w-full flex flex-col gap-1">
+            <div className="font-semibold text-lg text-black">Step 0 of 1</div>
+            <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
+          </div>
+        </div>
+
         {!isEditForm ? (
           next === 0 ? (
-            <div className="w-full flex justify-between items-center py-8">
-              <div className="text-lg font-gilroySemiBold mt-4">
-                Bulk Upload
-              </div>
+            <div className="w-full flex justify-between items-center pb-5">
               <BulkUpload
                 bulkApi={bulkUploadUsers}
-                closeBtn={closeBtn}
+                closeBtn={() => closeBtn(false)}
                 requiredKeys={bulkUploadKeys}
               />
             </div>
           ) : null
         ) : null}
 
-        <Form width="100%" formId="user-form" onFormSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-7">
           {next === 0 ? (
             <>
-              <div className="w-full flex items-center gap-6">
-                <Input
-                  label="First Name"
-                  rules={{ required: true }}
-                  width="100%"
-                  value={formData.firstN}
-                  onChange={(e) =>
-                    setFormData({ ...formData, firstN: e.target.value })
-                  }
-                  name="first_name"
-                  type="text"
-                />
-                <Input
-                  label="Last Name"
-                  rules={{ required: true }}
-                  width="100%"
-                  value={formData.lastN}
-                  onChange={(e) =>
-                    setFormData({ ...formData, lastN: e.target.value })
-                  }
-                  name="last_name"
-                  type="text"
-                />
-              </div>
-              <div className="w-full flex items-center gap-6">
-                <Input
-                  label="Email"
-                  rules={{ required: true }}
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  name="email"
-                  type="email"
-                  width="100%"
-                />
-                <Input
-                  label="Phone"
-                  rules={{ required: true }}
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  name="phone"
-                  type="number"
-                  width="100%"
-                />
-              </div>
-              <div className="w-full flex items-center gap-6">
-                <div className="w-1/2">
-                  <label className="text-sm font-gilroySemiBold">
-                    Date of Birth
-                  </label>
-                  <br />
-                  <input
-                    type="date"
-                    value={formData.dob}
-                    onChange={(e) =>
-                      setFormData({ ...formData, dob: e.target.value })
-                    }
-                    className="p-2 border rounded-md"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <br />
+              {!isEditForm && (
+                <>
+                  <div className="flex items-center justify-center ">
+                    <div className="border-t border-[#B1B1B1] w-7"></div>
+                    <span className="mx-4 font-semibold text-lg text-[#5F5F5F]">
+                      OR
+                    </span>
+                    <div className="border-t border-[#B1B1B1] w-7"></div>
+                  </div>
+                </>
+              )}
 
-                  <SelectDropdown
-                    options={genders}
-                    onSelect={(data) =>
-                      setFormData({
-                        ...formData,
-                        gender: data.value,
-                      })
+              <div className="font-gilroySemiBold text-2xl ">Personal Info</div>
+              <FormField
+                label="Name"
+                error={errors.firstN}
+                id="name"
+                value={formData?.firstN ?? ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, firstN: e.target.value }))
+                }
+                type="text"
+                placeholder="John Doe"
+              />
+              <div className="flex flex-col gap-1.5">
+                <label className="font-gilroyMedium text-black text-base">
+                  Upload picture
+                </label>
+
+                <div
+                  className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                  onClick={() => fileImageRef?.current?.click()}
+                >
+                  <div className="flex flex-col justify-center items-center">
+                    <Icons.uploadImage className="size-5" />
+                    <span className="text-[#0EA5E9]">Click to upload</span>
+                    <p className="text-xs text-neutral-400">
+                      JPG, JPEG, PNG less than 1MB
+                    </p>
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  ref={fileImageRef}
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                />
+                {errors.image && (
+                  <p className="text-destructive text-sm">{errors.image}</p>
+                )}
+              </div>
+              <div className="flex w-full flex-wrap items-center gap-4 pt-3">
+                <div className="flex-1">
+                  <FormField
+                    label="DOB"
+                    error={errors.dob}
+                    id="dob"
+                    name="dob"
+                    value={formData?.dob ?? ""}
+                    type="date"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        dob: e.target.value,
+                      }))
                     }
-                    label="Gender"
-                    value={formData.gender}
+                    placeholder="DD/MM/YYYY"
+                  />
+                </div>
+                <div className="flex-1">
+                  <div className="z-20 flex-1">
+                    <SelectDropdown
+                      options={genders}
+                      onSelect={(data) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          gender: data?.value,
+                        }))
+                      }
+                      label="Gender"
+                      value={`${
+                        formData?.gender ? formData?.gender : "eg: Male"
+                      }`}
+                      className={cn(
+                        errors.gender
+                          ? "border-destructive/80 "
+                          : "border-[#5F5F5F]",
+                        "rounded-xl border"
+                      )}
+                    />
+                    {errors.gender && (
+                      <p className="mt-2 text-sm text-destructive">
+                        {errors.gender}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-full flex-wrap items-center gap-4 py-3">
+                <div className="flex-1">
+                  <FormField
+                    label="Email"
+                    id="email"
+                    error={errors.email}
+                    name="email"
+                    value={formData?.email ?? ""}
+                    type="text"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
+                    placeholder="jhondoe@winuall.com"
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormField
+                    label="Phone"
+                    id="phone"
+                    name="phone"
+                    error={errors.phone}
+                    value={formData?.phone ?? ""}
+                    type="text"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
+                    placeholder="+91"
                   />
                 </div>
               </div>
-              <div className="w-full flex items-center gap-6">
-                <div className="w-1/2">
+              {/* {error && <span className="w-full text-red-400">{error}</span>} */}
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  className="rounded-full w-1/2 text-xl font-gilroySemiBold border border-black"
+                  onClick={() => closeBtn(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  onClick={() => {
+                    if (validateStepOne()) {
+                      setNext(1);
+                    }
+                  }}
+                >
+                  Next
+                  <ChevronRight color="white" />
+                </Button>
+              </div>
+            </>
+          ) : next === 1 ? (
+            <>
+              <div className="w-full flex flex-col gap-6">
+                <h1 className="text-2xl font-gilroySemiBold">
+                  Professional Info
+                </h1>
+                <div className="z-50 pt-3">
                   <SelectInput
                     value={formData.reportM.name || ""}
                     fetchOptions={searchUsers}
@@ -271,113 +387,180 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         ...prev,
                         reportM: { name: data.email, value: data._id },
                       }));
-                      console.log({ data });
                     }}
                     label="Reporting Manager"
+                    className={cn(
+                      errors.reportM ? "border-destructive/80 border" : ""
+                    )}
                   />
+                  {errors.reportM && (
+                    <p className="text-destructive text-sm">{errors.reportM}</p>
+                  )}
                 </div>
-              </div>
-              {error && <span className="w-full text-red-400">{error}</span>}
-              <div className="flex justify-end">
-                <Button
-                  className="dark:bg-blue-500 dark:hover:bg-blue-600"
-                  onClick={() => {
-                    if (!validateFormData()) {
-                      setError("Please fill all required fields.");
-                      return;
-                    }
-                    setError("");
-                    setNext(1);
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            </>
-          ) : next === 1 ? (
-            <>
-              <div className="w-full flex items-center gap-6">
-                <div className="w-1/2">
-                  <SelectDropdown
-                    options={designations}
-                    onSelect={(data) =>
-                      setFormData({
-                        ...formData,
-                        designation: data.value,
-                      })
-                    }
-                    label="Designation"
-                    value={formData.designation}
-                  />
+                <div className="flex w-full flex-wrap items-center gap-4 py-3">
+                  <div className="flex-1">
+                    <FormField
+                      label="Onboarding Date"
+                      id="onboarding_date"
+                      error={errors.onboarding}
+                      name="Joining Date"
+                      value={formData?.onboarding ?? ""}
+                      type="date"
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          onboarding: e.target.value,
+                        }))
+                      }
+                      placeholder="DD/MM/YYYY"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="z-20 flex-1">
+                      <SelectDropdown
+                        options={employments}
+                        onSelect={(data) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            employment: data?.value,
+                          }))
+                        }
+                        label="Employment Type"
+                        value={`${
+                          formData?.employment
+                            ? formData?.employment
+                            : "eg: Full time"
+                        }`}
+                        className={cn(
+                          errors.employment
+                            ? "border-destructive/80 "
+                            : "border-[#5F5F5F]",
+                          "rounded-xl border"
+                        )}
+                      />
+                      {errors.employment && (
+                        <p className="mt-2 text-sm text-destructive">
+                          {errors.employment}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="w-1/2">
-                  <SelectInput
-                    value={formData.team.name || ""}
-                    fetchOptions={async (query) => {
-                      const data = await fetchTeams();
-                      const filtered = data.filter((obj: any) =>
-                        obj.title.toLowerCase().includes(query.toLowerCase())
-                      );
-                      return filtered;
-                    }}
-                    initialOptions={fetchTeams}
-                    onSelect={(data: any) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        team: { name: data.title, value: data._id },
-                      }));
-                      // console.log({ data });
-                    }}
-                    label="Select Team"
-                  />
+                <div className="flex w-full flex-wrap items-center gap-4 py-3">
+                  <div className="flex-1">
+                    <div className="z-20 flex-1">
+                      <SelectInput
+                        value={formData?.team?.name}
+                        fetchOptions={async (query) => {
+                          const data = await fetchTeams();
+                          const filtered = data.filter((obj: any) =>
+                            obj.title
+                              .toLowerCase()
+                              .includes(query.toLowerCase())
+                          );
+                          return filtered;
+                        }}
+                        initialOptions={fetchTeams}
+                        onSelect={(data: any) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            team: { name: data.title, value: data._id },
+                          }));
+                        }}
+                        label="Team"
+                        className={cn(
+                          errors.team ? "border-destructive/80 border" : ""
+                        )}
+                      />
+                      {errors.team && (
+                        <p className="text-destructive text-sm">
+                          {errors.team}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="z-20 flex-1">
+                      <SelectDropdown
+                        options={designations}
+                        onSelect={(data) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            designation: data?.value,
+                          }))
+                        }
+                        label="Role"
+                        value={`${
+                          formData?.designation
+                            ? formData?.designation
+                            : "eg: Full Stack Developer"
+                        }`}
+                        className={cn(
+                          errors.designation
+                            ? "border-destructive/80 "
+                            : "border-[#5F5F5F]",
+                          "rounded-xl border"
+                        )}
+                      />
+                      {errors.designation && (
+                        <p className="mt-2 text-sm text-destructive">
+                          {errors.designation}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="w-full flex items-center gap-6">
-                <div className="w-1/2">
-                  <label className="text-sm font-gilroySemiBold">
-                    Onboarding Date
+                {/* Offer letter */}
+                <div className="flex flex-col gap-1.5 ">
+                  <label className="font-gilroyMedium text-black text-base">
+                    Upload Offer Letter
                   </label>
-                  <br />
+                  <div
+                    className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                    onClick={() => fileOfferLetterRef?.current?.click()}
+                  >
+                    <div className="flex flex-col justify-center items-center">
+                      <Icons.uploadImage className="size-5" />
+                      <span className="text-[#0EA5E9]">Click to upload</span>
+                      <p className="text-xs text-neutral-400">
+                        JPG, JPEG, PNG less than 1MB
+                      </p>
+                    </div>
+                  </div>
                   <input
-                    type="date"
-                    value={formData.onboarding}
-                    onChange={(e) =>
-                      setFormData({ ...formData, onboarding: e.target.value })
-                    }
-                    className="p-2 border rounded-md"
+                    type="file"
+                    ref={fileOfferLetterRef}
+                    style={{ display: "none" }}
+                    onChange={handleOfferLetterChange}
                   />
-                </div>
-                <div className="w-1/2">
-                  <label className="text-sm font-gilroySemiBold">
-                    Employment Type
-                  </label>
-                  <br />
-
-                  <SelectDropdown
-                    options={employments}
-                    onSelect={(data) =>
-                      setFormData({
-                        ...formData,
-                        employment: data.value,
-                      })
-                    }
-                    label="Employment"
-                    value={formData.employment}
-                  />
+                  {errors.offerLetter && (
+                    <p className="text-destructive text-sm">
+                      {errors.offerLetter}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div className="flex justify-between w-full mt-4">
-                <Button onClick={() => setNext(0)}>Previous</Button>
-                <Button onClick={handleSubmit} disabled={!validateStepTwo()}>
+
+              <div className="flex gap-2 w-full mt-4">
+                <Button
+                  className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
+                  onClick={() => setNext(0)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  type="submit"
+                >
                   {isEditForm ? "Save Changes" : "Submit"}
+                  <ChevronRight color="white" />
                 </Button>
               </div>
-              {error && <span className="w-full text-red-400">{error}</span>}
             </>
           ) : (
             <></>
           )}
-        </Form>
+        </form>
       </div>
     </div>
   );
