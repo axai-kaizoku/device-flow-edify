@@ -117,7 +117,7 @@ export default function IssueTable({ data }: { data: Issues[] }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <input
+      {/* <input
         className="border p-2"
         value={searchTerm || ""}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -138,7 +138,7 @@ export default function IssueTable({ data }: { data: Issues[] }) {
             X
           </button>
         )}
-      </div>
+      </div> */}
       {openFilter && (
         <div className="py-4">
           <div className="flex flex-col gap-4">

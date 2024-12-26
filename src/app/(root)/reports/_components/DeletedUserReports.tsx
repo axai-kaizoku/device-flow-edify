@@ -2,8 +2,17 @@ import React from "react";
 import { convertToCSV, downloadCSV } from "./util";
 import { deletedUsers } from "@/server/filterActions";
 import { UserResponse } from "@/server/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import { closeAlert, openAlert } from "@/app/store/alertSlice";
+import { GlobalAlert } from "@/components/global-alert";
 
-const DeletedUserReports = () => {
+const DeletedUserReports = ({
+  closeBtn,
+}: {
+  closeBtn: (value: boolean) => void;
+}) => {
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state: any) => state.alert.isOpen);
   const handleDownloadDeletedAssetsReport = async () => {
     try {
       const deletedUserResponse: UserResponse = await deletedUsers();
@@ -16,18 +25,31 @@ const DeletedUserReports = () => {
 
         downloadCSV(csv, `deleted_users_report.csv`);
       } else {
-        alert("No data available");
+        // alert("No data available");
+        dispatch(openAlert());
       }
     } catch (error) {
       console.error("Error downloading the report:", error);
-      alert("Failed to download the report. Please try again.");
+      dispatch(openAlert());
+
+      // alert("Failed to download the report. Please try again.");
     }
   };
   return (
     <>
+      <GlobalAlert
+        isOpen={isOpen}
+        onClose={() => dispatch(closeAlert())}
+        title="No data available"
+        description="Something went wrong !!"
+        isFailure={true}
+      />
       <div>Get All the Deleted Members</div>
       <div className="flex gap-2">
-        <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+        <button
+          onClick={() => closeBtn(false)}
+          className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+        >
           Cancel
         </button>
         <button

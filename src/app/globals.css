@@ -6,6 +6,15 @@ body {
   -webkit-font-smoothing: antialiased; /* Improves clarity */
   -moz-osx-font-smoothing: grayscale; /* Improves clarity */
 }
+/* Hide scrollbar for all browsers */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
 
 .label {
   position: absolute;
@@ -138,18 +147,16 @@ body {
 }
 
 .custom-link path {
-	transform: translateY(-67.5px) translateX(-88px); /* Adjust offsets to match your card size */
+  transform: translateY(-67.5px) translateX(-88px); /* Adjust offsets to match your card size */
 }
 
 .custom-checkbox:checked::before {
-	content: '';
-	display: block;
-	width: 10px;
-	height: 5px;
-	border: solid white;
-	border-width: 0 2px 2px 0;
-	transform: rotate(45deg);
-	margin: auto;
-  }
-  
- 
+  content: "";
+  display: block;
+  width: 10px;
+  height: 5px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin: auto;
+}

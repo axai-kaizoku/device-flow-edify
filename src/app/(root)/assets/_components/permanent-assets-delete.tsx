@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateTeam } from "@/server/teamActions";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";

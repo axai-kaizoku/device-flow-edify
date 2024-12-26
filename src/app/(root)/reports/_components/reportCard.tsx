@@ -2,15 +2,12 @@
 import React, { useState } from "react";
 import { report } from "../page";
 import { RenderIcon } from "./renderIcons";
-import { SheetTrigger } from "@/components/ui/side-sheet";
 import AllReports from "./allReports";
-import Modal from "./Modal";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const ReportCard = ({ report, index }: { report: report; index: number }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
   return (
     <>
       <div className="bg-white border border-[rgba(195, 195, 195, 0.31)] rounded-[33px] p-6 flex flex-col justify-between gap-4">
@@ -30,16 +27,17 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         {/* Button as Sheet Trigger */}
         <button
           className="bg-black text-white rounded-[49px] py-2.5 px-20 font-gilroySemiBold text-lg"
-          onClick={handleOpenModal}
+          onClick={() => setIsOpen(true)}
         >
           Download
         </button>
       </div>
 
-      {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <AllReports report={report} index={index} />
-      </Modal>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
+          <AllReports closeBtn={setIsOpen} report={report} index={index} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

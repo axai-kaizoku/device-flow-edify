@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
+import { Icons } from "@/components/icons";
 
 export const SoftDeleteAsset = ({
   id,
@@ -28,11 +28,12 @@ export const SoftDeleteAsset = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
+
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <AlertCircle className="w-6 h-6" /> {/* Lucide-react icon */}
+            <Icons.warning_delete />
           </div>
         </div>
 
@@ -43,22 +44,19 @@ export const SoftDeleteAsset = ({
 
         {/* Description */}
         <DialogDescription className="p-1 text-sm text-gray-600">
-          Are you sure you want to delete this? Assigned assets will be moved to
-          the unassigned section.
+          Are you sure you want to delete this?
         </DialogDescription>
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
-            variant="secondary"
-            className="w-1/2 rounded-[0.60rem]"
+            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            className="w-1/2 rounded-[0.60rem]"
-            variant="destructive"
+            className="w-1/2 rounded-md bg-[#D92D20] text-white"
             onClick={async () => {
               if (id) {
                 try {

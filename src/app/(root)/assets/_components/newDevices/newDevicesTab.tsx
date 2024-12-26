@@ -6,8 +6,8 @@ const NewDevicesTab: React.FC<OrdersProps> = ({ data }) => {
     
   return (
     <div className="flex flex-col gap-12">
-		<NewDeviceTable data={data}/>
-	</div>
+      <NewDeviceTable data={data}/>
+    </div>
   )
 }
 

@@ -1,6 +1,7 @@
 "use client";
 import { Address } from "@/server/addressActions";
 import { updateCartAddress } from "@/server/cartActions";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -10,7 +11,6 @@ interface AddressSectionProps {
 }
 
 const AddressSection = ({ cart, allAddresses }: AddressSectionProps) => {
-  const [flag, setFlag] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(
     cart?.addressDetails?._id
   );
@@ -19,7 +19,6 @@ const AddressSection = ({ cart, allAddresses }: AddressSectionProps) => {
   const handleAddressChange = async (addressId: string) => {
     try {
       const updateResponse = await updateCartAddress(addressId);
-      setFlag(false);
       router.refresh();
     } catch (error) {
       console.error("Error updating address:", error);
@@ -27,70 +26,73 @@ const AddressSection = ({ cart, allAddresses }: AddressSectionProps) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-      {flag === false ? (
+    <div className="bg-white mt-12">
         <div>
-          <h2 className="text-xl font-gilroySemiBold text-gray-800 dark:text-gray-200">
-            Shipping Address
-          </h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">
-            City: {cart?.addressDetails?.city}
-          </p>
-          <p className="text-gray-700 dark:text-gray-300">
-            Is Primary: {cart?.addressDetails?.isPrimary ? "Yes" : "No"}
-          </p>
-          <button
-            className="inline-block p-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors mt-4"
-            onClick={() => setFlag(true)}
-          >
-            Change Address
-          </button>
-        </div>
-      ) : (
-        <div>
-          <h2 className="text-xl font-gilroySemiBold text-gray-800 dark:text-gray-200 mb-4">
-            Select a Shipping Address
-          </h2>
-          {allAddresses.map((address: Address) => (
-            <label
-              key={address._id}
-              className="flex items-center mb-2 cursor-pointer"
-            >
-              <input
-                type="radio"
-                name="address"
-                value={address._id}
-                checked={selectedAddressId === address._id}
-                onChange={() => {
-                  setSelectedAddressId(address._id);
-                }}
-                className="mr-2"
-              />
-              <span className="text-gray-700 dark:text-gray-300">
-                {address.city}
-              </span>
-            </label>
-          ))}
-          <div className="flex justify-start gap-6">
-            <button
-              className="inline-block p-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors mt-4"
-              onClick={() => handleAddressChange(selectedAddressId)}
-            >
-              Update
-            </button>
+          {allAddresses?.map((address: Address, i:number) => (
+            <div className="flex flex-col" key={address?._id}>
+              <div
+                key={address?._id}
+                className="flex items-start group"
+              >
+                <div className="flex items-start w-full">
+                  <input
+                    type="radio"
+                    name="address"
+                    value={address?._id}
+                    checked={selectedAddressId === address?._id}
+                    onChange={() => {
+                      setSelectedAddressId(address?._id);
+                      handleAddressChange(address?._id)
+                      router.refresh();
+                    }}
+                    className="mr-3 accent-black w-6 h-6 mt-1"
+                  />
+                  
+                  <div className="flex flex-col w-full cursor-pointer">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex gap-2 items-center">
+                        <div className="font-gilroySemiBold text-2xl text-[#17183B]">
+                          {address?.title}
+                        </div>
+                        
+                        {address?.isPrimary && (
+                          <div className="rounded-[4px] border border-[#027A48] p-1 text-xs text-[#027A48] font-gilroySemiBold">
+                            PRIMARY
+                          </div>
+                        )}
+                        
+                      </div>
 
-            <button
-              className="inline-block p-2 rounded-md text-white bg-gray-500 hover:bg-gray-600 transition-colors mt-4"
-              onClick={() => {
-                setSelectedAddressId(cart.addressDetails._id);
-                setFlag(false);
-              }}
-            >
-              Cancel
-            </button>
-          </div>
+                      <div className="cursor-pointer text-black text-base font-gilroySemiBold">Edit</div>
+                    </div>
+
+                    <div className="font-gilroyMedium text-base text-[#17183B] mt-4">
+                    {`${address?.address}, ${address?.landmark}, ${address?.city}, ${address?.state}, ${address?.pinCode}`}
+                    </div>
+
+                    <div className="font-gilroyMedium text-base text-[#17183B] mt-3">
+                      <span className="font-semibold">Contact</span> - {address?.phone}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {i < allAddresses?.length - 1 && allAddresses?.length > 1 && (
+                    <div className="h-[1px] bg-[#D1D1D8] w-full my-[27px]"></div>
+              )}
+              
+            </div>
+          ))}
+
+            <div className="h-[1px] bg-[#D1D1D8] w-full my-8"></div>
+
+            <div className="flex items-center gap-4 ml-6 group cursor-pointer" onClick={()=>{ router.push('/settings');}}>
+              <div><Plus className="size-6"/></div>
+              <div className="text-base font-gilroySemiBold text-black">Add New Address</div>
+            </div>
+        
         </div>
-      )}
     </div>
   );
 };

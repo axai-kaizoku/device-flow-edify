@@ -1,97 +1,10 @@
 "use client";
 
-// import { OrdersProps } from '../orders/components/orderPage';
-// import AddDevices from './_components/addDevices/AddDevices';
-// import DeletedDevices from './_components/DeletedDevice/deleted-devices';
-// import Inventory from './_components/inventory/Inventory';
-// import NewDevicesTab from './_components/newDevices/newDevicesTab';
-// import { Tab } from './_components/Tab';
-// import { Device } from '@/server/deviceActions';
-// import { useQueryState } from 'nuqs';
-
-// interface TabDisplayProps {
-// 	devices: Device[];
-// 	currentPage: number;
-// 	totalPages: number;
-// 	totalDocuments: number;
-// 	currentDocumentCount: number;
-// 	pageSize: number;
-// 	prevOrders : {data : OrdersProps};
-// 	deletedDevices: Device[];
-// }
-
-// function TabDisplay({
-// 	devices,
-// 	currentPage,
-// 	totalPages,
-// 	totalDocuments,
-// 	currentDocumentCount,
-// 	pageSize,
-// 	prevOrders,
-// 	deletedDevices
-// }: TabDisplayProps) {
-// 	const [activeTab, setActiveTab] = useQueryState('tab', {
-// 		defaultValue: 'devices',
-// 	});
-
-// 	const renderContent = () => {
-// 		switch (activeTab) {
-// 			case 'devices':
-// 				return <AddDevices devices={devices} totalDocuments={totalDocuments} />;
-// 			case 'inventory':
-// 				return <Inventory devices={devices} />;
-// 			case 'new':
-// 				return <NewDevicesTab data={prevOrders} />
-// 			case 'deleted':
-// 				return <DeletedDevices data={deletedDevices} />
-// 			default:
-// 				return null;
-// 		}
-// 	};
-
-// 	return (
-// 		<>
-// 			<div className="flex items-center w-full gap-6">
-// 				<Tab
-// 					active={activeTab === 'inventory'}
-// 					onClick={() => setActiveTab('inventory')}
-// 					iconType="OutlinedStore"
-// 					label="Inventory"
-// 				/>
-// 				<Tab
-// 					active={activeTab === 'devices'}
-// 					onClick={() => setActiveTab('devices')}
-// 					iconType="OutlinedLaptop"
-// 					label="Assigned Devices"
-// 				/>
-// 				<Tab
-// 					active={activeTab === 'new'}
-// 					onClick={() => setActiveTab('new')}
-// 					iconType="OutlinedStore"
-// 					label="Newly Added Devices"
-// 				/>
-// 				<Tab
-// 					active={activeTab === 'deleted'}
-// 					onClick={() => setActiveTab('deleted')}
-// 					iconType="OutlinedLaptop"
-// 					label="Deleted Devices"
-// 				/>
-// 			</div>
-
-// 			<div className="mt-4">{renderContent()}</div>
-// 		</>
-
-// 	);
-// }
-
-// export default TabDisplay;
-"use client";
-
 import { useQueryState } from "nuqs";
 
 import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Spinner from "@/components/Spinner";
 import AssignedAssets from "./_components/assigned-assets";
 import { Device } from "@/server/deviceActions";
@@ -101,12 +14,8 @@ import { Tab } from "../teams/_components/Tab";
 import CreateDevice from "./_components/addDevices/_components/create-device";
 import { Icons } from "@/components/icons";
 
-interface TabDisplayProps {
-  devices: Device[];
-  deletedDevices: Device[];
-}
 
-function TabDisplay({ devices, deletedDevices }: TabDisplayProps) {
+function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "assigned_assets",
   });
@@ -130,11 +39,11 @@ function TabDisplay({ devices, deletedDevices }: TabDisplayProps) {
   const renderContent = () => {
     switch (activeTab) {
       case "assigned_assets":
-        return <AssignedAssets devices={devices} />;
+        return (<Suspense fallback={<Spinner/>}><AssignedAssets /></Suspense>);
       case "un_assigned_assets":
-        return <UnAssignedAssets devices={devices} />;
+        return (<Suspense fallback={<Spinner/>}><UnAssignedAssets /></Suspense>);
       case "inactive_assets":
-        return <InActiveAssets devices={deletedDevices} />;
+        return (<Suspense fallback={<Spinner/>}><InActiveAssets /></Suspense>);
       default:
         return null;
     }
@@ -143,17 +52,17 @@ function TabDisplay({ devices, deletedDevices }: TabDisplayProps) {
     {
       key: "assigned_assets",
       label: "Assigned Assets",
-      component: <AssignedAssets devices={devices} />,
+      component: <AssignedAssets />,
     },
     {
       key: "un_assigned_assets",
       label: "Unassigned Assets",
-      component: <UnAssignedAssets devices={devices} />,
+      component: <UnAssignedAssets />,
     },
     {
       key: "inactive_assets",
       label: "Inactive Assets",
-      component: <InActiveAssets devices={deletedDevices} />,
+      component: <InActiveAssets />,
     },
   ];
   return (

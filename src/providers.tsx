@@ -11,7 +11,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <SessionProvider
         refetchOnWindowFocus={false}
         refetchWhenOffline={false}
-        refetchInterval={100}
+        refetchInterval={1500}
       >
         <StyledJsxRegistry>
           <ThemeProvider attribute="class" defaultTheme="light">

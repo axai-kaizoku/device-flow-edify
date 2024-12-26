@@ -4,14 +4,14 @@ type ContainerHeaderProps = {
   description?: string;
 };
 type CombinedContainerProps = {
-  title: string;
+  title?: string;
   description?: string;
   children: React.ReactNode;
 };
 
 export const InnerContainer = ({ children }: ChildrenProps) => {
   return (
-    <section className="flex flex-col w-full pt-8 pr-8 overflow-hidden h-full">
+    <section className="flex flex-col w-[97%] overflow-y-auto border rounded-3xl h-full min-h-[70vh]">
       {children}
     </section>
   );
@@ -19,7 +19,9 @@ export const InnerContainer = ({ children }: ChildrenProps) => {
 
 export const OuterContainer = ({ children }: ChildrenProps) => {
   return (
-    <div className="flex flex-col w-full min-h-screen h-full">{children}</div>
+    <div className="flex flex-col w-full justify-center h-[83vh]">
+      {children}
+    </div>
   );
 };
 

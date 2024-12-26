@@ -1,6 +1,5 @@
 import React from "react";
 import { report } from "../page";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import AllReports from "./allReports";
 import { RenderIcon } from "./renderIcons";
 import ReportCard from "./reportCard";
@@ -13,7 +12,7 @@ const ReportSection = ({ reportData }: { reportData: report[] }) => {
   }, {} as Record<string, typeof reportData>);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col font-gilroyRegular gap-8">
       <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">Reports</h1>
       <div>
         {Object.entries(groupedReports).map(([tag, reports]) => (

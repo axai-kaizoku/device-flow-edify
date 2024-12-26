@@ -2,6 +2,7 @@ import { Device } from "./deviceActions";
 import { callAPIWithToken } from "./helper";
 import { Issues } from "./issueActions";
 import { User } from "./userActions";
+import { cache } from 'react';
 
 export interface FilterApiParams {
   filters?: any[][];
@@ -140,7 +141,8 @@ export async function filterUsers({
   }
 }
 
-export async function filterDevice({
+
+export const filterDevice = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
@@ -153,7 +155,6 @@ export async function filterDevice({
       page_length: pageLength,
     };
 
-    // console.log(payload);
     // Construct the URL with an optional search query
     const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
@@ -161,30 +162,27 @@ export async function filterDevice({
 
     // API call
     const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
-    // Check if response has data
-    // console.log(res.data.devices);
+
+    // Check and return response data
     if (res && res.data) {
-      // console.log('Filtered Data:', res.data);
-      return res.data; // Return the filtered data
+      return res.data;
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
     console.error(
       "Error filtering devices:",
       error.response?.data || error.message
     );
-
-    // Throw more specific error message
     throw new Error(
       error.response?.data?.message ||
         "Failed to filter devices. Please try again later."
     );
   }
-}
+});
 
-export async function deletedDevices({
+
+export const deletedDevices = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
@@ -226,7 +224,7 @@ export async function deletedDevices({
         "Failed to filter devices. Please try again later."
     );
   }
-}
+});
 
 export const issueFields = [
   "description",

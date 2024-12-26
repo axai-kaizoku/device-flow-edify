@@ -2,12 +2,23 @@
 import { getAssignedDevicesReport } from "@/server/reportsAction";
 import React, { useState } from "react";
 import { convertToCSV, downloadCSV } from "./util";
+import { GlobalAlert } from "@/components/global-alert";
+import { useDispatch, useSelector } from "react-redux";
+import { closeAlert, openAlert } from "@/app/store/alertSlice";
 
-const AssignedDevicesReport = () => {
+const AssignedDevicesReport = ({
+  closeBtn,
+}: {
+  closeBtn: (value: boolean) => void;
+}) => {
   const [operator, setOperator] = useState(">");
   const [date, setDate] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state: any) => state.alert.isOpen);
+
   const handleDeviceDownloadClick = async () => {
     try {
       const filters = [];
@@ -23,11 +34,13 @@ const AssignedDevicesReport = () => {
 
         downloadCSV(csv, `assigned_devices_report.csv`);
       } else {
-        alert("No data available");
+        // alert("No data available");
+        dispatch(openAlert());
       }
     } catch (error) {
       console.error("Error downloading the report:", error);
-      alert("Failed to download the report. Please try again.");
+      // alert("Failed to download the report. Please try again.");
+      dispatch(openAlert());
     }
     // onDownload(filters);
     setFromDate("");
@@ -35,60 +48,69 @@ const AssignedDevicesReport = () => {
     setDate("");
   };
   return (
-    <div>
-      <label className="block text-gray-700 font-gilroyMedium text-lg my-4">
-        Select an Operator:
-      </label>
-      <select
-        className="w-full mb-8 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
-        value={operator}
-        onChange={(e) => setOperator(e.target.value)}
-      >
-        <option value=">">Greater Than</option>
-        <option value="<">Less Than</option>
-        <option value="between">Between</option>
-      </select>
+    <>
+      <GlobalAlert
+        isOpen={isOpen}
+        onClose={() => dispatch(closeAlert())}
+        title="No data available"
+        description="Something went wrong !!"
+        isFailure={true}
+      />
 
-      {operator === "between" ? (
-        <div className="grid grid-cols-2 gap-8 mb-8">
-          <div>
+      <div>
+        <label className="block text-gray-700 font-gilroyMedium text-lg my-4">
+          Select an Operator:
+        </label>
+        <select
+          className="w-full mb-8 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+          value={operator}
+          onChange={(e) => setOperator(e.target.value)}
+        >
+          <option value=">">Greater Than</option>
+          <option value="<">Less Than</option>
+          <option value="between">Between</option>
+        </select>
+
+        {operator === "between" ? (
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            <div>
+              <label className="text-gray-700 font-gilroyMedium text-lg">
+                From:
+              </label>
+              <input
+                type="date"
+                className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-gray-700 font-gilroyMedium text-lg">
+                To:
+              </label>
+              <input
+                type="date"
+                className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="mb-8">
             <label className="text-gray-700 font-gilroyMedium text-lg">
-              From:
+              Date:
             </label>
             <input
               type="date"
               className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
-          <div>
-            <label className="text-gray-700 font-gilroyMedium text-lg">
-              To:
-            </label>
-            <input
-              type="date"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="mb-8">
-          <label className="text-gray-700 font-gilroyMedium text-lg">
-            Date:
-          </label>
-          <input
-            type="date"
-            className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-      )}
+        )}
 
-      {/* <div className="mb-8">
+        {/* <div className="mb-8">
             <label className="text-gray-700 font-gilroyMedium text-lg">File Format :</label>  
             <input type='text'
              className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200'
@@ -97,18 +119,22 @@ const AssignedDevicesReport = () => {
             />  
         </div> */}
 
-      <div className="flex gap-2">
-        <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
-          Cancel
-        </button>
-        <button
-          className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
-          onClick={handleDeviceDownloadClick}
-        >
-          Download
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => closeBtn(false)}
+            className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+          >
+            Cancel
+          </button>
+          <button
+            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            onClick={handleDeviceDownloadClick}
+          >
+            Download
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

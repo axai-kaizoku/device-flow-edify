@@ -29,9 +29,37 @@ const config: Config = {
             opacity: "0",
           },
         },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "tick-fall": {
+          "0%": { transform: "translate(-50%, -50%) scale(0.5)" },
+          "100%": { transform: "translate(0, 0) scale(1)" },
+        },
+        "pop-center": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "25%": { transform: "scale(0.25)", opacity: "0.25"},
+          "50%": { transform: "scale(0.5)", opacity: "0.5" },
+          "75%": { transform: "scale(0.75)", opacity: "0.75" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "scale-up-center": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "100%": { transform: "scale(2)", opacity: "1" },
+        },
+        "fall-fade-out": {
+          "0%": { transform: "scale(2) translateY(0)", opacity: "1" },
+          "100%": { transform: "scale(2) translateY(200px)", opacity: "0" },
+        },
       },
       animation: {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "fade-in":"fade-in 1s ease-in-out",
+        "tick-fall": "tick-fall 0.1s ease-out",
+        "pop-center": "pop-center 1s ease-in",
+        "scale-up-center": "scale-up-center 2s ease-in-out",
+        "fall-fade-out": "fall-fade-out 2s ease-in-out forwards",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
