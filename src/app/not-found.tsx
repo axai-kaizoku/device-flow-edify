@@ -2,21 +2,23 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col justify-center items-center h-[95vh] sm:h-screen -mt-10 sm:-mt-20 lg:-mt-1 w-full">
-      <img
-        src="/media/loading-man.svg"
-        alt="404"
-        className="w-48 h-48 sm:w-60 sm:h-60 object-contain"
-      />
-      <h1 className="text-[1.2rem] pl-7 lg:text-8xl font-gilroyBold font-manuale text-gray-800 mb-4">
-        404.
+    <div className="fixed inset-0 flex flex-col justify-center items-center h-[95vh] sm:h-screen w-full">
+      <div className="relative w-full h-[65%] flex justify-center items-center">
+        <img
+          src="/media/error.svg"
+          alt="500-error"
+          className="w-48 absolute z-[1] h-48 sm:w-60 sm:h-60 md:w-[500px] md:h-[350px] lg:w-[650px] lg:h-[420px]  object-contain"
+        />
+        <div className="text-[#EEE] absolute z-[0] font-gilroyBold text-8xl sm:text-[16rem] md:text-[18rem] lg:text-[20rem] ">
+          404
+        </div>
+      </div>
+      <h1 className="text-[1.2rem] md:text-3xl lg:text-4xl  font-gilroyBold font-manuale text-black mb-4">
+        Oops! Page Note Found
       </h1>
-      <h2 className="text-[0.9rem] lg:text-2xl font-gilroyMedium font-manuale text-gray-600 mb-4 text-center">
-        Page Not Found
+      <h2 className="text-[0.9rem] md:text-xl lg:text-2xl  font-gilroyMedium font-manuale text-[#6C6C6C] mb-4 text-center">
+        We couldn&apos;t find the page you looking for
       </h2>
-      <Link href="/" className="hover:underline">
-        Go to home
-      </Link>
     </div>
   );
 }

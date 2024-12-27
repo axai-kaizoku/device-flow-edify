@@ -43,7 +43,13 @@ export default function PaymentMethods({
 				'https://media.glassdoor.com/sqll/2268419/winuall-squarelogo-1562701582366.png',
 			order_id: orderId, // Razorpay order ID from query parameter
 			handler: function (response: any) {
+<<<<<<< HEAD
+				console.log(response); // Handle payment success response
 				if (response?.razorpay_payment_id){
+					console.log("Success");
+=======
+				if (response?.razorpay_payment_id){
+>>>>>>> master
 					router.refresh();
 					router.push('/store/cart/checkout/payment-success');
 				}

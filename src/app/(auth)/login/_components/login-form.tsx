@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
 import Link from "next/link";
+import Spinner from "@/components/Spinner";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -24,11 +26,13 @@ export default function LoginForm() {
     }
 
     try {
+      setLoading(true);
       const response = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+      setLoading(false);
 
       if (response?.status === 200) {
         router.push("/");
@@ -92,7 +96,7 @@ export default function LoginForm() {
       {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
       <button type="submit" className="border rounded bg-black text-white p-4">
-        Login
+        {loading ? <Spinner size="sm" /> : "Login"}
       </button>
 
       <div className="flex text-[0.8rem] underline justify-between items-center text-[#616161] dark:text-white">

@@ -1,7 +1,8 @@
 import Header from "@/components/header/header";
 import Sidebar from "@/components/sidebar";
 import { getSession } from "@/server/helper";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
+import { LandingPage } from "./_landing-page";
 
 export type Props = {
   session: Session | null;
@@ -13,10 +14,18 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+
+  if (!session) {
+    return (
+      <div className="w-full min-h-screen">
+        <LandingPage />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full min-h-screen overflow-hidden bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed">
       {/* Header Section */}
-
       <div className="absolute inset-0 bg-white opacity-70 backdrop-blur-lg z-[-1]" />
 
       <Header session={session} />

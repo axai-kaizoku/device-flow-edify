@@ -76,11 +76,12 @@ import { useQueryState } from "nuqs";
 import { Search, Download } from "lucide-react"; // Importing icons from lucide-react
 
 import Spinner from "@/components/Spinner";
-import { Tab } from "../teams/_components/Tab";
+
 import { Icons } from "@/components/icons";
 import UserMain from "./_components/user-main";
 import { User, UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
+import { Tab } from "../teams/_components/Tab";
 
 interface TabDisplayProps {
   users: User[];

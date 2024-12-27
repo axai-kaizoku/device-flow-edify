@@ -4,11 +4,18 @@ import UserDashboard from "./_components/user-page";
 
 export default async function Dashboard() {
   const sess = await getSession();
+
+  if (!sess) {
+    return "NOT FOUND";
+  }
+
   return (
     <>
       {/* {JSON.stringify(sess, null, 2)} */}
-      {/* {sess?.user.role === 2 ? <AdminDashboard /> : <UserDashboard />} */}
-      <AdminDashboard />
+      {sess?.user.role === 2 ? <AdminDashboard /> : null}
+      {sess?.user.role === 1 ? <UserDashboard /> : null}
+
+      {/* <AdminDashboard /> */}
     </>
   );
 }
