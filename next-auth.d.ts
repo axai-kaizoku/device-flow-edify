@@ -1,43 +1,76 @@
-import 'next-auth/jwt';
+import "next-auth";
+import "next-auth/jwt";
 
-declare module 'next-auth/jwt' {
-	interface JWT {
-		token: string;
-		id: string;
-		email: string;
-		first_name: string;
-		last_name: string;
-		orgId: string;
-		role: number;
-	}
+interface Organization {
+  _id: string;
+  name: string;
+  email: string;
 }
 
-declare module 'next-auth' {
-	interface Session {
-		user: User & {
-			token: string;
-			id: string;
-			email: string;
-			first_name: string;
-			last_name: string;
-			orgId: string;
-			role: number;
-		};
-	}
+interface Team {
+  _id: string;
+  title: string;
+  description: string;
 }
 
-declare module 'next-auth' {
-	interface User {
-		token: string;
-		user: {
-			_id: string;
-			email: string;
-			first_name: string;
-			last_name: string;
-			orgId: {
-				_id: string;
-			};
-			role: number;
-		};
-	}
+interface AddressDetails {
+  _id: string;
+  title: string;
+  phone: string;
+  landmark: string;
+  address: string;
+  state: string;
+  city: string;
+  pinCode: string;
+  isPrimary: boolean;
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    token: string;
+    userId: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    role?: number;
+    orgId?: Organization;
+    teamId: Team;
+    addressDetails?: AddressDetails;
+  }
+}
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      user: {
+        token: string;
+        userId: string;
+        email: string;
+        firstName?: string;
+        lastName?: string;
+        role?: number;
+        orgId?: Organization;
+        teamId: Team;
+        addressDetails?: AddressDetails;
+      };
+    };
+  }
+
+  interface User {
+    token: string;
+    user: {
+      last_name: string | undefined;
+      first_name: string | undefined;
+      _id: string;
+      token: string;
+      userId: string;
+      email: string;
+      firstName?: string;
+      lastName?: string;
+      role?: number;
+      orgId?: Organization;
+      teamId: Team;
+      addressDetails?: AddressDetails;
+    }[];
+  }
 }

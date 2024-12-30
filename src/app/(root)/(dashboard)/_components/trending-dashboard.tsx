@@ -67,7 +67,7 @@ function TrendingDevices({ data }: { data: Device[] }) {
 
               {/* Call to Action */}
               <button
-                onClick={() => handleSubmit(device._id)}
+                onClick={() => handleSubmit(device._id!)}
                 className="mt-6 w-full bg-black hover:bg-black/80 text-white text-sm font-gilroyMedium py-2 rounded-lg transition-colors duration-300"
               >
                 View Details

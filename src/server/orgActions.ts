@@ -72,7 +72,7 @@ export async function createOrg(
         title,
         description,
         image,
-        orgId: sess?.user?.orgId,
+        orgId: sess?.user?.user?.orgId?._id,
       }
     );
 
@@ -85,7 +85,7 @@ export async function createOrg(
 export const getCurrentOrg = cache(async function <Org>() {
   try {
     const sess = await getSession();
-    const orgId = sess?.user?.orgId;
+    const orgId = sess?.user?.user?.orgId?._id;
     const res = await callAPIWithToken<Org>(
       `https://api.edify.club/edifybackend/v1/organisation/${orgId}`, // API endpoint
       "GET", // HTTP method

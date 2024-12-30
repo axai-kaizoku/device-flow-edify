@@ -4,10 +4,31 @@ export type UserData = {
   token: string;
   userId: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  orgId?: string;
-  role?: number;
+  firstName: string;
+  lastName: string;
+  role: number;
+  orgId: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  teamId: {
+    _id: string;
+    title: string;
+    description: string;
+    image?: string;
+  };
+  addressDetails: {
+    _id: string;
+    title: string;
+    phone: string;
+    landmark: string;
+    address: string;
+    state: string;
+    city: string;
+    pinCode: string;
+    isPrimary: boolean;
+  };
 };
 
 interface AuthState {

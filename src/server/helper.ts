@@ -1,17 +1,17 @@
-'use server';
+"use server";
 
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { getServerSession } from 'next-auth';
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
 export const getSession = async () => {
-	const session = await getServerSession(authOptions);
-	return session;
+  const session = await getServerSession(authOptions);
+  return session;
 };
 
 export const getTokenFromSession = async () => {
-	const session = await getServerSession(authOptions);
-	const token = session?.user?.token;
-	return token;
+  const session = await getServerSession(authOptions);
+  const token = session?.user?.user.token;
+  return token;
 };
 
 // Enhanced function with inbuilt token retrieval
@@ -52,59 +52,64 @@ export const getTokenFromSession = async () => {
 // 	}
 // }
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 interface APIResponse<T> {
-	data: T;
-	status: number;
+  data: T;
+  status: number;
 }
 
 // Main function using axios
 export async function callAPIWithToken<T>(
-	url: string,
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-	body: unknown = null,
-	headers: Record<string, string> = {}, // Allow passing custom headers
+  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+  body: unknown = null,
+  headers: Record<string, string> = {} // Allow passing custom headers
 ): Promise<APIResponse<T>> {
-	// Retrieve the token
-	const token = await getTokenFromSession();
+  // Retrieve the token
+  const token = await getTokenFromSession();
 
-	if (!token) {
-		throw new Error('Unauthorized: No token available.');
-	}
+  if (!token) {
+    throw new Error("Unauthorized: No token available.");
+  }
 
-	try {
-		// Default headers, including Authorization
-		const defaultHeaders: Record<string, string> = {
-			Authorization: `Bearer ${token}`,
-			...headers, // Allow additional headers to be passed
-		};
+  try {
+    // Default headers, including Authorization
+    const defaultHeaders: Record<string, string> = {
+      Authorization: `Bearer ${token}`,
+      ...headers, // Allow additional headers to be passed
+    };
 
-		// Set 'Content-Type' only if not already provided (for multipart/form-data)
-		if (!defaultHeaders['Content-Type']) {
-			defaultHeaders['Content-Type'] = 'application/json';
-		}
+    // Set 'Content-Type' only if not already provided (for multipart/form-data)
+    if (!defaultHeaders["Content-Type"]) {
+      defaultHeaders["Content-Type"] = "application/json";
+    }
 
-		// Make the API call using axios
-		const response: AxiosResponse<T> = await axios({
-			url,
-			method,
-			data: method === 'POST' || method === 'PUT' || method === 'PATCH' ? body : undefined,
-			headers: defaultHeaders,
-		});
+    // Make the API call using axios
+    const response: AxiosResponse<T> = await axios({
+      url,
+      method,
+      data:
+        method === "POST" || method === "PUT" || method === "PATCH"
+          ? body
+          : undefined,
+      headers: defaultHeaders,
+    });
 
-		// Return response data and status
-		return {
-			data: response?.data as T,
-			status: response?.status,
-		};
-	} catch (error) {
-		// Handle Axios-specific errors
-		if (error instanceof AxiosError) {
-			// console.error('API call failed:', error?.response?.data || error?.message);
-			throw new Error(error?.response?.data?.message || error?.message || 'API request failed');
-		}
-		// Handle unexpected errors
-		throw new Error('An unexpected error occurred during the API request');
-	}
+    // Return response data and status
+    return {
+      data: response?.data as T,
+      status: response?.status,
+    };
+  } catch (error) {
+    // Handle Axios-specific errors
+    if (error instanceof AxiosError) {
+      // console.error('API call failed:', error?.response?.data || error?.message);
+      throw new Error(
+        error?.response?.data?.message || error?.message || "API request failed"
+      );
+    }
+    // Handle unexpected errors
+    throw new Error("An unexpected error occurred during the API request");
+  }
 }

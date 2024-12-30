@@ -37,23 +37,14 @@ export const Profile = async () => {
     <div>
       {session && (
         <div className="whitespace-nowrap flex flex-col gap-0.5 text-gray-700 dark:text-gray-300">
-          {session?.user.name ? (
-            <>
-              <span className="font-gilroyMedium">{session?.user.name}</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Employee
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="font-gilroyMedium">
-                {session?.user.first_name} {session?.user.last_name}
-              </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {session.user.role === 1 ? "Employee" : "Admin"}
-              </span>
-            </>
-          )}
+          <div>
+            <span className="font-gilroyMedium">
+              {session?.user.user.firstName} {session?.user.user.lastName}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {session.user.user.role === 1 ? "Employee" : "Admin"}
+            </span>
+          </div>
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
-import { cache } from 'react';
+import { cache } from "react";
 
 export type Address = {
   isPrimary?: boolean;
@@ -16,8 +16,7 @@ export type Address = {
   pinCode?: string;
 };
 
-
-export const getAddress = cache(async function(): Promise<Address[]> {
+export const getAddress = cache(async function (): Promise<Address[]> {
   try {
     const res = await callAPIWithToken<Address[]>(
       "https://api.edify.club/edifybackend/v1/address",
@@ -38,7 +37,7 @@ export async function createAddress(address: Address): Promise<Address> {
       "POST", // HTTP method
       {
         userId: sess?.user?.id,
-        orgId: sess?.user?.orgId,
+        orgId: sess?.user?.user?.orgId?._id,
         ...address,
       }
     );

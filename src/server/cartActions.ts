@@ -1,145 +1,143 @@
 // 'use server';
-import { AxiosError } from 'axios';
-import { Device } from './deviceActions';
-import { callAPIWithToken, getSession } from './helper';
-import { cache } from 'react';
+import { AxiosError } from "axios";
+import { Device } from "./deviceActions";
+import { callAPIWithToken, getSession } from "./helper";
+import { cache } from "react";
 
 export type DeviceWithQty = Device & { quantity: number };
 
 export const removeItemFromCart = async (itemId: string): Promise<void> => {
-	try {
-		// Make the DELETE request to remove the item from the cart
-		await callAPIWithToken(
-			`https://api.edify.club/edifybackend/v1/cart/item/quantity`,
-			'PATCH',
-			{ itemId, quantity: 1 },
-		);
-	} catch (error) {
-		throw new Error((error as AxiosError)?.message);
-	}
+  try {
+    // Make the DELETE request to remove the item from the cart
+    await callAPIWithToken(
+      `https://api.edify.club/edifybackend/v1/cart/item/quantity`,
+      "PATCH",
+      { itemId, quantity: 1 }
+    );
+  } catch (error) {
+    throw new Error((error as AxiosError)?.message);
+  }
 };
 
-export const getCart = cache(async function(){
-	const sess = await getSession(); // Fetch session details
+export const getCart = cache(async function () {
+  const sess = await getSession(); // Fetch session details
 
-	try {
-		if (sess?.user && sess?.user?.id) {
-			// Fetch Cart data
-			const response = await callAPIWithToken<any>(
-				`https://api.edify.club/edifybackend/v1/cart`,
-				'GET',
-			);
+  try {
+    if (sess?.user && sess?.user?.user.userId) {
+      // Fetch Cart data
+      const response = await callAPIWithToken<any>(
+        `https://api.edify.club/edifybackend/v1/cart`,
+        "GET"
+      );
 
-			return response?.data; // Return the cart data
-		} else {
-			throw new Error('No user session found');
-		}
-	} catch (error: any) {
-		throw new Error(error?.message || 'Failed to fetch cart');
-	}
+      return response?.data; // Return the cart data
+    } else {
+      throw new Error("No user session found");
+    }
+  } catch (error: any) {
+    throw new Error(error?.message || "Failed to fetch cart");
+  }
 });
 
 export const updateCartItemQuantity = async (
-	itemId: string,
-	quantity: number,
+  itemId: string,
+  quantity: number
 ): Promise<void> => {
-	try {
-		const response = await callAPIWithToken<any>(
-			`https://api.edify.club/edifybackend/v1/cart/item/quantity`,
-			'PATCH',
-			{ itemId: itemId, quantity: quantity },
-		);
-	} catch (error) {
-		throw new Error((error as AxiosError)?.message);
-	}
+  try {
+    const response = await callAPIWithToken<any>(
+      `https://api.edify.club/edifybackend/v1/cart/item/quantity`,
+      "PATCH",
+      { itemId: itemId, quantity: quantity }
+    );
+  } catch (error) {
+    throw new Error((error as AxiosError)?.message);
+  }
 };
 
 export async function addItemToCart(
-	itemId: string,
-	quantity: number,
-	addressId?: string | null,
+  itemId: string,
+  quantity: number,
+  addressId?: string | null
 ) {
-	try {
-		const payload = {
-			item: {
-				itemId,
-				quantity,
-			},
-			addressId: addressId,
-		};
-		const apiUrl = 'https://api.edify.club/edifybackend/v1/cart/addItem';
+  try {
+    const payload = {
+      item: {
+        itemId,
+        quantity,
+      },
+      addressId: addressId,
+    };
+    const apiUrl = "https://api.edify.club/edifybackend/v1/cart/addItem";
 
-		const response = await callAPIWithToken(apiUrl, 'POST', payload);
-		return response?.data;
-	} catch (error: any) {
-		throw new Error(error?.response || 'Failed to add item to cart.');
-	}
+    const response = await callAPIWithToken(apiUrl, "POST", payload);
+    return response?.data;
+  } catch (error: any) {
+    throw new Error(error?.response || "Failed to add item to cart.");
+  }
 }
 
 export const getPaymentMethods = async (price: number) => {
-	const sess = await getSession(); // Fetch session details
+  const sess = await getSession(); // Fetch session details
 
-	try {
-		if (sess?.user && sess?.user?.id) {
-			// Fetch Cart data
-			const response = await callAPIWithToken<any>(
-				`https://api.edify.club/edifybackend/v1/payments/methods?amount=${price}`,
-				'GET',
-			);
+  try {
+    if (sess?.user && sess?.user?.user.userId) {
+      // Fetch Cart data
+      const response = await callAPIWithToken<any>(
+        `https://api.edify.club/edifybackend/v1/payments/methods?amount=${price}`,
+        "GET"
+      );
 
-			return response?.data; // Return the cart data
-		} else {
-			throw new Error('No user session found');
-		}
-	} catch (error: any) {
-		throw new Error(error?.message || 'Failed to fetch payment methods');
-	}
+      return response?.data; // Return the cart data
+    } else {
+      throw new Error("No user session found");
+    }
+  } catch (error: any) {
+    throw new Error(error?.message || "Failed to fetch payment methods");
+  }
 };
 
 export async function createOrderId(amount: number, paymentOption: string) {
-	try {
-		const payload = {
-			amount,
-			paymentOption,
-		};
-		const apiUrl = 'https://api.edify.club/edifybackend/v1/payments/initiate';
+  try {
+    const payload = {
+      amount,
+      paymentOption,
+    };
+    const apiUrl = "https://api.edify.club/edifybackend/v1/payments/initiate";
 
-		const response = await callAPIWithToken(apiUrl, 'POST', payload);
-		//@ts-ignore
-		const orderId = response?.data?.orderId;
-		//@ts-ignore
-		const paymentMethod = response?.data?.paymentOption;
+    const response = await callAPIWithToken(apiUrl, "POST", payload);
+    //@ts-ignore
+    const orderId = response?.data?.orderId;
+    //@ts-ignore
+    const paymentMethod = response?.data?.paymentOption;
 
-		const checkoutPayload = {
-			payment_mode: paymentMethod,
-			orderId,
-		};
-		const checkoutUrl = 'https://api.edify.club/edifybackend/v1/cart/checkout';
+    const checkoutPayload = {
+      payment_mode: paymentMethod,
+      orderId,
+    };
+    const checkoutUrl = "https://api.edify.club/edifybackend/v1/cart/checkout";
 
-		const checkoutRes = await callAPIWithToken(
-			checkoutUrl,
-			'POST',
-			checkoutPayload,
-		);
-		return checkoutRes.data;
-	} catch (error: any) {
-		throw new Error(error.response || 'Failed to create orderID.');
-	}
+    const checkoutRes = await callAPIWithToken(
+      checkoutUrl,
+      "POST",
+      checkoutPayload
+    );
+    return checkoutRes.data;
+  } catch (error: any) {
+    throw new Error(error.response || "Failed to create orderID.");
+  }
 }
 
 // Update Cart Address
 
-export const updateCartAddress = async (
-	addressId: string,
-): Promise<void> => {
-	try {
-		const response = await callAPIWithToken<any>(
-			`https://api.edify.club/edifybackend/v1/cart/address`,
-			'PATCH',
-			{ addressId },
-		);
-		return response?.data;
-	} catch (error) {
-		throw new Error((error as AxiosError)?.message);
-	}
+export const updateCartAddress = async (addressId: string): Promise<void> => {
+  try {
+    const response = await callAPIWithToken<any>(
+      `https://api.edify.club/edifybackend/v1/cart/address`,
+      "PATCH",
+      { addressId }
+    );
+    return response?.data;
+  } catch (error) {
+    throw new Error((error as AxiosError)?.message);
+  }
 };

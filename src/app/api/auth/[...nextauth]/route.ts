@@ -76,38 +76,37 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // console.log('jwt token:', token);
-      // console.log('jwt user:', user);
-
       if (user) {
         token.token = user.token;
-        token.id = user.user._id; // Ensure you're correctly referencing the user object
-        token.email = user.user.email;
-        token.first_name = user.user.first_name;
-        token.last_name = user.user.last_name;
-        token.orgId = user.user.orgId._id; // Ensure orgId is available
-        token.role = user.user.role;
+        token.userId = user.user[0]._id;
+        token.email = user.user[0].email;
+        token.firstName = user.user[0].first_name;
+        token.lastName = user.user[0].last_name;
+        token.role = user.user[0].role;
+        token.orgId = user.user[0].orgId;
+        token.teamId = user.user[0].teamId;
+        // @ts-ignore
+        token.addressDetails = user.user[0].addressDetails[0];
       }
 
-      // console.log('jwt token only:', token);
+      // console.log("JWT token:", token);
       return token;
     },
 
     async session({ session, token }) {
-      // console.log('session token:', token);
-      // console.log('session session:', session);
+      session.user.user = {
+        token: token.token,
+        userId: token.userId,
+        email: token.email,
+        firstName: token.firstName,
+        lastName: token.lastName,
+        role: token.role,
+        orgId: token.orgId,
+        teamId: token.teamId,
+        addressDetails: token.addressDetails,
+      };
 
-      if (token.token) {
-        session.user.token = token.token;
-        session.user.email = token.email;
-        session.user.id = token.id;
-        session.user.first_name = token.first_name;
-        session.user.last_name = token.last_name;
-        session.user.orgId = token.orgId;
-        session.user.role = token.role;
-      }
-
-      // console.log('session only:', session);
+      // console.log("Session object:", session);
       return session;
     },
   },

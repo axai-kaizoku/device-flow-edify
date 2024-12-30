@@ -109,7 +109,7 @@ export const createIssue = async (
     if (sess?.user) {
       const issue = {
         ...issueData,
-        orgId: sess.user.orgId,
+        orgId: sess.user.user.orgId?._id,
         // userId: sess.user.id,
         // email: sess.user.email,
         createdAt: new Date().toISOString(),
@@ -132,7 +132,7 @@ export const getIssueByUserId = cache(async (): Promise<getAllResponse> => {
   const sess = await getSession(); // Fetch session details
 
   try {
-    if (sess?.user && sess?.user?.id) {
+    if (sess?.user && sess.user.user.userId) {
       // const userId = sess.user.id;
 
       // Make the GET request to fetch issues by user ID

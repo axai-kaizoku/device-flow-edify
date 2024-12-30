@@ -13,7 +13,7 @@ export default function SidebarMain({ session }: Props) {
 
   return (
     <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen bg-transparent">
-      {session?.user.role === 2 ? (
+      {session?.user.user.role === 2 ? (
         <>
           <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full">
             {pathname !== "/" ? (
@@ -65,8 +65,7 @@ export default function SidebarMain({ session }: Props) {
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
                 onClick={() => {
-                  signOut()
-
+                  signOut();
                 }}
               >
                 <LogOut className="w-5 h-5" />

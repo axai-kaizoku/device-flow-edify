@@ -87,7 +87,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
-  const userRole: number | undefined = session?.user.role;
+  const userRole: number | undefined = session?.user.user.role;
 
   return (
     <html lang="en">

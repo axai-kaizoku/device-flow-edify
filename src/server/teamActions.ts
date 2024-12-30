@@ -1,5 +1,5 @@
 "use server";
-import { cache } from 'react';
+import { cache } from "react";
 
 import { FilterApiParams } from "./filterActions";
 import { callAPIWithToken, getSession } from "./helper";
@@ -62,7 +62,6 @@ export const fetchTeams = cache(async function ({
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    
     // Throw more specific error message
     throw new Error(
       error?.response?.data?.message ||
@@ -99,7 +98,6 @@ export const fetchDeletedTeams = cache(async function ({
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    
     // Throw more specific error message
     throw new Error(
       error?.response?.data?.message ||
@@ -123,7 +121,7 @@ export async function createTeam(
         title,
         description,
         image,
-        orgId: sess?.user?.orgId,
+        orgId: sess?.user?.user?.orgId?._id,
       }
     );
 

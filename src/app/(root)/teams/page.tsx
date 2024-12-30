@@ -10,7 +10,7 @@ export default async function Teams() {
     const teams = await fetchTeams();
     const deletedTeams = await fetchDeletedTeams();
     const sess = await getSession();
-    const isAdmin = sess?.user?.role === 2;
+    const isAdmin = sess?.user?.user.role === 2;
     // const teamId = "670370b2f95db70c42788288";
 
     return (

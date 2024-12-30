@@ -39,7 +39,7 @@ export default async function UserPage({ params }: UserPageProps) {
       <div className="flex justify-between w-full items-center">
         <div className="text-gray-500 font-gilroySemiBold">Profile</div>
         <div className="flex gap-5">
-          {sess?.user.role === 2 && (
+          {sess?.user.user.role === 2 && (
             <div className="flex gap-2.5">
               <div className="border rounded-full py-2 px-6 border-gray-500">
                 <div className="text-[#6C6C6C] font-gilroyMedium text-md">

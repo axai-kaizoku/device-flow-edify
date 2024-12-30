@@ -77,16 +77,14 @@ export const createDevices = async (
       ...(device?.userId !== "" && { userId: device?.userId }),
     };
 
-    
     // API call
     const sess = await getSession();
 
     // Flatten the payload
     const payload = {
       ...deviceData,
-      orgId: sess?.user?.orgId,
+      orgId: sess?.user?.user?.orgId?._id,
     };
-
 
     const res = await callAPIWithToken<Device>(
       "https://api.edify.club/edifybackend/v1/devices",
@@ -114,26 +112,26 @@ export const createDevices = async (
 
 //Getting Devices
 
-export const getAllDevices = cache(async function(): Promise<getAllDevicesProp> {
-  try {
-    const res = await callAPIWithToken<getAllDevicesProp>(
-      "https://api.edify.club/edifybackend/v1/devices",
-      "GET"
-    );
+export const getAllDevices = cache(
+  async function (): Promise<getAllDevicesProp> {
+    try {
+      const res = await callAPIWithToken<getAllDevicesProp>(
+        "https://api.edify.club/edifybackend/v1/devices",
+        "GET"
+      );
 
-    // Validate response structure
-    if (!res?.data || !Array.isArray(res?.data)) {
-      throw new Error("Invalid API response structure");
+      // Validate response structure
+      if (!res?.data || !Array.isArray(res?.data)) {
+        throw new Error("Invalid API response structure");
+      }
+
+      return res?.data;
+    } catch (e) {
+      // Optionally, handle specific error scenarios
+      throw new Error((e as AxiosError)?.message || "Failed to fetch devices");
     }
-
-    return res?.data;
-  } catch (e) {
-    // Optionally, handle specific error scenarios
-    throw new Error((e as AxiosError)?.message || "Failed to fetch devices");
   }
-
-});
-
+);
 
 //Update Devices
 export const updateDevice = async (
@@ -204,43 +202,47 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 }
 
 // Get Device by ID
-export const getDeviceById = cache(async (deviceId: string): Promise<Device> => {
-  try {
-    // Make the GET request to fetch a single device by ID
-    const res = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
-      "GET"
-    );
-
-    // Return the fetched device
-    return res?.data;
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
-  }
-});
-
-// Getting Devices by User ID
-
-export const getDevicesByUserId = cache(async (): Promise<getAllDevicesProp> => {
-  const sess = await getSession(); // Fetch session details
-
-  try {
-    if (sess?.user && sess?.user?.id) {
-      // Make the GET request to fetch Devices of user ID
-      const res = await callAPIWithToken<getAllDevicesProp>(
-        `https://api.edify.club/edifybackend/v1/devices/userDetails`,
+export const getDeviceById = cache(
+  async (deviceId: string): Promise<Device> => {
+    try {
+      // Make the GET request to fetch a single device by ID
+      const res = await callAPIWithToken<Device>(
+        `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
         "GET"
       );
 
-      // Return the list of Devices
+      // Return the fetched device
       return res?.data;
-    } else {
-      throw new Error("No user session found");
+    } catch (error) {
+      throw new Error((error as AxiosError)?.message);
     }
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
   }
-});
+);
+
+// Getting Devices by User ID
+
+export const getDevicesByUserId = cache(
+  async (): Promise<getAllDevicesProp> => {
+    const sess = await getSession(); // Fetch session details
+
+    try {
+      if (sess?.user && sess?.user?.user.userId) {
+        // Make the GET request to fetch Devices of user ID
+        const res = await callAPIWithToken<getAllDevicesProp>(
+          `https://api.edify.club/edifybackend/v1/devices/userDetails`,
+          "GET"
+        );
+
+        // Return the list of Devices
+        return res?.data;
+      } else {
+        throw new Error("No user session found");
+      }
+    } catch (error) {
+      throw new Error((error as AxiosError)?.message);
+    }
+  }
+);
 
 //pagination
 export const paginatedDevices = async (

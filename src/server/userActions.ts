@@ -170,7 +170,6 @@ export async function searchUsers(searchQuery: string): Promise<UserResponse> {
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
-    
 
     return res?.data?.users;
   } catch (e) {
@@ -184,7 +183,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
     const user = {
       ...userData,
       password: "winuall123",
-      orgId: sess?.user?.orgId,
+      orgId: sess?.user?.user?.orgId?._id,
     };
 
     const res = await callAPIWithToken<User>(
@@ -274,7 +273,7 @@ export const getUsersByTeamId = cache(async function <User>(teamId: string) {
   } catch (e) {
     throw new Error("Failed to fetch user");
   }
-})
+});
 
 //Search api
 export async function userSearchAPI(query: string): Promise<UserResponse> {
@@ -292,15 +291,17 @@ export async function userSearchAPI(query: string): Promise<UserResponse> {
 }
 
 // API function to fetch the hierarchy data
-export const fetchUserHierarchy = cache(async function (): Promise<HierarchyResponse> {
-  try {
-    const res = await callAPIWithToken<HierarchyResponse>(
-      "https://api.edify.club/edifybackend/v1/user/hierarchy", // API endpoint for hierarchy
-      "GET" // HTTP method
-    );
+export const fetchUserHierarchy = cache(
+  async function (): Promise<HierarchyResponse> {
+    try {
+      const res = await callAPIWithToken<HierarchyResponse>(
+        "https://api.edify.club/edifybackend/v1/user/hierarchy", // API endpoint for hierarchy
+        "GET" // HTTP method
+      );
 
-    return res?.data;
-  } catch (e) {
-    throw new Error("Failed to fetch user hierarchy");
+      return res?.data;
+    } catch (e) {
+      throw new Error("Failed to fetch user hierarchy");
+    }
   }
-});
+);
