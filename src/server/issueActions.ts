@@ -8,7 +8,9 @@ export type Issues = {
   description?: string;
   orgId?: string;
   title?: string;
+  deviceId?: string;
   status?: string;
+  images?: string[];
   deleted_at?: null | string;
   createdAt?: string;
   updatedAt?: string;
@@ -33,6 +35,8 @@ export interface IssueData {
   status: string; // Status of the issue (e.g., 'Open')
   title: string; // Title of the issue
   description: string; // Detailed description of the issue
+  userId?: string;
+  email?: string;
 }
 
 //get all issues-admin
@@ -105,10 +109,10 @@ export const createIssue = async (
     if (sess?.user) {
       const issue = {
         ...issueData,
-        orgId: sess?.user?.orgId,
-        userId: sess?.user?.id,
-        email: sess?.user?.email,
-        createdAt: new Date()?.toISOString(),
+        orgId: sess.user.orgId,
+        // userId: sess.user.id,
+        // email: sess.user.email,
+        createdAt: new Date().toISOString(),
       };
       const res = await callAPIWithToken<Issues>(
         "https://api.edify.club/edifybackend/v1/issue/",

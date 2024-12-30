@@ -1,5 +1,4 @@
 "use client";
-import { Tab } from "@/app/(root)/assets/_components/Tab";
 import { Button } from "@/components/wind/Buttons";
 import { useState } from "react";
 import Personal from "./personalSection";
@@ -8,10 +7,12 @@ import Document from "./documentSection";
 import { Pencil } from "lucide-react";
 import { CreateUserArgs, updateUser, User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
+import { Tab } from "@/app/(root)/teams/_components/Tab";
+import { UserData } from "@/app/store/authSlice";
 
 // import { Input } from "@/components/wind/Input";
 
-const ProfileContainer = ({ user }: { user: User }) => {
+const ProfileContainer = ({ user }: { user: UserData }) => {
   const [activeTab, setActiveTab] = useState("Personal");
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();

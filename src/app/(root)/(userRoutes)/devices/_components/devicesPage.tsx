@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
-import Form from "./Form";
 import { useRouter } from "next/navigation";
 import { Device, getAllDevicesProp } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
+import { IssueForm } from "./issue-form";
+
+export type LoggedInUser = {
+  email: string;
+  token: string;
+  id: string;
+  first_name: string;
+  last_name: string;
+  designation: string;
+  orgId: string;
+  role: number;
+};
 
 type DevicesProps = {
   devices: getAllDevicesProp;
@@ -11,6 +22,17 @@ type DevicesProps = {
 
 const Devices = ({ devices }: DevicesProps) => {
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+  const user = {
+    email: "akshay.y@winuall.com",
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmZlNGVkNWNlZDNmZDI0NjMyN2ZiNjgiLCJvcmdJZCI6IjY2Y2RiNDI5ZWNhN2VmMDI1NTI5ODRlNyIsInJvbGUiOjEsImlhdCI6MTczNTI4MTA0NCwiZXhwIjoxNzM3ODczMDQ0fQ.02DUiS8k57FvDUnHK8rxWid6mftIw_Kelhce3hHIzIY",
+    id: "66fe4ed5ced3fd246327fb68",
+    first_name: "akshay",
+    last_name: "yelle",
+    orgId: "66cdb429eca7ef02552984e7",
+    role: 1,
+  };
+
   const router = useRouter();
 
   const handleDeviceClick = (id: string | undefined) => {
@@ -162,7 +184,11 @@ const Devices = ({ devices }: DevicesProps) => {
       >
         <SheetContent>
           {selectedDevice && (
-            <Form device={selectedDevice} closeBtn={closeSheet} />
+            <IssueForm
+              user={user}
+              device={selectedDevice}
+              closeBtn={closeSheet}
+            />
           )}
         </SheetContent>
       </Sheet>

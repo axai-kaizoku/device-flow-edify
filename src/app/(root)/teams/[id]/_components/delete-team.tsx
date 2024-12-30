@@ -11,8 +11,8 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteTeam } from "@/server/teamActions";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
+import { Icons } from "@/components/icons";
 
 export const DeleteTeam = ({
   id,
@@ -28,11 +28,12 @@ export const DeleteTeam = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
+
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <AlertCircle className="w-6 h-6" /> {/* Lucide-react icon */}
+            <Icons.warning_delete />
           </div>
         </div>
 
@@ -43,8 +44,7 @@ export const DeleteTeam = ({
 
         {/* Description */}
         <DialogDescription className="p-1 text-sm text-gray-600">
-          Are you sure you want to delete this? Assigned assets will be moved to
-          the unassigned section.
+          Are you sure you want to delete this?
         </DialogDescription>
 
         {/* Footer Buttons */}

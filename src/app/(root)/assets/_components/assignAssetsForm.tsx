@@ -60,7 +60,7 @@ const AssignAssetsForm = ({
               {device?.serial_no ?? "N/A"}
             </div>
             <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-medium text-[#027A48] mt-1 max-w-16">
-              <div>Laptop</div>
+              <div>{device?.device_type ?? "N/A"}</div>
             </div>
           </div>
         </div>

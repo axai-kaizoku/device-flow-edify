@@ -9,7 +9,7 @@ function UserTeamView() {
     router.push("/teams/670370b2f95db70c42788288");
     router.refresh();
   }, []);
-  return <div>UserTeamView</div>;
+  return <div></div>;
 }
 
 export default UserTeamView;

@@ -2,39 +2,47 @@
 
 import { useQueryState } from "nuqs";
 
-import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
+import { Search, Download } from "lucide-react"; // Importing icons from lucide-react
 
-import { useState, useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import Spinner from "@/components/Spinner";
 import AssignedAssets from "./_components/assigned-assets";
-import { Device } from "@/server/deviceActions";
+// import { Device } from "@/server/deviceActions";
 import UnAssignedAssets from "./_components/un-assigned-assets";
 import InActiveAssets from "./_components/in-active-assets";
 import { Tab } from "../teams/_components/Tab";
 import CreateDevice from "./_components/addDevices/_components/create-device";
 import { Icons } from "@/components/icons";
 
-
 function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "assigned_assets",
   });
-  const [loading, setLoading] = useState<boolean>(false);
 
-  // Function to handle tab change with loading state
   const handleTabChange = (tab: string) => {
-    setLoading(true); // Set loading to true before fetching data
     setActiveTab(tab);
   };
 
   const renderContent = () => {
     switch (activeTab) {
       case "assigned_assets":
-        return (<Suspense fallback={<Spinner/>}><AssignedAssets /></Suspense>);
+        return (
+          <Suspense fallback={<Spinner />}>
+            <AssignedAssets />
+          </Suspense>
+        );
       case "un_assigned_assets":
-        return (<Suspense fallback={<Spinner/>}><UnAssignedAssets /></Suspense>);
+        return (
+          <Suspense fallback={<Spinner />}>
+            <UnAssignedAssets />
+          </Suspense>
+        );
       case "inactive_assets":
-        return (<Suspense fallback={<Spinner/>}><InActiveAssets /></Suspense>);
+        return (
+          <Suspense fallback={<Spinner />}>
+            <InActiveAssets />
+          </Suspense>
+        );
       default:
         return null;
     }
@@ -103,15 +111,7 @@ function TabDisplay() {
         </div>
       </div>
       <div className="border mt-2"></div>
-
-      {/* Show loading spinner while fetching */}
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <Spinner />
-        </div>
-      ) : (
-        <div className="mt-4">{renderContent()}</div>
-      )}
+      <div className="mt-4">{renderContent()}</div>
     </>
   );
 }

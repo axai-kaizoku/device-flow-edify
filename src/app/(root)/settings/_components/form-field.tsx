@@ -14,7 +14,7 @@ export const FormField = ({
   label: string;
   id: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Correct type
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Correct type
   error?: string;
   placeholder: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) => (
