@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
+import { cache } from "react";
 
 export type Issues = {
   _id?: string;
@@ -41,25 +42,25 @@ export async function getAllIssues(): Promise<IssueResponse> {
       "https://api.edify.club/edifybackend/v1/issue",
       "GET"
     );
-    return res.data;
+    return res?.data;
   } catch (error) {
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 }
 
 //get single issue by ID-admin/user
-export async function getIssueById<Issues>(issueId: string) {
+export const getIssueById = cache(async function <Issues>(issueId: string) {
   try {
     const res = await callAPIWithToken<Issues>(
       `https://api.edify.club/edifybackend/v1/issue/${issueId}`,
       "GET",
       null
     );
-    return res.data;
+    return res?.data;
   } catch (error) {
     throw new Error("Failed to fetch Issue");
   }
-}
+});
 
 //update issue
 export const updateIssue = async (
@@ -72,9 +73,9 @@ export const updateIssue = async (
       "PUT",
       issueData
     );
-    return res.data;
+    return res?.data;
   } catch (error) {
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 };
 
@@ -88,10 +89,8 @@ export async function deleteIssue(
       "DELETE"
     );
 
-    return deleletedIssues.data;
+    return deleletedIssues?.data;
   } catch (error) {
-    console.error("Error deleting Issues:", error);
-
     return undefined;
   }
 }
@@ -106,31 +105,30 @@ export const createIssue = async (
     if (sess?.user) {
       const issue = {
         ...issueData,
-        orgId: sess.user.orgId,
-        userId: sess.user.id,
-        email: sess.user.email,
-        createdAt: new Date().toISOString(),
+        orgId: sess?.user?.orgId,
+        userId: sess?.user?.id,
+        email: sess?.user?.email,
+        createdAt: new Date()?.toISOString(),
       };
       const res = await callAPIWithToken<Issues>(
         "https://api.edify.club/edifybackend/v1/issue/",
         "POST",
         issue
       );
-      return res.data;
+      return res?.data;
     }
   } catch (error) {
-    console.error("Error creating a new issue:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 };
 
 //  Get Issues by UserId
 
-export const getIssueByUserId = async (): Promise<getAllResponse> => {
+export const getIssueByUserId = cache(async (): Promise<getAllResponse> => {
   const sess = await getSession(); // Fetch session details
 
   try {
-    if (sess?.user && sess.user.id) {
+    if (sess?.user && sess?.user?.id) {
       // const userId = sess.user.id;
 
       // Make the GET request to fetch issues by user ID
@@ -140,15 +138,14 @@ export const getIssueByUserId = async (): Promise<getAllResponse> => {
       );
 
       // Return the list of issues
-      return res.data;
+      return res?.data;
     } else {
       throw new Error("No user session found");
     }
   } catch (error) {
-    console.error("Error fetching issues by user ID:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
-};
+});
 
 //pagination
 export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
@@ -157,10 +154,9 @@ export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
       `https://api.edify.club/edifybackend/v1/issue/paginated?page=${page}`,
       "GET"
     );
-    // console.log(res.data);
-    return res.data;
+    return res?.data;
   } catch (error) {
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 };
 
@@ -170,9 +166,8 @@ export async function issueSearchAPI(query: string): Promise<IssueResponse> {
     const url = `https://api.edify.club/edifybackend/v1/issue/search?query=${query}`;
     const res = await callAPIWithToken<IssueResponse>(url, "GET");
 
-    return res.data;
+    return res?.data;
   } catch (error) {
-    console.error("Error searching:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 }

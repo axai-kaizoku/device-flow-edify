@@ -16,10 +16,10 @@ export async function getDeviceReport(status: string): Promise<DeviceReport> {
 			'GET',
 		);
 
-		return res.data;
+		return res?.data;
 	} catch (e) {
 		// Optionally, handle specific error scenarios
-		throw new Error((e as AxiosError).message || 'Failed to fetch devices');
+		throw new Error((e as AxiosError)?.message || 'Failed to fetch devices');
 	}
 }
 
@@ -31,10 +31,10 @@ export async function getSoldInventoryReport(): Promise<any> {
 			'GET',
 		);
 
-		return res.data;
+		return res?.data;
 	} catch (e) {
 		// Optionally, handle specific error scenarios
-		throw new Error((e as AxiosError).message || 'Failed to fetch devices');
+		throw new Error((e as AxiosError)?.message || 'Failed to fetch devices');
 	}
 }
 
@@ -96,11 +96,9 @@ export async function getUserReports({
 	try {
 		const payload = {
 			fields,
-			filters: filters && filters.length > 0 ? filters : [],
+			filters: filters && filters?.length > 0 ? filters : [],
 			page_length: pageLength,
 		};
-
-		console.log('payload for user report -> ', payload);
 
 		// Construct the URL with an optional search query
 		const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
@@ -109,24 +107,17 @@ export async function getUserReports({
 
 		// API call
 		const res = await callAPIWithToken<User[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
 		// Check if response has data
-		if (res && res.data) {
+		if (res && res?.data) {
 			// console.log('Filtered Data:', res.data);
-			return res.data; // Return the filtered data
+			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
 		}
 	} catch (error: any) {
-		// Enhanced error logging
-		console.error(
-			'Error filtering users:',
-			error.response?.data || error.message,
-		);
-
 		// Throw more specific error message
 		throw new Error(
-			error.response?.data?.message ||
+			error?.response?.data?.message ||
 				'Failed to filter Users. Please try again later.',
 		);
 	}
@@ -142,11 +133,9 @@ export async function getAssignedDevicesReport({
 	try {
 		const payload = {
 			fields,
-			filters: filters && filters.length > 0 ? filters : [],
+			filters: filters && filters?.length > 0 ? filters : [],
 			page_length: pageLength,
 		};
-
-		console.log('payload for Device report -> ', payload);
 
 		// Construct the URL with an optional search query
 		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
@@ -155,24 +144,18 @@ export async function getAssignedDevicesReport({
 
 		// API call
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
 		// Check if response has data
-		if (res && res.data) {
+		if (res && res?.data) {
 			// console.log('Filtered Data:', res.data);
-			return res.data; // Return the filtered data
+			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
 		}
 	} catch (error: any) {
-		// Enhanced error logging
-		console.error(
-			'Error filtering Devices:',
-			error.response?.data || error.message,
-		);
-
+		
 		// Throw more specific error message
 		throw new Error(
-			error.response?.data?.message ||
+			error?.response?.data?.message ||
 				'Failed to filter Devices. Please try again later.',
 		);
 	}
@@ -188,11 +171,9 @@ export async function getDeletedDevicesReport({
 	try {
 		const payload = {
 			fields,
-			filters: filters && filters.length > 0 ? filters : [],
+			filters: filters && filters?.length > 0 ? filters : [],
 			page_length: pageLength,
 		};
-
-		console.log('payload for Device report -> ', payload);
 
 		// Construct the URL with an optional search query
 		const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
@@ -201,24 +182,18 @@ export async function getDeletedDevicesReport({
 
 		// API call
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
-		console.log(apiUrl, payload);
 		// Check if response has data
-		if (res && res.data) {
+		if (res && res?.data) {
 			// console.log('Filtered Data:', res.data);
-			return res.data; // Return the filtered data
+			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
 		}
 	} catch (error: any) {
-		// Enhanced error logging
-		console.error(
-			'Error filtering Devices:',
-			error.response?.data || error.message,
-		);
-
+		
 		// Throw more specific error message
 		throw new Error(
-			error.response?.data?.message ||
+			error?.response?.data?.message ||
 				'Failed to filter Devices. Please try again later.',
 		);
 	}

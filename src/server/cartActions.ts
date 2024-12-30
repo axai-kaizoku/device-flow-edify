@@ -2,6 +2,7 @@
 import { AxiosError } from 'axios';
 import { Device } from './deviceActions';
 import { callAPIWithToken, getSession } from './helper';
+import { cache } from 'react';
 
 export type DeviceWithQty = Device & { quantity: number };
 
@@ -13,34 +14,30 @@ export const removeItemFromCart = async (itemId: string): Promise<void> => {
 			'PATCH',
 			{ itemId, quantity: 1 },
 		);
-		console.log(`Item with ID ${itemId} removed from cart`);
 	} catch (error) {
-		console.error('Error removing item from cart:', error);
-		throw new Error((error as AxiosError).message);
+		throw new Error((error as AxiosError)?.message);
 	}
 };
 
-export const getCart = async () => {
+export const getCart = cache(async function(){
 	const sess = await getSession(); // Fetch session details
 
 	try {
-		if (sess?.user && sess.user.id) {
+		if (sess?.user && sess?.user?.id) {
 			// Fetch Cart data
 			const response = await callAPIWithToken<any>(
 				`https://api.edify.club/edifybackend/v1/cart`,
 				'GET',
 			);
 
-			console.log('Fetched Cart:', response.data);
-			return response.data; // Return the cart data
+			return response?.data; // Return the cart data
 		} else {
 			throw new Error('No user session found');
 		}
 	} catch (error: any) {
-		console.error('Error fetching cart:', error);
-		throw new Error(error.message || 'Failed to fetch cart');
+		throw new Error(error?.message || 'Failed to fetch cart');
 	}
-};
+});
 
 export const updateCartItemQuantity = async (
 	itemId: string,
@@ -52,13 +49,8 @@ export const updateCartItemQuantity = async (
 			'PATCH',
 			{ itemId: itemId, quantity: quantity },
 		);
-		console.log(
-			`Updated quantity for item ${itemId}:`,
-			response.data.cart.items,
-		);
 	} catch (error) {
-		console.error('Error updating item quantity in cart:', error);
-		throw new Error((error as AxiosError).message);
+		throw new Error((error as AxiosError)?.message);
 	}
 };
 
@@ -73,17 +65,14 @@ export async function addItemToCart(
 				itemId,
 				quantity,
 			},
-			addressId: '6704c1de78d41ea73950ea71',
+			addressId: addressId,
 		};
-		console.log(payload);
 		const apiUrl = 'https://api.edify.club/edifybackend/v1/cart/addItem';
 
 		const response = await callAPIWithToken(apiUrl, 'POST', payload);
-		console.log('Item added to cart:', response.data);
-		return response.data;
+		return response?.data;
 	} catch (error: any) {
-		console.error('Failed to add item to cart:', error);
-		throw new Error(error.response || 'Failed to add item to cart.');
+		throw new Error(error?.response || 'Failed to add item to cart.');
 	}
 }
 
@@ -91,21 +80,19 @@ export const getPaymentMethods = async (price: number) => {
 	const sess = await getSession(); // Fetch session details
 
 	try {
-		if (sess?.user && sess.user.id) {
+		if (sess?.user && sess?.user?.id) {
 			// Fetch Cart data
 			const response = await callAPIWithToken<any>(
 				`https://api.edify.club/edifybackend/v1/payments/methods?amount=${price}`,
 				'GET',
 			);
 
-			// console.log('Fetched Cart:', response.data);
-			return response.data; // Return the cart data
+			return response?.data; // Return the cart data
 		} else {
 			throw new Error('No user session found');
 		}
 	} catch (error: any) {
-		console.error('Error fetching cart:', error);
-		throw new Error(error.message || 'Failed to fetch payment methods');
+		throw new Error(error?.message || 'Failed to fetch payment methods');
 	}
 };
 
@@ -115,15 +102,13 @@ export async function createOrderId(amount: number, paymentOption: string) {
 			amount,
 			paymentOption,
 		};
-		console.log(payload);
 		const apiUrl = 'https://api.edify.club/edifybackend/v1/payments/initiate';
 
 		const response = await callAPIWithToken(apiUrl, 'POST', payload);
-		console.log('OrderID Created', response.data);
 		//@ts-ignore
-		const orderId = response.data.orderId;
+		const orderId = response?.data?.orderId;
 		//@ts-ignore
-		const paymentMethod = response.data.paymentOption;
+		const paymentMethod = response?.data?.paymentOption;
 
 		const checkoutPayload = {
 			payment_mode: paymentMethod,
@@ -136,10 +121,8 @@ export async function createOrderId(amount: number, paymentOption: string) {
 			'POST',
 			checkoutPayload,
 		);
-		console.log(checkoutRes.data);
 		return checkoutRes.data;
 	} catch (error: any) {
-		console.error('Failed to create orderID:', error);
 		throw new Error(error.response || 'Failed to create orderID.');
 	}
 }
@@ -155,13 +138,8 @@ export const updateCartAddress = async (
 			'PATCH',
 			{ addressId },
 		);
-		console.log(
-			`Updated cart Address!`,
-			response.data,
-		);
-		return response.data;
+		return response?.data;
 	} catch (error) {
-		console.error('Error updating item quantity in cart:', error);
-		throw new Error((error as AxiosError).message);
+		throw new Error((error as AxiosError)?.message);
 	}
 };

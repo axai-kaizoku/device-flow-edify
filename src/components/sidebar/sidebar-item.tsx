@@ -14,6 +14,7 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type SidebarItemProps = {
@@ -24,12 +25,18 @@ type SidebarItemProps = {
 
 const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    router.prefetch(href); // Prefetch the route on hover
+  };
 
   return (
     <Link href={href}>
       <div
         className="relative font-gilroyRegular group z-[1000] w-10 h-10 flex items-center justify-center rounded-full transition-all"
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div
@@ -58,7 +65,7 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           ) : label === "Onboarding" ? (
             <Upload className="w-5 h-5" />
           ) : label === "Issues" ? (
-            <Bug className="w-5 h-5" />
+            <Wrench className="w-5 h-5" />
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
           ) : label === "Profile" ? (

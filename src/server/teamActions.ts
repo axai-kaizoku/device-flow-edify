@@ -1,4 +1,5 @@
 "use server";
+import { cache } from 'react';
 
 import { FilterApiParams } from "./filterActions";
 import { callAPIWithToken, getSession } from "./helper";
@@ -34,7 +35,7 @@ const teamFields = [
   "deletedAt",
 ];
 
-export async function fetchTeams({
+export const fetchTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
@@ -43,7 +44,7 @@ export async function fetchTeams({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
     };
 
@@ -54,29 +55,23 @@ export async function fetchTeams({
 
     // API call
     const res = await callAPIWithToken<Team[]>(apiUrl, "POST", payload);
-    console.log(apiUrl, payload);
     // Check if response has data
-    if (res && res.data) {
-      return res.data.teams;
+    if (res && res?.data) {
+      return res?.data?.teams;
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering teams:",
-      error.response?.data || error.message
-    );
-
+    
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter teams. Please try again later."
     );
   }
-}
+});
 
-export async function fetchDeletedTeams({
+export const fetchDeletedTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
@@ -85,7 +80,7 @@ export async function fetchDeletedTeams({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
       isDeleted: true,
     };
@@ -97,27 +92,21 @@ export async function fetchDeletedTeams({
 
     // API call
     const res = await callAPIWithToken<Team[]>(apiUrl, "POST", payload);
-    console.log(apiUrl, payload);
     // Check if response has data
-    if (res && res.data) {
-      return res.data.teams;
+    if (res && res?.data) {
+      return res?.data?.teams;
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering teams:",
-      error.response?.data || error.message
-    );
-
+    
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter teams. Please try again later."
     );
   }
-}
+});
 
 export async function createTeam(
   title: string,
@@ -134,17 +123,17 @@ export async function createTeam(
         title,
         description,
         image,
-        orgId: sess?.user.orgId,
+        orgId: sess?.user?.orgId,
       }
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to create team");
   }
 }
 
-export async function getTeamById<Team>(teamId: string) {
+export const getTeamById = cache(async function <Team>(teamId: string) {
   try {
     const res = await callAPIWithToken<Team>(
       `https://api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
@@ -152,12 +141,11 @@ export async function getTeamById<Team>(teamId: string) {
       null
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
-    console.log(e);
     throw new Error("Failed to fetch team");
   }
-}
+});
 
 export async function updateTeam(
   id: string,
@@ -171,8 +159,7 @@ export async function updateTeam(
         ...team,
       }
     );
-    console.log(res, "team updated");
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to Update team");
   }
@@ -185,7 +172,7 @@ export async function deleteTeam<Team>(teamId: string) {
       "DELETE",
       null
     );
-    return res.data;
+    return res?.data;
   } catch (e: any) {
     throw e;
   }

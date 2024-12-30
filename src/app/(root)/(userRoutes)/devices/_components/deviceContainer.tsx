@@ -61,10 +61,9 @@ import { Search, Download } from "lucide-react"; // Importing icons from lucide-
 import Spinner from "@/components/Spinner";
 import Devices from "./devicesPage";
 import Issue from "./issuePage";
-import { Icons } from "@/components/icons";
-import { User, UserResponse } from "@/server/userActions";
-
 import { getAllDevicesProp } from "@/server/deviceActions";
+import { Icons } from "@/components/icons";
+
 import { getAllResponse } from "@/server/issueActions";
 import { Tab } from "@/app/(root)/teams/_components/Tab";
 

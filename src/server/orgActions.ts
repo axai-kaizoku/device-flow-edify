@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { Address } from "./addressActions";
 import { callAPIWithToken, getSession } from "./helper";
 
@@ -43,18 +44,18 @@ export type Org = {
   total_purchased?: number;
 };
 
-export async function getAllOrgs(): Promise<Org[]> {
+export const getAllOrgs = cache(async function (): Promise<Org[]> {
   try {
     const res = await callAPIWithToken<Org[]>(
       "https://api.edify.club/edifybackend/v1/organisation",
       "GET"
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to fetch orgs");
   }
-}
+});
 
 export async function createOrg(
   title: string,
@@ -71,32 +72,31 @@ export async function createOrg(
         title,
         description,
         image,
-        orgId: sess?.user.orgId,
+        orgId: sess?.user?.orgId,
       }
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to create org");
   }
 }
 
-export async function getCurrentOrg<Org>() {
+export const getCurrentOrg = cache(async function <Org>() {
   try {
     const sess = await getSession();
-    const orgId = sess?.user.orgId;
+    const orgId = sess?.user?.orgId;
     const res = await callAPIWithToken<Org>(
       `https://api.edify.club/edifybackend/v1/organisation/${orgId}`, // API endpoint
       "GET", // HTTP method
       null
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
-    console.log(e);
     throw new Error("Failed to fetch org");
   }
-}
+});
 
 export async function updateOrg(
   id?: string,
@@ -114,8 +114,7 @@ export async function updateOrg(
         image,
       }
     );
-    console.log(res);
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to Update org");
   }

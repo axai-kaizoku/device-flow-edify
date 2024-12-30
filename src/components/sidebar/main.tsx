@@ -15,7 +15,7 @@ export default function SidebarMain({ session }: Props) {
     <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen bg-transparent">
       {session?.user.role === 2 ? (
         <>
-          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full cursor-pointer">
+          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
@@ -45,7 +45,7 @@ export default function SidebarMain({ session }: Props) {
                 />
               ))}
 
-              {SIDEBAR.Functions.map((page, i) => (
+              {/* {SIDEBAR.Functions.map((page, i) => (
                 <SidebarItem
                   href={page.path}
                   label={page.label}
@@ -56,7 +56,7 @@ export default function SidebarMain({ session }: Props) {
                   }
                   key={page.label}
                 />
-              ))}
+              ))} */}
             </div>
 
             <div className="flex gap-2 flex-col">
@@ -64,7 +64,10 @@ export default function SidebarMain({ session }: Props) {
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut()
+
+                }}
               >
                 <LogOut className="w-5 h-5" />
               </button>
@@ -75,7 +78,7 @@ export default function SidebarMain({ session }: Props) {
         </>
       ) : (
         <>
-          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full cursor-pointer">
+          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white

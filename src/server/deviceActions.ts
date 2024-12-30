@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
+import { cache } from "react";
 
 //Device type
 export type Device = {
@@ -55,40 +56,37 @@ export const createDevices = async (
   try {
     // Prepare device data with proper types
     const deviceData = {
-      device_name: device.device_name || "Default",
-      device_type: device.device_type,
-      asset_serial_no: device.asset_serial_no || null,
-      serial_no: device.serial_no,
-      ram: device.ram,
-      processor: device.processor,
-      storage: device.storage,
-      custom_model: device.custom_model,
-
-      brand: device.brand,
-      warranty_status: device.warranty_status ?? false, // Default to false if undefined
-      warranty_expiary_date: device.warranty_expiary_date,
-      ownership: device.ownership,
-      purchase_order: device.purchase_order,
-      purchase_value: Number(device.purchase_value), // Ensure it's a number
-      os: device.os,
-      device_purchase_date: device.device_purchase_date || null,
-      image: device.image,
-      addressId: device.addressId,
-      ...(device.userId !== "" && { userId: device.userId }),
+      device_name: device?.device_name || "Default",
+      device_type: device?.device_type,
+      asset_serial_no: device?.asset_serial_no || null,
+      serial_no: device?.serial_no,
+      ram: device?.ram,
+      processor: device?.processor,
+      storage: device?.storage,
+      custom_model: device?.custom_model,
+      brand: device?.brand,
+      warranty_status: device?.warranty_status ?? false, // Default to false if undefined
+      warranty_expiary_date: device?.warranty_expiary_date,
+      ownership: device?.ownership,
+      purchase_order: device?.purchase_order,
+      purchase_value: Number(device?.purchase_value), // Ensure it's a number
+      os: device?.os,
+      device_purchase_date: device?.device_purchase_date || null,
+      image: device?.image,
+      addressId: device?.addressId,
+      ...(device?.userId !== "" && { userId: device?.userId }),
     };
 
-    // console.log("Prepared Device Data:", deviceData);
-
+    
     // API call
     const sess = await getSession();
 
     // Flatten the payload
     const payload = {
       ...deviceData,
-      orgId: sess?.user.orgId,
+      orgId: sess?.user?.orgId,
     };
 
-    // console.log('Payload to be sent:', payload);
 
     const res = await callAPIWithToken<Device>(
       "https://api.edify.club/edifybackend/v1/devices",
@@ -96,18 +94,16 @@ export const createDevices = async (
       payload
     );
 
-    console.log("API Response:", res);
-
-    return res.data;
+    return res?.data;
   } catch (error) {
     // Ensure the error is typed as AxiosError
     if (error instanceof AxiosError) {
       // Handle AxiosError specifically
-      if (error.response && error.response.status === 401) {
+      if (error?.response && error?.response?.status === 401) {
         redirect("/login");
       } else {
         // Throw a new error with the message from AxiosError
-        throw new Error(error.message || "Failed to create device");
+        throw new Error(error?.message || "Failed to create device");
       }
     } else {
       // Handle any other unexpected errors
@@ -117,7 +113,8 @@ export const createDevices = async (
 };
 
 //Getting Devices
-export async function getAllDevices(): Promise<getAllDevicesProp> {
+
+export const getAllDevices = cache(async function(): Promise<getAllDevicesProp> {
   try {
     const res = await callAPIWithToken<getAllDevicesProp>(
       "https://api.edify.club/edifybackend/v1/devices",
@@ -125,16 +122,18 @@ export async function getAllDevices(): Promise<getAllDevicesProp> {
     );
 
     // Validate response structure
-    if (!res.data || !Array.isArray(res.data)) {
+    if (!res?.data || !Array.isArray(res?.data)) {
       throw new Error("Invalid API response structure");
     }
 
-    return res.data;
+    return res?.data;
   } catch (e) {
     // Optionally, handle specific error scenarios
-    throw new Error((e as AxiosError).message || "Failed to fetch devices");
+    throw new Error((e as AxiosError)?.message || "Failed to fetch devices");
   }
-}
+
+});
+
 
 //Update Devices
 export const updateDevice = async (
@@ -149,10 +148,9 @@ export const updateDevice = async (
       deviceData
     );
 
-    return res.data;
+    return res?.data;
   } catch (error) {
-    console.error("Error updating device:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 };
 
@@ -166,7 +164,7 @@ export async function deleteDevice(
       "DELETE"
     );
 
-    return deleletedDevice.data;
+    return deleletedDevice?.data;
   } catch (e: any) {
     throw e;
   }
@@ -187,9 +185,8 @@ export const bulkUploadDevices = async (
         "Content-Type": "multipart/form-data",
       }
     );
-    return response.data;
+    return response?.data;
   } catch (error) {
-    console.error("Error in bulk uploading devices:", error);
     throw error;
   }
 };
@@ -200,15 +197,14 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
     const url = `https://api.edify.club/edifybackend/v1/devices/search?query=${query}`;
     const res = await callAPIWithToken<DeviceResponse>(url, "GET");
 
-    return res.data;
+    return res?.data;
   } catch (error) {
-    console.error("Error searching:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 }
 
 // Get Device by ID
-export const getDeviceById = async (deviceId: string): Promise<Device> => {
+export const getDeviceById = cache(async (deviceId: string): Promise<Device> => {
   try {
     // Make the GET request to fetch a single device by ID
     const res = await callAPIWithToken<Device>(
@@ -217,38 +213,34 @@ export const getDeviceById = async (deviceId: string): Promise<Device> => {
     );
 
     // Return the fetched device
-    return res.data;
+    return res?.data;
   } catch (error) {
-    console.error("Error fetching device by ID:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
-};
+});
 
 // Getting Devices by User ID
 
-export const getDevicesByUserId = async (): Promise<getAllDevicesProp> => {
+export const getDevicesByUserId = cache(async (): Promise<getAllDevicesProp> => {
   const sess = await getSession(); // Fetch session details
 
   try {
-    if (sess?.user && sess.user.id) {
+    if (sess?.user && sess?.user?.id) {
       // Make the GET request to fetch Devices of user ID
       const res = await callAPIWithToken<getAllDevicesProp>(
         `https://api.edify.club/edifybackend/v1/devices/userDetails`,
         "GET"
       );
 
-      console.log(res);
-
       // Return the list of Devices
-      return res.data;
+      return res?.data;
     } else {
       throw new Error("No user session found");
     }
   } catch (error) {
-    console.error("Error fetching Devices of user ID:", error);
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
-};
+});
 
 //pagination
 export const paginatedDevices = async (
@@ -259,9 +251,8 @@ export const paginatedDevices = async (
       `https://api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
       "GET"
     );
-    // console.log(res.data);
-    return res.data;
+    return res?.data;
   } catch (error) {
-    throw new Error((error as AxiosError).message);
+    throw new Error((error as AxiosError)?.message);
   }
 };

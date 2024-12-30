@@ -27,15 +27,6 @@ function TabDisplay() {
     setActiveTab(tab);
   };
 
-  useEffect(() => {
-    // When the active tab changes, simulate a delay to show loading
-    const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false once the content is ready
-    }, 500); // Adjust time as needed
-
-    return () => clearTimeout(timer);
-  }, [activeTab]);
-
   const renderContent = () => {
     switch (activeTab) {
       case "assigned_assets":

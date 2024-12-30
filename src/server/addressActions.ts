@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
+import { cache } from 'react';
 
 export type Address = {
   isPrimary?: boolean;
@@ -7,7 +8,6 @@ export type Address = {
   _id?: string;
   city?: string;
   deviceId?: string;
-
   title?: string;
   phone?: string;
   landmark?: string;
@@ -16,17 +16,18 @@ export type Address = {
   pinCode?: string;
 };
 
-export async function getAddress(): Promise<Address[]> {
+
+export const getAddress = cache(async function(): Promise<Address[]> {
   try {
     const res = await callAPIWithToken<Address[]>(
       "https://api.edify.club/edifybackend/v1/address",
       "GET"
     );
-    return res.data;
+    return res?.data;
   } catch (e) {
-    throw new Error((e as AxiosError).message);
+    throw new Error((e as AxiosError)?.message);
   }
-}
+});
 
 export async function createAddress(address: Address): Promise<Address> {
   try {
@@ -36,13 +37,13 @@ export async function createAddress(address: Address): Promise<Address> {
       "https://api.edify.club/edifybackend/v1/address", // API endpoint
       "POST", // HTTP method
       {
-        userId: sess?.user.id,
-        orgId: sess?.user.orgId,
+        userId: sess?.user?.id,
+        orgId: sess?.user?.orgId,
         ...address,
       }
     );
 
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to create Address");
   }
@@ -53,9 +54,6 @@ export async function updateAddress(
   address: Address
 ): Promise<Address> {
   try {
-    const sess = await getSession();
-    console.log("updating", address);
-
     const res = await callAPIWithToken<Address>(
       `https://api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
       "PUT", // HTTP method
@@ -63,8 +61,7 @@ export async function updateAddress(
         ...address,
       }
     );
-    console.log(res.data, "final data");
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to Update Address");
   }
@@ -77,7 +74,7 @@ export async function deleteAddress<Address>(addressId: string) {
       "DELETE",
       null
     );
-    return res.data;
+    return res?.data;
   } catch (e) {
     throw new Error("Failed to delete Address");
   }

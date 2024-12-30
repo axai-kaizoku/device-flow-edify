@@ -4,6 +4,10 @@ type UserData = {
   token: string;
   userId: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
+  orgId?: string;
+  role?: number;
 };
 
 interface AuthState {

@@ -54,7 +54,7 @@ export const usersFields = [
   "deleted_at",
 ];
 
-export async function deletedUsers({
+export const deletedUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
@@ -63,7 +63,7 @@ export async function deletedUsers({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
       isDeleted: true,
     };
@@ -77,28 +77,22 @@ export async function deletedUsers({
     const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
-    if (res && res.data) {
+    if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
-      return res.data; // Return the filtered data
+      return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering users:",
-      error.response?.data || error.message
-    );
-
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter Users. Please try again later."
     );
   }
-}
+});
 
-export async function filterUsers({
+export const filterUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
@@ -107,7 +101,7 @@ export async function filterUsers({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
     };
 
@@ -120,26 +114,21 @@ export async function filterUsers({
     const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
-    if (res && res.data) {
+    if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
-      return res.data; // Return the filtered data
+      return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering users:",
-      error.response?.data || error.message
-    );
 
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter Users. Please try again later."
     );
   }
-}
+});
 
 export const filterDevice = cache(async function ({
   filters = [],
@@ -150,7 +139,7 @@ export const filterDevice = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
     };
 
@@ -163,18 +152,14 @@ export const filterDevice = cache(async function ({
     const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
 
     // Check and return response data
-    if (res && res.data) {
-      return res.data;
+    if (res && res?.data) {
+      return res?.data;
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    console.error(
-      "Error filtering devices:",
-      error.response?.data || error.message
-    );
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter devices. Please try again later."
     );
   }
@@ -189,7 +174,7 @@ export const deletedDevices = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
       isDeleted: true,
     };
@@ -203,22 +188,16 @@ export const deletedDevices = cache(async function ({
     // API call
     const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
     // Check if response has data
-    if (res && res.data) {
+    if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
-      return res.data; // Return the filtered data
+      return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering devices:",
-      error.response?.data || error.message
-    );
-
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter devices. Please try again later."
     );
   }
@@ -236,7 +215,7 @@ export const issueFields = [
   "email",
 ];
 
-export async function filterIssues({
+export const filterIssues = cache(async function ({
   filters = [],
   fields = issueFields,
   searchQuery = "",
@@ -245,7 +224,7 @@ export async function filterIssues({
   try {
     const payload = {
       fields,
-      filters: filters.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? filters : [],
       page_length: pageLength,
     };
 
@@ -258,23 +237,17 @@ export async function filterIssues({
     const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
-    if (res && res.data) {
+    if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
-      return res.data; // Return the filtered data
+      return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
-    // Enhanced error logging
-    console.error(
-      "Error filtering issues:",
-      error.response?.data || error.message
-    );
-
     // Throw more specific error message
     throw new Error(
-      error.response?.data?.message ||
+      error?.response?.data?.message ||
         "Failed to filter issues. Please try again later."
     );
   }
-}
+});

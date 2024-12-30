@@ -10,7 +10,7 @@ export const getSession = async () => {
 
 export const getTokenFromSession = async () => {
 	const session = await getServerSession(authOptions);
-	const token = session?.user.token;
+	const token = session?.user?.token;
 	return token;
 };
 
@@ -95,14 +95,14 @@ export async function callAPIWithToken<T>(
 
 		// Return response data and status
 		return {
-			data: response.data as T,
-			status: response.status,
+			data: response?.data as T,
+			status: response?.status,
 		};
 	} catch (error) {
 		// Handle Axios-specific errors
 		if (error instanceof AxiosError) {
-			console.error('API call failed:', error.response?.data || error.message);
-			throw new Error(error.response?.data?.message || error.message || 'API request failed');
+			// console.error('API call failed:', error?.response?.data || error?.message);
+			throw new Error(error?.response?.data?.message || error?.message || 'API request failed');
 		}
 		// Handle unexpected errors
 		throw new Error('An unexpected error occurred during the API request');

@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken } from "./helper";
+import { cache } from "react";
 
 // Define the structure of a Previous Order
 export interface PreviousOrder {
@@ -16,7 +17,7 @@ export interface PreviousOrder {
 
 
 // Fetch Previous Orders
-export async function getPreviousOrders(): Promise<PreviousOrder[]> {
+export const getPreviousOrders = cache(async function (): Promise<PreviousOrder[]> {
 	try {
 		// API call to fetch previous orders
 		const res = await callAPIWithToken<{ soldInventory: PreviousOrder[] }>(
@@ -25,13 +26,12 @@ export async function getPreviousOrders(): Promise<PreviousOrder[]> {
 		);
 
 		// Validate response structure
-		if (!res.data || !Array.isArray(res.data.soldInventory)) {
+		if (!res?.data || !Array.isArray(res?.data?.soldInventory)) {
 			throw new Error('Invalid API response structure');
 		}
 
-		return res.data.soldInventory;
+		return res?.data?.soldInventory;
 	} catch (e) {
-		console.error('Error fetching previous orders:', e);
-		throw new Error((e as AxiosError).message || 'Failed to fetch previous orders');
+		throw new Error((e as AxiosError)?.message || 'Failed to fetch previous orders');
 	}
-}
+});

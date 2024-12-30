@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret });
-  const { pathname } = req.nextUrl;
+	const token = await getToken({ req, secret });
+	const { pathname } = req?.nextUrl;
 
   const userRoutes = ["/profile", "/devices", "/devices/(.*)"];
 

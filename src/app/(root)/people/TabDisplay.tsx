@@ -81,6 +81,7 @@ import { Icons } from "@/components/icons";
 import UserMain from "./_components/user-main";
 import { User, UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
+import { Suspense } from "react";
 import { Tab } from "../teams/_components/Tab";
 
 interface TabDisplayProps {
@@ -89,7 +90,7 @@ interface TabDisplayProps {
   deletedUserResponse: UserResponse;
 }
 
-function TabDisplay({ users, userRole, deletedUserResponse }: TabDisplayProps) {
+function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "people",
   });
@@ -101,9 +102,9 @@ function TabDisplay({ users, userRole, deletedUserResponse }: TabDisplayProps) {
   const renderContent = () => {
     switch (activeTab) {
       case "people":
-        return <UserMain data={users} />;
+        return <Suspense fallback={<Spinner/>}><UserMain /></Suspense>;
       case "deleted_people":
-        return <DeletedUser data={deletedUserResponse?.users} />;
+        return <Suspense fallback={<Spinner/>}><DeletedUser /></Suspense>;
 
       default:
         return null;
@@ -113,12 +114,12 @@ function TabDisplay({ users, userRole, deletedUserResponse }: TabDisplayProps) {
     {
       key: "people",
       label: "Active People",
-      component: <UserMain data={users} />,
+      component: <UserMain />,
     },
     {
       key: "deleted_people",
       label: "Inactive People",
-      component: <DeletedUser data={deletedUserResponse?.users} />,
+      component: <DeletedUser />,
     },
   ];
   return (

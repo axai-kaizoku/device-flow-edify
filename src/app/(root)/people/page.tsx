@@ -1,36 +1,19 @@
 import { CombinedContainer } from "@/components/container/container";
-import { UserResponse } from "@/server/userActions";
-
-import UserMain from "./_components/user-main";
-import { getSession } from "@/server/helper";
-import { deletedUsers, filterUsers } from "@/server/filterActions";
-import TabDisplay from "./TabDisplay";
+import dynamic from "next/dynamic";
+import { RootState } from "@/app/store/store";
+import { useSelector } from "react-redux";
+const TabDisplay = dynamic(() => import("./TabDisplay"), { ssr: false });
 
 export default async function Users() {
-  const session = await getSession();
-  const userRole = session?.user.role || 0;
+  // const userData = useSelector((state: RootState) => state.auth.userData);
+  // const userRole = userData?.role;
   try {
-    const userResponse: UserResponse = await filterUsers();
-    const deletedUserResponse: UserResponse = await deletedUsers();
-    // console.log(deletedUserResponse);
-
     return (
       <CombinedContainer title="Users">
-        <TabDisplay
-          users={userResponse?.users} // Pass the documents array directly
-          currentPage={userResponse?.currentPage}
-          totalPages={userResponse?.totalPages}
-          totalDocuments={userResponse?.totalDocuments}
-          currentDocumentCount={userResponse?.currentDocumentCount}
-          pageSize={userResponse?.pageSize}
-          userRole={userRole}
-          deletedUserResponse={deletedUserResponse}
-        />
-        {/* <UserMain data={userResponse.users} userRole={userRole} /> */}
+        <TabDisplay/>
       </CombinedContainer>
     );
   } catch (error) {
-    console.error("Error fetching data:", error);
     return (
       <CombinedContainer title="People">
         <div className="text-red-500">

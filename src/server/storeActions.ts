@@ -2,32 +2,35 @@
 import { AxiosError } from 'axios';
 import { DeviceResponse, getAllDevicesProp } from './deviceActions';
 import { callAPIWithToken, getSession } from './helper';
+import { cache } from 'react';
 
 //Getting Devices
-export async function getStoreDevices(): Promise<getAllDevicesProp> {
+export const getStoreDevices = cache(async function (): Promise<getAllDevicesProp> {
 	try {
 		const res = await callAPIWithToken<getAllDevicesProp>(
 			'https://api.edify.club/edifybackend/v1/devices/assets',
 			'GET',
 		);
 
-		return res.data;
+		return res?.data;
 	} catch (e) {
 		// redirect('/login');
-		throw new Error((e as AxiosError).message);
+		throw new Error((e as AxiosError)?.message);
 	}
-}
+});
+
+
 //Getting Devices
-export async function getTrendingDevice(): Promise<getAllDevicesProp> {
+export const getTrendingDevice = cache(async function (): Promise<getAllDevicesProp> {
 	try {
 		const res = await callAPIWithToken<getAllDevicesProp>(
 			'https://api.edify.club/edifybackend/v1/devices/assets?query=trending',
 			'GET',
 		);
 
-		return res.data;
+		return res?.data;
 	} catch (e) {
 		// redirect('/login');
-		throw new Error((e as AxiosError).message);
+		throw new Error((e as AxiosError)?.message);
 	}
-}
+});
