@@ -1,88 +1,7 @@
-"use client";
-import { Integration } from "./Integration";
-import { Testimonials } from "./Testimonials";
-import { CTA } from "./CTA";
-import { Footer } from "./Footer";
-import { useEffect, useRef, useState } from "react";
-import { Slide } from "react-awesome-reveal";
-import { Section3 } from "./Section3";
-import { Section2 } from "./Section2";
-import { FAQ } from "./FAQ";
-import Link from "next/link";
-
-export const LandingPage = () => {
-  const cardsRef: any = useRef([]); // Reference to all the 3 cards
-  const boxRef: any = useRef(null); // Reference to the box container
-  const elementRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        rootMargin: "0px",
-        threshold: 0.1,
-      }
-    );
-
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      if (elementRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const boxPosition = boxRef.current.getBoundingClientRect().top;
-      if (boxPosition < 300) {
-        cardsRef.current.forEach((card: any, index: number) => {
-          if (index === 0) {
-            const xOffset = 203; // X-offset for each card
-            const yOffset = 625; //
-            card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-          }
-          if (index === 1) {
-            const xOffset = 235; // X-offset for each card
-            const yOffset = 588; //
-            card.style.width = "320px";
-            card.style.height = "139px";
-            card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-          }
-          if (index === 2) {
-            const xOffset = -402; // X-offset for each card
-            const yOffset = 750; //
-            card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-          }
-          if (index === 3) {
-            const xOffset = -153; // X-offset for each card
-            const yOffset = 625; //
-            card.style.width = "200px";
-            card.style.height = "115px";
-            card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-          }
-        });
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <>
-      <div className="px-8">
+export const Section1 = (cardsRef: any, boxRef: any) => {
+    return(
+        <>
+        <div className="px-8">
         <div
           className={
             " fade-in-top flex w-full items-center rounded-xl bg-neutral-800 py-[15px] pl-10 pr-2.5 mt-5"
@@ -127,8 +46,7 @@ export const LandingPage = () => {
               <div>Pricing</div>
               <div>Blog</div>
             </div>
-            <Link href={'/login'} >
-            <div className="pl-3 font-medium underline">Log in</div></Link>
+            <div className="pl-3 font-medium underline">Log in</div>
           </div>
           <div
             className={
@@ -245,14 +163,6 @@ export const LandingPage = () => {
         <div ref={boxRef}>
           <img src={"/media/landingPage/hero.svg"} />
         </div>
-      </div>
-      <Section2 />
-      <Section3 />
-      <Integration />
-      <Testimonials />
-      <CTA />
-      <FAQ />
-      <Footer />
-    </>
-  );
-};
+      </div></>
+    )
+}

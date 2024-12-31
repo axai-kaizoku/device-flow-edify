@@ -27,7 +27,6 @@ export default async function MainLayout({
     <div className="flex flex-col h-full min-h-screen overflow-hidden bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed">
       {/* Header Section */}
       <div className="absolute inset-0 bg-white opacity-30 backdrop-blur-lg z-0" />
-
       <Header session={session}/>
       <div className="h-14 pointer-events-none w-full" />
 
