@@ -1,23 +1,22 @@
 import { CombinedContainer } from '@/components/container/container';
 import React from 'react';
-import Orders from './components/orderPage';
-import { getPreviousOrders } from '@/server/orderActions';
-import { getDeviceById } from '@/server/deviceActions';
+import dynamic from 'next/dynamic';
+const TabDisplay = dynamic(() => import("./OrdersTabDisplay"), { ssr: false });
+
 
 const OrdersPage = async () => {
 	try {
-		const prevOrders = await getPreviousOrders();
-		const orderDetails = await Promise.all(
-			prevOrders.map(async (order) => {
-				const itemDetails = await getDeviceById(order.itemId);
-				return { ...order, item: itemDetails };
-			}),
-		);
+		// const orderDetails = await Promise.all(
+		// 	prevOrders.map(async (order) => {
+		// 		const itemDetails = await getDeviceById(order.itemId);
+		// 		return { ...order, item: itemDetails };
+		// 	}),
+		// );
 
 		return (
 			<CombinedContainer title="Orders">
-				<Orders data={orderDetails.reverse()} />
-				{/* <div>Hello</div> */}
+				<TabDisplay/>
+				{/* <Orders data={orderDetails.reverse()} /> */}
 			</CombinedContainer>
 		);
 	} catch (error) {

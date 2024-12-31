@@ -12,7 +12,7 @@ import NotFound from "@/app/not-found";
 export default async function Settings() {
   try {
     const org: Org = await getCurrentOrg();
-    const sess = await getSession();
+    // const sess = await getSession();
 
     return (
       <CombinedContainer

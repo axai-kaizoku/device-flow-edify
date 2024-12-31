@@ -1,4 +1,4 @@
-import { OrdersProps } from '@/app/(root)/orders/components/orderPage'
+import { OrdersProps } from '@/app/(root)/orders/_components/orderPage'
 import React from 'react'
 import NewDeviceTable from './_components/newDeviceTable';
 

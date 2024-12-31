@@ -322,7 +322,7 @@ export const Table = ({
               <TableHeader>
                 <TableHeadRow>
                   {checkboxSelection && (
-                    <TableCell style={{ textAlign: "left" }}>
+                    <TableCell style={{ textAlign: "left", marginLeft:"12px" }}>
                       <Checkbox
                         value="master"
                         size="lg"
@@ -335,9 +335,9 @@ export const Table = ({
                     {columnData?.map((header: ColumnWithSortingType, index) => (
                       <TableCell
                         style={{
-                          fontSize: 12,
-                          color: "#667085",
-                          fontWeight: 500,
+                          fontSize: 12.435,
+                          color: "#7F7F7F",
+                          fontWeight: 600,
                           textAlign: "left",
                         }}
                         key={index}

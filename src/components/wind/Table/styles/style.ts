@@ -4,7 +4,7 @@ import { Colors } from "./colors";
 
 export const TableCell = styled.td`
   width: ${(props) => (props?.width ? `${props?.width}px` : "")};
-  padding: 12px 24px;
+  padding: 12px 8px;
   font-family: var(--font-gilroy-medium), sans-serif;
   text-align: left;
 `;
@@ -21,7 +21,7 @@ export const TableHeader = styled.thead`
 
 export const TableHeadRow = styled.tr`
   height: 44px;
-  padding: 12px 24px;
+  padding: 0px;
   border-bottom: 1.036px solid #eaecf0;
   font-size: 13px;
   text-align: left;
@@ -33,6 +33,7 @@ export const TableHeadRow = styled.tr`
 export const TableRow = styled(TableHeadRow)`
   height: 70px;
   background: ${Colors.white_1};
+  padding: 0;
 `;
 
 export const TableFooter = styled.footer`
@@ -58,7 +59,8 @@ export const TableContainer = styled.div`
 `;
 export const TableTag = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: seperate;
+  border-spacing: 0 5px;
   overflow-x: overlay;
   position: relative;
 `;

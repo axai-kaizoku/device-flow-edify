@@ -31,7 +31,6 @@ async function Issues({ searchParams }: IssueProps) {
       </CombinedContainer>
     );
   } catch (error) {
-    console.error("Error fetching data:", error);
     return (
       <CombinedContainer title="Issues">
         <div className="text-red-500">

@@ -16,12 +16,13 @@ function SettingsHeader({ data }: { data: Org }) {
   return (
     <>
       <div className="flex flex-col">
-        <h1 className="font-gilroyMedium text-xl 2xl:text-2xl text-secondary mb-7 mt-4">
+        <h1 className="text-gray-400 font-gilroySemiBold 2xl:text-lg text-base mb-7">
           Settings
         </h1>
-        <div className="flex gap-7">
+
+        <div className="flex justify-between gap-4">
           {/* Company Information Card */}
-          <div className="relative flex rounded-[25px] pl-5 py-5 border border-gray-300 bg-white backdrop-blur-md shadow-md gap-2 h-[190px]  w-full max-w-sm  items-center">
+          <div className="relative flex-1 flex rounded-[25px] pl-5 py-5 border border-gray-300 bg-white gap-2 h-[190px] w-full max-w-sm items-center">
             <div>
               {/* Display the logo */}
               {logo ? (
@@ -47,10 +48,10 @@ function SettingsHeader({ data }: { data: Org }) {
                 {data?.email ?? "N/A"}
               </h2>
               <div className="flex gap-2 mt-2">
-                <span className="text-[#027A48] bg-[#ECFDF3] rounded-full px-3 py-1 text-sm font-gilroyRegular">
+                <span className="text-[#027A48] bg-[#ECFDF3] rounded-full px-4 py-1 text-sm font-gilroyMedium">
                   Company
                 </span>
-                <span className="text-[#AF52DE] bg-[#F4E7FF] rounded-full px-3 py-1 text-sm font-gilroyRegular">
+                <span className="text-[#AF52DE] bg-[#F4E7FF] rounded-full px-4 py-1 text-sm font-gilroyMedium">
                   Admin
                 </span>
               </div>
@@ -58,19 +59,19 @@ function SettingsHeader({ data }: { data: Org }) {
           </div>
 
           {/* Employee Info Card */}
-          <div className="rounded-[25px] relative p-5 border border-gray-300 bg-white backdrop-blur-md shadow-md w-full max-w-sm h-[190px]">
+          <div className="rounded-[25px] flex-1 relative p-5 border border-gray-300 bg-white w-full max-w-sm h-[190px]">
             <div className="flex items-center ">
-              <h1 className="text-secondary text-[1.10rem] font-gilroyMedium mb-[5px]">
+              <h1 className="text-[#9B9B9B] text-[1.10rem] font-gilroySemiBold mb-[5px]">
                 Employee info.
               </h1>
-              <div className="absolute right-4 top-4 border p-2 border-gray-300 rounded-full mt-2">
+              <div className="absolute right-4 top-4 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
                 <Icons.settings_download />
               </div>
             </div>
             <div className="flex items-center gap-4">
               <Icons.settings_employee_info />
               <div className="flex flex-col ">
-                <h2 className="text-secondary text-base font-gilroyMedium">
+                <h2 className="text-[#737373] text-base font-gilroySemiBold">
                   Active Employees
                 </h2>
                 <h1 className="text-primary text-[1.35rem] font-gilroySemiBold">
@@ -79,26 +80,26 @@ function SettingsHeader({ data }: { data: Org }) {
               </div>
             </div>
             <Link href={"/people"}>
-              <button className="bg-primary mt-3 text-white py-3 px-6 rounded-full w-full font-gilroyMedium">
+              <button className="bg-primary mt-3 text-white py-3 px-6 rounded-full w-full font-gilroySemiBold text-lg">
                 Manage Employees
               </button>
             </Link>
           </div>
 
           {/* Assets Info Card */}
-          <div className="rounded-[25px] relative p-5 border border-gray-300 bg-white backdrop-blur-md shadow-md w-full max-w-sm h-[190px]">
+          <div className="rounded-[25px] flex-1 relative p-5 border border-gray-300 bg-white w-full max-w-sm h-[190px]">
             <div className="flex items-center ">
-              <h1 className="text-secondary text-[1.10rem] font-gilroyMedium mb-[5px]">
+              <h1 className="text-[#9B9B9B] text-[1.10rem] font-gilroySemiBold mb-[5px]">
                 Assets
               </h1>
-              <div className="absolute right-4 top-4 border p-2 border-gray-300 rounded-full mt-2">
+              <div className="absolute right-4 top-4 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
                 <Icons.settings_download />
               </div>
             </div>
             <div className="flex items-center gap-4">
               <Icons.settings_assets />
               <div className="flex flex-col ">
-                <h2 className="text-secondary text-base font-gilroyRegular">
+                <h2 className="text-[#737373] text-base font-gilroySemiBold">
                   Active Assets
                 </h2>
                 <h1 className="text-primary text-[1.35rem] font-gilroySemiBold">
@@ -107,7 +108,7 @@ function SettingsHeader({ data }: { data: Org }) {
               </div>
             </div>
             <Link href={"/assets"}>
-              <button className="bg-primary mt-3 text-white py-3 px-6 rounded-full w-full font-gilroyMedium">
+              <button className="bg-primary mt-3 text-white py-3 px-6 text-lg  rounded-full w-full font-gilroySemiBold">
                 Manage Assets
               </button>
             </Link>

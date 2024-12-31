@@ -1,5 +1,5 @@
 "use client";
-import { OrdersProps } from "@/app/(root)/orders/components/orderPage";
+import { OrdersProps } from "@/app/(root)/orders/_components/orderPage";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 

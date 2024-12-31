@@ -26,9 +26,9 @@ export default async function MainLayout({
   return (
     <div className="flex flex-col h-full min-h-screen overflow-hidden bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed">
       {/* Header Section */}
-      <div className="absolute inset-0 bg-white opacity-70 backdrop-blur-lg z-[-1]" />
+      <div className="absolute inset-0 bg-white opacity-30 backdrop-blur-lg z-0" />
 
-      <Header session={session} />
+      <Header session={session}/>
       <div className="h-14 pointer-events-none w-full" />
 
       {/* Main Content Section */}
@@ -39,7 +39,7 @@ export default async function MainLayout({
         </div>
 
         {/* Main Content */}
-        <div className="ml-36 mt-4 w-full">
+        <div className="ml-36 mt-4 w-full z-10">
           <div className="h-8 pointer-events-none w-full" />
           {children}
         </div>

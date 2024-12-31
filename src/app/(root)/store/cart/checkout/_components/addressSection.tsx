@@ -2,7 +2,7 @@
 import { Address } from "@/server/addressActions";
 import { updateCartAddress } from "@/server/cartActions";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 interface AddressSectionProps {
@@ -21,7 +21,7 @@ const AddressSection = ({ cart, allAddresses }: AddressSectionProps) => {
       const updateResponse = await updateCartAddress(addressId);
       router.refresh();
     } catch (error) {
-      console.error("Error updating address:", error);
+      notFound();
     }
   };
 

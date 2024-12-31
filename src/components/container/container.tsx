@@ -11,7 +11,7 @@ type CombinedContainerProps = {
 
 export const InnerContainer = ({ children }: ChildrenProps) => {
   return (
-    <section className="flex flex-col w-[97%] overflow-y-auto border rounded-3xl h-full min-h-[70vh]">
+    <section className="flex flex-col w-[97%] overflow-y-auto rounded-3xl h-full min-h-[70vh] px-3 py-4">
       {children}
     </section>
   );
