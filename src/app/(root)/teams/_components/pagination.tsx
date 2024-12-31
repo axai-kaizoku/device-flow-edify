@@ -1,21 +1,21 @@
 interface PaginationProps {
   totalItems: number;
-  itemsPerPage: number;
+  itemsPerPage?: number;
   currentPage: number;
   onPageChange: (page: number) => void;
 }
 
+export const ITEMS_PER_PAGE = 5;
+
 const Pagination = ({
   totalItems,
-  itemsPerPage,
+  itemsPerPage = 5,
   currentPage,
   onPageChange,
 }: PaginationProps) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   const renderPageButtons = () => {
     const buttons = [];
-
     if (totalPages <= 3) {
       // Render all pages if totalPages is 3 or less
       for (let i = 1; i <= totalPages; i++) {
@@ -52,7 +52,6 @@ const Pagination = ({
           </button>
         );
       }
-
       // Add ellipsis if totalPages > 4
       if (totalPages > 4) {
         buttons.push(
@@ -64,7 +63,6 @@ const Pagination = ({
           </span>
         );
       }
-
       // Add last page
       buttons.push(
         <button
@@ -125,5 +123,4 @@ const Pagination = ({
     </div>
   );
 };
-
 export default Pagination;

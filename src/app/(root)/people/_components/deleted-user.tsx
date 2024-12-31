@@ -1,31 +1,155 @@
 import { User, UserResponse } from "@/server/userActions";
-import React from "react";
-import UserTable from "./user-table";
-import DeletedUserTable from "./deleted-user-table";
+import React, { useState } from "react";
 import { Icons } from "@/components/icons";
 import CreateUser from "./create-user";
 import { deletedUsers } from "@/server/filterActions";
+import { useRouter } from "next/navigation";
+import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
+import { PermanentUserDelete } from "./permanent-user-delete";
+import { RestoreUser } from "./restore-user";
+import { Table } from "@/components/wind/Table";
 
-interface DeletedProps {
-  data: User[];
-}
+function DeletedUser({ data }: { data: UserResponse }) {
+  const router = useRouter();
 
-const DeletedUser = async () => {
-  const deletedUserResponse: UserResponse = await deletedUsers();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const currentPeople = data?.users?.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => setCurrentPage(page);
+
   return (
     <>
       <div className="rounded-[33px] border border-white/30 px-7 py-5 bg-white/80 backdrop-blur-[22.8px]">
-        {deletedUserResponse?.users?.length === 0 ? (
+        {data?.users?.length === 0 ? (
           <div className="flex flex-col gap-4 justify-center items-center py-10">
-            <Icons.no_memeber_table />
-            <CreateUser name="Create Employee" />
+            <Icons.no_member_table />
+            <CreateUser>
+              <div className="bg-black rounded-full text-white text-lg font-gilroySemiBold px-10 py-2">
+                Create User
+              </div>
+            </CreateUser>
           </div>
         ) : (
-          <DeletedUserTable users={deletedUserResponse?.users} />
+          <div className="rounded-[21px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 px-6 flex flex-col gap-5">
+            <div className=" flex gap-2 w-fit">
+              <h1 className="text-xl font-gilroySemiBold">People</h1>
+              <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                {data?.totalCount} People
+              </h1>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Table
+                data={currentPeople}
+                checkboxSelection={{
+                  uniqueField: "_id",
+                  //logic yet to be done
+                  onSelectionChange: (e) => console.log(e),
+                }}
+                columns={[
+                  {
+                    title: "Name",
+                    render: (users: User) => (
+                      <div
+                        className="w-28 justify-start flex items-center gap-2 cursor-pointer"
+                        onClick={() => router.push(`/people/${users?._id}`)}
+                      >
+                        <img
+                          src={
+                            users?.image ||
+                            "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                          }
+                          alt="Profile Image"
+                          className="size-10 object-cover rounded-full"
+                        />
+
+                        {/* Truncated Text */}
+                        <div className="font-gilroySemiBold text-sm gap-1 flex whitespace-nowrap  text-black ">
+                          {users?.first_name} {users?.last_name}
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    title: "Role",
+                    dataIndex: "designation",
+                  },
+                  {
+                    title: "Joining Date",
+                    render: (data) => (
+                      <div className="">
+                        {data?.onboarding_date
+                          ? new Date(data.onboarding_date).toLocaleDateString()
+                          : "N/A"}
+                      </div>
+                    ),
+                  },
+                  {
+                    title: "Reporting Manager",
+                    render: (record: User) => (
+                      <div className=" whitespace-nowrap flex text-sm font-gilroyMedium text-[#6C6C6C] gap-1">
+                        <h1>{record?.reporting_manager?.first_name}</h1>
+                        <h1>{record?.reporting_manager?.last_name}</h1>
+                      </div>
+                    ),
+                  },
+                  {
+                    title: "Team",
+                    render: (data) => (
+                      <div className="">
+                        {data?.onboarding_date
+                          ? new Date(data.onboarding_date).toLocaleDateString()
+                          : "N/A"}
+                      </div>
+                    ),
+                  },
+
+                  // {
+                  //   title: "Assets assigned",
+                  //   render: (data: User) => (
+                  //     <div className="text-center rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                  //       {data?.devices?.length > 0
+                  //         ? `${data.devices.length} Assigned`
+                  //         : "N/A"}
+                  //     </div>
+                  //   ),
+                  // },
+                  {
+                    title: "",
+                    render: (record: User) => (
+                      <div className="flex gap-8 justify-center items-center">
+                        <PermanentUserDelete id={record?._id!}>
+                          <Icons.table_delete className="size-6" />
+                        </PermanentUserDelete>
+
+                        <RestoreUser id={record?._id!}>
+                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-lg py-0.5 px-6">
+                            Restore
+                          </div>
+                        </RestoreUser>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+              {/* Pagination Control */}
+              <Pagination
+                currentPage={currentPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+                totalItems={data?.users?.length}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </div>
         )}
       </div>
     </>
   );
-};
+}
 
 export default DeletedUser;

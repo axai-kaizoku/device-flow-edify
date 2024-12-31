@@ -123,7 +123,7 @@ export type UserResponse = {
   users: User[];
   totalPages: number;
   currentPage: number;
-  totalDocuments: number;
+  totalCount: number;
   pageSize: number;
   documentCount: number;
   currentDocumentCount: number;

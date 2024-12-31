@@ -121,7 +121,78 @@ export const filterUsers = cache(async function ({
       throw new Error("No data received from the API");
     }
   } catch (error: any) {
+    // Throw more specific error message
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter Users. Please try again later."
+    );
+  }
+});
+export const activeUsers = cache(async function ({
+  filters = [],
+  fields = usersFields,
+  searchQuery = "",
+  pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      page_length: pageLength,
+    };
 
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
+    // console.log(apiUrl, payload);
+    // Check if response has data
+    if (res && res?.data) {
+      // console.log('Filtered Data:', res.data);
+      return res?.data; // Return the filtered data
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    // Throw more specific error message
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter Users. Please try again later."
+    );
+  }
+});
+export const inActiveUsers = cache(async function ({
+  filters = [],
+  fields = usersFields,
+  searchQuery = "",
+  pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      page_length: pageLength,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
+    // console.log(apiUrl, payload);
+    // Check if response has data
+    if (res && res?.data) {
+      // console.log('Filtered Data:', res.data);
+      return res?.data; // Return the filtered data
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
     // Throw more specific error message
     throw new Error(
       error?.response?.data?.message ||
@@ -153,6 +224,115 @@ export const filterDevice = cache(async function ({
 
     // Check and return response data
     if (res && res?.data) {
+      console.log("filter Triggered");
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter devices. Please try again later."
+    );
+  }
+});
+
+export const assignedAssets = cache(async function ({
+  filters = [],
+  fields = devicesFields,
+  searchQuery = "",
+  pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      page_length: pageLength,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+
+    // Check and return response data
+    if (res && res?.data) {
+      console.log("AssignedAssets Triggered");
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter devices. Please try again later."
+    );
+  }
+});
+
+export const unAssignedAssets = cache(async function ({
+  filters = [],
+  fields = devicesFields,
+  searchQuery = "",
+  pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      page_length: pageLength,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+
+    // Check and return response data
+    if (res && res?.data) {
+      console.log("unAssignedAssets Triggered");
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter devices. Please try again later."
+    );
+  }
+});
+
+export const inActiveAssets = cache(async function ({
+  filters = [],
+  fields = devicesFields,
+  searchQuery = "",
+  pageLength = 20,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      page_length: pageLength,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+
+    // Check and return response data
+    if (res && res?.data) {
+      console.log("inactive Assets Triggered");
       return res?.data;
     } else {
       throw new Error("No data received from the API");

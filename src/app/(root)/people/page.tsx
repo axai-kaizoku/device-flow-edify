@@ -1,27 +1,25 @@
+"use client";
 import { CombinedContainer } from "@/components/container/container";
 import dynamic from "next/dynamic";
-import { RootState } from "@/app/store/store";
-import { useSelector } from "react-redux";
+import { filterUsers } from "@/server/filterActions";
+import { useEffect, useState } from "react";
+import Error from "@/app/error/page";
+import NotFound from "@/app/not-found";
+import { UserResponse } from "@/server/userActions";
 const TabDisplay = dynamic(() => import("./TabDisplay"), { ssr: false });
 
-export default async function Users() {
-  // const userData = useSelector((state: RootState) => state.auth.userData);
-  // const userRole = userData?.role;
+export default function People() {
   try {
     return (
-      <CombinedContainer title="Users">
-        <TabDisplay/>
+      <CombinedContainer title="Assets">
+        <TabDisplay />
       </CombinedContainer>
     );
   } catch (error) {
+    console.error("Error fetching Users:", error);
     return (
-      <CombinedContainer title="People">
-        <div className="text-red-500">
-          Failed to load data. Please try again later. <br />{" "}
-          <a href="/" className="underline text-blue-500">
-            Back to home
-          </a>
-        </div>
+      <CombinedContainer title="Users">
+        <Error />
       </CombinedContainer>
     );
   }

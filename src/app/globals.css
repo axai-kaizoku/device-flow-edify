@@ -161,6 +161,15 @@ body {
   margin: auto;
 }
 
+/* Hide the dropdown by default */
+#filterToggle + label + div {
+  display: none;
+}
+
+/* Show the dropdown when the checkbox is checked */
+#filterToggle:checked + label + div {
+  display: block;
+}
 @keyframes fadeInRight {
   from {
     opacity: 0;
@@ -264,7 +273,6 @@ body {
 .slide-out-left {
   animation: slideOutLeft 0.5s forwards; /* 'forwards' keeps it at final state */
 }
-
 
 h2.title {
   text-align: center;

@@ -14,6 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Props } from "@/app/(root)/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
+import CreateUser from "@/app/(root)/people/_components/create-user";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
@@ -136,9 +137,11 @@ export default function Header({ session }: Props) {
                 <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
                   <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
                 </div>
-                <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
-                  Add Employee
-                </div>
+                <CreateUser>
+                  <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
+                    Add Employee
+                  </div>
+                </CreateUser>
               </div>
             </div>
           </div>
