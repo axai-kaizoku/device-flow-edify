@@ -11,26 +11,30 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Issues, updateIssue } from "@/server/issueActions"; // Import the updateIssue function
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
-export const IssueConfirmation = ({
+export const IssueStatusChange = ({
   id,
   issueData, // Add the issue data as a prop
   children,
+  reOpen,
+  className,
 }: {
   id: string;
   issueData: Issues;
   children: React.ReactNode;
+  reOpen: boolean;
+  className?: string;
 }) => {
   const router = useRouter();
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
   const [initText, setInitText] = useState("Are you sure?");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger className={cn(className)}>{children}</DialogTrigger>
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center ">
@@ -45,8 +49,10 @@ export const IssueConfirmation = ({
         </DialogTitle>
 
         {/* Description */}
-        <DialogDescription className="p-1 text-sm text-gray-600">
-          Are you sure you want to change the status of this issue to Closed?
+        <DialogDescription className="p-1 text-sm font-gilroyMedium text-gray-600">
+          {reOpen
+            ? "Are you sure you want to change the status of this issue to Open?"
+            : "Are you sure you want to change the status of this issue to Closed?"}
         </DialogDescription>
 
         {/* Footer Buttons */}
@@ -62,10 +68,9 @@ export const IssueConfirmation = ({
             onClick={async () => {
               if (id) {
                 try {
-                  // Update the issue status to 'Closed'
                   const updatedIssue = await updateIssue(id, {
                     ...issueData,
-                    status: "Closed",
+                    status: reOpen ? "Open" : "Closed",
                   });
                   setOpen(false);
 

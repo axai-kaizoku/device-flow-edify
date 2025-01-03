@@ -414,7 +414,7 @@ export const filterIssues = cache(async function ({
   filters = [],
   fields = issueFields,
   searchQuery = "",
-  pageLength = 20,
+  pageLength = 100000,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {

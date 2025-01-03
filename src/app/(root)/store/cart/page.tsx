@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MoveLeft, ShoppingCart, Tag } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { DeviceWithQty, getCart } from "@/server/cartActions";
 import CartMain from "./_components/cart-main";
 
@@ -8,15 +8,15 @@ export default async function Cart() {
 
   return (
     <>
-      <CartMain cart={cart}/>
-   </>
+      <CartMain cart={cart} />
+    </>
   );
 }
 
 export const CartComponent = async () => {
   const cart = await getCart();
   const totalQty = cart.items.reduce(
-    (acc:number, item: DeviceWithQty) => acc + item?.quantity!,
+    (acc: number, item: DeviceWithQty) => acc + item?.quantity!,
     0
   );
   return (

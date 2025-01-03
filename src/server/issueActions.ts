@@ -18,6 +18,66 @@ export type Issues = {
   userName?: string;
   serial_no?: string;
   email?: string;
+  deviceDetails?: {
+    _id?: string;
+    userId?: string;
+    orgId?: string;
+    addressId?: string;
+    device_name?: string;
+    asset_serial_no?: string;
+    serial_no?: string;
+    device_type?: string;
+    ram?: string;
+    processor?: string;
+    storage?: string;
+    custom_model?: string;
+    brand?: string;
+    warranty_status?: boolean;
+    warranty_expiary_date?: string | null;
+    ownership?: string;
+    device_purchase_date?: string;
+    purchase_order?: string;
+    purchase_value?: number;
+    payable?: number;
+    os?: string;
+    is_trending?: boolean;
+    image?: string;
+    deleted_at?: null | string;
+    assigned_at?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+  };
+  userDetails?: {
+    name?: string;
+    phone?: string;
+    image?: string;
+    email?: string;
+    designation?: string;
+  };
+  teamDetails?: {
+    _id?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    orgId?: string;
+    deleted_at?: null | string;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+  };
+  manager?: {
+    name?: string;
+    phone?: string;
+    email?: string;
+    designation?: string;
+  };
+  purchaseDetails?: {
+    _id?: string;
+    itemId?: string;
+    cartId?: string;
+    purchased_date?: string;
+  }[];
 };
 
 export type getAllResponse = Issues[];

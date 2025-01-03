@@ -4,6 +4,62 @@ import { callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
 import { cache } from "react";
 
+export type StoreDevice = {
+  _id?: string;
+  device_name: string;
+  device_type: string;
+  asset_serial_no: string | null;
+  serial_no: string | null;
+  ram: string | null;
+  processor: string | null;
+  storage: [] | null;
+  custom_model: string | null;
+  brand: string | null;
+  warranty_status?: boolean;
+  warranty_expiary_date: string | null; // Assuming this is a date string
+  ownership: string | null;
+  purchase_order: string | null;
+  purchase_value: number | null;
+  payable?: number | null;
+  os: string | null;
+  image: { url: string; color: string }[] | null; // Array of image objects
+  invoice?: string | null;
+  deleted_at?: string | null; // Assuming this is a date string
+  device_purchase_date: string | null; // Assuming this is a date string
+  assigned_at?: string | null; // Assuming this is a date string
+  userName?: string | null;
+  email?: string | null;
+  userId?: string | null;
+  city?: string | null;
+  addressId?: string | null;
+  perfectFor: { title: string }[] | null; // Array of objects with `title` property
+  deviceFeatures:
+    | {
+        title: string;
+        features: { title: string; value: string }[];
+      }[]
+    | null; // Array of feature groups with titles and feature lists
+  orgId: string | null;
+  ratings?: unknown[]; // Could specify a type if known
+  overallReviews?: number | null;
+  overallRating?: number | null;
+  ratingDetails?: {
+    stars: number;
+    percentage: number;
+    reviewsCount: number;
+  }[];
+  reviews: {
+    _id: string; // MongoDB ObjectId, typically a string
+    comment: string;
+    rating: number; // Assuming ratings are numbers (e.g., 1 to 5)
+    createdAt: string; // ISO date string
+    updatedAt: string; // ISO date string
+    image: string; // Path or filename for the image
+    role: number; // Assuming roles are represented as numbers
+    name: string;
+  }[];
+};
+
 //Device type
 export type Device = {
   _id?: string;
@@ -202,22 +258,20 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 }
 
 // Get Device by ID
-export const getDeviceById = cache(
-  async (deviceId: string): Promise<Device> => {
-    try {
-      // Make the GET request to fetch a single device by ID
-      const res = await callAPIWithToken<Device>(
-        `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
-        "GET"
-      );
+export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+  try {
+    // Make the GET request to fetch a single device by ID
+    const res = await callAPIWithToken<Device>(
+      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      "GET"
+    );
 
-      // Return the fetched device
-      return res?.data;
-    } catch (error) {
-      throw new Error((error as AxiosError)?.message);
-    }
+    // Return the fetched device
+    return res?.data;
+  } catch (error) {
+    throw new Error((error as AxiosError)?.message);
   }
-);
+});
 
 // Getting Devices by User ID
 
@@ -234,7 +288,7 @@ export const getDevicesByUserId = cache(
         );
 
         // Return the list of Devices
-        return res?.data;
+        return res.data;
       } else {
         throw new Error("No user session found");
       }

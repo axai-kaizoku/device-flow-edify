@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Icon } from "@/components/wind/Icons";
 import { Table } from "@/components/wind/Table";
 import { Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
 import { issueFields, filterIssues } from "@/server/filterActions";
 import { useQueryState } from "nuqs";
 import Pagination from "../../teams/_components/pagination";
-import { IssueConfirmation } from "./issue-closed";
+import { IssueStatusChange } from "./issue-status-change";
 
 const numericFields = ["updatedAt", "createdAt"];
 
@@ -42,22 +41,22 @@ export default function IssueTable({ data }: { data: Issues[] }) {
             title: "Device",
             render: (data: Issues) => (
               <div
-                className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                className="w-full flex justify-start items-center gap-1 cursor-pointer"
                 onClick={() => router.push(`/issues/${data?._id}`)}
               >
                 <img
-                  src=""
+                  src={data?.deviceDetails?.image ?? "/media/mac.jpeg"}
                   alt="Device Logo"
                   className="border size-10 rounded-full"
                 />
-                <div>Device Name</div>
+                <div>{data?.deviceDetails?.device_name ?? "-"}</div>
               </div>
             ),
           },
           {
             title: "Issue Severity",
             render: (data: Issues) => (
-              <div className="w-full flex justify-center">
+              <div className="w-full flex justify-start">
                 <div>
                   {data?.priority === "Critical" ? (
                     <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-alert-foreground text-failure">
@@ -89,22 +88,25 @@ export default function IssueTable({ data }: { data: Issues[] }) {
             title: "Raised by",
             dataIndex: "userName",
           },
-
           {
             title: "Raised on",
-            render: (data: Issues) => (
-              <div className="w-full flex justify-center">
-                <div>
-                  {data.createdAt
-                    ? new Date(data?.createdAt).toLocaleDateString()
-                    : "NULL"}
+            render: (data: Issues) => {
+              const date = new Date(data?.createdAt!);
+              const formattedDate = date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
+              return (
+                <div className="justify-start flex items-center">
+                  {formattedDate}
                 </div>
-              </div>
-            ),
+              );
+            },
           },
           {
             title: "Issue type",
-            dataIndex: "description",
+            dataIndex: "title",
           },
           {
             title: "Status",
@@ -114,11 +116,15 @@ export default function IssueTable({ data }: { data: Issues[] }) {
           {
             title: "Actions",
             render: (record: Issues) => (
-              <IssueConfirmation id={record?._id!} issueData={data}>
-                <div className="rounded-full bg-[#027A14] text-base whitespace-nowrap px-2 text-white font-gilroyMedium">
+              <IssueStatusChange
+                reOpen={false}
+                id={record?._id!}
+                issueData={record}
+              >
+                <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-2.5 py-0.5 text-white font-gilroyMedium">
                   Mark as resolved
                 </div>
-              </IssueConfirmation>
+              </IssueStatusChange>
             ),
           },
         ]}

@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Table } from "@/components/wind/Table";
 import { Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
 
 import Pagination from "../../teams/_components/pagination";
-import { IssueReOpen } from "./issue-reopen";
 import IssueClosedHeader from "./issue-closed-header";
+import { IssueStatusChange } from "./issue-status-change";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -48,22 +48,26 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
                 title: "Device",
                 render: (data: Issues) => (
                   <div
-                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                    className="w-full flex justify-start items-center gap-1 cursor-pointer"
                     onClick={() => router.push(`/issues/${data?._id}`)}
                   >
                     <img
-                      src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                      src={data.deviceDetails?.image ?? "/media/mac.jpeg"}
                       alt="Device Logo"
                       className="border size-10 rounded-full"
                     />
-                    <div>Device Name</div>
+                    <div>{data.deviceDetails?.device_name ?? "-"}</div>
                   </div>
                 ),
               },
 
               {
                 title: "Serial number",
-                dataIndex: "serial_no",
+                render: (data: Issues) => (
+                  <div className="w-full flex justify-start items-center gap-1">
+                    <div>{data?.deviceDetails?.serial_no ?? "-"}</div>
+                  </div>
+                ),
               },
               {
                 title: "Issued Id",
@@ -75,15 +79,20 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
               },
               {
                 title: "Closed on",
-                render: (record: Issues) => (
-                  <div>{new Date(record?.updatedAt!).toLocaleDateString()}</div>
-                ),
+                render: (data: Issues) => {
+                  const date = new Date(data?.updatedAt!);
+                  const formattedDate = date.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  });
+                  return <div>{formattedDate}</div>;
+                },
               },
               {
                 title: "Issue Type",
-                dataIndex: "description",
+                dataIndex: "title",
               },
-
               {
                 title: "Closed by",
                 dataIndex: "status",
@@ -92,11 +101,15 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
               {
                 title: "Actions",
                 render: (record: Issues) => (
-                  <IssueReOpen id={record?._id!} issueData={data}>
-                    <div className="rounded-full bg-primary text-base whitespace-nowrap px-2 text-white font-gilroyMedium">
+                  <IssueStatusChange
+                    id={record?._id!}
+                    issueData={record}
+                    reOpen={true}
+                  >
+                    <div className="rounded-full bg-primary text-sm 2xl:text-base whitespace-nowrap px-2 py-0.5 text-white font-gilroyMedium">
                       Reopen
                     </div>
-                  </IssueReOpen>
+                  </IssueStatusChange>
                 ),
               },
             ]}

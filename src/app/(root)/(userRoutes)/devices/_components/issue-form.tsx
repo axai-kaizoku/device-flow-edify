@@ -101,7 +101,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     },
     {
       icon: <Icons.high_issue_icon className="size-10" />,
-      title: "High",
+      title: "Critical",
       desc: `Major issue, needs immediate attention—fix now!`,
     },
   ];

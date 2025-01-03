@@ -42,7 +42,7 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   return (
     <>
       <div className="flex items-center justify-between ">
-        <div className="flex items-center -mb-8  w-full gap-12">
+        <div className="flex items-center -mb-8 w-full gap-12">
           <Tab
             active={activeTab === "open"}
             onClick={() => {

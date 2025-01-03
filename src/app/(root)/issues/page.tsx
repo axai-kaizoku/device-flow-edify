@@ -9,6 +9,7 @@ interface IssueProps {
     page?: string;
   };
 }
+
 async function Issues({ searchParams }: IssueProps) {
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
   try {

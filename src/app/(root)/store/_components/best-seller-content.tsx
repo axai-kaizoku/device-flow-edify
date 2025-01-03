@@ -4,6 +4,7 @@ import Image from "next/image"; // For optimized images in Next.js
 import { Icons } from "@/components/icons";
 import { getAllDevicesProp } from "@/server/deviceActions";
 import Link from "next/link";
+import { addItemToCart } from "@/server/cartActions";
 
 const products = [
   {
