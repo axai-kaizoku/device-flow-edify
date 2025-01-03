@@ -61,7 +61,7 @@ export default function LoginForm() {
         <input
           id="email"
           type="email"
-          className="border rounded p-2"
+          className="border  p-2 h-[60px] rounded-[8px] border-[#5F5F5F]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
@@ -77,7 +77,7 @@ export default function LoginForm() {
           <input
             id="password"
             type={showPassword ? "text" : "password"}
-            className="border rounded p-2 w-full"
+            className="border  p-2 h-[60px] rounded-[8px] border-[#5F5F5F] w-full"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
@@ -86,7 +86,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute right-2 top-2 text-sm"
+            className="absolute right-2 top-5 text-sm"
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
@@ -95,7 +95,7 @@ export default function LoginForm() {
 
       {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 
-      <button type="submit" className="border rounded bg-black text-white p-4">
+      <button type="submit" className="border rounded-[10px] h-[56px] bg-black text-white p-4">
         {loading ? <Spinner size="sm" /> : "Login"}
       </button>
 
