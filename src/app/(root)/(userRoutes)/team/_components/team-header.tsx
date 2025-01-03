@@ -4,21 +4,12 @@ interface TeamHeaderProps {
   image: string;
   title: string;
   description: string;
-  manager: {
-    _id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    image: string;
-  }[];
 }
 
 const TeamHeader: React.FC<TeamHeaderProps> = ({
   image,
   title,
   description,
-  manager,
 }) => {
   return (
     <div className="flex gap-5 items-center">
@@ -43,9 +34,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         <p className="text-sm font-gilroyMedium text-[#ADADAC]">
           Reporting Manager:{" "}
           <span className="font-gilroySemiBold text-xl text-black">
-            {`${manager[0]?.first_name ?? "No Manager"} ${
-              manager[0]?.last_name ?? ""
-            }`}
+            Abhinav Prakash
           </span>
         </p>
       </div>

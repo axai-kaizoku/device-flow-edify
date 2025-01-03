@@ -14,9 +14,13 @@ import AssetsSection from "./assets-section";
 import { User } from "@/server/userActions";
 import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { useRouter } from "next/navigation";
+import { UserData } from "@/app/store/authSlice";
+import { useSelector } from "react-redux";
 
 const UserGrid = ({ user }: { user: User }) => {
   const router = useRouter();
+  const data: UserData = useSelector((state: any) => state.auth.userData);
+
   const renderMembers = () => {
     if (user?.teamId?.employees_count === 0) {
       return Array(3)
@@ -33,7 +37,7 @@ const UserGrid = ({ user }: { user: User }) => {
   };
   return (
     <>
-      <div className="grid grid-cols-3 mt-2">
+      <div className="grid grid-cols-3 mt-2 font-gilroyRegular">
         {/* First Column */}
         <div className="flex flex-col gap-6">
           {/* First Row */}
@@ -41,7 +45,10 @@ const UserGrid = ({ user }: { user: User }) => {
             <div className="flex justify-start gap-4 items-start w-full px-6">
               <div className="w-[90px] h-[90px] rounded-full overflow-hidden flex-shrink-0">
                 <img
-                  src="https://scontent.fblr22-1.fna.fbcdn.net/v/t39.30808-6/299723678_176959964835512_8907956075924868119_n.png?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=V14yt6ietWQQ7kNvgFKAQXH&_nc_zt=23&_nc_ht=scontent.fblr22-1.fna&_nc_gid=ARrFZrbYuAobN5g3U0pc_z9&oh=00_AYD0uUpZ3twiBioiEk2u6j_UwbmZ9MUmFww3wZKAfUQddQ&oe=675CA6AB"
+                  src={
+                    user?.image ||
+                    "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                  }
                   // Replace with your profile image URL
                   alt="Profile"
                   className="w-full h-full object-cover"
@@ -49,21 +56,21 @@ const UserGrid = ({ user }: { user: User }) => {
               </div>
 
               <div className="flex flex-col">
-                <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                <h1 className="text-2xl font-gilroySemiBold text-gray-800 dark:text-gray-200">
                   {`${user?.first_name ?? ""} ${user?.last_name ?? ""}`}
                 </h1>
-                <p className="text-[#7C7C7C] text-base font-medium">
-                  {user?.designation ?? ""} . {user?.teamId?.title || "Tech"}
+                <p className="text-[#7C7C7C] text-base font-gilroyMedium">
+                  {user?.designation ?? ""} . {user?.teamId?.title ?? "-"}
                 </p>
                 <div className="flex gap-2 mt-2">
                   <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#ECFDF3]">
-                    <span className="text-center text-[#027A48] font-inter text-[12.435px] font-medium leading-[18.652px]">
+                    <span className="text-center text-[#027A48] text-[12.435px] font-gilroyMedium leading-[18.652px]">
                       Active
                     </span>
                   </div>
 
                   <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#FFE8D6]">
-                    <span className="text-center text-[#E89F02] font-inter text-[12.435px] font-medium leading-[18.652px]">
+                    <span className="text-center text-[#E89F02] text-[12.435px] font-gilroyMedium leading-[18.652px]">
                       {user?.employment_type ?? ""}
                     </span>
                   </div>
@@ -75,7 +82,7 @@ const UserGrid = ({ user }: { user: User }) => {
           {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[50px] px-2 py-6">
             <div className="flex flex-col justify-start gap-5 items-start w-full px-6">
-              <div className="font-semibold text-gray-500 text-xl">
+              <div className="font-gilroySemiBold text-gray-500 text-xl">
                 Personal Info.
               </div>
 
@@ -84,10 +91,10 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Mail className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Email
                   </div>
-                  <div className="font-semibold">{user?.email ?? ""}</div>
+                  <div className="font-gilroySemiBold">{user?.email ?? ""}</div>
                 </div>
               </div>
 
@@ -96,10 +103,10 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Smartphone className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Phone
                   </div>
-                  <div className="font-semibold">{user?.phone ?? ""}</div>
+                  <div className="font-gilroySemiBold">{user?.phone ?? ""}</div>
                 </div>
               </div>
 
@@ -108,11 +115,13 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Cake className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Date of Birth
                   </div>
-                  <div className="font-semibold">
-                    {new Date(user?.date_of_birth).toLocaleDateString()}
+                  <div className="font-gilroySemiBold">
+                    {new Date(
+                      user?.date_of_birth as string
+                    ).toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -122,11 +131,13 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Link className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Joining Date
                   </div>
-                  <div className="font-semibold">
-                    {new Date(user?.onboarding_date).toLocaleDateString()}
+                  <div className="font-gilroySemiBold">
+                    {new Date(
+                      user?.onboarding_date as string
+                    ).toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -139,13 +150,14 @@ const UserGrid = ({ user }: { user: User }) => {
           {/* First Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[50px] px-2">
             <div className="flex flex-col gap-4 items-start w-full px-6 py-4">
-              <div className="font-semibold text-gray-500 text-xl">
+              <div className="font-gilroySemiBold text-gray-500 text-xl">
                 Reporting Manager
               </div>
               <div className="flex justify-start gap-4 items-start w-full">
                 <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
                   <img
-                    src="https://scontent.fblr22-1.fna.fbcdn.net/v/t39.30808-6/299723678_176959964835512_8907956075924868119_n.png?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=V14yt6ietWQQ7kNvgFKAQXH&_nc_zt=23&_nc_ht=scontent.fblr22-1.fna&_nc_gid=ARrFZrbYuAobN5g3U0pc_z9&oh=00_AYD0uUpZ3twiBioiEk2u6j_UwbmZ9MUmFww3wZKAfUQddQ&oe=675CA6AB"
+                    // src={user?.reporting_manager?.image}
+                    src="https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
                     // Replace with your profile image URL
                     alt="Profile"
                     className="w-full h-full object-cover"
@@ -153,7 +165,7 @@ const UserGrid = ({ user }: { user: User }) => {
                 </div>
 
                 <div className="flex flex-col relative w-full">
-                  <h1 className="text-xl font-semibold dark:text-gray-200">
+                  <h1 className="text-xl font-gilroySemiBold dark:text-gray-200">
                     {`${user?.reporting_manager?.first_name} ${user?.reporting_manager?.last_name}`}
                   </h1>
                   <div
@@ -165,7 +177,7 @@ const UserGrid = ({ user }: { user: User }) => {
                     <ChevronRight />
                   </div>
 
-                  <p className="text-gray-500 font-medium text-sm">
+                  <p className="text-gray-500 font-gilroyMedium text-sm">
                     {user?.reporting_manager?.email}
                   </p>
                   <div className="flex gap-2 mt-2 justify-start items-center">
@@ -175,11 +187,11 @@ const UserGrid = ({ user }: { user: User }) => {
 
                     <div>
                       {user?.teamId?.employees_count ? (
-                        <div className="font-medium text-gray-500 text-sm">
+                        <div className="font-gilroyMedium text-gray-500 text-sm">
                           {user?.teamId?.employees_count} Team Members
                         </div>
                       ) : (
-                        <div className="font-medium text-gray-500 text-sm">
+                        <div className="font-gilroyMedium text-gray-500 text-sm">
                           5 Team Members
                         </div>
                       )}
@@ -193,7 +205,7 @@ const UserGrid = ({ user }: { user: User }) => {
           {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[50px] px-2 py-6">
             <div className="flex flex-col justify-start gap-5 items-start w-full px-6">
-              <div className="font-semibold text-gray-500 text-xl">
+              <div className="font-gilroySemiBold text-gray-500 text-xl">
                 Organisation Info.
               </div>
 
@@ -202,11 +214,11 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Building2 className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Company
                   </div>
-                  <div className="font-semibold">
-                    {user?.orgId?.legal_entity_name || "Hello"}
+                  <div className="font-gilroySemiBold">
+                    {data?.orgId?.name ?? "-"}
                   </div>
                 </div>
               </div>
@@ -216,11 +228,11 @@ const UserGrid = ({ user }: { user: User }) => {
                   <NotepadText className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Org Contact
                   </div>
-                  <div className="font-semibold">
-                    {user?.orgId?.office_address?.phone || "Hello"}
+                  <div className="font-gilroySemiBold">
+                    {data?.addressDetails?.phone ?? "-"}
                   </div>
                 </div>
               </div>
@@ -230,11 +242,11 @@ const UserGrid = ({ user }: { user: User }) => {
                   <Mail className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Email
                   </div>
-                  <div className="font-semibold">
-                    {user?.orgId?.email || "Hello"}
+                  <div className="font-gilroySemiBold">
+                    {data?.orgId?.email ?? "-"}
                   </div>
                 </div>
               </div>
@@ -244,11 +256,11 @@ const UserGrid = ({ user }: { user: User }) => {
                   <MapPin className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-base text-gray-500 font-semibold">
+                  <div className="text-base text-gray-500 font-gilroySemiBold">
                     Address
                   </div>
-                  <div className="font-semibold">
-                    {user?.orgId?.office_address?.address || "Hello"}
+                  <div className="font-gilroySemiBold">
+                    {data?.addressDetails?.city ?? "-"}
                   </div>
                 </div>
               </div>

@@ -16,7 +16,7 @@ export const SIDEBAR = {
   ],
   UserPages: [
     { label: "Home", path: "/", icon: "/media/sidebar/home.svg" },
-    { label: "Teams", path: "/teams", icon: "/media/sidebar/contact.svg" },
+    { label: "Team", path: "/team", icon: "/media/sidebar/contact.svg" },
     { label: "Profile", path: "/profile", icon: "/media/sidebar/profile.svg" },
     { label: "Devices", path: "/devices", icon: "/media/sidebar/devices.svg" },
   ],

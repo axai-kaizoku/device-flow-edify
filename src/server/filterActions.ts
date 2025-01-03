@@ -11,6 +11,21 @@ export interface FilterApiParams {
   pageLength?: number;
 }
 
+export const devicesFilterFields = [
+  { label: "Device Name", value: "device_name" },
+  { label: "Device Type", value: "device_type" },
+  { label: "OS", value: "os" },
+  { label: "Brand", value: "brand" },
+  { label: "Serial No", value: "serial_no" },
+  { label: "Assigned To", value: "userName" },
+  { label: "RAM", value: "ram" },
+  { label: "Warranty Expiry Date", value: "warranty_expiary_date" },
+  { label: "Price", value: "purchase_value" },
+  { label: "Warranty Status", value: "warranty_status" },
+  { label: "Storage", value: "storage" },
+  // ...rest of the fields
+];
+
 export const devicesFields = [
   "device_name",
   "device_type",

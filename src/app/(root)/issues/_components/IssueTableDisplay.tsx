@@ -8,10 +8,12 @@ interface IssueTableDisplayProps {
 
 function IssueTableDisplay({ data }: IssueTableDisplayProps) {
   return (
-    <div className="rounded-[33px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 px-4 flex flex-col">
-      <OpenHeader data={data} />
+    <div className="rounded-[33px] border border-[#C3C3C34F] px-7 py-5 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+      <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] flex flex-col">
+        <OpenHeader data={data} />
 
-      <IssueTable data={data} />
+        <IssueTable data={data} />
+      </div>
     </div>
   );
 }

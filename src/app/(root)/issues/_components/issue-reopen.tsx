@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Issues, updateIssue } from "@/server/issueActions"; // Import the updateIssue function
 import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
+import { Icons } from "@/components/icons";
 
 export const IssueReOpen = ({
   id,
@@ -34,7 +35,7 @@ export const IssueReOpen = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <AlertCircle className="w-6 h-6" /> {/* Lucide-react icon */}
+            <Icons.warning_restore />
           </div>
         </div>
 
@@ -51,14 +52,13 @@ export const IssueReOpen = ({
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
-            variant="secondary"
-            className="w-1/2 rounded-[0.60rem]"
+            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            className="w-1/2 rounded-[0.60rem] bg-success hover:opacity-80 "
+            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-sm text-white"
             onClick={async () => {
               if (id) {
                 try {

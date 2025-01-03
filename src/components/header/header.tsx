@@ -15,6 +15,7 @@ import { Props } from "@/app/(root)/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
 import CreateUser from "@/app/(root)/people/_components/create-user";
+import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
@@ -102,21 +103,18 @@ export default function Header({ session }: Props) {
               </div>
 
               {/* Action Buttons */}
-              <div
-                className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black hover:text-white hover:border-white group"
-                onClick={() => {
-                  router.push("/assets");
-                }}
-              >
-                <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
-                  <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+              <CreateDevice>
+                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black hover:text-white hover:border-white group">
+                  <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
+                    <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+                  </div>
+                  <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
+                    Add Device
+                  </div>
                 </div>
-                <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
-                  Add Device
-                </div>
-              </div>
+              </CreateDevice>
 
-              <div className="flex gap-2 items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black group">
+              <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black group">
                 {/* Icon Section */}
                 <div className="rounded-full border border-gray-400 p-1 border-dashed group-hover:border-white">
                   <RefreshCw className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />

@@ -23,6 +23,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
               image={data?.image}
               title={data?.title ?? "N/A"}
               description={data?.description ?? "N/A"}
+              manager={data.manager}
             />
             <TeamActions teamId={data?._id! ?? "N/A"} />
           </div>

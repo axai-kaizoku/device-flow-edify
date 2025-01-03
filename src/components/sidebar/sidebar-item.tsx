@@ -48,7 +48,7 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
         >
           {label === "Dashboard" ? (
             <LayoutDashboard className="w-5 h-5" />
-          ) : label === "Teams" ? (
+          ) : label === "Teams" || label === "Team" ? (
             <Users className="w-5 h-5" />
           ) : label === "Assets" ? (
             <Smartphone className="w-5 h-5" />

@@ -1,3 +1,4 @@
+"use client";
 import { Device } from "@/server/deviceActions";
 import { User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
@@ -42,16 +43,16 @@ export const AssetsSection = ({ user }: { user: User }) => {
             </div>
           ))}
 
-          {totalAssets > 2 && (
+          {totalAssets! > 2 && (
             <div className="text-[#9B9B9B] font-gilroySemiBold text-lg my-2 text-center">
-              +{totalAssets - 2} more
+              +{totalAssets! - 2} more
             </div>
           )}
 
           <button
             className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-3 rounded-full"
             onClick={() => {
-              router.push("/assets");
+              router.push("/devices");
             }}
           >
             Manage Assets

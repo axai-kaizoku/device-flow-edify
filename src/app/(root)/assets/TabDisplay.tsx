@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import { useQueryState } from "nuqs";
 import { Search, Download } from "lucide-react"; // Importing icons from lucide-react
 
@@ -15,17 +15,19 @@ import { DeviceResponse } from "@/server/deviceActions";
 import {
   assignedAssets,
   devicesFields,
+  devicesFilterFields,
   filterDevice,
   inActiveAssets,
   unAssignedAssets,
 } from "@/server/filterActions";
 import useAlert from "@/hooks/useAlert";
 import { GlobalAlert } from "@/components/global-alert";
+
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
 const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
 
-function TabDisplay({ data }: { data?: DeviceResponse }) {
+function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "assigned_assets",
   });
@@ -41,6 +43,24 @@ function TabDisplay({ data }: { data?: DeviceResponse }) {
   const [availableOperators, setAvailableOperators] =
     useState(generalOperators);
 
+  const filterModalRef = useRef<HTMLDivElement>(null);
+
+  // Close filter modal when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterModalRef.current &&
+        !filterModalRef.current.contains(event.target as Node)
+      ) {
+        setOpenFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const handleSearchAndFilter = async () => {
     // Combine search term and filters
     const query = {
@@ -103,19 +123,13 @@ function TabDisplay({ data }: { data?: DeviceResponse }) {
         return [f.field, f.operator, finalValue];
       });
 
-    if (newFilters.length === 0) {
-      showAlert();
-
-      return;
-    }
-
     setFilters(newFilters); // Set the new filters
     setOpenFilter(false); // Close filter modal
   };
 
   const handleResetFilters = () => {
-    setFilters([]); // Clear all filters
-    setSearchTerm("");
+    // setFilters([]); // Clear all filters
+    // setSearchTerm("");
     setFilterInputs([{ field: "", operator: "", value: "" }]); // Reset filters
   };
 
@@ -203,7 +217,7 @@ function TabDisplay({ data }: { data?: DeviceResponse }) {
         isFailure={true}
       />
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col  ">
         <h1 className="text-gray-400 font-gilroySemiBold text-lg">Assets</h1>
         <h2 className="text-3xl font-gilroyBold py-4">Manage Assets</h2>
         <div className="flex items-center justify-between">
@@ -227,17 +241,18 @@ function TabDisplay({ data }: { data?: DeviceResponse }) {
                 className="text-base bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
                 value={searchTerm || ""}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search issues..."
+                placeholder="Search assets..."
               />
             </div>
 
-            {/* Add Device */}
-            <div className="flex items-center relative gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Icons.tab_add_device />
-              <span className="text-sm font-gilroyMedium whitespace-nowrap">
-                <CreateDevice button={"Add Device"} />
-              </span>
-            </div>
+            <CreateDevice>
+              <div className="flex items-center relative gap-1 p-2 pr-3 text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Icons.tab_add_device className="text-black" />
+                <span className="text-sm font-gilroyMedium whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-medium rounded-lg ">
+                  Add Device
+                </span>
+              </div>
+            </CreateDevice>
 
             <div className="relative">
               <button
@@ -249,146 +264,146 @@ function TabDisplay({ data }: { data?: DeviceResponse }) {
               </button>
 
               {openFilter && (
-                <div className="absolute top-16 right-0 z-50">
-                  <>
-                    <div className="flex-col w-fit border border-gray-300 bg-white shadow-lg rounded-lg p-4 flex gap-3">
-                      <div className="flex flex-col gap-4">
-                        {filterInputs.map((filter, index) => (
-                          <div key={index} className="flex gap-2">
-                            <select
-                              value={filter.field}
-                              onChange={(e) =>
-                                handleFieldChange(index, e.target.value)
-                              }
-                              className="w-28 focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
-                            >
-                              <option value="">Select Field</option>
-                              {devicesFields.map((key) => (
-                                <option key={key} value={key}>
-                                  {key}
-                                </option>
-                              ))}
-                            </select>
-                            <select
-                              value={filter.operator}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  index,
-                                  "operator",
-                                  e.target.value
-                                )
-                              }
-                              className="w-[72px] focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
-                            >
-                              <option value="">Select Operator</option>
-                              {availableOperators.map((operator) => (
-                                <option key={operator} value={operator}>
-                                  {operator}
-                                </option>
-                              ))}
-                            </select>
-                            <input
-                              type="text"
-                              value={filter.value}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  index,
-                                  "value",
-                                  e.target.value
-                                )
-                              }
-                              className="w-28 focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
-                              placeholder="Enter filter value"
-                            />
-                            {index > 0 && (
-                              <svg
-                                onClick={() => removeFilter(index)}
-                                className="size-3 cursor-pointer"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="15"
-                                viewBox="0 0 16 15"
-                                fill="none"
-                              >
-                                <path
-                                  d="M1.81787 1.2684L14.4117 13.1024"
-                                  stroke="#AEAEAE"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                                <path
-                                  d="M13.8442 1.19273L2.30198 13.5789"
-                                  stroke="#AEAEAE"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        ))}
-                        <div className="h-[1px] bg-gray-200"></div>
-                        <div className="flex justify-between">
-                          <div
-                            onClick={addFilter}
-                            className="cursor-pointer flex justify-center items-center gap-1.5"
+                <div
+                  ref={filterModalRef}
+                  className="absolute top-16 right-0 z-50"
+                >
+                  <div className="flex-col w-fit border border-gray-300 bg-white shadow-xl rounded-lg p-6 flex gap-4">
+                    <div className="flex flex-col gap-6">
+                      {filterInputs.map((filter, index) => (
+                        <div key={index} className="flex gap-4 items-center">
+                          <select
+                            value={filter.field}
+                            onChange={(e) =>
+                              handleFieldChange(index, e.target.value)
+                            }
+                            className="w-40 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                           >
+                            <option value="">Select Field</option>
+                            {devicesFilterFields.map((key) => (
+                              <option key={key.value} value={key.value}>
+                                {key.label}
+                              </option>
+                            ))}
+                          </select>
+
+                          <select
+                            value={filter.operator}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "operator",
+                                e.target.value
+                              )
+                            }
+                            className="w-28  focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
+                          >
+                            <option value="">Select Operator</option>
+                            {availableOperators.map((operator) => (
+                              <option key={operator} value={operator}>
+                                {operator}
+                              </option>
+                            ))}
+                          </select>
+
+                          <input
+                            type="text"
+                            value={filter.value}
+                            onChange={(e) =>
+                              handleInputChange(index, "value", e.target.value)
+                            }
+                            className="w-32  focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
+                            placeholder="Enter filter value"
+                          />
+
+                          {index > 0 && (
                             <svg
-                              className="size-3 -mt-0.5 "
-                              width="19"
-                              height="18"
-                              viewBox="0 0 19 18"
-                              fill="none"
+                              onClick={() => removeFilter(index)}
+                              className="size-3 cursor-pointer text-gray-500 hover:text-gray-700 transition-all duration-200"
                               xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="15"
+                              viewBox="0 0 16 15"
+                              fill="none"
                             >
                               <path
-                                d="M1.80566 8.98486H17.4177"
-                                stroke="#7F7F7F"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                d="M1.81787 1.2684L14.4117 13.1024"
+                                stroke="#AEAEAE"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
-                                d="M9.61182 16.7909L9.61182 1.17883"
-                                stroke="#7F7F7F"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                d="M13.8442 1.19273L2.30198 13.5789"
+                                stroke="#AEAEAE"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
+                          )}
+                        </div>
+                      ))}
+                      <div className="h-[1px] bg-gray-200"></div>
+                      <div className="flex justify-between items-center">
+                        <div
+                          onClick={addFilter}
+                          className="cursor-pointer flex justify-center items-center gap-2 py-2 px-4 text-[#4A4A4A] hover:bg-[#F0F0F0] rounded-md transition-all duration-300"
+                        >
+                          <svg
+                            className="size-3 -mt-0.5"
+                            width="19"
+                            height="18"
+                            viewBox="0 0 19 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1.80566 8.98486H17.4177"
+                              stroke="#7F7F7F"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M9.61182 16.7909L9.61182 1.17883"
+                              stroke="#7F7F7F"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          <h1 className="text-sm font-gilroyRegular">
+                            Add Filter
+                          </h1>
+                        </div>
 
-                            <h1 className="text-[#7F7F7F] text-sm font-gilroyRegular">
-                              Add Filter
-                            </h1>
+                        <div className="flex gap-3">
+                          <div
+                            className="py-2 px-6 bg-[#F4F5F6] hover:bg-[#D1D7DB] text-sm rounded-md cursor-pointer transition-all duration-300"
+                            onClick={handleResetFilters}
+                          >
+                            Clear
                           </div>
-                          <div className="flex gap-2">
-                            <div
-                              className="py-0.5 flex justify-center bg-[#F4F5F6] hover:bg-[#C0C6CB]/50 items-center px-4  rounded-md text-sm font-gilroyRegular  cursor-pointer"
-                              onClick={handleResetFilters}
-                            >
-                              Clear
-                            </div>
-                            <div
-                              className="py-0.5 flex justify-center items-center bg-black cursor-pointer px-4 rounded-md text-sm font-gilroyRegular text-white"
-                              onClick={handleApplyFilters}
-                            >
-                              Apply
-                            </div>
+                          <div
+                            className="py-2 px-6 bg-black text-white text-sm rounded-md cursor-pointer transition-all duration-300 hover:bg-[#333333]"
+                            onClick={handleApplyFilters}
+                          >
+                            Apply
                           </div>
                         </div>
                       </div>
                     </div>
-                  </>
+                  </div>
                 </div>
               )}
             </div>
 
             {/* Download */}
-            <button className="flex items-center gap-1  p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            {/* <button className="flex items-center gap-1  p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={20} className="text-[#7F7F7F]" />
               <span className="text-sm font-gilroyMedium">Download</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

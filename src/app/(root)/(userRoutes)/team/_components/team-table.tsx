@@ -3,12 +3,12 @@ import { Table } from "@/components/wind/Table";
 import { updateUser, User } from "@/server/userActions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Pagination from "../../_components/pagination";
 import { useState } from "react";
 import { Team } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
 import EditUser from "@/app/(root)/people/[id]/_components/edit-user";
 import { DeleteUser } from "@/app/(root)/people/[id]/_components/delete-user";
+import Pagination from "@/app/(root)/teams/_components/pagination";
 // Import EditUser component
 
 const ITEMS_PER_PAGE = 6;
@@ -82,8 +82,8 @@ export default function TeamTable({ data }: { data: User[] }) {
             title: "Assets assigned",
             render: (data: User) => (
               <div className="text-center w-fit px-2 font-gilroySemiBold rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                {data?.devices?.length! > 0
-                  ? `${data.devices!.length} Assigned`
+                {data?.devices!?.length > 0
+                  ? `${data?.devices!.length} Assigned`
                   : "N/A"}
               </div>
             ),

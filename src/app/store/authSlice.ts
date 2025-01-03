@@ -30,7 +30,6 @@ export type UserData = {
     isPrimary: boolean;
   };
 };
-
 interface AuthState {
   isAuthenticated: boolean;
   userData: UserData | null;

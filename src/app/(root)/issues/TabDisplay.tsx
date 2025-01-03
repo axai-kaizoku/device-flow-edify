@@ -1,11 +1,12 @@
 "use client";
 
-import { Issues } from "@/server/issueActions";
+import { Issues, updateIssue } from "@/server/issueActions";
 import { useQueryState } from "nuqs";
 import { ArrowUpDown, Check, Download, Plus, Search } from "lucide-react";
 import { Tab } from "../teams/_components/Tab";
 import IssueTableDisplay from "./_components/IssueTableDisplay";
 import ClosedIssueTable from "./_components/ClosedIssues";
+import { useState } from "react";
 
 interface TabDisplayProps {
   issues: Issues[];
@@ -17,13 +18,22 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "open",
   });
+  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
+
+  const filteredIssues = searchTerm
+    ? issues.filter((issue) =>
+        Object.values(issue).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
+    : issues;
 
   const renderContent = () => {
     switch (activeTab) {
       case "open":
-        return <IssueTableDisplay data={issues} />;
+        return <IssueTableDisplay data={filteredIssues} />;
       case "closed":
-        return <ClosedIssueTable data={issues} />;
+        return <ClosedIssueTable data={filteredIssues} />;
       default:
         return null;
     }
@@ -32,7 +42,7 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   return (
     <>
       <div className="flex items-center justify-between ">
-        <div className="flex items-center -mb-9  w-full gap-12">
+        <div className="flex items-center -mb-8  w-full gap-12">
           <Tab
             active={activeTab === "open"}
             onClick={() => {
@@ -57,6 +67,8 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
               className="text-sm bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
               placeholder="Search Issues"
               style={{ color: "#7F7F7F" }}
+              value={searchTerm || ""}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -69,20 +81,19 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
             </div>
           )}
 
-          <div className="flex justify-between items-center gap-2 text-nowrap px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full">
+          {/* <div className="flex justify-between items-center gap-2 text-nowrap px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full">
             <ArrowUpDown className="text-[#7F7F7F] size-6" />
             <div className="font-gilroyMedium text-base text-[#7F7F7F]">
               Sort By
             </div>
-          </div>
+          </div> */}
 
-          <button className="flex items-center gap-2 px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full hover:text-black hover:border-black transition-all duration-300">
+          {/* <button className="flex items-center gap-2 px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full hover:text-black hover:border-black transition-all duration-300">
             <Download className="size-6 text-[#7F7F7F]" />{" "}
-            {/* Lucide icon for download */}
             <span className="text-base font-gilroyMedium text-[#7F7F7F]">
               Download
             </span>
-          </button>
+          </button> */}
         </div>
       </div>
 

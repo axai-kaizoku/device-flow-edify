@@ -16,6 +16,14 @@ export type Team = {
   updatedAt?: string;
   orgId?: string | null;
   __v?: number;
+  manager: {
+    _id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    image: string;
+  }[];
 };
 
 export type TeamsResponse = {
