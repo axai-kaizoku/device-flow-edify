@@ -322,7 +322,9 @@ export const Table = ({
               <TableHeader>
                 <TableHeadRow>
                   {checkboxSelection && (
-                    <TableCell style={{ textAlign: "left", marginLeft:"12px" }}>
+                    <TableCell
+                      style={{ textAlign: "left", marginLeft: "12px" }}
+                    >
                       <Checkbox
                         value="master"
                         size="lg"

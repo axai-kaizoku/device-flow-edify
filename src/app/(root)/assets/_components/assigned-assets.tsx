@@ -30,11 +30,11 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
 
   return (
     <>
-      <div className="rounded-[33px] border border-[#C3C3C34F] px-7 py-5 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 flex flex-col gap-5">
+      <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           {" "}
-          <div className=" flex gap-2 w-fit">
-            <h1 className="text-xl px-6 font-gilroySemiBold">Total Assets</h1>
+          <div className=" flex gap-3 w-fit">
+            <h1 className="text-xl pl-6 font-gilroySemiBold">Total Assets</h1>
             <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
               {data?.totalCount} Assets
             </h1>
@@ -52,7 +52,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                     title: "Device",
                     render: (data: Device) => (
                       <div
-                        className="w-28 justify-start flex items-center gap-2 cursor-pointer"
+                        className=" justify-start flex items-center gap-2 cursor-pointer"
                         onClick={() => router.push(`/assets/${data?._id}`)}
                       >
                         <img
@@ -91,7 +91,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                       return <div>{formattedDate}</div>;
                     },
                   },
-                  { title: "Team", dataIndex: "team" },
+                  { title: "Team", dataIndex: "userName" },
                   { title: "Serial Number", dataIndex: "serial_no" },
                   {
                     title: "Asset health",
@@ -111,7 +111,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                       }
                       return (
                         <span
-                          className={`${color} px-2 py-0.5-1 w-fit flex justify-center items-center rounded-full`}
+                          className={`${color} px-3 py-0.5-1 w-fit flex justify-center items-center rounded-full`}
                         >
                           {record?.brand}
                         </span>
@@ -124,8 +124,8 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                       <span
                         className={`${
                           record?.warranty_status
-                            ? "text-[#027A48] px-2 py-0.5-1 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
-                            : "text-[#F00] px-2 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
+                            ? "text-[#027A48] px-3 py-0.5-1 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
+                            : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
                         }`}
                       >
                         {record?.warranty_status ? "Active" : "Inactive"}
@@ -135,12 +135,12 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                   {
                     title: "",
                     render: (record) => (
-                      <div className="flex gap-8 justify-center items-center">
+                      <div className="flex gap-5 -ml-2 items-center">
                         <SoftDeleteAsset id={record?._id}>
                           <Icons.table_delete className="size-6" />
                         </SoftDeleteAsset>
                         <Link href={`/assets/${record?._id}`}>
-                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-lg py-0.5 px-6">
+                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                             Manage
                           </div>
                         </Link>
@@ -149,11 +149,13 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                   },
                 ]}
               />
-              <Pagination
-                currentPage={currentPage}
-                totalItems={data.devices?.length}
-                onPageChange={handlePageChange}
-              />
+              <div className="mt-1">
+                <Pagination
+                  currentPage={currentPage}
+                  totalItems={data.devices?.length}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
           </Suspense>
         </div>

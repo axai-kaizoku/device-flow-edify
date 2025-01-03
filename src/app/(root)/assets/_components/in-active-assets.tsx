@@ -99,7 +99,7 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                           color = "text-[#FF8000] bg-[#FFFACB]";
                       }
                       return (
-                        <span className={`${color} px-2 py-1  rounded-full`}>
+                        <span className={`${color} px-3 py-1  rounded-full`}>
                           {record?.brand ? record?.brand : <>-</>}
                         </span>
                       );
@@ -111,8 +111,8 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                       <span
                         className={`${
                           record?.warranty_status
-                            ? "text-[#027A48] px-2 py-1 rounded-full bg-[#ECFDF3]"
-                            : "text-[#F00] rounded-full px-2 py-1  bg-[#FFE0E0] "
+                            ? "text-[#027A48] px-3 py-1 rounded-full bg-[#ECFDF3]"
+                            : "text-[#F00] rounded-full px-3 py-1  bg-[#FFE0E0] "
                         }`}
                       >
                         {record?.warranty_status ? "Active" : "Inactive"}
@@ -138,11 +138,13 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                 ]}
               />
               {/* Pagination Control */}
-              <Pagination
-                currentPage={currentPage}
-                totalItems={data?.devices?.length}
-                onPageChange={handlePageChange}
-              />
+              <div className="mt-1">
+                <Pagination
+                  currentPage={currentPage}
+                  totalItems={data?.devices?.length}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
           </Suspense>
         </div>

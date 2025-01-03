@@ -217,11 +217,13 @@ function TabDisplay() {
         isFailure={true}
       />
 
-      <div className="flex flex-col  ">
-        <h1 className="text-gray-400 font-gilroySemiBold text-lg">Assets</h1>
-        <h2 className="text-3xl font-gilroyBold py-4">Manage Assets</h2>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center w-full -mb-8 gap-12">
+      <div className="flex flex-col  pt-[14px]">
+        <h1 className="text-gray-400 font-gilroyMedium text-lg">Assets</h1>
+        <h2 className="text-3xl font-gilroySemiBold pt-[10px]">
+          Manage Assets
+        </h2>
+        <div className="flex items-center justify-between -mt-2">
+          <div className="flex items-center w-full -mb-9 gap-12 -mt-1">
             {tabs?.map((tab) => (
               <Tab
                 key={tab?.key}
@@ -234,11 +236,11 @@ function TabDisplay() {
 
           <div className="flex gap-2 relative">
             {/* Search */}
-            <div className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Search size={20} className="text-[#7F7F7F]" />
 
               <input
-                className="text-base bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
+                className=" bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
                 value={searchTerm || ""}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search assets..."
@@ -246,9 +248,9 @@ function TabDisplay() {
             </div>
 
             <CreateDevice>
-              <div className="flex items-center relative gap-1 p-2 pr-3 text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <Icons.tab_add_device className="text-black" />
-                <span className="text-sm font-gilroyMedium whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Icons.tab_add_device className="text-black size-5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Add Device
                 </span>
               </div>
@@ -257,10 +259,10 @@ function TabDisplay() {
             <div className="relative">
               <button
                 onClick={() => setOpenFilter(!openFilter)}
-                className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
+                className="flex items-center  py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
               >
-                <Icons.tab_filter />
-                <span className="text-base font-gilroyMedium">Filter</span>
+                <Icons.tab_filter className="size-5" />
+                <span className="text-base font-gilroyMedium pr-1">Filter</span>
               </button>
 
               {openFilter && (

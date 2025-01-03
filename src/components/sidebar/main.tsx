@@ -15,7 +15,7 @@ export default function SidebarMain({ session }: Props) {
     <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen bg-transparent">
       {session?.user.user.role === 2 ? (
         <>
-          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full">
+          <div className="absolute top-0 flex flex-col mx-auto justify-end gap-8 w-full">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
@@ -31,7 +31,7 @@ export default function SidebarMain({ session }: Props) {
               <div></div>
             )}
 
-            <div className="flex flex-col gap-2 mx-auto">
+            <div className="flex flex-col gap-2 mx-auto mt-2">
               {SIDEBAR.AdminPages.map((page, i) => (
                 <SidebarItem
                   href={page.path}
@@ -59,7 +59,7 @@ export default function SidebarMain({ session }: Props) {
               ))} */}
             </div>
 
-            <div className="flex gap-2 flex-col">
+            <div className="flex gap-2 flex-col pt-8">
               <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"

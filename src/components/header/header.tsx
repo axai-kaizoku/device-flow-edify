@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
 import CreateUser from "@/app/(root)/people/_components/create-user";
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
+import { Icons } from "../icons";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
@@ -49,18 +50,17 @@ export default function Header({ session }: Props) {
   return (
     <>
       {session ? (
-        <header className="fixed top-0 font-gilroyRegular py-12 left-0 w-full h-16 bg-transparent backdrop-blur-3xl z-50 flex justify-between items-center px-12 ">
+        <header className="fixed  top-0 font-gilroyRegular py-12 left-0 w-full h-14 bg-transparent backdrop-blur-3xl z-50 flex justify-between items-center px-12 ">
           {/* Logo Section */}
-          <div className="flex items-center gap-2 pl-2">
-            <Image
-              src="/media/logo/logo.png"
+          <div className="flex items-center gap-2">
+            <img
+              src="/media/Deviceflow.png"
               alt="Logo"
-              width={107.3}
-              height={30.77}
-              className="mr-4"
+              className="2xl:w-[170px] w-[150px] 2xl:h-10 h-9"
             />
+            {/* <Icons.main_Logo /> */}
 
-            {pathname === "/" && session?.user.user.role === 1 ? (
+            {/* {pathname === "/" && session?.user.user.role === 1 ? (
               <div className="border-0 border-l-2 pl-4">Home</div>
             ) : pathname === "/" && session?.user.user.role === 2 ? (
               <div className="border-0 border-l-2 pl-4">Dashboard</div>
@@ -86,48 +86,48 @@ export default function Header({ session }: Props) {
               <div className="border-0 border-l-2 pl-4">Settings</div>
             ) : (
               <div></div>
-            )}
+            )} */}
           </div>
 
           {/* Middle Search and Actions */}
-          <div className="flex justify-center items-center ">
-            <div className="flex items-center gap-x-4 lg:gap-x-2 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.5rem] px-1.5 py-1.5">
+          <div className="flex justify-center items-center ml-16">
+            <div className="flex items-center gap-x-4 lg:gap-x-1 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.6rem] px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent flex items-center gap-2 border border-gray-400 rounded-[calc(2.5rem+1px)] p-2">
+              <div className="bg-transparent flex items-center gap-2 border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
                 <Icon type="OutlinedSearch" color="gray" />
                 <input
                   type="text"
-                  placeholder="Search"
-                  className="flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500"
+                  placeholder="Search anything..."
+                  className="flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px]"
                 />
               </div>
 
               {/* Action Buttons */}
               <CreateDevice>
-                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black hover:text-white hover:border-white group">
+                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black hover:text-white hover:border-white group">
                   <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
                     <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
                   </div>
-                  <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
+                  <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Add Device
                   </div>
                 </div>
               </CreateDevice>
 
-              <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black group">
+              <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group">
                 {/* Icon Section */}
                 <div className="rounded-full border border-gray-400 p-1 border-dashed group-hover:border-white">
                   <RefreshCw className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
                 </div>
 
                 {/* Text Section */}
-                <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
+                <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                   Re/Assign
                 </div>
               </div>
 
               <div
-                className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[0.43rem] hover:bg-black group hover:text-white hover:border-white"
+                className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white"
                 onClick={() => {
                   router.push("/people");
                 }}
@@ -136,7 +136,7 @@ export default function Header({ session }: Props) {
                   <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
                 </div>
                 <CreateUser>
-                  <div className="text-gray-500 group-hover:text-white text-nowrap xl:text-base lg:text-sm 2xl:text-base">
+                  <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Add Employee
                   </div>
                 </CreateUser>
@@ -145,28 +145,28 @@ export default function Header({ session }: Props) {
           </div>
 
           {/* Right Icons Section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             {/* Notification Icon */}
-            <button className="w-10 h-10 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full">
-              <Bell />
+            <button className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full">
+              <Bell className="size-5" />
             </button>
 
             {/* Settings Icon */}
             <button
               onClick={() => router.push("/settings")}
-              className="w-10 h-10 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
+              className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
             >
-              <Settings />
+              <Settings className="size-5" />
             </button>
 
             {/* Query Icon */}
-            <button className="w-10 h-10 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full">
-              <CircleHelp />
+            <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
+              <CircleHelp className="size-5" />
             </button>
 
             {/* Profile Icon */}
-            <button className="w-10 h-10 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full">
-              <UserRound />
+            <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
+              <UserRound className="size-5" />
             </button>
           </div>
         </header>

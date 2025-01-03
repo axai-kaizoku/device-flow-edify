@@ -193,11 +193,11 @@ function TabDisplay({ data }: { data?: UserResponse }) {
         description="Something went wrong !!"
         isFailure={true}
       />
-      <div className="flex flex-col ">
+      <div className="flex flex-col pt-[14px]">
         <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">People</h1>
-        <h1 className="text-3xl font-gilroyBold py-2">Manage People</h1>
+        <h1 className="text-3xl pt-[10px] font-gilroyBold ">Manage People</h1>
         <div className="flex items-center justify-between ">
-          <div className="flex items-center w-full -mb-8 gap-12">
+          <div className="flex items-center w-full -mb-9 -mt-1 gap-12">
             {tabs?.map((tab) => (
               <Tab
                 key={tab?.key}
