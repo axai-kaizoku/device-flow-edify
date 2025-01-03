@@ -21,17 +21,17 @@ export default async function AdminDashboard() {
 
   return (
     <CombinedContainer title="Admin Dashboard">
-      <div className="flex gap-3 ">
-        <div style={{ width: "75%" }} className="flex justify-between gap-[0.6rem] flex-wrap ">
-          <div style={{ width: "50%" }}>
+      <div className="flex gap-3">
+        <div style={{ width: "75%" }} className="flex justify-between gap-3 flex-wrap ">
+          <div style={{ width: "49%" }}>
             <AssetsHealth />
           </div>
-          <div style={{ width: "48%" }}>
+          <div style={{ width: "49%" }}>
             <AssetsCount />
           </div>
-          <div className="flex gap-5 w-[100%]">
+          <div className="flex gap-4 w-[100%]">
             <ManageIssue />
-            <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col gap-5 ">
               <Members />
               <Teams />
             </div>
