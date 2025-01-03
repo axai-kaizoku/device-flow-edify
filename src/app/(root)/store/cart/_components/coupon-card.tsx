@@ -23,7 +23,7 @@ export const CouponCard = ({ coupon, key, selected, onClick }: CouponCardProps) 
         </div>
 
         <div className="gap-[3px] pl-4 flex flex-col w-full border border-l-2 border-[rgba(102,102,102,0.40)] border-r-0 border-y-0 border-dashed">
-          <div className="text-2xl font-semibold text-black">{coupon?.discount}</div>
+          <div className="text-2xl font-gilroySemiBold text-black">{coupon?.discount}</div>
           <div className="text-xs font-gilroyRegular text-[#6C6C6C]">{coupon?.description}</div>
           <div className="text-[10px] text-[#6c6c6c9e]">{coupon?.validity}</div>
         </div>

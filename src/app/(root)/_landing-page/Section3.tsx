@@ -40,7 +40,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
@@ -96,7 +96,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
@@ -150,7 +150,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
@@ -206,7 +206,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
@@ -260,7 +260,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
@@ -316,7 +316,7 @@ export const Section3 = () => {
                 <img src='/media/landingPage/device-flow-1.png'   />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-medium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>

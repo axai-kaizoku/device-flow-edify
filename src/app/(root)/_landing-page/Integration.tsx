@@ -5,7 +5,7 @@ export function Integration({}) {
         <div className="w-[692px] text-4xl font-bold leading-[44px] tracking-[-0.32px] text-gray-950">
           Upcoming Integrations
         </div>
-        <div className="flex items-end justify-center self-stretch px-56 pt-2 text-xl font-medium leading-[30px]">
+        <div className="flex items-end justify-center self-stretch px-56 pt-2 text-xl font-gilroyMedium leading-[30px]">
           <p className="text-center">
             Soon DeviceFlow will works seamlessly with your favorite apps. Use
             over 500 tools and apps by just one click.

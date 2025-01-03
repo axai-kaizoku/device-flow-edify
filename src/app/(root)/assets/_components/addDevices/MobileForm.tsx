@@ -90,7 +90,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="text-2xl font-medium py-5">Select OS</h1>
+      <h1 className="text-2xl font-gilroyMedium py-5">Select OS</h1>
 
       <div className={`flex justify-between items-center flex-wrap gap-4 w-full ${!errors?.os && "mb-7" }`}>
         {deviceType === "mobile" &&
@@ -112,11 +112,11 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
                 className="mr-3 h-4 w-4 mt-1 accent-black sr-only"
               />
               <label htmlFor={os?.id} className="flex flex-col">
-                <p className="flex items-center font-medium gap-2 text-xl">
+                <p className="flex items-center font-gilroyMedium gap-2 text-xl">
                   {os?.icon}
                   {os?.name}
                 </p>
-                <span className="text-xs text-[#C8C8C8] font-medium">
+                <span className="text-xs text-[#C8C8C8] font-gilroyMedium">
                   {os?.description}
                 </span>
               </label>

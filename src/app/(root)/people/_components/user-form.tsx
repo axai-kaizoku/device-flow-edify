@@ -211,7 +211,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       <div className="flex justify-center items-center">
         <div className="flex flex-col w-[93%] h-[80%] justify-start items-center">
           <div className="flex flex-col gap-5 pb-5 w-full">
-            <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-semibold">
+            <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
               <div className="bg-black rounded-full  size-14 p-2 flex justify-center items-center">
                 <Icons.user_form_icon />
               </div>
@@ -220,7 +220,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
               </span>
             </div>
             <div className="w-full flex flex-col gap-1">
-              <div className="font-semibold text-lg text-black">
+              <div className="font-gilroySemiBold text-lg text-black">
                 {next === 0 ? "Step 0 of 1" : "Step 1 of 1"}
               </div>
               <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
@@ -246,7 +246,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   <>
                     <div className="flex items-center justify-center ">
                       <div className="border-t border-[#B1B1B1] w-7"></div>
-                      <span className="mx-4 font-semibold text-lg text-[#5F5F5F]">
+                      <span className="mx-4 font-gilroySemiBold text-lg text-[#5F5F5F]">
                         OR
                       </span>
                       <div className="border-t border-[#B1B1B1] w-7"></div>

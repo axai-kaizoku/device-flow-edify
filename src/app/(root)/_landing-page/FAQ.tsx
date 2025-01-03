@@ -6,15 +6,15 @@ export const FAQ = () => {
       <div className="text-center text-4xl font-bold leading-[44px] tracking-[-0.32px] text-gray-950">
         Got Questions? We Have Answers
       </div>
-      <div className="self-stretch text-center text-xl font-medium leading-[30px] text-gray-500">
+      <div className="self-stretch text-center text-xl font-gilroyMedium leading-[30px] text-gray-500">
         Everything you need to know about DeviceFlow
       </div>
       <div className="flex flex-wrap items-start justify-center gap-x-6 gap-y-3 pt-1 min-[1430px]:flex-nowrap">
         <div className="flex w-[580px] flex-shrink-0 flex-col gap-y-2">
-          <div className="text-lg font-semibold leading-7 text-gray-950">
+          <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
             What is DeviceFlow?
           </div>
-          <div className="flex items-start font-medium leading-6 text-gray-500">
+          <div className="flex items-start font-gilroyMedium leading-6 text-gray-500">
             <p>
               DeviceFlow is a comprehensive IT asset management tool designed to
               help startups and businesses manage devices, onboard/offboard
@@ -47,7 +47,7 @@ export const FAQ = () => {
       </div>
       <div className="flex flex-wrap items-start justify-center border-t border-solid border-gray-300 pt-9 gap-x-6 gap-y-3 pt-1 min-[1430px]:flex-nowrap">
         <div className="flex w-[580px] flex-shrink-0 flex-col gap-y-2">
-          <div className="text-lg font-semibold leading-7 text-gray-950">
+          <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
             Who is DeviceFlow for?
           </div>
         </div>
@@ -76,7 +76,7 @@ export const FAQ = () => {
       </div>
       <div className="flex flex-wrap items-start justify-center border-t border-solid border-gray-300 pt-9 gap-x-6 gap-y-3 pt-1 min-[1430px]:flex-nowrap">
         <div className="flex w-[580px] flex-shrink-0 flex-col gap-y-2">
-          <div className="text-lg font-semibold leading-7 text-gray-950">
+          <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
             What makes DeviceFlow different?
           </div>
         </div>
@@ -105,7 +105,7 @@ export const FAQ = () => {
       </div>
       <div className="flex flex-wrap items-start justify-center border-t border-solid border-gray-300 pt-9 gap-x-6 gap-y-3 pt-1 min-[1430px]:flex-nowrap">
         <div className="flex w-[580px] flex-shrink-0 flex-col gap-y-2">
-          <div className="text-lg font-semibold leading-7 text-gray-950">
+          <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
             Is DeviceFlow compatible with my existing tools?
           </div>
         </div>
@@ -134,7 +134,7 @@ export const FAQ = () => {
       </div>
       <div className="flex flex-wrap items-start justify-center border-t border-solid border-gray-300 pt-9 gap-x-6 gap-y-3 pt-1 min-[1430px]:flex-nowrap">
         <div className="flex w-[580px] flex-shrink-0 flex-col gap-y-2">
-          <div className="text-lg font-semibold leading-7 text-gray-950">
+          <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
             Can I try DeviceFlow before purchasing?
           </div>
         </div>
@@ -161,7 +161,7 @@ export const FAQ = () => {
           />
         </svg>
       </div>
-      <div className="pt-3 text-center text-sm font-semibold leading-normal underline">
+      <div className="pt-3 text-center text-sm font-gilroySemiBold leading-normal underline">
         View more
       </div>
     </div>

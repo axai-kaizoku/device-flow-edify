@@ -20,14 +20,14 @@ export default function Login() {
           <div className="flex h-[53px] flex-shrink-0 items-center justify-center text-[45px] font-bold leading-[53px] tracking-[-1.72px] text-gray-950" >
             <p className="text-center">
               {"Welcome Again! "}
-              <span className="text-[31px] font-semibold leading-[53px]">
+              <span className="text-[31px] font-gilroySemiBold leading-[53px]">
                 👋
               </span>
             </p>
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center px-16 font-medium leading-[26px] tracking-[0px] text-zinc-600" >
+      <div className="flex items-center justify-center px-16 font-gilroyMedium leading-[26px] tracking-[0px] text-zinc-600" >
         <p className="text-center" style={{fontSize: 15}}>
           Log in to access your account and manage your assets effortlessly with DeviceFlow.
         </p>

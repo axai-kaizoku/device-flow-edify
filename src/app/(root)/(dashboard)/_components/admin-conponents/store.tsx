@@ -1,7 +1,7 @@
 export const DashboardStore = () => {
     return(
         <div className={`z-0 flex w-full items-start rounded-3xl `}>
-      <div className="font-gilroy relative flex h-full w-full flex-shrink-0 flex-col gap-y-2 overflow-clip rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white px-3.5 pb-[15px] pt-3 font-medium tracking-[0px]" >
+      <div className="font-gilroy relative flex h-full w-full flex-shrink-0 flex-col gap-y-2 overflow-clip rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white px-3.5 pb-[15px] pt-3 font-gilroyMedium tracking-[0px]" >
         <div className="bg-dell__inspiron_2in-1_16_oled_touch_laptop_12th_gen_intel_core_i-7_16gb_memory_512gb_ssd_nv absolute bottom-0 right-0 z-0 h-24 max-h-full w-[121px] max-w-full flex-shrink-0 bg-no-repeat [background-position:0px_0px] [background-size:186%_160%]" />
         <div className="relative z-[2] flex items-center justify-center pr-1.5" >
           <div className="z-[1] flex flex-grow flex-col gap-y-[5.1px] pl-[0.24px]" >
@@ -30,7 +30,7 @@ export const DashboardStore = () => {
           </div>
           <div className="absolute right-0 top-3.5 z-[2] flex h-7 w-[73px] flex-shrink-0 flex-col items-center" >
             <div className="flex items-center justify-center gap-x-[7px] rounded-[57px] bg-black px-[18px] py-[6.5px]" >
-              <div className="text-[13px] font-semibold leading-[normal] text-white" >
+              <div className="text-[13px] font-gilroySemiBold leading-[normal] text-white" >
                 Visit
               </div>
               <div className="flex flex-col items-center">

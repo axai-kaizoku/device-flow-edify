@@ -71,7 +71,7 @@ const AddressSection = ({ cart, allAddresses }: AddressSectionProps) => {
                     </div>
 
                     <div className="font-gilroyMedium text-base text-[#17183B] mt-3">
-                      <span className="font-semibold">Contact</span> - {address?.phone}
+                      <span className="font-gilroySemiBold">Contact</span> - {address?.phone}
                     </div>
                   </div>
                 </div>

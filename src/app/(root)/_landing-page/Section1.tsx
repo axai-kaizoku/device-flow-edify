@@ -8,7 +8,7 @@ export const Section1 = (cardsRef: any, boxRef: any) => {
           }
         >
           <div className=" flex flex-grow flex-wrap items-center justify-center gap-x-2.5 gap-y-[9px] min-[1355px]:flex-nowrap">
-            <div className="font-gilroy flex h-[18px] w-[1285px] flex-shrink-0 items-center justify-center text-center text-lg font-semibold leading-[18px] tracking-[0px] text-white">
+            <div className="font-gilroy flex h-[18px] w-[1285px] flex-shrink-0 items-center justify-center text-center text-lg font-gilroySemiBold leading-[18px] tracking-[0px] text-white">
               <p>
                 {
                   "Welcome to the club!! Join the BETA program to get all the new updates  "
@@ -46,14 +46,14 @@ export const Section1 = (cardsRef: any, boxRef: any) => {
               <div>Pricing</div>
               <div>Blog</div>
             </div>
-            <div className="pl-3 font-medium underline">Log in</div>
+            <div className="pl-3 font-gilroyMedium underline">Log in</div>
           </div>
           <div
             className={
               "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 px-[15px] py-[11px]"
             }
           >
-            <div className="font-gilroy text-center font-semibold leading-6 tracking-[-0.2px] text-white">
+            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white">
               <span>
                 {"Register for "}
                 Beta
@@ -75,7 +75,7 @@ export const Section1 = (cardsRef: any, boxRef: any) => {
         <div className="fade-in fltopex w-[826px] items-center justify-center text-center text-[60px] font-bold leading-[88px] tracking-[-3.6px] text-neutral-800">
           <p>Streamline IT Asset Management with DeviceFlow</p>
         </div>
-        <div className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-medium leading-8 tracking-[-0.3px] text-[darkgray]">
+        <div className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-[darkgray]">
           <p>
             Simplify your office's IT workflows with seamless asset, user, and
             inventory management.
@@ -83,13 +83,13 @@ export const Section1 = (cardsRef: any, boxRef: any) => {
         </div>
         <div className="fade-in flex items-center justify-center self-stretch">
           <div className="flex items-center justify-end pl-9">
-            <div className="flex items-center justify-center gap-x-3 text-center font-semibold leading-6 tracking-[-0.2px]">
+            <div className="flex items-center justify-center gap-x-3 text-center font-gilroySemiBold leading-6 tracking-[-0.2px]">
               <div
                 className={
                   "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 px-[15px] py-[11px]"
                 }
               >
-                <div className="font-gilroy text-center font-semibold leading-6 tracking-[-0.2px] text-white">
+                <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white">
                   <span>
                     {"Register for "}
                     Beta

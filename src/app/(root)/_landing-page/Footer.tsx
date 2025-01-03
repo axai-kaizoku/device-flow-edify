@@ -25,7 +25,7 @@ export function Footer({}) {
                 <div>Company</div>
                 <div>Support</div>
               </div>
-              <div className="font-gilroy font-medium leading-6 tracking-[-0.2px]">
+              <div className="font-gilroy font-gilroyMedium leading-6 tracking-[-0.2px]">
                 Ready to grow?
               </div>
             </div>

@@ -77,7 +77,7 @@ const DetailSection = () => {
               <div className="text-[#1D2939] text-lg 2xl:text-xl font-gilroySemiBold">
                 $1000.00
               </div>
-              <div className="text-[#667085] text-[14px] 2xl:text-base font-medium text-right">
+              <div className="text-[#667085] text-[14px] 2xl:text-base font-gilroyMedium text-right">
                 Qty: 1
               </div>
             </div>
@@ -109,7 +109,7 @@ const DetailSection = () => {
               <div className="text-[#1D2939] text-lg 2xl:text-xl font-gilroySemiBold">
                 $1000.00
               </div>
-              <div className="text-[#667085] text-[14px] 2xl:text-base font-medium text-right">
+              <div className="text-[#667085] text-[14px] 2xl:text-base font-gilroyMedium text-right">
                 Qty: 1
               </div>
             </div>

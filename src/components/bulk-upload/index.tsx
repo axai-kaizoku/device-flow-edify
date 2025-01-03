@@ -140,7 +140,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
       </div>
 
       {csvError && (
-        <p className="text-red-500 text-sm font-medium transition-all duration-300 mb-4">
+        <p className="text-red-500 text-sm font-gilroyMedium transition-all duration-300 mb-4">
           {csvError}
         </p>
       )}

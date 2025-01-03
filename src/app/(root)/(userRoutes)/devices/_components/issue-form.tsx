@@ -165,7 +165,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       <div className="flex justify-center items-start w-full h-full">
         <div className="flex flex-col w-[95%] h-[80%] justify-start items-start">
           <div className="flex flex-col gap-5 pb-5 w-full">
-            <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-semibold">
+            <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
               <div className="bg-black rounded-full  size-12 p-2 flex justify-center items-center">
                 <Icons.issue_form_icon />
               </div>
@@ -174,7 +174,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
               </span>
             </div>
             <div className="w-full flex flex-col gap-1">
-              <div className="font-semibold text-lg text-black">
+              <div className="font-gilroySemiBold text-lg text-black">
                 {next === 0 ? "Step 0 of 1" : "Step 1 of 1"}
               </div>
               <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
@@ -192,14 +192,14 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     <img src="/media/mac-2.png" alt="Asset-1" />
                   </div>
                   <div>
-                    <div className="font-semibold text-xl">
+                    <div className="font-gilroySemiBold text-xl">
                       {device?.device_name ?? ""}
                     </div>
                     <div className="text-[#7C7C7C] font-gilroyRegular text-sm">
                       {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{" "}
                       {device?.serial_no ?? "N/A"}
                     </div>
-                    <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-medium text-[#027A48] mt-1 max-w-16 w-fit">
+                    <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-gilroyMedium text-[#027A48] mt-1 max-w-16 w-fit">
                       <div>{device?.device_type ?? "N/A"}</div>
                     </div>
                   </div>
@@ -352,7 +352,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                             <div className="font-gilroySemiBold text-lg text-black">
                               {v.title ?? ""}
                             </div>
-                            <div className="font-medium text-[#7C7C7C] text-xs">
+                            <div className="font-gilroyMedium text-[#7C7C7C] text-xs">
                               {v.desc ?? ""}
                             </div>
                           </div>
@@ -391,7 +391,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     />
                     {formData.images.length > 0 && (
                       <div className="mt-2">
-                        <h4 className="font-medium text-sm">Uploaded Files:</h4>
+                        <h4 className="font-gilroyMedium text-sm">Uploaded Files:</h4>
                         <ul className="list-disc pl-5">
                           {formData.images.map((image, index) => (
                             <li

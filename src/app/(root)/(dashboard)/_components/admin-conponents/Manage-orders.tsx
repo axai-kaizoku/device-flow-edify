@@ -4,7 +4,7 @@ export const ManageOrders = () => {
       className={`font-gilroy flex w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-4 tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
-        <div className="text-sm font-semibold leading-[23px]">Orders</div>
+        <div className="text-sm font-gilroySemiBold leading-[23px]">Orders</div>
       </div>
       
       <div className="self-stretch pr-[0.8px] pt-[3px]">
@@ -29,6 +29,7 @@ export const ManageOrders = () => {
                     fontStyle: "normal",
                     fontWeight: 600,
                   }}
+                  className="font-gilroySemiBold"
                 >
                   Urgent Maintenance
                 </div>
@@ -106,6 +107,7 @@ export const ManageOrders = () => {
                     fontStyle: "normal",
                     fontWeight: 600,
                   }}
+                  className="font-gilroySemiBold"
                 >
                   Urgent Maintenance
                 </div>
@@ -183,6 +185,7 @@ export const ManageOrders = () => {
                     fontStyle: "normal",
                     fontWeight: 600,
                   }}
+                  className="font-gilroySemiBold"
                 >
                   Urgent Maintenance
                 </div>
@@ -260,6 +263,7 @@ export const ManageOrders = () => {
                     fontStyle: "normal",
                     fontWeight: 600,
                   }}
+                  className="font-gilroySemiBold"
                 >
                   Urgent Maintenance
                 </div>
@@ -337,6 +341,7 @@ export const ManageOrders = () => {
                     fontStyle: "normal",
                     fontWeight: 600,
                   }}
+                  className="font-gilroySemiBold"
                 >
                   Urgent Maintenance
                 </div>
@@ -394,7 +399,7 @@ export const ManageOrders = () => {
           </div>
         </div>
         <div className="flex items-center justify-center rounded-[49px] bg-black p-[9px]">
-          <div className="text-center text-sm font-semibold leading-[normal] text-white">
+          <div className="text-center text-sm font-gilroySemiBold leading-[normal] text-white">
             Manage Orders
           </div>
         </div>

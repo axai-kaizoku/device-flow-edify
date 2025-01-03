@@ -52,7 +52,7 @@ const AllReports = ({ index, report, closeBtn }: reportsForm) => {
         isFailure={true}
       />
       <div key={index} className="flex flex-col space-y-4">
-        <h2 className="text-3xl flex justify-start items-center gap-2 font-semibold">
+        <h2 className="text-3xl flex justify-start items-center gap-2 font-gilroySemiBold">
           {report?.title}
         </h2>
         {/* <p className="text-gray-600 mb-5 leading-relaxed">{report.description}</p> */}
@@ -64,7 +64,7 @@ const AllReports = ({ index, report, closeBtn }: reportsForm) => {
         ) : report?.title === "Inventory Devices Report" ? (
           <div className="flex flex-col">
             {/* <div className="my-4">
-						<label className="text-gray-700 font-medium text-lg">File Format :</label>  
+						<label className="text-gray-700 font-gilroyMedium text-lg">File Format :</label>  
 						<input type='text'
 						className='w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200'
 						value="CSV"
@@ -74,11 +74,11 @@ const AllReports = ({ index, report, closeBtn }: reportsForm) => {
 					</div> */}
 
             <div className="flex gap-2">
-              <button className="flex-1 font-semibold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
+              <button className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]">
                 Cancel
               </button>
               <button
-                className="flex-1 text-white bg-black rounded-[49px] font-semibold text-lg py-2.5"
+                className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
                 onClick={handleDownloadInventoryReport}
               >
                 Download

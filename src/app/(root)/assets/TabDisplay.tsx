@@ -248,7 +248,7 @@ function TabDisplay() {
             <CreateDevice>
               <div className="flex items-center relative gap-1 p-2 pr-3 text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
                 <Icons.tab_add_device className="text-black" />
-                <span className="text-sm font-gilroyMedium whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-medium rounded-lg ">
+                <span className="text-sm font-gilroyMedium whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Add Device
                 </span>
               </div>

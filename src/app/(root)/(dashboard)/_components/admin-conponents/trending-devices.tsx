@@ -4,7 +4,7 @@ export function TrendingDevices({}) {
       <div className="font-gilroy flex flex-grow flex-col items-center justify-center gap-y-[15px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-5 pl-[5.2px] pr-[4.7px] pt-[13px] leading-[normal] tracking-[0px] backdrop-blur-[24]">
         <div className="flex items-center justify-between gap-x-4 self-stretch pl-4 pr-8">
           <div className="flex flex-col items-center">
-            <div className="text-sm font-semibold leading-[23px]">
+            <div className="text-sm font-gilroySemiBold leading-[23px]">
               Trending devices
             </div>
           </div>
@@ -51,10 +51,10 @@ export function TrendingDevices({}) {
                 />
               </div>
               <div className="flex flex-col items-start gap-y-[1.9px]">
-                <div className="text-center text-lg font-semibold leading-[normal]">
+                <div className="text-center text-lg font-gilroySemiBold leading-[normal]">
                   Macbook Pro 2023
                 </div>
-                <div className="flex items-center gap-x-[2.8px] text-sm font-medium leading-[normal] text-[gray]">
+                <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">
                   <div>12GB</div>
                   <div className="flex flex-col items-center pb-[3.4px]">
                     {/* <Ellipse1 className="h-[2.9px] w-[2.9px] flex-shrink-0" /> */}
@@ -62,7 +62,7 @@ export function TrendingDevices({}) {
                   <div>512GB</div>
                 </div>
                 <div className="flex items-center pt-[1.9px]">
-                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-medium leading-[17px] text-green-700">
+                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-gilroyMedium leading-[17px] text-green-700">
                     New
                   </div>
                 </div>
@@ -91,10 +91,10 @@ export function TrendingDevices({}) {
                 />
               </div>
               <div className="flex flex-col items-start gap-y-[1.9px]">
-                <div className="text-center text-lg font-semibold leading-[normal]">
+                <div className="text-center text-lg font-gilroySemiBold leading-[normal]">
                   Macbook Pro 2023
                 </div>
-                <div className="flex items-center gap-x-[2.8px] text-sm font-medium leading-[normal] text-[gray]">
+                <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">
                   <div>12GB</div>
                   <div className="flex flex-col items-center pb-[3.4px]">
                     {/* <Ellipse1 className="h-[2.9px] w-[2.9px] flex-shrink-0" /> */}
@@ -102,7 +102,7 @@ export function TrendingDevices({}) {
                   <div>512GB</div>
                 </div>
                 <div className="flex items-center pt-[1.9px]">
-                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-medium leading-[17px] text-green-700">
+                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-gilroyMedium leading-[17px] text-green-700">
                     New
                   </div>
                 </div>
@@ -131,10 +131,10 @@ export function TrendingDevices({}) {
                 />
               </div>
               <div className="flex flex-col items-start gap-y-[1.9px]">
-                <div className="text-center text-lg font-semibold leading-[normal]">
+                <div className="text-center text-lg font-gilroySemiBold leading-[normal]">
                   Macbook Pro 2023
                 </div>
-                <div className="flex items-center gap-x-[2.8px] text-sm font-medium leading-[normal] text-[gray]">
+                <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">
                   <div>12GB</div>
                   <div className="flex flex-col items-center pb-[3.4px]">
                     {/* <Ellipse1 className="h-[2.9px] w-[2.9px] flex-shrink-0" /> */}
@@ -142,7 +142,7 @@ export function TrendingDevices({}) {
                   <div>512GB</div>
                 </div>
                 <div className="flex items-center pt-[1.9px]">
-                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-medium leading-[17px] text-green-700">
+                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-gilroyMedium leading-[17px] text-green-700">
                     New
                   </div>
                 </div>
@@ -171,10 +171,10 @@ export function TrendingDevices({}) {
                 />
               </div>
               <div className="flex flex-col items-start gap-y-[1.9px]">
-                <div className="text-center text-lg font-semibold leading-[normal]">
+                <div className="text-center text-lg font-gilroySemiBold leading-[normal]">
                   Macbook Pro 2023
                 </div>
-                <div className="flex items-center gap-x-[2.8px] text-sm font-medium leading-[normal] text-[gray]">
+                <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">
                   <div>12GB</div>
                   <div className="flex flex-col items-center pb-[3.4px]">
                     {/* <Ellipse1 className="h-[2.9px] w-[2.9px] flex-shrink-0" /> */}
@@ -182,7 +182,7 @@ export function TrendingDevices({}) {
                   <div>512GB</div>
                 </div>
                 <div className="flex items-center pt-[1.9px]">
-                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-medium leading-[17px] text-green-700">
+                  <div className="rounded-[15px] bg-green-50 py-[1.9px] pl-[5.7px] pr-[7.6px] text-center text-[11px] font-gilroyMedium leading-[17px] text-green-700">
                     New
                   </div>
                 </div>

@@ -213,12 +213,12 @@ export function CTA({}) {
                       {"Congratulations! "}
                       <span className="text-[gray]" />
                     </p>
-                    <p className="text-3xl font-semibold leading-[43px] text-[gray]">
+                    <p className="text-3xl font-gilroySemiBold leading-[43px] text-[gray]">
                       Our team will contact you soon.
                     </p>
                   </span>
                 </div>
-                <div className="text-xl font-medium leading-[43px]">
+                <div className="text-xl font-gilroyMedium leading-[43px]">
                   <span>
                     <p className="text-[gray]">For further info:</p>
                     <p className="text-white">{"(+91) 7470873515  "}</p>

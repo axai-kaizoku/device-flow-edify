@@ -35,7 +35,7 @@ export const Section2 = () => {
             <img src={"/media/landingPage/hassel-free-1.png"} />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
-            <div className="text-black text-[42px] font-semibold  leading-[57.60px]">
+            <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
               Add your devices and users to DeviceFlow’s intuitive platform.
             </div>
           </Slide>
@@ -43,7 +43,7 @@ export const Section2 = () => {
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
           
-            <div className="text-black text-[42px] font-semibold  leading-[57.60px]">
+            <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
             Manage device allocation, purchases, and inventory with a few clicks.
             </div>
           </Slide>
@@ -56,7 +56,7 @@ export const Section2 = () => {
             <img src={"/media/landingPage/hassel-free-4.png"} />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
-            <div className="text-black text-[42px] font-semibold  leading-[57.60px]">
+            <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
             Monitor asset lifecycle and optimize your IT workflows seamlessly.
             </div>
           </Slide>

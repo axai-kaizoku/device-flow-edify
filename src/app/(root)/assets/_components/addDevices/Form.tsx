@@ -253,7 +253,7 @@ function Form({ closeBtn }: FormProps) {
   };
   return (
     <div className="flex flex-col justify-start items-start pt-2 px-3 space-y-4 gap-1 h-full">
-      <div className="flex justify-start items-center gap-4 text-2xl font-semibold">
+      <div className="flex justify-start items-center gap-4 text-2xl font-gilroySemiBold">
         <div className="bg-black rounded-full p-2 flex justify-center items-center">
           <Monitor color="white" className="size-5" />
         </div>
@@ -262,7 +262,7 @@ function Form({ closeBtn }: FormProps) {
         </span>
       </div>
       <div className="w-full flex flex-col gap-1">
-        <div className="font-semibold text-lg text-black">
+        <div className="font-gilroySemiBold text-lg text-black">
           Step {step} of {totalStep}
         </div>
         <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
@@ -352,7 +352,7 @@ function Form({ closeBtn }: FormProps) {
       <div className="flex gap-3 w-full mt-auto">
         {step >= 1 ? (
           <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300 border border-black text-center"
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300 border border-black text-center"
             onClick={handlePrevStep}
             disabled={isLoading}
           >
@@ -360,7 +360,7 @@ function Form({ closeBtn }: FormProps) {
           </button>
         ) : (
           <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300 border border-black text-center"
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300 border border-black text-center"
             onClick={() => {
               closeBtn();
             }}
@@ -372,7 +372,7 @@ function Form({ closeBtn }: FormProps) {
         {step < totalStep ? (
           <button
             type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300"
             onClick={handleNextStep}
             disabled={isLoading}
           >
@@ -384,7 +384,7 @@ function Form({ closeBtn }: FormProps) {
         ) : (
           <button
             type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-semibold text-xl w-full transition duration-300"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300"
             onClick={handleSubmit}
             disabled={isLoading}
           >

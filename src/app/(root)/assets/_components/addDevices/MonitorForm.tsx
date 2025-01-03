@@ -42,7 +42,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-semibold text-2xl">Monitor Details</div>
+      <div className="font-gilroySemiBold text-2xl">Monitor Details</div>
 
       <div className="flex flex-col gap-8 mt-5">
         <FormField
@@ -89,7 +89,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
       </div>
 
       <div className="flex flex-col gap-1.5 mt-7">
-        <label className="font-medium text-black text-base">
+        <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
         <div
