@@ -35,7 +35,7 @@ export const RestoreUser = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50 ring-8 ring-yellow-100 text-yellow-400">
+          <div>
             <Icons.warning_restore />
           </div>
         </div>
@@ -46,21 +46,21 @@ export const RestoreUser = ({
         </DialogTitle>
 
         {/* Description */}
-        <DialogDescription className="p-1 text-sm text-gray-600">
+        <DialogDescription className="-mt-4 mb-3 font-gilroyMedium text-sm text-gray-600">
           Do you want to restore the deleted item?
         </DialogDescription>
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between">
           <Button
-            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+            className="w-1/2 rounded-md border text-base border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
             disabled={loading} // Disable button while loading
           >
             {loading ? <Spinner /> : "Discard"}
           </Button>
           <Button
-            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-sm text-white"
+            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] text-base shadow-sm text-white"
             onClick={async () => {
               if (id) {
                 setLoading(true); // Start loading

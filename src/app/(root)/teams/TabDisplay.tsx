@@ -9,6 +9,7 @@ import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icon
 import CreateTeam from "./_components/create-team";
 import { useState, useEffect } from "react";
 import Spinner from "@/components/Spinner";
+import { Icons } from "@/components/icons";
 
 interface TabDisplayProps {
   sess: any;
@@ -50,13 +51,13 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
 
   return (
     <>
-      <div className="flex flex-col ">
-        <h1 className="text-gray-400 font-gilroySemiBold text-lg">Teams</h1>
-        <h1 className="text-3xl font-gilroyBold py-4">
+      <div className="flex flex-col pt-[14px]">
+        <h1 className="text-gray-400 font-gilroyMedium text-lg">Teams</h1>
+        <h1 className="text-3xl font-gilroySemiBold pt-[10px]">
           Manage Teams & Employee
         </h1>
-        <div className="flex items-center justify-between ">
-          <div className="flex items-center w-full -mb-9 gap-12">
+        <div className="flex items-center justify-between -mt-2">
+          <div className="flex items-center w-full -mb-9 -mt-1 gap-12">
             <Tab
               active={activeTab === "active"}
               onClick={() => handleTabChange("active")}
@@ -64,32 +65,35 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
             />
 
             <Tab
+              className="after:left-[-20%]  after:w-[140%]"
               active={activeTab === "deleted"}
               onClick={() => handleTabChange("deleted")}
               label="Deleted Teams"
             />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2.5 pl-2 pr-20 py-3 ext-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Search size={16} /> {/* Lucide icon for search */}
+          <div className="flex gap-2">
+            <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Search size={20} className="text-[#7F7F7F]" />{" "}
+              {/* Lucide icon for search */}
               <input
-                className="text-sm bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
+                className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
                 placeholder="Search teams"
               />
             </div>
+            <CreateTeam>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Plus className="text-[#6C6C6C]  size-5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Add Team
+                </span>
+              </div>
+            </CreateTeam>
 
-            <div className="flex items-center relative gap-2 px-4 py-3 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Plus size={16} /> {/* Lucide icon for add */}
-              <span className="text-sm font-gilroyMedium whitespace-nowrap">
-                <CreateTeam />
-              </span>
-            </div>
-
-            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Download size={16} /> {/* Lucide icon for download */}
+            {/* <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Download size={16} /> 
               <span className="text-sm font-gilroyMedium">Download</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

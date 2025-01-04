@@ -84,7 +84,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
 
                       const formattedDate = date.toLocaleDateString("en-GB", {
                         day: "2-digit",
-                        month: "long",
+                        month: "short",
                         year: "numeric",
                       });
 
@@ -111,7 +111,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                       }
                       return (
                         <span
-                          className={`${color} px-3 py-0.5-1 w-fit flex justify-center items-center rounded-full`}
+                          className={`${color} px-3 py-0.5 w-fit flex justify-center items-center rounded-full`}
                         >
                           {record?.brand}
                         </span>

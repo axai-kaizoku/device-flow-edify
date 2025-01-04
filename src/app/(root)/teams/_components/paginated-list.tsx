@@ -27,7 +27,7 @@ export default function PaginatedList({
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   return (
-    <div className="bg-white p-[29px] rounded-[54px] w-full my-2">
+    <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-1 w-full">
       {/* Grid of Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
         {currentTeams?.map(
@@ -43,7 +43,7 @@ export default function PaginatedList({
       </div>
 
       {/* Pagination */}
-      <div className="mt-8 flex justify-center">
+      <div className="mt-2 ">
         <Pagination
           totalItems={totalTeams}
           itemsPerPage={itemsPerPage}

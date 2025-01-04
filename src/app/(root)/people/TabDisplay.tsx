@@ -10,7 +10,7 @@ import { Icons } from "@/components/icons";
 import UserMain from "./_components/user-main";
 import { User, UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Tab } from "../teams/_components/Tab";
 import useAlert from "@/hooks/useAlert";
 import { GlobalAlert } from "@/components/global-alert";
@@ -18,6 +18,7 @@ import {
   activeUsers,
   filterUsers,
   inActiveUsers,
+  userFilterFields,
   usersFields,
 } from "@/server/filterActions";
 const numericFields = ["updatedAt", "createdAt"];
@@ -45,7 +46,24 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   ]); // Store dynamic filter fields
   const [availableOperators, setAvailableOperators] =
     useState(generalOperators);
+  const filterModalRef = useRef<HTMLDivElement>(null);
 
+  // Close filter modal when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterModalRef.current &&
+        !filterModalRef.current.contains(event.target as Node)
+      ) {
+        setOpenFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const handleSearchAndFilter = async () => {
     // Combine search term and filters
     const query = {
@@ -108,19 +126,13 @@ function TabDisplay({ data }: { data?: UserResponse }) {
         return [f.field, f.operator, finalValue];
       });
 
-    if (newFilters.length === 0) {
-      showAlert();
-
-      return;
-    }
-
     setFilters(newFilters); // Set the new filters
     setOpenFilter(false); // Close filter modal
   };
 
   const handleResetFilters = () => {
-    setFilters([]); // Clear all filters
-    setSearchTerm("");
+    // setFilters([]); // Clear all filters
+    // setSearchTerm("");
     setFilterInputs([{ field: "", operator: "", value: "" }]); // Reset filters
   };
 
@@ -195,8 +207,10 @@ function TabDisplay({ data }: { data?: UserResponse }) {
       />
       <div className="flex flex-col pt-[14px]">
         <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">People</h1>
-        <h1 className="text-3xl pt-[10px] font-gilroyBold ">Manage People</h1>
-        <div className="flex items-center justify-between ">
+        <h1 className="text-3xl pt-[10px] font-gilroySemiBold ">
+          Manage People
+        </h1>
+        <div className="flex items-center justify-between -mt-2">
           <div className="flex items-center w-full -mb-9 -mt-1 gap-12">
             {tabs?.map((tab) => (
               <Tab
@@ -209,10 +223,10 @@ function TabDisplay({ data }: { data?: UserResponse }) {
           </div>
 
           <div className="flex gap-2">
-            <div className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Search size={20} className="text-[#7F7F7F]" />{" "}
               <input
-                className="text-base bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
+                className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
                 value={searchTerm || ""}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search issues..."
@@ -222,30 +236,33 @@ function TabDisplay({ data }: { data?: UserResponse }) {
             <div className="relative">
               <button
                 onClick={() => setOpenFilter(!openFilter)}
-                className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
+                className="flex items-center  py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
               >
-                <Icons.tab_filter />
+                <Icons.tab_filter className="size-5" />
                 <span className="text-base font-gilroyMedium">Filter</span>
               </button>
 
               {openFilter && (
-                <div className="absolute top-16 right-0 z-50">
+                <div
+                  ref={filterModalRef}
+                  className="absolute top-16 right-0 z-50"
+                >
                   <>
-                    <div className="flex-col w-fit border border-gray-300 bg-white shadow-lg rounded-lg p-4 flex gap-3">
+                    <div className="flex-col w-fit border border-gray-300 bg-white shadow-xl rounded-lg p-3 flex gap-4">
                       <div className="flex flex-col gap-4">
                         {filterInputs?.map((filter, index) => (
-                          <div key={index} className="flex gap-2">
+                          <div key={index} className="flex gap-4 items-center">
                             <select
                               value={filter?.field}
                               onChange={(e) =>
                                 handleFieldChange(index, e.target.value)
                               }
-                              className="w-28 focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
+                              className="w-40 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                             >
                               <option value="">Select Field</option>
-                              {usersFields?.map((key) => (
-                                <option key={key} value={key}>
-                                  {key}
+                              {userFilterFields?.map((key) => (
+                                <option key={key?.value} value={key?.value}>
+                                  {key?.label}
                                 </option>
                               ))}
                             </select>
@@ -258,7 +275,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
                                   e.target.value
                                 )
                               }
-                              className="w-[72px] focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
+                              className="w-28  focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                             >
                               <option value="">Select Operator</option>
                               {availableOperators?.map((operator) => (
@@ -277,13 +294,12 @@ function TabDisplay({ data }: { data?: UserResponse }) {
                                   e.target.value
                                 )
                               }
-                              className="w-28 focus:outline-none bg-[#F4F5F6] px-3 h-6  text-xs rounded-md"
-                              placeholder="Enter filter value"
+                              className="w-32  focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                             />
                             {index > 0 && (
                               <svg
                                 onClick={() => removeFilter(index)}
-                                className="size-3 cursor-pointer"
+                                className="size-3 cursor-pointer text-gray-500 hover:text-gray-700 transition-all duration-200"
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
                                 height="15"
@@ -309,10 +325,10 @@ function TabDisplay({ data }: { data?: UserResponse }) {
                           </div>
                         ))}
                         <div className="h-[1px] bg-gray-200"></div>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                           <div
                             onClick={addFilter}
-                            className="cursor-pointer flex justify-center items-center gap-1.5"
+                            className="cursor-pointer flex items-center gap-2 py-2  text-[#4A4A4A] hover:text-black rounded-md transition-all duration-300"
                           >
                             <svg
                               className="size-3 -mt-0.5 "
@@ -342,15 +358,15 @@ function TabDisplay({ data }: { data?: UserResponse }) {
                               Add Filter
                             </h1>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex gap-3">
                             <div
-                              className="py-0.5 flex justify-center bg-[#F4F5F6] hover:bg-[#C0C6CB]/50 items-center px-4  rounded-md text-sm font-gilroyRegular  cursor-pointer"
+                              className="py-2 px-6 bg-[#F4F5F6] hover:bg-[#D1D7DB] text-sm rounded-md cursor-pointer transition-all duration-300"
                               onClick={handleResetFilters}
                             >
                               Clear
                             </div>
                             <div
-                              className="py-0.5 flex justify-center items-center bg-black cursor-pointer px-4 rounded-md text-sm font-gilroyRegular text-white"
+                              className="py-2 px-6 bg-black text-white text-sm rounded-md cursor-pointer transition-all duration-300 hover:bg-[#333333]"
                               onClick={handleApplyFilters}
                             >
                               Apply
@@ -364,10 +380,10 @@ function TabDisplay({ data }: { data?: UserResponse }) {
               )}
             </div>
 
-            <button className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            {/* <button className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={20} className="text-[#7F7F7F]" />{" "}
               <span className="text-sm font-gilroyMedium">Download</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -12,15 +12,15 @@ function OpenHeader({ data }: { data: Issues[] }) {
     (item) => item.priority === "Low" && item.status === "Open"
   ).length;
   return (
-    <div className="flex gap-3 px-6 py-5">
-      <h1 className="text-xl font-gilroyMedium">Open Issues</h1>
-      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-alert-foreground text-failure">
+    <div className="flex gap-3 ">
+      <h1 className="text-xl pl-6 font-gilroySemiBold">Open Issues</h1>
+      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-alert-foreground text-failure">
         {criticalCount} Critical
       </h1>
-      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-[#FFFACB] text-[#FF8000]">
+      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-[#FFFACB] text-[#FF8000]">
         {mediumCount} Medium
       </h1>
-      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-success-foreground text-success-second">
+      <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-success-foreground text-success-second">
         {lowCount} Low
       </h1>
     </div>

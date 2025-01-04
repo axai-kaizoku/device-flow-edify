@@ -50,7 +50,18 @@ export const devicesFields = [
   "assigned_at",
   "warranty_status",
 ];
-
+export const userFilterFields = [
+  { label: "First Name", value: "first_name" },
+  { label: "Last Name", value: "last_name" },
+  { label: "Email", value: "email" },
+  { label: "Phone", value: "phone" },
+  { label: "Gender", value: "gender" },
+  { label: "Employement type", value: "employment_type" },
+  { label: "Role", value: "role" },
+  { label: "Designation", value: "designation" },
+  { label: "Reporting Manager", value: "reporting_manager" },
+  { label: "Onboarding date", value: "onboarding_date" },
+];
 export const usersFields = [
   "first_name",
   "last_name",

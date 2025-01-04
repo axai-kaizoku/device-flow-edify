@@ -230,6 +230,7 @@ function TabDisplay() {
                 active={activeTab === tab?.key}
                 onClick={() => handleTabChange(tab?.key)}
                 label={tab?.label}
+                className="after:left-[-30%]  after:w-[160%]"
               />
             ))}
           </div>
@@ -270,27 +271,27 @@ function TabDisplay() {
                   ref={filterModalRef}
                   className="absolute top-16 right-0 z-50"
                 >
-                  <div className="flex-col w-fit border border-gray-300 bg-white shadow-xl rounded-lg p-6 flex gap-4">
-                    <div className="flex flex-col gap-6">
-                      {filterInputs.map((filter, index) => (
+                  <div className="flex-col w-fit border border-gray-300 bg-white shadow-xl rounded-lg p-3 flex gap-4">
+                    <div className="flex flex-col gap-4">
+                      {filterInputs?.map((filter, index) => (
                         <div key={index} className="flex gap-4 items-center">
                           <select
-                            value={filter.field}
+                            value={filter?.field}
                             onChange={(e) =>
                               handleFieldChange(index, e.target.value)
                             }
                             className="w-40 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                           >
                             <option value="">Select Field</option>
-                            {devicesFilterFields.map((key) => (
-                              <option key={key.value} value={key.value}>
-                                {key.label}
+                            {devicesFilterFields?.map((key) => (
+                              <option key={key?.value} value={key?.value}>
+                                {key?.label}
                               </option>
                             ))}
                           </select>
 
                           <select
-                            value={filter.operator}
+                            value={filter?.operator}
                             onChange={(e) =>
                               handleInputChange(
                                 index,
@@ -301,7 +302,7 @@ function TabDisplay() {
                             className="w-28  focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                           >
                             <option value="">Select Operator</option>
-                            {availableOperators.map((operator) => (
+                            {availableOperators?.map((operator) => (
                               <option key={operator} value={operator}>
                                 {operator}
                               </option>
@@ -310,7 +311,7 @@ function TabDisplay() {
 
                           <input
                             type="text"
-                            value={filter.value}
+                            value={filter?.value}
                             onChange={(e) =>
                               handleInputChange(index, "value", e.target.value)
                             }
@@ -350,7 +351,7 @@ function TabDisplay() {
                       <div className="flex justify-between items-center">
                         <div
                           onClick={addFilter}
-                          className="cursor-pointer flex justify-center items-center gap-2 py-2 px-4 text-[#4A4A4A] hover:bg-[#F0F0F0] rounded-md transition-all duration-300"
+                          className="cursor-pointer flex items-center gap-2 py-2  text-[#4A4A4A] hover:text-black rounded-md transition-all duration-300"
                         >
                           <svg
                             className="size-3 -mt-0.5"

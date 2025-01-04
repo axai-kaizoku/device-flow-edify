@@ -1,3 +1,4 @@
+//inactive:-
 import { Device, DeviceResponse } from "@/server/deviceActions";
 import React, { Suspense, useState } from "react";
 import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
@@ -28,10 +29,10 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
 
   return (
     <>
-      <div className="rounded-[33px] border border-[#C3C3C34F] px-7 py-5 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 flex flex-col gap-5">
-          <div className=" flex gap-2 w-fit">
-            <h1 className="text-xl font-gilroySemiBold px-6">Total Assets</h1>
+      <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+          <div className=" flex gap-3 w-fit">
+            <h1 className="text-xl font-gilroySemiBold pl-6">Total Assets</h1>
             <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
               {data?.totalCount} Assets
             </h1>
@@ -62,7 +63,7 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                           className="size-10 object-cover rounded-full"
                         />
 
-                        <div className="text-[#101828] font-gilroyMedium text-sm">
+                        <div className="text-[#101828] font-gilroySemiBold text-sm">
                           {data?.device_name}
                         </div>
                       </div>
@@ -73,10 +74,18 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                     dataIndex: "serial_no",
                   },
                   {
-                    title: "Purchased On",
-                    render: (record: Device) => (
-                      <span className="">{record?.device_purchase_date}</span>
-                    ),
+                    title: "Prchased  On",
+                    render: (record) => {
+                      const date = new Date(record?.device_purchase_date);
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return <div>{formattedDate}</div>;
+                    },
                   },
                   {
                     title: "Asset Condition",
@@ -122,13 +131,13 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                   {
                     title: "",
                     render: (record: Device) => (
-                      <div className="flex gap-8 justify-center items-center">
+                      <div className="flex gap-5 -ml-2">
                         <PermanentAssetsDelete id={record?._id!}>
                           <Icons.table_delete className="size-6" />
                         </PermanentAssetsDelete>
 
                         <RestoreDevice id={record?._id!}>
-                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-lg py-0.5 px-6">
+                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                             Restore
                           </div>
                         </RestoreDevice>

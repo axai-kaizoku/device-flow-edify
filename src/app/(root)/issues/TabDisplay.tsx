@@ -42,13 +42,14 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   return (
     <>
       <div className="flex items-center justify-between ">
-        <div className="flex items-center -mb-8 w-full gap-12">
+        <div className="flex items-center -mb-7 -mt-1  w-full gap-12">
           <Tab
             active={activeTab === "open"}
             onClick={() => {
               setActiveTab("open");
             }}
             label="Open Issues"
+            className="after:left-[-35%]  after:w-[170%]"
           />
           <Tab
             active={activeTab === "closed"}
@@ -56,26 +57,26 @@ function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
               setActiveTab("closed");
             }}
             label="Closed Issues"
+            className="after:left-[-20%]  after:w-[140%]"
           />
         </div>
 
         <div className="flex gap-3">
-          <div className="flex items-center gap-2.5 pl-2 pr-20 py-2.5 text-[#7F7F7F] text-xl border border-[#7F7F7F] rounded-full">
-            <Search size={"20px"} color="#7F7F7F" />{" "}
+          <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <Search className="text-[#7F7F7F] size-5" />
             {/* Lucide icon for search */}
             <input
               className="text-sm bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
               placeholder="Search Issues"
-              style={{ color: "#7F7F7F" }}
               value={searchTerm || ""}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           {activeTab !== "open" && (
-            <div className="flex items-center relative gap-2 px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Check className="text-[#7F7F7F]" />
-              <div className="font-gilroyMedium text-base text-[#7F7F7F]">
+            <div className="relative px-4 flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+              <Check className="text-[#7F7F7F] size-5" />
+              <div className="font-gilroyMedium text-sm text-[#7F7F7F]">
                 Reopen
               </div>
             </div>

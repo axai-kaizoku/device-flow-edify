@@ -33,8 +33,8 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="rounded-[33px] border border-[#C3C3C34F] px-7 py-5 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
+      <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col ">
           <IssueClosedHeader data={data} />
           <Table
             data={currentIssues}
@@ -106,7 +106,7 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
                     issueData={record}
                     reOpen={true}
                   >
-                    <div className="rounded-full bg-primary text-sm 2xl:text-base whitespace-nowrap px-2 py-0.5 text-white font-gilroyMedium">
+                    <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                       Reopen
                     </div>
                   </IssueStatusChange>
@@ -115,7 +115,7 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
             ]}
           />
           {/* Pagination Control */}
-          <div className="py-2">
+          <div className="mt-2">
             <Pagination
               currentPage={currentPage}
               itemsPerPage={ITEMS_PER_PAGE}

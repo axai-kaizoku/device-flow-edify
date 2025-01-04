@@ -121,7 +121,7 @@ export default function IssueTable({ data }: { data: Issues[] }) {
                 id={record?._id!}
                 issueData={record}
               >
-                <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-2.5 py-0.5 text-white font-gilroyMedium">
+                <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-5 py-1.5 text-white font-gilroyMedium">
                   Mark as resolved
                 </div>
               </IssueStatusChange>
@@ -130,11 +130,11 @@ export default function IssueTable({ data }: { data: Issues[] }) {
         ]}
       />
       {/* Pagination Control */}
-      <div className="py-2">
+      <div className="mt-2">
         <Pagination
           currentPage={currentPage}
           itemsPerPage={ITEMS_PER_PAGE}
-          totalItems={OpenIssues.length}
+          totalItems={OpenIssues?.length}
           onPageChange={handlePageChange}
         />
       </div>
