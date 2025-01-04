@@ -206,8 +206,8 @@ function TabDisplay({ data }: { data?: UserResponse }) {
         isFailure={true}
       />
       <div className="flex flex-col pt-[14px]">
-        <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">People</h1>
-        <h1 className="text-3xl pt-[10px] font-gilroySemiBold ">
+        <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">People</h1>
+        <h1 className="2xl:text-3xl text-2xl pt-[10px] font-gilroyBold ">
           Manage People
         </h1>
         <div className="flex items-center justify-between -mt-2">

@@ -218,8 +218,8 @@ function TabDisplay() {
       />
 
       <div className="flex flex-col  pt-[14px]">
-        <h1 className="text-gray-400 font-gilroyMedium text-lg">Assets</h1>
-        <h2 className="text-3xl font-gilroySemiBold pt-[10px]">
+        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">Assets</h1>
+        <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
           Manage Assets
         </h2>
         <div className="flex items-center justify-between -mt-2">

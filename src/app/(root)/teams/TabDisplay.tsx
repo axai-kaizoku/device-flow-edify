@@ -52,8 +52,8 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
   return (
     <>
       <div className="flex flex-col pt-[14px]">
-        <h1 className="text-gray-400 font-gilroyMedium text-lg">Teams</h1>
-        <h1 className="text-3xl font-gilroySemiBold pt-[10px]">
+        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">Teams</h1>
+        <h1 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
           Manage Teams & Employee
         </h1>
         <div className="flex items-center justify-between -mt-2">

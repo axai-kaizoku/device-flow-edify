@@ -98,16 +98,16 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
         />
       </div>
 
-      <div className="flex items-center justify-center mt-8">
+      <div className="flex items-center justify-center mt-8 mb-4">
         <div className="border-t border-[#B1B1B1] w-7"></div>
-        <span className="mx-4 font-gilroySemiBold text-lg text-[#5F5F5F]">OR</span>
+        <span className="mx-4 font-gilroySemiBold 2xl:text-lg text-base text-[#5F5F5F]">OR</span>
         <div className="border-t border-[#B1B1B1] w-7"></div>
       </div>
 
-      <div className="flex flex-col gap-6 mb-20">
-        <div className="font-gilroySemiBold text-2xl">Device Type</div>
+      <div className="flex flex-col gap-6 mb-19">
+        <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">Device Type</div>
         <div className="grid grid-cols-2 gap-5 mb-4">
-          {deviceList.map((device, index) => (
+          {deviceList?.map((device, index) => (
             <div
               key={device?.id}
               className={`${

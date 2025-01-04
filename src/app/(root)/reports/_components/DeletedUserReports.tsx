@@ -44,16 +44,16 @@ const DeletedUserReports = ({
         description="Something went wrong !!"
         isFailure={true}
       />
-      <div>Get All the Deleted Members</div>
+      <div className="text-left my-[33px]">Get All the Deleted Members</div>
       <div className="flex gap-2">
         <button
           onClick={() => closeBtn(false)}
-          className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+          className="flex-1 px-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
         >
           Cancel
         </button>
         <button
-          className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+          className="flex-1 px-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
           onClick={handleDownloadDeletedAssetsReport}
         >
           Download

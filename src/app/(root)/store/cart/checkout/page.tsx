@@ -10,8 +10,10 @@ import Image from "next/image";
 export default async function Checkout() {
   try {
     const cart: any = await getCart();
-    const payments: any = await getPaymentMethods(cart.totalPrice);
+    const payments: any = await getPaymentMethods(cart?.totalPrice);
     const allAddresses: Address[] = await getAddress();
+
+    
 
     return (
       // <div className="flex w-full justify-between border h-fit gap-10 bg-white px-12">

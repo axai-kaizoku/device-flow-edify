@@ -13,12 +13,12 @@ const ReportSection = ({ reportData }: { reportData: report[] }) => {
 
   return (
     <div className="flex flex-col font-gilroyRegular gap-8">
-      <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">Reports</h1>
+      <h1 className="text-[#7F7F7F] font-gilroyMedium text-base">Reports</h1>
       <div>
         {Object.entries(groupedReports).map(([tag, reports]) => (
           <div key={tag} className="mb-4">
             {/* Section Header */}
-            <h2 className="text-[28px] font-gilroySemiBold mb-4 text-black capitalize">
+            <h2 className="text-[22px] font-gilroySemiBold mb-4 text-black capitalize">
               {tag}
             </h2>
 

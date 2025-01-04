@@ -42,7 +42,7 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-gilroySemiBold text-2xl">Device Details</div>
+      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">Device Details</div>
 
       <div className="flex flex-col gap-8 mt-5">
         <FormField

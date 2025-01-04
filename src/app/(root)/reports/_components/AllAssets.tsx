@@ -39,8 +39,8 @@ const AllAssets = ({ closeBtn }: { closeBtn: (value: boolean) => void }) => {
         description="Something went wrong !!"
         isFailure={true}
       />
-      <div className="w-full">
-        <div className="mb-8">
+      <div className="w-full my-[33px]">
+        <div className="mb-8 text-left">
           <div>Get all the Assets</div>
         </div>
 
@@ -59,12 +59,12 @@ const AllAssets = ({ closeBtn }: { closeBtn: (value: boolean) => void }) => {
         <div className="flex gap-2">
           <button
             onClick={() => closeBtn(false)}
-            className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+            className="flex-1 font-gilroySemiBold 2xl:text-lg text-base py-2.5 px-1 border-[2px] border-black rounded-[49px]"
           >
             Cancel
           </button>
           <button
-            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            className="flex-1 text-white bg-black rounded-[49px] px-1 font-gilroySemiBold 2xl:text-lg text-base py-2.5"
             onClick={handleDownloadReport}
           >
             Download

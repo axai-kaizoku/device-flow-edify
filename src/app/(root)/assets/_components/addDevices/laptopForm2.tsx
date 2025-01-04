@@ -42,7 +42,9 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full flex flex-col justify-start">
-      <div className="font-gilroySemiBold text-2xl mb-2">Laptop Details</div>
+      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] mb-2">
+        Laptop Details
+      </div>
 
       <div className="flex flex-col gap-8 mt-8">
         <div className="flex flex-col gap-1">
@@ -57,7 +59,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             placeholder="eg: EDIFYXXXX, etc"
           />
 
-          <div className="font-normal text-sm text-[#8B8B8B]">
+          <div className="font-gilroyMedium text-sm text-[#8B8B8B]">
             Need help finding serial Number?{" "}
             <span className="text-[#005DFF] underline cursor-pointer">
               Click here
@@ -120,21 +122,19 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
         </div>
       </div>
 
-
-      <div className="flex items-center gap-2 my-5">
+      <form className="flex items-center gap-2 my-5">
         <input
-            type="checkbox"
-            id="chargerProvided"
-            className="h-5 w-5 appearance-none border border-gray-300 rounded-md checked:bg-[#0A7AFF] checked:border-[#0A7AFF] checked:focus:ring-white focus:outline-none focus:ring-2 focus:ring-black cursor-pointer"
+          type="checkbox"
+          id="chargerProvided"
+          className="h-4 w-4 rounded-[49px]"
         />
-        <label htmlFor="chargerProvided" className="text-base font-normal text-black">
-            Charger provided with the device?
+        <label
+          for="chargerProvided"
+          className="text-base font-gilroyMedium text-black"
+        >
+          Charger provided with the device?
         </label>
-    </div>
-
-
-      
-
+      </form>
     </div>
   );
 };

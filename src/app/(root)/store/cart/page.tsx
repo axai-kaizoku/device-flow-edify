@@ -5,7 +5,7 @@ import CartMain from "./_components/cart-main";
 
 export default async function Cart() {
   const cart: any = await getCart();
-
+  
   return (
     <>
       <CartMain cart={cart} />

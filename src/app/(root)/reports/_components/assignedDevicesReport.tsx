@@ -5,13 +5,15 @@ import { convertToCSV, downloadCSV } from "./util";
 import { GlobalAlert } from "@/components/global-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { closeAlert, openAlert } from "@/app/store/alertSlice";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
+import { FormField } from "../../settings/_components/form-field";
 
 const AssignedDevicesReport = ({
   closeBtn,
 }: {
   closeBtn: (value: boolean) => void;
 }) => {
-  const [operator, setOperator] = useState(">");
+  const [operator, setOperator] = useState("Select an Operator");
   const [date, setDate] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -57,55 +59,54 @@ const AssignedDevicesReport = ({
         isFailure={true}
       />
 
-      <div>
-        <label className="block text-gray-700 font-gilroyMedium text-lg my-4">
-          Select an Operator:
-        </label>
-        <select
-          className="w-full mb-8 border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+      <div className="mt-[33px]">
+        <SelectDropdown
+          options={[
+            { label: "Greater Than", value: ">" },
+            { label: "Less Than", value: "<" },
+            { label: "Between", value: "between" },
+          ]}
+          onSelect={(data) => setOperator(data.value)}
+          label="Action"
           value={operator}
-          onChange={(e) => setOperator(e.target.value)}
-        >
-          <option value=">">Greater Than</option>
-          <option value="<">Less Than</option>
-          <option value="between">Between</option>
-        </select>
+          className="rounded-xl border border-[#5F5F5F]"
+        />
 
         {operator === "between" ? (
-          <div className="grid grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-2 gap-8 my-8">
             <div>
-              <label className="text-gray-700 font-gilroyMedium text-lg">
-                From:
-              </label>
-              <input
-                type="date"
-                className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+              <FormField
+                label="From"
+                id="fromDate"
+                name="fromDate"
                 value={fromDate}
+                type="date"
                 onChange={(e) => setFromDate(e.target.value)}
+                placeholder="DD/MM/YYYY"
               />
             </div>
             <div>
-              <label className="text-gray-700 font-gilroyMedium text-lg">
-                To:
-              </label>
-              <input
-                type="date"
-                className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+              <FormField
+                label="To"
+                id="ToDate"
+                name="toDate"
                 value={toDate}
+                type="date"
                 onChange={(e) => setToDate(e.target.value)}
+                placeholder="DD/MM/YYYY"
               />
             </div>
           </div>
         ) : (
-          <div className="mb-8">
-            <label className="text-gray-700 font-gilroyMedium text-lg">
-              Date:
-            </label>
-            <input
-              type="date"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
+          <div className="my-8">
+            <FormField
+              label="Date"
+              id="date"
+              name="date"
               value={date}
+              type="date"
               onChange={(e) => setDate(e.target.value)}
+              placeholder="DD/MM/YYYY"
             />
           </div>
         )}
@@ -122,12 +123,12 @@ const AssignedDevicesReport = ({
         <div className="flex gap-2">
           <button
             onClick={() => closeBtn(false)}
-            className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+            className="flex-1 px-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
           >
             Cancel
           </button>
           <button
-            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            className="flex-1 px-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
             onClick={handleDeviceDownloadClick}
           >
             Download

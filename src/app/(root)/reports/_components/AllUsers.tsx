@@ -38,9 +38,7 @@ const AllUsers = ({ closeBtn }: { closeBtn: (value: boolean) => void }) => {
         isFailure={true}
       />
       <div className="w-full">
-        <div className="mb-8">
-          <div>Get All the Employees</div>
-        </div>
+        <div className="my-[33px] text-left">Get All the Employees within the Organization</div>
 
         {/* <div className="mb-8">
         <label className="text-gray-700 font-gilroyMedium text-lg">
@@ -57,12 +55,12 @@ const AllUsers = ({ closeBtn }: { closeBtn: (value: boolean) => void }) => {
         <div className="flex gap-2">
           <button
             onClick={() => closeBtn(false)}
-            className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+            className="flex-1 font-gilroySemiBold text-lg py-2.5 px-1 border-[2px] border-black rounded-[49px]"
           >
             Cancel
           </button>
           <button
-            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5 px-1"
             onClick={handleDownloadReport}
           >
             Download

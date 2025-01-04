@@ -218,30 +218,6 @@ function Form({ closeBtn }: FormProps) {
       setIsLoading(true);
       try {
         const payload: any = createPayload(formData);
-        
-        // const deviceDetails: Device = {
-          // {formData.deviceType === 'laptop' && {}}
-          // device_type: formData.deviceType, //fixed
-          // device_name: formData.laptopPage1.device_name,
-          // os: formData.laptopPage1.os,
-          // custom_model: formData.laptopPage1.model,
-          // processor: formData.laptopPage1.processor,
-          // ram: formData.laptopPage1.ram,
-          // storage: formData.laptopPage1.storage,
-          // serial_no: formData.advanceDeviceDetails.serialNumber,
-          // device_purchase_date: formData.advanceDeviceDetails.purchaseDate,
-          // purchase_order: formData.extraDetails.purchaseOrder,
-          // warranty_expiary_date:
-          //   formData.advanceDeviceDetails.warrantyExpiryDate,
-          // brand: formData.extraDetails.brand,
-          // image: formData.extraDetails.image,
-          // userId: formData.extraDetails.assignedTo.value,
-          // ownership: formData.extraDetails.ownership,
-          // purchase_value: formData.extraDetails.purchaseValue,
-          // asset_serial_no: "Asset serial no", // Consider making this dynamic if needed
-          // addressId: formData.extraDetails.officeLocation.value,
-        // };
-    
         const response = await createDevices(payload);
         closeBtn(); // Close the sheet after successful submission
         router.refresh();
@@ -252,12 +228,12 @@ function Form({ closeBtn }: FormProps) {
     }
   };
   return (
-    <div className="flex flex-col justify-start items-start pt-2 px-3 space-y-4 gap-1 h-full">
+    <div className="flex flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
       <div className="flex justify-start items-center gap-4 text-2xl font-gilroySemiBold">
-        <div className="bg-black rounded-full p-2 flex justify-center items-center">
+        <div className="bg-black rounded-full p-2.5 flex justify-center items-center">
           <Monitor color="white" className="size-5" />
         </div>
-        <span>
+        <span className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
           Add a {formData?.deviceType ? formData?.deviceType : "Device"}
         </span>
       </div>

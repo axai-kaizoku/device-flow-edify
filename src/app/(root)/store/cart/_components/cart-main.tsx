@@ -1,16 +1,18 @@
 'use client'
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
-import { DeviceWithQty } from "@/server/cartActions";
+import { DeviceWithQty, getCart } from "@/server/cartActions";
 import { CartItem } from "./cart-item";
 import { coupons } from "./utils";
 import { CouponsModal } from "./coupons-modal";
 import { CouponCard } from "./coupon-card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const CartMain = ({cart}:{cart:any}) => {
     const [selectedCoupon, setSelectedCoupon] = useState<string | null>(null);
     const [couponCode, setCouponCode] = useState<string>("");
+    const router = useRouter();
 
     const handleCouponSelect = (code: string) => {
         setSelectedCoupon(code);
@@ -20,6 +22,18 @@ const CartMain = ({cart}:{cart:any}) => {
     const handleApplyCoupon = (code: string) => {
         setCouponCode(code);
       };
+
+      useEffect(() => {
+        const fetchData = async ()=>{
+          const cartDetail = await getCart();
+          if (cartDetail?.items?.length === 0){
+            router.push('/store');
+          }
+        }
+        fetchData();
+      },[]);
+
+
   return (
     <>
       <div className="flex w-full justify-between h-fit gap-10 bg-white px-12 pb-8">

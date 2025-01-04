@@ -10,11 +10,13 @@ export default function CreateUser({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger>{children}</SheetTrigger>
-      <SheetContent>
-        <UserForm closeBtn={setOpen} />
-      </SheetContent>
-    </Sheet>
+    <div className="flex justify-center items-center gap-8">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger>{children}</SheetTrigger>
+        <SheetContent>
+          <UserForm closeBtn={setOpen} />
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }

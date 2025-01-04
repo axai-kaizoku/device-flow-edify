@@ -1,8 +1,10 @@
 "use client";
 
+import { setPaymentData } from "@/app/store/paymentSlice";
 import { createOrderId } from "@/server/cartActions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 export default function PaymentMethods({
   // data: payments,
@@ -12,6 +14,7 @@ export default function PaymentMethods({
   price: number;
 }) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
     // const formData = new FormData(e.currentTarget);
@@ -45,7 +48,8 @@ export default function PaymentMethods({
       handler: function (response: any) {
         if (response?.razorpay_payment_id) {
           router.refresh();
-          router.push("/store/cart/checkout/payment-success");
+          dispatch(setPaymentData({ paymentId: response?.razorpay_payment_id, amount: totalPrice }));
+          router.push(`/store/cart/checkout/payment-success`);
         }
       },
       prefill: {

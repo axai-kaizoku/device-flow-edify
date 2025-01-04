@@ -96,11 +96,11 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-2xl font-gilroyMedium">Select OS</h1>
+      <h1 className="2xl:text-2xl text-[22px] font-gilroySemiBold mb-5">Select OS</h1>
 
       <div
         className={`flex justify-between items-center flex-wrap gap-4 w-full ${
-          !errors?.os && "mb-7"
+          !errors?.os && "mb-8"
         }`}
       >
         {deviceType === "laptop" &&
@@ -136,7 +136,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
 
       {errors?.os && <p className="text-red-500 text-sm mb-7">{errors?.os}</p>}
 
-      <div className="flex flex-col gap-7">
+      <div className="flex flex-col gap-8">
         <div className="">
           <SelectDropdown
             options={[

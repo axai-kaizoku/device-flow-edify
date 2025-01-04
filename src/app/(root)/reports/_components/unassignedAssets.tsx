@@ -45,7 +45,7 @@ const UnassignedReport = ({
         isFailure={true}
       />
 
-      <div className="w-full">
+      <div className="w-full mt-[33px]">
         <div className="flex flex-col items-start gap-4 my-4">
           <div>Get all the Unassigned Assets</div>
         </div>
@@ -62,12 +62,12 @@ const UnassignedReport = ({
         <div className="flex gap-2">
           <button
             onClick={() => closeBtn(false)}
-            className="flex-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+            className="flex-1 font-gilroySemiBold text-lg py-2.5 px-1 border-[2px] border-black rounded-[49px]"
           >
             Cancel
           </button>
           <button
-            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5 px-1"
             onClick={handleDownloadReport}
           >
             Download

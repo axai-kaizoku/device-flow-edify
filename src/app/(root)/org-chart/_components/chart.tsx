@@ -48,29 +48,32 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
 
   return (
     <>
-      <div className="flex flex-col w-full pt-8 pr-8 overflow-hidden h-full gap-3">
+      <div className="flex flex-col w-full pr-8 overflow-hidden h-full gap-3">
         <div className="flex justify-between items-center">
-          <h1 className="text-[#7F7F7F] font-gilroySemiBold text-lg">
+          <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">
             Organisation Chart
           </h1>
+
+          
+
           <div className="flex gap-2">
-            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer">
+            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] px-3 py-1.5 gap-1 cursor-pointer">
               <ChevronUp className="w-5 h-5" />
-              <div>Top of chart</div>
+              <div className="font-gilroyMedium text-base">Top of chart</div>
             </div>
-            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer">
+            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] px-3 py-1.5 gap-1 cursor-pointer">
               <Link className="w-5 h-5" />
-              <div>Group by department</div>
+              <div className="font-gilroyMedium text-base">Group by department</div>
             </div>
-            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] p-2 gap-1.5 cursor-pointer">
+            <div className="flex items-center border rounded-[68px] border-[#7F7F7F] text-base text-[#7F7F7F] px-3 py-1.5 gap-1 cursor-pointer">
               <Download className="w-5 h-5" />
-              <div>Download</div>
+              <div className="font-gilroyMedium text-base">Download</div>
             </div>
           </div>
         </div>
         <div
           id="treeWrapper"
-          className="w-full rounded-[49px] h-[calc(80vh-60px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
+          className="w-full rounded-[49px] h-[calc(80vh-35px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
         >
           <Tree
             data={data}

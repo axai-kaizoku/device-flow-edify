@@ -51,15 +51,13 @@ const AllReports = ({ index, report, closeBtn }: reportsForm) => {
         description="Something went wrong !!"
         isFailure={true}
       />
-      <div key={index} className="flex flex-col space-y-4">
-        <h2 className="text-3xl flex justify-start items-center gap-2 font-gilroySemiBold">
+      <div key={index} className="flex flex-col">
+        <h2 className="text-2xl flex justify-center items-center font-gilroySemiBold">
           {report?.title}
         </h2>
+
         {/* <p className="text-gray-600 mb-5 leading-relaxed">{report.description}</p> */}
-        {report?.title === "Total Assets" ? (
-          // <DevicesReport />
-          <AllAssets closeBtn={closeBtn} />
-        ) : report?.title === "Assigned Members" ? (
+        {report?.title === "Assigned Members" ? (
           <EmployeeReport closeBtn={closeBtn} />
         ) : report?.title === "Inventory Devices Report" ? (
           <div className="flex flex-col">
@@ -87,14 +85,6 @@ const AllReports = ({ index, report, closeBtn }: reportsForm) => {
           </div>
         ) : report?.title === "Assigned Assets" ? (
           <AssignedDevicesReport closeBtn={closeBtn} />
-        ) : report?.title === "Deleted Assets" ? (
-          <DeletedAssetsReport closeBtn={closeBtn} />
-        ) : report?.title === "Unassigned Assets" ? (
-          <UnassignedReport closeBtn={closeBtn} />
-        ) : report?.title === "Deleted Members" ? (
-          <DeletedUserReports closeBtn={closeBtn} />
-        ) : report?.title === "Total Members" ? (
-          <AllUsers closeBtn={closeBtn} />
         ) : (
           <div className="text-gray-500 italic">
             No action available right now

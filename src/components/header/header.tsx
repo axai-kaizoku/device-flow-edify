@@ -126,21 +126,16 @@ export default function Header({ session }: Props) {
                 </div>
               </div>
 
-              <div
-                className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white"
-                onClick={() => {
-                  router.push("/people");
-                }}
-              >
-                <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
-                  <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
-                </div>
-                <CreateUser>
+              <CreateUser>
+                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
+                  <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
+                    <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
+                  </div>
                   <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Add Employee
                   </div>
-                </CreateUser>
-              </div>
+                </div>
+              </CreateUser>
             </div>
           </div>
 

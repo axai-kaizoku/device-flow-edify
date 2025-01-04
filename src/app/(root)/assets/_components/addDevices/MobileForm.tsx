@@ -3,10 +3,7 @@
 import { Icon } from "@/components/wind/Icons";
 import { getAllDevices } from "@/server/deviceActions";
 import React, { useState } from "react";
-import {
-	DevicePage1 as DevicePage1,
-  FormErrors,
-} from "./_components/types";
+import { DevicePage1 as DevicePage1, FormErrors } from "./_components/types";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 
 interface BasicDetailsProps {
@@ -90,9 +87,15 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="text-2xl font-gilroyMedium py-5">Select OS</h1>
+      <h1 className="2xl:text-2xl text-[22px] font-gilroySemiBold mb-4">
+        Select OS
+      </h1>
 
-      <div className={`flex justify-between items-center flex-wrap gap-4 w-full ${!errors?.os && "mb-7" }`}>
+      <div
+        className={`flex justify-between items-center flex-wrap gap-4 w-full ${
+          !errors?.os && "mb-8"
+        }`}
+      >
         {deviceType === "mobile" &&
           operatingSystems?.map((os, index) => (
             <div
@@ -124,105 +127,104 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
           ))}
       </div>
 
-      {errors?.os && <p className="text-red-500 text-sm mb-7">{errors?.os}</p>}
+      {errors?.os && <p className="text-red-500 text-sm mb-8">{errors?.os}</p>}
 
-
-	  <div className="flex flex-col gap-6">
-		<div>
-			<FormField
-				label="Brand Name"
-				id="brand"
-				name="brand"
-				type="text"
-				value={formData?.brand}
-				onChange={handleChange}
-				error={errors?.brand}
-				placeholder="eg: Lenovo, etc"
-				className="outline-[#5F5F5F] border"
-			/>
-		</div>
+      <div className="flex flex-col gap-8">
+        <div>
+          <FormField
+            label="Brand Name"
+            id="brand"
+            name="brand"
+            type="text"
+            value={formData?.brand}
+            onChange={handleChange}
+            error={errors?.brand}
+            placeholder="eg: Lenovo, etc"
+            className="outline-[#5F5F5F] border"
+          />
+        </div>
 
         <div>
-			<FormField
-				label="Device Name"
-				id="device_name"
-				name="device_name"
-				type="text"
-				value={formData?.device_name}
-				onChange={handleChange}
-				error={errors?.device_name}
-				placeholder="eg: Lenovo, etc"
-				className="outline-[#5F5F5F] border"
-			/>
-		</div>
+          <FormField
+            label="Device Name"
+            id="device_name"
+            name="device_name"
+            type="text"
+            value={formData?.device_name}
+            onChange={handleChange}
+            error={errors?.device_name}
+            placeholder="eg: Lenovo, etc"
+            className="outline-[#5F5F5F] border"
+          />
+        </div>
 
-		<div>
-			<FormField
-			label="Model Name"
-			id="model"
-			name="model"
-			type="text"
-			value={formData?.model}
-			onChange={handleChange}
-			error={errors?.model}
-			placeholder="eg: X14D, etc"
-			/>
-		</div>
+        <div>
+          <FormField
+            label="Model Name"
+            id="model"
+            name="model"
+            type="text"
+            value={formData?.model}
+            onChange={handleChange}
+            error={errors?.model}
+            placeholder="eg: X14D, etc"
+          />
+        </div>
 
-		<div className="flex gap-4">
-			<div className="flex-1">
-				<FormField
-				label="Processor"
-				id="processor"
-				name="processor"
-				type="text"
-				value={formData?.processor}
-				onChange={handleChange}
-				error={errors?.processor}
-				placeholder="eg: X14D, etc"
-				/>
-			</div>
-			<div className="flex-1">
-				<FormField
-				label="RAM"
-				id="ram"
-				name="ram"
-				type="text"
-				value={formData?.ram}
-				onChange={handleChange}
-				error={errors?.ram}
-				placeholder="eg: X14D, etc"
-				/>
-			</div>
-		</div>
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <FormField
+              label="Processor"
+              id="processor"
+              name="processor"
+              type="text"
+              value={formData?.processor}
+              onChange={handleChange}
+              error={errors?.processor}
+              placeholder="eg: X14D, etc"
+            />
+          </div>
+          <div className="flex-1">
+            <FormField
+              label="RAM"
+              id="ram"
+              name="ram"
+              type="text"
+              value={formData?.ram}
+              onChange={handleChange}
+              error={errors?.ram}
+              placeholder="eg: X14D, etc"
+            />
+          </div>
+        </div>
 
-		<div className="flex gap-4">
-			<div className="flex-1">
-				<FormField
-				label="Storage"
-				id="storage"
-				name="storage"
-				type="text"
-				value={formData?.storage}
-				onChange={handleChange}
-				error={errors?.storage}
-				placeholder="eg: X14D, etc"
-				/>
-			</div>
-			<div className="flex-1">
-				<FormField
-				label="Condition"
-				id="condition"
-				name="condition"
-				type="text"
-				value={formData?.condition}
-				onChange={handleChange}
-				error={errors?.condition}
-				placeholder="eg: X14D, etc"
-				/>
-			</div>
-		</div>
-	  </div>
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <FormField
+              label="Storage"
+              id="storage"
+              name="storage"
+              type="text"
+              value={formData?.storage}
+              onChange={handleChange}
+              error={errors?.storage}
+              placeholder="eg: X14D, etc"
+            />
+          </div>
+          <div className="flex-1">
+            <FormField
+              label="Condition"
+              id="condition"
+              name="condition"
+              type="text"
+              value={formData?.condition}
+              onChange={handleChange}
+              error={errors?.condition}
+              placeholder="eg: X14D, etc"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

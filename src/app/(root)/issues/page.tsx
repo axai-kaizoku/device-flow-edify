@@ -21,8 +21,8 @@ async function Issues({ searchParams }: IssueProps) {
     return (
       <CombinedContainer title="Issues">
         <div className="flex flex-col pt-[14px]">
-          <h1 className="text-gray-400 font-gilroySemiBold text-lg">Issues</h1>
-          <h1 className="text-3xl font-gilroySemiBold pt-[10px]">
+          <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">Issues</h1>
+          <h1 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
             Manage Issues
           </h1>
           <TabDisplay
