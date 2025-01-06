@@ -33,7 +33,7 @@ export default function Login() {
         </p>
       </div>
     </div>
-        <div className="w-[65%] md:w-[65%] lg:w-[65%] h-fit">
+        <div className="w-[76%] md:w-[76%] lg:w-[76%] h-fit">
           <LoginForm />
         </div>
         <div className="flex text-xs lg:text-sm absolute bottom-10 text-[#9E9E9E] left-9 justify-items-start">

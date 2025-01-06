@@ -6,9 +6,9 @@ export const ManageOrders = () => {
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Orders</div>
       </div>
-      
+
       <div className="self-stretch pr-[0.8px] pt-[3px]">
-      <div className="p-1 mb-2">
+        <div className="p-1 mb-2">
           <div
             style={{
               width: "100%",
