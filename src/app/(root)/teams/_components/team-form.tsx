@@ -8,6 +8,9 @@ import { createTeam, updateTeam } from "@/server/teamActions";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
+import { getImageUrl } from "@/server/orgActions";
+import { useToast } from "@/hooks/useToast";
+import { useAlert } from "@/hooks/useAlert";
 
 const DEPARTMENT_OPTIONS = [
   "Backend",
@@ -44,6 +47,8 @@ export const TeamForm = ({
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
+  const { openToast } = useToast();
+  const { showAlert } = useAlert();
 
   // Local state for form data
   const [formData, setFormData] = useState({
@@ -73,28 +78,41 @@ export const TeamForm = ({
 
     if (isEditForm) {
       setLoading(true);
+      // @ts-ignore
       await updateTeam(id!, {
-        title: formData.title,
-        description: formData.description,
-        image: formData.image,
+        title: formData.title!,
+        description: formData.description!,
+        image: formData.image!,
       });
+
       setLoading(false);
+      openToast("success", "Team updated successfully !");
+
+      router.refresh();
+      closeBtn(false);
     } else {
       setLoading(true);
       await createTeam(formData.title, formData.description, formData.image);
+      // setLocalAlert(true);
+      showAlert({
+        title: "WOHOOO!! 🎉",
+        description: "Team created successfully !",
+        isFailure: false,
+        key: "create-team-success",
+      });
       setLoading(false);
+      router.refresh();
+      closeBtn(false);
     }
-
-    router.refresh();
-    closeBtn(false);
   };
 
   // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file.name }));
-    }
+    const res = await getImageUrl({ file: file! }, "team");
+    // if (file) {
+    setFormData((prev) => ({ ...prev, image: res.data }));
+    // }
   };
 
   // Handle department selection
@@ -103,130 +121,134 @@ export const TeamForm = ({
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex flex-col w-[98%] h-[80%] justify-start items-start">
-        <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
-        <h3 className="text-3xl font-gilroySemiBold mb-2">
-          {isEditForm ? "Edit Team" : "Let's work together"}
-        </h3>
-        <p className="text-slate-500 mb-10">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua
-        </p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-          className="flex flex-col gap-8"
-        >
-          <div className="group relative">
-            <label
-              htmlFor="team-name"
-              className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
-            >
-              Team Name
-            </label>
-            <Input
-              id="team-name"
-              className={cn(
-                errors.title
-                  ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-                  : "h-12"
-              )}
-              value={formData.title}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
-              }
-              placeholder="eg: Alpha, Gamma"
-              type="text"
-            />
-            {errors.title && (
-              <p className="mt-2 text-sm text-destructive">{errors.title}</p>
-            )}
-          </div>
+    <>
+      <div className="flex justify-center items-center">
+        <div className="flex flex-col w-[98%] h-[80%] justify-start items-start">
+          <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
+          <h3 className="text-3xl font-gilroySemiBold mb-2">
+            {isEditForm ? "Edit Team" : "Let's work together"}
+          </h3>
+          <p className="text-slate-500 mb-10">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua
+          </p>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="font-gilroyMedium">Upload team image</label>
-            <div
-              className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <div className="flex flex-col justify-center items-center">
-                <Icons.uploadImage className="size-5" />
-                <span className="text-[#0EA5E9]">Click to upload</span>
-                <p className="text-xs text-neutral-400">
-                  JPG, JPEG, PNG less than 1MB
-                </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+            className="flex flex-col gap-8"
+          >
+            <div className="group relative">
+              <label
+                htmlFor="team-name"
+                className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+              >
+                Team Name
+              </label>
+              <Input
+                maxLength={20}
+                id="team-name"
+                className={cn(
+                  errors.title
+                    ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
+                    : "h-12"
+                )}
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, title: e.target.value }))
+                }
+                placeholder="eg: Alpha, Gamma"
+                type="text"
+              />
+              {errors.title && (
+                <p className="mt-2 text-sm text-destructive">{errors.title}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="font-gilroyMedium">Upload team image</label>
+              <div
+                className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <div className="flex flex-col justify-center items-center">
+                  <Icons.uploadImage className="size-5" />
+                  <span className="text-[#0EA5E9]">Click to upload</span>
+                  <p className="text-xs text-neutral-400">
+                    JPG, JPEG, PNG less than 1MB
+                  </p>
+                </div>
               </div>
-            </div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-            {errors.image && (
-              <p className="text-destructive text-sm">{errors.image}</p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="font-gilroyMedium my-1">Choose Department</label>
-            <div className="flex flex-wrap gap-x-5 gap-y-3">
-              {DEPARTMENT_OPTIONS.map((preLabel) => (
-                <button
-                  key={preLabel}
-                  type="button"
-                  className={cn(
-                    "w-fit h-fit flex px-3.5 text-secondary py-2.5 border border-secondary items-center justify-center text-base rounded-full",
-                    formData.description === preLabel
-                      ? "border-white bg-primary text-white"
-                      : "hover:border-black hover:text-black"
-                  )}
-                  onClick={() => handleDepartmentSelect(preLabel)}
-                >
-                  {preLabel}
-                </button>
-              ))}
-            </div>
-            {errors.description && (
-              <p className="text-destructive text-sm">{errors.description}</p>
-            )}
-          </div>
-
-          <div className="flex space-x-3 w-full pt-2 justify-between items-center">
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-full w-1/2"
-              onClick={() => closeBtn(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="rounded-full border w-1/2 bg-primary text-primary-foreground"
-              disabled={loading}
-            >
-              {loading ? (
-                <Spinner className={spinnerVariants({ size: "sm" })} />
-              ) : isEditForm ? (
-                <>
-                  Edit Team <Icons.arrowRight className="size-5" />
-                </>
-              ) : (
-                <>
-                  Submit
-                  <Icons.arrowRight className="size-5" />
-                </>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+              {errors.image && (
+                <p className="text-destructive text-sm">{errors.image}</p>
               )}
-              {/* {isEditForm ? "Edit Team" : "Submit"}{" "} */}
-              {/* <Spinner className={spinnerVariants({ size: "sm" })} /> */}
-            </Button>
-          </div>
-        </form>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="font-gilroyMedium my-1">
+                Choose Department
+              </label>
+              <div className="flex flex-wrap gap-x-5 gap-y-3">
+                {DEPARTMENT_OPTIONS.map((preLabel) => (
+                  <button
+                    key={preLabel}
+                    type="button"
+                    className={cn(
+                      "w-fit h-fit flex px-3.5 text-secondary py-2.5 border border-secondary items-center justify-center text-base rounded-full",
+                      formData.description === preLabel
+                        ? "border-white bg-primary text-white"
+                        : "hover:border-black hover:text-black"
+                    )}
+                    onClick={() => handleDepartmentSelect(preLabel)}
+                  >
+                    {preLabel}
+                  </button>
+                ))}
+              </div>
+              {errors.description && (
+                <p className="text-destructive text-sm">{errors.description}</p>
+              )}
+            </div>
+
+            <div className="flex space-x-3 w-full pt-2 justify-between items-center">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-full w-1/2"
+                onClick={() => closeBtn(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="rounded-full border w-1/2 bg-primary text-primary-foreground"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Spinner className={spinnerVariants({ size: "sm" })} />
+                ) : isEditForm ? (
+                  <>
+                    Edit Team <Icons.arrowRight className="size-5" />
+                  </>
+                ) : (
+                  <>
+                    Submit
+                    <Icons.arrowRight className="size-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

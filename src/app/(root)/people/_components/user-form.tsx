@@ -27,8 +27,9 @@ import { Icons } from "@/components/icons";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Spinner from "@/components/Spinner";
-import { GlobalAlert } from "@/components/global-alert";
-import useAlert from "@/hooks/useAlert";
+import { getImageUrl } from "@/server/orgActions";
+import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -38,7 +39,9 @@ interface UserFormProps {
 
 export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const router = useRouter();
-  const { isOpen, showAlert, hideAlert } = useAlert();
+  const { showAlert } = useAlert();
+  const { openToast } = useToast();
+
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -48,11 +51,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
     image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
     team: userData?.teamId
-      ? { name: userData.teamId.title, value: userData.teamId._id }
+      ? // @ts-ignore
+        { name: userData.teamId.title, value: userData.teamId._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
+          // @ts-ignore
           name: userData.reporting_manager.email,
+          // @ts-ignore
           value: userData.reporting_manager._id,
         }
       : { name: "", value: "" },
@@ -79,13 +85,24 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   });
 
   const validateStepOne = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
     const newErrors = {
       firstN: formData.firstN ? "" : "Name is required",
-      image: formData.image ? "" : "Image is required",
+      // image: formData.image ? "" : "Image is required",
       dob: formData.dob ? "" : "Date of birth is required",
       gender: formData.gender ? "" : "Gender is required",
-      email: formData.email ? "" : "Email is required",
-      phone: formData.phone ? "" : "Phone number is required",
+      email: formData.email
+        ? emailRegex.test(formData.email)
+          ? ""
+          : "Invalid email format"
+        : "Email is required",
+      phone: formData.phone
+        ? phoneRegex.test(formData.phone)
+          ? ""
+          : "Phone number must be 10 digits"
+        : "Phone number is required",
     };
 
     setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
@@ -96,10 +113,10 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const validateStepTwo = () => {
     const newErrors = {
       designation: formData.designation ? "" : "Designation is required",
-      team: formData.team.value ? "" : "Team is required",
+      // team: formData.team.value ? "" : "Team is required",
       reportM: formData.reportM.value ? "" : "Reporting Manager is required",
       employment: formData.employment ? "" : "Employment type is required",
-      offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
+      // offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
       onboarding: formData.onboarding ? "" : "Onboarding date is required",
     };
 
@@ -110,7 +127,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Clear previous errors
+    // @ts-ignore
     setErrors({});
 
     // Validation before submitting
@@ -142,72 +159,85 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
         try {
           await updateUser(userData?._id!, user);
           setLoading(false);
+          openToast("success", "User update success !");
           router.refresh();
           closeBtn(false);
         } catch (error) {
-          showAlert();
+          showAlert({
+            title: "Can't update user",
+            description: "Something went wrong !!",
+            isFailure: true,
+            key: "update-user-failure",
+          });
         }
       } else {
         setLoading(true);
         try {
           await createUser(user);
           setLoading(false);
+          showAlert({
+            title: "WOHOOO!! 🎉",
+            description: "User created successfully !!",
+            isFailure: false,
+            key: "create-user-success",
+          });
           router.push("/people");
           router.refresh();
+
+          setFormData({
+            firstN: "",
+            phone: "",
+            email: "",
+            image: "",
+            designation: "",
+            team: { name: "", value: "" },
+            reportM: { name: "", value: "" },
+            gender: "",
+            employment: "",
+            offerLetter: "",
+            dob: "",
+            onboarding: "",
+          });
           closeBtn(false);
         } catch (error: any) {
-          showAlert();
+          showAlert({
+            title: "Can't create user",
+            description: "Phone no. or email is used already !!",
+            isFailure: true,
+            key: "create-user-failure",
+          });
         }
 
         setLoading(false);
       }
-
-      // Reset form data after successful submission
-      setFormData({
-        firstN: "",
-        phone: "",
-        email: "",
-        image: "",
-        designation: "",
-        team: { name: "", value: "" },
-        reportM: { name: "", value: "" },
-        gender: "",
-        employment: "",
-        offerLetter: "",
-        dob: "",
-        onboarding: "",
-      });
     } catch (error) {
       notFound();
     }
   };
 
   const fileImageRef = useRef<HTMLInputElement | null>(null);
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file.name }));
-    }
+    const res = await getImageUrl({ file: file! }, "user");
+    // if (file) {
+    setFormData((prev) => ({ ...prev, image: res.data }));
+    console.log(formData.image);
+    // }
   };
 
   const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
-  const handleOfferLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOfferLetterChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, offerLetter: file.name }));
-    }
+    const res = await getImageUrl({ file: file! }, "device");
+    // if (file) {
+    setFormData((prev) => ({ ...prev, offerLetter: res.data }));
+    // }
   };
 
   return (
     <>
-      <GlobalAlert
-        isOpen={isOpen}
-        onClose={hideAlert}
-        title={isEditForm ? "Can't update user" : "Can't create user"}
-        description="Something went wrong !!"
-        isFailure={true}
-      />
-
       <div className="flex flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
         <div className="flex justify-start items-center gap-4 font-gilroySemiBold">
           <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
@@ -251,7 +281,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </>
               )}
 
-              <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] mb-2">Personal Info</div>
+              <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] mb-2">
+                Personal Info
+              </div>
               <FormField
                 label="Name"
                 error={errors.firstN}
@@ -260,6 +292,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, firstN: e.target.value }))
                 }
+                maxLength={35}
+                minLength={2}
                 type="text"
                 placeholder="John Doe"
               />
@@ -350,12 +384,32 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     name="email"
                     value={formData?.email ?? ""}
                     type="text"
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      const emailRegex =
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                      if (
+                        !inputValue ||
+                        /^[a-zA-Z0-9@._-]*$/.test(inputValue)
+                      ) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          email: inputValue,
+                        }));
+
+                        // Validate email format on the fly
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          email: inputValue
+                            ? emailRegex.test(inputValue)
+                              ? ""
+                              : "Invalid email format"
+                            : "Email is required",
+                        }));
+                      }
+                    }}
+                    maxLength={50}
                     placeholder="jhondoe@winuall.com"
                   />
                 </div>
@@ -366,14 +420,31 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     name="phone"
                     error={errors.phone}
                     value={formData?.phone ?? ""}
-                    type="text"
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }))
-                    }
-                    placeholder="+91"
+                    type="tel"
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      const phoneRegex = /^[0-9]{0,10}$/;
+
+                      // Allow only numbers (or empty string) and prevent invalid input
+                      if (!inputValue || phoneRegex.test(inputValue)) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          phone: inputValue,
+                        }));
+
+                        // Validate phone number format on the fly
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          phone: inputValue
+                            ? /^[0-9]{10}$/.test(inputValue)
+                              ? ""
+                              : "Phone number must be 10 digits"
+                            : "Phone number is required",
+                        }));
+                      }
+                    }}
+                    maxLength={10}
+                    placeholder="eg: 9876543210"
                   />
                 </div>
               </div>
@@ -409,7 +480,10 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 <div className="z-50 pt-3">
                   <SelectInput
                     value={formData.reportM.name || ""}
+                    placeholder="Search by name, etc"
+                    // @ts-ignore
                     fetchOptions={searchUsers}
+                    // @ts-ignore
                     initialOptions={fetchUsers}
                     onSelect={(data: any) => {
                       setFormData((prev) => ({
@@ -482,6 +556,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     <div className="z-20 flex-1">
                       <SelectInput
                         value={formData?.team?.name}
+                        placeholder="Search by name, etc"
                         fetchOptions={async (query) => {
                           const data = await fetchTeams();
                           const filtered = data.filter((obj: any) =>
@@ -573,7 +648,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   )}
                 </div>
               </div>
-
               <div className="flex gap-2 w-full mt-4">
                 <Button
                   className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"

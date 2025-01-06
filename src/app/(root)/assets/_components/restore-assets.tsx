@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TriangleAlert } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import Spinner from "@/components/Spinner";
@@ -34,9 +33,7 @@ export const RestoreDevice = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <div>
-            <Icons.warning_restore />
-          </div>
+          <Icons.warning_restore />
         </div>
 
         {/* Title */}

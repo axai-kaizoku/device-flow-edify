@@ -1,7 +1,5 @@
-import { CombinedContainer } from "@/components/container/container";
-import React from "react";
 import { getIssueById, Issues } from "@/server/issueActions";
-import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface IssuePageProps {
   params: { id: string };
@@ -16,22 +14,24 @@ async function SignleIssue({ params }: IssuePageProps) {
         Issues <span className="text-black text-xl">(ID: {data?._id})</span>
       </h1>
       <div className="flex h-fit w-full">
+        {/* <!-- First Column --> */}
         <div className="flex flex-col w-[45%]">
+          {/* <!-- First Row of First Column --> */}
           <div className="m-2 py-1 px-6 rounded-[27px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
             <div className="flex justify-start items-center p-3 gap-4">
               <div className="size-[90.21px] rounded-[90.21px]">
                 <img
-                  src={`/media/mac.jpeg`}
+                  src={data?.deviceDetails?.image ?? "/media/mac.jpeg"}
                   alt=" Asset Image"
                   className="object-cover"
                 />
               </div>
               <div>
                 <div className="text-2xl font-gilroySemiBold text-black">
-                  Macbook Pro 2023
+                  {data?.deviceDetails?.device_name ?? "-"}
                 </div>
                 <div className="font-gilroyMedium text-[17.557px] text-[#7C7C7C]">
-                  A13HNSXGE683BSDGG
+                  {data?.deviceDetails?.serial_no ?? "-"}
                 </div>
               </div>
             </div>
@@ -52,7 +52,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Brand
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      Apple
+                      {data?.deviceDetails?.brand ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -60,7 +60,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Model
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      Macbook Pro 2023
+                      {data?.deviceDetails?.custom_model ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -68,7 +68,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       RAM
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      16GB
+                      {data?.deviceDetails?.ram ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -76,7 +76,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Storage
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      512GB
+                      {data?.deviceDetails?.storage ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -84,14 +84,14 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Serial Number
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      EDIFY-23456
+                      {data?.deviceDetails?.serial_no ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <div className="text-[#737373] font-gilroySemiBold text-base">
                       Condition
                     </div>
-                    <div className="font-gilroySemiBold text-[#008910] text-lg">
+                    <div className="font-gilroySemiBold text-black text-lg">
                       Good
                     </div>
                   </div>
@@ -99,8 +99,10 @@ async function SignleIssue({ params }: IssuePageProps) {
                     <div className="text-[#737373] font-gilroySemiBold text-base">
                       Warranty Status
                     </div>
-                    <div className="font-gilroySemiBold text-[#008910] text-lg">
-                      In Warranty
+                    <div className="font-gilroySemiBold text-black text-lg">
+                      {data.deviceDetails?.warranty_status
+                        ? "Active"
+                        : "Inactive"}
                     </div>
                   </div>
                 </div>
@@ -120,7 +122,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Assigned to
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      {data?.userName}
+                      {data?.userDetails?.name ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -128,7 +130,9 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Purchased on
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      Macbook Pro 2023
+                      {new Date(
+                        data?.deviceDetails?.createdAt!
+                      ).toLocaleDateString()}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -136,7 +140,9 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Assigned on
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      16GB
+                      {new Date(
+                        data?.deviceDetails?.assigned_at!
+                      ).toLocaleDateString()}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -144,7 +150,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Department
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      512GB
+                      {data.teamDetails?.description ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -152,7 +158,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Role
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      EDIFY-23456
+                      {data.userDetails?.designation ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -160,7 +166,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Team
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      Good
+                      {data.teamDetails?.title ?? "-"}
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -168,7 +174,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                       Reporting Manager
                     </div>
                     <div className="font-gilroySemiBold text-black text-lg">
-                      Active
+                      {data?.manager?.name ?? "-"}
                     </div>
                   </div>
                 </div>
@@ -190,26 +196,27 @@ async function SignleIssue({ params }: IssuePageProps) {
                   {data?.title}
                 </div>
                 <div className="flex gap-3">
+                  {data?.status!.toLowerCase() === "open" ? (
+                    <div className="font-gilroyRegular text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl">
+                      {data?.status}
+                    </div>
+                  ) : (
+                    <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl">
+                      {data?.status}
+                    </div>
+                  )}
+
                   {data?.priority?.toLowerCase() === "low" ? (
-                    <div className="font-gilroySemiBold text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl text-center">
+                    <div className="font-gilroyRegular text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl text-center">
                       {data?.priority}
                     </div>
                   ) : data?.priority?.toLowerCase() === "medium" ? (
-                    <div className="font-gilroySemiBold text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
+                    <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
                       {data?.priority}
                     </div>
                   ) : (
-                    <div className="font-gilroySemiBold text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
+                    <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
                       {data?.priority}
-                    </div>
-                  )}
-                  {data?.status!.toLowerCase() === "open" ? (
-                    <div className="font-gilroySemiBold text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl">
-                      {data?.status}
-                    </div>
-                  ) : (
-                    <div className="font-gilroySemiBold text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl">
-                      {data?.status}
                     </div>
                   )}
                 </div>
@@ -221,11 +228,7 @@ async function SignleIssue({ params }: IssuePageProps) {
                     Opened on
                   </div>
                   <div className="font-gilroySemiBold underline text-[#008910] text-xl">
-                    {new Date(data?.createdAt!).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
+                    {new Date(data?.createdAt!).toLocaleDateString()}
                   </div>
                 </div>
 
@@ -250,10 +253,31 @@ async function SignleIssue({ params }: IssuePageProps) {
                   Description
                 </div>
                 <div className="font-gilroySemiBold text-xl">
-                  {/* Show up to 12 words */}
                   {data?.description}
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* <!-- Third Row of Second Column --> */}
+          <div className="m-2 p-4">
+            <div className="flex justify-end gap-4">
+              <div className="w-1/2" />
+
+              <div
+                className={cn(
+                  data.status!.toLowerCase() === "open"
+                    ? "bg-[#027A47] "
+                    : "bg-black",
+                  "flex-1 rounded-[49px] text-center py-3 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-lg text-white"
+                )}
+              >
+                {data?.status!.toLowerCase() === "open"
+                  ? "Not Resolved"
+                  : "Resolved"}
+              </div>
+
+              <button></button>
             </div>
           </div>
         </div>

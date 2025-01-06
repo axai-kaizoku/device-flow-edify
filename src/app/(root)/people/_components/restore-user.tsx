@@ -10,9 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TriangleAlert } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
-import { updateDevice } from "@/server/deviceActions";
 import Spinner from "@/components/Spinner";
 import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
@@ -26,8 +24,7 @@ export const RestoreUser = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for restore action
-  const [initText, setInitText] = useState("Restore User");
+  const [loading, setLoading] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -35,9 +32,7 @@ export const RestoreUser = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <div>
-            <Icons.warning_restore />
-          </div>
+          <Icons.warning_restore />
         </div>
 
         {/* Title */}
@@ -55,9 +50,8 @@ export const RestoreUser = ({
           <Button
             className="w-1/2 rounded-md border text-base border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
             onClick={() => setOpen(false)}
-            disabled={loading} // Disable button while loading
           >
-            {loading ? <Spinner /> : "Discard"}
+            {"Discard"}
           </Button>
           <Button
             className="w-1/2 rounded-md border border-[#039855] bg-[#039855] text-base shadow-sm text-white"
@@ -69,11 +63,6 @@ export const RestoreUser = ({
                   setOpen(false);
                   router.refresh();
                 } catch (e: any) {
-                  const errorMessage =
-                    e.response?.data?.message ||
-                    e.message ||
-                    "Failed to restore the device.";
-                  setInitText(errorMessage);
                 } finally {
                   setLoading(false); // End loading
                 }

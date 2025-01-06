@@ -3,44 +3,44 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteUser } from "@/server/userActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
-import { useAlert } from "@/hooks/useAlert";
+import { updateUser, User } from "@/server/userActions";
+import { useToast } from "@/hooks/useToast";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
 
-export const DeleteUser = ({
-  id,
+export const RemoveTeamMember = ({
+  userData,
   children,
 }: {
-  id: string;
+  userData: User;
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const { openToast } = useToast();
   const [open, setOpen] = useState(false);
-  const { showAlert } = useAlert();
+  const [loading, setLoading] = useState(false);
 
-  const handleDelete = async () => {
-    if (id) {
+  const handleRemove = async () => {
+    if (userData._id) {
+      setLoading(true);
       try {
-        await deleteUser(id);
+        await updateUser(userData._id, { teamId: null });
         setOpen(false);
+        openToast("success", "Removed member from team !");
         router.refresh();
       } catch (e: any) {
-        showAlert({
-          title: "Failed to delete the user.",
-          description:
-            "User has devices assigned. Please remove all devices before deleting the user.",
-          isFailure: true,
-          key: "delete-user-1",
-        });
+        openToast("error", "Can't remove member from this team!");
         setOpen(false);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -51,25 +51,21 @@ export const DeleteUser = ({
         <DialogTrigger>{children}</DialogTrigger>
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
-          {/* Warning Icon */}
-          <div className="flex justify-center">
-            <div>
+          <div className="flex justify-center ">
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
               <Icons.warning_delete />
             </div>
           </div>
 
-          {/* Title */}
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
             Are you sure?
           </DialogTitle>
 
-          {/* Description */}
-          <DialogDescription className="p-1 text-sm text-gray-600">
-            Are you sure you want to delete this?
+          <DialogDescription className="p-1 text-sm text-gray-600 font-gilroyMedium">
+            Are you sure you want to remove member from this team?
           </DialogDescription>
 
-          {/* Footer Buttons */}
-          <DialogFooter className="flex w-full items-center justify-between ">
+          <DialogFooter className="flex w-full items-center justify-between">
             <Button
               className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
               onClick={() => setOpen(false)}
@@ -78,9 +74,15 @@ export const DeleteUser = ({
             </Button>
             <Button
               className="w-1/2 rounded-md bg-[#D92D20] text-white"
-              onClick={handleDelete}
+              onClick={handleRemove}
             >
-              Delete
+              {loading ? (
+                <>
+                  <Spinner className={spinnerVariants({ size: "sm" })} />
+                </>
+              ) : (
+                "Remove"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -17,7 +17,9 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ users }) => {
         </h2>
 
         <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-sm px-3 py-1 rounded-full">
-          {users?.length ?? "N/A"} Members
+          {users?.length
+            ? `${users.length} ${users.length > 1 ? "Members" : "Member"}`
+            : "N/A"}
         </span>
       </div>
       <TeamTable data={users} />

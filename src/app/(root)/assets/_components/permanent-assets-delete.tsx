@@ -23,7 +23,6 @@ export const PermanentAssetsDelete = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [initText, setInitText] = useState("Are you sure?");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,17 +58,11 @@ export const PermanentAssetsDelete = ({
             onClick={async () => {
               if (id) {
                 try {
-                  updateDevice(id!, { orgId: null });
+                  await updateDevice(id!, { orgId: null });
                   setOpen(false);
-
+                  router.push("/assets?tab=inactive_assets");
                   router.refresh();
-                } catch (e: any) {
-                  const errorMessage =
-                    e.response?.data?.message ||
-                    e.message ||
-                    "Failed to delete the team.";
-                  setInitText(errorMessage);
-                }
+                } catch (e: any) {}
               }
             }}
           >

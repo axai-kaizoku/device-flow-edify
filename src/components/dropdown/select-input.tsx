@@ -21,6 +21,7 @@ type SelectInputProps = {
   onSelect: (data: Option) => void;
   label: string;
   className?: string;
+  placeholder?: string;
 };
 
 export const SelectInput = ({
@@ -30,6 +31,7 @@ export const SelectInput = ({
   onSelect,
   label,
   className,
+  placeholder,
 }: SelectInputProps) => {
   const [query, setQuery] = useState(value);
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -153,7 +155,7 @@ export const SelectInput = ({
               setHighlightedIndex(null);
             }}
             onFocus={() => setIsDropdownOpen(true)}
-            placeholder="Choose"
+            placeholder={placeholder ?? "Search or select"}
             type="text"
           />
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">

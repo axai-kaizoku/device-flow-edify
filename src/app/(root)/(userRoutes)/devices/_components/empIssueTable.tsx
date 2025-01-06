@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { Icon } from "@/components/wind/Icons";
 import { Table } from "@/components/wind/Table";
 import { getAllResponse, Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
@@ -31,29 +30,45 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
         data={currentIssues}
         checkboxSelection={{
           uniqueField: "_id",
+          // logic yet to be done
           onSelectionChange: (e) => console.log(e),
         }}
         columns={[
           {
             title: "Issue ID",
-            dataIndex: "_id",
+            render: (data: Issues) => (
+              <div
+                className="cursor-pointer w-fit h-fit"
+                onClick={() => router.push(`/devices/issues/${data?._id}`)}
+              >
+                {data._id}
+              </div>
+            ),
+            // dataIndex: "_id",
           },
           {
             title: "Device",
             render: (data: Issues) => (
-              <div className="w-full flex justify-center items-center gap-2 cursor-pointer">
+              <div
+                className="w-full flex justify-start items-center gap-1 cursor-pointer"
+                onClick={() => router.push(`/devices/${data?._id}`)}
+              >
                 <img
-                  src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                  src={data.deviceDetails?.image ?? "/media/mac.jpeg"}
                   alt="Device Logo"
                   className="border size-10 rounded-full"
                 />
-                <div className="whitespace-nowrap">Device Name</div>
+                <div>{data.deviceDetails?.device_name ?? "-"}</div>
               </div>
             ),
           },
           {
             title: "Serial number",
-            dataIndex: "serial_no",
+            render: (data: Issues) => (
+              <div className="w-full flex justify-start items-center gap-1">
+                <div>{data?.deviceDetails?.serial_no ?? "-"}</div>
+              </div>
+            ),
           },
           {
             title: "Raised by",
@@ -61,7 +76,7 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
           },
           {
             title: "Issue Type",
-            dataIndex: "description",
+            dataIndex: "title",
           },
           {
             title: "Issue Status",
@@ -76,7 +91,7 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
             render: (data: Issues) => (
               <div
                 className="cursor-pointer"
-                onClick={() => router.push(`devices/issues/${data?._id}`)}
+                onClick={() => router.push(`/devices/issues/${data?._id}`)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

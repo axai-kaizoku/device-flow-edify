@@ -1,15 +1,12 @@
 "use client";
 import { Table } from "@/components/wind/Table";
-import { updateUser, User } from "@/server/userActions";
-import Link from "next/link";
+import { User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import Pagination from "../../_components/pagination";
 import { useState } from "react";
-import { Team } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
-import EditUser from "@/app/(root)/people/[id]/_components/edit-user";
-import { DeleteUser } from "@/app/(root)/people/[id]/_components/delete-user";
-// Import EditUser component
+import { RemoveTeamMember } from "./remove-team-member";
+import MoveTeamMember from "./move-team-member";
 
 const ITEMS_PER_PAGE = 6;
 export default function TeamTable({ data }: { data: User[] }) {
@@ -41,10 +38,10 @@ export default function TeamTable({ data }: { data: User[] }) {
               >
                 <img
                   src={
-                    data?.image ||
+                    data?.image ??
                     "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
-                  } // Default image if no profile_image exists
-                  alt={`${data?.first_name || "User"}'s Profile`}
+                  }
+                  alt={`${data?.first_name ?? "User"}'s Profile`}
                   className="w-10 h-10 rounded-full border object-cover"
                 />
                 <span>{data?.first_name || "N/A"}</span>
@@ -62,20 +59,20 @@ export default function TeamTable({ data }: { data: User[] }) {
           },
           {
             title: "Joining Date",
-            render: (data) => (
-              <div className="text-center">
-                {data?.onboarding_date
-                  ? new Date(data.onboarding_date).toLocaleDateString()
-                  : "N/A"}
-              </div>
-            ),
+            render: (data) => {
+              const date = new Date(data?.onboarding_date!);
+              const formattedDate = date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
+              return <div>{formattedDate}</div>;
+            },
           },
           {
             title: "Reporting Manager",
             render: (data) => (
-              <div className="text-center">
-                {data?.reporting_manager?.first_name || "N/A"}
-              </div>
+              <div>{data?.reporting_manager?.first_name || "N/A"}</div>
             ),
           },
           {
@@ -91,19 +88,13 @@ export default function TeamTable({ data }: { data: User[] }) {
           {
             title: "Actions",
             render: (data) => (
-              <div className="flex justify-center items-center gap-5">
-                {/* <button
-                  className="flex flex-col"
-                  onClick={() => handleRemoveUser(data)}
-                >
+              <div className="flex justify-start items-center gap-5">
+                <RemoveTeamMember userData={data}>
                   <Icons.table_delete className="size-6" />
-                </button> */}
-                <DeleteUser id={data?._id}>
-                  <Icons.table_delete className="size-6" />
-                </DeleteUser>
-                <EditUser userData={data}>
+                </RemoveTeamMember>
+                <MoveTeamMember userData={data}>
                   <Icons.table_edit className="size-5" />
-                </EditUser>
+                </MoveTeamMember>
               </div>
             ),
           },

@@ -6,9 +6,9 @@ import { callAPIWithToken, getSession } from "./helper";
 
 export type Team = {
   _id?: string;
-  title: string;
-  description: string;
-  image: string;
+  title?: string;
+  description?: string;
+  image?: string;
   size?: string;
   employees_count?: number;
   deleted_at?: string | null;
@@ -16,13 +16,13 @@ export type Team = {
   updatedAt?: string;
   orgId?: string | null;
   __v?: number;
-  manager: {
-    _id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    image: string;
+  manager?: {
+    _id?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    phone?: string;
+    image?: string;
   }[];
 };
 

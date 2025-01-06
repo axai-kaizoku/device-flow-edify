@@ -8,12 +8,11 @@ import { Team } from "@/server/teamActions";
 
 interface TeamsMainProps {
   teams: Team[];
-  sess: any;
 }
 
 const ITEMS_PER_PAGE = 6;
 
-export default function TeamsMain({ teams, sess }: TeamsMainProps) {
+export default function TeamsMain({ teams }: TeamsMainProps) {
   return (
     <PaginatedList
       teams={teams}

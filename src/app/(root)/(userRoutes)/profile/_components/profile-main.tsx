@@ -60,7 +60,7 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
               <div className="w-[90px] h-[90px] rounded-full overflow-hidden flex-shrink-0">
                 <img
                   src={
-                    user?.image ||
+                    user?.image ??
                     "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
                   }
                   alt="Profile"

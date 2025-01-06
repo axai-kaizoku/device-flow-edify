@@ -97,7 +97,6 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
                 title: "Closed by",
                 dataIndex: "status",
               },
-
               {
                 title: "Actions",
                 render: (record: Issues) => (

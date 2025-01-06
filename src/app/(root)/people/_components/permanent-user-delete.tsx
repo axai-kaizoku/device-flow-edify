@@ -10,10 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateTeam } from "@/server/teamActions";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
-import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
 
@@ -26,7 +23,6 @@ export const PermanentUserDelete = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [initText, setInitText] = useState("Are you sure?");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -62,17 +58,12 @@ export const PermanentUserDelete = ({
             onClick={async () => {
               if (id) {
                 try {
-                  updateUser(id!, { orgId: null });
+                  await updateUser(id!, { orgId: null });
                   setOpen(false);
+                  router.push("/people?tab=inactive_people");
 
                   router.refresh();
-                } catch (e: any) {
-                  const errorMessage =
-                    e.response?.data?.message ||
-                    e.message ||
-                    "Failed to delete the team.";
-                  setInitText(errorMessage);
-                }
+                } catch (e: any) {}
               }
             }}
           >

@@ -1,6 +1,6 @@
 export default function Error() {
   return (
-    <div className="fixed inset-0 flex flex-col justify-center items-center h-[95vh] sm:h-screen w-full">
+    <div className="flex flex-col justify-center items-center h-[95vh] sm:h-screen w-full">
       <div className="relative w-full h-[65%] flex justify-center items-center">
         <img
           src="/media/error.svg"

@@ -1,3 +1,4 @@
+"use client";
 import DeviceContainer from "./_components/deviceContainer";
 
 export default function Devices() {

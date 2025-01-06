@@ -15,8 +15,7 @@ import { Icons } from "@/components/icons";
 import { type LoggedInUser } from "./devicesPage";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
-import useAlert from "@/hooks/useAlert";
-import { GlobalAlert } from "@/components/global-alert";
+import { useAlert } from "@/hooks/useAlert";
 
 interface IssueFormProps {
   device: Device;
@@ -27,7 +26,7 @@ interface IssueFormProps {
 export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
   const router = useRouter();
   const [next, setNext] = useState(0);
-  const { hideAlert, isOpen, showAlert } = useAlert();
+  const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const fileIssueImages = useRef<HTMLInputElement | null>(null);
 
@@ -59,8 +58,8 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
   const validateStepTwo = () => {
     const newErrors = {
       priority: formData.priority ? "" : "Priority is required",
-      images:
-        formData.images.length > 0 ? "" : "At least one image is required",
+      // images:
+      //   formData.images.length > 0 ? "" : "At least one image is required",
     };
 
     setErrors((prev) => ({ ...prev, ...newErrors }));
@@ -115,6 +114,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    // @ts-ignore
     setErrors({});
 
     const isStepOneValid = validateStepOne();
@@ -132,7 +132,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       title: formData.title,
       description: formData.description,
       email: user.email,
-      userId: user.id,
+      userId: user.userId,
     };
 
     setLoading(true);
@@ -141,7 +141,12 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       router.refresh();
       closeBtn(false);
     } catch (error) {
-      showAlert();
+      showAlert({
+        title: "Error Creating Issue",
+        description: "Failed to create an issue. Please try again.",
+        isFailure: true,
+        key: "create-issue",
+      });
     }
     setLoading(false);
 
@@ -155,13 +160,6 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
 
   return (
     <>
-      <GlobalAlert
-        isOpen={isOpen}
-        onClose={hideAlert}
-        title="Error Creating Issue"
-        description="Failed to create an issue. Please try again."
-        isFailure
-      />
       <div className="flex justify-center items-start w-full h-full">
         <div className="flex flex-col w-[95%] h-[80%] justify-start items-start">
           <div className="flex flex-col gap-5 pb-5 w-full">
@@ -209,10 +207,10 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     <FormField
                       label="Raised by"
                       id="raised_by"
-                      value={user.first_name}
+                      value={user?.firstName ?? ""}
                       disabled
                       type="text"
-                      placeholder="John Doe"
+                      placeholder=""
                     />
                   </div>
                   <div className="w-full flex flex-row justify-between items-center">
@@ -230,7 +228,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                       <FormField
                         label="Role"
                         id="role"
-                        value={user?.designation ?? "Frontend Developer"}
+                        value={`${user?.role ?? "Frontend Developer"}`}
                         disabled
                         type="text"
                         placeholder=""
@@ -368,7 +366,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
 
                   <div className="flex flex-col gap-1.5 ">
                     <label className="font-gilroyMedium text-black text-base">
-                      Upload Offer Letter
+                      Upload Images
                     </label>
                     <div
                       className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
@@ -391,7 +389,9 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     />
                     {formData.images.length > 0 && (
                       <div className="mt-2">
-                        <h4 className="font-gilroyMedium text-sm">Uploaded Files:</h4>
+                        <h4 className="font-gilroyMedium text-sm">
+                          Uploaded Files:
+                        </h4>
                         <ul className="list-disc pl-5">
                           {formData.images.map((image, index) => (
                             <li

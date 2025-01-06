@@ -1,4 +1,4 @@
-"use server";
+// "use server";
 
 import { cache } from "react";
 import { Address } from "./addressActions";
@@ -130,5 +130,53 @@ export async function deleteOrg<Org>(orgId: string) {
     return res.data;
   } catch (e) {
     throw new Error("Failed to delete org");
+  }
+}
+
+export async function getImageUrl(
+  file: { file?: File },
+  type: "user" | "device" | "org" | "team"
+): Promise<any> {
+  try {
+    if (false) {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await callAPIWithToken<string>(
+        "https://api.edify.club/edifybackend/v1/upload", // API endpoint
+        "POST", // HTTP method
+        formData
+      );
+      return res.data;
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Determine the URL based on the type
+      let imageUrl: string;
+
+      switch (type) {
+        case "user":
+          imageUrl =
+            "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp";
+          break;
+        case "device":
+          imageUrl =
+            "https://utfs.io/f/NQykNGTeJtaHOrliC4Qt8HPrZM9gUevJhFLDnwaou0TEiB16";
+          break;
+        case "org":
+          imageUrl =
+            "https://via.placeholder.com/150/008000/FFFFFF?text=Org+Image";
+          break;
+        case "team":
+          imageUrl =
+            "https://via.placeholder.com/150/008000/FFFFFF?text=Team+Image";
+          break;
+        default:
+          throw new Error("Invalid type provided");
+      }
+
+      return { data: imageUrl };
+    }
+  } catch (error) {
+    throw new Error("Failed to create image url");
   }
 }

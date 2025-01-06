@@ -54,6 +54,9 @@ function UnAssignedAssets({ data }: { data: DeviceResponse }) {
                       <div
                         className="w-fit justify-center flex items-center gap-2 cursor-pointer"
                         onClick={() => router.push(`/assets/${data?._id}`)}
+                        onMouseEnter={() =>
+                          router.prefetch(`/assets/${data?._id}`)
+                        }
                       >
                         <img
                           src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"

@@ -7,19 +7,19 @@ import TeamMembers from "./_components/team-members";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/Spinner";
+import { UserData } from "@/app/store/authSlice";
 
 export default function TeamPage() {
-  const teamState = useSelector((state: any) => state.auth.userData);
+  const user: UserData = useSelector((state: any) => state.auth.userData);
   const [users, setUsers] = useState<User[] | null>(null);
-  const data = teamState?.teamId;
+  const teamState = user?.teamId;
 
   useEffect(() => {
-    if (!data?._id) return;
+    if (!teamState?._id) return;
 
     const fetchData = async () => {
       try {
-        console.log(data);
-        const fetchedUsers: User[] = await getUsersByTeamId(data._id);
+        const fetchedUsers: User[] = await getUsersByTeamId(teamState._id);
         setUsers(fetchedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -27,17 +27,13 @@ export default function TeamPage() {
     };
 
     fetchData();
-  }, [data]);
+  }, [teamState]);
 
   return (
     <CombinedContainer title="Teams">
       <div className="bg-white p-8 my-4 mx-8 rounded-3xl shadow-lg">
         <div className="flex justify-between items-center mb-6">
-          <TeamHeader
-            image={data?.image}
-            title={data?.title ?? "N/A"}
-            description={data?.description ?? "N/A"}
-          />
+          <TeamHeader teamData={teamState} />
         </div>
         {users === null ? (
           <div className="flex justify-center items-center">

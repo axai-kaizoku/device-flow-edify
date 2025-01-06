@@ -1,19 +1,11 @@
 "use client";
 import { Table } from "@/components/wind/Table";
-import { updateUser, User } from "@/server/userActions";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { User } from "@/server/userActions";
 import { useState } from "react";
-import { Team } from "@/server/teamActions";
-import { Icons } from "@/components/icons";
-import EditUser from "@/app/(root)/people/[id]/_components/edit-user";
-import { DeleteUser } from "@/app/(root)/people/[id]/_components/delete-user";
 import Pagination from "@/app/(root)/teams/_components/pagination";
-// Import EditUser component
 
 const ITEMS_PER_PAGE = 6;
 export default function TeamTable({ data }: { data: User[] }) {
-  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalTeams = data?.length || 0;
@@ -36,8 +28,8 @@ export default function TeamTable({ data }: { data: User[] }) {
             title: "Name",
             render: (data) => (
               <div
-                className="flex items-center gap-3 cursor-pointer"
-                onClick={() => router.push(`/people/${data._id}`)}
+                className="flex items-center gap-3"
+                // onClick={() => router.push(`/people/${data._id}`)}
               >
                 <img
                   src={
@@ -54,7 +46,7 @@ export default function TeamTable({ data }: { data: User[] }) {
           { title: "Email", dataIndex: "email" },
           {
             title: "Role",
-            render: (data) => (
+            render: (data: User) => (
               <div className="truncate max-w-[150px]">
                 {data?.designation || "N/A"}
               </div>
@@ -62,19 +54,21 @@ export default function TeamTable({ data }: { data: User[] }) {
           },
           {
             title: "Joining Date",
-            render: (data) => (
-              <div className="text-center">
-                {data?.onboarding_date
-                  ? new Date(data.onboarding_date).toLocaleDateString()
-                  : "N/A"}
-              </div>
-            ),
+            render: (data: User) => {
+              const date = new Date(data?.onboarding_date!);
+              const formattedDate = date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
+              return <div>{formattedDate}</div>;
+            },
           },
           {
             title: "Reporting Manager",
-            render: (data) => (
+            render: (data: User) => (
               <div className="text-center">
-                {data?.reporting_manager?.first_name || "N/A"}
+                {data?.reporting_manager?.first_name || "-"}
               </div>
             ),
           },
@@ -85,25 +79,6 @@ export default function TeamTable({ data }: { data: User[] }) {
                 {data?.devices!?.length > 0
                   ? `${data?.devices!.length} Assigned`
                   : "N/A"}
-              </div>
-            ),
-          },
-          {
-            title: "Actions",
-            render: (data) => (
-              <div className="flex justify-center items-center gap-5">
-                {/* <button
-                  className="flex flex-col"
-                  onClick={() => handleRemoveUser(data)}
-                >
-                  <Icons.table_delete className="size-6" />
-                </button> */}
-                <DeleteUser id={data?._id}>
-                  <Icons.table_delete className="size-6" />
-                </DeleteUser>
-                <EditUser userData={data}>
-                  <Icons.table_edit className="size-5" />
-                </EditUser>
               </div>
             ),
           },

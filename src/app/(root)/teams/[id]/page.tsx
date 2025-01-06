@@ -20,12 +20,12 @@ export default async function TeamPage({ params }: TeamPageProps) {
         <div className="bg-white p-8 my-6 mx-8 rounded-3xl shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <TeamHeader
-              image={data?.image}
-              title={data?.title ?? "N/A"}
-              description={data?.description ?? "N/A"}
+              image={data?.image ?? ""}
+              title={data?.title ?? "-"}
+              description={data?.description ?? "-"}
               manager={data.manager}
             />
-            <TeamActions teamId={data?._id! ?? "N/A"} />
+            <TeamActions team={data} />
           </div>
           <TeamMembers users={users} />
         </div>

@@ -53,6 +53,9 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
                       <div
                         className=" justify-start flex items-center gap-2 cursor-pointer"
                         onClick={() => router.push(`/assets/${data?._id}`)}
+                        onMouseEnter={() =>
+                          router.prefetch(`/assets/${data?._id}`)
+                        }
                       >
                         <img
                           src={

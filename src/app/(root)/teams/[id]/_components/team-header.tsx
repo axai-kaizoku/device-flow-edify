@@ -24,7 +24,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
     <div className="flex gap-5 items-center">
       <img
         src={
-          image ||
+          image ??
           "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
         }
         alt="team-image"

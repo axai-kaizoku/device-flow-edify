@@ -12,8 +12,6 @@ import { User, UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Tab } from "../teams/_components/Tab";
-import useAlert from "@/hooks/useAlert";
-import { GlobalAlert } from "@/components/global-alert";
 import {
   activeUsers,
   filterUsers,
@@ -21,9 +19,12 @@ import {
   userFilterFields,
   usersFields,
 } from "@/server/filterActions";
+import { useAlert } from "@/hooks/useAlert";
+
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
 const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
+
 interface TabDisplayProps {
   users: User[];
   userRole: number;
@@ -32,10 +33,10 @@ interface TabDisplayProps {
 
 function TabDisplay({ data }: { data?: UserResponse }) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
-    defaultValue: "people",
+    defaultValue: "active_people",
   });
 
-  const { hideAlert, isOpen, showAlert } = useAlert();
+  const { showAlert } = useAlert();
 
   const [assets, setAssets] = useState<UserResponse | null>(null);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
@@ -76,7 +77,12 @@ function TabDisplay({ data }: { data?: UserResponse }) {
       setAssets(res);
     } catch (error) {
       console.error("Error fetching issues:", error);
-      showAlert();
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to fetch data",
+        isFailure: true,
+        key: "fetch-error-users",
+      });
     }
   };
 
@@ -146,10 +152,10 @@ function TabDisplay({ data }: { data?: UserResponse }) {
       try {
         let response;
         switch (activeTab) {
-          case "people":
+          case "active_people":
             response = await activeUsers();
             break;
-          case "deleted_people":
+          case "inactive_people":
             response = await inActiveUsers();
             break;
 
@@ -159,7 +165,12 @@ function TabDisplay({ data }: { data?: UserResponse }) {
         setAssets(response); // Update state with the fetched data
       } catch (error) {
         console.error("Error fetching tab data:", error);
-        showAlert();
+        showAlert({
+          title: "Something went wrong",
+          description: "Failed to fetch data",
+          isFailure: true,
+          key: "fetch-error-users-2",
+        });
       }
     };
 
@@ -167,13 +178,13 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   }, [activeTab]);
   const renderContent = () => {
     switch (activeTab) {
-      case "people":
+      case "active_people":
         return (
           <Suspense fallback={<Spinner />}>
             <UserMain data={assets} />
           </Suspense>
         );
-      case "deleted_people":
+      case "inactive_people":
         return (
           <Suspense fallback={<Spinner />}>
             <DeletedUser data={assets} />
@@ -186,27 +197,22 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   };
   const tabs = [
     {
-      key: "people",
+      key: "active_people",
       label: "Active People",
       component: <UserMain data={assets} />,
     },
     {
-      key: "deleted_people",
+      key: "inactive_people",
       label: "Inactive People",
       component: <DeletedUser data={assets} />,
     },
   ];
   return (
     <>
-      <GlobalAlert
-        isOpen={isOpen}
-        onClose={hideAlert}
-        title={"Failed to fetch data. Please try again."}
-        description="Something went wrong !!"
-        isFailure={true}
-      />
       <div className="flex flex-col pt-[14px]">
-        <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">People</h1>
+        <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">
+          People
+        </h1>
         <h1 className="2xl:text-3xl text-2xl pt-[10px] font-gilroyBold ">
           Manage People
         </h1>

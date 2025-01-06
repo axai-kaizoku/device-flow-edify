@@ -14,14 +14,12 @@ import { Icons } from "@/components/icons";
 import { DeviceResponse } from "@/server/deviceActions";
 import {
   assignedAssets,
-  devicesFields,
   devicesFilterFields,
   filterDevice,
   inActiveAssets,
   unAssignedAssets,
 } from "@/server/filterActions";
-import useAlert from "@/hooks/useAlert";
-import { GlobalAlert } from "@/components/global-alert";
+import { useAlert } from "@/hooks/useAlert";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -31,7 +29,7 @@ function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "assigned_assets",
   });
-  const { hideAlert, isOpen, showAlert } = useAlert();
+  const { showAlert } = useAlert();
 
   const [assets, setAssets] = useState<DeviceResponse | null>(null);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
@@ -73,7 +71,12 @@ function TabDisplay() {
       setAssets(res);
     } catch (error) {
       console.error("Error fetching issues:", error);
-      showAlert();
+      showAlert({
+        title: "Something went wrong !!",
+        description: "Failed to fetch data. Please try again.",
+        isFailure: true,
+        key: "fetch-error-device",
+      });
     }
   };
 
@@ -157,7 +160,12 @@ function TabDisplay() {
         setAssets(response); // Update state with the fetched data
       } catch (error) {
         console.error("Error fetching tab data:", error);
-        showAlert();
+        showAlert({
+          title: "Something went wrong !!",
+          description: "Failed to fetch data. Please try again.",
+          isFailure: true,
+          key: "fetch-error-device-tab",
+        });
       }
     };
 
@@ -209,14 +217,6 @@ function TabDisplay() {
 
   return (
     <>
-      <GlobalAlert
-        isOpen={isOpen}
-        onClose={hideAlert}
-        title={"Failed to fetch data. Please try again."}
-        description="Something went wrong !!"
-        isFailure={true}
-      />
-
       <div className="flex flex-col  pt-[14px]">
         <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">Assets</h1>
         <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">

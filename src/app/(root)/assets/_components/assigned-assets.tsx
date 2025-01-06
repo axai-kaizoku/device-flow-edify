@@ -54,10 +54,13 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                       <div
                         className=" justify-start flex items-center gap-2 cursor-pointer"
                         onClick={() => router.push(`/assets/${data?._id}`)}
+                        onMouseEnter={() =>
+                          router.prefetch(`/assets/${data?._id}`)
+                        }
                       >
                         <img
                           src={
-                            data?.image ||
+                            data?.image ??
                             "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
                           }
                           alt="Device Logo"
@@ -139,8 +142,13 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                         <SoftDeleteAsset id={record?._id}>
                           <Icons.table_delete className="size-6" />
                         </SoftDeleteAsset>
-                        <Link href={`/assets/${record?._id}`}>
-                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
+                        <Link
+                          href={`/assets/${record?._id}`}
+                          onMouseEnter={() =>
+                            router.prefetch(`/assets/${record?._id}`)
+                          }
+                        >
+                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-lg py-0.5 px-6">
                             Manage
                           </div>
                         </Link>

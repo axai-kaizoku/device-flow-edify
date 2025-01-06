@@ -1,3 +1,4 @@
+"use client";
 import EmpIssueTable from "./empIssueTable";
 import { getAllResponse } from "@/server/issueActions";
 

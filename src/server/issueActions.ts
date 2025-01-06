@@ -170,8 +170,6 @@ export const createIssue = async (
       const issue = {
         ...issueData,
         orgId: sess.user.user.orgId?._id,
-        // userId: sess.user.id,
-        // email: sess.user.email,
         createdAt: new Date().toISOString(),
       };
       const res = await callAPIWithToken<Issues>(

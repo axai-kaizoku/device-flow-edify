@@ -7,41 +7,26 @@ import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
 import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
-import { useState, useEffect } from "react";
-import Spinner from "@/components/Spinner";
-import { Icons } from "@/components/icons";
 
 interface TabDisplayProps {
-  sess: any;
   teams: Team[];
   deletedTeams: Team[];
 }
 
-function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
+function TabDisplay({ teams, deletedTeams }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active",
   });
-  const [loading, setLoading] = useState(false);
 
   // Function to handle tab change with loading state
   const handleTabChange = (tab: string) => {
-    setLoading(true); // Set loading to true before fetching data
     setActiveTab(tab);
   };
-
-  useEffect(() => {
-    // When the active tab changes, simulate a delay to show loading
-    const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false once the content is ready
-    }, 500); // Adjust time as needed
-
-    return () => clearTimeout(timer);
-  }, [activeTab]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "active":
-        return <TeamsMain teams={teams} sess={sess} />;
+        return <TeamsMain teams={teams} />;
       case "deleted":
         return <DeletedTeams teams={deletedTeams} />;
       default:
@@ -52,7 +37,9 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
   return (
     <>
       <div className="flex flex-col pt-[14px]">
-        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">Teams</h1>
+        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
+          Teams
+        </h1>
         <h1 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
           Manage Teams & Employee
         </h1>
@@ -99,14 +86,7 @@ function TabDisplay({ sess, teams, deletedTeams }: TabDisplayProps) {
       </div>
       <div className="border mt-2"></div>
 
-      {/* Show loading spinner while fetching */}
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <Spinner />
-        </div>
-      ) : (
-        <div className="mt-4">{renderContent()}</div>
-      )}
+      <div className="mt-4">{renderContent()}</div>
     </>
   );
 }

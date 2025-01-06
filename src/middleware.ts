@@ -4,15 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req: NextRequest) {
-	const token = await getToken({ req, secret });
-	const { pathname } = req?.nextUrl;
+  const token = await getToken({ req, secret });
+  const { pathname } = req?.nextUrl;
 
-  const userRoutes = ["/profile", "/devices", "/devices/(.*)"];
+  const userRoutes = [
+    "/profile",
+    "/team",
+    "/team/(.*)",
+    "/devices",
+    "/devices/(.*)",
+  ];
 
-  // Use regex to match dynamic routes
-  const commonRoutes = ["/", "/teams", "/teams/(.*)"];
+  const commonRoutes = ["/"];
 
   const adminRoutes = [
+    "/teams",
+    "/teams/(.*)",
     "/assets",
     "/assets/(.*)",
     "/settings",
@@ -81,7 +88,10 @@ export const config = {
     "/((?!login$).*)",
     "/assets",
     "/assets/:path*",
-    "/teams/:path*", // Protect dynamic routes under /teams/
+    "/team",
+    "/team/:path*",
+    "/teams",
+    "/teams/:path*",
     "/devices",
     "/devices/:path*",
     "/people",
