@@ -18,109 +18,119 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   return (
-    <div className="rounded-[33px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 px-4 flex flex-col">
-      <div className="font-gilroySemiBold text-lg text-[#101828] flex gap-2 px-6 py-4 items-center">
-        Issue Reported{" "}
-        <span className="text-[#6941C6] text-xs font-gilroySemiBold rounded-full bg-[#F9F5FF] px-2 py-1">
-          {data?.length} Issues
-        </span>
+    <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+      <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+        {" "}
+        <div className=" flex gap-3 w-fit">
+          <h1 className="2xl:text-xl text-lg pl-6 font-gilroySemiBold">Issue Reported</h1>
+          <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+            {data?.length} Issues
+          </h1>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Table
+            data={currentIssues}
+            checkboxSelection={{
+              uniqueField: "_id",
+              // logic yet to be done
+              onSelectionChange: (e) => console.log(e),
+            }}
+            columns={[
+              {
+                title: "Issue ID",
+                render: (data: Issues) => (
+                  <div
+                    className="cursor-pointer w-fit h-fit"
+                    onClick={() => router.push(`/devices/issues/${data?._id}`)}
+                  >
+                    {data._id}
+                  </div>
+                ),
+                // dataIndex: "_id",
+              },
+              {
+                title: "Device",
+                render: (data: Issues) => (
+                  <div
+                    className="w-full flex justify-start items-center gap-1 cursor-pointer"
+                    onClick={() => router.push(`/devices/${data?._id}`)}
+                  >
+                    <img
+                      src={data.deviceDetails?.image ?? "/media/mac.jpeg"}
+                      alt="Device Logo"
+                      className="border size-10 rounded-full"
+                    />
+                    <div>{data.deviceDetails?.device_name ?? "Device Name"}</div>
+                  </div>
+                ),
+              },
+              {
+                title: "Serial number",
+                render: (data: Issues) => (
+                  <div className="w-full flex justify-start items-center gap-1">
+                    <div>{data?.deviceDetails?.serial_no ?? "Serial Number"}</div>
+                  </div>
+                ),
+              },
+              {
+                title: "Raised by",
+                dataIndex: "userName",
+              },
+              {
+                title: "Issue Type",
+                dataIndex: "title",
+              },
+              {
+                title: "Issue Status",
+                render: (data: Issues) => (
+                  data?.status === 'Closed' ?
+                  (<div className="font-gilroySemiBold flex items-center justify-center py-0.5 px-3 w-fit  text-xs text-[#FF0000] bg-[#FED9D9] rounded-full">
+                    {data?.status}
+                  </div>) :
+                  (<div className="font-gilroySemiBold flex items-center justify-center py-0.5 px-3 w-fit  text-xs text-[#027A48] bg-[#ECFDF3] rounded-full">
+                    {data?.status}
+                  </div>)
+                ),
+              },
+              {
+                title: "",
+                render: (data: Issues) => (
+                  <div
+                    className="cursor-pointer mx-6"
+                    onClick={() => router.push(`/devices/issues/${data?._id}`)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="8"
+                      height="12"
+                      viewBox="0 0 8 12"
+                      fill="none"
+                    >
+                      <path
+                        d="M1.54514 1.16309L6.19092 5.91949L1.54514 10.5652"
+                        stroke="#AAAAAA"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                ),
+              },
+            ]}
+          />
+
+          {/* Pagination Control */}
+          <div className="mt-1">
+            <Pagination
+              currentPage={currentPage}
+              itemsPerPage={ITEMS_PER_PAGE}
+              totalItems={data?.length}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </div>
       </div>
-
-      <Table
-        data={currentIssues}
-        checkboxSelection={{
-          uniqueField: "_id",
-          // logic yet to be done
-          onSelectionChange: (e) => console.log(e),
-        }}
-        columns={[
-          {
-            title: "Issue ID",
-            render: (data: Issues) => (
-              <div
-                className="cursor-pointer w-fit h-fit"
-                onClick={() => router.push(`/devices/issues/${data?._id}`)}
-              >
-                {data._id}
-              </div>
-            ),
-            // dataIndex: "_id",
-          },
-          {
-            title: "Device",
-            render: (data: Issues) => (
-              <div
-                className="w-full flex justify-start items-center gap-1 cursor-pointer"
-                onClick={() => router.push(`/devices/${data?._id}`)}
-              >
-                <img
-                  src={data.deviceDetails?.image ?? "/media/mac.jpeg"}
-                  alt="Device Logo"
-                  className="border size-10 rounded-full"
-                />
-                <div>{data.deviceDetails?.device_name ?? "-"}</div>
-              </div>
-            ),
-          },
-          {
-            title: "Serial number",
-            render: (data: Issues) => (
-              <div className="w-full flex justify-start items-center gap-1">
-                <div>{data?.deviceDetails?.serial_no ?? "-"}</div>
-              </div>
-            ),
-          },
-          {
-            title: "Raised by",
-            dataIndex: "userName",
-          },
-          {
-            title: "Issue Type",
-            dataIndex: "title",
-          },
-          {
-            title: "Issue Status",
-            render: (data: Issues) => (
-              <div className="font-gilroySemiBold flex items-center justify-center p-1 text-xs text-[#027A48] bg-[#ECFDF3] rounded-full">
-                {data?.status}
-              </div>
-            ),
-          },
-          {
-            title: "",
-            render: (data: Issues) => (
-              <div
-                className="cursor-pointer"
-                onClick={() => router.push(`/devices/issues/${data?._id}`)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="8"
-                  height="12"
-                  viewBox="0 0 8 12"
-                  fill="none"
-                >
-                  <path
-                    d="M1.54514 1.16309L6.19092 5.91949L1.54514 10.5652"
-                    stroke="#AAAAAA"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-            ),
-          },
-        ]}
-      />
-
-      {/* Pagination Control */}
-      <Pagination
-        currentPage={currentPage}
-        itemsPerPage={ITEMS_PER_PAGE}
-        totalItems={data?.length}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 }

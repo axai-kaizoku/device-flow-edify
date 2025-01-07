@@ -126,7 +126,7 @@ export default function Header({ session }: Props) {
               </div>
 
               {/* Action Buttons */}
-              <CreateDevice>
+              {session?.user?.user?.role === 2 ? ( <> <CreateDevice>
                 <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black hover:text-white hover:border-white group">
                   <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
                     <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
@@ -158,7 +158,18 @@ export default function Header({ session }: Props) {
                     Add Employee
                   </div>
                 </div>
-              </CreateUser>
+              </CreateUser> </>) : (
+                <div className="cursor-pointer" onClick={()=>{router.push('/devices');}}>
+                  <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
+                    <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
+                      <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
+                    </div>
+                    <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                      Report an Issue
+                    </div>
+                  </div>
+               </div>
+              )}
             </div>
           </div>
 

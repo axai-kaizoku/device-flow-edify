@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 
 import { type Device } from "@/server/deviceActions";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Plus, X } from "lucide-react";
 import { createIssue } from "@/server/issueActions";
 import { notFound, useRouter } from "next/navigation";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
@@ -78,13 +78,23 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
         return isValidSize && isValidType;
       });
 
-      const fileNames = validFiles.map((file) => file.name);
+      const imagePreviews = validFiles.map((file) => ({
+        name: file.name,
+        url: URL.createObjectURL(file), // Generate a preview URL for each file
+      }));
 
       setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...fileNames],
+        images: [...prev.images, ...imagePreviews],
       }));
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   const severityArray = [
@@ -364,22 +374,56 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     )}
                   </div>
 
-                  <div className="flex flex-col gap-1.5 ">
+                  <div className="flex flex-col gap-1.5">
                     <label className="font-gilroyMedium text-black text-base">
                       Upload Images
                     </label>
-                    <div
-                      className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
-                      onClick={() => fileIssueImages?.current?.click()}
-                    >
-                      <div className="flex flex-col justify-center items-center">
-                        <Icons.uploadImage className="size-5" />
-                        <span className="text-[#0EA5E9]">Click to upload</span>
-                        <p className="text-xs text-neutral-400">
-                          JPG, JPEG, PNG less than 1MB
-                        </p>
+                    <div className="flex flex-wrap gap-4">
+                      {/* Render uploaded images with a preview */}
+
+                      {/* Add new upload button */}
+                      <div
+                        className="flex gap-2 items-center justify-start bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 px-2 py-6 border-[#52ABFF] cursor-pointer"
+                        onClick={() => fileIssueImages?.current?.click()}
+                      >
+                        {formData.images.map((image, index) => (
+                          <div
+                            key={index}
+                            className="relative w-24 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
+                          >
+                            <img
+                              src={image.url}
+                              alt={image.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              onClick={() => handleRemoveImage(index)}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="text-white size-4"/>
+                            </button>
+                          </div>
+                        ))}
+                        {formData.images.length === 0 ? (
+                          <div className="flex flex-col justify-center items-center w-full mx-auto">
+                            <Icons.uploadImage className="text-blue-500 w-6 h-6" />
+                            <span className="text-[#0EA5E9]">
+                              Click to upload
+                            </span>
+                            <p className="text-xs text-neutral-400">
+                              JPG, JPEG, PNG less than 1MB
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="w-24 h-[75px] bg-gray-100 flex justify-center items-center rounded-xl border border-dashed border-gray-600">
+                            <div className="bg-gray-400 text-white text-3xl rounded-full flex items-center justify-center w-8 h-8">
+                              <Plus className="text-white"/>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
+
                     <input
                       type="file"
                       ref={fileIssueImages}
@@ -387,23 +431,6 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                       onChange={handleIssueImages}
                       multiple
                     />
-                    {formData.images.length > 0 && (
-                      <div className="mt-2">
-                        <h4 className="font-gilroyMedium text-sm">
-                          Uploaded Files:
-                        </h4>
-                        <ul className="list-disc pl-5">
-                          {formData.images.map((image, index) => (
-                            <li
-                              key={index}
-                              className="text-sm text-neutral-600"
-                            >
-                              {image}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                     {errors.images && (
                       <p className="text-destructive text-sm">
                         {errors.images}
@@ -442,4 +469,26 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       </div>
     </>
   );
+}
+
+{
+  /* <div
+                      className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                      onClick={() => fileIssueImages?.current?.click()}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <Icons.uploadImage className="size-5" />
+                        <span className="text-[#0EA5E9]">Click to upload</span>
+                        <p className="text-xs text-neutral-400">
+                          JPG, JPEG, PNG less than 1MB
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      ref={fileIssueImages}
+                      style={{ display: "none" }}
+                      onChange={handleIssueImages}
+                      multiple
+                    /> */
 }

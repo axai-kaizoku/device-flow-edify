@@ -31,8 +31,8 @@ export default function TeamPage() {
 
   return (
     <CombinedContainer title="Teams">
-      <div className="bg-white p-8 my-4 mx-8 rounded-3xl shadow-lg">
-        <div className="flex justify-between items-center mb-6">
+      <div className="bg-white p-3 my-6 rounded-3xl shadow-lg">
+        <div className="flex items-center mb-6 pt-2 pl-3">
           <TeamHeader teamData={teamState} />
         </div>
         {users === null ? (

@@ -70,26 +70,29 @@ function DeviceContainer() {
   const tabs = [
     {
       key: "devices",
-      label: "Assets",
+      label: "Assets Assigned",
       component: <Devices devices={devices} />,
     },
     {
       key: "issues",
-      label: "Issues",
+      label: "Issues Raised",
       component: <Issue issues={issues} />,
     },
   ];
   return (
     <>
-      <div className="flex flex-col ">
-        <h1 className="text-3xl font-gilroyBold py-2">
-          Manage Assets & Issues
+      <div className="flex flex-col  pt-[14px]">
+        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
+          Assets
         </h1>
-        <div className="flex items-center justify-between ">
-          <div className="flex items-center w-full -mb-8 gap-12">
+        <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
+          Manage Assets & Issues
+        </h2>
+        <div className="flex items-center justify-between -mt-2">
+          <div className="flex items-center w-full -mb-9 gap-12 -mt-1">
             {tabs?.map((tab) => (
               <Tab
-                className="after:left-[-60%]  after:w-[220%]"
+                className="after:left-[-30%]  after:w-[160%]"
                 key={tab?.key}
                 active={activeTab === tab?.key}
                 onClick={() => handleTabChange(tab?.key)}
@@ -98,21 +101,15 @@ function DeviceContainer() {
             ))}
           </div>
 
-          <div className="flex gap-2">
-            <div className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Search size={20} className="text-[#7F7F7F]" />{" "}
-              <input
-                className="text-base bg-transparent font-gilroyMedium whitespace-nowrap focus:outline-none"
-                placeholder="Search "
-              />
-            </div>
+          <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <Search size={20} className="text-[#7F7F7F]" />
 
-            <button className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300 group">
-              <Icons.sort_icon />
-              <span className="text-base font-gilroyMedium whitespace-nowrap">
-                Sort By
-              </span>
-            </button>
+            <input
+              className=" bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
+              // value={searchTerm || ""}
+              // onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search assets..."
+            />
           </div>
         </div>
       </div>
