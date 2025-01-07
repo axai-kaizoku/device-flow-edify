@@ -5,6 +5,7 @@ import { ScreenSize } from "@/components/utils/screen-size";
 import KbarWrapper from "./KbarWrapper";
 import { getSession } from "@/server/helper";
 import localFont from "next/font/local";
+import InternetCheck from "./InternetCheck";
 
 export const metadata: Metadata = {
   title: "DeviceFlow by Edify",
@@ -109,6 +110,7 @@ export default async function RootLayout({
           <ScreenSize />
           {children}
         </Providers>
+        <InternetCheck />
       </body>
     </html>
   );

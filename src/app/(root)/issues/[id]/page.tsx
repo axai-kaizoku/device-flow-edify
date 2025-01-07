@@ -13,7 +13,7 @@ async function SingleIssue({ params }: IssuePageProps) {
     const data: Issues = await getIssueById(params.id);
     return (
       <CombinedContainer title="Issue Details">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pt-[10px]">
           <div className="flex justify-between items-center">
             <div className="text-[#7F7F7F] font-gilroySemiBold text-lg">
               Issues

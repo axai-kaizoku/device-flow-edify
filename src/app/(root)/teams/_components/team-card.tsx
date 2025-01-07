@@ -77,11 +77,11 @@ export const TeamCard = ({
   return (
     <div
       className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
- relative rounded-[25px] w-96 2xl:w-[402px] p-5 flex flex-col transition-all"
+ relative rounded-[25px] w-96 2xl:w-[402px] p-4 flex flex-col transition-all"
     >
       <Link
         href={`/teams/${_id}`}
-        className="flex flex-col gap-6 cursor-pointer"
+        className="flex flex-col gap-5 cursor-pointer"
       >
         {/* Header Section */}
         <div className="flex justify-between items-center">

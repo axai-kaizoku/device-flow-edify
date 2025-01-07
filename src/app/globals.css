@@ -395,7 +395,43 @@ h2.title::after {
 .transition-path {
   transition: d 0.3s ease;
 }
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid black;
+  position: absolute;
+  top: calc(100% + 0px);
+  left: 60%;
+  transform: translateX(-50%);
+  background: transparent;
+}
+.triangle::before {
+  content: "";
+  width: 15px;
+  position: absolute;
+  height: 3px;
+  border: none;
+  background-color: #f2f6d6;
+  top: -0.7rem;
+  right: -0.46rem;
+}
+.triangle::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+  border-top-color: #f2f6d6;
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
 
+  transform: translateX(-50%);
+}
 @keyframes slide-up {
   0% {
     transform: translateY(0);

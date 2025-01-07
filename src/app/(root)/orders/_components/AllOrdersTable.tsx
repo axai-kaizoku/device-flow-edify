@@ -23,14 +23,14 @@ function AllOrdersTable({ data }: { data: any[] }) {
   const handlePageChange = (page: number) => setCurrentPage(page);
   return (
     <>
-      <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] py-5 flex flex-col gap-5">
-        <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6">
-          <h1 className="2xl:text-lg text-base font-gilroySemiBold">Orders</h1>
-          <h1 className="2xl:text-[12.435px] text-[10.435px] font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+      <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
+        <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6 pt-5">
+          <h1 className="2xl:text-lg text-xl font-gilroySemiBold">Orders</h1>
+          <h1 className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
             {data?.length} Orders
           </h1>
         </div>
-        <div className="flex flex-col 2xl:gap-2 gap-1.5">
+        <div className="flex flex-col mt-5">
           <Table
             data={currentOrder}
             checkboxSelection={{
@@ -43,30 +43,33 @@ function AllOrdersTable({ data }: { data: any[] }) {
                 title: "Order ID",
                 render: (data: any) => (
                   <div
-                    className="2xl:w-28 w-[108px] justify-start flex items-center gap-2 cursor-pointer"
+                    className="2xl:w-28  justify-start flex items-center gap-2 cursor-pointer"
                     onClick={() =>
                       router.push(
-                        `/order/${data?.cartDetails?.razorpay_order_id}`
+                        `/orders/${data?.cartDetails?.razorpay_order_id}`
                       )
                     }
                   >
-                    <div className="font-gilroySemiBold 2xl:text-[14.507px] text-[12.507px] gap-1 flex whitespace-nowrap  text-black ">
+                    <div className="font-gilroySemiBold 2xl:text-[14.507px] text-sm gap-1 flex whitespace-nowrap  text-black ">
                       {data?.cartDetails?.razorpay_order_id}
                     </div>
                   </div>
                 ),
               },
+
               {
                 title: "Ordered on",
-                render: (data) => (
-                  <div className="text-[#7F7F7F] font-gilroyMedium 2xl:text-[14.507px] text-[12.507px]">
-                    {data?.response[0]?.ordered_on
-                      ? new Date(
-                          data?.response[0]?.ordered_on
-                        )?.toLocaleDateString()
-                      : "N/A"}
-                  </div>
-                ),
+                render: (record) => {
+                  const date = new Date(record?.response[0]?.ordered_on);
+
+                  const formattedDate = date.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  });
+
+                  return <div>{formattedDate}</div>;
+                },
               },
               {
                 title: "QTY",
@@ -87,7 +90,9 @@ function AllOrdersTable({ data }: { data: any[] }) {
                         {data?.cartDetails?.state}
                       </div>
                     ) : (
-                      <div className="bg-alert-foreground text-failure py-1 px-2 rounded-[16.58px] text-xs w-fit">{data?.cartDetails?.state}</div>
+                      <div className="bg-alert-foreground text-failure py-1 px-2 rounded-[16.58px] text-xs w-fit">
+                        {data?.cartDetails?.state}
+                      </div>
                     )}
                   </>
                 ),
@@ -103,8 +108,13 @@ function AllOrdersTable({ data }: { data: any[] }) {
               {
                 title: "Total",
                 render: (data) => (
-                  <div className=" whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
-                    {data?.cartDetails?.totalPrice || "N/A"}
+                  <div className="whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
+                    {data?.cartDetails?.totalPrice
+                      ? new Intl.NumberFormat("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(Number(data.cartDetails.totalPrice))
+                      : "N/A"}
                   </div>
                 ),
               },
@@ -117,6 +127,8 @@ function AllOrdersTable({ data }: { data: any[] }) {
             ]}
           />
           {/* Pagination Control */}
+        </div>
+        <div className="my-2">
           <Pagination
             currentPage={currentPage}
             itemsPerPage={ITEMS_PER_PAGE}

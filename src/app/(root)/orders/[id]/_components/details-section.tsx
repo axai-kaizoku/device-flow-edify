@@ -13,10 +13,10 @@ import React from "react";
 
 const DetailSection = () => {
   return (
-    <div className="flex justify-between gap-6 h-full">
-      <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col py-4 px-6 2xl:py-5 2xl:px-7 flex-[60%] h-fit">
+    <div className="flex justify-between gap-6 mt-5">
+      <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col pt-4 px-6 2xl:py-5 2xl:px-7 flex-[60%] h-fit">
         <div className="flex justify-between items-center">
-          <div className="text-[#344054] text-xl 2xl:text-[30px] font-gilroySemiBold">
+          <div className="text-[#344054] text-2xl 2xl:text-[30px] font-gilroySemiBold">
             Order ID: ED003
           </div>
           <button className="flex items-center gap-2 text-[#667085] 2xl:text-[14px] px-3 py-1 2xl:px-4 2xl:py-2 rounded-[8px] border border-[#D0D5DD] font-gilroySemiBold">
@@ -75,7 +75,7 @@ const DetailSection = () => {
 
             <div className="2xl:mt-[11.44px] mt-[10.44px]">
               <div className="text-[#1D2939] text-lg 2xl:text-xl font-gilroySemiBold">
-                $1000.00
+                ₹1000.00
               </div>
               <div className="text-[#667085] text-[14px] 2xl:text-base font-gilroyMedium text-right">
                 Qty: 1
@@ -107,7 +107,7 @@ const DetailSection = () => {
 
             <div className="2xl:mt-[11.44px] mt-[10.44px]">
               <div className="text-[#1D2939] text-lg 2xl:text-xl font-gilroySemiBold">
-                $1000.00
+                ₹1000.00
               </div>
               <div className="text-[#667085] text-[14px] 2xl:text-base font-gilroyMedium text-right">
                 Qty: 1
@@ -118,7 +118,7 @@ const DetailSection = () => {
 
         <div className="h-[1px] bg-[#D0D5DD] w-full"></div>
 
-        <div className="2xl:my-[27.11px] my-[23.11px] flex justify-between">
+        <div className="2xl:my-[27.11px] mt-[23.11px] mb-1 flex justify-between">
           <div className="flex-1 flex flex-col gap-9 2xl:gap-10">
             <div>
               <div className="2xl:text-xl text-lg text-black font-gilroySemiBold mb-1">
@@ -157,17 +157,21 @@ const DetailSection = () => {
 
             <div className="flex flex-col gap-3 text-lg 2xl:text-xl text-[#667085] font-gilroySemiBold">
               <div className="flex justify-between">
+                <div>Amount</div>
+                <div>₹0</div>
+              </div>
+              <div className="flex justify-between">
                 <div>Discount</div>
-                <div>$0</div>
+                <div>- ₹0</div>
               </div>
 
               <div className="flex justify-between">
                 <div>Delivery</div>
-                <div>$0</div>
+                <div>₹0</div>
               </div>
               <div className="flex justify-between">
                 <div>Tax</div>
-                <div>$0</div>
+                <div>₹0</div>
               </div>
             </div>
 
@@ -175,7 +179,9 @@ const DetailSection = () => {
               <div className="font-gilroySemiBold 2xl:text-xl text-lg text-[#667085]">
                 Total
               </div>
-              <div className="font-gilroyBold 2xl:text-xl text-lg text-black">$2000.00</div>
+              <div className="font-gilroyBold 2xl:text-xl text-lg text-black">
+                ₹2000.00
+              </div>
             </div>
           </div>
         </div>
@@ -188,12 +194,16 @@ const DetailSection = () => {
           </div>
           <div className="flex 2xl:gap-3 gap-2 items-center text-[#667085]">
             <UserRound className="2xl:size-[27px] size-[23px]" />
-            <div className="font-gilroyMedium 2xl:text-lg text-base">Lalithya Sahu</div>
+            <div className="font-gilroyMedium 2xl:text-lg text-base">
+              Lalitya Sahu
+            </div>
           </div>
 
           <div className="flex gap-3 items-center text-[#667085]">
             <Phone className="2xl:size-[27px] size-[23px]" />
-            <div className="font-gilroyMedium 2xl:text-lg text-base">(+91) 90099 89097</div>
+            <div className="font-gilroyMedium 2xl:text-lg text-base">
+              (+91) 90099 89097
+            </div>
           </div>
 
           <div className="flex gap-3 items-center text-[#667085]">
@@ -209,7 +219,9 @@ const DetailSection = () => {
           </div>
           <div className="flex 2xl:gap-3 gap-2 items-center text-[#667085]">
             <UserRound className="2xl:size-[27px] size-[23px]" />
-            <div className="font-gilroyMedium 2xl:text-lg text-base">Lalithya Sahu</div>
+            <div className="font-gilroyMedium 2xl:text-lg text-base">
+              Lalithya Sahu
+            </div>
           </div>
           <div className="w-3/4 2xl:text-lg text-base font-gilroyMedium text-[#667085] flex flex-col gap-2">
             <div>

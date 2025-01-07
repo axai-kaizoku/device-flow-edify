@@ -17,7 +17,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 
     return (
       <CombinedContainer title="Teams">
-        <div className="bg-white p-8 my-6 mx-8 rounded-3xl shadow-lg">
+        <div className="bg-white p-3 my-6  rounded-3xl shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <TeamHeader
               image={data?.image ?? ""}

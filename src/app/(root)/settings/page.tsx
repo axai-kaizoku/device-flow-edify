@@ -19,7 +19,7 @@ export default async function Settings() {
         title="Settings"
         description="Manage your organization's settings"
       >
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-5">
           <SettingsHeader data={org} />
           <SettingAddress data={org} />
         </div>

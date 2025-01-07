@@ -59,7 +59,7 @@ const AssignedDevicesReport = ({
         isFailure={true}
       />
 
-      <div className="mt-[33px]">
+      <div className="mt-5">
         <SelectDropdown
           options={[
             { label: "Greater Than", value: ">" },
@@ -73,7 +73,7 @@ const AssignedDevicesReport = ({
         />
 
         {operator === "between" ? (
-          <div className="grid grid-cols-2 gap-8 my-8">
+          <div className="grid grid-cols-2 gap-4 my-6">
             <div>
               <FormField
                 label="From"
@@ -98,7 +98,7 @@ const AssignedDevicesReport = ({
             </div>
           </div>
         ) : (
-          <div className="my-8">
+          <div className="my-6">
             <FormField
               label="Date"
               id="date"
@@ -123,12 +123,12 @@ const AssignedDevicesReport = ({
         <div className="flex gap-2">
           <button
             onClick={() => closeBtn(false)}
-            className="flex-1 px-1 font-gilroySemiBold text-lg py-2.5 border-[2px] border-black rounded-[49px]"
+            className="flex-1 px-1 font-gilroySemiBold text-lg py-1.5 border-[2px] border-black rounded-[49px]"
           >
             Cancel
           </button>
           <button
-            className="flex-1 px-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-2.5"
+            className="flex-1 px-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-1.5"
             onClick={handleDeviceDownloadClick}
           >
             Download

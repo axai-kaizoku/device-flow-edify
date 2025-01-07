@@ -9,25 +9,29 @@ interface TeamActionsProps {
 
 const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
   return (
-    <div className="flex gap-4">
-      <div className="flex items-center gap-2 pl-3 pr-12 py-2 border rounded-full text-gray-600 hover:text-black hover:border-black">
-        <Search size={18} />
+    <div className="flex gap-4 font-gilroyMedium -mb-16">
+      <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+        <Search size={20} className="text-[#7F7F7F]" />{" "}
+        {/* Lucide icon for search */}
         <input
-          type="text"
+          className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
           placeholder="Search teams"
-          className="focus:outline-none bg-transparent text-sm"
         />
       </div>
       <AddTeamMember teamData={team}>
-        <div className="flex cursor-pointer items-center gap-2 px-4 py-2 border rounded-full text-gray-600 hover:text-black hover:border-black">
-          <Plus size={18} />
-          Add member
+        <div className="flex items-center justify-center relative py-1.5 gap-1   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+          <Plus className="text-[#6C6C6C]  size-5 -mt-1" />
+          <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+            Add Members
+          </span>
         </div>
       </AddTeamMember>
       <DeleteTeam id={team?._id ?? ""}>
-        <div className="flex items-center gap-2 px-4 py-2 border  rounded-full text-gray-600 hover:text-black hover:border-black">
-          <Trash2 size={18} />
-          Delete Team
+        <div className="flex items-center justify-center relative py-1.5 gap-2  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+          <Trash2 className="text-[#6C6C6C]  size-4 -mt-1" />
+          <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+            Delete Team
+          </span>
         </div>
       </DeleteTeam>
     </div>

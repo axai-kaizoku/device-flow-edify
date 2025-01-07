@@ -148,7 +148,7 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
                             router.prefetch(`/assets/${record?._id}`)
                           }
                         >
-                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-lg py-0.5 px-6">
+                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                             Manage
                           </div>
                         </Link>

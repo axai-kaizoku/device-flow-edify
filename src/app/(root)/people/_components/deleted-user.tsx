@@ -142,7 +142,7 @@ function DeletedUser({ data }: { data: UserResponse }) {
                 ]}
               />
               {/* Pagination Control */}
-              <div className="my-2">
+              <div className="mt-2">
                 <Pagination
                   currentPage={currentPage}
                   itemsPerPage={ITEMS_PER_PAGE}

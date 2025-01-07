@@ -8,15 +8,15 @@ interface TeamMembersProps {
 const TeamMembers: React.FC<TeamMembersProps> = ({ users }) => {
   return (
     <div
-      className="rounded-3xl flex flex-col gap-4"
+      className="rounded-2xl flex flex-col "
       style={{ border: "1px solid #F6F6F6" }}
     >
-      <div className="flex gap-3 p-6 items-center">
-        <h2 className="text-lg font-gilroySemiBold text-gray-800">
+      <div className="flex gap-3 p-3 items-center">
+        <h2 className="text-lg pl-3 font-gilroySemiBold text-gray-800">
           Team Members
         </h2>
 
-        <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-sm px-3 py-1 rounded-full">
+        <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
           {users?.length
             ? `${users.length} ${users.length > 1 ? "Members" : "Member"}`
             : "N/A"}

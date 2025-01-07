@@ -10,30 +10,35 @@ const AssetsSection = ({ user }: { user: User }) => {
     <>
       <div className=" w-full">
         <div className="flex justify-between">
-          <div className="text-[#9B9B9B] font-gilroySemiBold text-[22px]">
+          <div className="text-black -mt-2 font-gilroySemiBold text-lg">
             Assets Issued
           </div>
-          <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2  text-xs font-gilroyMedium text-[#027A48]">
-            {totalAssets} Assigned
+          <div>
+            <h1 className="text-xs bg-[#ECFDF3] py-1 rounded-2xl -mt-2 px-2 font-gilroyMedium  text-[#027A48]">
+              {totalAssets} Assigned
+            </h1>
           </div>
         </div>
 
         {/* Assets */}
 
-        <div className="flex flex-col mt-5 gap-1">
+        <div className="flex flex-col  gap-1">
           {user?.devices?.slice(0, 2).map((device: Device) => (
-            <div className="flex justify-start items-center gap-4 pb-4 border-b">
+            <div className="flex justify-start items-center gap-4 py-4 border-b">
               <div className="">
                 <img
-                  src={`${device?.image || "/media/mac-2.png"}`}
+                  src={`${
+                    device?.image
+                  } || ${"https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"}`}
                   alt="Asset-1"
+                  className="size-16 rounded-full"
                 />
               </div>
-              <div>
-                <div className="font-gilroySemiBold text-xl">
+              <div className="flex flex-col ">
+                <div className="font-gilroySemiBold text-lg">
                   {device?.device_name}
                 </div>
-                <div className="text-[#7C7C7C] font-gilroyMedium text-base">
+                <div className="text-[#7C7C7C] font-gilroyMedium text-sm">
                   {device?.ram} . {device?.storage}
                 </div>
                 <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-gilroyMedium text-[#027A48] mt-1 max-w-16">
@@ -50,7 +55,7 @@ const AssetsSection = ({ user }: { user: User }) => {
           )}
 
           <button
-            className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-3 rounded-full"
+            className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full"
             onClick={() => {
               router.push("/assets");
             }}

@@ -32,46 +32,39 @@ export default async function UserPage({ params }: UserPageProps) {
   }
 
   return (
-    <CombinedContainer
-      title={`${user?.first_name} ${user?.last_name ?? ""}`}
-      description="User Details"
-    >
-      <div className="flex justify-between w-full items-center">
+    <div className="px-4">
+      <div className="flex justify-between w-full items-center  pr-24">
         <div className="text-gray-500 font-gilroySemiBold">Profile</div>
         <div className="flex gap-5">
           {sess?.user.user.role === 2 && (
             <div className="flex gap-2.5">
-              <div className="border rounded-full py-2 px-6 border-gray-500">
-                <div className="text-[#6C6C6C] font-gilroyMedium text-md">
+              <div className="flex items-center justify-center py-1.5 gap-1  px-5  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <span className="text-[15px]   whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Assign
-                </div>
+                </span>
               </div>
-              <div className="border rounded-full py-2 px-6 border-gray-500">
-                <EditUser userData={user as unknown as CreateUserArgs}>
-                  <p className="text-[#6C6C6C] font-gilroyMedium text-md">
+
+              <EditUser userData={user as unknown as CreateUserArgs}>
+                <div className="flex items-center justify-center py-1.5 gap-1  px-5  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                  <span className="text-[15px]   whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                     Edit
-                  </p>
-                </EditUser>
-              </div>
-              <div className="border rounded-full py-2 px-6 border-gray-500">
-                <DeleteUser id={params.id ?? ""}>
-                  <p className="text-[#6C6C6C] font-gilroyMedium text-md">
-                    Delete
-                  </p>
-                </DeleteUser>
-              </div>
+                  </span>
+                </div>
+              </EditUser>
+
+              {/* 
               <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
                 <ChevronLeft className="text-[#6C6C6C]" />
               </div>
               <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
                 <ChevronRight className="text-[#6C6C6C]" />
-              </div>
+              </div> */}
             </div>
           )}
         </div>
       </div>
 
       <UserGrid user={user} />
-    </CombinedContainer>
+    </div>
   );
 }

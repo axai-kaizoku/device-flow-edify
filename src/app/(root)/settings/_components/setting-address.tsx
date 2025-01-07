@@ -10,23 +10,25 @@ import CreateAddress from "./create-address";
 function SettingAddress({ data }: { data: Org }) {
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-gray-400 font-gilroySemiBold 2xl:text-lg text-base ">
+      <div className="flex justify-between mb-1">
+        <h1 className="text-gray-400 font-gilroySemiBold  text-lg ">
           Office Address ({data?.office_address?.length || 0})
         </h1>
+
         <CreateAddress>
-          <button className="rounded-full text-secondary flex items-center gap-2 px-4 py-2 border border-secondary">
-            <MapPin className="2xl:w-5 2xl:h-5 w-4 h-4"
-            />
-            <h1 className="font-gilroySemiBold 2xl:text-sm text-[12px]">Add Address</h1>
-          </button>
+          <div className="flex items-center relative py-1.5 gap-1.5   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+            <MapPin className=" size-5 -mt-0.5" />
+            <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              Add Address
+            </span>
+          </div>
         </CreateAddress>
       </div>
       <div className="flex flex-wrap gap-6 h-fit">
         {data?.office_address?.map((address) => (
           <div
             key={address?._id}
-            className="flex flex-col w-fit rounded-[33px] border border-gray-300 bg-white backdrop-blur-md shadow-md p-6 hover:shadow-lg transition-shadow"
+            className="flex flex-col relative w-[30%] rounded-[25px] border border-gray-300 bg-white backdrop-blur-md  px-5 pb-5 pt-4 "
           >
             <div className="flex items-center gap-2">
               {address?.isPrimary ? (
@@ -37,20 +39,17 @@ function SettingAddress({ data }: { data: Org }) {
               <div>
                 <div className="flex gap-8">
                   <h1 className="2xl:text-2xl text-xl text-primary font-gilroySemiBold">
-                    {address?.isPrimary ? "Primary Office" : "Secondary Office"}
-                  </h1>
-                  <h1
-                    className={`${
-                      address?.isPrimary
-                        ? "text-success-second bg-success-foreground"
-                        : "text-[#FF8000] bg-[#FFFDF0]"
-                    } flex justify-center rounded-full font-gilroyMedium items-center px-3`}
-                  >
-                    {address?.isPrimary ? "Primary" : "Secondary"}
+                    {address?.title}
                   </h1>
                 </div>
-                <h1 className="text-base text-[#7C7C7C] font-gilroyMedium mt-1">
-                  {address?.title}
+                <h1
+                  className={`${
+                    address?.isPrimary
+                      ? "text-success-second bg-success-foreground"
+                      : "text-[#FF8000] bg-[#FFFDF0]"
+                  }  text-sm font-gilroyMedium w-fit px-2  rounded-full`}
+                >
+                  {address?.isPrimary ? "Primary" : "Secondary"}
                 </h1>
               </div>
             </div>
@@ -62,25 +61,23 @@ function SettingAddress({ data }: { data: Org }) {
                   </h1>
                 </div>
                 <div className="text-primary text-sm font-gilroySemiBold max-w-full overflow-hidden">
-                  <p className="block">
-                    {address?.city}, {address?.landmark},
-                  </p>
-                  <p className="block">
-                    {address?.state}, {address?.pinCode},
+                  <p className="text-wrap">{address?.address}</p>
+                  <p className="text-pretty">
+                    {address?.city}, {address?.state} {address?.pinCode}
                   </p>
                   <p className="block">{address?.phone}</p>
                 </div>
               </div>
 
-              <div className="flex gap-2 mt-4">
+              <div className="flex flex-col absolute top-2 right-5 gap-2 mt-4">
                 <EditAddress address={address}>
-                  <span className="rounded-full text-sm text-secondary flex items-center gap-2 p-2 border border-secondary bg-white hover:border-primary hover:text-primary transition-shadow shadow-sm">
-                    <Pencil size={18} />
+                  <span className="rounded-full text-sm text-secondary flex items-center p-2  border border-secondary bg-white hover:border-primary hover:text-primary transition-shadow shadow-sm">
+                    <Pencil size={15} />
                   </span>
                 </EditAddress>
                 <DeleteAddress id={address?._id!}>
-                  <span className="rounded-full text-sm text-secondary flex items-center gap-2 p-[0.58rem] border border-secondary  hover:border-primary hover:text-primary transition-shadow shadow-sm">
-                    <Trash2 size={16} />
+                  <span className="rounded-full text-sm text-secondary flex justify-center p-2 items-center  border border-secondary  hover:border-primary hover:text-primary transition-shadow shadow-sm">
+                    <Trash2 size={15} />
                   </span>
                 </DeleteAddress>
               </div>

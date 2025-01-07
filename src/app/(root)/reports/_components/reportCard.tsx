@@ -6,7 +6,12 @@ import AllReports from "./allReports";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { convertToCSV, downloadCSV } from "./util";
 import { getDeviceReport } from "@/server/reportsAction";
-import { deletedDevices, deletedUsers, filterDevice, filterUsers } from "@/server/filterActions";
+import {
+  deletedDevices,
+  deletedUsers,
+  filterDevice,
+  filterUsers,
+} from "@/server/filterActions";
 import { useDispatch, useSelector } from "react-redux";
 import { closeAlert, openAlert } from "@/app/store/alertSlice";
 import { GlobalAlert } from "@/components/global-alert";
@@ -123,26 +128,21 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
     }
   };
 
-  const handleDownloadAction = () =>{
-    if(report?.title === 'Total Assets'){
+  const handleDownloadAction = () => {
+    if (report?.title === "Total Assets") {
       handleDownloadTotalDeviceReport();
-    }
-    else if(report?.title === 'Total Members'){
+    } else if (report?.title === "Total Members") {
       handleDownloadTotalUsersReport();
-    }
-    else if(report?.title === 'Deleted Members'){
+    } else if (report?.title === "Deleted Members") {
       handleDownloadDeletedUserReport();
-    }
-    else if(report?.title === 'Deleted Assets'){
+    } else if (report?.title === "Deleted Assets") {
       handleDownloadDeletedAssetsReport();
-    }
-    else if(report?.title === 'Unassigned Assets'){
+    } else if (report?.title === "Unassigned Assets") {
       handleDownloadUnassignedReport();
-    }
-    else{
+    } else {
       setIsOpen(true);
     }
-  }
+  };
 
   return (
     <>
@@ -170,7 +170,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="rounded-2xl bg-white px-5 py-5 shadow-lg text-center">
+        <DialogContent className="rounded-2xl bg-white p-5 shadow-lg text-center">
           <AllReports closeBtn={setIsOpen} report={report} index={index} />
         </DialogContent>
       </Dialog>

@@ -10,7 +10,7 @@ interface TeamsMainProps {
   teams: Team[];
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 5;
 
 export default function TeamsMain({ teams }: TeamsMainProps) {
   return (

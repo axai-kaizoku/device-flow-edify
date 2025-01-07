@@ -147,7 +147,7 @@ export default function UserMain({ data }: { data: UserResponse }) {
                       },
                     ]}
                   />
-                  <div className="my-2">
+                  <div className="mt-2">
                     <Pagination
                       currentPage={currentPage}
                       totalItems={data.users?.length}

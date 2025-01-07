@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { PrimarySelector } from "./primary-selector";
 import { FormField } from "./form-field";
+import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
 
 export const AddressForm = ({
   closeBtn,
@@ -35,6 +37,8 @@ export const AddressForm = ({
   isPrimary?: boolean;
 }) => {
   const router = useRouter();
+  const { showAlert } = useAlert();
+  const { openToast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
@@ -77,13 +81,31 @@ export const AddressForm = ({
 
     setLoading(true);
     if (isEditForm) {
-      await updateAddress(_id!, formData);
+      try {
+        await updateAddress(_id!, formData);
+        openToast("success", "Address updated successfully !");
+        router.refresh();
+        closeBtn(false);
+      } catch (error) {
+        setLoading(false);
+        openToast("error", "Failed to update address  !");
+      }
     } else {
-      await createAddress(formData);
+      try {
+        await createAddress(formData);
+        showAlert({
+          isFailure: false,
+          description: "New address added !!",
+          title: "Woahh ",
+          key: "create-address",
+        });
+        router.refresh();
+        closeBtn(false);
+      } catch (error) {
+        setLoading(false);
+        openToast("error", "Failed to create address  !");
+      }
     }
-    setLoading(false);
-    router.refresh();
-    closeBtn(false);
   };
 
   return (

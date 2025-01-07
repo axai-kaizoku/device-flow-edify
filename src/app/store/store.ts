@@ -4,12 +4,15 @@ import alertReducer from "./alertSlice";
 import assetReducer from "./assetsSlice";
 import paymentReducer from "./paymentSlice";
 
+import filterReducer from "./filterSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     alert: alertReducer,
     assets: assetReducer,
     payment: paymentReducer,
+    filter: filterReducer,
   },
 });
 
