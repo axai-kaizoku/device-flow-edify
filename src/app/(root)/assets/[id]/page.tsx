@@ -16,19 +16,20 @@ export default async function SingleDevice({ params }: DevicePageProps) {
 
   return (
     <CombinedContainer title="Devices">
-      <div className="flex justify-between w-full ">
-        <div className="text-[#7F7F7F] font-gilroySemiBold text-base 2xl:text-lg">
-          Device ID: EDIFY-0033378
+      <div className="flex justify-between w-full mt-2">
+        <div className="text-[#7F7F7F] font-gilroySemiBold pt-[5px] text-base 2xl:text-lg">
+          Device ID: <span className="text-black">EDIFY-0033378</span>
         </div>
-        <div className="flex gap-5 mt-2">
+        <div className="flex gap-5 pr-7">
           <div className="flex gap-2.5">
             {data.userId ? (
               <>
                 <UnassignAsset id={params.id ?? ""}>
-                  <div className="border rounded-full h-fit py-2 px-6 border-gray-500">
-                    <div className="text-[#6C6C6C] font-gilroyMedium text-md flex items-center gap-2">
-                      <Icons.unassign_asset /> Unassign
-                    </div>
+                  <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                    <Icons.unassign_asset className="text-black size-5" />
+                    <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                      Unassign
+                    </span>
                   </div>
                 </UnassignAsset>
               </>
@@ -38,38 +39,41 @@ export default async function SingleDevice({ params }: DevicePageProps) {
             {data.userId ? (
               <>
                 <ReassignAsset deviceData={data}>
-                  <div className="border rounded-full h-fit py-2 px-6 border-gray-500">
-                    <p className="text-[#6C6C6C] font-gilroyMedium text-md flex items-center gap-2">
-                      <Icons.reassign_asset /> Reassign
-                    </p>
+                  <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                    <Icons.reassign_asset className="text-black size-5" />
+                    <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                      Reassign
+                    </span>
                   </div>
                 </ReassignAsset>
               </>
             ) : (
               <>
                 <ReassignAsset deviceData={data}>
-                  <div className="border rounded-full h-fit py-2 px-6 border-gray-500">
-                    <p className="text-[#6C6C6C] font-gilroyMedium text-md flex items-center gap-2">
-                      <Icons.reassign_asset /> Assign
-                    </p>
+                  <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                    <Icons.reassign_asset className="text-black size-5" />
+                    <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                      Assign
+                    </span>
                   </div>
                 </ReassignAsset>
               </>
             )}
 
             <DeleteAsset id={params.id ?? ""}>
-              <div className="border rounded-full h-fit py-2 px-6 border-gray-500">
-                <p className="text-[#6C6C6C] font-gilroyMedium text-md flex items-center gap-2">
-                  <Icons.delete_asset /> Delete
-                </p>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Icons.delete_asset className="text-black size-5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Delete
+                </span>
               </div>
             </DeleteAsset>
-            <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
+            {/* <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
               <ChevronLeft className="text-[#6C6C6C]" />
             </div>
             <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
               <ChevronRight className="text-[#6C6C6C]" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

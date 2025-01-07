@@ -62,15 +62,15 @@ function TabDisplay() {
   ];
   return (
     <>
-      <div className="flex flex-col 2xl:gap-2 gap-1 pt-[16px]">
+      <div className="flex flex-col 2xl:gap-2  pt-[14px]">
         <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
           Orders
         </h1>
         <h1 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
           Manage Orders
         </h1>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center w-full 2xl:-mb-8 -mb-7 gap-12">
+        <div className="flex items-center justify-between -mt-2">
+          <div className="flex items-center w-full 2xl:-mb-8 -mb-9 gap-12 -mt-1">
             {tabs?.map((tab) => (
               <Tab
                 key={tab?.key}

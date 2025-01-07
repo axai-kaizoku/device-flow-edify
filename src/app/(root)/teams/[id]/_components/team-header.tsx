@@ -21,7 +21,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   manager,
 }) => {
   return (
-    <div className="flex gap-5 items-center">
+    <div className="flex gap-5 pl-3 pt-2 items-center">
       <img
         src={
           image ??

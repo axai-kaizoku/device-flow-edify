@@ -1,13 +1,9 @@
- 
 // Form.tsx
 "use client";
-import { Icon } from "@/components/wind/Icons";
 import React, { useEffect, useState } from "react";
 import DeviceType from "./deviceType";
 import { createDevices, Device } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
-import AdvanceDeviceDetails from "./advanceDeviceDetails";
-import ExtraDetails from "./extraDetails";
 import {
   FormData,
   FormErrors,
@@ -34,8 +30,8 @@ type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
 function Form({ closeBtn }: FormProps) {
-  const {showAlert} = useAlert();
-  const {openToast} = useToast()
+  const { showAlert } = useAlert();
+  const { openToast } = useToast();
   const [step, setStep] = useState<number>(0);
   const [totalStep, setTotalStep] = useState<number>(1);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -51,7 +47,7 @@ function Form({ closeBtn }: FormProps) {
       warrantyExpiryDate: "",
       brand: "",
     },
-    monitorDetails:{
+    monitorDetails: {
       model: "",
       invoiceFile: null,
       serialNumber: "",
@@ -74,8 +70,8 @@ function Form({ closeBtn }: FormProps) {
       ram: "",
       storage: "",
       device_name: "",
-      brand:"",
-      condition:"",
+      brand: "",
+      condition: "",
     },
     laptopPage2: {
       serialNumber: "",
@@ -90,8 +86,8 @@ function Form({ closeBtn }: FormProps) {
       ram: "",
       storage: "",
       device_name: "",
-      brand:"",
-      condition:"",
+      brand: "",
+      condition: "",
     },
     mobilePage2: {
       serialNumber: "",
@@ -115,11 +111,14 @@ function Form({ closeBtn }: FormProps) {
   };
   const validate = (): boolean => {
     let currentErrors: FormErrors = {};
-    const device1 = formData?.laptopPage1
+    const device1 = formData?.laptopPage1;
     const m1 = formData?.mobilePage1;
-    const device2 = formData?.laptopPage2
+    const device2 = formData?.laptopPage2;
     const m2 = formData?.mobilePage2;
-    const device3 = formData?.keyboardDetails || formData?.monitorDetails || formData?.mouseDetails;
+    const device3 =
+      formData?.keyboardDetails ||
+      formData?.monitorDetails ||
+      formData?.mouseDetails;
     const monitor = formData?.monitorDetails;
     const keyboard = formData?.keyboardDetails;
     const mouse = formData?.mouseDetails;
@@ -130,7 +129,7 @@ function Form({ closeBtn }: FormProps) {
         }
         break;
       case 1:
-        if (formData?.deviceType === 'laptop'){
+        if (formData?.deviceType === "laptop") {
           if (!device1?.os) {
             currentErrors.os = "Operating System is required.";
           }
@@ -142,8 +141,7 @@ function Form({ closeBtn }: FormProps) {
           if (!device1?.storage) currentErrors.storage = "Storage is required.";
           if (!device1?.condition)
             currentErrors.condition = "Device Condition is required.";
-        }
-        else if (formData?.deviceType === 'mobile'){
+        } else if (formData?.deviceType === "mobile") {
           if (!m1?.os) {
             currentErrors.os = "Operating System is required.";
           }
@@ -155,49 +153,64 @@ function Form({ closeBtn }: FormProps) {
           if (!m1?.storage) currentErrors.storage = "Storage is required.";
           if (!m1?.condition)
             currentErrors.condition = "Device Condition is required.";
-          if (!m1?.device_name) currentErrors.device_name = "Device Name is required.";
-        }
-        else if (formData?.deviceType === 'monitor'){
+          if (!m1?.device_name)
+            currentErrors.device_name = "Device Name is required.";
+        } else if (formData?.deviceType === "monitor") {
           // if(!monitor?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
-          if(!monitor?.model) currentErrors.model = "Model is required.";
+          if (!monitor?.model) currentErrors.model = "Model is required.";
           if (!monitor?.brand) currentErrors.brand = "Brand is required.";
-          if (!monitor?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
-          if (!monitor?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
-          if (!monitor?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
-        }
-        else if (formData?.deviceType === 'mouse'){
+          if (!monitor?.serialNumber)
+            currentErrors.serialNumber = "Serial Number is required";
+          if (!monitor?.purchaseDate)
+            currentErrors.purchaseDate = "Purchase Date is required";
+          if (!monitor?.warrantyExpiryDate)
+            currentErrors.warrantyExpiryDate =
+              "Warranty Expiry Date is required";
+        } else if (formData?.deviceType === "mouse") {
           // if(!mouse?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
-          if(!mouse?.model) currentErrors.model = "Model is required.";
+          if (!mouse?.model) currentErrors.model = "Model is required.";
           if (!mouse?.brand) currentErrors.brand = "Brand is required.";
-          if (!mouse?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
-          if (!mouse?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
-          if (!mouse?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
-        }
-        else if (formData?.deviceType === 'keyboard'){
+          if (!mouse?.serialNumber)
+            currentErrors.serialNumber = "Serial Number is required";
+          if (!mouse?.purchaseDate)
+            currentErrors.purchaseDate = "Purchase Date is required";
+          if (!mouse?.warrantyExpiryDate)
+            currentErrors.warrantyExpiryDate =
+              "Warranty Expiry Date is required";
+        } else if (formData?.deviceType === "keyboard") {
           // if(!keyboard?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
-          if(!keyboard?.model) currentErrors.model = "Model is required.";
+          if (!keyboard?.model) currentErrors.model = "Model is required.";
           if (!keyboard?.brand) currentErrors.brand = "Brand is required.";
-          if (!keyboard?.serialNumber) currentErrors.serialNumber = "Serial Number is required";
-          if (!keyboard?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
-          if (!keyboard?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+          if (!keyboard?.serialNumber)
+            currentErrors.serialNumber = "Serial Number is required";
+          if (!keyboard?.purchaseDate)
+            currentErrors.purchaseDate = "Purchase Date is required";
+          if (!keyboard?.warrantyExpiryDate)
+            currentErrors.warrantyExpiryDate =
+              "Warranty Expiry Date is required";
         }
         break;
       case 2:
-        if (formData?.deviceType === 'laptop'){
+        if (formData?.deviceType === "laptop") {
           if (!device2?.serialNumber) {
             currentErrors.serialNumber = "Serial Number is required";
           }
-          if (!device2?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
-          if (!device2?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+          if (!device2?.purchaseDate)
+            currentErrors.purchaseDate = "Purchase Date is required";
+          if (!device2?.warrantyExpiryDate)
+            currentErrors.warrantyExpiryDate =
+              "Warranty Expiry Date is required";
           // if (!device2.invoiceFile)
           //   currentErrors.invoiceFile = "Incoice File is required.";
-        }
-        else if (formData?.deviceType === 'mobile'){
+        } else if (formData?.deviceType === "mobile") {
           if (!m2?.serialNumber) {
             currentErrors.serialNumber = "Serial Number is required";
           }
-          if (!m2?.purchaseDate) currentErrors.purchaseDate = "Purchase Date is required";
-          if (!m2?.warrantyExpiryDate) currentErrors.warrantyExpiryDate = "Warranty Expiry Date is required";
+          if (!m2?.purchaseDate)
+            currentErrors.purchaseDate = "Purchase Date is required";
+          if (!m2?.warrantyExpiryDate)
+            currentErrors.warrantyExpiryDate =
+              "Warranty Expiry Date is required";
           // if (!device2.invoiceFile)
           //   currentErrors.invoiceFile = "Incoice File is required.";
         }
@@ -210,7 +223,6 @@ function Form({ closeBtn }: FormProps) {
   };
   const handleNextStep = () => {
     if (validate()) {
-      
       setStep((prevStep) => prevStep + 1);
     }
   };
@@ -223,12 +235,17 @@ function Form({ closeBtn }: FormProps) {
       try {
         const payload: any = createPayload(formData);
         const response = await createDevices(payload);
-        showAlert({isFailure:false,title:"WOAHH !",description: "Device created successfully !",key: "device-creating"})
+        showAlert({
+          isFailure: false,
+          title: "WOAHH !",
+          description: "Device created successfully !",
+          key: "device-creating",
+        });
         closeBtn(); // Close the sheet after successful submission
         router.refresh();
       } catch (error) {
         setIsLoading(false);
-        openToast("error","Failed to created Device !")
+        openToast("error", "Failed to created Device !");
         // Optionally, handle the error and display a message to the user
       }
     }
@@ -237,20 +254,20 @@ function Form({ closeBtn }: FormProps) {
     <div className="flex flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
       <div className="flex justify-start items-center gap-4 text-2xl font-gilroySemiBold">
         <div className="bg-black rounded-full p-2.5 flex justify-center items-center">
-          <Monitor color="white" className="size-5" />
+          <Monitor color="white" className="size-4" />
         </div>
-        <span className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
-          Add a {formData?.deviceType ? formData?.deviceType : "Device"}
+        <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
+          Add new {formData?.deviceType ? formData?.deviceType : "device"}
         </span>
       </div>
       <div className="w-full flex flex-col gap-1">
-        <div className="font-gilroySemiBold text-lg text-black">
+        <div className="font-gilroySemiBold text-base text-gray-400">
           Step {step} of {totalStep}
         </div>
         <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
       </div>
       {/* Render different components based on the current step */}
-      
+
       {step === 0 && (
         <DeviceType
           data={formData?.deviceType}
@@ -307,11 +324,11 @@ function Form({ closeBtn }: FormProps) {
           }
           errors={errors}
         />
-      ): (
+      ) : (
         <></>
       )}
       {step === 2 && formData?.deviceType === "laptop" ? (
-        <LaptopForm2 
+        <LaptopForm2
           data={formData?.laptopPage2}
           setData={(data: Partial<DevicePage2>) =>
             updateFormData("laptopPage2", data)
@@ -319,22 +336,22 @@ function Form({ closeBtn }: FormProps) {
           errors={errors}
         />
       ) : step === 2 && formData?.deviceType === "mobile" ? (
-        <MobileForm2 
+        <MobileForm2
           data={formData.mobilePage2}
           setData={(data: Partial<DevicePage2>) =>
             updateFormData("mobilePage2", data)
           }
           errors={errors}
         />
-      ): (
+      ) : (
         <></>
       )}
-      <div className="flex-grow"></div>    
+      <div className="flex-grow"></div>
       {/* Navigation buttons */}
       <div className="flex gap-3 w-full mt-auto">
         {step >= 1 ? (
           <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300 border border-black text-center"
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300 border border-black text-center"
             onClick={handlePrevStep}
             disabled={isLoading}
           >
@@ -342,7 +359,7 @@ function Form({ closeBtn }: FormProps) {
           </button>
         ) : (
           <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300 border border-black text-center"
+            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300 border border-black text-center"
             onClick={() => {
               closeBtn();
             }}
@@ -354,25 +371,33 @@ function Form({ closeBtn }: FormProps) {
         {step < totalStep ? (
           <button
             type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300"
             onClick={handleNextStep}
             disabled={isLoading}
           >
             <div className="flex items-center gap-2">
               <span>Next</span>
-              {isLoading ? <Spinner /> : <ChevronRight color="white" />}
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <ChevronRight className="size-5" color="white" />
+              )}
             </div>
           </button>
         ) : (
           <button
             type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[68.29px] font-gilroySemiBold text-xl w-full transition duration-300"
+            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300"
             onClick={handleSubmit}
             disabled={isLoading}
           >
             <div className="flex items-center gap-2">
               <span>Submit</span>
-              {isLoading ? <Spinner /> : <ChevronRight color="white" />}
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <ChevronRight color="white" className="size-4" />
+              )}
             </div>
           </button>
         )}
@@ -381,10 +406,3 @@ function Form({ closeBtn }: FormProps) {
   );
 }
 export default Form;
-
-
-
-
-
-
-

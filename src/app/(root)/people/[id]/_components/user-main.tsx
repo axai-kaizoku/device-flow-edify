@@ -124,7 +124,7 @@ const UserGrid = ({ user }: { user: User }) => {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-center">
+              <div className="flex gap-4 items-center pb-2">
                 <div className="p-3 bg-gray-100 rounded-2xl">
                   <Link className="size-6 text-gray-600" />
                 </div>
@@ -249,7 +249,7 @@ const UserGrid = ({ user }: { user: User }) => {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-center">
+              <div className="flex gap-4 items-center pb-2">
                 <div className="p-3 bg-gray-100 rounded-2xl">
                   <MapPin className="size-6 text-gray-600" />
                 </div>

@@ -41,13 +41,16 @@ export default function IssueTable({ data }: { data: Issues[] }) {
             title: "Device",
             render: (data: Issues) => (
               <div
-                className="w-full flex justify-start items-center gap-1 cursor-pointer"
+                className="w-full flex justify-start items-center gap-2 cursor-pointer"
                 onClick={() => router.push(`/issues/${data?._id}`)}
               >
                 <img
-                  src={data?.deviceDetails?.image ?? "/media/mac.jpeg"}
+                  src={
+                    data?.deviceDetails?.image ??
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwnpCabWZCg86pyyyD71E0s6JrIDZs4CSnqQ&s"
+                  }
                   alt="Device Logo"
-                  className="border size-10 rounded-full"
+                  className=" size-10 rounded-full"
                 />
                 <div>{data?.deviceDetails?.device_name ?? "-"}</div>
               </div>

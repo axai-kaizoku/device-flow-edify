@@ -12,12 +12,12 @@ import { IssueStatusChange } from "../../_components/issue-status-change";
 
 const IssueSection = ({ data }: { data: Issues }) => {
   return (
-    <div className="flex h-fit w-full">
+    <div className="flex h-fit  w-full gap-6">
       {/* <!-- First Column --> */}
-      <div className="flex flex-col w-[45%]">
+      <div className="flex flex-col gap-6 w-[45%]">
         {/* <!-- First Row of First Column --> */}
         <div className="px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
-          <div className="flex justify-start items-center p-3 gap-4">
+          <div className="flex justify-start items-center  gap-4">
             <img
               src={
                 data?.deviceDetails?.image ??
@@ -29,25 +29,25 @@ const IssueSection = ({ data }: { data: Issues }) => {
 
             <div>
               <div className="text-2xl font-gilroySemiBold text-black">
-                {data?.deviceDetails?.device_name ?? "-"}
+                {data?.deviceDetails?.device_name ?? "Issue Name"}
               </div>
-              <div className="font-gilroyMedium text-[17.557px] text-[#7C7C7C]">
-                {data?.deviceDetails?.serial_no ?? "-"}
+              <div className="font-gilroyMedium text-lg text-[#7C7C7C]">
+                {data?.deviceDetails?.serial_no ?? "Serial"}
               </div>
             </div>
           </div>
         </div>
 
         {/* <!-- Second Row of First Column --> */}
-        <div className="flex flex-1">
+        <div className="flex gap-6 flex-1">
           {/* <!-- First Column of Second Row --> */}
           <div className="flex-1  px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
-            <div className="flex flex-col gap-4 p-2 h-fit">
+            <div className="flex flex-col gap-4  h-fit">
               <div className="text-lg  font-gilroySemiBold">Device Info.</div>
 
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Brand
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -55,7 +55,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Model
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -63,7 +63,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     RAM
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -71,7 +71,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Storage
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -79,7 +79,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Serial Number
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -87,7 +87,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Condition
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -95,7 +95,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Warranty Status
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -115,7 +115,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
 
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Assigned to
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -123,7 +123,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Purchased on
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -133,7 +133,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Assigned on
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -143,7 +143,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Department
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -151,7 +151,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Role
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -159,7 +159,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Team
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -167,7 +167,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-[#737373] font-gilroySemiBold text-xs">
+                  <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Reporting Manager
                   </div>
                   <div className="font-gilroySemiBold text-black text-base">
@@ -183,34 +183,34 @@ const IssueSection = ({ data }: { data: Issues }) => {
       {/* <!-- Second Column --> */}
       <div className="flex flex-col w-[55%]">
         {/* <!-- First Row of Second Column --> */}
-        <div className="m-2 p-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
-          <div className="flex flex-col px-6 py-4 gap-2">
+        <div className="px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
+          <div className="flex flex-col  gap-2">
             <div className=" font-gilroySemiBold text-lg">Issue Info</div>
             <div className="flex justify-between items-center pb-4 border-b-[1px] border-[rgba(195, 195, 195, 0.31);]">
-              <div className="font-gilroySemiBold text-3xl text-black">
+              <div className="font-gilroySemiBold text-2xl text-black">
                 {data?.title}
               </div>
               <div className="flex gap-3">
                 {data?.status!.toLowerCase() === "open" ? (
-                  <div className="font-gilroyRegular text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl">
+                  <div className="font-gilroyMedium  text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 ) : (
-                  <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl">
+                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 )}
 
                 {data?.priority?.toLowerCase() === "low" ? (
-                  <div className="font-gilroyRegular text-lg text-[#027A48] bg-[#ECFDF3] py-1 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium  text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : data?.priority?.toLowerCase() === "medium" ? (
-                  <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : (
-                  <div className="font-gilroyRegular text-lg text-[#FF0000] bg-[#FED9D9] py-1 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 )}
@@ -219,11 +219,15 @@ const IssueSection = ({ data }: { data: Issues }) => {
 
             <div className="flex justify-between items-center">
               <div className="flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-base text-[#737373]">
+                <div className="font-gilroySemiBold text-sm text-[#737373]">
                   Opened on
                 </div>
-                <div className="font-gilroySemiBold underline text-[#008910] text-xl">
-                  {new Date(data?.createdAt!).toLocaleDateString()}
+                <div className="font-gilroySemiBold underline text-[#008910] text-base">
+                  {new Date(data?.createdAt!).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
                 </div>
               </div>
 
@@ -232,11 +236,11 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="font-gilroySemiBold text-base text-[#737373]">
                     Closed on
                   </div>
-                  <div className="font-gilroySemiBold underline text-[#FF0000] text-xl">
-                    {new Date(data?.updatedAt!).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
+                  <div className="font-gilroySemiBold underline text-[#FF0000] text-base">
+                    {new Date(data?.updatedAt!).toLocaleDateString("en-GB", {
                       day: "2-digit",
+                      month: "short",
+                      year: "numeric",
                     })}
                   </div>
                 </div>
@@ -244,41 +248,40 @@ const IssueSection = ({ data }: { data: Issues }) => {
             </div>
 
             <div className="flex flex-col gap-1">
-              <div className="font-gilroySemiBold text-base text-[#737373]">
+              <div className="font-gilroySemiBold text-sm text-[#737373]">
                 Description
               </div>
-              <div className="font-gilroySemiBold text-xl">
+              <div className="font-gilroySemiBold text-base">
                 {/* Show up to 12 words */}
-                {data?.description!.split(" ").slice(0, 12).join(" ")}
-                {data?.description!.split(" ").length > 12 && (
-                  <>
-                    <Dialog>
-                      <DialogTrigger className="text-[#0051FF] cursor-pointer underline">
-                        view more
-                      </DialogTrigger>
-
-                      <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
-                        {/* Title */}
-                        <DialogTitle className="text-xl font-gilroySemiBold text-gray-900">
-                          Issue Description
-                        </DialogTitle>
-
-                        {/* Description */}
-                        <DialogDescription className="p-1 text-gray-600 overflow-auto font-gilroySemiBold ">
-                          {data?.description}
-                        </DialogDescription>
-                      </DialogContent>
-                    </Dialog>
-                  </>
-                )}
+                {data?.description!}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <h1 className="font-gilroySemiBold  text-sm text-[#737373]">
+                View attached photos
+              </h1>
+              <div className="flex items-center gap-3 pb-2">
+                <img
+                  src={
+                    data?.images ||
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxfQLhFFAUUzm5fbyfNWKfv2jfDJcbrCBxQ&s"
+                  }
+                  className="p-1 rounded-lg border h-28 w-24"
+                  alt="issue-image"
+                />
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxfQLhFFAUUzm5fbyfNWKfv2jfDJcbrCBxQ&s"
+                  className="p-1 rounded-lg border h-28 w-24"
+                  alt="issue-image"
+                />
               </div>
             </div>
           </div>
         </div>
 
         {/* <!-- Third Row of Second Column --> */}
-        <div className="m-2 p-4">
-          <div className="flex justify-end gap-4">
+        <div className=" pt-4">
+          <div className="flex justify-end ">
             <div className="w-1/2" />
 
             <IssueStatusChange
@@ -289,7 +292,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                 data.status!.toLowerCase() === "open"
                   ? "bg-[#027A47] "
                   : "bg-black",
-                "flex-1 rounded-[49px] py-3 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-lg text-white"
+                "flex-1 rounded-[49px] py-2 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-lg text-white"
               )}
             >
               {data?.status!.toLowerCase() === "open"

@@ -16,15 +16,17 @@ type SelectInputProps = {
   label: string;
   error?: string;
   className?: string;
+  placeholder?: string;
 };
 
 export const SelectDropdown = ({
   value,
   options,
   onSelect,
+  placeholder = "Select",
   label,
   error,
-  className
+  className,
 }: SelectInputProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
@@ -102,26 +104,31 @@ export const SelectDropdown = ({
       <div className="relative" ref={dropdownRef}>
         <label
           htmlFor={label}
-          className="absolute start-1 top-0 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+          className="absolute start-1 top-0 block -translate-y-1/2 bg-background px-2 text-base  font-gilroyMedium text-foreground"
         >
           {label}
         </label>
         <div
           id={label}
           className={cn(
-            "pr-10 px-4 py-2 h-14 flex  items-center border rounded-xl cursor-pointer",
-           "bg-white text-gray-700 h-12",className
+            "pr-10 px-4 py-2 text-black  h-14 flex  items-center border rounded-xl cursor-pointer",
+            "bg-white  h-12",
+            className
           )}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
-          {typeof selectedOption === "string"
-            ? selectedOption
-            : selectedOption?.label || "Select..."}
+          {selectedOption && typeof selectedOption !== "string" ? (
+            selectedOption.label
+          ) : selectedOption ? (
+            selectedOption
+          ) : (
+            <span className="text-gray-400">{placeholder}</span>
+          )}
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
             <Icons.dropdownArrowUp
               className={cn(
-                "size-5 ml-4 mr-3.5 text-gray-500",
+                "size-3 ml-4 mr-3.5 ",
                 isDropdownOpen ? "" : "transform -scale-y-100"
               )}
             />
@@ -158,20 +165,3 @@ export const SelectDropdown = ({
     </>
   );
 };
-
-// Demo Component
-export function SelectDropdownDemo() {
-  return (
-    <div className="p-4">
-      <SelectDropdown
-        options={[
-          { label: "Yes", value: "yes" },
-          { label: "No", value: "no" },
-        ]}
-        onSelect={(data) => console.log("Selected:", data)}
-        label="Married"
-        value="Select..."
-      />
-    </div>
-  );
-}

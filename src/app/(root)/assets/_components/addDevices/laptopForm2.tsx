@@ -42,11 +42,11 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full flex flex-col justify-start">
-      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] mb-2">
+      <div className="font-gilroySemiBold 2xl:text-2xl text-xl mb-2">
         Laptop Details
       </div>
 
-      <div className="flex flex-col gap-8 mt-8">
+      <div className="flex flex-col mt-4">
         <div className="flex flex-col gap-1">
           <FormField
             label="Serial Number"
@@ -59,21 +59,21 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             placeholder="eg: EDIFYXXXX, etc"
           />
 
-          <div className="font-gilroyMedium text-sm text-[#8B8B8B]">
+          {/* <div className="font-gilroyMedium text-sm text-[#8B8B8B]">
             Need help finding serial Number?{" "}
             <span className="text-[#005DFF] underline cursor-pointer">
               Click here
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5 mt-7">
+      <div className="flex flex-col gap-1.5 mt-4">
         <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
         <div
-          className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+          className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
           onClick={() => fileInputRef?.current?.click()}
         >
           <div className="flex flex-col justify-center items-center">
@@ -95,7 +95,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
         )}
       </div>
 
-      <div className="flex w-full flex-wrap items-center gap-4 mt-12">
+      <div className="flex w-full flex-wrap items-center gap-4 mt-7">
         <div className="flex-1">
           <FormField
             label="Purchase Date"
@@ -122,7 +122,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
         </div>
       </div>
 
-      <form className="flex items-center gap-2 my-5">
+      <form className="flex items-center gap-2 my-4">
         <input
           type="checkbox"
           id="chargerProvided"

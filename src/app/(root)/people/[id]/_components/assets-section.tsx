@@ -50,7 +50,7 @@ const AssetsSection = ({ user }: { user: User }) => {
           ))}
 
           {totalAssets! > 2 && (
-            <div className="text-[#9B9B9B] font-gilroySemiBold text-lg my-2 text-center">
+            <div className="text-[#9B9B9B] font-gilroySemiBold text-lg mt-1 text-center">
               +{totalAssets! - 2} more
             </div>
           )}

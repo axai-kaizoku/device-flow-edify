@@ -111,16 +111,18 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
   return (
     <>
       <div className="w-full flex flex-col gap-6">
-        <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] text-black">Bulk Import</div>
+        <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+          Bulk Import
+        </div>
         <div className="w-full flex justify-between gap-4">
           <button
-            className="flex-1 bg-black rounded-[49px] text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+            className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
             onClick={handleFileUploadClick}
           >
             Upload CSV
           </button>
           <button
-            className="flex-1 border border-[#5F5F5F] rounded-[49px] text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+            className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
             onClick={downloadSampleCSV}
           >
             Download Sample CSV

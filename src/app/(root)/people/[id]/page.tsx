@@ -19,7 +19,7 @@ export default async function UserPage({ params }: UserPageProps) {
 
   return (
     <div className="px-4">
-      <div className="flex justify-between w-full items-center pr-36">
+      <div className="flex justify-between w-full items-center pr-36 xl:pr-24">
         <div className="text-gray-500 font-gilroySemiBold">Profile</div>
         <div className="flex gap-5">
           <div className="flex gap-2.5">

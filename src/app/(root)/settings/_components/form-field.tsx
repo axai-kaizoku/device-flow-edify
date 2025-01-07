@@ -30,7 +30,7 @@ export const FormField = ({
       className={cn(
         error
           ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-          : "h-12 rounded-xl border border-[#5F5F5F]",
+          : "h-12 placeholder:text-gray-400 pl-4 rounded-xl border border-[#5F5F5F]",
         className
       )}
       value={value}

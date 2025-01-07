@@ -18,15 +18,20 @@ export const Input = React.forwardRef<
         ref={ref}
         {...props}
       />
-      {type === 'date' && 
-        <button type="button" className="absolute top-3 right-3" onClick={(e)=> {
-          const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+      {type === "date" && (
+        <button
+          type="button"
+          className="absolute top-2.5 right-4"
+          onClick={(e) => {
+            const input = e.currentTarget
+              .previousElementSibling as HTMLInputElement;
             input?.focus();
             input?.click();
-          }}>
-          <Icons.calander />
+          }}
+        >
+          <Icons.calander className="cursor-pointer" />
         </button>
-      }
+      )}
     </div>
   );
 });
