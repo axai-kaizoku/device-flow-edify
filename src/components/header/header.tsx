@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Icon } from "../wind/Icons";
 import {
   Bell,
   CircleHelp,
+  LogOut,
   Plus,
   RefreshCw,
   Settings,
@@ -16,13 +17,73 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
 import CreateUser from "@/app/(root)/people/_components/create-user";
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
-import { Icons } from "../icons";
+import { signOut } from "next-auth/react";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
+  const [inputValue, setInputValue] = useState(""); // Tracks user input
+  const [isFocused, setIsFocused] = useState(false); // Tracks focus state
+
+
+  const placeholders = [
+    "Assets",
+    "People",
+    "Teams",
+    "Issues",
+  ];
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
+  const [animationState, setAnimationState] = useState(false);
+
+  useEffect(() => {
+    let index = 0;
+
+    const interval = setInterval(() => {
+      // Start the animation
+      if (!isFocused && inputValue === "") {
+      setAnimationState(true);
+
+      // Update placeholder after animation
+      setTimeout(() => {
+        index = (index + 1) % placeholders.length;
+        setCurrentPlaceholder(placeholders[index]);
+        setAnimationState(false); // Reset animation state
+      }, 1000); // Match the animation duration
+    }
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  // Closing dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (event: any) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setDropdownVisible((prev) => !prev);
+  };
+
+  const handleMenuClick = (action: string) => {
+    setDropdownVisible(false);
+    if (action === "profile") {
+      router.push("/profile");
+    } else if (action === "logout") {
+      signOut();
+    }
+  };
 
   useEffect(() => {
     if (session?.user?.user) {
@@ -58,47 +119,25 @@ export default function Header({ session }: Props) {
               alt="Logo"
               className="2xl:w-[170px] w-[150px] 2xl:h-10 h-9"
             />
-            {/* <Icons.main_Logo /> */}
-
-            {/* {pathname === "/" && session?.user.user.role === 1 ? (
-              <div className="border-0 border-l-2 pl-4">Home</div>
-            ) : pathname === "/" && session?.user.user.role === 2 ? (
-              <div className="border-0 border-l-2 pl-4">Dashboard</div>
-            ) : pathname === "/assets" ? (
-              <div className="border-0 border-l-2 pl-4">Assets</div>
-            ) : pathname === "/teams" ? (
-              <div className="border-0 border-l-2 pl-4">Teams</div>
-            ) : pathname === "/reports" ? (
-              <div className="border-0 border-l-2 pl-4">Reports</div>
-            ) : pathname === "/onboarding" ? (
-              <div className="border-0 border-l-2 pl-4">Onboarding</div>
-            ) : pathname === "/issues" ? (
-              <div className="border-0 border-l-2 pl-4">Issues</div>
-            ) : pathname === "/store" ? (
-              <div className="border-0 border-l-2 pl-4">Store</div>
-            ) : pathname === "/people" ? (
-              <div className="border-0 border-l-2 pl-4">People</div>
-            ) : pathname === "/orders" ? (
-              <div className="border-0 border-l-2 pl-4">Orders</div>
-            ) : pathname === "/org-chart" ? (
-              <div className="border-0 border-l-2 pl-4">Org Chart</div>
-            ) : pathname === "/settings" ? (
-              <div className="border-0 border-l-2 pl-4">Settings</div>
-            ) : (
-              <div></div>
-            )} */}
           </div>
 
           {/* Middle Search and Actions */}
           <div className="flex justify-center items-center ml-16">
             <div className="flex items-center gap-x-4 lg:gap-x-1 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.6rem] px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent flex items-center gap-2 border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
+              <div className="bg-transparent overflow-hidden flex items-center gap-2 border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
                 <Icon type="OutlinedSearch" color="gray" />
                 <input
                   type="text"
-                  placeholder="Search anything..."
-                  className="flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px]"
+                  placeholder={`Search ${currentPlaceholder}...`}
+                  onChange={(e) => setInputValue(e.target.value)} // Update input value
+                  onFocus={() => setIsFocused(true)} // Mark as focused
+                  onBlur={() => setIsFocused(false)} // Remove focus
+                  className={`flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
+                    !isFocused && inputValue === "" && animationState
+                      ? "animate-slide-up"
+                      : ""
+                  }`}
                 />
               </div>
 
@@ -140,12 +179,7 @@ export default function Header({ session }: Props) {
           </div>
 
           {/* Right Icons Section */}
-          <div className="flex items-center space-x-2">
-            {/* Notification Icon */}
-            <button className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full">
-              <Bell className="size-5" />
-            </button>
-
+          <div className="flex items-center space-x-4">
             {/* Settings Icon */}
             <button
               onClick={() => router.push("/settings")}
@@ -160,9 +194,40 @@ export default function Header({ session }: Props) {
             </button>
 
             {/* Profile Icon */}
-            <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
-              <UserRound className="size-5" />
-            </button>
+            <div className="relative">
+              <button
+                onClick={toggleDropdown}
+                className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
+              >
+                <UserRound className="size-5" />
+              </button>
+              {dropdownVisible && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-2xl pt-1 pb-0.5 border border-[#5F5F5F] font-gilroyMedium"
+                >
+                  <div className="block text-center mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                    <button
+                      onClick={() => handleMenuClick("profile")}
+                      className="w-full py-2 "
+                    >
+                      View Profile
+                    </button>
+                  </div>
+
+                  <div className="h-[1px] bg-[#F3F3F3]"></div>
+
+                  <div className="block text-center mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                    <button
+                      onClick={() => handleMenuClick("logout")}
+                      className="w-full py-2 "
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
       ) : null}

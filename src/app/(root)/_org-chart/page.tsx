@@ -13,7 +13,6 @@ const OrgPage = async () => {
 			</>
 		);
 	} catch (error) {
-		console.error('Error fetching data:', error);
 		return (
 			<div className="text-red-500">
 				Failed to load data. Please try again later. <br />{' '}

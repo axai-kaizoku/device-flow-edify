@@ -27,11 +27,15 @@ import MobileForm from "./MobileForm";
 import MobileForm2 from "./MobileForm2";
 import MonitorForm from "./MonitorForm";
 import { createPayload } from "./_components/createPayload";
+import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
 // import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
 function Form({ closeBtn }: FormProps) {
+  const {showAlert} = useAlert();
+  const {openToast} = useToast()
   const [step, setStep] = useState<number>(0);
   const [totalStep, setTotalStep] = useState<number>(1);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -219,10 +223,12 @@ function Form({ closeBtn }: FormProps) {
       try {
         const payload: any = createPayload(formData);
         const response = await createDevices(payload);
+        showAlert({isFailure:false,title:"WOAHH !",description: "Device created successfully !",key: "device-creating"})
         closeBtn(); // Close the sheet after successful submission
         router.refresh();
       } catch (error) {
         setIsLoading(false);
+        openToast("error","Failed to created Device !")
         // Optionally, handle the error and display a message to the user
       }
     }

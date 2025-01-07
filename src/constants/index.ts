@@ -1,14 +1,14 @@
 export const SIDEBAR = {
   AdminPages: [
-    { label: "Dashboard", path: "/" },
+    { label: "Home", path: "/" },
     { label: "People", path: "/people" },
     { label: "Assets", path: "/assets" },
     { label: "Teams", path: "/teams" },
-    {
-      label: "Org Chart",
-      path: "/org-chart",
-      icon: "/media/sidebar/orgchart.svg",
-    },
+    // {
+    //   label: "Org Chart",
+    //   path: "/org-chart",
+    //   icon: "/media/sidebar/orgchart.svg",
+    // },
     { label: "Store", path: "/store", icon: "/media/sidebar/calender.svg" },
     { label: "Orders", path: "/orders", icon: "/media/sidebar/calender.svg" },
     { label: "Issues", path: "/issues", icon: "/media/sidebar/calender.svg" },

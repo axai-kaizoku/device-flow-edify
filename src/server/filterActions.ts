@@ -122,7 +122,7 @@ export const filterUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
-  pageLength = 20,
+  pageLength = 1000,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {

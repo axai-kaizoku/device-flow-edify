@@ -395,3 +395,26 @@ h2.title::after {
 .transition-path {
   transition: d 0.3s ease;
 }
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 1s ease-in forwards;
+}

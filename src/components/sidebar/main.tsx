@@ -15,11 +15,11 @@ export default function SidebarMain({ session }: Props) {
     <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen bg-transparent">
       {session?.user.user.role === 2 ? (
         <>
-          <div className="absolute top-0 flex flex-col mx-auto justify-end gap-8 w-full">
+          <div className="absolute top-0 flex flex-col mx-auto justify-end gap-5 w-full">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
-							w-10 h-10 flex items-center justify-center rounded-full p-2 mb-4"
+							w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
                 onClick={() => {
                   router.back();
@@ -59,7 +59,7 @@ export default function SidebarMain({ session }: Props) {
               ))} */}
             </div>
 
-            <div className="flex gap-2 flex-col pt-8">
+            {/* <div className="flex gap-2 flex-col pt-8">
               <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
@@ -71,9 +71,9 @@ export default function SidebarMain({ session }: Props) {
                 <LogOut className="w-5 h-5" />
               </button>
 
-              <ToggleTheme />
+              {/* <ToggleTheme /> */}
             </div>
-          </div>
+          
         </>
       ) : (
         <>
@@ -108,10 +108,10 @@ export default function SidebarMain({ session }: Props) {
               ))}
             </div>
 
-            <div className="flex gap-2 flex-col">
-              <ToggleTheme />
+            {/* <div className="flex gap-2 flex-col">
+              {/* <ToggleTheme /> */}
 
-              <button
+              {/* <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
@@ -119,7 +119,7 @@ export default function SidebarMain({ session }: Props) {
               >
                 <LogOut className="w-5 h-5" />
               </button>
-            </div>
+            </div> */} 
           </div>
         </>
       )}

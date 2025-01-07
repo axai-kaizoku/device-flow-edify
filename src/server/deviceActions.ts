@@ -128,9 +128,9 @@ export const createDevices = async (
       purchase_value: Number(device?.purchase_value), // Ensure it's a number
       os: device?.os,
       device_purchase_date: device?.device_purchase_date || null,
-      image: device?.image,
-      addressId: device?.addressId,
-      ...(device?.userId !== "" && { userId: device?.userId }),
+      // image: device?.image,
+      // addressId: device?.addressId,
+      // ...(device?.userId !== "" && { userId: device?.userId }),
     };
 
     // API call
@@ -161,7 +161,7 @@ export const createDevices = async (
       }
     } else {
       // Handle any other unexpected errors
-      throw new Error("An unexpected error occurred");
+      throw new Error(error.message);
     }
   }
 };

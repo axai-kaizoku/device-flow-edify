@@ -34,7 +34,7 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
           const originalNode = findOriginalNode(orgData, node.name);
           if (originalNode) {
             node.children = originalNode.children
-              ? originalNode.children.map(mapEmployeeToRawNodeDatum)
+              ? originalNode?.children?.map(mapEmployeeToRawNodeDatum)
               : [];
           }
         }
@@ -48,8 +48,8 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
 
   return (
     <>
-      <div className="flex flex-col w-full pr-8 overflow-hidden h-full gap-3">
-        <div className="flex justify-between items-center">
+      <div className="flex flex-col w-full overflow-hidden h-full gap-3">
+        {/* <div className="flex justify-between items-center">
           <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">
             Organisation Chart
           </h1>
@@ -70,10 +70,10 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
               <div className="font-gilroyMedium text-base">Download</div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div
           id="treeWrapper"
-          className="w-full rounded-[49px] h-[calc(80vh-35px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
+          className="w-full rounded-[49px]  h-[calc(70vh-35px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
         >
           <Tree
             data={data}

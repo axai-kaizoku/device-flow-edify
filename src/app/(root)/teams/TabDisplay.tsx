@@ -7,13 +7,16 @@ import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
 import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
+import { Employee } from "../_org-chart/_components/data";
+import Org from "../_org-chart/_components/orgChart";
 
 interface TabDisplayProps {
   teams: Team[];
   deletedTeams: Team[];
+  orgData: Employee;
 }
 
-function TabDisplay({ teams, deletedTeams }: TabDisplayProps) {
+function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active",
   });
@@ -29,6 +32,8 @@ function TabDisplay({ teams, deletedTeams }: TabDisplayProps) {
         return <TeamsMain teams={teams} />;
       case "deleted":
         return <DeletedTeams teams={deletedTeams} />;
+      case "org":
+        return <Org data={orgData} />;
       default:
         return null;
     }
@@ -56,6 +61,13 @@ function TabDisplay({ teams, deletedTeams }: TabDisplayProps) {
               active={activeTab === "deleted"}
               onClick={() => handleTabChange("deleted")}
               label="Deleted Teams"
+            />
+
+            <Tab
+              className="after:left-[-20%]  after:w-[140%]"
+              active={activeTab === "org"}
+              onClick={() => handleTabChange("org")}
+              label="Org Chart"
             />
           </div>
 

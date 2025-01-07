@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Icons } from "../icons";
 
 type SidebarItemProps = {
   href: string;
@@ -33,9 +34,9 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
   };
 
   return (
-    <Link href={href}>
+    <Link href={href} className="flex flex-col items-center justify-center">
       <div
-        className="relative font-gilroyRegular group z-[1000] w-10 h-10 flex items-center justify-center rounded-full transition-all"
+        className="font-gilroyRegular group z-[1000] flex items-center justify-center rounded-full transition-all"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -61,11 +62,11 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           ) : label === "Orders" ? (
             <ShoppingBag className="w-5 h-5" />
           ) : label === "Reports" ? (
-            <Calendar className="w-5 h-5" />
+            !isActive ? <Icons.reports_icon className="size-5"/> : <Icons.reports_icon_white className="size-5"/>
           ) : label === "Onboarding" ? (
             <Upload className="w-5 h-5" />
           ) : label === "Issues" ? (
-            <Wrench className="w-5 h-5" />
+            !isActive ? <Icons.issue_icon className="size-5"/> : <Icons.issue_icon_white className="size-5"/>
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
           ) : label === "Profile" ? (
@@ -79,12 +80,9 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           )}
         </div>
 
-        {/* Tooltip */}
-        {isHovered && (
-          <div className="absolute left-12 top-1/2 -translate-y-1/2 bg-black z-[1000] text-white text-sm rounded-full py-1 px-2 shadow-lg whitespace-nowrap">
-            {label}
-          </div>
-        )}
+      </div>
+      <div className="text-black text-xs font-gilroyMedium py-1 px-2 whitespace-nowrap">
+        {label}
       </div>
     </Link>
   );
