@@ -114,6 +114,8 @@ export default function MoveTeamMember({
             >
               <div className="z-0 flex-1">
                 <SelectInput
+                  optionValue={{ firstV: "title", secondV: "description" }}
+                  key={"move-team-member-team-field"}
                   value={team?.title ?? ""}
                   placeholder="Search by name, etc"
                   fetchOptions={async (query) => {

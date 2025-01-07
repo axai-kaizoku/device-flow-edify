@@ -154,6 +154,7 @@ export const filterUsers = cache(async function ({
     );
   }
 });
+
 export const activeUsers = cache(async function ({
   filters = [],
   fields = usersFields,

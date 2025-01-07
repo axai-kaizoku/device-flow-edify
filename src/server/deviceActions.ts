@@ -104,7 +104,6 @@ export type DeviceResponse = {
   currentDocumentCount: number;
 };
 
-//Creating Devices
 // Creating Devices
 export const createDevices = async (
   device: Device
@@ -312,3 +311,52 @@ export const paginatedDevices = async (
     throw new Error((error as AxiosError)?.message);
   }
 };
+
+// SearchInput initial Fetch
+export const fetchDevices = cache(async function (): Promise<DeviceResponse> {
+  try {
+    const requestBody = {
+      fields: ["device_name", "serial_no"],
+      filters: [],
+      page_length: 10,
+    };
+
+    const res = await callAPIWithToken<DeviceResponse>(
+      "https://api.edify.club/edifybackend/v1/devices/filter",
+      "POST", // Changed to POST as the new API requires it
+      requestBody // Pass the request body
+    );
+
+    return res?.data?.devices;
+  } catch (e) {
+    throw new Error("Failed to fetch devices");
+  }
+});
+
+// SearchInput Search
+
+export async function searchDevices(
+  searchQuery: string
+): Promise<DeviceResponse> {
+  try {
+    const requestBody = {
+      fields: ["device_name", "serial_no"],
+      filters: [], // You can add filters here as per requirement
+      page_length: 10, // Number of users to fetch per page
+    };
+
+    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    const res = await callAPIWithToken<DeviceResponse>(
+      apiUrl,
+      "POST", // Changed to POST as the new API requires it
+      requestBody // Pass the request body
+    );
+
+    return res?.data?.devices;
+  } catch (e) {
+    throw new Error("Failed to fetch devices");
+  }
+}

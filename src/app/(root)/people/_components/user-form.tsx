@@ -480,6 +480,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 <div className="z-50 pt-3">
                   <SelectInput
                     value={formData.reportM.name || ""}
+                    optionValue={{ firstV: "first_name", secondV: "email" }}
+                    key={"user-form-reporting-manager"}
                     placeholder="Search by name, etc"
                     // @ts-ignore
                     fetchOptions={searchUsers}
@@ -556,6 +558,11 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     <div className="z-20 flex-1">
                       <SelectInput
                         value={formData?.team?.name}
+                        optionValue={{
+                          firstV: "title",
+                          secondV: "description",
+                        }}
+                        key={"user-form-team-field"}
                         placeholder="Search by name, etc"
                         fetchOptions={async (query) => {
                           const data = await fetchTeams();

@@ -43,7 +43,9 @@ const AssignAssetsForm = ({
         </div>
 
         <div className="w-full flex flex-col gap-1">
-          <div className="font-gilroySemiBold text-lg text-black">Step 1 of 1</div>
+          <div className="font-gilroySemiBold text-lg text-black">
+            Step 1 of 1
+          </div>
           <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
         </div>
 
@@ -69,12 +71,15 @@ const AssignAssetsForm = ({
           <SelectInput
             fetchOptions={searchUsers}
             initialOptions={fetchUsers}
+            optionValue={{ firstV: "first_name", secondV: "email" }}
+            key={"assign-assets-form"}
+            placeholder="Search by name, email, etc."
             // logic yet to be implemented
             onSelect={(data: any) => {
               setUser({ email: data.email, _id: data._id });
             }}
             label="Assigning To"
-            value=" "
+            value={user?.email ?? ""}
           />
         </div>
       </div>

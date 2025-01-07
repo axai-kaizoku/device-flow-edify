@@ -1,10 +1,8 @@
 "use client";
 import { SIDEBAR } from "@/constants";
-import { ToggleTheme } from "../utils/toggle-theme";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 import SidebarItem from "./sidebar-item";
-import { ChevronLeft, LogOut } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Props } from "@/app/(root)/layout";
 
 export default function SidebarMain({ session }: Props) {
@@ -18,7 +16,7 @@ export default function SidebarMain({ session }: Props) {
           <div className="absolute top-0 flex flex-col mx-auto justify-end gap-5 w-full">
             {pathname !== "/" ? (
               <div
-                className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
+                className="bg-white backdrop-blur-sm cursor-pointer dark:bg-gray-800 hover:bg-black hover:text-white
 							w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
                 onClick={() => {
@@ -72,8 +70,7 @@ export default function SidebarMain({ session }: Props) {
               </button>
 
               {/* <ToggleTheme /> */}
-            </div>
-          
+          </div>
         </>
       ) : (
         <>
@@ -111,7 +108,7 @@ export default function SidebarMain({ session }: Props) {
             {/* <div className="flex gap-2 flex-col">
               {/* <ToggleTheme /> */}
 
-              {/* <button
+            {/* <button
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
                     w-10 h-10 flex items-center justify-center rounded-full p-2"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
@@ -119,7 +116,7 @@ export default function SidebarMain({ session }: Props) {
               >
                 <LogOut className="w-5 h-5" />
               </button>
-            </div> */} 
+            </div> */}
           </div>
         </>
       )}

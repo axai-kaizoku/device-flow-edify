@@ -12,10 +12,14 @@ export type Option = {
   userName: string;
   title?: string;
   city?: string;
+  address?: string;
+  device_name?: string;
+  serial_no?: string;
 };
 
 type SelectInputProps = {
   value: string;
+  optionValue: { firstV: string; secondV?: string };
   fetchOptions: (query: string) => Promise<Option[]>;
   initialOptions: () => Promise<Option[]>;
   onSelect: (data: Option) => void;
@@ -26,6 +30,7 @@ type SelectInputProps = {
 
 export const SelectInput = ({
   value,
+  optionValue,
   fetchOptions,
   initialOptions,
   onSelect,
@@ -187,14 +192,18 @@ export const SelectInput = ({
                     }
                   }}
                 >
-                  {option?.first_name ??
+                  {/* {option?.first_name ??
                     option?.userName ??
                     option?.email ??
                     option?.title ??
-                    option?.city}
+                    option?.city ??
+                    option?.device_name ??
+                    option.serial_no} */}
+                  {option[optionValue?.firstV!]}
                   <br />
                   <span className="font-gilroyRegular text-sm">
-                    {option?.email ?? ""}
+                    {/* {option?.email ?? ""} */}
+                    {option[optionValue?.secondV]}
                   </span>
                 </div>
               ))}
@@ -220,6 +229,9 @@ export function SelectDemo() {
       <SelectInput
         fetchOptions={searchUsers}
         initialOptions={fetchUsers}
+        optionValue={{ firstV: "first_name", secondV: "email" }}
+        key={"demo-select-input-comp"}
+        placeholder="Search..."
         onSelect={handleSelect}
         label="Processor"
         value=""

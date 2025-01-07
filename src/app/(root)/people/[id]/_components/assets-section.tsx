@@ -2,6 +2,7 @@ import { Device } from "@/server/deviceActions";
 import { User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import React from "react";
+import ManageAssets from "./manage-assets";
 
 const AssetsSection = ({ user }: { user: User }) => {
   const totalAssets = user?.devices?.length;
@@ -48,20 +49,16 @@ const AssetsSection = ({ user }: { user: User }) => {
             </div>
           ))}
 
-          {totalAssets > 2 && (
+          {totalAssets! > 2 && (
             <div className="text-[#9B9B9B] font-gilroySemiBold text-lg my-2 text-center">
-              +{totalAssets - 2} more
+              +{totalAssets! - 2} more
             </div>
           )}
-
-          <button
-            className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full"
-            onClick={() => {
-              router.push("/assets");
-            }}
-          >
-            Manage Assets
-          </button>
+          <ManageAssets userData={user}>
+            <div className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full">
+              Manage Assets
+            </div>
+          </ManageAssets>
         </div>
       </div>
     </>

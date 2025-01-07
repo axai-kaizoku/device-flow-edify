@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/buttons/Button";
+import { Icons } from "@/components/icons";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
 import {
   Dialog,
   DialogContent,
@@ -8,16 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteUser } from "@/server/userActions";
-import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
-import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
+import { updateDevice } from "@/server/deviceActions";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export const DeleteUser = ({
+export const UnassignAsset = ({
   id,
   children,
 }: {
@@ -28,26 +27,19 @@ export const DeleteUser = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
-  const { showAlert } = useAlert();
 
   const handleDelete = async () => {
     if (id) {
       setLoading(true);
       try {
-        await deleteUser(id);
+        // @ts-ignore
+        await updateDevice(id, { userId: null });
         setLoading(false);
-        openToast("success", "Successfully deleted user !");
+        openToast("success", "Unassigned asset from user !");
         setOpen(false);
-        router.push("/people?tab=active_people");
         router.refresh();
       } catch (e: any) {
-        showAlert({
-          title: "Failed to delete the user.",
-          description:
-            "User has devices assigned. Please remove all devices before deleting the user.",
-          isFailure: true,
-          key: "delete-user-1",
-        });
+        openToast("error", "Failed to assign to user !");
         setOpen(false);
       } finally {
         setLoading(false);
@@ -70,10 +62,10 @@ export const DeleteUser = ({
           </DialogTitle>
 
           <DialogDescription className="p-1 text-sm text-gray-600">
-            Are you sure you want to delete this?
+            Are you sure you want to unassign this device?
           </DialogDescription>
 
-          <DialogFooter className="flex w-full items-center justify-between ">
+          <DialogFooter className="flex w-full items-center justify-between">
             <Button
               className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
               onClick={() => setOpen(false)}

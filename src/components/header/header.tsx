@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { Icon } from "../wind/Icons";
 import {
   Bell,
@@ -29,13 +28,7 @@ export default function Header({ session }: Props) {
   const [inputValue, setInputValue] = useState(""); // Tracks user input
   const [isFocused, setIsFocused] = useState(false); // Tracks focus state
 
-
-  const placeholders = [
-    "Assets",
-    "People",
-    "Teams",
-    "Issues",
-  ];
+  const placeholders = ["Assets", "People", "Teams", "Issues"];
   const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
   const [animationState, setAnimationState] = useState(false);
 
@@ -45,15 +38,15 @@ export default function Header({ session }: Props) {
     const interval = setInterval(() => {
       // Start the animation
       if (!isFocused && inputValue === "") {
-      setAnimationState(true);
+        setAnimationState(true);
 
-      // Update placeholder after animation
-      setTimeout(() => {
-        index = (index + 1) % placeholders.length;
-        setCurrentPlaceholder(placeholders[index]);
-        setAnimationState(false); // Reset animation state
-      }, 1000); // Match the animation duration
-    }
+        // Update placeholder after animation
+        setTimeout(() => {
+          index = (index + 1) % placeholders.length;
+          setCurrentPlaceholder(placeholders[index]);
+          setAnimationState(false); // Reset animation state
+        }, 1000); // Match the animation duration
+      }
     }, 3000); // Change every 3 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
@@ -74,15 +67,6 @@ export default function Header({ session }: Props) {
 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
-  };
-
-  const handleMenuClick = (action: string) => {
-    setDropdownVisible(false);
-    if (action === "profile") {
-      router.push("/profile");
-    } else if (action === "logout") {
-      signOut();
-    }
   };
 
   useEffect(() => {
@@ -204,24 +188,47 @@ export default function Header({ session }: Props) {
               {dropdownVisible && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-2xl pt-1 pb-0.5 border border-[#5F5F5F] font-gilroyMedium"
+                  className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg pt-0.5 pb-0.5 border border-[#5F5F5F] font-gilroyMedium"
                 >
-                  <div className="block text-center mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                  <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                     <button
-                      onClick={() => handleMenuClick("profile")}
-                      className="w-full py-2 "
+                      onClick={() => {
+                        if (session.user.user.role === 2) {
+                          router.push(`/people/${session.user.user.userId}`);
+                        } else {
+                          router.push("/profile");
+                        }
+                        setDropdownVisible(false);
+                      }}
+                      className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                     >
-                      View Profile
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <path
+                          d="M8.05589 3.62866H4.92486C4.50966 3.62866 4.11147 3.7936 3.81788 4.08719C3.52429 4.38078 3.35935 4.77897 3.35935 5.19417V14.5872C3.35935 15.0024 3.52429 15.4006 3.81788 15.6942C4.11147 15.9878 4.50966 16.1528 4.92486 16.1528H14.3179C14.7331 16.1528 15.1313 15.9878 15.4249 15.6942C15.7185 15.4006 15.8834 15.0024 15.8834 14.5872V11.4562M9.6214 9.89071L15.8834 3.62866M15.8834 3.62866V7.54244M15.8834 3.62866H11.9697"
+                          stroke="#000000"
+                          stroke-width="1.56551"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      View Profile{" "}
                     </button>
                   </div>
 
                   <div className="h-[1px] bg-[#F3F3F3]"></div>
 
-                  <div className="block text-center mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                  <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                     <button
-                      onClick={() => handleMenuClick("logout")}
-                      className="w-full py-2 "
+                      onClick={() => signOut()}
+                      className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                     >
+                      <LogOut className="size-4" />
                       Logout
                     </button>
                   </div>

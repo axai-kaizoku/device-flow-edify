@@ -24,10 +24,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               position="bottom-right"
               autoClose={3000}
               hideProgressBar
-              // toastClassName={(ctx) =>
-              //   "relative flex p-1 min-h-20 h-16 w-32 text-black min-w-16 rounded-xl  backdrop-blur-3xl bg-slate-300 justify-between overflow-hidden cursor-pointer"
-              // }
-
+              toastClassName={(ctx) =>
+                "relative flex min-h-20 h-20 items-center w-32 text-black min-w-16 rounded-xl backdrop-blur-3xl  justify-between overflow-hidden border border-gray-800 cursor-pointer"
+              }
               newestOnTop={false}
               closeOnClick={false}
               rtl={false}

@@ -2,34 +2,34 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useEffect, useState } from "react";
-import {
-  fetchUsers,
-  searchUsers,
-  updateUser,
-  User,
-} from "@/server/userActions";
 import { Icons } from "@/components/icons";
 import { SelectInput } from "@/components/dropdown/select-input";
-import { Team } from "@/server/teamActions";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Device,
+  fetchDevices,
+  searchDevices,
+  updateDevice,
+} from "@/server/deviceActions";
+import { User } from "@/server/userActions";
 
-export default function AddTeamMember({
+export default function AssignDevice({
   children,
-  teamData,
+  userData,
 }: {
   children: React.ReactNode;
-  teamData: Team;
+  userData: User;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
-  const [user, setUser] = useState<User>();
+  const [device, setDevice] = useState<Device>();
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -39,20 +39,20 @@ export default function AddTeamMember({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!user?._id) {
-      setError("User required");
+    if (!device?._id) {
+      setError("Device required");
       return;
     }
 
     setLoading(true);
     try {
-      await updateUser(user?._id ?? "", { teamId: teamData._id });
+      await updateDevice(userData?._id ?? "", { userId: userData?._id });
       setOpen(false);
-      openToast("success", "Added member to team !");
+      openToast("success", "Assigned asset to user !");
       setLoading(false);
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to add member to team !");
+      openToast("error", "Failed to assign to user !");
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ export default function AddTeamMember({
                   <Icons.user_form_icon className="size-8 2xl:size-11" />
                 </div>
                 <span className="font-gilroySemiBold text-2xl 2xl:text-3xl">
-                  {"Add Employee"}
+                  Assign Asset
                 </span>
               </div>
               <div className="w-full flex flex-col gap-1">
@@ -83,24 +83,24 @@ export default function AddTeamMember({
 
             <div className="h-[28vh] w-full bg-[#F1F1F1] border rounded-3xl mb-8 flex items-center gap-6 pl-7">
               <img
-                src={teamData.image ?? ""}
+                src={userData.image ?? ""}
                 alt="team-image"
                 className="w-24 h-24 object-contain rounded-full border"
               />
               <div className="h-full w-full flex flex-col justify-center gap-1">
                 <div className="flex gap-3 items-center">
                   <div className="text-black font-gilroySemiBold text-xl 2xl:text-2xl">
-                    {teamData?.title ?? "-"}
+                    {userData?.first_name ?? "-"}
                   </div>
                   <div className="text-[#027A48] h-fit rounded-3xl bg-[#ECFDF3] text-sm 2xl:text-base font-gilroySemiBold flex justify-center items-center px-2 py-0.5">
                     Active
                   </div>
                 </div>
                 <div className="text-[#7C7C7C] text-base 2xl:text-lg font-gilroyMedium">
-                  {teamData?.description ?? ""}
+                  {userData?.designation ?? ""}
                 </div>
 
-                <div className="flex gap-2 items-end">
+                {/* <div className="flex gap-2 items-end">
                   <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
                     Reporting Manger:
                   </div>
@@ -109,7 +109,7 @@ export default function AddTeamMember({
                       teamData?.manager![0]?.last_name ?? ""
                     }`}
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -119,17 +119,15 @@ export default function AddTeamMember({
             >
               <div className="z-0 pt-3">
                 <SelectInput
-                  optionValue={{ firstV: "first_name", secondV: "email" }}
-                  key={"add-team-member-user-field"}
-                  value={user?.first_name ?? ""}
-                  placeholder="Search by name, email, etc"
-                  // @ts-ignore
-                  fetchOptions={searchUsers}
-                  // @ts-ignore
-                  initialOptions={fetchUsers}
+                  key={"assign-device"}
+                  value={device?.device_name ?? ""}
+                  placeholder="Search by name, serial no, etc"
+                  fetchOptions={searchDevices}
+                  initialOptions={fetchDevices}
                   onSelect={(data: any) => {
-                    setUser({ _id: data._id });
+                    setDevice({ _id: data._id, device_name: data.device_name });
                   }}
+                  optionValue={{ firstV: "device_name", secondV: "serial_no" }}
                   label="Add member*"
                   className={cn(
                     error.length > 0 ? "border-destructive/80 border" : ""
@@ -156,7 +154,7 @@ export default function AddTeamMember({
                     <Spinner />
                   ) : (
                     <>
-                      <span>Add</span>
+                      <span>Assign</span>
                       <ChevronRight color="white" />
                     </>
                   )}

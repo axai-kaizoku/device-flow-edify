@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { getAddress } from "@/server/addressActions";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
-import {
-  Dropdown,
-  SelectDropdown,
-} from "@/components/dropdown/select-dropdown";
-import ApiDropdown from "@/components/dropdown/api-dropdown";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import {
   ExtraDetails as ExtraDetailsInterface,
   FormErrors,
@@ -125,27 +121,13 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 
         {/* Assigned To */}
         <div className="flex flex-col w-72">
-          {/* {formData.assignedTo.value ? (
-						<input
-							name="assignedTo"
-							value={formData.assignedTo.name}
-							disabled
-							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
-						/>
-					) : (
-						 <ApiDropdown
-						 	fetching={fetchUsers}
-						 	name="userId"
-						 	resName="first_name"
-						 	value={formData.assignedTo.value}
-						 	onChange={handleApiChange('assignedTo')}
-						 	placeholder="Select a User to Assign"
-						 /> 
-						)}  */}
           <SelectInput
             value={formData.assignedTo.name || ""}
             fetchOptions={searchUsers}
             initialOptions={fetchUsers}
+            optionValue={{ firstV: "first_name", secondV: "email" }}
+            key={"add-device"}
+            placeholder="Search by name, etc."
             onSelect={(data: any) => {
               setFormData((prev) => ({
                 ...prev,
@@ -163,23 +145,6 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
 
         {/* Office Location */}
         <div className="flex flex-col w-72">
-          {/* {formData.officeLocation.value ? (
-						<input
-							name="officeLocation"
-							value={formData.officeLocation.name}
-							disabled
-							className="px-2 py-3 rounded-lg border border-gray-200 bg-gray-100"
-						/>
-					) : (
-						<ApiDropdown
-							fetching={getAddress}
-							name="addressId"
-							resName="city"
-							value={formData.officeLocation.value}
-							onChange={handleApiChange('officeLocation')}
-							placeholder="Select a Location"
-						/>
-					)} */}
           <SelectInput
             value={formData.officeLocation.name || ""}
             fetchOptions={async (query) => {
@@ -190,6 +155,8 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
               return filtered;
             }}
             initialOptions={getAddress}
+            key={"extra-details-address-field"}
+            optionValue={{ firstV: "city", secondV: "address" }}
             onSelect={(data: any) => {
               setFormData((prev) => ({
                 ...prev,
