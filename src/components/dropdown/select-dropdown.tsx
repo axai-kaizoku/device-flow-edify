@@ -111,7 +111,7 @@ export const SelectDropdown = ({
         <div
           id={label}
           className={cn(
-            "pr-10 px-4 py-2 text-black  h-14 flex  items-center border rounded-xl cursor-pointer",
+            "pr-10 px-4 py-2 text-black  h-14 flex border-input  items-center border rounded-xl cursor-pointer",
             "bg-white  h-12",
             className
           )}
@@ -161,7 +161,11 @@ export const SelectDropdown = ({
         )}
       </div>
 
-      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+      {error && (
+        <p className="mt-2 text-xs font-gilroyMedium text-destructive">
+          {error}
+        </p>
+      )}
     </>
   );
 };

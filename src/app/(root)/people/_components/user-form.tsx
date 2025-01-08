@@ -238,17 +238,17 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 
   return (
     <>
-      <div className="flex flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
+      <div className="flex relative flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
         <div className="flex justify-start items-center gap-4 font-gilroySemiBold">
           <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-            <Icons.user_form_icon />
+            <Icons.user_form_icon className="size-6" />
           </div>
-          <span className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
+          <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
             {isEditForm ? "Edit Employee " : "Add Employee"}
           </span>
         </div>
         <div className="w-full flex flex-col gap-1">
-          <div className="font-gilroySemiBold text-lg text-black">
+          <div className="font-gilroySemiBold text-base text-gray-400">
             {next === 0 ? "Step 0 of 1" : "Step 1 of 1"}
           </div>
           <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
@@ -266,14 +266,17 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           ) : null
         ) : null}
 
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col gap-4 h-full"
+        >
           {next === 0 ? (
             <>
               {!isEditForm && (
                 <>
                   <div className="flex items-center justify-center ">
-                    <div className="border-t border-[#B1B1B1] w-7"></div>
-                    <span className="mx-4 font-gilroySemiBold 2xl:text-lg text-base text-[#5F5F5F]">
+                    <div className="border-t border-gray-400 w-7"></div>
+                    <span className="mx-4  font-gilroySemiBold 2xl:text-lg text-base text-gray-400">
                       OR
                     </span>
                     <div className="border-t border-[#B1B1B1] w-7"></div>
@@ -281,7 +284,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </>
               )}
 
-              <div className="font-gilroySemiBold 2xl:text-2xl text-[22px] mb-2">
+              <div className="font-gilroySemiBold 2xl:text-2xl text-xl mb-2">
                 Personal Info
               </div>
               <FormField
@@ -303,7 +306,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </label>
 
                 <div
-                  className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                  className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
                   onClick={() => fileImageRef?.current?.click()}
                 >
                   <div className="flex flex-col justify-center items-center">
@@ -320,9 +323,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   style={{ display: "none" }}
                   onChange={handleImageChange}
                 />
-                {errors.image && (
-                  <p className="text-destructive text-sm">{errors.image}</p>
-                )}
               </div>
               <div className="flex w-full flex-wrap items-center gap-4 pt-3">
                 <div className="flex-1">
@@ -357,9 +357,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         }))
                       }
                       label="Gender"
-                      value={`${
-                        formData?.gender ? formData?.gender : "eg: Male"
-                      }`}
+                      value={`${formData?.gender ?? ""}`}
+                      placeholder="eg: Male"
                       className={cn(
                         errors.gender
                           ? "border-destructive/80 "
@@ -368,7 +367,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                       )}
                     />
                     {errors.gender && (
-                      <p className="mt-2 text-sm text-destructive">
+                      <p className="mt-1 text-xs font-gilroyMedium text-destructive">
                         {errors.gender}
                       </p>
                     )}
@@ -449,17 +448,17 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </div>
               </div>
               {/* {error && <span className="w-full text-red-400">{error}</span>} */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-3">
                 <Button
                   type="button"
-                  className="rounded-full w-1/2 text-xl font-gilroySemiBold border border-black"
+                  className="rounded-full text-base w-1/2 font-gilroySemiBold border border-black"
                   onClick={() => closeBtn(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="button"
-                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  className="rounded-full text-base w-1/2  font-gilroySemiBold bg-black text-white "
                   onClick={() => {
                     if (validateStepOne()) {
                       setNext(1);
@@ -472,12 +471,12 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
               </div>
             </>
           ) : next === 1 ? (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 relative h-full">
               <div className="w-full flex flex-col gap-6">
-                <h1 className="2xl:text-2xl text-[22px] font-gilroySemiBold">
+                <h1 className="2xl:text-2xl text-xl font-gilroySemiBold">
                   Professional Info
                 </h1>
-                <div className="z-50 pt-3">
+                <div className="z-50">
                   <SelectInput
                     value={formData.reportM.name || ""}
                     optionValue={{ firstV: "first_name", secondV: "email" }}
@@ -499,11 +498,13 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     )}
                   />
                   {errors.reportM && (
-                    <p className="text-destructive text-sm">{errors.reportM}</p>
+                    <p className="text-destructive font-gilroyMedium text-xs">
+                      {errors.reportM}
+                    </p>
                   )}
                 </div>
 
-                <div className="flex w-full flex-wrap items-center gap-4 py-3">
+                <div className="flex w-full flex-wrap items-center gap-4 py-2">
                   <div className="flex-1">
                     <FormField
                       label="Onboarding Date"
@@ -532,11 +533,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                           }))
                         }
                         label="Employment Type"
-                        value={`${
-                          formData?.employment
-                            ? formData?.employment
-                            : "eg: Full time"
-                        }`}
+                        value={`${formData?.employment ?? ""}`}
+                        placeholder="eg: Full time"
                         className={cn(
                           errors.employment
                             ? "border-destructive/80 "
@@ -545,7 +543,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         )}
                       />
                       {errors.employment && (
-                        <p className="mt-2 text-sm text-destructive">
+                        <p className="mt-0.5 font-gilroyMedium text-xs text-destructive">
                           {errors.employment}
                         </p>
                       )}
@@ -553,7 +551,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   </div>
                 </div>
 
-                <div className="flex w-full flex-wrap items-center gap-4 pb-3">
+                <div className="flex w-full flex-wrap items-center gap-4 ">
                   <div className="flex-1">
                     <div className="z-20 flex-1">
                       <SelectInput
@@ -585,9 +583,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                           errors.team ? "border-destructive/80 border" : ""
                         )}
                       />
-                      {errors.team && (
-                        <p className="text-destructive text-sm">
-                          {errors.team}
+
+                      {true && (
+                        <p
+                          className={cn(
+                            "mt-0.5 text-sm text-destructive opacity-0"
+                          )}
+                        >
+                          {"team"}
                         </p>
                       )}
                     </div>
@@ -604,11 +607,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                           }))
                         }
                         label="Role"
-                        value={`${
-                          formData?.designation
-                            ? formData?.designation
-                            : "eg: Full Stack Developer"
-                        }`}
+                        value={`${formData?.designation ?? ""}`}
+                        placeholder="eg: Full Stack Developer"
                         className={cn(
                           errors.designation
                             ? "border-destructive/80 "
@@ -617,7 +617,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         )}
                       />
                       {errors.designation && (
-                        <p className="mt-2 text-sm text-destructive">
+                        <p className="mt-0.5 text-xs text-destructive">
                           {errors.designation}
                         </p>
                       )}
@@ -655,15 +655,15 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   )}
                 </div>
               </div>
-              <div className="flex gap-2 w-full mt-4">
+              <div className="flex gap-2 absolute -bottom-4 w-full  mt-4">
                 <Button
-                  className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
+                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
                   onClick={() => setNext(0)}
                 >
                   Previous
                 </Button>
                 <Button
-                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
                   type="submit"
                   disabled={loading}
                 >
@@ -673,7 +673,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     ) : (
                       <>
                         <span>Save Changes</span>
-                        <ChevronRight color="white" />
+                        <ChevronRight color="white" className="size-4" />
                       </>
                     )
                   ) : loading ? (
@@ -681,7 +681,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   ) : (
                     <>
                       <span>Submit</span>
-                      <ChevronRight color="white" />
+                      <ChevronRight color="white" className="size-4" />
                     </>
                   )}
                 </Button>

@@ -149,7 +149,7 @@ export const SelectInput = ({
         >
           {label}
         </label>
-        <div className="relative">
+        <div className="">
           <Input
             id={label}
             className={cn("pr-10 cursor-pointer", className)} // Add padding-right to avoid overlapping the icon
@@ -167,7 +167,7 @@ export const SelectInput = ({
             <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
             <Icons.dropdownArrowUp
               className={cn(
-                "size-5 ml-4 mr-3.5 text-gray-500",
+                "size-3 ml-4 mr-3.5 text-gray-500",
                 isDropdownOpen ? "" : "transform -scale-y-100"
               )}
             />

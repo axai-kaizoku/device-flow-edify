@@ -12,7 +12,7 @@ export const Input = React.forwardRef<
       <input
         type={type}
         className={cn(
-          "flex h-14 w-full rounded-xl border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-gilroyMedium file:text-foreground placeholder:text-[#8A8A8A] focus-visible:outline-none focus-visible:border-primary  disabled:cursor-not-allowed disabled:opacity-50 md:text-base",
+          "flex h-12 w-full  rounded-xl border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-gilroyMedium file:text-foreground placeholder:text-[#8A8A8A] focus-visible:outline-none focus-visible:border-primary  disabled:cursor-not-allowed disabled:opacity-50 md:text-base",
           className
         )}
         ref={ref}

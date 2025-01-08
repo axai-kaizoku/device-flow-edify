@@ -122,23 +122,22 @@ export const TeamForm = ({
 
   return (
     <>
-      <div className="flex justify-center items-center">
-        <div className="flex flex-col w-[98%] h-[80%] justify-start items-start">
-          <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
-          <h3 className="text-3xl font-gilroySemiBold mb-2">
-            {isEditForm ? "Edit Team" : "Let's work together"}
-          </h3>
-          <p className="text-slate-500 mb-10">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua
-          </p>
+      <div className="flex justify-center items-center gap-6">
+        <div className="flex flex-col  justify-start items-start gap-6">
+          <div className="flex items-center  justify-center gap-4 ">
+            <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
+            <h3 className="text-xl font-gilroySemiBold  ">
+              {isEditForm ? "Edit Team" : "Create new team"}
+            </h3>
+          </div>
+          <div className="h-[1px] bg-[#E7E7E7] w-full mb-2"></div>
 
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit();
             }}
-            className="flex flex-col gap-8"
+            className="flex flex-col gap-6"
           >
             <div className="group relative">
               <label
@@ -163,7 +162,9 @@ export const TeamForm = ({
                 type="text"
               />
               {errors.title && (
-                <p className="mt-2 text-sm text-destructive">{errors.title}</p>
+                <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
+                  {errors.title}
+                </p>
               )}
             </div>
 
@@ -188,7 +189,9 @@ export const TeamForm = ({
                 onChange={handleFileChange}
               />
               {errors.image && (
-                <p className="text-destructive text-sm">{errors.image}</p>
+                <p className="text-destructive text-xs font-gilroyMedium ">
+                  {errors.image}
+                </p>
               )}
             </div>
 
@@ -196,13 +199,13 @@ export const TeamForm = ({
               <label className="font-gilroyMedium my-1">
                 Choose Department
               </label>
-              <div className="flex flex-wrap gap-x-5 gap-y-3">
+              <div className="flex flex-wrap gap-3">
                 {DEPARTMENT_OPTIONS.map((preLabel) => (
                   <button
                     key={preLabel}
                     type="button"
                     className={cn(
-                      "w-fit h-fit flex px-3.5 text-secondary py-2.5 border border-secondary items-center justify-center text-base rounded-full",
+                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300 text-lg",
                       formData.description === preLabel
                         ? "border-white bg-primary text-white"
                         : "hover:border-black hover:text-black"
@@ -214,34 +217,36 @@ export const TeamForm = ({
                 ))}
               </div>
               {errors.description && (
-                <p className="text-destructive text-sm">{errors.description}</p>
+                <p className="text-destructive text-xs font-gilroyMedium">
+                  {errors.description}
+                </p>
               )}
             </div>
 
-            <div className="flex space-x-3 w-full pt-2 justify-between items-center">
+            <div className="flex w-[93%] gap-3 absolute bottom-6 pt-2 justify-between items-center">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-full w-1/2"
+                className="rounded-full text-base flex-1 font-gilroySemiBold border border-black"
                 onClick={() => closeBtn(false)}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="rounded-full border w-1/2 bg-primary text-primary-foreground"
+                className="rounded-full flex-1 text-base font-gilroySemiBold bg-black text-white "
                 disabled={loading}
               >
                 {loading ? (
                   <Spinner className={spinnerVariants({ size: "sm" })} />
                 ) : isEditForm ? (
                   <>
-                    Edit Team <Icons.arrowRight className="size-5" />
+                    Edit Team <Icons.arrowRight className="size-4" />
                   </>
                 ) : (
                   <>
                     Submit
-                    <Icons.arrowRight className="size-5" />
+                    <Icons.arrowRight className="size-2" />
                   </>
                 )}
               </Button>

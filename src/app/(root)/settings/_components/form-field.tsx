@@ -38,6 +38,10 @@ export const FormField = ({
       placeholder={placeholder}
       {...props}
     />
-    {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+    {error && (
+      <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
+        {error}
+      </p>
+    )}
   </div>
 );
