@@ -43,7 +43,7 @@ const AssignAssetsForm = ({
         </div>
 
         <div className="w-full flex flex-col gap-1">
-          <div className="font-gilroySemiBold text-lg text-black">
+          <div className="font-gilroySemiBold text-lg text-gray-400">
             Step 1 of 1
           </div>
           <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
@@ -55,10 +55,10 @@ const AssignAssetsForm = ({
           </div>
           <div>
             <div className="font-gilroySemiBold text-xl">
-              {device?.device_name ?? ""}
+              {device?.device_name ?? "fff"}
             </div>
             <div className="text-[#7C7C7C] font-gilroyRegular text-sm">
-              {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{" "}
+              {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{"ff "}
               {device?.serial_no ?? "N/A"}
             </div>
             <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-gilroyMedium text-[#027A48] mt-1 max-w-16">

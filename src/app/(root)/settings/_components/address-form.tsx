@@ -96,7 +96,7 @@ export const AddressForm = ({
         showAlert({
           isFailure: false,
           description: "New address added !!",
-          title: "Woahh ",
+          title: "WOHOOO!! 🎉",
           key: "create-address",
         });
         router.refresh();
@@ -109,70 +109,71 @@ export const AddressForm = ({
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex flex-col h-[80%]">
-        <Icons.teamMemberIcon className="size-10 border my-3 bg-black rounded-full" />
-        <h3 className="text-3xl font-gilroySemiBold mb-2">
+    <div className="flex flex-col w-[100%] gap-6">
+      <div className="flex items-center gap-4">
+        <Icons.teamMemberIcon className="size-9 border  bg-black rounded-full" />
+        <h1 className="text-xl font-gilroySemiBold">
           {isEditForm ? "Edit Address" : "Add New Address"}
-        </h3>
-        <p className="text-slate-500 mb-10">
-          Please provide the address details to be used for delivery or billing
-          purposes.
-        </p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
+        </h1>
+      </div>
+      <div className="h-[1px] bg-[#E7E7E7] w-full "></div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        className="flex relative flex-col gap-8"
+      >
+        {/* Primary/Secondary Selection */}
+        <PrimarySelector
+          isPrimary={formData?.isPrimary}
+          onSelect={(value) =>
+            setFormData((prev) => ({ ...prev, isPrimary: value }))
+          }
+        />
+
+        {/* Form Fields */}
+        <FormField
+          label="Address Title"
+          id="title"
+          value={formData?.title}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, title: e.target.value }))
+          }
+          type="text"
+          error={errors?.title}
+          placeholder="eg: Home, Office"
+        />
+
+        <FormField
+          label="Phone Number"
+          id="phone"
+          type="text"
+          value={formData?.phone}
+          onChange={(e) => {
+            if (/^\d{0,10}$/.test(e.target.value))
+              setFormData((prev) => ({ ...prev, phone: e.target.value }));
           }}
-          className="flex flex-col gap-8"
-        >
-          {/* Primary/Secondary Selection */}
-          <PrimarySelector
-            isPrimary={formData?.isPrimary}
-            onSelect={(value) =>
-              setFormData((prev) => ({ ...prev, isPrimary: value }))
-            }
-          />
+          maxLength={10}
+          error={errors?.phone}
+          placeholder="eg: 1234567890"
+        />
 
-          {/* Form Fields */}
-          <FormField
-            label="Address Title"
-            id="title"
-            value={formData?.title}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, title: e.target.value }))
-            }
-            type="text"
-            error={errors?.title}
-            placeholder="eg: Home, Office"
-          />
+        <FormField
+          label="Address"
+          id="address"
+          value={formData?.address}
+          className="h-24"
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, address: e.target.value }))
+          }
+          type="text"
+          error={errors?.address}
+          placeholder=""
+        />
 
-          <FormField
-            label="Phone Number"
-            id="phone"
-            type="text"
-            value={formData?.phone}
-            onChange={(e) => {
-              if (/^\d{0,10}$/.test(e.target.value))
-                setFormData((prev) => ({ ...prev, phone: e.target.value }));
-            }}
-            maxLength={10}
-            error={errors?.phone}
-            placeholder="eg: 1234567890"
-          />
-
-          <FormField
-            label="Address"
-            id="address"
-            value={formData?.address}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, address: e.target.value }))
-            }
-            type="text"
-            error={errors?.address}
-            placeholder="eg: 123 Street, City"
-          />
-
+        <div className="flex gap-3">
           <FormField
             label="City"
             id="city"
@@ -196,46 +197,46 @@ export const AddressForm = ({
             error={errors?.state}
             placeholder="eg: NY"
           />
+        </div>
 
-          <FormField
-            label="Pin Code"
-            id="pinCode"
-            value={formData?.pinCode}
-            maxLength={6}
-            onChange={(e) => {
-              if (/^\d{0,6}$/.test(e.target.value))
-                setFormData((prev) => ({ ...prev, pinCode: e.target.value }));
-            }}
-            error={errors?.pinCode}
-            placeholder="eg: 10001"
-          />
+        <FormField
+          label="Pin Code"
+          id="pinCode"
+          value={formData?.pinCode}
+          maxLength={6}
+          onChange={(e) => {
+            if (/^\d{0,6}$/.test(e.target.value))
+              setFormData((prev) => ({ ...prev, pinCode: e.target.value }));
+          }}
+          error={errors?.pinCode}
+          placeholder="eg: 10001"
+        />
 
-          {/* Submit and Cancel Buttons */}
-          <div className="flex space-x-3 w-full pt-2 justify-between items-center">
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-full w-1/2"
-              onClick={() => closeBtn(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="rounded-full border w-1/2 bg-primary text-primary-foreground"
-            >
-              {loading ? (
-                <Spinner className={spinnerVariants({ size: "sm" })} />
-              ) : (
-                <>
-                  {isEditForm ? "Edit Address" : "Submit"}
-                  <Icons.arrowRight className="size-5" />
-                </>
-              )}
-            </Button>
-          </div>
-        </form>
-      </div>
+        {/* Submit and Cancel Buttons */}
+        <div className="flex  space-x-3 w-full pt-16 justify-between items-center">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-full w-1/2"
+            onClick={() => closeBtn(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="rounded-full border w-1/2 bg-primary text-primary-foreground"
+          >
+            {loading ? (
+              <Spinner className={spinnerVariants({ size: "sm" })} />
+            ) : (
+              <>
+                {isEditForm ? "Edit Address" : "Submit"}
+                <Icons.arrowRight className="size-5" />
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

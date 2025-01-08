@@ -316,7 +316,7 @@ export const paginatedDevices = async (
 export const fetchDevices = cache(async function (): Promise<DeviceResponse> {
   try {
     const requestBody = {
-      fields: ["device_name", "serial_no"],
+      fields: ["device_name", "serial_no", "ram", "storage", "image"],
       filters: [],
       page_length: 10,
     };
@@ -340,7 +340,7 @@ export async function searchDevices(
 ): Promise<DeviceResponse> {
   try {
     const requestBody = {
-      fields: ["device_name", "serial_no"],
+      fields: ["device_name", "serial_no", "ram", "storage", "image"],
       filters: [], // You can add filters here as per requirement
       page_length: 10, // Number of users to fetch per page
     };
