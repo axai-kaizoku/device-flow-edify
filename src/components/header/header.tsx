@@ -17,6 +17,7 @@ import { login } from "@/app/store/authSlice";
 import CreateUser from "@/app/(root)/people/_components/create-user";
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
 import { signOut } from "next-auth/react";
+import { Icons } from "../icons";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
@@ -109,20 +110,24 @@ export default function Header({ session }: Props) {
           <div className="flex justify-center items-center ml-16">
             <div className="flex items-center gap-x-4 lg:gap-x-1 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.6rem] px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent overflow-hidden flex items-center gap-2 border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
-                <Icon type="OutlinedSearch" color="gray" />
-                <input
-                  type="text"
-                  placeholder={`Search ${currentPlaceholder}...`}
-                  onChange={(e) => setInputValue(e.target.value)} // Update input value
-                  onFocus={() => setIsFocused(true)} // Mark as focused
-                  onBlur={() => setIsFocused(false)} // Remove focus
-                  className={`flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
-                    !isFocused && inputValue === "" && animationState
-                      ? "animate-slide-up"
-                      : ""
-                  }`}
-                />
+              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
+                <div className="flex gap-2">
+                  <Icon type="OutlinedSearch" color="gray" />
+                  <input
+                    type="text"
+                    placeholder={`Search ${currentPlaceholder}...`}
+                    onChange={(e) => setInputValue(e.target.value)} // Update input value
+                    onFocus={() => setIsFocused(true)} // Mark as focused
+                    onBlur={() => setIsFocused(false)} // Remove focus
+                    className={`flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
+                      !isFocused && inputValue === "" && animationState
+                        ? "animate-slide-up"
+                        : ""
+                    }`}
+                  />
+                </div>
+
+                <Icons.kbar_icon/>
               </div>
 
               {/* Action Buttons */}
@@ -237,10 +242,10 @@ export default function Header({ session }: Props) {
                   <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                     <button
                       onClick={() => signOut()}
-                      className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
+                      className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                     >
                       <LogOut className="size-4" />
-                      Logout
+                      <div>Logout</div>
                     </button>
                   </div>
                 </div>

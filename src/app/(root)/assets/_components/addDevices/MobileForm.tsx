@@ -5,6 +5,8 @@ import { getAllDevices } from "@/server/deviceActions";
 import React, { useState } from "react";
 import { DevicePage1 as DevicePage1, FormErrors } from "./_components/types";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
+import { Icons } from "@/components/icons";
 
 interface BasicDetailsProps {
   data: DevicePage1;
@@ -75,19 +77,19 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
       id: "android",
       name: "Android",
       description: "Android 13, Android 14, Android 15",
-      icon: <Icon type={"OutlinedNote"} color="black" />,
+      icon: <Icons.android_icon className="-ml-1 size-7 p-0 " />,
     },
     {
       id: "apple",
       name: "Apple",
       description: "ios 10, ios 12, ios 13",
-      icon: <Icon type={"OutlinedNote"} color="black" />,
+      icon: <Icons.apple_icon className="-ml-0.5 mb-1 size-6" />,
     },
   ];
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="2xl:text-2xl text-[22px] font-gilroySemiBold mb-4">
+      <h1 className="2xl:text-2xl text-xl font-gilroySemiBold mb-4">
         Select OS
       </h1>
 
@@ -127,20 +129,35 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
           ))}
       </div>
 
-      {errors?.os && <p className="text-red-500 text-sm mb-8">{errors?.os}</p>}
+      {errors?.os && (
+        <p className="text-red-500 text-xs font-gilroyMedium mb-8">
+          {errors?.os}
+        </p>
+      )}
 
       <div className="flex flex-col gap-8">
-        <div>
-          <FormField
-            label="Brand Name"
-            id="brand"
-            name="brand"
-            type="text"
-            value={formData?.brand}
-            onChange={handleChange}
+        <div className="">
+          <SelectDropdown
+            options={[
+              { label: "Lenovo", value: "Lenovo" },
+              { label: "Apple", value: "Apple" },
+              { label: "Dell", value: "Dell" },
+              { label: "HP", value: "HP" },
+              { label: "ASUS", value: "ASUS" },
+            ]}
+            onSelect={(data) => {
+              const updatedFormData = {
+                ...formData,
+                brand: data?.value,
+              };
+              setFormData(updatedFormData);
+              setData(updatedFormData);
+            }}
+            label="Brand"
             error={errors?.brand}
-            placeholder="eg: Lenovo, etc"
-            className="outline-[#5F5F5F] border"
+            value={`${formData?.brand ?? ""}`}
+            placeholder="eg: Realme, etc"
+            className=" rounded-xl   text-black border border-[#5F5F5F]"
           />
         </div>
 
@@ -172,55 +189,102 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
         </div>
 
         <div className="flex gap-4">
-          <div className="flex-1">
-            <FormField
+          <div className="z-20 flex-1">
+            <SelectDropdown
+              options={[
+                { label: "Intel Core i3", value: "Intel Core i3" },
+                { label: "Intel Core i5", value: "Intel Core i5" },
+                { label: "Intel Core i7", value: "Intel Core i7" },
+                { label: "AMD Ryzen 5", value: "AMD Ryzen 5" },
+                { label: "Apple M1", value: "Apple M1" },
+              ]}
+              onSelect={(data) => {
+                const updatedFormData = {
+                  ...formData,
+                  processor: data?.value,
+                };
+                setFormData(updatedFormData);
+                setData(updatedFormData);
+              }}
               label="Processor"
-              id="processor"
-              name="processor"
-              type="text"
-              value={formData?.processor}
-              onChange={handleChange}
               error={errors?.processor}
-              placeholder="eg: X14D, etc"
+              value={`${formData?.processor ?? ""}`}
+              placeholder="eg: Intel Core i3, etc"
+              className="rounded-xl  text-black border border-[#5F5F5F]"
             />
           </div>
           <div className="flex-1">
-            <FormField
+            <SelectDropdown
+              options={[
+                { label: "4GB", value: "4GB" },
+                { label: "8GB", value: "8GB" },
+                { label: "16GB", value: "16GB" },
+                { label: "32GB", value: "32GB" },
+                { label: "64GB", value: "64GB" },
+              ]}
+              onSelect={(data) => {
+                const updatedFormData = {
+                  ...formData,
+                  ram: data?.value,
+                };
+                setFormData(updatedFormData);
+                setData(updatedFormData);
+              }}
               label="RAM"
-              id="ram"
-              name="ram"
-              type="text"
-              value={formData?.ram}
-              onChange={handleChange}
               error={errors?.ram}
-              placeholder="eg: X14D, etc"
+              value={formData?.ram ?? ""}
+              className="rounded-xl  text-black border border-[#5F5F5F]"
+              placeholder="eg: 8GB, etc"
             />
           </div>
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <FormField
+            <SelectDropdown
+              options={[
+                { label: "128GB", value: "128GB" },
+                { label: "256GB", value: "256GB" },
+                { label: "512GB", value: "512GB" },
+                { label: "1TB", value: "1TB" },
+                { label: "2TB", value: "2TB" },
+              ]}
+              onSelect={(data) => {
+                const updatedFormData = {
+                  ...formData,
+                  storage: data?.value,
+                };
+                setFormData(updatedFormData);
+                setData(updatedFormData);
+              }}
               label="Storage"
-              id="storage"
-              name="storage"
-              type="text"
-              value={formData?.storage}
-              onChange={handleChange}
               error={errors?.storage}
-              placeholder="eg: X14D, etc"
+              value={`${formData?.storage ?? ""}`}
+              placeholder="eg: 256GB, etc"
+              className="rounded-xl  text-black border border-[#5F5F5F]"
             />
           </div>
           <div className="flex-1">
-            <FormField
+            <SelectDropdown
+              options={[
+                { label: "Good", value: "Good" },
+                { label: "Best", value: "Best" },
+                { label: "Old", value: "Old" },
+                { label: "New", value: "New" },
+              ]}
+              onSelect={(data) => {
+                const updatedFormData = {
+                  ...formData,
+                  condition: data?.value,
+                };
+                setFormData(updatedFormData);
+                setData(updatedFormData);
+              }}
               label="Condition"
-              id="condition"
-              name="condition"
-              type="text"
-              value={formData?.condition}
-              onChange={handleChange}
               error={errors?.condition}
-              placeholder="eg: X14D, etc"
+              value={`${formData?.condition ?? ""}`}
+              placeholder="eg: Best, etc"
+              className="rounded-xl  text-black border border-[#5F5F5F]"
             />
           </div>
         </div>

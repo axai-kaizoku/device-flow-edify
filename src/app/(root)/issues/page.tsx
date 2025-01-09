@@ -4,6 +4,7 @@ import IssueTableDisplay from "./_components/IssueTableDisplay";
 import { notFound } from "next/navigation";
 import { filterIssues } from "@/server/filterActions";
 import TabDisplay from "./TabDisplay";
+import NotFound from "@/app/not-found";
 interface IssueProps {
   searchParams: {
     page?: string;
@@ -36,12 +37,7 @@ async function Issues({ searchParams }: IssueProps) {
   } catch (error) {
     return (
       <CombinedContainer title="Issues">
-        <div className="text-red-500">
-          Failed to load data. Please try again later. <br />{" "}
-          <a href="/" className="underline text-blue-500">
-            Back to home
-          </a>
-        </div>
+        <NotFound/>
       </CombinedContainer>
     );
   }

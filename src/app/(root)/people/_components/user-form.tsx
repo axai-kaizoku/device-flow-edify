@@ -24,7 +24,7 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { FormField } from "../../settings/_components/form-field";
 import { Icons } from "@/components/icons";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Spinner from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
@@ -216,25 +216,74 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   };
 
   const fileImageRef = useRef<HTMLInputElement | null>(null);
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle file selection
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const res = await getImageUrl({ file: file! }, "user");
-    // if (file) {
-    setFormData((prev) => ({ ...prev, image: res.data }));
-    console.log(formData.image);
-    // }
+    if (file) {
+      const isValidSize = file.size <= 1024 * 1024; // 1MB
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
+
+      if (isValidSize && isValidType) {
+        const res = await getImageUrl({ file }, "team");
+        setFormData((prev) => ({ ...prev, image: res.data }));
+        setErrors((prev) => ({
+          ...prev,
+          image: "",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          image: "Only JPG, JPEG, or PNG files under 1MB are allowed.",
+        }));
+      }
+    }
   };
 
   const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
-  const handleOfferLetterChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const [offerLetter, setOfferLetter] = useState<File | null>(null);
+
+  const handleOfferLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const res = await getImageUrl({ file: file! }, "device");
-    // if (file) {
-    setFormData((prev) => ({ ...prev, offerLetter: res.data }));
-    // }
+    if (file) {
+      const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
+      const isValidType = [
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+      ].includes(file.type);
+
+      if (isValidSize && isValidType) {
+        setOfferLetter(file);
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          offerLetter: "Only PDF files under 5MB are allowed.",
+        }));
+      }
+    }
   };
+
+  const handleRemoveOfferLetter = () => {
+    setOfferLetter(null);
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({ ...prev, image: "" }));
+  };
+
+  // const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
+  // const handleOfferLetterChange = async (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const file = e.target.files?.[0];
+  //   const res = await getImageUrl({ file: file! }, "device");
+  //   // if (file) {
+  //   setFormData((prev) => ({ ...prev, offerLetter: res.data }));
+  //   // }
+  // };
 
   return (
     <>
@@ -305,23 +354,40 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   Upload picture
                 </label>
 
-                <div
-                  className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
-                  onClick={() => fileImageRef?.current?.click()}
-                >
-                  <div className="flex flex-col justify-center items-center">
-                    <Icons.uploadImage className="size-5" />
-                    <span className="text-[#0EA5E9]">Click to upload</span>
-                    <p className="text-xs text-neutral-400">
-                      JPG, JPEG, PNG less than 1MB
-                    </p>
+                {formData.image ? (
+                  <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                    <img
+                      src={formData.image}
+                      alt={formData.image.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={handleRemoveImage}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
-                </div>
+                ) : (
+                  <div
+                    className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                    onClick={() => fileImageRef.current?.click()}
+                  >
+                    <div className="flex flex-col justify-center items-center">
+                      <Icons.uploadImage className="size-5" />
+                      <span className="text-[#0EA5E9]">Click to upload</span>
+                      <p className="text-xs text-neutral-400">
+                        JPG, JPEG, PNG less than 1MB
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <input
                   type="file"
                   ref={fileImageRef}
                   style={{ display: "none" }}
-                  onChange={handleImageChange}
+                  onChange={handleFileChange}
                 />
               </div>
               <div className="flex w-full flex-wrap items-center gap-4 pt-3">
@@ -630,18 +696,37 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   <label className="font-gilroyMedium text-black text-base">
                     Upload Offer Letter
                   </label>
-                  <div
-                    className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
-                    onClick={() => fileOfferLetterRef?.current?.click()}
-                  >
-                    <div className="flex flex-col justify-center items-center">
-                      <Icons.uploadImage className="size-5" />
-                      <span className="text-[#0EA5E9]">Click to upload</span>
-                      <p className="text-xs text-neutral-400">
-                        JPG, JPEG, PNG less than 1MB
-                      </p>
+                  {offerLetter ? (
+                    <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+                      <iframe
+                        src={URL.createObjectURL(offerLetter)}
+                        width="100%"
+                        height="100%"
+                        title="Offer Letter Preview"
+                        className="object-cover"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+                        onClick={handleRemoveOfferLetter}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
-                  </div>
+                  ) : (
+                    <div
+                      className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                      onClick={() => fileOfferLetterRef?.current?.click()}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <Icons.uploadImage className="size-5" />
+                        <span className="text-[#0EA5E9]">Click to upload</span>
+                        <p className="text-xs text-neutral-400">
+                          PDF/JPEG/PNG/JPG under 5MB
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   <input
                     type="file"
                     ref={fileOfferLetterRef}

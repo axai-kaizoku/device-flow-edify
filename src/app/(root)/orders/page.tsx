@@ -1,6 +1,7 @@
 import { CombinedContainer } from '@/components/container/container';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import NotFound from '@/app/not-found';
 const TabDisplay = dynamic(() => import("./OrdersTabDisplay"), { ssr: false });
 
 
@@ -22,12 +23,7 @@ const OrdersPage = async () => {
 	} catch (error) {
 		return (
 			<CombinedContainer title="Orders">
-				<div className="text-red-500">
-					Failed to load data. Please try again later. <br />{' '}
-					<a href="/" className="underline text-blue-500">
-						Back to home
-					</a>
-				</div>
+				<NotFound/>
 			</CombinedContainer>
 		);
 	}

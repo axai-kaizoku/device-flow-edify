@@ -1,5 +1,6 @@
 "use client";
 import Error from "@/app/error/page";
+import NotFound from "@/app/not-found";
 import { CombinedContainer } from "@/components/container/container";
 
 import dynamic from "next/dynamic";
@@ -14,10 +15,9 @@ export default function Assets() {
       </CombinedContainer>
     );
   } catch (error) {
-    console.error("Error fetching devices:", error);
     return (
       <CombinedContainer title="Assets">
-        <Error />
+        <NotFound/>
       </CombinedContainer>
     );
   }

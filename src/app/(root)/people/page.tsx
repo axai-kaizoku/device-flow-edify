@@ -19,7 +19,7 @@ export default function People() {
     console.error("Error fetching Users:", error);
     return (
       <CombinedContainer title="Users">
-        <Error />
+        <NotFound />
       </CombinedContainer>
     );
   }

@@ -11,6 +11,7 @@ import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
 import { useToast } from "@/hooks/useToast";
 import { useAlert } from "@/hooks/useAlert";
+import { X } from "lucide-react";
 
 const DEPARTMENT_OPTIONS = [
   "Backend",
@@ -109,10 +110,24 @@ export const TeamForm = ({
   // Handle file selection
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const res = await getImageUrl({ file: file! }, "team");
-    // if (file) {
-    setFormData((prev) => ({ ...prev, image: res.data }));
-    // }
+    if (file) {
+      const isValidSize = file.size <= 1024 * 1024; // 1MB
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+
+      if (isValidSize && isValidType) {
+        const res = await getImageUrl({ file }, "team");
+        setFormData((prev) => ({ ...prev, image: res.data }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          image: "Only JPG, JPEG, or PNG files under 1MB are allowed.",
+        }));
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({ ...prev, image: "" }));
   };
 
   // Handle department selection
@@ -170,6 +185,22 @@ export const TeamForm = ({
 
             <div className="flex flex-col gap-1.5">
               <label className="font-gilroyMedium">Upload team image</label>
+              {formData.image ? (
+              <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                <img
+                  src={formData.image}
+                  alt={formData.image.name}
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={handleRemoveImage}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) :(
               <div
                 className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
                 onClick={() => fileInputRef.current?.click()}
@@ -181,7 +212,7 @@ export const TeamForm = ({
                     JPG, JPEG, PNG less than 1MB
                   </p>
                 </div>
-              </div>
+              </div>)}
               <input
                 type="file"
                 ref={fileInputRef}

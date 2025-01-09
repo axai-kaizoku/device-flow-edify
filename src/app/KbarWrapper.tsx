@@ -1,157 +1,189 @@
 "use client"; // Ensure this is a client-side component
-import { KBarProvider, KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, KBarResults, useMatches } from 'kbar';
+import { Icons } from "@/components/icons";
+import {
+  KBarProvider,
+  KBarPortal,
+  KBarPositioner,
+  KBarAnimator,
+  KBarSearch,
+  KBarResults,
+  useMatches,
+} from "kbar";
+import {
+  FileText,
+  LayoutDashboard,
+  Package,
+  Search,
+  Settings,
+  Store,
+  TriangleAlert,
+} from "lucide-react";
 
 const EmpActions = [
   {
     id: "home",
     name: "Home",
-    shortcut: ["h"],
+    shortcut: ["H"],
     keywords: "home homepage",
-    perform: () => window.location.pathname = "/",
+    logo: <LayoutDashboard className="text-[#6C6C6C] size-5 mb-0.5" />,
+    perform: () => (window.location.pathname = "/"),
   },
   {
     id: "profile",
     name: "Profile",
-    shortcut: ["p"],
+    shortcut: ["P"],
     keywords: "profile",
-    perform: () => window.location.pathname = "/profile",
+    logo: <Icons.profile_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
+    perform: () => (window.location.pathname = "/profile"),
   },
   {
     id: "devices",
     name: "Devices",
-    shortcut: ["d"],
+    shortcut: ["D"],
     keywords: "devices",
-    perform: () => window.location.pathname = "/devices",
+    logo: <Icons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
+    perform: () => (window.location.pathname = "/devices"),
   },
   {
     id: "teams",
     name: "Teams",
-    shortcut: ["t"],
+    shortcut: ["T"],
     keywords: "teams",
-    perform: () => window.location.pathname = "/teams",
+    perform: () => (window.location.pathname = "/teams"),
+    logo: <Icons.team_icon className="text-[#6C6C6C] size-[22px] mb-0.5" />,
   },
 ];
 
 const adminActions = [
   {
     id: "dashboard",
-    name: "Dashboard",
-    shortcut: ["h"],
+    name: "Home",
+    shortcut: ["H"],
+    logo: <LayoutDashboard className="text-[#6C6C6C] size-5 mb-0.5" />,
     keywords: "home homepage dashboard",
-    perform: () => window.location.pathname = "/",
+    perform: () => (window.location.pathname = "/"),
   },
   {
     id: "reports",
     name: "Reports",
-    shortcut: ["r"],
+    shortcut: ["R"],
+    logo: <FileText className="text-[#6C6C6C] size-5 mb-0.5" />,
     keywords: "reports",
-    perform: () => window.location.pathname = "/reports",
+    perform: () => (window.location.pathname = "/reports"),
   },
   {
     id: "orders",
     name: "Orders",
-    shortcut: ["w"],
+    logo: <Package className="text-[#6C6C6C] size-5" />,
+    shortcut: ["W"],
     keywords: "reports",
-    perform: () => window.location.pathname = "/orders",
-  },
-  {
-    id: "org-chart",
-    name: "Org Chart",
-    shortcut: ["q"],
-    keywords: "org-chart",
-    perform: () => window.location.pathname = "/org-chart",
+    perform: () => (window.location.pathname = "/orders"),
   },
   {
     id: "people",
     name: "People",
-    shortcut: ["p"],
+    logo: <Icons.people_icon className="text-[#6C6C6C] size-6 mb-0.5" />,
+    shortcut: ["P"],
     keywords: "people",
-    perform: () => window.location.pathname = "/people",
-  },
-  {
-    id: "onboarding",
-    name: "Onboarding",
-    shortcut: ["o"],
-    keywords: "profile",
-    perform: () => window.location.pathname = "/onboarding",
+    perform: () => (window.location.pathname = "/people"),
   },
   {
     id: "assets",
     name: "Assets",
-    shortcut: ["a"],
+    shortcut: ["A"],
+    logo: <Icons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
     keywords: "assets",
-    perform: () => window.location.pathname = "/assets",
+    perform: () => (window.location.pathname = "/assets"),
   },
   {
     id: "teams",
     name: "Teams",
-    shortcut: ["t"],
+    shortcut: ["T"],
+    logo: <Icons.team_icon className="text-[#6C6C6C] size-[22px] mb-0.5" />,
     keywords: "teams",
-    perform: () => window.location.pathname = "/teams",
+    perform: () => (window.location.pathname = "/teams"),
   },
   {
     id: "store",
     name: "Store",
-    shortcut: ["s"],
+    shortcut: ["S"],
+    logo: <Store className="text-[#6C6C6C] size-[18px] mb-0.5" />,
     keywords: "store",
-    perform: () => window.location.pathname = "/store",
+    perform: () => (window.location.pathname = "/store"),
   },
   {
     id: "issues",
     name: "Issues",
-    shortcut: ["i"],
+    logo: <TriangleAlert className="text-[#6C6C6C] size-5 mb-0.5" />,
+    shortcut: ["I"],
     keywords: "issues",
-    perform: () => window.location.pathname = "/issues",
+    perform: () => (window.location.pathname = "/issues"),
   },
   {
     id: "settings",
     name: "Settings",
-    shortcut: ["x"],
+    logo: <Settings className="text-[#6C6C6C] size-5 mb-0.5" />,
+    shortcut: ["X"],
     keywords: "settings",
-    perform: () => window.location.pathname = "/settings",
+    perform: () => (window.location.pathname = "/settings"),
   },
 ];
 
-
 // Custom component to render the results inside the command bar
 function RenderResults() {
-    const { results } = useMatches();
-    return (
-      <KBarResults
-        items={results}
-        onRender={({ item, active }) =>
-          typeof item === "string" ? (
-            <div className="text-gray-500 px-4 py-2">{item}</div>
-          ) : (
-            <div className={`px-4 flex justify-between items-center py-2 rounded-md cursor-pointer ${
-                active ? "bg-gray-300 " : "bg-white text-black"
-            }`}>
-                <div>
-                    {item.name}
-                </div>
-
-                <div className="px-2 py-1 rounded-md bg-slate-400">{item?.shortcut}</div>
-            </div>
-          )
-        }
-      />
-    );
-  }
-
-export default function KbarWrapper({userRole}:{userRole : number | undefined}) {
+  const { results } = useMatches();
   return (
-    <KBarProvider actions={userRole===1 ? EmpActions : adminActions}>
+    <KBarResults
+      items={results}
+      onRender={({ item, active }) =>
+        typeof item === "string" ? (
+          <div className="text-gray-500 px-4 py-2">{item}</div>
+        ) : (
+          <div
+            className={`px-3 flex justify-between items-center py-2 rounded-md cursor-pointer mb-4 ${
+              active ? "bg-[#f5f5f5] " : "bg-white text-black"
+            }`}
+          >
+            <div className="flex gap-[10px] items-center">
+              <div>{item?.logo}</div>
+              <div className="text-base font-gilroyMedium">{item?.name}</div>
+            </div>
+
+            <div className="flex size-6 rounded-[5px] bg-white border-[1.5px] border-[#E4E4E4] text-[#6C6C6C] justify-center items-center">
+              <div>{item?.shortcut}</div>
+            </div>
+          </div>
+        )
+      }
+    />
+  );
+}
+
+export default function KbarWrapper({
+  userRole,
+}: {
+  userRole: number | undefined;
+}) {
+  return (
+    <KBarProvider actions={userRole === 1 ? EmpActions : adminActions}>
       <KBarPortal>
         <KBarPositioner className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <KBarAnimator className="w-full max-w-lg min-h-max bg-white rounded-lg shadow-xl p-6 space-y-4">
-            <KBarSearch
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-8"
-              placeholder="Type a command..."
-            />
+          <KBarAnimator className="w-full max-w-lg min-h-fit bg-white rounded-[14px] px-3 shadow-xl space-y-4 pb-2 overflow-hidden">
+            <div className="flex gap-2 justify-between items-center py-3 px-3">
+              <div className="flex gap-2 items-center">
+                <Search className="text-[#B9B9B9]" />
+                <KBarSearch
+                  defaultPlaceholder="Search"
+                  className="w-full border-none border-gray-300 rounded-md focus:outline-none"
+                />
+              </div>
+              <Icons.kbar_icon />
+            </div>
+
+            <div className="h-[1px] w-[200%] bg-[#E8E8E8] mb-1 -ml-10"></div>
             {/* Rendering all actions */}
 
             <RenderResults />
-            
           </KBarAnimator>
         </KBarPositioner>
       </KBarPortal>

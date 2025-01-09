@@ -348,7 +348,7 @@ function Form({ closeBtn }: FormProps) {
       )}
       <div className="flex-grow"></div>
       {/* Navigation buttons */}
-      <div className="flex gap-3 w-full mt-auto">
+      <div className="flex gap-3 w-full mt-auto pb-2">
         {step >= 1 ? (
           <button
             className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300 border border-black text-center"

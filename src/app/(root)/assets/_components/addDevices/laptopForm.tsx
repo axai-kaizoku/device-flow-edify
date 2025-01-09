@@ -179,7 +179,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
       </h1>
 
       <div
-        className={`flex justify-between items-center flex-wrap gap-4 w-full ${
+        className={`flex text-xs font-gilroyMedium justify-between items-center flex-wrap gap-4 w-full ${
           !errors?.os && "mb-8"
         }`}
       >
@@ -218,7 +218,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
           ))}
       </div>
 
-      {errors?.os && <p className="text-red-500 text-sm mb-7">{errors?.os}</p>}
+      {errors?.os && <p className="text-red-500 text-xs font-gilroyMedium mb-7">{errors?.os}</p>}
 
       <div className="flex flex-col gap-8">
         <div className="">
