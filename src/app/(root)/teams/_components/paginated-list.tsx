@@ -3,34 +3,51 @@
 import React, { useState } from "react";
 import Pagination from "./pagination";
 import { TeamCard } from "./team-card";
-import { Team } from "@/server/teamActions";
+import {
+  fetchActiveTeams,
+  fetchInactiveTeams,
+  fetchTeams,
+  Team,
+  TeamsResponse,
+} from "@/server/teamActions";
 
 interface PaginatedListProps {
-  teams: Team[];
-  itemsPerPage: number;
+  teams: TeamsResponse;
+  itemsPerPage?: number;
   renderButtons: (team: Team) => JSX.Element;
+  tab?: "active_teams" | "inactive_teams";
 }
 
 export default function PaginatedList({
-  teams,
-  itemsPerPage,
+  teams: data,
   renderButtons,
+  tab,
 }: PaginatedListProps) {
+  const [teams, setTeams] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalTeams = teams?.length || 0;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentTeams = teams
-    ? teams?.slice(startIndex, startIndex + itemsPerPage)
-    : [];
+  // const totalTeams = teams?.total;
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const currentTeams = teams
+  //   ? teams?.slice(startIndex, startIndex + itemsPerPage)
+  //   : [];
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePageChange = async (page: number) => {
+    let res: TeamsResponse;
+    if (tab === "active_teams") {
+      res = await fetchActiveTeams({ page });
+    } else if (tab === "inactive_teams") {
+      res = await fetchInactiveTeams({ page });
+    }
+    setTeams(res);
+    setCurrentPage(page);
+  };
 
   return (
     <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-4 w-full">
       {/* Grid of Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {currentTeams?.map(
+        {teams.teams?.map(
           (team) =>
             team && (
               <TeamCard
@@ -45,9 +62,8 @@ export default function PaginatedList({
       {/* Pagination */}
       <div className="mt-4 ">
         <Pagination
-          totalItems={totalTeams}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
+          total_pages={teams?.total_pages}
+          current_page={currentPage}
           onPageChange={handlePageChange}
         />
       </div>

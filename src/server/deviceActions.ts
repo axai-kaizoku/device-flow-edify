@@ -95,13 +95,10 @@ export type Device = {
 };
 export type getAllDevicesProp = Device[];
 export type DeviceResponse = {
-  devices: Device[]; // Changed from 'devices' to 'documents'
-  totalPages: number;
-  currentPage: number;
-  totalCount: number;
-  pageSize: number;
-  documentCount: number;
-  currentDocumentCount: number;
+  devices: StoreDevice[]; // Changed from 'devices' to 'documents'
+  total_pages: number;
+  current_page: number;
+  total: number;
 };
 
 // Creating Devices
@@ -318,7 +315,8 @@ export const fetchDevices = cache(async function (): Promise<DeviceResponse> {
     const requestBody = {
       fields: ["device_name", "serial_no", "ram", "storage", "image"],
       filters: [],
-      page_length: 10,
+      page: 1,
+      pageLimit: 5,
     };
 
     const res = await callAPIWithToken<DeviceResponse>(
@@ -342,7 +340,8 @@ export async function searchDevices(
     const requestBody = {
       fields: ["device_name", "serial_no", "ram", "storage", "image"],
       filters: [], // You can add filters here as per requirement
-      page_length: 10, // Number of users to fetch per page
+      page: 1,
+      pageLimit: 10, // Number of users to fetch per page
     };
 
     const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${

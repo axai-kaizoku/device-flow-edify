@@ -1,27 +1,30 @@
 import { User, UserResponse } from "@/server/userActions";
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { Icons } from "@/components/icons";
 import CreateUser from "./create-user";
-import { deletedUsers } from "@/server/filterActions";
+import { deletedUsers, inActiveUsers } from "@/server/filterActions";
 import { useRouter } from "next/navigation";
-import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
+import Pagination from "../../teams/_components/pagination";
 import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
 import { Table } from "@/components/wind/Table";
 
-function DeletedUser({ data }: { data: UserResponse }) {
+function DeletedUser({
+  data,
+  setUsers,
+}: {
+  data: UserResponse;
+  setUsers: SetStateAction<UserResponse>;
+}) {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  const currentPeople = data?.users?.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePageChange = async (page: number) => {
+    const res = await inActiveUsers({ page });
+    setUsers(res);
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -40,12 +43,12 @@ function DeletedUser({ data }: { data: UserResponse }) {
             <div className=" flex gap-3 w-fit">
               <h1 className="text-xl font-gilroySemiBold pl-6">People</h1>
               <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                {data?.totalCount} People
+                {data?.total} People
               </h1>
             </div>
             <div className="flex flex-col ">
               <Table
-                data={currentPeople}
+                data={data?.users ?? []}
                 checkboxSelection={{
                   uniqueField: "_id",
                   //logic yet to be done
@@ -144,9 +147,8 @@ function DeletedUser({ data }: { data: UserResponse }) {
               {/* Pagination Control */}
               <div className="mt-2">
                 <Pagination
-                  currentPage={currentPage}
-                  itemsPerPage={ITEMS_PER_PAGE}
-                  totalItems={data?.users?.length}
+                  current_page={currentPage}
+                  total_pages={data?.total_pages!}
                   onPageChange={handlePageChange}
                 />
               </div>

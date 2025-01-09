@@ -3,25 +3,32 @@ import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Table } from "@/components/wind/Table";
-import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
+import Pagination from "../../teams/_components/pagination";
 import { DeleteUser } from "../[id]/_components/delete-user";
 import EditUser from "../[id]/_components/edit-user";
+import { activeUsers } from "@/server/filterActions";
 
-export default function UserMain({ data }: { data: UserResponse }) {
+export default function UserMain({
+  data,
+  setUsers,
+}: {
+  data: UserResponse;
+  setUsers: any;
+}) {
   if (!data) {
     return <div>Not Found</div>;
   }
 
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  // const [users, setUsers] = useState(data);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentUsers = data.users.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
+  const handlePageChange = async (page: number) => {
+    const res = await activeUsers({ page });
+    setUsers(res);
+    setCurrentPage(page);
+  };
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
   return (
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
@@ -37,13 +44,13 @@ export default function UserMain({ data }: { data: UserResponse }) {
                   Total People
                 </h1>
                 <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                  {data?.totalCount} People
+                  {data?.total} People
                 </h1>
               </div>
               <Suspense fallback={<div>Loading...</div>}>
                 <div className="flex flex-col  w-full">
                   <Table
-                    data={currentUsers}
+                    data={data.users}
                     checkboxSelection={{
                       uniqueField: "_id",
                       onSelectionChange: (e) => console.log(e),
@@ -149,8 +156,8 @@ export default function UserMain({ data }: { data: UserResponse }) {
                   />
                   <div className="mt-2">
                     <Pagination
-                      currentPage={currentPage}
-                      totalItems={data.users?.length}
+                      current_page={currentPage}
+                      total_pages={data.total_pages!}
                       onPageChange={handlePageChange}
                     />
                   </div>

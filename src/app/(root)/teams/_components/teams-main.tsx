@@ -4,10 +4,10 @@ import PaginatedList from "./paginated-list";
 import { DeleteTeam } from "../[id]/_components/delete-team";
 import EditTeam from "../[id]/_components/edit-team";
 import { Icons } from "@/components/icons";
-import { Team } from "@/server/teamActions";
+import { Team, TeamsResponse } from "@/server/teamActions";
 
 interface TeamsMainProps {
-  teams: Team[];
+  teams: TeamsResponse;
 }
 
 const ITEMS_PER_PAGE = 5;
@@ -15,6 +15,8 @@ const ITEMS_PER_PAGE = 5;
 export default function TeamsMain({ teams }: TeamsMainProps) {
   return (
     <PaginatedList
+      key="teams-main"
+      tab="active_teams"
       teams={teams}
       itemsPerPage={ITEMS_PER_PAGE}
       renderButtons={(team) => (

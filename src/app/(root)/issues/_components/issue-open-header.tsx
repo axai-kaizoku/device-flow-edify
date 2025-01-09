@@ -1,14 +1,14 @@
-import { Issues } from "@/server/issueActions";
+import { IssueResponse, Issues } from "@/server/issueActions";
 import React from "react";
 
-function OpenHeader({ data }: { data: Issues[] }) {
-  const criticalCount = data?.filter(
+function OpenHeader({ data }: { data: IssueResponse }) {
+  const criticalCount = data?.issues.filter(
     (item) => item.priority === "Critical" && item.status === "Open"
   ).length;
-  const mediumCount = data?.filter(
+  const mediumCount = data?.issues.filter(
     (item) => item.priority === "Medium" && item.status === "Open"
   ).length;
-  const lowCount = data?.filter(
+  const lowCount = data?.issues.filter(
     (item) => item.priority === "Low" && item.status === "Open"
   ).length;
   return (

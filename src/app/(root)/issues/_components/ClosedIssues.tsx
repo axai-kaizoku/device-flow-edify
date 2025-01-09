@@ -1,35 +1,46 @@
 "use client";
 import { useState } from "react";
 import { Table } from "@/components/wind/Table";
-import { Issues } from "@/server/issueActions";
+import { IssueResponse, Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
 
 import Pagination from "../../teams/_components/pagination";
 import IssueClosedHeader from "./issue-closed-header";
 import { IssueStatusChange } from "./issue-status-change";
+import { closedIssues } from "@/server/filterActions";
 
 const ITEMS_PER_PAGE = 5;
 
-export default function ClosedIssueTable({ data }: { data: Issues[] }) {
+export default function ClosedIssueTable({
+  data,
+  setIssues,
+}: {
+  data: IssueResponse;
+  setIssues: any;
+}) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  // const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  // Filter issues to show only "Closed" issues
-  const ClosedIssues = Array.isArray(data)
-    ? data.filter(
-        (item) =>
-          item && typeof item.status === "string" && item.status === "Closed"
-      )
-    : [];
+  // // Filter issues to show only "Closed" issues
+  // const ClosedIssues = Array.isArray(data)
+  //   ? data.filter(
+  //       (item) =>
+  //         item && typeof item.status === "string" && item.status === "Closed"
+  //     )
+  //   : [];
 
-  const currentIssues = ClosedIssues.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
+  // const currentIssues = ClosedIssues.slice(
+  //   startIndex,
+  //   startIndex + ITEMS_PER_PAGE
+  // );
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePageChange = async (page: number) => {
+    const res = await closedIssues({ page });
+    setIssues(res);
+    setCurrentPage(page);
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -37,7 +48,7 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
         <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col ">
           <IssueClosedHeader data={data} />
           <Table
-            data={currentIssues}
+            data={data.issues}
             checkboxSelection={{
               uniqueField: "_id",
               //logic yet to be done
@@ -119,9 +130,8 @@ export default function ClosedIssueTable({ data }: { data: Issues[] }) {
           {/* Pagination Control */}
           <div className="mt-2">
             <Pagination
-              currentPage={currentPage}
-              itemsPerPage={ITEMS_PER_PAGE}
-              totalItems={ClosedIssues?.length}
+              current_page={currentPage}
+              total_pages={data?.total!}
               onPageChange={handlePageChange}
             />
           </div>

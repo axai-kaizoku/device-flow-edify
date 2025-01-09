@@ -1,31 +1,29 @@
 //inactive:-
 import { Device, DeviceResponse } from "@/server/deviceActions";
 import React, { Suspense, useState } from "react";
-import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
+import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
 import { Icons } from "@/components/icons";
 import { PermanentAssetsDelete } from "./permanent-assets-delete";
 import { RestoreDevice } from "./restore-assets";
+import { inActiveAssets } from "@/server/filterActions";
 
-function InActiveAssets({ data }: { data: DeviceResponse }) {
-  if (!data) {
-    return (
-      <>
-        <div>NO DATA</div>
-      </>
-    );
-  }
+function InActiveAssets({
+  data,
+  setAssets,
+}: {
+  data: DeviceResponse;
+  setAssets: any;
+}) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentDevice = data.devices.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePageChange = async (page: number) => {
+    const res = await inActiveAssets({ page });
+    setAssets(res);
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -34,13 +32,13 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
           <div className=" flex gap-3 w-fit">
             <h1 className="text-xl font-gilroySemiBold pl-6">Total Assets</h1>
             <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-              {data?.totalCount} Assets
+              {data?.total} Assets
             </h1>
           </div>
           <Suspense fallback={<div>Loading...</div>}>
             <div className="flex flex-col gap-2">
               <Table
-                data={currentDevice}
+                data={data?.devices ?? []}
                 checkboxSelection={{
                   uniqueField: "_id",
                   //logic yet to be done
@@ -152,8 +150,8 @@ function InActiveAssets({ data }: { data: DeviceResponse }) {
               {/* Pagination Control */}
               <div className="mt-1">
                 <Pagination
-                  currentPage={currentPage}
-                  totalItems={data?.devices?.length}
+                  current_page={currentPage}
+                  total_pages={data?.total_pages!}
                   onPageChange={handlePageChange}
                 />
               </div>

@@ -1,7 +1,7 @@
-import { Device } from "./deviceActions";
+import { Device, StoreDevice } from "./deviceActions";
 import { callAPIWithToken } from "./helper";
 import { Issues } from "./issueActions";
-import { User } from "./userActions";
+import { User, UserResponse } from "./userActions";
 import { cache } from "react";
 
 export interface FilterApiParams {
@@ -9,6 +9,33 @@ export interface FilterApiParams {
   fields?: string[];
   searchQuery?: string;
   pageLength?: number;
+  pageLimit?: number;
+  page?: number;
+  isDeleted?: boolean;
+}
+export interface activeFilterApiParams {
+  filters?: any[][];
+  fields?: string[];
+  searchQuery?: string;
+  pageLimit?: number;
+  page?: number;
+  isDeleted?: boolean;
+}
+export interface inactiveFilterApiParams {
+  filters?: any[][];
+  fields?: string[];
+  searchQuery?: string;
+  pageLimit?: number;
+  page?: number;
+  isDeleted?: boolean;
+}
+
+export interface IssueResponse {
+  issues: Issues[];
+  total_pages?: number;
+  current_page?: number;
+  total?: number;
+  per_page?: number;
 }
 
 export const devicesFilterFields = [
@@ -122,13 +149,16 @@ export const filterUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
-  pageLength = 1000,
+  page = 1,
+  pageLimit = 5,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+
+      page,
+      pageLimit,
     };
 
     // Construct the URL with an optional search query
@@ -137,9 +167,9 @@ export const filterUsers = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
-    // Check if response has data
+    const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
+    // console.log("1" + apiUrl, payload);
+
     if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
@@ -159,13 +189,17 @@ export const activeUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
+  page = 1,
+  pageLimit = 5,
+  isDeleted = false,
+}: activeFilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      page,
+      pageLimit,
+      isDeleted,
     };
 
     // Construct the URL with an optional search query
@@ -174,11 +208,12 @@ export const activeUsers = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
+    console.log("Active" + res.data);
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
+      console.log("Filtered Data:", res.data.users);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -195,13 +230,17 @@ export const inActiveUsers = cache(async function ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
+  page = 1,
+  pageLimit = 5,
+  isDeleted = true,
+}: inactiveFilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      page,
+      pageLimit,
+      isDeleted,
     };
 
     // Construct the URL with an optional search query
@@ -210,8 +249,9 @@ export const inActiveUsers = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
+    // console.log("Inactivw" + res);
     // Check if response has data
     if (res && res?.data) {
       // console.log('Filtered Data:', res.data);
@@ -232,13 +272,15 @@ export const filterDevice = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
-  pageLength = 20,
+  pageLength = 5,
+  page = 1,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      pageLimit: pageLength,
+      page,
     };
 
     // Construct the URL with an optional search query
@@ -268,13 +310,15 @@ export const assignedAssets = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
-  pageLength = 20,
+  page = 1,
+  pageLimit = 5,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      page,
+      pageLimit,
     };
 
     // Construct the URL with an optional search query
@@ -283,7 +327,7 @@ export const assignedAssets = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<StoreDevice[]>(apiUrl, "POST", payload);
 
     // Check and return response data
     if (res && res?.data) {
@@ -304,13 +348,15 @@ export const unAssignedAssets = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
-  pageLength = 20,
+  page = 1,
+  pageLimit = 5,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      page: page,
+      pageLimit,
     };
 
     // Construct the URL with an optional search query
@@ -319,7 +365,7 @@ export const unAssignedAssets = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<StoreDevice[]>(apiUrl, "POST", payload);
 
     // Check and return response data
     if (res && res?.data) {
@@ -340,13 +386,17 @@ export const inActiveAssets = cache(async function ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
+  page = 1,
+  pageLimit = 5,
+  isDeleted = true,
+}: inactiveFilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      page,
+      pageLimit,
+      isDeleted,
     };
 
     // Construct the URL with an optional search query
@@ -355,7 +405,7 @@ export const inActiveAssets = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<StoreDevice[]>(apiUrl, "POST", payload);
 
     // Check and return response data
     if (res && res?.data) {
@@ -421,6 +471,84 @@ export const issueFields = [
   "serial_no",
   "email",
 ];
+
+export const openIssues = cache(async function ({
+  filters = [["status", "Equals", "Open"]],
+  fields = issueFields,
+  searchQuery = "",
+  page = 1,
+  pageLimit = 5,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      pageLimit,
+      page,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
+    // console.log(apiUrl, payload);
+    // Check if response has data
+    if (res && res?.data) {
+      // console.log('Filtered Data:', res.data);
+      return res?.data; // Return the filtered data
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    // Throw more specific error message
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter issues. Please try again later."
+    );
+  }
+});
+
+export const closedIssues = cache(async function ({
+  filters = [["status", "Equals", "Closed"]],
+  fields = issueFields,
+  searchQuery = "",
+  page = 1,
+  pageLimit = 5,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      pageLimit,
+      page,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
+    // console.log(apiUrl, payload);
+    // Check if response has data
+    if (res && res?.data) {
+      // console.log('Filtered Data:', res.data);
+      return res?.data; // Return the filtered data
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    // Throw more specific error message
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter issues. Please try again later."
+    );
+  }
+});
 
 export const filterIssues = cache(async function ({
   filters = [],

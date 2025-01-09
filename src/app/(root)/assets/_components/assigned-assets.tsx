@@ -5,28 +5,25 @@ import React, { Suspense, useState } from "react";
 import { SoftDeleteAsset } from "./soft-delete-asset";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
-import Pagination, { ITEMS_PER_PAGE } from "../../teams/_components/pagination";
+import Pagination from "../../teams/_components/pagination";
 import { Table } from "@/components/wind/Table";
+import { assignedAssets } from "@/server/filterActions";
 
-function AssignedAssets({ data }: { data: DeviceResponse }) {
-  if (!data) {
-    return (
-      <>
-        <div>NotFound</div>
-      </>
-    );
-  }
-
+function AssignedAssets({
+  data,
+  setAssets,
+}: {
+  data: DeviceResponse;
+  setAssets: any;
+}) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentDevice = data.devices.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePageChange = async (page: number) => {
+    const res = await assignedAssets({ page });
+    setAssets(res);
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -36,13 +33,13 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
           <div className=" flex gap-3 w-fit">
             <h1 className="text-xl pl-6 font-gilroySemiBold">Total Assets</h1>
             <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-              {data?.totalCount} Assets
+              {data?.total} Assets
             </h1>
           </div>
           <Suspense fallback={<div>Loading...</div>}>
             <div className="flex flex-col gap-2">
               <Table
-                data={currentDevice}
+                data={data?.devices ?? []}
                 checkboxSelection={{
                   uniqueField: "_id",
                   onSelectionChange: (e) => console.log(e),
@@ -159,8 +156,8 @@ function AssignedAssets({ data }: { data: DeviceResponse }) {
               />
               <div className="mt-1">
                 <Pagination
-                  currentPage={currentPage}
-                  totalItems={data.devices?.length}
+                  current_page={currentPage}
+                  total_pages={data?.total_pages!}
                   onPageChange={handlePageChange}
                 />
               </div>

@@ -121,16 +121,14 @@ export type HierarchyResponse = HierarchyUser[];
 
 export type UserResponse = {
   users: User[];
-  totalPages: number;
-  currentPage: number;
-  totalCount: number;
-  pageSize: number;
-  documentCount: number;
-  currentDocumentCount: number;
+  total_pages?: number;
+  current_page?: number;
+  total?: number;
+  per_page?: number;
 };
 
 export type newAllUserResponse = {
-  users: User[];
+  users: UserResponse;
 };
 
 export const fetchUsers = cache(async function (): Promise<UserResponse> {
@@ -144,7 +142,8 @@ export const fetchUsers = cache(async function (): Promise<UserResponse> {
         "image",
       ], // Specify fields to be fetched
       filters: [], // You can add filters here as per requirement
-      page_length: 10, // Number of users to fetch per page
+      page: 1,
+      pageLimit: 5,
     };
 
     const res = await callAPIWithToken<UserResponse>(
@@ -171,7 +170,8 @@ export async function searchUsers(searchQuery: string): Promise<UserResponse> {
         "image",
       ], // Specify fields to be fetched
       filters: [], // You can add filters here as per requirement
-      page_length: 10, // Number of users to fetch per page
+      page: 1,
+      pageLimit: 10, // Number of users to fetch per page
     };
     // console.log("searchUsers" + requestBody);
     const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${

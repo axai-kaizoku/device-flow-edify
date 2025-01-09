@@ -30,7 +30,7 @@ function TabDisplay() {
     defaultValue: "assigned_assets",
   });
   const { showAlert } = useAlert();
-
+  const [loading, setLoading] = useState(false);
   const [assets, setAssets] = useState<DeviceResponse | null>(null);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const [openFilter, setOpenFilter] = useState(false);
@@ -67,8 +67,15 @@ function TabDisplay() {
     };
 
     try {
-      const res = await filterDevice(query);
+      setLoading(true);
+      let res: any;
+      if (activeTab === "inactive_assets") {
+        res = await inActiveAssets(query);
+      } else {
+        res = await filterDevice(query);
+      }
       setAssets(res);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching issues:", error);
       showAlert({
@@ -77,6 +84,8 @@ function TabDisplay() {
         isFailure: true,
         key: "fetch-error-device",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,6 +156,7 @@ function TabDisplay() {
   useEffect(() => {
     const fetchTabData = async () => {
       try {
+        setLoading(true);
         let response;
         switch (activeTab) {
           case "assigned_assets":
@@ -162,6 +172,7 @@ function TabDisplay() {
             response = [];
         }
         setAssets(response); // Update state with the fetched data
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching tab data:", error);
         showAlert({
@@ -170,6 +181,8 @@ function TabDisplay() {
           isFailure: true,
           key: "fetch-error-device-tab",
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -180,21 +193,33 @@ function TabDisplay() {
     switch (activeTab) {
       case "assigned_assets":
         return (
-          <Suspense fallback={<Spinner />}>
-            <AssignedAssets data={assets} />
-          </Suspense>
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <AssignedAssets data={assets} setAssets={setAssets} />
+            )}
+          </>
         );
       case "un_assigned_assets":
         return (
-          <Suspense fallback={<Spinner />}>
-            <UnAssignedAssets data={assets} />
-          </Suspense>
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <UnAssignedAssets data={assets} setAssets={setAssets} />
+            )}
+          </>
         );
       case "inactive_assets":
         return (
-          <Suspense fallback={<Spinner />}>
-            <InActiveAssets data={assets} />
-          </Suspense>
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <InActiveAssets data={assets} setAssets={setAssets} />
+            )}
+          </>
         );
       default:
         return null;
@@ -205,17 +230,17 @@ function TabDisplay() {
     {
       key: "assigned_assets",
       label: "Assigned Assets",
-      component: <AssignedAssets data={assets} />,
+      component: <AssignedAssets data={assets} setAssets={setAssets} />,
     },
     {
       key: "un_assigned_assets",
       label: "Unassigned Assets",
-      component: <UnAssignedAssets data={assets} />,
+      component: <UnAssignedAssets data={assets} setAssets={setAssets} />,
     },
     {
       key: "inactive_assets",
       label: "Inactive Assets",
-      component: <InActiveAssets data={assets} />,
+      component: <InActiveAssets data={assets} setAssets={setAssets} />,
     },
   ];
 

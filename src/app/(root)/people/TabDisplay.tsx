@@ -24,13 +24,7 @@ const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
 const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
 
-interface TabDisplayProps {
-  users: User[];
-  userRole: number;
-  deletedUserResponse: UserResponse;
-}
-
-function TabDisplay({ data }: { data?: UserResponse }) {
+function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active_people",
   });
@@ -38,6 +32,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   const { showAlert } = useAlert();
 
   const [assets, setAssets] = useState<UserResponse | null>(null);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const [openFilter, setOpenFilter] = useState(false);
   const [filters, setFilters] = useState<any[]>([]); // Store applied filters
@@ -64,6 +59,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const handleSearchAndFilter = async () => {
     // Combine search term and filters
     const query = {
@@ -72,8 +68,15 @@ function TabDisplay({ data }: { data?: UserResponse }) {
     };
 
     try {
-      const res = await filterUsers(query);
+      setLoading(true);
+      let res: UserResponse;
+      if (activeTab === "active_people") {
+        res = await activeUsers(query);
+      } else if (activeTab === "inactive_people") {
+        res = await inActiveUsers(query);
+      }
       setAssets(res);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching issues:", error);
       showAlert({
@@ -82,6 +85,8 @@ function TabDisplay({ data }: { data?: UserResponse }) {
         isFailure: true,
         key: "fetch-error-users",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,6 +158,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   useEffect(() => {
     const fetchTabData = async () => {
       try {
+        setLoading(true);
         let response;
         switch (activeTab) {
           case "active_people":
@@ -166,6 +172,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
             response = [];
         }
         setAssets(response); // Update state with the fetched data
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching tab data:", error);
         showAlert({
@@ -174,6 +181,8 @@ function TabDisplay({ data }: { data?: UserResponse }) {
           isFailure: true,
           key: "fetch-error-users-2",
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -183,15 +192,23 @@ function TabDisplay({ data }: { data?: UserResponse }) {
     switch (activeTab) {
       case "active_people":
         return (
-          <Suspense fallback={<Spinner />}>
-            <UserMain data={assets} />
-          </Suspense>
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <UserMain data={assets} setUsers={setAssets} />
+            )}
+          </>
         );
       case "inactive_people":
         return (
-          <Suspense fallback={<Spinner />}>
-            <DeletedUser data={assets} />
-          </Suspense>
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <DeletedUser data={assets} setUsers={setAssets} />
+            )}
+          </>
         );
 
       default:
@@ -213,6 +230,7 @@ function TabDisplay({ data }: { data?: UserResponse }) {
   return (
     <>
       <div className="flex flex-col pt-[14px]">
+        {/* {JSON.stringify(assets)} */}
         <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">
           People
         </h1>
@@ -483,11 +501,6 @@ function TabDisplay({ data }: { data?: UserResponse }) {
                 </div>
               )}
             </div>
-
-            {/* <button className="flex items-center gap-1 p-2 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Download size={20} className="text-[#7F7F7F]" />{" "}
-              <span className="text-sm font-gilroyMedium">Download</span>
-            </button> */}
           </div>
         </div>
       </div>

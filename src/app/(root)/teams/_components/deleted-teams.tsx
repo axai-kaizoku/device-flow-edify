@@ -4,19 +4,18 @@ import PaginatedList from "./paginated-list";
 import { RestoreTeam } from "./restore-team";
 import { PermanentTeamDelete } from "./permanent-team";
 import { Icons } from "@/components/icons";
-import { Team } from "@/server/teamActions";
+import { Team, TeamsResponse } from "@/server/teamActions";
 
 interface DeletedTeamsProps {
-  teams: Team[];
+  teams: TeamsResponse;
 }
-
-const ITEMS_PER_PAGE = 6;
 
 export default function DeletedTeams({ teams }: DeletedTeamsProps) {
   return (
     <PaginatedList
+      key={"deleted-teams"}
+      tab="inactive_teams"
       teams={teams}
-      itemsPerPage={ITEMS_PER_PAGE}
       renderButtons={(team) => (
         <>
           <PermanentTeamDelete id={team?._id!}>

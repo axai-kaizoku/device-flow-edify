@@ -650,13 +650,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         )}
                       />
 
-                      {true && (
-                        <p
-                          className={cn(
-                            "mt-0.5 text-sm text-destructive opacity-0"
-                          )}
-                        >
-                          {"team"}
+                      {errors.designation && (
+                        <p className="mt-0.5 text-xs opacity-0 text-destructive">
+                          {errors.designation}
                         </p>
                       )}
                     </div>

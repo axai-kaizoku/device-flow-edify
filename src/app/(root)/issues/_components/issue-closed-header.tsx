@@ -1,8 +1,10 @@
-import { Issues } from "@/server/issueActions";
+import { IssueResponse, Issues } from "@/server/issueActions";
 import React from "react";
 
-function IssueClosedHeader({ data }: { data: Issues[] }) {
-  const closedCount = data?.filter((item) => item.status === "Closed").length;
+function IssueClosedHeader({ data }: { data: IssueResponse }) {
+  const closedCount = data?.issues.filter(
+    (item) => item.status === "Closed"
+  ).length;
 
   return (
     <div className="flex gap-3 pb-5">

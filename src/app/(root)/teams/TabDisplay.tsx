@@ -2,7 +2,7 @@
 
 import { useQueryState } from "nuqs";
 import { Tab } from "./_components/Tab";
-import { Team } from "@/server/teamActions";
+import { Team, TeamsResponse } from "@/server/teamActions";
 import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
 import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
@@ -11,14 +11,14 @@ import { Employee } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
 
 interface TabDisplayProps {
-  teams: Team[];
-  deletedTeams: Team[];
+  teams: TeamsResponse;
+  deletedTeams: TeamsResponse;
   orgData: Employee;
 }
 
 function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
-    defaultValue: "active",
+    defaultValue: "active_teams",
   });
 
   // Function to handle tab change with loading state
@@ -28,9 +28,9 @@ function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "active":
+      case "active_teams":
         return <TeamsMain teams={teams} />;
-      case "deleted":
+      case "inactive_teams":
         return <DeletedTeams teams={deletedTeams} />;
       case "org":
         return <Org data={orgData} />;
@@ -51,15 +51,15 @@ function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
         <div className="flex items-center justify-between -mt-2">
           <div className="flex items-center w-full -mb-9 -mt-1 gap-12">
             <Tab
-              active={activeTab === "active"}
-              onClick={() => handleTabChange("active")}
+              active={activeTab === "active_teams"}
+              onClick={() => handleTabChange("active_teams")}
               label="Active Teams"
             />
 
             <Tab
               className="after:left-[-20%]  after:w-[140%]"
-              active={activeTab === "deleted"}
-              onClick={() => handleTabChange("deleted")}
+              active={activeTab === "inactive_teams"}
+              onClick={() => handleTabChange("inactive_teams")}
               label="Deleted Teams"
             />
 

@@ -84,8 +84,10 @@ export type getAllResponse = Issues[];
 
 export type IssueResponse = {
   issues: Issues[]; // Changed from 'devices' to 'documents'
-  total_count: number;
-  page_size: number;
+  total_pages?: number;
+  current_page?: number;
+  total?: number;
+  per_page?: number;
 };
 
 export interface IssueData {

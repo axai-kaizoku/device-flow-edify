@@ -1,39 +1,109 @@
 "use client";
 
-import { Issues, updateIssue } from "@/server/issueActions";
+import { IssueResponse, Issues, updateIssue } from "@/server/issueActions";
 import { useQueryState } from "nuqs";
 import { ArrowUpDown, Check, Download, Plus, Search } from "lucide-react";
 import { Tab } from "../teams/_components/Tab";
 import IssueTableDisplay from "./_components/IssueTableDisplay";
 import ClosedIssueTable from "./_components/ClosedIssues";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAlert } from "@/hooks/useAlert";
+import { closedIssues, filterIssues, openIssues } from "@/server/filterActions";
 
-interface TabDisplayProps {
-  issues: Issues[];
-  totalDocuments: number;
-  pageSize: number;
-}
+function TabDisplay() {
+  const [issues, setIssues] = useState<IssueResponse>();
 
-function TabDisplay({ issues, pageSize, totalDocuments }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "open",
   });
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
 
-  const filteredIssues = searchTerm
-    ? issues.filter((issue) =>
-        Object.values(issue).some((value) =>
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      )
-    : issues;
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await filterIssues();
+      setIssues(res);
+    };
+    fetch();
+  }, []);
+
+  const handleSearchAndFilter = async () => {
+    // Combine search term and filters
+    const query = {
+      searchQuery: searchTerm || "",
+    };
+
+    try {
+      setLoading(true);
+      const res = await filterIssues(query);
+      setIssues(res);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to fetch data",
+        isFailure: true,
+        key: "fetch-error-users",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSearchAndFilter();
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const fetchTabData = async () => {
+      try {
+        setLoading(true);
+        let response;
+        switch (activeTab) {
+          case "open":
+            response = await openIssues();
+            break;
+          case "closed":
+            response = await closedIssues();
+            break;
+
+          default:
+            response = [];
+        }
+        setIssues(response); // Update state with the fetched data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching tab data:", error);
+        showAlert({
+          title: "Something went wrong",
+          description: "Failed to fetch data",
+          isFailure: true,
+          key: "fetch-error-users-2",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTabData();
+  }, [activeTab]);
+
+  // const filteredIssues = searchTerm
+  //   ? issues.filter((issue) =>
+  //       Object.values(issue).some((value) =>
+  //         String(value).toLowerCase().includes(searchTerm.toLowerCase())
+  //       )
+  //     )
+  //   : issues;
 
   const renderContent = () => {
     switch (activeTab) {
       case "open":
-        return <IssueTableDisplay data={filteredIssues} />;
+        return <IssueTableDisplay data={issues} setIssues={setIssues} />;
       case "closed":
-        return <ClosedIssueTable data={filteredIssues} />;
+        return <ClosedIssueTable data={issues} setIssues={setIssues} />;
       default:
         return null;
     }
