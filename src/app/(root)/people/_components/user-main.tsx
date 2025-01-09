@@ -1,19 +1,21 @@
 import { User, UserResponse } from "@/server/userActions";
-import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, useState } from "react";
 import { Table } from "@/components/wind/Table";
 import Pagination from "../../teams/_components/pagination";
 import { DeleteUser } from "../[id]/_components/delete-user";
 import EditUser from "../[id]/_components/edit-user";
 import { activeUsers } from "@/server/filterActions";
+import { Icons } from "../icons";
+
+import CreateUser from "./create-user";
 
 export default function UserMain({
   data,
   setUsers,
 }: {
-  data: UserResponse;
-  setUsers: any;
+  data: UserResponse | null;
+  setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
 }) {
   if (!data) {
     return <div>Not Found</div>;
@@ -33,8 +35,13 @@ export default function UserMain({
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
         {data?.users?.length === 0 ? (
-          <div className="flex justify-center items-center py-10">
-            <Icons.no_member_table />
+          <div className="flex flex-col gap-6 justify-center items-center py-10">
+            <Icons.no_people_display />
+            <CreateUser>
+              <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+                Add User
+              </div>
+            </CreateUser>
           </div>
         ) : (
           <>

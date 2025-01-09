@@ -5,6 +5,7 @@ import { callAPIWithToken, getSession } from "./helper";
 import { Team } from "./teamActions";
 import { Device } from "./deviceActions";
 import { cache } from "react";
+import { usersFields } from "./filterActions";
 
 type Address = {
   address: string;
@@ -274,12 +275,23 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
   }
 };
 
-export const getUsersByTeamId = cache(async function <User>(teamId: string) {
+export const getUsersByTeamId = cache(async function <User>(
+  teamId: string,
+  page: number
+) {
   try {
+    const sess = await getSession();
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${teamId}/team`, // API endpoint
-      "GET", // HTTP method
-      null
+      `https://api.edify.club/edifybackend/v1/user/teams`, // API endpoint
+      "POST", // HTTP method
+      {
+        teamId,
+        orgId: sess.user.user.orgId?._id,
+        filters: [],
+        fields: usersFields,
+        pageLimit: 5,
+        page: page ? page : 1,
+      }
     );
 
     return res?.data;

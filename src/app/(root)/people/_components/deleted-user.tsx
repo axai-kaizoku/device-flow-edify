@@ -1,6 +1,6 @@
 import { User, UserResponse } from "@/server/userActions";
-import React, { SetStateAction, useState } from "react";
-import { Icons } from "@/components/icons";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { Icons } from "../icons";
 import CreateUser from "./create-user";
 import { deletedUsers, inActiveUsers } from "@/server/filterActions";
 import { useRouter } from "next/navigation";
@@ -13,8 +13,8 @@ function DeletedUser({
   data,
   setUsers,
 }: {
-  data: UserResponse;
-  setUsers: SetStateAction<UserResponse>;
+  data: UserResponse | null;
+  setUsers: Dispatch<SetStateAction<UserResponse>>;
 }) {
   const router = useRouter();
 
@@ -30,11 +30,11 @@ function DeletedUser({
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
         {data?.users?.length === 0 ? (
-          <div className="flex flex-col gap-4 justify-center items-center py-10">
-            <Icons.no_member_table />
+          <div className="flex flex-col gap-6 justify-center items-center py-10">
+            <Icons.no_people_display />
             <CreateUser>
-              <div className="bg-black rounded-full text-white text-lg font-gilroySemiBold px-10 py-2">
-                Create User
+              <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+                Add User
               </div>
             </CreateUser>
           </div>

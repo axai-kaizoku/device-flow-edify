@@ -13,7 +13,6 @@ interface TeamPageProps {
 export default async function TeamPage({ params }: TeamPageProps) {
   try {
     const data: Team = await getTeamById(params.id);
-    const users: User[] = await getUsersByTeamId(params.id);
 
     return (
       <CombinedContainer title="Teams">
@@ -27,7 +26,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
             />
             <TeamActions team={data} />
           </div>
-          <TeamMembers users={users} />
+          <TeamMembers id={params?.id ?? ""} />
         </div>
       </CombinedContainer>
     );

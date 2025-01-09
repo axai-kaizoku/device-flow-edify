@@ -69,7 +69,7 @@ function TabDisplay() {
 
     try {
       setLoading(true);
-      let res: UserResponse;
+      let res: UserResponse | null = null;
       if (activeTab === "active_people") {
         res = await activeUsers(query);
       } else if (activeTab === "inactive_people") {
@@ -219,12 +219,12 @@ function TabDisplay() {
     {
       key: "active_people",
       label: "Active People",
-      component: <UserMain data={assets} />,
+      component: <UserMain data={assets} setUsers={setAssets} />,
     },
     {
       key: "inactive_people",
       label: "Inactive People",
-      component: <DeletedUser data={assets} />,
+      component: <DeletedUser data={assets} setUsers={setAssets} />,
     },
   ];
   return (

@@ -9,7 +9,7 @@ import { User } from "@/server/userActions";
 import { SoftDeleteAsset } from "../../assets/_components/soft-delete-asset";
 import { PreviousOrder } from "@/server/orderActions";
 import { ChevronRight } from "lucide-react";
-
+import { orderIcons } from "../icons";
 const ITEMS_PER_PAGE = 5;
 function AllOrdersTable({ data }: { data: any[] }) {
   const router = useRouter();
@@ -23,120 +23,132 @@ function AllOrdersTable({ data }: { data: any[] }) {
   const handlePageChange = (page: number) => setCurrentPage(page);
   return (
     <>
-      <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
-        <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6 pt-5">
-          <h1 className="2xl:text-lg text-xl font-gilroySemiBold">Orders</h1>
-          <h1 className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-            {data?.length} Orders
-          </h1>
+      {data?.length === 0 ? (
+        <div className="flex flex-col gap-6 justify-center items-center py-10">
+          <orderIcons.no_order_display />
+
+          <Link href={"/store"}>
+            <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+              Shop Now
+            </div>
+          </Link>
         </div>
-        <div className="flex flex-col mt-5">
-          <Table
-            data={currentOrder}
-            checkboxSelection={{
-              uniqueField: "_id",
-              //logic yet to be done
-              onSelectionChange: (e) => console.log(e),
-            }}
-            columns={[
-              {
-                title: "Order ID",
-                render: (data: any) => (
-                  <div
-                    className="2xl:w-28  justify-start flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(
-                        `/orders/${data?.cartDetails?.razorpay_order_id}`
-                      )
-                    }
-                  >
-                    <div className="font-gilroySemiBold 2xl:text-[14.507px] text-sm gap-1 flex whitespace-nowrap  text-black ">
-                      {data?.cartDetails?.razorpay_order_id}
+      ) : (
+        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
+          <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6 pt-5">
+            <h1 className="2xl:text-lg text-xl font-gilroySemiBold">Orders</h1>
+            <h1 className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+              {data?.length} Orders
+            </h1>
+          </div>
+          <div className="flex flex-col mt-5">
+            <Table
+              data={currentOrder}
+              checkboxSelection={{
+                uniqueField: "_id",
+                //logic yet to be done
+                onSelectionChange: (e) => console.log(e),
+              }}
+              columns={[
+                {
+                  title: "Order ID",
+                  render: (data: any) => (
+                    <div
+                      className="2xl:w-28  justify-start flex items-center gap-2 cursor-pointer"
+                      onClick={() =>
+                        router.push(
+                          `/orders/${data?.cartDetails?.razorpay_order_id}`
+                        )
+                      }
+                    >
+                      <div className="font-gilroySemiBold 2xl:text-[14.507px] text-sm gap-1 flex whitespace-nowrap  text-black ">
+                        {data?.cartDetails?.razorpay_order_id}
+                      </div>
                     </div>
-                  </div>
-                ),
-              },
-
-              {
-                title: "Ordered on",
-                render: (record) => {
-                  const date = new Date(record?.response[0]?.ordered_on);
-
-                  const formattedDate = date.toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  });
-
-                  return <div>{formattedDate}</div>;
+                  ),
                 },
-              },
-              {
-                title: "QTY",
-                // dataIndex: "quantity",
-                render: (data) => (
-                  <div className=" whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
-                    {data?.response?.length} items
-                  </div>
-                ),
-              },
-              {
-                title: "Payment Status",
-                // dataIndex: "quantity",
-                render: (data) => (
-                  <>
-                    {data?.cartDetails?.state !== "failed" ? (
-                      <div className="text-[#027A48] bg-[#ECFDF3] py-1 px-2 rounded-[16.58px] whitespace-nowrap flex text-xs w-fit">
-                        {data?.cartDetails?.state}
-                      </div>
-                    ) : (
-                      <div className="bg-alert-foreground text-failure py-1 px-2 rounded-[16.58px] text-xs w-fit">
-                        {data?.cartDetails?.state}
-                      </div>
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "Delivery Office",
-                render: (data: User) => (
-                  <div className=" whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
-                    {data?.cartDetails?.addressId?.city}
-                  </div>
-                ),
-              },
-              {
-                title: "Total",
-                render: (data) => (
-                  <div className="whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
-                    {data?.cartDetails?.totalPrice
-                      ? new Intl.NumberFormat("en-IN", {
-                          style: "currency",
-                          currency: "INR",
-                        }).format(Number(data.cartDetails.totalPrice))
-                      : "N/A"}
-                  </div>
-                ),
-              },
-              {
-                title: "",
-                render: (data) => (
-                  <ChevronRight className="text-[#CECECE] 2xl:text-[14.507px] text-[12.507px] cursor-pointer" />
-                ),
-              },
-            ]}
-          />
-          {/* Pagination Control */}
+
+                {
+                  title: "Ordered on",
+                  render: (record) => {
+                    const date = new Date(record?.response[0]?.ordered_on);
+
+                    const formattedDate = date.toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    });
+
+                    return <div>{formattedDate}</div>;
+                  },
+                },
+                {
+                  title: "QTY",
+                  // dataIndex: "quantity",
+                  render: (data) => (
+                    <div className=" whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
+                      {data?.response?.length} items
+                    </div>
+                  ),
+                },
+                {
+                  title: "Payment Status",
+                  // dataIndex: "quantity",
+                  render: (data) => (
+                    <>
+                      {data?.cartDetails?.state !== "failed" ? (
+                        <div className="text-[#027A48] bg-[#ECFDF3] py-1 px-2 rounded-[16.58px] whitespace-nowrap flex text-xs w-fit">
+                          {data?.cartDetails?.state}
+                        </div>
+                      ) : (
+                        <div className="bg-alert-foreground text-failure py-1 px-2 rounded-[16.58px] text-xs w-fit">
+                          {data?.cartDetails?.state}
+                        </div>
+                      )}
+                    </>
+                  ),
+                },
+                {
+                  title: "Delivery Office",
+                  render: (data: User) => (
+                    <div className=" whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
+                      {data?.cartDetails?.addressId?.city}
+                    </div>
+                  ),
+                },
+                {
+                  title: "Total",
+                  render: (data) => (
+                    <div className="whitespace-nowrap flex 2xl:text-[14.507px] text-[12.507px] text-[#7F7F7F] gap-1">
+                      {data?.cartDetails?.totalPrice
+                        ? new Intl.NumberFormat("en-IN", {
+                            style: "currency",
+                            currency: "INR",
+                          }).format(Number(data.cartDetails.totalPrice))
+                        : "N/A"}
+                    </div>
+                  ),
+                },
+                {
+                  title: "",
+                  render: (data) => (
+                    <ChevronRight className="text-[#CECECE] 2xl:text-[14.507px] text-[12.507px] cursor-pointer" />
+                  ),
+                },
+              ]}
+            />
+            {/* Pagination Control */}
+          </div>
+          <div className="my-2">
+            <Pagination
+              currentPage={currentPage}
+              itemsPerPage={ITEMS_PER_PAGE}
+              totalItems={data?.length}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
-        <div className="my-2">
-          <Pagination
-            currentPage={currentPage}
-            itemsPerPage={ITEMS_PER_PAGE}
-            totalItems={data?.length}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      </div>
+      )}
     </>
   );
 }

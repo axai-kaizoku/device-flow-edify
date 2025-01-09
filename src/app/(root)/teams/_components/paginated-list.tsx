@@ -16,14 +16,15 @@ interface PaginatedListProps {
   itemsPerPage?: number;
   renderButtons: (team: Team) => JSX.Element;
   tab?: "active_teams" | "inactive_teams";
+  setTeams: any;
 }
 
 export default function PaginatedList({
-  teams: data,
+  teams,
   renderButtons,
   tab,
+  setTeams,
 }: PaginatedListProps) {
-  const [teams, setTeams] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
 
   // const totalTeams = teams?.total;
@@ -47,7 +48,7 @@ export default function PaginatedList({
     <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-4 w-full">
       {/* Grid of Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {teams.teams?.map(
+        {teams?.teams?.map(
           (team) =>
             team && (
               <TeamCard

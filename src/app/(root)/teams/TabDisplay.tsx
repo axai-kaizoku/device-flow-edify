@@ -2,13 +2,21 @@
 
 import { useQueryState } from "nuqs";
 import { Tab } from "./_components/Tab";
-import { Team, TeamsResponse } from "@/server/teamActions";
+import {
+  fetchActiveTeams,
+  fetchInactiveTeams,
+  Team,
+  TeamsResponse,
+} from "@/server/teamActions";
 import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
 import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
 import { Employee } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
+import { useEffect, useState } from "react";
+import { useAlert } from "@/hooks/useAlert";
+import Spinner from "@/components/Spinner";
 
 interface TabDisplayProps {
   teams: TeamsResponse;
@@ -16,22 +24,107 @@ interface TabDisplayProps {
   orgData: Employee;
 }
 
-function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
+function TabDisplay({ orgData }: TabDisplayProps) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active_teams",
   });
+  const [teams, setTeams] = useState<TeamsResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
+  const { showAlert } = useAlert();
   // Function to handle tab change with loading state
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+  const handleSearchAndFilter = async () => {
+    // Combine search term and filters
+    const query = {
+      searchQuery: searchTerm || "",
+    };
+
+    try {
+      setLoading(true);
+      let res: TeamsResponse;
+      if (activeTab === "inactive_teams") {
+        res = await fetchInactiveTeams(query);
+      } else {
+        res = await fetchActiveTeams(query);
+      }
+      setTeams(res);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+      showAlert({
+        title: "Something went wrong !!",
+        description: "Failed to fetch data. Please try again.",
+        isFailure: true,
+        key: "fetch-error-team",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    handleSearchAndFilter();
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const fetchTabData = async () => {
+      try {
+        setLoading(true);
+        let response;
+        switch (activeTab) {
+          case "active_teams":
+            response = await fetchActiveTeams();
+            break;
+          case "inactive_teams":
+            response = await fetchInactiveTeams();
+            break;
+
+          default:
+            response = [];
+        }
+        setTeams(response); // Update state with the fetched data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching tab data:", error);
+        showAlert({
+          title: "Something went wrong !!",
+          description: "Failed to fetch data. Please try again.",
+          isFailure: true,
+          key: "fetch-error-device-tab",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTabData();
+  }, [activeTab]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "active_teams":
-        return <TeamsMain teams={teams} />;
+        return (
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <TeamsMain teams={teams} setTeams={setTeams} />
+            )}
+          </>
+        );
       case "inactive_teams":
-        return <DeletedTeams teams={deletedTeams} />;
+        return (
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <DeletedTeams teams={teams} setTeams={setTeams} />
+            )}
+          </>
+        );
       case "org":
         return <Org data={orgData} />;
       default:
@@ -77,7 +170,9 @@ function TabDisplay({ teams, deletedTeams, orgData }: TabDisplayProps) {
               {/* Lucide icon for search */}
               <input
                 className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
-                placeholder="Search teams"
+                value={searchTerm || ""}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search teams..."
               />
             </div>
             <CreateTeam>
