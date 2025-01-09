@@ -19,6 +19,7 @@ export const employments = [
 export const bulkUploadKeys = [
   "first_name",
   "last_name",
+  "designation",
   "email",
   "password",
   "phone",

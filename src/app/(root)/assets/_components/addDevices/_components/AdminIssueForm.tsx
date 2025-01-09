@@ -12,25 +12,27 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Icons } from "@/components/icons";
-import { type LoggedInUser } from "./devicesPage";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 import { useToast } from "@/hooks/useToast";
 
 interface IssueFormProps {
   device: Device;
-  user: LoggedInUser;
   closeBtn: (value: boolean) => void;
 }
 
-export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
+export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
+  const userData = useSelector((state: RootState) => state.auth.userData);
+
   const router = useRouter();
-  const [next, setNext] = useState(0);
+  const { openToast } = useToast();
   const { showAlert } = useAlert();
+  const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const fileIssueImages = useRef<HTMLInputElement | null>(null);
-  const { openToast } = useToast();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -143,8 +145,8 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       status: "Open",
       title: formData.title,
       description: formData.description,
-      email: user.email,
-      userId: user.userId,
+      email: userData?.email,
+      userId: userData?.userId,
     };
 
     setLoading(true);
@@ -220,7 +222,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     <FormField
                       label="Raised by"
                       id="raised_by"
-                      value={user?.firstName ?? ""}
+                      value={userData?.firstName ?? ""}
                       disabled
                       type="text"
                       placeholder=""
@@ -230,7 +232,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     <FormField
                         label="Email"
                         id="email"
-                        value={user?.email ?? ""}
+                        value={userData?.email ?? ""}
                         disabled
                         type="text"
                         placeholder=""
@@ -238,7 +240,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     <FormField
                         label="Role"
                         id="role"
-                        value={`${user?.role ?? "Frontend Developer"}`}
+                        value={`${userData?.role ?? "Frontend Developer"}`}
                         disabled
                         type="text"
                         placeholder=""

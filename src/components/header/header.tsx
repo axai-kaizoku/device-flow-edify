@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "../wind/Icons";
 import {
+  AlertTriangle,
   Bell,
   CircleHelp,
   LogOut,
@@ -111,7 +112,7 @@ export default function Header({ session }: Props) {
             <div className="flex items-center gap-x-4 lg:gap-x-1 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.6rem] px-1 py-1">
               {/* Search Bar */}
               <div className="bg-transparent overflow-hidden flex justify-between items-center border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   <Icon type="OutlinedSearch" color="gray" />
                   <input
                     type="text"
@@ -167,7 +168,7 @@ export default function Header({ session }: Props) {
                 <div className="cursor-pointer" onClick={()=>{router.push('/devices');}}>
                   <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
                     <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
-                      <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
+                      <AlertTriangle className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
                     </div>
                     <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                       Report an Issue
@@ -181,12 +182,12 @@ export default function Header({ session }: Props) {
           {/* Right Icons Section */}
           <div className="flex items-center space-x-4">
             {/* Settings Icon */}
-            <button
+            {session?.user?.user?.role === 2 && (<button
               onClick={() => router.push("/settings")}
               className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
             >
               <Settings className="size-5" />
-            </button>
+            </button>)}
 
             {/* Query Icon */}
             <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">

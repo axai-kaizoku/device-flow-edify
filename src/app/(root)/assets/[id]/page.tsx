@@ -1,19 +1,19 @@
 import { CombinedContainer } from "@/components/container/container";
 import { Icons } from "@/components/icons";
-import { Device, getDeviceById } from "@/server/deviceActions";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Device, getDeviceById, StoreDevice } from "@/server/deviceActions";
+import { AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { DeleteAsset } from "./_components/delete-asset";
 import { UnassignAsset } from "./_components/unassign-asset";
 import ReassignAsset from "./_components/reassign-asset";
 import { DeviceGrid } from "./_components/device-grid";
+import CreateIssue from "../_components/addDevices/_components/create-issue";
 
 interface DevicePageProps {
   params: { id: string };
 }
 
 export default async function SingleDevice({ params }: DevicePageProps) {
-  const data: Device = await getDeviceById(params.id);
-
+  const data: StoreDevice = await getDeviceById(params.id);
   return (
     <CombinedContainer title="Devices">
       <div className="flex justify-between w-full mt-2">
@@ -68,6 +68,15 @@ export default async function SingleDevice({ params }: DevicePageProps) {
                 </span>
               </div>
             </DeleteAsset>
+
+            <CreateIssue device={data}>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <AlertTriangle className="text-[#6C6C6C] size-[18px] mb-0.5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Add Issue
+                </span>
+              </div>
+            </CreateIssue>
             {/* <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">
               <ChevronLeft className="text-[#6C6C6C]" />
             </div>

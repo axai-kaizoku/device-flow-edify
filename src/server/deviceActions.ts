@@ -235,6 +235,7 @@ export const bulkUploadDevices = async (
         "Content-Type": "multipart/form-data",
       }
     );
+    console.log(response?.data)
     return response?.data;
   } catch (error) {
     throw error;

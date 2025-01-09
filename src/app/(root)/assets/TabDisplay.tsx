@@ -20,6 +20,7 @@ import {
   unAssignedAssets,
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
+import CreateIssue from "./_components/addDevices/_components/create-issue";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];

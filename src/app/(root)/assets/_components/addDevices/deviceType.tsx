@@ -81,6 +81,8 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
           requiredKeys={[
             "device_name",
             "asset_serial_no",
+            "serial_no",
+            "device_purchase_date",
             "ram",
             "processor",
             "storage",
@@ -92,6 +94,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
             "device_type",
             "brand",
             "model",
+            "condition",
             "serial_no",
           ]}
           bulkApi={bulkUploadDevices}

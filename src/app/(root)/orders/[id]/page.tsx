@@ -3,11 +3,11 @@ import React, { Suspense } from "react";
 import DetailsContainer from "./_components/detailsContainer";
 import Spinner from "@/components/Spinner";
 
-const OrderDetail = () => {
+const OrderDetail = ({params}:{params:{id:string;}}) => {
   return (
     <CombinedContainer title="Order Details">
       <Suspense fallback={<Spinner/>}>
-        <DetailsContainer/>
+        <DetailsContainer orderId={params.id}/>
       </Suspense>
     </CombinedContainer>
   );

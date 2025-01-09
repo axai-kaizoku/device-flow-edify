@@ -35,3 +35,25 @@ export const getPreviousOrders = cache(async function (): Promise<PreviousOrder[
 		throw new Error((e as AxiosError)?.message || 'Failed to fetch previous orders');
 	}
 });
+
+
+// Fetch Previous Orders
+export const getSingleOrder = cache(async function ({orderId}:{orderId:any}): Promise<any[]> {
+	try {
+		// API call to fetch previous orders
+		const res = await callAPIWithToken<{ soldInventory: any[] }>(
+			`https://api.edify.club/edifybackend/v1/soldInventory/org?orderId=${orderId}`,
+			'GET',
+		);
+
+		// Validate response structure
+		if (!res?.data || !Array.isArray(res?.data?.soldInventory)) {
+			throw new Error('Invalid API response structure');
+		}
+
+		return res?.data?.soldInventory;
+	} catch (e) {
+		throw new Error((e as AxiosError)?.message || 'Failed to fetch previous orders');
+	}
+});
+
