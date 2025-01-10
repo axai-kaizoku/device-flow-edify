@@ -20,6 +20,21 @@ export const getStoreDevices = cache(
   }
 );
 
+export const getTrendingDevice = cache(
+  async function (): Promise<StoreDevicesRes> {
+    try {
+      const res = await callAPIWithToken<StoreDevicesRes>(
+        "https://api.edify.club/edifybackend/v1/devices/assets?query=trending",
+        "GET"
+      );
+
+      return res?.data;
+    } catch (e) {
+      // redirect('/login');
+      throw new Error((e as AxiosError)?.message);
+    }
+  }
+);
 export const getBestSellers = cache(
   async function (): Promise<StoreDevicesRes> {
     try {
