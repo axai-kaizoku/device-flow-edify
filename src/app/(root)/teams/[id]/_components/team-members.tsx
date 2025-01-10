@@ -1,6 +1,11 @@
 "use client";
 import { Table } from "@/components/wind/Table";
-import { getUsersByTeamId, User } from "@/server/userActions";
+import {
+  getUsersByTeamId,
+  User,
+  UserResponse,
+  UsersTeamResponse,
+} from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import Pagination from "../../_components/pagination";
 import { useEffect, useState } from "react";
@@ -11,11 +16,11 @@ import MoveTeamMember from "./move-team-member";
 const TeamMembers = ({ id }: { id: string }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [data, setData] = useState<User>();
+  const [data, setData] = useState<UsersTeamResponse>();
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await getUsersByTeamId(id, 1);
+      const res: any = await getUsersByTeamId(id, 1);
       setData(res);
     };
     fetch();
@@ -38,8 +43,10 @@ const TeamMembers = ({ id }: { id: string }) => {
         </h2>
 
         <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
-          {users?.length
-            ? `${users.length} ${users.length > 1 ? "Members" : "Member"}`
+          {data?.users.length
+            ? `${data.users.length} ${
+                data.users.length > 1 ? "Members" : "Member"
+              }`
             : "N/A"}
         </span>
       </div>
@@ -49,7 +56,7 @@ const TeamMembers = ({ id }: { id: string }) => {
       <>
         <div className="flex flex-col">
           <Table
-            data={currentTeams}
+            data={data?.users ?? []}
             checkboxSelection={{
               uniqueField: "_id",
               //logic yet to be done
@@ -131,7 +138,7 @@ const TeamMembers = ({ id }: { id: string }) => {
         <div className="my-4">
           <Pagination
             current_page={currentPage}
-            total_pages={data?.total_pages}
+            total_pages={data?.total_pages!}
             onPageChange={handlePageChange}
           />
         </div>

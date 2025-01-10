@@ -1,25 +1,7 @@
+import { Team } from "@/server/teamActions";
 import React from "react";
 
-interface TeamHeaderProps {
-  image: string;
-  title: string;
-  description: string;
-  manager: {
-    _id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    image: string;
-  }[];
-}
-
-const TeamHeader: React.FC<TeamHeaderProps> = ({
-  image,
-  title,
-  description,
-  manager,
-}) => {
+const TeamHeader = ({ image, title, description, manager }: Team) => {
   return (
     <div className="flex gap-5 pl-3 pt-2 items-center">
       <img
@@ -43,8 +25,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         <p className="text-sm font-gilroyMedium text-[#ADADAC]">
           Reporting Manager:{" "}
           <span className="font-gilroySemiBold text-lg text-black">
-            {`${manager[0]?.first_name ?? "No Manager"} ${
-              manager[0]?.last_name ?? ""
+            {`${manager![0]?.first_name ?? "No Manager"} ${
+              manager![0]?.last_name ?? ""
             }`}
           </span>
         </p>

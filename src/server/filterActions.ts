@@ -493,7 +493,7 @@ export const openIssues = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
@@ -532,7 +532,7 @@ export const closedIssues = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
@@ -551,16 +551,18 @@ export const closedIssues = cache(async function ({
 });
 
 export const filterIssues = cache(async function ({
-  filters = [],
+  filters = [["status", "Equals", "Open"]],
   fields = issueFields,
   searchQuery = "",
-  pageLength = 100000,
+  pageLimit = 10000,
+  page = 1,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
+      pageLimit,
+      page,
     };
 
     // Construct the URL with an optional search query
@@ -569,7 +571,7 @@ export const filterIssues = cache(async function ({
     }`;
 
     // API call
-    const res = await callAPIWithToken<Issues[]>(apiUrl, "POST", payload);
+    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
     // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {

@@ -14,7 +14,7 @@ function DeletedUser({
   setUsers,
 }: {
   data: UserResponse | null;
-  setUsers: Dispatch<SetStateAction<UserResponse>>;
+  setUsers: React.Dispatch<SetStateAction<UserResponse | null>>;
 }) {
   const router = useRouter();
 

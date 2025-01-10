@@ -11,10 +11,10 @@ export default function EditTeam({
   image,
 }: {
   children: React.ReactNode;
-  _id: string;
-  title: string;
-  description: string;
-  image: string;
+  _id?: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }) {
   const [open, setOpen] = useState(false);
 

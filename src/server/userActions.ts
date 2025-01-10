@@ -132,7 +132,7 @@ export type newAllUserResponse = {
   users: UserResponse;
 };
 
-export const fetchUsers = cache(async function (): Promise<UserResponse> {
+export const fetchUsers = cache(async function (): Promise<any> {
   try {
     const requestBody = {
       fields: [
@@ -154,13 +154,13 @@ export const fetchUsers = cache(async function (): Promise<UserResponse> {
     );
 
     // console.log("fetchUssrs" + res.data.users[0].designation);
-    return res?.data?.users;
+    return res.data.users;
   } catch (e) {
     throw new Error("Failed to fetch users");
   }
 });
 
-export async function searchUsers(searchQuery: string): Promise<UserResponse> {
+export async function searchUsers(searchQuery: string): Promise<any> {
   try {
     const requestBody = {
       fields: [
@@ -274,19 +274,25 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
     throw error;
   }
 };
-
-export const getUsersByTeamId = cache(async function <User>(
+export type UsersTeamResponse = {
+  users: User[];
+  total: number;
+  per_page: number;
+  current_page: number;
+  total_pages: number;
+};
+export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
   teamId: string,
   page: number
 ) {
   try {
     const sess = await getSession();
-    const res = await callAPIWithToken<User>(
+    const res = await callAPIWithToken<UsersTeamResponse>(
       `https://api.edify.club/edifybackend/v1/user/teams`, // API endpoint
       "POST", // HTTP method
       {
         teamId,
-        orgId: sess.user.user.orgId?._id,
+        orgId: sess?.user.user.orgId?._id ?? "",
         filters: [],
         fields: usersFields,
         pageLimit: 5,

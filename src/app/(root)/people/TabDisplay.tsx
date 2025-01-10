@@ -301,10 +301,12 @@ function TabDisplay() {
 
                                   const svgIcon = selectElement.nextSibling;
                                   if (svgIcon) {
+                                    // @ts-ignore
                                     svgIcon.classList.toggle(
                                       "text-black",
                                       selectElement.value !== "Select Field"
                                     );
+                                    // @ts-ignore
                                     svgIcon.classList.toggle(
                                       "text-gray-400",
                                       selectElement.value === "Select Field"
@@ -370,10 +372,13 @@ function TabDisplay() {
 
                                   const svgIcon = selectElement.nextSibling;
                                   if (svgIcon) {
+                                    // @ts-ignore
                                     svgIcon.classList.toggle(
                                       "text-black",
                                       selectElement.value !== "Select Field"
                                     );
+                                    // @ts-ignore
+
                                     svgIcon.classList.toggle(
                                       "text-gray-400",
                                       selectElement.value === "Select Field"

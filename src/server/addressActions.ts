@@ -36,7 +36,7 @@ export async function createAddress(address: Address): Promise<Address> {
       "https://api.edify.club/edifybackend/v1/address", // API endpoint
       "POST", // HTTP method
       {
-        userId: sess?.user?.id,
+        userId: sess?.user?.user.userId,
         orgId: sess?.user?.user?.orgId?._id,
         ...address,
       }

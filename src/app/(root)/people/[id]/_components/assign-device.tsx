@@ -134,7 +134,10 @@ export default function AssignDevice({
                   key={"assign-device"}
                   value={device?.device_name ?? ""}
                   placeholder="Search by name, serial no, etc"
+                  //@ts-ignore
                   fetchOptions={searchDevices}
+                  //@ts-ignore
+
                   initialOptions={fetchDevices}
                   onSelect={(data: any) => {
                     setDevice({

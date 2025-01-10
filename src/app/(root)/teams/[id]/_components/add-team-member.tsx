@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import { useEffect, useState } from "react";
 import {
   fetchUsers,
+  getUsersByTeamId,
   searchUsers,
   updateUser,
   User,
@@ -49,6 +50,7 @@ export default function AddTeamMember({
       await updateUser(user?._id ?? "", { teamId: teamData._id });
       setOpen(false);
       openToast("success", "Added member to team !");
+
       setLoading(false);
       router.refresh();
     } catch (error) {

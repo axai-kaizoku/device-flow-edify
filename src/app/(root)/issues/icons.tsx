@@ -1,5 +1,5 @@
 import { LucideProps } from "lucide-react";
-export const Icons = {
+export const issueIcons = {
   no_issues_icon: (props: LucideProps) => (
     <svg
       {...props}

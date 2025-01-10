@@ -1,18 +1,27 @@
-import { IssueResponse, Issues } from "@/server/issueActions";
-import React from "react";
+import { IssueResponse } from "@/server/issueActions";
 
-function OpenHeader({ data }: { data: IssueResponse }) {
-  const criticalCount = data?.issues.filter(
-    (item) => item.priority === "Critical" && item.status === "Open"
-  ).length;
-  const mediumCount = data?.issues.filter(
-    (item) => item.priority === "Medium" && item.status === "Open"
-  ).length;
-  const lowCount = data?.issues.filter(
-    (item) => item.priority === "Low" && item.status === "Open"
-  ).length;
+function OpenHeader({
+  countIssues: data,
+}: {
+  countIssues: IssueResponse | null;
+}) {
+  const criticalCount =
+    data?.issues.filter(
+      (item) => item.priority === "Critical" && item.status === "Open"
+    ).length || 0;
+
+  const mediumCount =
+    data?.issues.filter(
+      (item) => item.priority === "Medium" && item.status === "Open"
+    ).length || 0;
+
+  const lowCount =
+    data?.issues.filter(
+      (item) => item.priority === "Low" && item.status === "Open"
+    ).length || 0;
+
   return (
-    <div className="flex gap-3 ">
+    <div className="flex gap-3">
       <h1 className="text-xl pl-6 font-gilroySemiBold">Open Issues</h1>
       <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-alert-foreground text-failure">
         {criticalCount} Critical

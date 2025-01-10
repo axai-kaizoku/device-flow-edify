@@ -165,42 +165,6 @@ export const fetchInactiveTeams = cache(async function ({
   }
 });
 
-export const fetchDeletedTeams = cache(async function ({
-  filters = [],
-  fields = teamFields,
-  searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
-      isDeleted: true,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<Team[]>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data?.teams;
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter teams. Please try again later."
-    );
-  }
-});
-
 export async function createTeam(
   title: string,
   description: string,

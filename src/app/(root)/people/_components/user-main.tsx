@@ -17,10 +17,6 @@ export default function UserMain({
   data: UserResponse | null;
   setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
 }) {
-  if (!data) {
-    return <div>Not Found</div>;
-  }
-
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   // const [users, setUsers] = useState(data);
@@ -57,7 +53,7 @@ export default function UserMain({
               <Suspense fallback={<div>Loading...</div>}>
                 <div className="flex flex-col  w-full">
                   <Table
-                    data={data.users}
+                    data={data?.users ?? []}
                     checkboxSelection={{
                       uniqueField: "_id",
                       onSelectionChange: (e) => console.log(e),
@@ -164,7 +160,7 @@ export default function UserMain({
                   <div className="mt-2">
                     <Pagination
                       current_page={currentPage}
-                      total_pages={data.total_pages!}
+                      total_pages={data?.total_pages!}
                       onPageChange={handlePageChange}
                     />
                   </div>

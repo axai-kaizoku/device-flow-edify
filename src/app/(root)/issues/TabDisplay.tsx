@@ -9,24 +9,17 @@ import ClosedIssueTable from "./_components/ClosedIssues";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import { closedIssues, filterIssues, openIssues } from "@/server/filterActions";
+import Spinner from "@/components/Spinner";
 
 function TabDisplay() {
-  const [issues, setIssues] = useState<IssueResponse>();
-
+  const [issues, setIssues] = useState<IssueResponse | null>(null);
+  const [countIssues, setCountIssues] = useState<IssueResponse | null>(null);
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "open",
   });
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
-
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await filterIssues();
-      setIssues(res);
-    };
-    fetch();
-  }, []);
 
   const handleSearchAndFilter = async () => {
     // Combine search term and filters
@@ -36,7 +29,16 @@ function TabDisplay() {
 
     try {
       setLoading(true);
-      const res = await filterIssues(query);
+      let res: IssueResponse;
+      if (activeTab === "open") {
+        const count = await filterIssues(query);
+        setCountIssues(count);
+
+        res = await openIssues(query);
+      } else {
+        res = await closedIssues(query);
+      }
+
       setIssues(res);
       setLoading(false);
     } catch (error) {
@@ -63,14 +65,13 @@ function TabDisplay() {
         let response;
         switch (activeTab) {
           case "open":
+            const count = await filterIssues();
+            setCountIssues(count);
             response = await openIssues();
             break;
           case "closed":
             response = await closedIssues();
             break;
-
-          default:
-            response = [];
         }
         setIssues(response); // Update state with the fetched data
         setLoading(false);
@@ -90,20 +91,32 @@ function TabDisplay() {
     fetchTabData();
   }, [activeTab]);
 
-  // const filteredIssues = searchTerm
-  //   ? issues.filter((issue) =>
-  //       Object.values(issue).some((value) =>
-  //         String(value).toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     )
-  //   : issues;
-
   const renderContent = () => {
     switch (activeTab) {
       case "open":
-        return <IssueTableDisplay data={issues} setIssues={setIssues} />;
+        return (
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <IssueTableDisplay
+                data={issues}
+                countIssues={countIssues}
+                setIssues={setIssues}
+              />
+            )}
+          </>
+        );
       case "closed":
-        return <ClosedIssueTable data={issues} setIssues={setIssues} />;
+        return (
+          <>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <ClosedIssueTable data={issues} setIssues={setIssues} />
+            )}
+          </>
+        );
       default:
         return null;
     }
