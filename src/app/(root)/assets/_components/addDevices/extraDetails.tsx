@@ -133,7 +133,6 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
                 ...prev,
                 assignedTo: { name: data.email, value: data._id },
               }));
-              console.log({ data });
             }}
             label="Assigned to"
           />
@@ -162,7 +161,6 @@ const ExtraDetails: React.FC<ExtraDetailsProps> = ({
                 ...prev,
                 officeLocation: { name: data.city, value: data._id },
               }));
-              console.log({ data });
             }}
             label="Office Location"
           />

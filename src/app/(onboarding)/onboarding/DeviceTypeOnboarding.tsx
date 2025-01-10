@@ -1,19 +1,9 @@
 "use client";
 
-import {
-  Keyboard,
-  Laptop,
-  Laptop2,
-  Monitor,
-  Mouse,
-  Smartphone,
-  SmartphoneCharging,
-  Star,
-} from "lucide-react";
-import React, { useState } from "react";
 import { bulkUploadDevices } from "@/server/deviceActions";
-import BulkUpload from "@/components/bulk-upload";
-import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { Keyboard, Laptop2, Monitor, Mouse, Smartphone } from "lucide-react";
+import React, { useState } from "react";
+import BulkUpload from "./BulkUpload";
 
 type DeviceTypeProps = {
   data: string;
@@ -23,7 +13,7 @@ type DeviceTypeProps = {
   setTotalSteps: (steps: number) => void;
 };
 
-const DeviceType: React.FC<DeviceTypeProps> = ({
+const DeviceTypeOnboarding: React.FC<DeviceTypeProps> = ({
   data,
   setData,
   error,
@@ -166,4 +156,4 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
   );
 };
 
-export default DeviceType;
+export default DeviceTypeOnboarding;

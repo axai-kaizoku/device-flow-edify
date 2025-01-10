@@ -31,7 +31,6 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
     };
   });
 
-  console.log(modifiedPerfectFor);
 
   // const perfectFor = [
   //   {

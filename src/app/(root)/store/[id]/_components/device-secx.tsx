@@ -84,7 +84,6 @@ export const DeviceSecx = ({ data }: { data: StoreDevice }) => {
     };
   });
 
-  console.log(modifiedConfig);
 
   const [currentIdx, setCurrentIdx] = useState(0);
 

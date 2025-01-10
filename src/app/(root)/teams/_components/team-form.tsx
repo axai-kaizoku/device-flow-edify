@@ -189,7 +189,7 @@ export const TeamForm = ({
               <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
                 <img
                   src={formData.image}
-                  alt={formData.image.name}
+                  alt={formData.image}
                   className="w-full h-full object-cover"
                 />
                 <button

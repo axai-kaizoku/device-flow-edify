@@ -4,7 +4,6 @@ import { TrendingDevices } from "./admin-conponents/trending-devices";
 import { AssetsCount } from "./admin-conponents/assets-count";
 import { AssetsHealth } from "./admin-conponents/assets-health";
 import { CombinedContainer } from "@/components/container/container";
-import { SearchBarWithProfile } from "@/components/container/search-bar-with-profile";
 
 import { getTrendingDevice } from "@/server/storeActions";
 import { getCurrentOrg, Org } from "@/server/orgActions";
@@ -22,7 +21,10 @@ export default async function AdminDashboard() {
   return (
     <CombinedContainer title="Admin Dashboard">
       <div className="flex gap-3">
-        <div style={{ width: "75%" }} className="flex justify-between gap-3 flex-wrap ">
+        <div
+          style={{ width: "75%" }}
+          className="flex justify-between gap-3 flex-wrap "
+        >
           <div style={{ width: "49%" }}>
             <AssetsHealth />
           </div>
@@ -38,7 +40,15 @@ export default async function AdminDashboard() {
             <ManageOrders />
           </div>
         </div>
-        <div style={{ width: "25%", display: 'flex', flexDirection: 'column', gap:4, justifyContent: 'space-between'}}>
+        <div
+          style={{
+            width: "25%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            justifyContent: "space-between",
+          }}
+        >
           <TrendingDevices />
           <DashboardStore />
         </div>

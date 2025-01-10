@@ -221,7 +221,6 @@ export const SelectInput = ({
 // Demo Component
 export function SelectDemo() {
   const handleSelect = (data: any) => {
-    console.log("Selected:", data);
   };
 
   return (

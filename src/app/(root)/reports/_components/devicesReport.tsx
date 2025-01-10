@@ -9,7 +9,6 @@ const DevicesReport = () => {
 
   const handleDownloadReport = async () => {
     try {
-      console.log(status);
       if (status === "all") {
         const data = await filterDevice({ pageLength: 1000 });
 

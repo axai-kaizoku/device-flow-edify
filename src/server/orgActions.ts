@@ -44,43 +44,6 @@ export type Org = {
   total_purchased?: number;
 };
 
-export const getAllOrgs = cache(async function (): Promise<Org[]> {
-  try {
-    const res = await callAPIWithToken<Org[]>(
-      "https://api.edify.club/edifybackend/v1/organisation",
-      "GET"
-    );
-
-    return res?.data;
-  } catch (e) {
-    throw new Error("Failed to fetch orgs");
-  }
-});
-
-export async function createOrg(
-  title: string,
-  description: string,
-  image: string
-): Promise<Org> {
-  try {
-    const sess = await getSession();
-
-    const res = await callAPIWithToken<Org>(
-      "https://api.edify.club/edifybackend/v1/organisation", // API endpoint
-      "POST", // HTTP method
-      {
-        title,
-        description,
-        image,
-        orgId: sess?.user?.user?.orgId?._id,
-      }
-    );
-
-    return res?.data;
-  } catch (e) {
-    throw new Error("Failed to create org");
-  }
-}
 
 export const getCurrentOrg = cache(async function <Org>() {
   try {
@@ -120,36 +83,13 @@ export async function updateOrg(
   }
 }
 
-export async function deleteOrg<Org>(orgId: string) {
-  try {
-    const res = await callAPIWithToken<Org>(
-      `https://api.edify.club/edifybackend/v1/organisation/${orgId}`, // API endpoint
-      "DELETE",
-      null
-    );
-    return res.data;
-  } catch (e) {
-    throw new Error("Failed to delete org");
-  }
-}
 
 export async function getImageUrl(
   file: { file?: File },
   type: "user" | "device" | "org" | "team"
 ): Promise<any> {
   try {
-    if (false) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await callAPIWithToken<string>(
-        "https://api.edify.club/edifybackend/v1/upload", // API endpoint
-        "POST", // HTTP method
-        formData
-      );
-      return res.data;
-    } else {
       await new Promise((resolve) => setTimeout(resolve, 500));
-
       // Determine the URL based on the type
       let imageUrl: string;
 
@@ -175,7 +115,7 @@ export async function getImageUrl(
       }
 
       return { data: imageUrl };
-    }
+    
   } catch (error) {
     throw new Error("Failed to create image url");
   }

@@ -77,7 +77,6 @@ export const createPayload = (formData: FormData) => {
         throw new Error("Unsupported device type.");
     }
 
-    console.log(payload)
   
     return {
       deviceType,

@@ -27,7 +27,6 @@ const AssignAssetsForm = ({
       setLoading(false);
       router.push("/assets?tab=un_assigned_assets");
       router.refresh();
-      // console.log({ res });
     }
     closeBtn(false);
   };

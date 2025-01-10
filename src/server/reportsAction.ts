@@ -109,7 +109,6 @@ export async function getUserReports({
 		const res = await callAPIWithToken<User[]>(apiUrl, 'POST', payload);
 		// Check if response has data
 		if (res && res?.data) {
-			// console.log('Filtered Data:', res.data);
 			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
@@ -146,7 +145,6 @@ export async function getAssignedDevicesReport({
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
 		// Check if response has data
 		if (res && res?.data) {
-			// console.log('Filtered Data:', res.data);
 			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');
@@ -184,7 +182,6 @@ export async function getDeletedDevicesReport({
 		const res = await callAPIWithToken<Device[]>(apiUrl, 'POST', payload);
 		// Check if response has data
 		if (res && res?.data) {
-			// console.log('Filtered Data:', res.data);
 			return res?.data; // Return the filtered data
 		} else {
 			throw new Error('No data received from the API');

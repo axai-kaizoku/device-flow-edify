@@ -61,7 +61,6 @@ export const fetchTeams = cache(async function ({
       page,
       isDeleted,
     };
-    console.log("teams api");
 
     // Construct the URL with an optional search query
     const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
@@ -71,7 +70,6 @@ export const fetchTeams = cache(async function ({
     // API call
     const res = await callAPIWithToken<TeamsResponse>(apiUrl, "POST", payload);
     // Check if response has data
-    console.log(res.data, "TEam actions");
     if (res && res?.data) {
       return res?.data.teams;
     } else {
@@ -101,7 +99,6 @@ export const fetchActiveTeams = cache(async function ({
       page,
       isDeleted,
     };
-    console.log("teams api");
 
     // Construct the URL with an optional search query
     const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
@@ -111,7 +108,6 @@ export const fetchActiveTeams = cache(async function ({
     // API call
     const res = await callAPIWithToken<TeamsResponse>(apiUrl, "POST", payload);
     // Check if response has data
-    console.log(res.data, "TEam actions");
     if (res && res?.data) {
       return res?.data;
     } else {

@@ -11,7 +11,6 @@ function EditIssue({ data }: { data: Issues }) {
   const [issueData, setIssueData] = useState(data);
   const router = useRouter();
 
-  console.log(data);
 
   // Handle Edit Save
   const handleSave = async () => {

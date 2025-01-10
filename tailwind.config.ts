@@ -9,6 +9,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'inner-click': '3px 2px 22px 1px rgba(0, 0, 0, 0.24)'
+      },
+      scale: {
+        '98': '0.98', // Slightly scale down on click
+      },
       fontFamily: {
         gilroyThin: ["var(--font-gilroy-thin)", "sans-serif"],
         gilroyExtraLight: ["var(--font-gilroy-extralight)", "sans-serif"],

@@ -31,7 +31,6 @@ export const authOptions: NextAuthOptions = {
         if (res.status === 200) {
           return body;
         } else {
-          console.log(body.message);
           throw new Error(body.message || "Login failed");
         }
       },
@@ -41,8 +40,6 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       async profile(profile, tokens) {
-        console.log("profile google", profile);
-        console.log("tokens google", tokens);
 
         const res = await fetch(
           "https://api.edify.club/edifybackend/v1/auth/login",
@@ -58,7 +55,6 @@ export const authOptions: NextAuthOptions = {
         );
 
         const data = await res.json();
-        console.log("google api data", data);
 
         const returnData = {
           id: profile.sub,
@@ -68,7 +64,6 @@ export const authOptions: NextAuthOptions = {
         if (res.status === 200) {
           return returnData as User;
         } else {
-          console.log(data.message);
           throw new Error(data.message || "Login failed");
         }
       },

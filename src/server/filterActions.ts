@@ -128,10 +128,8 @@ export const deletedUsers = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -168,10 +166,8 @@ export const filterUsers = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
-    // console.log("1" + apiUrl, payload);
 
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -209,11 +205,8 @@ export const activeUsers = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
     // Check if response has data
-    console.log("Active" + res.data);
     if (res && res?.data) {
-      console.log("Filtered Data:", res.data.users);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -250,11 +243,8 @@ export const inActiveUsers = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
-    // console.log("Inactivw" + res);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -293,7 +283,6 @@ export const filterDevice = cache(async function ({
 
     // Check and return response data
     if (res && res?.data) {
-      console.log("filter Triggered");
       return res?.data;
     } else {
       throw new Error("No data received from the API");
@@ -331,7 +320,6 @@ export const assignedAssets = cache(async function ({
 
     // Check and return response data
     if (res && res?.data) {
-      console.log("AssignedAssets Triggered");
       return res?.data;
     } else {
       throw new Error("No data received from the API");
@@ -369,7 +357,6 @@ export const unAssignedAssets = cache(async function ({
 
     // Check and return response data
     if (res && res?.data) {
-      console.log("unAssignedAssets Triggered");
       return res?.data;
     } else {
       throw new Error("No data received from the API");
@@ -409,7 +396,6 @@ export const inActiveAssets = cache(async function ({
 
     // Check and return response data
     if (res && res?.data) {
-      console.log("inactive Assets Triggered");
       return res?.data;
     } else {
       throw new Error("No data received from the API");
@@ -436,7 +422,6 @@ export const deletedDevices = cache(async function ({
       isDeleted: true,
     };
 
-    console.log(payload);
     // Construct the URL with an optional search query
     const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
@@ -446,7 +431,6 @@ export const deletedDevices = cache(async function ({
     const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -494,10 +478,8 @@ export const openIssues = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -533,10 +515,8 @@ export const closedIssues = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");
@@ -572,10 +552,8 @@ export const filterIssues = cache(async function ({
 
     // API call
     const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // console.log(apiUrl, payload);
     // Check if response has data
     if (res && res?.data) {
-      // console.log('Filtered Data:', res.data);
       return res?.data; // Return the filtered data
     } else {
       throw new Error("No data received from the API");

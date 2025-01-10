@@ -1,7 +1,6 @@
 // Form.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import DeviceType from "./deviceType";
 import { createDevices, Device } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import {
@@ -12,28 +11,30 @@ import {
   ExtraDetails as ExtraDetailsInterface,
   KeyboardDetailsInterface,
   DevicePage2,
-} from "./_components/types";
+} from "../../(root)/assets/_components/addDevices/_components/types";
 import Spinner from "@/components/Spinner";
 import { ChevronLeft, ChevronRight, Laptop, Monitor } from "lucide-react";
-import KeyboardForm from "./keyBoardForm";
-import MouseForm from "./mouseForm";
-import LaptopForm from "./laptopForm";
-import LaptopForm2 from "./laptopForm2";
-import MobileForm from "./MobileForm";
-import MobileForm2 from "./MobileForm2";
-import MonitorForm from "./MonitorForm";
-import { createPayload } from "./_components/createPayload";
+import KeyboardForm from "../../(root)/assets/_components/addDevices/keyBoardForm";
+import MouseForm from "../../(root)/assets/_components/addDevices/mouseForm";
+import LaptopForm from "../../(root)/assets/_components/addDevices/laptopForm";
+import LaptopForm2 from "../../(root)/assets/_components/addDevices/laptopForm2";
+import MobileForm from "../../(root)/assets/_components/addDevices/MobileForm";
+import MobileForm2 from "../../(root)/assets/_components/addDevices/MobileForm2";
+import MonitorForm from "../../(root)/assets/_components/addDevices/MonitorForm";
+import { createPayload } from "../../(root)/assets/_components/addDevices/_components/createPayload";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/buttons/Button";
+import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
 // import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
-function Form({ closeBtn }: FormProps) {
+export const DeviceComponent = () => {
   const { showAlert } = useAlert();
   const { openToast } = useToast();
   const [step, setStep] = useState<number>(0);
+  const [success, setSuccess] = useState(false);
   const [totalStep, setTotalStep] = useState<number>(1);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -236,14 +237,7 @@ function Form({ closeBtn }: FormProps) {
       try {
         const payload: any = createPayload(formData);
         const response = await createDevices(payload);
-        showAlert({
-          isFailure: false,
-          title: "WOAHH !",
-          description: "Device created successfully !",
-          key: "device-creating",
-        });
-        closeBtn(); // Close the sheet after successful submission
-        router.refresh();
+        setSuccess(true)
       } catch (error) {
         setIsLoading(false);
         openToast("error", "Failed to created Device !");
@@ -252,158 +246,166 @@ function Form({ closeBtn }: FormProps) {
     }
   };
   return (
-    <div className="flex flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
-      <div className="flex justify-start items-center gap-4 text-2xl font-gilroySemiBold">
-        <div className="bg-black rounded-full p-2.5 flex justify-center items-center">
-          <Monitor color="white" className="size-4" />
-        </div>
-        <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
-          Add new {formData?.deviceType ? formData?.deviceType : "device"}
-        </span>
-      </div>
-      <div className="w-full flex flex-col gap-1">
-        <div className="font-gilroySemiBold text-base text-gray-400">
-          Step {step} of {totalStep}
-        </div>
-        <div className="h-[1px] bg-[#E7E7E7] w-full"></div>
-      </div>
-      {/* Render different components based on the current step */}
-
-      {step === 0 && (
-        <DeviceType
-          data={formData?.deviceType}
-          setData={(data: string) =>
-            setFormData((prev) => ({ ...prev, deviceType: data }))
-          }
-          error={errors?.deviceType}
-          closeBtn={closeBtn}
-          setTotalSteps={(steps: number) => {
-            setTotalStep(steps);
-          }}
-        />
-        // <AssignAssetsForm/>
-      )}
-      {step === 1 && formData?.deviceType === "keyboard" ? (
-        <KeyboardForm
-          data={formData?.keyboardDetails}
-          setData={(data: Partial<KeyboardDetailsInterface>) =>
-            updateFormData("keyboardDetails", data)
-          }
-          errors={errors}
-        />
-      ) : step === 1 && formData?.deviceType === "mouse" ? (
-        <MouseForm
-          data={formData?.mouseDetails}
-          setData={(data: Partial<KeyboardDetailsInterface>) =>
-            updateFormData("mouseDetails", data)
-          }
-          errors={errors}
-        />
-      ) : step === 1 && formData.deviceType === "laptop" ? (
-        <LaptopForm
-          data={formData?.laptopPage1}
-          setData={(data: Partial<DevicePage1>) =>
-            updateFormData("laptopPage1", data)
-          }
-          errors={errors}
-          deviceType={formData?.deviceType}
-        />
-      ) : step === 1 && formData?.deviceType === "mobile" ? (
-        <MobileForm
-          data={formData?.mobilePage1}
-          setData={(data: Partial<DevicePage1>) =>
-            updateFormData("mobilePage1", data)
-          }
-          errors={errors}
-          deviceType={formData?.deviceType}
-        />
-      ) : step === 1 && formData?.deviceType === "monitor" ? (
-        <MonitorForm
-          data={formData?.monitorDetails}
-          setData={(data: Partial<KeyboardDetailsInterface>) =>
-            updateFormData("monitorDetails", data)
-          }
-          errors={errors}
-        />
-      ) : (
-        <></>
-      )}
-      {step === 2 && formData?.deviceType === "laptop" ? (
-        <LaptopForm2
-          data={formData?.laptopPage2}
-          setData={(data: Partial<DevicePage2>) =>
-            updateFormData("laptopPage2", data)
-          }
-          errors={errors}
-        />
-      ) : step === 2 && formData?.deviceType === "mobile" ? (
-        <MobileForm2
-          data={formData.mobilePage2}
-          setData={(data: Partial<DevicePage2>) =>
-            updateFormData("mobilePage2", data)
-          }
-          errors={errors}
-        />
-      ) : (
-        <></>
-      )}
-      <div className="flex-grow"></div>
-      {/* Navigation buttons */}
-      <div className="flex gap-3 w-full mt-auto pb-2">
-        {step >= 1 ? (
-          <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300 border border-black text-center"
-            onClick={handlePrevStep}
-            disabled={isLoading}
-          >
-            Back
-          </button>
-        ) : (
-          <button
-            className="flex items-center justify-center gap-2 text-black py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300 border border-black text-center"
+    <div className="w-full h-screen justify-evenly  items-center flex flex-col lg:flex-row p-8">
+      {success ? (
+        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+          <div className="w-full">
+            <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
+            Great!! Setup complete
+            </div>
+            <div className="text-center text-md mt-2 font-gilroySemiBold leading-[normal] text-zinc-400">
+            Your are ready to manage assets with DeviceFlow
+            </div>
+          </div>
+          <Button
+            className="rounded-[9px] font-gilroySemiBold text-[16px]   w-[75%] h-[56px] bg-primary text-primary-foreground"
+            type="button"
             onClick={() => {
-              closeBtn();
+            router.push('/')
             }}
-            disabled={isLoading}
           >
-            Cancel
-          </button>
-        )}
-        {step < totalStep ? (
-          <Button
-            type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300"
-            onClick={handleNextStep}
-            disabled={isLoading}
-          >
-            <div className="flex items-center gap-2">
-              <span>Next</span>
-              {isLoading ? (
-                <Spinner />
+            Done
+          </Button>
+        </div>
+      ) : (
+        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+          <div className="w-full">
+            <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
+              Add Devices
+            </div>
+            <div className="text-center text-xl font-gilroyMedium leading-[normal] text-zinc-400">
+            Add all the devices in organisation
+            </div>
+          </div>
+          
+          {step === 0 && (
+            <div className="flex w-[75%] gap-4">
+             <DeviceTypeOnboarding
+                data={formData?.deviceType}
+                setData={(data: string) =>
+                  setFormData((prev) => ({ ...prev, deviceType: data }))
+                }
+                error={errors?.deviceType}
+                closeBtn={() => {}}
+                setTotalSteps={(steps: number) => {
+                  setTotalStep(steps);
+                }}
+              />
+            </div>
+          )}
+       
+          <div className="flex flex-col w-[86%] justify-start items-start pb-1 px-1 space-y-4 gap-1">
+            {step === 1 && formData?.deviceType === "keyboard" ? (
+              <KeyboardForm
+                data={formData?.keyboardDetails}
+                setData={(data: Partial<KeyboardDetailsInterface>) =>
+                  updateFormData("keyboardDetails", data)
+                }
+                errors={errors}
+              />
+            ) : step === 1 && formData?.deviceType === "mouse" ? (
+              <MouseForm
+                data={formData?.mouseDetails}
+                setData={(data: Partial<KeyboardDetailsInterface>) =>
+                  updateFormData("mouseDetails", data)
+                }
+                errors={errors}
+              />
+            ) : step === 1 && formData.deviceType === "laptop" ? (
+              <LaptopForm
+                data={formData?.laptopPage1}
+                setData={(data: Partial<DevicePage1>) =>
+                  updateFormData("laptopPage1", data)
+                }
+                errors={errors}
+                deviceType={formData?.deviceType}
+              />
+            ) : step === 1 && formData?.deviceType === "mobile" ? (
+              <MobileForm
+                data={formData?.mobilePage1}
+                setData={(data: Partial<DevicePage1>) =>
+                  updateFormData("mobilePage1", data)
+                }
+                errors={errors}
+                deviceType={formData?.deviceType}
+              />
+            ) : step === 1 && formData?.deviceType === "monitor" ? (
+              <MonitorForm
+                data={formData?.monitorDetails}
+                setData={(data: Partial<KeyboardDetailsInterface>) =>
+                  updateFormData("monitorDetails", data)
+                }
+                errors={errors}
+              />
+            ) : (
+              <></>
+            )}
+            {step === 2 && formData?.deviceType === "laptop" ? (
+              <LaptopForm2
+                data={formData?.laptopPage2}
+                setData={(data: Partial<DevicePage2>) =>
+                  updateFormData("laptopPage2", data)
+                }
+                errors={errors}
+              />
+            ) : step === 2 && formData?.deviceType === "mobile" ? (
+              <MobileForm2
+                data={formData.mobilePage2}
+                setData={(data: Partial<DevicePage2>) =>
+                  updateFormData("mobilePage2", data)
+                }
+                errors={errors}
+              />
+            ) : (
+              <></>
+            )}
+            <div className="flex-grow"></div>
+            {/* Navigation buttons */}
+            <div className="flex gap-3 w-full mt-auto pb-2">
+              {step < totalStep ? (
+                <Button
+                  type="button"
+                  className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[9px] h-[56px] font-gilroySemiBold text-base w-full transition duration-300"
+                  onClick={handleNextStep}
+                  disabled={isLoading}
+                >
+                  <div className="flex items-center gap-2">
+                    <span>Next</span>
+                    {isLoading ? (
+                      <Spinner />
+                    ) : (
+                      <ChevronRight className="size-5" color="white" />
+                    )}
+                  </div>
+                </Button>
               ) : (
-                <ChevronRight className="size-5" color="white" />
+                <Button
+                  type="button"
+                  className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[9px] h-[56px] font-gilroySemiBold text-base w-full transition duration-300"
+                  onClick={handleSubmit}
+                  disabled={isLoading} 
+                >
+                  <div className="flex items-center gap-2">
+                    <span>Submit</span>
+                    {isLoading ? (
+                      <Spinner />
+                    ) : (
+                      <ChevronRight color="white" className="size-4" />
+                    )}
+                 </div>
+                </Button>
               )}
             </div>
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-full font-gilroySemiBold text-base w-full transition duration-300"
-            onClick={handleSubmit}
-            disabled={isLoading}
-          >
-            <div className="flex items-center gap-2">
-              <span>Submit</span>
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <ChevronRight color="white" className="size-4" />
-              )}
-            </div>
-          </Button>
-        )}
+          </div>
+        </div>
+      )}
+      <div className="w-[46%] flex justify-center  h-[auto]">
+      <img
+           src="/media/Onboarding/device.png"
+          alt="edify-background"
+          style={{width: '80%', height: 500}}
+        />
       </div>
     </div>
   );
-}
-export default Form;
+};

@@ -18,6 +18,7 @@ export async function middleware(req: NextRequest) {
   const commonRoutes = ["/"];
 
   const adminRoutes = [
+    "/onboarding",
     "/teams",
     "/teams/(.*)",
     "/assets",
@@ -58,7 +59,6 @@ export async function middleware(req: NextRequest) {
   ) {
     // If token is missing, redirect to login
     if (token) {
-      // console.log(token, "token");
 
       // Check for admin route protection
       if (
@@ -86,6 +86,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/((?!login$).*)",
+    "/onboarding",
     "/assets",
     "/assets/:path*",
     "/team",
