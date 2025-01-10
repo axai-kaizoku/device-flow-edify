@@ -256,7 +256,7 @@ function TabDisplay() {
                 className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
                 value={searchTerm || ""}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search issues..."
+                placeholder="Search People..."
               />
             </div>
 

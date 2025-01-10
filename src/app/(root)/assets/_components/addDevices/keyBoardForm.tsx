@@ -4,6 +4,8 @@ import React, { useRef, useState } from "react";
 import { FormErrors, KeyboardDetailsInterface } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { X } from "lucide-react";
+import { getImageUrl } from "@/server/orgActions";
+import { useToast } from "@/hooks/useToast";
 
 interface KeyboardDetailsProps {
   data: KeyboardDetailsInterface;
@@ -19,6 +21,7 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<KeyboardDetailsInterface>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const {openToast} = useToast();
 
 
   // Handle input changes for text and date fields
@@ -35,7 +38,7 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
   };
 
   // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -47,7 +50,12 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setInvoiceFile(file);
+        try {
+          const res = await getImageUrl({ file });
+          setInvoiceFile(res?.fileUrl);
+        } catch (error) {
+          openToast("error","Some Error while uploading the File");
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -110,7 +118,7 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
         {invoiceFile ? (
           <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
-              src={URL.createObjectURL(invoiceFile)}
+              src={invoiceFile}
               width="100%"
               height="100%"
               title="Offer Letter Preview"

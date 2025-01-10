@@ -4,6 +4,8 @@ import React, { useRef, useState } from "react";
 import { DevicePage2, FormErrors } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { X } from "lucide-react";
+import { useToast } from "@/hooks/useToast";
+import { getImageUrl } from "@/server/orgActions";
 
 interface KeyboardDetailsProps {
   data: DevicePage2;
@@ -19,6 +21,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<DevicePage2>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const {openToast} = useToast();
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +36,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
     });
   };
 
-  // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -46,7 +48,12 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setInvoiceFile(file);
+        try {
+          const res = await getImageUrl({ file });
+          setInvoiceFile(res?.fileUrl);
+        } catch (error) {
+          openToast("error","Some Error while uploading the File");
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -89,7 +96,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
         {invoiceFile ? (
           <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
-              src={URL.createObjectURL(invoiceFile)}
+              src={invoiceFile}
               width="100%"
               height="100%"
               title="Offer Letter Preview"

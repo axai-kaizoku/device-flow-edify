@@ -9,9 +9,11 @@ import {
 import { useRouter } from "next/navigation";
 import Pagination from "../../_components/pagination";
 import { useEffect, useState } from "react";
-import { Icons } from "@/components/icons";
 import { RemoveTeamMember } from "./remove-team-member";
 import MoveTeamMember from "./move-team-member";
+import CreateUser from "@/app/(root)/people/_components/create-user";
+import { teamIcons } from "../../icons"; 
+import { Icons } from "@/components/icons";
 
 const TeamMembers = ({ id }: { id: string }) => {
   const router = useRouter();
@@ -37,15 +39,25 @@ const TeamMembers = ({ id }: { id: string }) => {
       className="rounded-2xl flex flex-col "
       style={{ border: "1px solid #F6F6F6" }}
     >
+      {data?.users?.length === 0 ? (
+          <div className="flex flex-col gap-6 justify-center items-center py-10">
+            <teamIcons.no_team_display/>
+            <CreateUser>
+              <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+                Add User
+              </div>
+            </CreateUser>
+          </div>
+      ) : ( <>
       <div className="flex gap-3 p-3 items-center">
         <h2 className="text-lg pl-3 font-gilroySemiBold text-gray-800">
           Team Members
         </h2>
 
         <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
-          {data?.users.length
-            ? `${data.users.length} ${
-                data.users.length > 1 ? "Members" : "Member"
+          {data?.total
+            ? `${data?.total} ${
+                data?.total > 1 ? "Members" : "Member"
               }`
             : "N/A"}
         </span>
@@ -143,6 +155,7 @@ const TeamMembers = ({ id }: { id: string }) => {
           />
         </div>
       </>
+      </>)}
     </div>
   );
 };

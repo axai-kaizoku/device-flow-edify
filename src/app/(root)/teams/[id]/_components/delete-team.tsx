@@ -14,6 +14,7 @@ import { deleteTeam } from "@/server/teamActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
 
 export const DeleteTeam = ({
   id,
@@ -24,6 +25,7 @@ export const DeleteTeam = ({
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
+  const { openToast } = useToast();
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -31,6 +33,7 @@ export const DeleteTeam = ({
       try {
         await deleteTeam(id);
         setOpen(false);
+        openToast('success', "Team Deleted Successfully!");
         router.push("/teams");
         router.refresh();
       } catch (e: any) {

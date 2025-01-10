@@ -79,31 +79,58 @@ export const TeamForm = ({
 
     if (isEditForm) {
       setLoading(true);
-      // @ts-ignore
-      await updateTeam(id!, {
-        title: formData.title!,
-        description: formData.description!,
-        image: formData.image!,
-      });
+      try {
+        // @ts-ignore
+        await updateTeam(id!, {
+          title: formData.title!,
+          description: formData.description!,
+          image: formData.image!,
+        });
 
-      setLoading(false);
-      openToast("success", "Team updated successfully !");
+        setLoading(false);
+        openToast("success", "Team updated successfully !");
 
-      router.refresh();
-      closeBtn(false);
+        router.refresh();
+        closeBtn(false);
+      } catch (error:any) {
+        closeBtn(false);
+        showAlert({
+          title: "Can't update user",
+          description: error.message,
+          isFailure: true,
+          key: "update-user-failure",
+        });
+      }
+      finally{
+        setLoading(false);
+      }
     } else {
       setLoading(true);
-      await createTeam(formData.title, formData.description, formData.image);
-      // setLocalAlert(true);
-      showAlert({
-        title: "WOHOOO!! 🎉",
-        description: "Team created successfully !",
-        isFailure: false,
-        key: "create-team-success",
-      });
-      setLoading(false);
-      router.refresh();
-      closeBtn(false);
+      try {
+        await createTeam(formData?.title, formData?.description, formData?.image);
+        // setLocalAlert(true);
+        showAlert({
+          title: "WOHOOO!! 🎉",
+          description: "Team created successfully !",
+          isFailure: false,
+          key: "create-team-success",
+        });
+        setLoading(false);
+        router.refresh();
+        closeBtn(false);
+      } catch (error:any) {
+        closeBtn(false);
+        showAlert({
+          title: "Can't Create User",
+          description: error.message,
+          isFailure: true,
+          key: "update-user-failure",
+        });
+      }
+      finally{
+        setLoading(false);
+      }
+      
     }
   };
 
@@ -112,7 +139,9 @@ export const TeamForm = ({
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
-      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
 
       if (isValidSize && isValidType) {
         const res = await getImageUrl({ file }, "team");
@@ -186,33 +215,34 @@ export const TeamForm = ({
             <div className="flex flex-col gap-1.5">
               <label className="font-gilroyMedium">Upload team image</label>
               {formData.image ? (
-              <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
-                <img
-                  src={formData.image}
-                  alt={formData.image}
-                  className="w-full h-full object-cover"
-                />
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={handleRemoveImage}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ) :(
-              <div
-                className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <div className="flex flex-col justify-center items-center">
-                  <Icons.uploadImage className="size-5" />
-                  <span className="text-[#0EA5E9]">Click to upload</span>
-                  <p className="text-xs text-neutral-400">
-                    JPG, JPEG, PNG less than 1MB
-                  </p>
+                <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                  <img
+                    src={formData.image}
+                    alt={formData.image.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={handleRemoveImage}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-              </div>)}
+              ) : (
+                <div
+                  className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <div className="flex flex-col justify-center items-center">
+                    <Icons.uploadImage className="size-5" />
+                    <span className="text-[#0EA5E9]">Click to upload</span>
+                    <p className="text-xs text-neutral-400">
+                      JPG, JPEG, PNG less than 1MB
+                    </p>
+                  </div>
+                </div>
+              )}
               <input
                 type="file"
                 ref={fileInputRef}

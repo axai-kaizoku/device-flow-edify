@@ -17,6 +17,7 @@ import {
   Settings,
   Store,
   TriangleAlert,
+  UserRound,
 } from "lucide-react";
 
 const EmpActions = [
@@ -33,7 +34,7 @@ const EmpActions = [
     name: "Profile",
     shortcut: ["P"],
     keywords: "profile",
-    logo: <Icons.profile_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
+    logo: <UserRound className="text-[#6C6C6C] size-5 mb-0.5" />,
     perform: () => (window.location.pathname = "/profile"),
   },
   {
@@ -140,8 +141,8 @@ function RenderResults() {
           <div className="text-gray-500 px-4 py-2">{item}</div>
         ) : (
           <div
-            className={`px-3 flex justify-between items-center py-2 rounded-md cursor-pointer mb-4 ${
-              active ? "bg-[#f5f5f5] " : "bg-white text-black"
+            className={`px-3 flex justify-between items-center py-2 rounded-md cursor-pointer hover:bg-[#f5f5f5] ${
+              "bg-white text-black"
             }`}
           >
             <div className="flex gap-[10px] items-center">
@@ -168,7 +169,7 @@ export default function KbarWrapper({
     <KBarProvider actions={userRole === 1 ? EmpActions : adminActions}>
       <KBarPortal>
         <KBarPositioner className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <KBarAnimator className="w-full max-w-lg min-h-fit bg-white rounded-[14px] px-3 shadow-xl space-y-4 pb-2 overflow-hidden">
+          <KBarAnimator className="w-full max-w-lg min-h-fit bg-white rounded-[14px] px-3 shadow-xl space-y-4 pb-3 overflow-hidden">
             <div className="flex gap-2 justify-between items-center py-3 px-3">
               <div className="flex gap-2 items-center">
                 <Search className="text-[#B9B9B9]" />

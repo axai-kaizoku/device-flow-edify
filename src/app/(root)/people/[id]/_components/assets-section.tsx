@@ -54,11 +54,13 @@ const AssetsSection = ({ user }: { user: User }) => {
               +{totalAssets! - 2} more
             </div>
           )}
-          <ManageAssets userData={user}>
-            <div className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full">
-              Manage Assets
-            </div>
-          </ManageAssets>
+          {totalAssets!==0 && (
+            <ManageAssets userData={user}>
+              <div className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full">
+                Manage Assets
+              </div>
+            </ManageAssets>
+          )}
         </div>
       </div>
     </>

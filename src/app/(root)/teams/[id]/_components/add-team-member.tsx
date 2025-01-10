@@ -64,45 +64,45 @@ export default function AddTeamMember({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
-        <div className="flex justify-center w-full h-full items-start">
-          <div className="flex flex-col w-[97%] h-full justify-start items-center">
-            <div className="flex flex-col gap-1 pb-5 w-full">
+      <div className="flex justify-center w-full h-full items-start">
+          <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
+            <div className="flex flex-col  w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <div className="bg-black rounded-full size-12 2xl:size-16 p-2 flex justify-center items-center">
-                  <Icons.user_form_icon className="size-8 2xl:size-11" />
+                <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
+                  <Icons.user_form_icon className="size-6 2xl:size-8" />
                 </div>
-                <span className="font-gilroySemiBold text-2xl 2xl:text-3xl">
+                <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
                   {"Add Employee"}
                 </span>
               </div>
               <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-lg 2xl:text-xl text-black">
+                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
                   {"Step 1 of 1"}
                 </div>
-                <div className="h-[1px] bg-[#E7E7E7] w-full mb-3"></div>
+                <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
               </div>
             </div>
 
-            <div className="h-[28vh] w-full bg-[#F1F1F1] border rounded-3xl mb-8 flex items-center gap-6 pl-7">
+            <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
               <img
                 src={teamData.image ?? ""}
                 alt="team-image"
-                className="w-24 h-24 object-contain rounded-full border"
+                className="w-24 h-20 p-1  object-cover rounded-full "
               />
-              <div className="h-full w-full flex flex-col justify-center gap-1">
+              <div className="w-full flex flex-col justify-center">
                 <div className="flex gap-3 items-center">
-                  <div className="text-black font-gilroySemiBold text-xl 2xl:text-2xl">
+                  <div className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
                     {teamData?.title ?? "-"}
                   </div>
-                  <div className="text-[#027A48] h-fit rounded-3xl bg-[#ECFDF3] text-sm 2xl:text-base font-gilroySemiBold flex justify-center items-center px-2 py-0.5">
+                  <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
                     Active
                   </div>
                 </div>
-                <div className="text-[#7C7C7C] text-base 2xl:text-lg font-gilroyMedium">
+                <div className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
                   {teamData?.description ?? ""}
                 </div>
 
-                <div className="flex gap-2 items-end">
+                <div className="flex gap-2 items-center">
                   <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
                     Reporting Manger:
                   </div>
@@ -144,13 +144,13 @@ export default function AddTeamMember({
 
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                 <Button
-                  className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
+                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
                   onClick={() => setOpen(false)}
                 >
                   Close
                 </Button>
                 <Button
-                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
                   type="submit"
                   disabled={loading}
                 >

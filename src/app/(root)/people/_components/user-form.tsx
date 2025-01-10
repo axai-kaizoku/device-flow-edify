@@ -162,13 +162,15 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           openToast("success", "User update success !");
           router.refresh();
           closeBtn(false);
-        } catch (error) {
+        } catch (error: any) {
           showAlert({
             title: "Can't update user",
-            description: "Something went wrong !!",
+            description: error.message,
             isFailure: true,
             key: "update-user-failure",
           });
+        } finally {
+          setLoading(false);
         }
       } else {
         setLoading(true);
@@ -206,6 +208,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
             isFailure: true,
             key: "create-user-failure",
           });
+        } finally {
+          setLoading(false);
         }
 
         setLoading(false);
@@ -217,21 +221,35 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 
   const fileImageRef = useRef<HTMLInputElement | null>(null);
   // Handle file selection
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+  
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
-      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
-        file.type
-      );
-
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+  
       if (isValidSize && isValidType) {
-        const res = await getImageUrl({ file }, "team");
-        setFormData((prev) => ({ ...prev, image: res.data }));
-        setErrors((prev) => ({
-          ...prev,
-          image: "",
-        }));
+        try {
+          const res = await getImageUrl({ file });
+          console.log("Uploaded image response:", res);
+  
+          setFormData((prev) => ({
+            ...prev,
+            image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
+          }));
+  
+          setErrors((prev) => ({
+            ...prev,
+            image: "",
+          }));
+        } catch (error) {
+          openToast("error","Image upload failed");
+          setErrors((prev) => ({
+            ...prev,
+            image: "Failed to upload the image. Please try again.",
+          }));
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -240,11 +258,12 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       }
     }
   };
+  
 
   const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
   const [offerLetter, setOfferLetter] = useState<File | null>(null);
 
-  const handleOfferLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOfferLetterChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -256,7 +275,13 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setOfferLetter(file);
+        try {
+          const res = await getImageUrl({ file });
+          console.log("Uploaded image response:", res);
+          setOfferLetter(res?.fileUrl);
+        } catch (error) {
+          openToast("error","Image upload failed");
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -341,9 +366,25 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 error={errors.firstN}
                 id="name"
                 value={formData?.firstN ?? ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, firstN: e.target.value }))
-                }
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  const nameRegex = /^[A-Za-z\s]*$/; // Allows only alphabets and spaces
+
+                  // Validate input for only alphabets and spaces
+                  if (!inputValue || nameRegex.test(inputValue)) {
+                    setFormData((prev) => ({ ...prev, firstN: inputValue }));
+
+                    // Optional validation for length or other constraints
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      firstN: inputValue
+                        ? inputValue.length >= 2 && inputValue.length <= 35
+                          ? ""
+                          : "Name must be between 2 and 35 characters"
+                        : "Name is required",
+                    }));
+                  }
+                }}
                 maxLength={35}
                 minLength={2}
                 type="text"

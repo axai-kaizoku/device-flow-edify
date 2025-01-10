@@ -89,7 +89,7 @@ export default function ManageAssets({
             </Link>
           ))}
           {/* Button */}
-          <div className="flex absolute bottom-0 gap-2  w-full ">
+          <div className="flex mb-2 gap-2  w-full ">
             <Button
               className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
               onClick={() => setOpen(false)}

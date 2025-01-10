@@ -6,6 +6,7 @@ import Pagination from "../../teams/_components/pagination";
 import { DeleteUser } from "../[id]/_components/delete-user";
 import EditUser from "../[id]/_components/edit-user";
 import { activeUsers } from "@/server/filterActions";
+import Spinner from "@/components/Spinner";
 import { Icons } from "../icons";
 
 import CreateUser from "./create-user";
@@ -17,6 +18,10 @@ export default function UserMain({
   data: UserResponse | null;
   setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
 }) {
+  if (!data) {
+    return <Spinner/>;
+  }
+
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   // const [users, setUsers] = useState(data);

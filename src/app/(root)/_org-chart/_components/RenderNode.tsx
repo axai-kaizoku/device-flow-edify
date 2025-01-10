@@ -73,18 +73,18 @@ export const renderCustomNodeElement = ({
             </p>
             {isCEO ? (
               <div className="flex absolute -bottom-3 justify-center items-center rounded-[18.473px] border-[1.385px] border-[#F3F3F3] bg-white py-[5.389px] px-[5.9px]">
-                <div className="text-[8.108px] text-black font-gilroyMedium">
+                <div className="text-[10px] text-black font-gilroyMedium">
                   {childrenCount} Members
                 </div>
-                <ChevronDown className="text-black w-[10px] h-[10px]" />
+                <ChevronDown className="text-black w-[12px] h-[10px]" />
               </div>
             ) : (
               childrenCount > 0 && (
                 <div className="flex absolute -bottom-3 justify-center items-center rounded-[18.473px] border-[1.385px] border-[#F3F3F3] bg-white py-[5.389px] px-[5.9px]">
-                  <div className="text-[8.108px] text-black font-gilroyMedium">
+                  <div className="text-[10px] text-black font-gilroyMedium">
                     {childrenCount} Members
                   </div>
-                  <ChevronDown className="text-black w-[10px] h-[10px]" />
+                  <ChevronDown className="text-black w-[12px] h-[10px]" />
                 </div>
               )
             )}

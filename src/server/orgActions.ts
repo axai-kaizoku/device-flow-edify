@@ -61,12 +61,10 @@ export const getCurrentOrg = cache(async function <Org>() {
   }
 });
 
-export async function updateOrg(
-  id?: string,
-  title?: string,
-  description?: string,
-  image?: string
-): Promise<Org> {
+export async function updateOrg({id,title,description,logo}:{id?: string;
+  title?: string;
+  description?: string;
+  logo?: string;}): Promise<Org> {
   try {
     const res = await callAPIWithToken<Org>(
       `https://api.edify.club/edifybackend/v1/organisation/${id}`, // API endpoint
@@ -74,9 +72,10 @@ export async function updateOrg(
       {
         title,
         description,
-        image,
+        logo,
       }
     );
+    console.log(res.data)
     return res?.data;
   } catch (e) {
     throw new Error("Failed to Update org");
@@ -84,39 +83,25 @@ export async function updateOrg(
 }
 
 
-export async function getImageUrl(
-  file: { file?: File },
-  type: "user" | "device" | "org" | "team"
-): Promise<any> {
+export const getImageUrl = async (data: { file: File }) => {
+  const formData = new FormData();
+  formData.append("file", data.file);
+  
+
   try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // Determine the URL based on the type
-      let imageUrl: string;
-
-      switch (type) {
-        case "user":
-          imageUrl =
-            "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp";
-          break;
-        case "device":
-          imageUrl =
-            "https://utfs.io/f/NQykNGTeJtaHOrliC4Qt8HPrZM9gUevJhFLDnwaou0TEiB16";
-          break;
-        case "org":
-          imageUrl =
-            "https://via.placeholder.com/150/008000/FFFFFF?text=Org+Image";
-          break;
-        case "team":
-          imageUrl =
-            "https://via.placeholder.com/150/008000/FFFFFF?text=Team+Image";
-          break;
-        default:
-          throw new Error("Invalid type provided");
+    const response = await callAPIWithToken<any>(
+      "https://api.edify.club/edifybackend/v1/file/upload",
+      "POST",
+      formData,
+      {
+        "Content-Type": "multipart/form-data",
       }
+    );
 
-      return { data: imageUrl };
-    
+    console.log(response);
+    return response.data; 
   } catch (error) {
-    throw new Error("Failed to create image url");
+    console.error("Error uploading the image:", error);
+    throw error;
   }
-}
+};

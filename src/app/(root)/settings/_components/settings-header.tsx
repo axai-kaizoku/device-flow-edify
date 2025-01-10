@@ -6,12 +6,7 @@ import { LogoCompanyModal } from "./logo-company";
 import Link from "next/link";
 
 function SettingsHeader({ data }: { data: Org }) {
-  const [logo, setLogo] = useState<string | null>(data?.logo || null);
 
-  // Handle logo update from LogoCompanyModal
-  const handleLogoUpdate = (newLogo: string | null) => {
-    setLogo(newLogo); // Update the logo when the user uploads or removes it
-  };
 
   return (
     <>
@@ -25,9 +20,9 @@ function SettingsHeader({ data }: { data: Org }) {
           <div className="relative flex-1 flex rounded-[25px] pl-5 py-5 border border-gray-300 bg-white gap-2 h-[185px] w-full max-w-sm items-center">
             <div>
               {/* Display the logo */}
-              {logo ? (
+              {data.logo ? (
                 <img
-                  src={logo}
+                  src={data.logo}
                   alt="Company Logo"
                   className="size-28 rounded-full border object-cover"
                 />
@@ -36,7 +31,7 @@ function SettingsHeader({ data }: { data: Org }) {
               )}
             </div>
             {/* Modal trigger for editing the logo */}
-            <LogoCompanyModal id={data?._id!} onLogoUpdate={handleLogoUpdate}>
+            <LogoCompanyModal id={data?._id!}>
               <Icons.settings_edit className="absolute left-[4.7rem] bottom-8 cursor-pointer" />
             </LogoCompanyModal>
 

@@ -236,8 +236,13 @@ export async function updateUser(
       userData
     );
     return res?.data;
-  } catch (e) {
-    throw new Error("Failed to Update user");
+  } catch (e: any) {
+    if (e?.message?.includes("E11000 duplicate key error")) {
+      // Customize the error response for duplicate email
+      throw new Error("A user with this Email or Phone already exists.");
+    }
+    // Default error message
+    throw new Error("Failed to Update User. Please try again.");
   }
 }
 

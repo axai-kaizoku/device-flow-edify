@@ -14,6 +14,7 @@ import { updateTeam } from "@/server/teamActions";
 import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
+import { useToast } from "@/hooks/useToast";
 
 export const PermanentTeamDelete = ({
   id,
@@ -25,6 +26,7 @@ export const PermanentTeamDelete = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [initText, setInitText] = useState("Are you sure?");
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -62,7 +64,7 @@ export const PermanentTeamDelete = ({
                 try {
                   updateTeam(id!, { orgId: null });
                   setOpen(false);
-
+                  openToast('success', "Team Deleted Successfully!");
                   router.refresh();
                 } catch (e: any) {
                   const errorMessage =

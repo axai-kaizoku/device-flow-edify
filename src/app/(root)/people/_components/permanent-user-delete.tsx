@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
+import { useToast } from "@/hooks/useToast";
 
 export const PermanentUserDelete = ({
   id,
@@ -23,6 +24,7 @@ export const PermanentUserDelete = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,11 +61,14 @@ export const PermanentUserDelete = ({
               if (id) {
                 try {
                   await updateUser(id!, { orgId: null });
+                  openToast('success',"User Deleted Successfully!");
                   setOpen(false);
                   router.push("/people?tab=inactive_people");
 
                   router.refresh();
-                } catch (e: any) {}
+                } catch (e: any) {
+                  openToast('error',"Some Error Occured! Please try again later");
+                }
               }
             }}
           >

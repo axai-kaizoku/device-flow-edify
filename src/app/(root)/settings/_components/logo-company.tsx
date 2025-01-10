@@ -11,52 +11,61 @@ import {
 } from "@/components/ui/dialog";
 import { useState, useRef } from "react";
 import { ErrorButton, GreyButton } from "@/components/wind/Buttons";
-import { updateOrg } from "@/server/orgActions";
+import { getImageUrl, updateOrg } from "@/server/orgActions";
 import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
+import { useToast } from "@/hooks/useToast";
 
 // Add open and setOpen props
 export const LogoCompanyModal = ({
   id,
   children,
-  onLogoUpdate,
 }: {
   id: string;
   children: React.ReactNode;
-  onLogoUpdate: (newLogo: string | null) => void;
+  
 }) => {
-  const [image, setImage] = useState<string | File | null>(null); // Track image file
+  const [image, setImage] = useState<string | null>(null); // Track image file
   const [open, setOpen] = useState(false); // Modal open state
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const {openToast} = useToast();
 
   // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImage(file); // Save the selected file
-    }
-  };
+      const isValidSize = file.size <= 1024 * 1024; // 1MB
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+  
+      if (isValidSize && isValidType) {
+        try {
+          const res = await getImageUrl({ file });
+          setImage(res.fileUrl);
+        } catch (error) {
+          openToast("error","Image upload failed");
+        }
+      } else{
+        openToast("error","Image Size too large");
+      }
+  
+  };}
 
   // Handle upload logic
   const handleUploadLogo = async () => {
-    if (image instanceof File) {
-      const formData = new FormData();
-      formData.append("file", image);
       try {
-        await updateOrg(id, undefined, undefined, formData); // Send the image in the form data
-        onLogoUpdate(URL.createObjectURL(image)); // Update the parent with the new logo
+         await updateOrg({id:id,logo: image}); // Send the image in the form data
+        
         setOpen(false); // Close the modal after successful upload
       } catch (error) {
-        <NotFound />;
+        openToast("error","Image upload failed");
       }
     }
-  };
+  
 
   // Handle remove logic
   const handleRemoveLogo = async () => {
     try {
-      await updateOrg(id, undefined, undefined, ""); // Send empty string to remove logo
-      onLogoUpdate(null); // Update the parent to remove the logo
+      await updateOrg(id); // Send empty string to remove logo
       setOpen(false); // Close the modal after removal
     } catch (error) {
       <NotFound />;
