@@ -7,7 +7,7 @@ import Link from "next/link";
 import { StoreDevice } from "@/server/deviceActions";
 import { useQueryState } from "nuqs";
 import { useAlert } from "@/hooks/useAlert";
-import { getBestSellers, getLatestReleases } from "@/server/storeActions";
+import { getTrendingDevice, getLatestReleases } from "@/server/storeActions";
 import { ProductSlider } from "./product-slider";
 
 export const ProductsSection = ({ cart }: { cart: any }) => {
@@ -26,7 +26,7 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         setLoading(true);
         switch (activeTab) {
           case "best_sellers":
-            response = await getBestSellers();
+            response = await getTrendingDevice();
             break;
           case "latest_release":
             response = await getLatestReleases();

@@ -1,7 +1,7 @@
 "use client";
 import { CombinedContainer } from "@/components/container/container";
 
-import { getUsersByTeamId, User } from "@/server/userActions";
+import { getUsersByTeamId, UsersTeamResponse } from "@/server/userActions";
 import TeamHeader from "./_components/team-header";
 import TeamMembers from "./_components/team-members";
 import { useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import { UserData } from "@/app/store/authSlice";
 
 export default function TeamPage() {
   const user: UserData = useSelector((state: any) => state.auth.userData);
-  const [users, setUsers] = useState<User[] | null>(null);
+  const [users, setUsers] = useState<UsersTeamResponse | null>(null);
   const teamState = user?.teamId;
 
   useEffect(() => {
@@ -19,7 +19,10 @@ export default function TeamPage() {
 
     const fetchData = async () => {
       try {
-        const fetchedUsers: User[] = await getUsersByTeamId(teamState._id);
+        const fetchedUsers: UsersTeamResponse = await getUsersByTeamId(
+          teamState._id,
+          1
+        );
         setUsers(fetchedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -41,7 +44,7 @@ export default function TeamPage() {
           </div>
         ) : (
           <>
-            <TeamMembers users={users} />
+            <TeamMembers users={users} setUsers={setUsers} id={teamState._id} />
           </>
         )}
       </div>
