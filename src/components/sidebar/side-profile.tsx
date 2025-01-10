@@ -1,27 +1,15 @@
 'use client';
-import { logout } from '@/app/store/authSlice';
 import { signOut, useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useDispatch } from 'react-redux';
 
 export const AuthBtn = () => {
-	const session = useSession();
-	const dispatch = useDispatch();
-	const handleLogout = () => {
-		signOut();
-		dispatch(logout());
-	};
+	return <button onClick={() => signOut()}>Logout</button>;
+};
 
+export const SessionState = () => {
+	const session = useSession();
 	return (
-		<div>
-			{session.data?.user && <span>{session.data.user.email} 👋🏻</span>}
-			{session.data?.user ? (
-				<button onClick={handleLogout} className="text-sm ">
-					Logout
-				</button>
-			) : (
-				<Link href="/login">Login</Link>
-			)}
+		<div className="w-96 bg-muted rounded-md h-fit p-6 break-all">
+			{JSON.stringify(session)}
 		</div>
 	);
 };

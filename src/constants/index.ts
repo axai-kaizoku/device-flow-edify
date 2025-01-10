@@ -1,29 +1,30 @@
 export const SIDEBAR = {
-	MainPages: [
-		{ label: 'Dashboard', path: '/dashboard', icon: '/sidebar/dashboard.svg' },
-		{ label: 'Assets', path: '/assets', icon: '/sidebar/assets.svg' },
-		{ label: 'Users', path: '/users', icon: '/sidebar/users.svg' },
-		{ label: 'Reports', path: '/reports', icon: '/sidebar/reports.svg' },
-		{ label: 'Settings', path: '/settings', icon: '/sidebar/settings-1.svg' },
-	],
-	Pages: [
-		{ label: 'Pricing', path: '/pricing', icon: '/sidebar/pricing.svg' },
-		{ label: 'Calender', path: '/calender', icon: '/sidebar/calender.svg' },
-		{ label: 'Todo', path: '/todo', icon: '/sidebar/todo.svg' },
-		{ label: 'Contact', path: '/contact', icon: '/sidebar/contact.svg' },
-		{ label: 'Invoice', path: '/invoice', icon: '/sidebar/invoice.svg' },
-		{
-			label: 'UI Elements',
-			path: '/ui-elements',
-			icon: '/sidebar/ui-elements.svg',
-		},
-		{ label: 'Table', path: '/table', icon: '/sidebar/table.svg' },
-	],
-	Functions: [
-		{
-			label: 'Settings',
-			path: '/settings',
-			icon: '/sidebar/settings.svg',
-		},
-	],
+  AdminPages: [
+    { label: "Home", path: "/" },
+    { label: "People", path: "/people" },
+    { label: "Assets", path: "/assets" },
+    { label: "Teams", path: "/teams" },
+    // {
+    //   label: "Org Chart",
+    //   path: "/org-chart",
+    //   icon: "/media/sidebar/orgchart.svg",
+    // },
+    { label: "Store", path: "/store", icon: "/media/sidebar/calender.svg" },
+    { label: "Orders", path: "/orders", icon: "/media/sidebar/calender.svg" },
+    { label: "Issues", path: "/issues", icon: "/media/sidebar/calender.svg" },
+    { label: "Reports", path: "/reports", icon: "/media/sidebar/devices.svg" },
+  ],
+  UserPages: [
+    { label: "Home", path: "/", icon: "/media/sidebar/home.svg" },
+    { label: "Team", path: "/team", icon: "/media/sidebar/contact.svg" },
+    { label: "Profile", path: "/profile", icon: "/media/sidebar/profile.svg" },
+    { label: "Devices", path: "/devices", icon: "/media/sidebar/devices.svg" },
+  ],
+  Functions: [
+    {
+      label: "Settings",
+      path: "/settings",
+      icon: "/media/sidebar/settings.svg",
+    },
+  ],
 };

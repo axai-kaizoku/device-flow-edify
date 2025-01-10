@@ -1,7 +1,42 @@
-import React from 'react';
+import { cn } from "@/lib/utils";
 
-function Container({ children }: { children: React.ReactNode }) {
-	return <div className="w-full max-w-7xl mx-auto p-4">{children}</div>;
-}
+type ChildrenProps = { children: React.ReactNode; className?: string };
 
-export default Container;
+type CombinedContainerProps = {
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export const InnerContainer = ({ children, className }: ChildrenProps) => {
+  return (
+    <section
+      className={cn(
+        "flex  rounded-3xl  px-3 py-4 flex-col w-[97%] overflow-y-auto h-full min-h-[90vh] 2xl:min-h-[70vh]",
+        className
+      )}
+    >
+      {children}
+    </section>
+  );
+};
+
+export const OuterContainer = ({ children }: ChildrenProps) => {
+  return (
+    <div className="flex flex-col w-full justify-center h-[83vh]">
+      {children}
+    </div>
+  );
+};
+
+export const CombinedContainer = ({
+  children,
+  className,
+}: CombinedContainerProps) => {
+  return (
+    <OuterContainer>
+      <InnerContainer className={className}>{children}</InnerContainer>
+    </OuterContainer>
+  );
+};
