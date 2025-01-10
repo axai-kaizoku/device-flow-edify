@@ -16,24 +16,21 @@ import {
   searchDevices,
   updateDevice,
 } from "@/server/deviceActions";
-import { User } from "@/server/userActions";
+import { fetchUsers, searchUsers, User } from "@/server/userActions";
 
-export default function AssignDevice({
-  children,
-  userData,
-}: {
-  children: React.ReactNode;
-  userData: User;
-}) {
+export default function ReAssign({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
-  const [device, setDevice] = useState<Device>();
+  const [device, setDevice] = useState<Device | null>();
+  const [user, setUser] = useState<User | null>();
   const [error, setError] = useState("");
 
   useEffect(() => {
     setError("");
+    setUser(null);
+    setDevice(null);
   }, [open]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +43,7 @@ export default function AssignDevice({
 
     setLoading(true);
     try {
-      await updateDevice(device?._id ?? "", { userId: userData?._id });
+      await updateDevice(device?._id ?? "", { userId: user?._id });
       setOpen(false);
       openToast("success", "Assigned asset to user !");
       setLoading(false);
@@ -98,30 +95,7 @@ export default function AssignDevice({
                 </h1>
               </div>
               <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                  {"Step 1 of 1"}
-                </div>
-                <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
-              </div>
-            </div>
-
-            <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
-              <img
-                src={userData.image ?? ""}
-                alt="user-image"
-                className="w-24 h-20 p-1  object-cover rounded-full "
-              />
-              <div className=" w-full flex flex-col justify-center ">
-                <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                  {userData?.first_name ?? "-"}
-                </h1>
-
-                <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
-                  {userData?.designation ?? "designation"}
-                </h1>
-                <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
-                  Active
-                </p>
+                <div className="h-[1px] bg-[#E7E7E7] w-full my-3"></div>
               </div>
             </div>
 
@@ -129,7 +103,7 @@ export default function AssignDevice({
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-7 relative h-full"
             >
-              <div className="z-0 pt-3">
+              <div className="z-10 pt-3">
                 <SelectInput
                   key={"assign-device"}
                   value={device?.device_name ?? ""}
@@ -137,8 +111,9 @@ export default function AssignDevice({
                   //@ts-ignore
                   fetchOptions={searchDevices}
                   //@ts-ignore
+
                   initialOptions={fetchDevices}
-                  onSelect={(data: any) => {
+                  onSelect={(data: Device) => {
                     setDevice({
                       _id: data._id,
                       device_name: data.device_name,
@@ -149,7 +124,7 @@ export default function AssignDevice({
                     });
                   }}
                   optionValue={{ firstV: "device_name", secondV: "serial_no" }}
-                  label="Assigned to*"
+                  label="Device assigned*"
                   className={cn(
                     error.length > 0 ? "border-destructive/80 border" : ""
                   )}
@@ -158,26 +133,84 @@ export default function AssignDevice({
                   <p className="text-destructive text-sm">{error}</p>
                 )}
               </div>
-              <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
-                <img
-                  src={device?.image ?? ""}
-                  alt="team-image"
-                  className="w-24 h-20 p-1  object-cover rounded-full "
-                />
-                <div className=" w-full flex flex-col justify-center ">
-                  <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                    {device?.device_name ?? "-"}
-                  </h1>
 
-                  <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
-                    {device?.ram ?? "RAM"}
-                    <span className="flex text-2xl mx-1 -mt-3">.</span>
-                    {device?.storage ?? "Storage"}
-                    <span className="flex text-2xl mx-1 -mt-3">.</span>
-                    {device?.serial_no ?? "Serial number"}
-                  </h1>
-                </div>
+              {device ? (
+                <>
+                  <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+                    <img
+                      src={device?.image ?? ""}
+                      alt="team-image"
+                      className="w-24 h-20 p-1  object-cover rounded-full "
+                    />
+                    <div className=" w-full flex flex-col justify-center ">
+                      <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                        {device?.device_name ?? "-"}
+                      </h1>
+
+                      <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                        {device?.ram ?? "RAM"}
+                        <span className="flex text-2xl mx-1 -mt-3">.</span>
+                        {device?.storage ?? "Storage"}
+                        <span className="flex text-2xl mx-1 -mt-3">.</span>
+                        {device?.serial_no ?? "Serial number"}
+                      </h1>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+
+              <div className="pt-3 w-full z-0">
+                <SelectInput
+                  fetchOptions={searchUsers}
+                  initialOptions={fetchUsers}
+                  optionValue={{ firstV: "first_name", secondV: "email" }}
+                  key={"assign-assets-form"}
+                  placeholder="Search by name, email, etc."
+                  // logic yet to be implemented
+                  onSelect={(data: User) => {
+                    setUser({
+                      email: data.email,
+                      _id: data._id,
+                      designation: data.designation,
+                      first_name: data.first_name,
+                      employment_type: data.employment_type,
+                      image: data.image,
+                    });
+                  }}
+                  label="Assigning To*"
+                  value={user?.email ?? ""}
+                />
               </div>
+
+              {user ? (
+                <>
+                  <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+                    <img
+                      src={device?.image ?? ""}
+                      alt="team-image"
+                      className="w-24 h-20 p-1  object-cover rounded-full "
+                    />
+                    <div className=" w-full flex flex-col justify-center ">
+                      <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                        {device?.device_name ?? "-"}
+                      </h1>
+
+                      <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                        {device?.ram ?? "RAM"}
+                        <span className="flex text-2xl mx-1 -mt-3">.</span>
+                        {device?.storage ?? "Storage"}
+                        <span className="flex text-2xl mx-1 -mt-3">.</span>
+                        {device?.serial_no ?? "Serial number"}
+                      </h1>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+
               <div className="flex gap-2 absolute bottom-0 w-full ">
                 <Button
                   className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"

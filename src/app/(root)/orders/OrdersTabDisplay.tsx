@@ -12,11 +12,6 @@ function TabDisplay() {
     defaultValue: "orders",
   });
 
-  // Function to handle tab change with loading state
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   const renderContent = () => {
     switch (activeTab) {
       case "orders":

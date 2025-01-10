@@ -145,7 +145,7 @@ export const createDevices = async (
     );
 
     return res?.data;
-  } catch (error) {
+  } catch (error: any) {
     // Ensure the error is typed as AxiosError
     if (error instanceof AxiosError) {
       // Handle AxiosError specifically
@@ -235,7 +235,7 @@ export const bulkUploadDevices = async (
         "Content-Type": "multipart/form-data",
       }
     );
-    console.log(response?.data)
+    console.log(response?.data);
     return response?.data;
   } catch (error) {
     throw error;
@@ -296,9 +296,7 @@ export const getDevicesByUserId = cache(
 );
 
 //pagination
-export const paginatedDevices = async (
-  page: string
-): Promise<DeviceResponse> => {
+export const paginatedDevices = async (page: string): Promise<any> => {
   try {
     const res = await callAPIWithToken<DeviceResponse>(
       `https://api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
@@ -311,7 +309,7 @@ export const paginatedDevices = async (
 };
 
 // SearchInput initial Fetch
-export const fetchDevices = cache(async function (): Promise<DeviceResponse> {
+export const fetchDevices = cache(async function (): Promise<any> {
   try {
     const requestBody = {
       fields: ["device_name", "serial_no", "ram", "storage", "image"],
@@ -334,9 +332,7 @@ export const fetchDevices = cache(async function (): Promise<DeviceResponse> {
 
 // SearchInput Search
 
-export async function searchDevices(
-  searchQuery: string
-): Promise<DeviceResponse> {
+export async function searchDevices(searchQuery: string): Promise<any> {
   try {
     const requestBody = {
       fields: ["device_name", "serial_no", "ram", "storage", "image"],

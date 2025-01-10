@@ -179,7 +179,9 @@ export const SelectInput = ({
               {options?.map((option, index) => (
                 <div
                   key={option?._id}
-                  ref={(el) => (optionRefs.current[index] = el)}
+                  ref={(el) => {
+                    optionRefs.current[index] = el;
+                  }}
                   className={cn(
                     "px-4 py-3 font-gilroyRegular text-gray-700 z-20 hover:rounded-lg m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
                     highlightedIndex === index
@@ -192,13 +194,6 @@ export const SelectInput = ({
                     }
                   }}
                 >
-                  {/* {option?.first_name ??
-                    option?.userName ??
-                    option?.email ??
-                    option?.title ??
-                    option?.city ??
-                    option?.device_name ??
-                    option.serial_no} */}
                   {option[optionValue?.firstV!]}
                   <br />
                   <span className="font-gilroyRegular text-sm">
@@ -210,31 +205,7 @@ export const SelectInput = ({
             </div>
           ) : null
         ) : null}
-        {/* {errors.title && (
-      <p className="mt-2 text-sm text-destructive">{errors.title}</p>
-    )} */}
       </div>
     </>
   );
 };
-
-// Demo Component
-export function SelectDemo() {
-  const handleSelect = (data: any) => {
-  };
-
-  return (
-    <div className="p-4">
-      <SelectInput
-        fetchOptions={searchUsers}
-        initialOptions={fetchUsers}
-        optionValue={{ firstV: "first_name", secondV: "email" }}
-        key={"demo-select-input-comp"}
-        placeholder="Search..."
-        onSelect={handleSelect}
-        label="Processor"
-        value=""
-      />
-    </div>
-  );
-}

@@ -20,6 +20,7 @@ type DeviceTypeProps = {
   setData: (newData: string) => void;
   error?: string;
   closeBtn: () => void;
+
   setTotalSteps: (steps: number) => void;
 };
 
@@ -33,7 +34,6 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
   const [selectedDevice, setSelectedDevice] = useState<string | null>(
     data || ""
   );
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSelect = (device: string) => {
     setSelectedDevice(device);
@@ -156,7 +156,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
             </div>
           ))}
           {error && (
-            <p className="text-red-500 text-sm font-normal transition-all duration-300">
+            <p className="text-red-500 text-xs font-gilroyMedium transition-all duration-300">
               {error}
             </p>
           )}

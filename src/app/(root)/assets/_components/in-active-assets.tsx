@@ -14,8 +14,8 @@ function InActiveAssets({
   data,
   setAssets,
 }: {
-  data: DeviceResponse;
-  setAssets: any;
+  data: DeviceResponse | null;
+  setAssets: React.Dispatch<React.SetStateAction<DeviceResponse | null>>;
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);

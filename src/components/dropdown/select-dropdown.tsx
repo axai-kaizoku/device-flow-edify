@@ -136,11 +136,13 @@ export const SelectDropdown = ({
         </div>
         {isDropdownOpen && (
           <div className="absolute z-50 rounded-xl w-full mt-2 bg-white border border-[#D5D5D5] shadow-lg max-h-52 overflow-y-auto">
-            {options.length ? (
-              options.map((option, index) => (
+            {options?.length ? (
+              options?.map((option, index) => (
                 <div
                   key={option.value}
-                  ref={(el) => (optionRefs.current[index] = el)}
+                  ref={(el) => {
+                    optionRefs.current[index] = el;
+                  }}
                   className={cn(
                     "px-4 py-3 text-gray-700 hover:rounded-lg m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
                     highlightedIndex === index
@@ -162,7 +164,7 @@ export const SelectDropdown = ({
       </div>
 
       {error && (
-        <p className="mt-2 text-xs font-gilroyMedium text-destructive">
+        <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
           {error}
         </p>
       )}

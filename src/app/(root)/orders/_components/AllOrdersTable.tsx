@@ -6,8 +6,6 @@ import { Table } from "@/components/wind/Table";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { User } from "@/server/userActions";
-import { SoftDeleteAsset } from "../../assets/_components/soft-delete-asset";
-import { PreviousOrder } from "@/server/orderActions";
 import { ChevronRight } from "lucide-react";
 import { orderIcons } from "../icons";
 const ITEMS_PER_PAGE = 5;
@@ -19,6 +17,8 @@ function AllOrdersTable({ data }: { data: any[] }) {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
   const currentOrder = data?.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const totalPages = data && data.length > 0 ? Math.ceil(data.length / 5) : 0;
 
   const handlePageChange = (page: number) => setCurrentPage(page);
   return (
@@ -141,9 +141,9 @@ function AllOrdersTable({ data }: { data: any[] }) {
           </div>
           <div className="my-2">
             <Pagination
-              currentPage={currentPage}
-              itemsPerPage={ITEMS_PER_PAGE}
-              totalItems={data?.length}
+              current_page={currentPage}
+              per_page={ITEMS_PER_PAGE}
+              total_pages={totalPages}
               onPageChange={handlePageChange}
             />
           </div>

@@ -20,14 +20,14 @@ const TeamMembers = ({ id }: { id: string }) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const res: any = await getUsersByTeamId(id, 1);
+      const res: UsersTeamResponse = await getUsersByTeamId(id, 1);
       setData(res);
     };
     fetch();
   }, []);
 
   const handlePageChange = async (page: number) => {
-    const res = await getUsersByTeamId(id, page);
+    const res: UsersTeamResponse = await getUsersByTeamId(id, page);
     setData(res);
     setCurrentPage(page);
   };

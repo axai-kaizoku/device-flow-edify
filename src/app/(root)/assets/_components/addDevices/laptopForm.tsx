@@ -1,7 +1,5 @@
 // basicDetailsDevice.tsx
 
-import { Icon } from "@/components/wind/Icons";
-import { getAllDevices } from "@/server/deviceActions";
 import React, { useState } from "react";
 import { DevicePage1 as DevicePage1, FormErrors } from "./_components/types";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
@@ -22,9 +20,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
 }) => {
   const [selectedOS, setSelectedOS] = useState<string | null>(data?.os || "");
   const [formData, setFormData] = useState<DevicePage1>(data);
-  const [deviceOptions, setDeviceOptions] = useState<string[]>([]); // Store device options
-  const [isDeviceDropdownActive, setDeviceDropdownActive] =
-    useState<boolean>(false); // Trigger fetch on focus
+  useState<boolean>(false); // Trigger fetch on focus
 
   // Handle text inputs
   const handleChange = (
@@ -39,7 +35,6 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
     setData(updatedFormData); // Set the data after updating formData to avoid outdated values
   };
 
-
   // Handle OS selection
   const handleSelectOS = (os: string) => {
     const updatedFormData = {
@@ -49,25 +44,6 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
     setSelectedOS(os);
     setFormData(updatedFormData);
     setData(updatedFormData); // Ensure you setData after updating formData
-  };
-
-  const fetchDevices = async () => {
-    try {
-      const devices = await getAllDevices(); // API call
-      // Map to just device names if the API response returns full device objects
-      const deviceNames = devices.map((device) => device?.device_name);
-      setDeviceOptions(deviceNames);
-    } catch (error) {
-      console.error("Failed to fetch devices:", error);
-    }
-  };
-
-  // Trigger fetch when device_name is focused
-  const handleDeviceNameFocus = () => {
-    if (!isDeviceDropdownActive) {
-      setDeviceDropdownActive(true); // Prevent multiple calls
-      fetchDevices();
-    }
   };
 
   const operatingSystems = [
@@ -215,7 +191,11 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
           ))}
       </div>
 
-      {errors?.os && <p className="text-red-500 text-xs font-gilroyMedium mb-7">{errors?.os}</p>}
+      {errors?.os && (
+        <p className="text-red-500 text-xs font-gilroyMedium mb-7">
+          {errors?.os}
+        </p>
+      )}
 
       <div className="flex flex-col gap-8">
         <div className="">

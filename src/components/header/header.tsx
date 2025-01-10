@@ -19,6 +19,7 @@ import CreateUser from "@/app/(root)/people/_components/create-user";
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
 import { signOut } from "next-auth/react";
 import { Icons } from "../icons";
+import ReAssign from "@/app/(root)/assets/_components/re-assign";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
@@ -57,6 +58,7 @@ export default function Header({ session }: Props) {
   // Closing dropdown on outside click
   useEffect(() => {
     const handleOutsideClick = (event: any) => {
+      // @ts-ignore
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownVisible(false);
       }
@@ -128,44 +130,52 @@ export default function Header({ session }: Props) {
                   />
                 </div>
 
-                <Icons.kbar_icon/>
+                <Icons.kbar_icon />
               </div>
 
               {/* Action Buttons */}
-              {session?.user?.user?.role === 2 ? ( <> <CreateDevice>
-                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black hover:text-white hover:border-white group">
-                  <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
-                    <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
-                  </div>
-                  <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                    Add Device
-                  </div>
-                </div>
-              </CreateDevice>
+              {session?.user?.user?.role === 2 ? (
+                <>
+                  {" "}
+                  <CreateDevice>
+                    <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black hover:text-white hover:border-white group">
+                      <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
+                        <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+                      </div>
+                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                        Add Device
+                      </div>
+                    </div>
+                  </CreateDevice>
+                  <ReAssign>
+                    <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group">
+                      <div className="rounded-full border border-gray-400 p-1 border-dashed group-hover:border-white">
+                        <RefreshCw className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+                      </div>
 
-              <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group">
-                {/* Icon Section */}
-                <div className="rounded-full border border-gray-400 p-1 border-dashed group-hover:border-white">
-                  <RefreshCw className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
-                </div>
-
-                {/* Text Section */}
-                <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                  Re/Assign
-                </div>
-              </div>
-
-              <CreateUser>
-                <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
-                  <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
-                    <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
-                  </div>
-                  <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                    Add Employee
-                  </div>
-                </div>
-              </CreateUser> </>) : (
-                <div className="cursor-pointer" onClick={()=>{router.push('/devices');}}>
+                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                        Re/Assign
+                      </div>
+                    </div>
+                  </ReAssign>
+                  <CreateUser>
+                    <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
+                      <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
+                        <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
+                      </div>
+                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                        Add Employee
+                      </div>
+                    </div>
+                  </CreateUser>{" "}
+                </>
+              ) : (
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    router.push("/devices");
+                  }}
+                >
                   <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
                     <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
                       <AlertTriangle className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
@@ -174,7 +184,7 @@ export default function Header({ session }: Props) {
                       Report an Issue
                     </div>
                   </div>
-               </div>
+                </div>
               )}
             </div>
           </div>
@@ -182,12 +192,14 @@ export default function Header({ session }: Props) {
           {/* Right Icons Section */}
           <div className="flex items-center space-x-4">
             {/* Settings Icon */}
-            {session?.user?.user?.role === 2 && (<button
-              onClick={() => router.push("/settings")}
-              className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
-            >
-              <Settings className="size-5" />
-            </button>)}
+            {session?.user?.user?.role === 2 && (
+              <button
+                onClick={() => router.push("/settings")}
+                className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
+              >
+                <Settings className="size-5" />
+              </button>
+            )}
 
             {/* Query Icon */}
             <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">

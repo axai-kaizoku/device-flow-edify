@@ -34,7 +34,7 @@ export default function PaginatedList({
   //   : [];
 
   const handlePageChange = async (page: number) => {
-    let res: TeamsResponse;
+    let res: TeamsResponse | null = null;
     if (tab === "active_teams") {
       res = await fetchActiveTeams({ page });
     } else if (tab === "inactive_teams") {
