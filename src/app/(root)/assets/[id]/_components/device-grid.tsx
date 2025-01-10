@@ -95,8 +95,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                   Condition
                 </div>
                 <div className="text-black text-base 2xl:text-xl font-gilroySemiBold">
-                  {/* {data?.condition ?? "-"} */}
-                  Logic yet to be done
+                  {data?.device_condition ?? "-"}
                 </div>
               </div>
 

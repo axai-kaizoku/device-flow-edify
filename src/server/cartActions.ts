@@ -1,10 +1,30 @@
 // 'use server';
 import { AxiosError } from "axios";
-import { Device } from "./deviceActions";
+import { StoreDevice } from "./deviceActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
 
-export type DeviceWithQty = Device & { quantity: number };
+export type DeviceWithQty = StoreDevice & { quantity: number };
+
+export type Cart = {
+  userId: string;
+  orgId: string;
+  addressId: string;
+  items: DeviceWithQty[];
+  totalPrice: number;
+  status: string;
+  addressDetails: {
+    _id: string;
+    userId: string;
+    orgId: string;
+    city: string;
+    isPrimary: boolean;
+    deleted_at: string | null;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+};
 
 export const removeItemFromCart = async (itemId: string): Promise<void> => {
   try {
@@ -12,7 +32,7 @@ export const removeItemFromCart = async (itemId: string): Promise<void> => {
     await callAPIWithToken(
       `https://api.edify.club/edifybackend/v1/cart/item/quantity`,
       "PATCH",
-      { itemId, quantity: 1 }
+      { itemId, quantity: 0 }
     );
   } catch (error) {
     throw new Error((error as AxiosError)?.message);
@@ -25,12 +45,13 @@ export const getCart = cache(async function () {
   try {
     if (sess?.user && sess?.user?.user.userId) {
       // Fetch Cart data
-      const response = await callAPIWithToken<any>(
+      const response = await callAPIWithToken<Cart>(
         `https://api.edify.club/edifybackend/v1/cart`,
         "GET"
       );
 
       return response?.data; // Return the cart data
+      // return
     } else {
       throw new Error("No user session found");
     }
@@ -54,22 +75,18 @@ export const updateCartItemQuantity = async (
   }
 };
 
-export async function addItemToCart(
-  itemId: string,
-  quantity: number,
-  addressId?: string | null
-) {
+export async function addItemToCart(itemId: string, quantity: number) {
   try {
     const payload = {
       item: {
         itemId,
         quantity,
       },
-      addressId: addressId,
     };
     const apiUrl = "https://api.edify.club/edifybackend/v1/cart/addItem";
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
+    console.log(response, "ITEM ADDED TO CART");
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to add item to cart.");

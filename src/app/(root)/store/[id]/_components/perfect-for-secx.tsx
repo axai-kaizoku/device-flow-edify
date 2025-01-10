@@ -18,10 +18,10 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
     },
   ];
 
-  const modifiedPerfectFor = data.perfectFor!.map((item) => {
+  const modifiedPerfectFor = data?.perfectFor!.map((item) => {
     // Find a matching icon based on the title
     const matchingIcon = icons.find((icon) =>
-      item.title.toLowerCase().includes(icon.key.toLowerCase())
+      item?.title!.toLowerCase().includes(icon.key.toLowerCase())
     );
 
     // Return the object with icon and title
@@ -30,7 +30,6 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
       title: item.title,
     };
   });
-
 
   // const perfectFor = [
   //   {
@@ -51,13 +50,13 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
   //   },
   // ];
   return (
-    <section className="px-32 pt-16 pb-10">
+    <section className="px-32 pt-16 pb-6">
       <h2 className="text-2xl 2xl:text-3xl font-gilroySemiBold">Perfect for</h2>
-      <div className="flex py-4 items-center gap-5">
+      <div className="flex py-5 items-center gap-5">
         {modifiedPerfectFor.map((v) => (
           <div
             key={v.title}
-            className="w-64 bg-[#F4F4F4] h-20 rounded-lg flex justify-center items-center gap-4"
+            className="w-64 bg-[#F4F4F4] h-16 rounded-lg flex justify-center items-center gap-4"
           >
             <div>{v?.icon ?? ""}</div>{" "}
             <span className="font-gilroySemiBold text-black">

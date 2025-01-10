@@ -455,3 +455,16 @@ h2.title::after {
 .animate-slide-up {
   animation: slide-up 1s ease-in forwards;
 }
+
+@keyframes widthTransition {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 5.5rem;
+  }
+}
+
+.input-transition {
+  animation: widthTransition 0.2s linear normal; /* Set to linear for smooth transition */
+}

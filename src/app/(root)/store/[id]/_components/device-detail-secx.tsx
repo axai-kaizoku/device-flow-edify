@@ -1,40 +1,71 @@
+"use client";
+
 import { StoreDevice } from "@/server/deviceActions";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const DeviceDetailedSecx = ({ data }: { data: StoreDevice }) => {
-  const deviceDetails = `Just as a book is judged by its cover, the first thing you notice when
-        you pick up a modern smartphone is the display. Nothing surprising,
-        because advanced technologies allow you to practically level the display
-        frames and cutouts for the front camera and speaker, leaving no room for
-        bold design solutions. And how good that in such realities Apple
-        everything is fine with displays. Both critics and mass consumers always
-        praise the quality of the picture provided by the products of the
-        Californian brand. And last year's 6.7-inch Retina panels, which had
-        ProMotion, caused real admiration for many.`;
+  const [viewMore, setViewMore] = useState(false);
+  const [viewFeat, setViewFeat] = useState(1);
+
+  useEffect(() => {
+    // Set viewFeat based on the number of device features
+    setViewFeat(
+      data?.deviceFeatures?.length! > 1 ? 1 : data?.deviceFeatures?.length!
+    );
+  }, [data]);
+
+  const handleViewMore = () => {
+    setViewMore(!viewMore);
+    // If viewMore is true, show all features; otherwise, show only one
+    setViewFeat(viewMore ? 1 : data?.deviceFeatures?.length!);
+  };
 
   return (
-    <section className="flex px-32 flex-col py-3">
-      <h2 className="text-2xl 2xl:text-3xl font-gilroySemiBold py-3">
-        Details
-      </h2>
+    <section className="flex px-32 flex-col pt-1.5 pb-4">
+      <h2 className="text-2xl 2xl:text-3xl font-gilroySemiBold">Details</h2>
       <p className="text-pretty py-3.5 font-gilroySemiBold text-[#9D9D9D] text-sm 2xl:text-base">
-        {deviceDetails}
+        {data?.description ?? ""}
       </p>
-      {data.deviceFeatures!.map((feat) => (
-        <div key={feat.title}>
+      {data?.deviceFeatures!.slice(0, viewFeat).map((feat) => (
+        <div key={feat?.title}>
           <h3 className="text-xl 2xl:text-2xl font-gilroySemiBold pt-4 pb-3">
-            {feat.title}
+            {feat?.title}
           </h3>
-          {feat.features.map((v) => (
+          {feat?.features?.map((v) => (
             <div key={v.title} className="pt-1 pb-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center font-gilroyMedium justify-between">
                 <span>{v.title}</span>
                 <span>{v.value}</span>
               </div>
-              <div className="h-px my-2.5 w-full bg-[#CDCDCD]" />
+              <div className="h-[1px] my-2.5 w-full bg-[#CDCDCD]" />
             </div>
           ))}
         </div>
       ))}
+
+      {data?.deviceFeatures?.length! > 1 && (
+        <div className="flex items-center justify-center py-4">
+          <button
+            onClick={handleViewMore}
+            className="w-40 group h-12 border border-black bg-white hover:bg-black text-black hover:text-white flex items-center justify-center gap-1.5 rounded-md "
+          >
+            {viewMore ? (
+              <>
+                <span className="font-gilroySemiBold text-sm pr-1">
+                  View Less
+                </span>
+                <ChevronUp className="text-black group-hover:text-white" />
+              </>
+            ) : (
+              <>
+                <span className="font-gilroySemiBold text-sm">View More</span>
+                <ChevronDown className="text-black group-hover:text-white" />
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </section>
   );
 };

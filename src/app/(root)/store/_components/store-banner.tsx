@@ -4,7 +4,7 @@ import React from "react";
 function StoreBanner() {
   return (
     <>
-      <div className="flex bg-white relative px-24 flex-col justify-center items-center w-full overflow-hidden">
+      <div className="flex  bg-white relative px-24 flex-col justify-center items-center w-full overflow-hidden">
         {/* Absolute Positioned Image */}
         <img
           src="/media/store_banner.png"
@@ -20,7 +20,7 @@ function StoreBanner() {
           </h1>
           <h1 className="text-2xl gap-2 font-gilroyMedium text-[#7F7F7F] flex flex-col justify-center items-center">
             <span>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
+              Lorem Ipsum is simply dummy text of the printing and typesetting
             </span>
             <span>industry. Lorem Ipsum has been the industry's standard.</span>{" "}
           </h1>

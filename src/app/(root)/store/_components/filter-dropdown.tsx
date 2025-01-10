@@ -27,10 +27,10 @@ const CustomDropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="relative w-36">
+    <div className="relative w-32 h-8">
       {/* Dropdown Label */}
       <button
-        className="w-full text-base font-gilroyMedium py-2 px-4 flex justify-center items-center gap-2.5 bg-white  rounded-md shadow-sm focus:outline-none"
+        className="w-full text-base font-gilroyMedium py-1 px-4 flex justify-center items-center gap-2.5 bg-white  rounded-md shadow-sm focus:outline-none"
         onClick={toggleDropdown}
       >
         {selectedValues.length > 0 ? (
@@ -38,7 +38,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
             {selectedValues.map((value, index) => (
               <span
                 key={index}
-                className="py-2 px-4 bg-gray-100 text-xs text-gray-700 rounded-md border border-gray-300"
+                className="py-2 px-4 bg-gray-100 text-xs text-gray-700 font-gilroyMedium rounded-md border border-gray-300"
               >
                 {
                   options.find((option) => option.value.toString() === value)
@@ -49,7 +49,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
           </div>
         ) : (
           <>
-            <span>{label}</span>
+            <span className="font-gilroyMedium text-sm">{label}</span>
             <Icons.arrow_down
               className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
             />

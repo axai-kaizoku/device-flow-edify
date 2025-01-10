@@ -12,7 +12,7 @@ export type StoreDevice = {
   serial_no: string | null;
   ram: string | null;
   processor: string | null;
-  storage: [] | null;
+  storage: string[] | null;
   custom_model: string | null;
   brand: string | null;
   warranty_status?: boolean;
@@ -32,11 +32,11 @@ export type StoreDevice = {
   userId?: string | null;
   city?: string | null;
   addressId?: string | null;
-  perfectFor: { title: string }[] | null; // Array of objects with `title` property
+  perfectFor?: { title?: string }[] | null; // Array of objects with `title` property
   deviceFeatures:
     | {
-        title: string;
-        features: { title: string; value: string }[];
+        title?: string;
+        features?: { title: string; value: string }[];
       }[]
     | null; // Array of feature groups with titles and feature lists
   orgId: string | null;
@@ -44,56 +44,32 @@ export type StoreDevice = {
   overallReviews?: number | null;
   overallRating?: number | null;
   ratingDetails?: {
-    stars: number;
-    percentage: number;
-    reviewsCount: number;
+    stars?: number;
+    percentage?: number;
+    reviewsCount?: number;
   }[];
-  reviews: {
-    _id: string; // MongoDB ObjectId, typically a string
-    comment: string;
-    rating: number; // Assuming ratings are numbers (e.g., 1 to 5)
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
-    image: string; // Path or filename for the image
-    role: number; // Assuming roles are represented as numbers
-    name: string;
+  reviews?: {
+    _id?: string; // MongoDB ObjectId, typically a string
+    comment?: string;
+    rating?: number; // Assuming ratings are numbers (e.g., 1 to 5)
+    createdAt?: string; // ISO date string
+    updatedAt?: string; // ISO date string
+    image?: string; // Path or filename for the image
+    role?: number; // Assuming roles are represented as numbers
+    name?: string;
   }[];
+  latest_release?: boolean;
+  is_trending?: boolean;
+  is_charger_provided?: boolean;
+  description?: string;
+  config?: { key: string; value: string }[];
+  device_condition?: string;
 };
 
 //Device type
-export type Device = {
-  _id?: string;
-  id?: string;
-  userId?: string;
-  orgId?: string | null;
-  addressId?: string | null;
-  city?: string;
-  device_name?: string;
-  userName?: string;
-  device_type?: string;
-  asset_serial_no?: string;
-  serial_no?: string;
-  ram?: string;
-  processor?: string;
-  storage?: string;
-  assigned_at?: string;
-  custom_model?: string;
-  brand?: string;
-  warranty_status?: boolean;
-  warranty_expiary_date?: string | null;
-  ownership?: string;
-  purchase_order?: string;
-  purchase_value?: number;
-  os?: string;
-  deleted_at?: string | null;
-  device_purchase_date?: string;
-  is_trending?: boolean;
-  image?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  payable?: number;
-};
+export type Device = StoreDevice;
 export type getAllDevicesProp = Device[];
+export type StoreDevicesRes = StoreDevice[];
 export type DeviceResponse = {
   devices: StoreDevice[]; // Changed from 'devices' to 'documents'
   total_pages: number;

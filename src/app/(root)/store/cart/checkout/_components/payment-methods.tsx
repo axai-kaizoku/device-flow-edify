@@ -48,7 +48,12 @@ export default function PaymentMethods({
       handler: function (response: any) {
         if (response?.razorpay_payment_id) {
           router.refresh();
-          dispatch(setPaymentData({ paymentId: response?.razorpay_payment_id, amount: totalPrice }));
+          dispatch(
+            setPaymentData({
+              paymentId: response?.razorpay_payment_id,
+              amount: totalPrice,
+            })
+          );
           router.push(`/store/cart/checkout/payment-success`);
         }
       },
@@ -85,14 +90,13 @@ export default function PaymentMethods({
 					</div>
 				))}
 			</div> */}
-      <>
-        <button
-          type="submit"
-          className="text-white font-gilroySemiBold text-base rounded-sm bg-black text-center px-10 py-[18px] w-full"
-        >
-          Proceed to Pay
-        </button>
-      </>
+
+      <button
+        type="submit"
+        className="bg-black text-white hover:text-black hover:bg-white hover:ring-1 hover:ring-black font-gilroyMedium text-base rounded-sm  text-center h-14 flex justify-center items-center w-full"
+      >
+        Proceed to Pay
+      </button>
     </form>
   );
 }

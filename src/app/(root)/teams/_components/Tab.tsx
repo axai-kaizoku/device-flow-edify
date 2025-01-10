@@ -3,13 +3,15 @@ import { cn } from "@/lib/utils";
 interface TabProps {
   active: boolean;
   onClick: () => void;
+  id?: string;
   label: string;
   className?: string; // Optional width for the line
 }
 
-export function Tab({ active, onClick, label, className }: TabProps) {
+export function Tab({ active, onClick, label, className, id }: TabProps) {
   return (
     <div
+      id={id}
       className={`relative flex justify-center items-center pl-8 cursor-pointer transition-all duration-300 ${
         active
           ? "text-black dark:text-white"

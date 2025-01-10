@@ -47,7 +47,6 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
       {currentAlert && (
         <Dialog open={true} onOpenChange={hideAlert}>
           <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
-            {/* Icon */}
             <div className="flex justify-center">
               <div
                 className={`w-12 h-12 flex items-center justify-center rounded-full ${
@@ -64,20 +63,19 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
 
-            {/* Title */}
-            <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
-              {currentAlert.title}
-            </DialogTitle>
+            <div className="flex flex-col gap-y-0.5 my-1">
+              <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
+                {currentAlert.title}
+              </DialogTitle>
 
-            {/* Description */}
-            <DialogDescription className="p-1 text-sm font-gilroyMedium text-gray-600">
-              {currentAlert.description}
-            </DialogDescription>
+              <DialogDescription className="p-1 text-sm px-2 font-gilroyMedium text-pretty text-gray-600">
+                {currentAlert.description}
+              </DialogDescription>
+            </div>
 
-            {/* Footer Buttons */}
-            <DialogFooter className="flex w-full items-center pb-3 justify-center">
+            <DialogFooter className="flex w-full items-center  justify-center">
               <Button
-                className={`w-[90%] rounded-md border shadow-sm ${
+                className={`w-full rounded-md border shadow-sm ${
                   currentAlert.isFailure
                     ? "border-[#D0D5DD] bg-[#FFF] text-[#344054]"
                     : "border-[#039855] bg-[#039855] text-white"

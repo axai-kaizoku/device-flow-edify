@@ -71,12 +71,25 @@ export const devicesFields = [
   "serial_no",
   "deleted_at",
   "storage",
+  "device_condition",
   "warranty_expiary_date",
   "device_purchase_date",
   "payable",
   "assigned_at",
   "warranty_status",
+  // Fields from the db model that were missing
+  "orgId",
+  "addressId",
+  "description",
+  "invoice",
+  "perfectFor",
+  "deviceFeatures",
+  "is_trending",
+  "latest_release",
+  "is_charger_provided",
+  "config",
 ];
+
 export const userFilterFields = [
   { label: "First Name", value: "first_name" },
   { label: "Last Name", value: "last_name" },

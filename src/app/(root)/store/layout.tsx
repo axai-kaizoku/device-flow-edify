@@ -1,5 +1,7 @@
-import { CombinedContainer } from "@/components/container/container";
+// "use client";
 import StoreNavbar from "./_components/store-navbar";
+// import Link from "next/link";
+import { CartOverview } from "./_components/cart-overview";
 
 export default function StoreLayout({
   children,
@@ -7,11 +9,12 @@ export default function StoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <CombinedContainer>
-      <div className="w-full h-full flex flex-col relative">
+    <section className="flex  rounded-3xl flex-col w-[97%] overflow-y-auto h-[83vh] min-h-[80vh] 2xl:min-h-[85vh]">
+      <div className="w-full h-full flex flex-col justify-center">
         <StoreNavbar />
-        <div className="flex-1 overflow-y-auto ">{children}</div>
+        <div className="flex-1 overflow-y-auto h-full">{children}</div>
+        <CartOverview />
       </div>
-    </CombinedContainer>
+    </section>
   );
 }

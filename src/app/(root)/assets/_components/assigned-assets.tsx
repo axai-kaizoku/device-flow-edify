@@ -68,7 +68,7 @@ function AssignedAssets({
                         >
                           <img
                             src={
-                              data?.image ??
+                              data?.image?.[0].url ??
                               "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
                             }
                             alt="Device Logo"
@@ -87,7 +87,12 @@ function AssignedAssets({
                         </div>
                       ),
                     },
-                    { title: "Assigned to", dataIndex: "userName" },
+                    {
+                      title: "Assigned to",
+                      render: (record) => {
+                        return <span>{record?.userName ?? "-"}</span>;
+                      },
+                    },
                     {
                       title: "Assigned On",
                       render: (record) => {
@@ -103,12 +108,17 @@ function AssignedAssets({
                       },
                     },
                     { title: "Team", dataIndex: "userName" },
-                    { title: "Serial Number", dataIndex: "serial_no" },
+                    {
+                      title: "Serial Number",
+                      render: (record) => {
+                        return <span>{record?.serial_no ?? "-"}</span>;
+                      },
+                    },
                     {
                       title: "Asset health",
-                      render: (record) => {
+                      render: (record: Device) => {
                         let color = "";
-                        switch (record.brand) {
+                        switch (record.device_condition) {
                           case "Good":
                           case "Best":
                           case "New":
@@ -124,7 +134,7 @@ function AssignedAssets({
                           <span
                             className={`${color} px-3 py-0.5 w-fit flex justify-center items-center rounded-full`}
                           >
-                            {record?.brand}
+                            {record?.device_condition ?? "-"}
                           </span>
                         );
                       },
