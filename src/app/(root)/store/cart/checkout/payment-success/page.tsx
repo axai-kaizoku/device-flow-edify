@@ -15,6 +15,7 @@ const PaymentSuccess = () => {
   const [fadeOutCrackers, setFadeOutCrackers] = useState(false);
   const router = useRouter();
   const paymentData = useSelector((state: RootState) => state?.payment);
+  const orderId = useSelector((state: RootState) => state?.payment);
 
   // if (!paymentData.paymentId) {
   //   router.push('/error');
@@ -223,7 +224,7 @@ const PaymentSuccess = () => {
                   Continue Shopping
                 </span>
                 {/* </Link> */}
-                <button className="text-lg font-gilroyMedium text-center cursor-pointer">
+                <button className="text-lg font-gilroyMedium text-center cursor-pointer" onClick={ ()=>{ router.push(`/orders/${orderId}`) }}>
                   View Order
                 </button>
               </div>

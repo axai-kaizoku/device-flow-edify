@@ -29,6 +29,7 @@ type Org = {
 type Manager = {
   deleted_at: null;
   _id: string;
+  image: string;
   first_name: string;
   last_name: string;
   password: string;

@@ -51,6 +51,7 @@ export default function PaymentMethods({
           dispatch(
             setPaymentData({
               paymentId: response?.razorpay_payment_id,
+              orderId: response?.razorpay_order_id,
               amount: totalPrice,
             })
           );

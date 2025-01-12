@@ -33,7 +33,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                 <img
                   src={data?.image ?? "/media/mac.jpeg"}
                   alt={data.device_name ?? "device-"}
-                  className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-contain"
+                  className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
                 />
                 <div className="flex flex-col  justify-center">
                   <div className="text-[#737373] font-gilroyMedium text-base 2xl:text-lg">
@@ -130,7 +130,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                       "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
                     }
                     alt={assignedTo.first_name ?? "assignee-"}
-                    className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-contain"
+                    className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
                   />
                   <div className="flex flex-col justify-center">
                     <div className="text-black font-gilroySemiBold text-xl 2xl:text-2xl">

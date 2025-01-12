@@ -15,20 +15,24 @@ import { getImageUrl, updateOrg } from "@/server/orgActions";
 import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
 import { useToast } from "@/hooks/useToast";
+import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
 // Add open and setOpen props
 export const LogoCompanyModal = ({
   id,
+  logo,
   children,
 }: {
   id: string;
+  logo: string;
   children: React.ReactNode;
-  
 }) => {
-  const [image, setImage] = useState<string | null>(null); // Track image file
+  const [image, setImage] = useState<string | null>(logo); // Track image file
   const [open, setOpen] = useState(false); // Modal open state
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {openToast} = useToast();
+  const router = useRouter();
 
   // Handle file selection
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,8 +58,8 @@ export const LogoCompanyModal = ({
   const handleUploadLogo = async () => {
       try {
          await updateOrg({id:id,logo: image}); // Send the image in the form data
-        
         setOpen(false); // Close the modal after successful upload
+        router.refresh();
       } catch (error) {
         openToast("error","Image upload failed");
       }
@@ -65,8 +69,9 @@ export const LogoCompanyModal = ({
   // Handle remove logic
   const handleRemoveLogo = async () => {
     try {
-      await updateOrg(id); // Send empty string to remove logo
+      await updateOrg({id:id, logo:""}); // Send empty string to remove logo
       setOpen(false); // Close the modal after removal
+      router.refresh();
     } catch (error) {
       <NotFound />;
     }
@@ -80,8 +85,46 @@ export const LogoCompanyModal = ({
           <DialogTitle>New profile picture</DialogTitle>
           <DialogDescription>
             <div className="flex flex-col gap-1.5">
-              <label className="font-gilroyMedium">Upload team image</label>
-              <div
+              <label className="font-gilroyMedium">Upload Organization Image</label>
+
+              {image ? (
+                  <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                    <img
+                      src={image}
+                      alt={image}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={handleRemoveLogo}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <div className="flex flex-col justify-center items-center">
+                      <Icons.uploadImage className="size-5" />
+                      <span className="text-[#0EA5E9]">Click to upload</span>
+                      <p className="text-xs text-neutral-400">
+                        JPG, JPEG, PNG less than 1MB
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+
+
+              {/* <div
                 className="flex flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -98,7 +141,7 @@ export const LogoCompanyModal = ({
                 ref={fileInputRef}
                 style={{ display: "none" }}
                 onChange={handleFileChange}
-              />
+              /> */}
             </div>
           </DialogDescription>
         </DialogHeader>

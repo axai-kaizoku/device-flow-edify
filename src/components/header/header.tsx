@@ -23,7 +23,13 @@ import ReAssign from "@/app/(root)/assets/_components/re-assign";
 // import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
+  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+
+  const handleMouseEnter = (href:string) => {
+    setIsHovered(true);
+    router.prefetch(href); // Prefetch the route on hover
+  };
   const pathname = usePathname();
   const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -196,6 +202,8 @@ export default function Header({ session }: Props) {
               <button
                 onClick={() => router.push("/settings")}
                 className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
+                onMouseEnter={()=>{ handleMouseEnter('/settings') }}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 <Settings className="size-5" />
               </button>

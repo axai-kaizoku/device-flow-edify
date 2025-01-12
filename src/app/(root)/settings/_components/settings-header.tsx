@@ -31,7 +31,7 @@ function SettingsHeader({ data }: { data: Org }) {
               )}
             </div>
             {/* Modal trigger for editing the logo */}
-            <LogoCompanyModal id={data?._id!}>
+            <LogoCompanyModal id={data?._id!} logo={data?.logo}>
               <Icons.settings_edit className="absolute left-[4.7rem] bottom-8 cursor-pointer" />
             </LogoCompanyModal>
 

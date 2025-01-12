@@ -87,7 +87,7 @@ export const TeamCard = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img
-              src={active_manager?.[0]?.image || defaultImage}
+              src={image || defaultImage}
               alt="manager-icon"
               className="w-14 h-14 object-cover rounded-full"
             />

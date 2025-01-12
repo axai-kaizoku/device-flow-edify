@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { ErrorButton, GreyButton } from '@/components/wind/Buttons';
 import { useRouter } from 'next/navigation';
 import { deleteAddress } from '@/server/addressActions';
+import { useToast } from '@/hooks/useToast';
 
 export const DeleteAddress = ({
 	id,
@@ -23,6 +24,7 @@ export const DeleteAddress = ({
 }) => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const { openToast } = useToast();
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -42,6 +44,7 @@ export const DeleteAddress = ({
 							if (id) {
 								await deleteAddress(id);
 								setOpen(false);
+								openToast('success', "Address deleted Successfully!");
 								router.refresh();
 							}
 						}}>

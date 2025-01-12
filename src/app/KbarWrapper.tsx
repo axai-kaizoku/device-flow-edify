@@ -181,7 +181,7 @@ export default function KbarWrapper({
               <Icons.kbar_icon />
             </div>
 
-            <div className="h-[1px] w-[200%] bg-[#E8E8E8] mb-1 -ml-10"></div>
+            <div className="h-[1px] w-[200%] bg-[#E8E8E8] mb-2 -ml-10"></div>
             {/* Rendering all actions */}
 
             <RenderResults />

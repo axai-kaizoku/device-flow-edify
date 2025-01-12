@@ -155,7 +155,7 @@ const UserGrid = ({ user }: { user: User }) => {
                 <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
                   <img
                     // src={user?.reporting_manager?.image}
-                    src="https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                    src={user?.reporting_manager?.image || `https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp`}
                     // Replace with your profile image URL
                     alt="Profile"
                     className="w-full h-full object-cover"

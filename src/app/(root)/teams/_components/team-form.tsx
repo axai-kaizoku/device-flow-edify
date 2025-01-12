@@ -135,17 +135,35 @@ export const TeamForm = ({
   };
 
   // Handle file selection
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+  
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
-      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
-        file.type
-      );
-
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+  
       if (isValidSize && isValidType) {
-        const res = await getImageUrl({ file }, "team");
-        setFormData((prev) => ({ ...prev, image: res.data }));
+        try {
+          const res = await getImageUrl({ file });
+          console.log("Uploaded image response:", res);
+  
+          setFormData((prev) => ({
+            ...prev,
+            image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
+          }));
+  
+          setErrors((prev) => ({
+            ...prev,
+            image: "",
+          }));
+        } catch (error) {
+          openToast("error","Image upload failed");
+          setErrors((prev) => ({
+            ...prev,
+            image: "Failed to upload the image. Please try again.",
+          }));
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -218,7 +236,7 @@ export const TeamForm = ({
                 <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
                   <img
                     src={formData.image}
-                    alt={formData.image.name}
+                    alt={formData.image}
                     className="w-full h-full object-cover"
                   />
                   <button
