@@ -22,6 +22,7 @@ export default function AdminDashboard() {
 
   const getDashboardDetils = async () => {
     const dashboard: DashboardDetails = await getDashboard();
+    console.log(dashboard)
     setDasboardData(dashboard)
   };
 

@@ -76,7 +76,7 @@ export function TrendingDevices({
                       />
                     </div>
                     <div className="flex flex-col items-start gap-y-[1.9px]">
-                      <div className="text-center text-lg font-gilroySemiBold leading-[normal]">
+                      <div className="text-center w-[150px] truncate text-lg font-gilroySemiBold leading-[normal]">
                         {response.device_name}
                       </div>
                       <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">

@@ -50,7 +50,7 @@ export const ManageOrders = ({
                         }}
                         className="font-gilroySemiBold"
                       >
-                        {response.device_name}
+                        {response.orderId}
                       </div>
                       <div className="flex gap-2">
                         <div

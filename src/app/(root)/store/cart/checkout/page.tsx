@@ -464,7 +464,7 @@ export default async function Checkout() {
                   >
                     <div>
                       <img
-                        src={item?.image?.[0].url ?? "/media/CartProduct.png"}
+                        src={item?.image?.[0]?.url ?? "/media/CartProduct.png"}
                         alt="mac"
                         className="size-10 rounded-lg object-cover"
                       />
