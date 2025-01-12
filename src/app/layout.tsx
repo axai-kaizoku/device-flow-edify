@@ -52,7 +52,7 @@ const gilroyMedium = localFont({
 });
 
 const gilroySemiBold = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-SemiBold.ttf",
+  src: "../../public/fonts/gilroy2/Gilroy-Semibold.ttf",
   // weight: "100 1000",
   display: "block",
   variable: "--font-gilroy-semibold",
@@ -67,7 +67,7 @@ const gilroyBold = localFont({
 });
 
 const gilroyExtraBold = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-ExtraBold.ttf",
+  src: "../../public/fonts/gilroy2/Gilroy-Extrabold.ttf",
   // weight: "800",
   display: "block",
 
