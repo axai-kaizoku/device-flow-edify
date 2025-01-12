@@ -1,22 +1,29 @@
-// 'use client'
-import { ManageIssue } from "./admin-conponents/manage-issue";
-import { TrendingDevices } from "./admin-conponents/trending-devices";
+"use client";
+import { CombinedContainer } from "@/components/container/container";
 import { AssetsCount } from "./admin-conponents/assets-count";
 import { AssetsHealth } from "./admin-conponents/assets-health";
-import { CombinedContainer } from "@/components/container/container";
-
-import { getCurrentOrg, Org } from "@/server/orgActions";
-import { Device } from "@/server/deviceActions";
+import { ManageIssue } from "./admin-conponents/manage-issue";
+import { TrendingDevices } from "./admin-conponents/trending-devices";
+import { getDashboard } from "@/server/dashboard";
+import { ManageOrders } from "./admin-conponents/Manage-orders";
 import { Members } from "./admin-conponents/members";
 import { Teams } from "./admin-conponents/Teams";
-import { ManageOrders } from "./admin-conponents/Manage-orders";
-import { DashboardStore } from "./admin-conponents/store";
-import { getTrendingDevice } from "@/server/storeActions";
+import { useEffect, useState } from "react";
+import { DashboardDetails } from "./admin-conponents/interface";
 
-export default async function AdminDashboard() {
-  const trendingDevice: Device[] = await getTrendingDevice();
-  const organisation: Org = await getCurrentOrg();
-  const organisationById = organisation;
+export default function AdminDashboard() {
+  const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
+    null
+  );
+
+  useEffect(() => {
+    getDashboardDetils();
+  }, []);
+
+  const getDashboardDetils = async () => {
+    const dashboard: DashboardDetails = await getDashboard();
+    setDasboardData(dashboard)
+  };
 
   return (
     <CombinedContainer title="Admin Dashboard">
@@ -26,18 +33,18 @@ export default async function AdminDashboard() {
           className="flex justify-between gap-3 flex-wrap "
         >
           <div style={{ width: "49%" }}>
-            <AssetsHealth />
+            <AssetsHealth dashboardData={dashboardData} />
           </div>
           <div style={{ width: "49%" }}>
-            <AssetsCount />
+            <AssetsCount dashboardData={dashboardData} />
           </div>
           <div className="flex gap-4 w-[100%]">
-            <ManageIssue />
+            <ManageIssue dashboardData={dashboardData} />
             <div className="flex flex-col gap-5 ">
-              <Members />
-              <Teams />
+              <Members dashboardData={dashboardData} />
+              <Teams dashboardData={dashboardData} />
             </div>
-            <ManageOrders />
+            <ManageOrders dashboardData={dashboardData} />
           </div>
         </div>
         <div
@@ -49,8 +56,10 @@ export default async function AdminDashboard() {
             justifyContent: "space-between",
           }}
         >
-          <TrendingDevices />
-          <DashboardStore />
+          <TrendingDevices dashboardData={dashboardData}  />
+          <div>
+            <img src={'/media/dashboard/store-banner.png'} style={{width: '100%', height: 170}} />
+          </div>
         </div>
       </div>
     </CombinedContainer>

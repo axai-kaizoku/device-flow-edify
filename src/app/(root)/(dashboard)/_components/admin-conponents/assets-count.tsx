@@ -1,5 +1,10 @@
 import React from "react";
-export function AssetsCount({}) {
+import { DashboardDetails } from "./interface";
+export function AssetsCount({
+  dashboardData,
+}: {
+  dashboardData: DashboardDetails | null;
+}) {
   return (
     <div className={`flex w-full items-start rounded-3xl `}>
       <div className="font-gilroy flex h-full w-full flex-shrink-0 flex-col gap-y-4 overflow-clip rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-5 pl-[22px] pr-5 pt-[13px] tracking-[0px] backdrop-blur-[24]">
@@ -9,7 +14,10 @@ export function AssetsCount({}) {
               Asset Count
             </div>
             <div className="rounded-[17px] bg-purple-50 px-2 py-0.5 text-center text-xs font-gilroyMedium leading-[19px] text-purple-700">
-              3245 Total Assets
+              {(dashboardData?.deviceStatusData?.[0]?.assigned || 0) +
+                (dashboardData?.deviceStatusData?.[0]?.inactive || 0) +
+                (dashboardData?.deviceStatusData?.[0]?.un_assigned || 0)}{" "}
+              Total Assets
             </div>
           </div>
         </div>
@@ -33,7 +41,7 @@ export function AssetsCount({}) {
               </svg>
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-              2345
+              {dashboardData?.deviceStatusData?.[0]?.assigned || 0}
             </div>
             <div className="text-center  text-[11px]">Assigned</div>
           </div>
@@ -56,7 +64,7 @@ export function AssetsCount({}) {
               </svg>
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-              10
+              {dashboardData?.deviceStatusData?.[0]?.un_assigned || 0}
             </div>
             <div className="text-center">Unassigned</div>
           </div>
@@ -89,9 +97,9 @@ export function AssetsCount({}) {
               </svg>
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-              51
+              {dashboardData?.deviceStatusData?.[0]?.inactive || 0}
             </div>
-            <div className="text-center">Damaged</div>
+            <div className="text-center">Inactive</div>
           </div>
         </div>
       </div>
