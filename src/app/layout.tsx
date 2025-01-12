@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 };
 
 const gilroyThin = localFont({
-  src: "fonts/gilroy2/Gilroy-Thin.ttf",
+  src: "/fonts/gilroy2/Gilroy-Thin.ttf",
   // weight: "100",
   display: "block",
   variable: "--font-gilroy-thin",
 });
 
 const gilroyExtraLight = localFont({
-  src: "fonts/gilroy2/Gilroy-UltraLight.ttf",
+  src: "/fonts/gilroy2/Gilroy-UltraLight.ttf",
   // weight: "200",
   display: "block",
 
@@ -28,7 +28,7 @@ const gilroyExtraLight = localFont({
 });
 
 const gilroyLight = localFont({
-  src: "fonts/gilroy2/Gilroy-Light.ttf",
+  src: "/fonts/gilroy2/Gilroy-Light.ttf",
   // weight: "300",
   display: "block",
 
@@ -36,7 +36,7 @@ const gilroyLight = localFont({
 });
 
 const gilroyRegular = localFont({
-  src: "fonts/gilroy2/Gilroy-Regular.ttf",
+  src: "/fonts/gilroy2/Gilroy-Regular.ttf",
   // weight: "400",
   display: "block",
 
@@ -44,7 +44,7 @@ const gilroyRegular = localFont({
 });
 
 const gilroyMedium = localFont({
-  src: "fonts/gilroy2/Gilroy-Medium.ttf",
+  src: "/fonts/gilroy2/Gilroy-Medium.ttf",
   // weight: "500",
   display: "block",
 
@@ -52,14 +52,14 @@ const gilroyMedium = localFont({
 });
 
 const gilroySemiBold = localFont({
-  src: "fonts/gilroy2/Gilroy-SemiBold.ttf",
+  src: "/fonts/gilroy2/Gilroy-SemiBold.ttf",
   // weight: "100 1000",
   display: "block",
   variable: "--font-gilroy-semibold",
 });
 
 const gilroyBold = localFont({
-  src: "fonts/gilroy2/Gilroy-Bold.ttf",
+  src: "/fonts/gilroy2/Gilroy-Bold.ttf",
   // weight: "700",
   display: "block",
 
@@ -67,7 +67,7 @@ const gilroyBold = localFont({
 });
 
 const gilroyExtraBold = localFont({
-  src: "fonts/gilroy2/Gilroy-ExtraBold.ttf",
+  src: "/fonts/gilroy2/Gilroy-ExtraBold.ttf",
   // weight: "800",
   display: "block",
 
@@ -75,7 +75,7 @@ const gilroyExtraBold = localFont({
 });
 
 const gilroyBlack = localFont({
-  src: "fonts/gilroy2/Gilroy-Heavy.ttf",
+  src: "/fonts/gilroy2/Gilroy-Heavy.ttf",
   // weight: "900",
   display: "block",
 
