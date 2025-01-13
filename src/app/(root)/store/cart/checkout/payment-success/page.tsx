@@ -2,9 +2,8 @@
 import Error from "@/app/error/page";
 import NotFound from "@/app/not-found";
 import { RootState } from "@/app/store/store";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const PaymentSuccess = () => {
@@ -211,7 +210,6 @@ const PaymentSuccess = () => {
             )}
             {showTextAndButtons ? (
               <div className="flex flex-col gap-3 animate-fade-in">
-                {/* <Link href="/store"> */}
                 <span
                   className="text-base font-gilroySemiBold bg-black text-white hover:text-black hover:bg-white hover:ring-1 hover:ring-black  px-9 py-4 rounded cursor-pointer"
                   onMouseEnter={() => {
@@ -223,8 +221,10 @@ const PaymentSuccess = () => {
                 >
                   Continue Shopping
                 </span>
-                {/* </Link> */}
-                <button className="text-lg font-gilroyMedium text-center cursor-pointer" onClick={ ()=>{ router.push(`/orders/${orderId}`) }}>
+                <button
+                  className="text-lg font-gilroyMedium text-center cursor-pointer"
+                  // onClick={() =>  router.push(`/orders/${orderId}`)}
+                >
                   View Order
                 </button>
               </div>
@@ -241,70 +241,3 @@ const PaymentSuccess = () => {
 };
 
 export default PaymentSuccess;
-
-// 'use client'
-// import React, { useEffect, useState } from "react";
-
-// const PaymentSuccess = () => {
-//   const [showTick, setShowTick] = useState(false);
-//   const [showText, setShowText] = useState(false);
-
-//   useEffect(() => {
-//     // Showing tick after 3 seconds
-//     const tickTimer = setTimeout(() => setShowTick(true), 2000);
-
-//     // Showing text after 4 seconds
-//     const textTimer = setTimeout(() => setShowText(true), 3000);
-
-//     return () => {
-//       clearTimeout(tickTimer);
-//       clearTimeout(textTimer);
-//     };
-//   }, []);
-
-//   return (
-//     <div className="flex flex-col items-center justify-center h-full bg-white">
-//       {/* Animation Container */}
-//       <div className="flex items-center justify-center w-32 h-32 relative">
-//         {/* Loader */}
-//         {!showTick && (
-//           <div className="w-24 h-24 border-8 border-t-transparent border-[#14AD23] rounded-full animate-spin"></div>
-//         )}
-//         {/* Tick */}
-//         {showTick && (
-//           <div className="absolute w-40 h-40 bg-[#14AD23] rounded-full flex items-center justify-center">
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               fill="none"
-//               viewBox="0 0 24 24"
-//               strokeWidth={4}
-//               stroke="white"
-//               className="w-32 h-32"
-//             >
-//               <path
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 d="M5 13l4 4L19 7"
-//               />
-//             </svg>
-//           </div>
-//         )}
-//       </div>
-//       {/* Success Text */}
-//       {showText && (
-//         <>
-//           <div className="mt-8 mb-[18.92px] text-4xl font-gilroyBold text-black animate-fade-in">
-//             Wohoo!! Order Placed
-//           </div>
-
-//           <div className="flex flex-col gap-3 animate-fade-in">
-//             <div className="text-base font-gilroySemiBold bg-black text-white px-9 py-[16px] rounded-[4px] cursor-pointer">Continue Shopping</div>
-//             <div className="text-[18px] font-gilroyMedium] text-center cursor-pointer">View</div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PaymentSuccess;

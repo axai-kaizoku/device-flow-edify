@@ -1,37 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import CustomDropdown from "../../_components/filter-dropdown";
 import { MoveLeft } from "lucide-react";
 import { BackBtn } from "../../cart/checkout/_components/back-btn";
+import { StoreDevice } from "@/server/deviceActions";
+import { searchStoreDevices } from "@/server/storeActions";
+import { useAlert } from "@/hooks/useAlert";
 
-const products = Array.from({ length: 20 }, (_, index) => ({
-  id: index + 1,
-  image: `/images/product${(index % 3) + 1}.jpg`, // Cycle through product images
-  title: `Product ${index + 1}`,
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  price: `$${(99.99 + index * 10).toFixed(2)}`, // Increment price for variety
-  ram: `${[4, 6, 8, 12][index % 4]}GB`, // Dynamic RAM options
-  storage: `${[128, 256, 512][index % 3]}GB`, // Dynamic Storage options
-  brand: ["Apple", "Samsung", "OnePlus", "Google"][index % 4], // Dynamic Brand options
-  rating: (4.5 + (index % 5) * 0.1).toFixed(1), // Increment rating for variety
-}));
-export default function AllProductsFilter({ setData }: { setData?: any }) {
+export default function AllProductsFilter({
+  setData,
+}: {
+  setData: React.Dispatch<SetStateAction<StoreDevice[]>>;
+}) {
+  const { showAlert } = useAlert();
   const [selectedRam, setSelectedRam] = useState<string[]>([]);
   const [selectedStorage, setSelectedStorage] = useState<string[]>([]);
+  const [selectedOS, setSelectedOS] = useState<string[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string[]>([]);
+  const [filters, setFilters] = useState<string[][]>([]);
 
-  // Filter products based on selected filters
-  const filteredProducts = products.filter((product) => {
-    const matchesRam =
-      selectedRam.length === 0 || selectedRam.includes(product.ram);
-    const matchesStorage =
-      selectedStorage.length === 0 || selectedStorage.includes(product.storage);
-    const matchesBrand =
-      selectedBrand.length === 0 || selectedBrand.includes(product.brand);
-    return matchesRam && matchesStorage && matchesBrand;
-  });
+  const updateFilters = () => {
+    let newFilters: string[][] = [];
+
+    selectedRam.forEach((ram) => {
+      newFilters.push(["ram", "Like", ram]);
+    });
+    selectedStorage.forEach((storage) => {
+      newFilters.push(["storage", "Like", storage]);
+    });
+    selectedOS.forEach((os) => {
+      newFilters.push(["os", "Like", os]);
+    });
+    selectedBrand.forEach((brand) => {
+      newFilters.push(["brand", "Like", brand]);
+    });
+
+    setFilters(newFilters);
+  };
+
+  useEffect(() => {
+    updateFilters();
+  }, [selectedRam, selectedStorage, selectedOS, selectedBrand]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await searchStoreDevices({ filters });
+        setData(res);
+      } catch (error) {
+        showAlert({
+          isFailure: true,
+          description: "Device not found",
+          title: "Failed to fetch data",
+          key: "store-filters-api",
+        });
+      }
+    };
+    fetch();
+  }, [filters]);
+
+  const clearAllFilters = () => {
+    setSelectedRam([]);
+    setSelectedStorage([]);
+    setSelectedOS([]);
+    setSelectedBrand([]);
+    setFilters([]); // Clear all filters
+  };
 
   return (
     <div className="flex items-center justify-between py-2 px-6 w-full bg-[#F4F4F4] rounded-2xl">
@@ -47,11 +82,12 @@ export default function AllProductsFilter({ setData }: { setData?: any }) {
               { value: "4GB", label: "4GB" },
               { value: "6GB", label: "6GB" },
               { value: "8GB", label: "8GB" },
-              { value: "12GB", label: "12GB" },
+              { value: "16GB", label: "16GB" },
             ]}
             selectedValues={selectedRam}
             onChange={setSelectedRam}
           />
+
           <CustomDropdown
             label="Storage"
             options={[
@@ -62,52 +98,39 @@ export default function AllProductsFilter({ setData }: { setData?: any }) {
             selectedValues={selectedStorage}
             onChange={setSelectedStorage}
           />
+
           <CustomDropdown
-            label="Storage"
+            label="OS"
             options={[
-              { value: "128GB", label: "128GB" },
-              { value: "256GB", label: "256GB" },
-              { value: "512GB", label: "512GB" },
+              { value: "windows", label: "Windows" },
+              { value: "mac", label: "Mac" },
+              { value: "linux", label: "Linux" },
             ]}
-            selectedValues={selectedStorage}
-            onChange={setSelectedStorage}
+            selectedValues={selectedOS}
+            onChange={setSelectedOS}
           />
-          <CustomDropdown
-            label="Storage"
-            options={[
-              { value: "128GB", label: "128GB" },
-              { value: "256GB", label: "256GB" },
-              { value: "512GB", label: "512GB" },
-            ]}
-            selectedValues={selectedStorage}
-            onChange={setSelectedStorage}
-          />
-          <CustomDropdown
-            label="Storage"
-            options={[
-              { value: "128GB", label: "128GB" },
-              { value: "256GB", label: "256GB" },
-              { value: "512GB", label: "512GB" },
-            ]}
-            selectedValues={selectedStorage}
-            onChange={setSelectedStorage}
-          />
+
           <CustomDropdown
             label="Brand"
             options={[
-              { value: "Apple", label: "Apple" },
-              { value: "Samsung", label: "Samsung" },
-              { value: "OnePlus", label: "OnePlus" },
-              { value: "Google", label: "Google" },
+              { value: "apple", label: "Apple" },
+              { value: "dell", label: "Dell" },
+              { value: "lenovo", label: "Lenovo" },
+              { value: "acer", label: "Acer" },
             ]}
             selectedValues={selectedBrand}
             onChange={setSelectedBrand}
           />
         </div>
       </div>
-      <h6 className="font-gilroyMedium text-sm tracking-wide flex items-center">
-        <div className="cursor-pointer">Clear all</div>
-      </h6>
+      {filters.length > 0 && (
+        <span
+          className="font-gilroyMedium text-sm tracking-wide flex items-center cursor-pointer text-red-500"
+          onClick={clearAllFilters}
+        >
+          Clear All
+        </span>
+      )}
     </div>
   );
 }

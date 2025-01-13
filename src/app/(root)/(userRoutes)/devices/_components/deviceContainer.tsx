@@ -101,10 +101,11 @@ function DeviceContainer() {
             ))}
           </div>
 
-          <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+          <div className="flex opacity-0 pointer-events-none items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
             <Search size={20} className="text-[#7F7F7F]" />
 
             <input
+              disabled
               className=" bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
               // value={searchTerm || ""}
               // onChange={(e) => setSearchTerm(e.target.value)}

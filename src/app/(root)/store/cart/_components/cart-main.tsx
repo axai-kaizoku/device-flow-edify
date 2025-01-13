@@ -33,6 +33,8 @@ const CartMain = ({ cart }: { cart: Cart }) => {
   //   fetchData();
   // },[]);
 
+  const isCartEmpty = cart?.items?.length === 0;
+
   return (
     <>
       <div className="flex w-full justify-between h-full min-h-[70vh] gap-10 bg-white px-12 pb-8">
@@ -57,19 +59,7 @@ const CartMain = ({ cart }: { cart: Cart }) => {
           </div>
 
           <div className="w-full h-full min-h-[50vh] overflow-y-auto">
-            {cart?.items?.length > 0 ? (
-              cart?.items?.map((data: DeviceWithQty, i: number) => (
-                <div
-                  className="flex flex-col"
-                  key={`${data._id}-cart-item-${i}`}
-                >
-                  <CartItem data={data} />
-                  {i < cart?.items?.length - 1 && cart?.items?.length > 1 && (
-                    <div className="h-[1px] bg-[#D1D1D8] w-full my-2"></div>
-                  )}
-                </div>
-              ))
-            ) : (
+            {isCartEmpty ? (
               <div className="w-full h-full items-center justify-start flex flex-col gap-0">
                 <img
                   src="/media/empty-cart.svg"
@@ -86,6 +76,18 @@ const CartMain = ({ cart }: { cart: Cart }) => {
                   Continue Shopping{" "}
                 </Link>
               </div>
+            ) : (
+              cart?.items?.map((data: DeviceWithQty, i: number) => (
+                <div
+                  className="flex flex-col"
+                  key={`${data._id}-cart-item-${i}`}
+                >
+                  <CartItem data={data} />
+                  {i < cart?.items?.length - 1 && cart?.items?.length > 1 && (
+                    <div className="h-[1px] bg-[#D1D1D8] w-full my-2"></div>
+                  )}
+                </div>
+              ))
             )}
           </div>
         </div>
@@ -99,23 +101,23 @@ const CartMain = ({ cart }: { cart: Cart }) => {
             <div className="flex flex-col gap-3 text-[#17183B] font-gilroyMedium text-base">
               <div className="flex justify-between items-center">
                 <div>Price</div>
-                <div>₹{cart?.totalPrice}</div>
+                <div>{isCartEmpty ? "-" : `₹${cart?.totalPrice}`}</div>
               </div>
               <div className="flex justify-between items-center">
                 <div>Discount</div>
-                <div>₹0</div>
+                <div>{isCartEmpty ? "-" : `₹0`}</div>
               </div>
               <div className="flex justify-between items-center">
                 <div>Shipping</div>
-                {cart.items.length > 0 ? (
-                  <div className="text-[#3AA39F]">Free</div>
-                ) : (
+                {isCartEmpty ? (
                   <div className="text-black">-</div>
+                ) : (
+                  <div className="text-[#3AA39F]">Free</div>
                 )}
               </div>
               <div className="flex justify-between items-center">
                 <div>Tax</div>
-                <div>₹0</div>
+                <div>{isCartEmpty ? "-" : `₹0`}</div>
               </div>
             </div>
 

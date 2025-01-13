@@ -52,7 +52,7 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
 
   return (
     <>
-    <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
+      <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
         {/* First Column */}
         <div className="flex flex-col gap-6">
           {/* First Row */}
@@ -181,14 +181,14 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
                   <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
                     {`${user?.reporting_manager?.first_name} ${user?.reporting_manager?.last_name}`}
                   </h1>
-                  <div
+                  {/* <div
                     className="absolute text-[#CDCDCD] text-xs top-4 -right-3 cursor-pointer"
                     onClick={() => {
                       router.push(`/people/${user?.reporting_manager?._id}`);
                     }}
                   >
                     <ChevronRight />
-                  </div>
+                  </div> */}
 
                   <p className="text-gray-500 font-gilroyMedium text-sm">
                     {user?.reporting_manager?.email}

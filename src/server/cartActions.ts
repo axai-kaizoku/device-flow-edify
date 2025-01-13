@@ -86,7 +86,7 @@ export async function addItemToCart(itemId: string, quantity: number) {
     const apiUrl = "https://api.edify.club/edifybackend/v1/cart/addItem";
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
-    console.log(response, "ITEM ADDED TO CART");
+    // console.log(response, "ITEM ADDED TO CART");
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to add item to cart.");

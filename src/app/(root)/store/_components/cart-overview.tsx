@@ -66,10 +66,10 @@ export const CartOverview = async () => {
           </span>
         </div>
         <Link
-          href="/store/cart/checkout"
+          href="/store/cart"
           className="rounded-sm font-gilroyMedium max-w-xs w-[14rem] bg-black text-white hover:text-black ring-1 ring-black hover:bg-white  hover:ring-black h-[58%] flex items-center justify-center"
         >
-          Check Out
+          Proceed
         </Link>
       </div>
     </CartOverviewWrapper>

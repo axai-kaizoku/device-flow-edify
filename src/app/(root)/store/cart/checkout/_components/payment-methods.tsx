@@ -48,14 +48,15 @@ export default function PaymentMethods({
       handler: function (response: any) {
         if (response?.razorpay_payment_id) {
           router.refresh();
-          dispatch(
-            setPaymentData({
-              paymentId: response?.razorpay_payment_id,
-              orderId: response?.razorpay_order_id,
-              amount: totalPrice,
-            })
-          );
           router.push(`/store/cart/checkout/payment-success`);
+          setTimeout(() => {
+            dispatch(
+              setPaymentData({
+                paymentId: response?.razorpay_payment_id,
+                amount: totalPrice,
+              })
+            );
+          }, 0);
         }
       },
       prefill: {

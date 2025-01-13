@@ -54,10 +54,13 @@ const AssetsSection = ({ user }: { user: User }) => {
             </div>
           )}
 
-          <div className="text-center mt-2">
-            <div className="text-white bg-black font-gilroySemiBold text-base w-full mt-2 py-2 rounded-full" onClick={()=>{
-              router.push('/devices');
-            }}>
+          <div className="text-center mt-2 cursor-pointer">
+            <div
+              className="text-white cursor-pointer bg-black font-gilroySemiBold text-base w-full mt-2 py-2 rounded-full"
+              onClick={() => {
+                router.push("/devices");
+              }}
+            >
               Manage Assets
             </div>
           </div>

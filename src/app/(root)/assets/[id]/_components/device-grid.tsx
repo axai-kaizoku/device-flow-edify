@@ -31,7 +31,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
               </div>
               <div className="flex gap-2 items-center">
                 <img
-                  src={data?.image ?? "/media/mac.jpeg"}
+                  src={data?.image?.[0].url ?? "/media/mac.jpeg"}
                   alt={data.device_name ?? "device-"}
                   className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
                 />
@@ -203,9 +203,9 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     {`${assignedTo?.reporting_manager?.first_name ?? "-"} ${
                       assignedTo?.reporting_manager?.last_name ?? ""
                     }`}{" "}
-                    {assignedTo.reporting_manager?.first_name && (
+                    {/* {assignedTo.reporting_manager?.first_name && (
                       <Icons.open_user_view />
-                    )}
+                    )} */}
                   </div>
                 </div>
 

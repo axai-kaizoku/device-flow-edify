@@ -6,6 +6,8 @@ import { cache } from "react";
 
 export type StoreDevice = {
   _id?: string;
+  createdAt?: string;
+  updatedAt?: string;
   device_name: string;
   device_type: string;
   asset_serial_no: string | null;
