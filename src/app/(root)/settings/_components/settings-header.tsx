@@ -59,9 +59,9 @@ function SettingsHeader({ data }: { data: Org }) {
               <h1 className="text-[#9B9B9B] text-[1.10rem] font-gilroySemiBold mb-[5px]">
                 Employee info.
               </h1>
-              <div className="absolute right-4 top-3 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
+              {/* <div className="absolute right-4 top-3 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
                 <Icons.settings_download />
-              </div>
+              </div> */}
             </div>
             <div className="flex items-center gap-4">
               <Icons.settings_employee_info />
@@ -87,9 +87,9 @@ function SettingsHeader({ data }: { data: Org }) {
               <h1 className="text-[#9B9B9B] text-[1.10rem] font-gilroySemiBold mb-[5px]">
                 Assets
               </h1>
-              <div className="absolute right-4 top-3 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
+              {/* <div className="absolute right-4 top-3 border p-2 border-gray-300 rounded-full mt-2 cursor-pointer">
                 <Icons.settings_download />
-              </div>
+              </div> */}
             </div>
             <div className="flex items-center gap-4">
               <Icons.settings_assets />

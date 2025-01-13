@@ -3,6 +3,7 @@ export function CTA({}) {
   const [onRegisterClicked, setOnRegisterClicked] = useState<boolean>(false);
   const [onNextClicked, setOnNextClicked] = useState<boolean>(false);
   const [onSubmitClicked, setSubmitClicked] = useState<boolean>(false);
+  const phoneRegex = /^[0-9]{10}$/;
   const initialPaths = [
     {
       default: "M740 0.400391H0V362.4H740V0.400391Z",
@@ -145,7 +146,7 @@ export function CTA({}) {
                   onClick={() => {
                     setOnRegisterClicked(true);
                   }}
-                  className="font-inter rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800"
+                  className="font-inter rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 hover:bg-gray-50 cursor-pointer border border-zinc-800 hover:border-gray-200"
                 >
                   Register
                 </div>
@@ -172,7 +173,7 @@ export function CTA({}) {
                   <label
                     htmlFor="floating_outlined"
                     style={{ backgroundColor: "#27272A" }}
-                    className="absolute text-lg text-white  duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0]   px-2 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
+                    className="absolute text-lg text-white  duration-300 transform -translate-y-6 scale-75 top-2 z-10 origin-[0]   px-1 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
                   >
                     Company Name
                   </label>
@@ -188,7 +189,7 @@ export function CTA({}) {
                   <label
                     htmlFor="floating_outlined"
                     style={{ backgroundColor: "#27272A" }}
-                    className="absolute text-sm text-white  duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0]   px-2 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
+                    className="absolute text-lg text-white  duration-300 transform -translate-y-6 scale-75 z-10 origin-[0]   px-1 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
                   >
                     Phone
                   </label>
@@ -197,7 +198,7 @@ export function CTA({}) {
                   onClick={() => {
                     setSubmitClicked(true);
                   }}
-                  className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800"
+                  className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
                 >
                   Submit
                 </div>
@@ -213,7 +214,7 @@ export function CTA({}) {
                       {"Congratulations! "}
                       <span className="text-[gray]" />
                     </p>
-                    <p className="text-3xl font-gilroySemiBold leading-[43px] text-[gray]">
+                    <p className="text-3xl font-gilroySemiBold leading-[43px] mt-4 text-[gray]">
                       Our team will contact you soon.
                     </p>
                   </span>
@@ -224,7 +225,7 @@ export function CTA({}) {
                     <p className="text-white">{"(+91) 7470873515  "}</p>
                     <p className="text-white">
                       <span className="whitespace-pre-wrap">
-                        {"  contact @edify.club"}
+                        {"contact @edify.club"}
                       </span>
                     </p>
                   </span>

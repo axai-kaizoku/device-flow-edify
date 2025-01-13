@@ -14,6 +14,10 @@ export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
   const boxRef: any = useRef(null); // Reference to the box container
   const elementRef = useRef(null);
+  const ctaRef = useRef<HTMLDivElement>(null); // Reference to the CTA section
+  const featRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const newRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -80,6 +84,32 @@ export const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToCTA = () => {
+    if (ctaRef.current) {
+      ctaRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToFeatures = () => {
+    if (featRef.current) {
+      featRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToAbout = () => {
+    if (aboutRef.current) {
+      aboutRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToNew = () => {
+    if (newRef.current) {
+      newRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+
+
   return (
     <>
       <div className="px-8">
@@ -94,7 +124,7 @@ export const LandingPage = () => {
                 {
                   "Welcome to the club!! Join the BETA program to get all the new updates  "
                 }
-                <span className="text-center text-[15px] leading-[18px] underline">
+                <span className="text-center text-[15px] leading-[18px] underline cursor-pointer" onClick={scrollToCTA}>
                   Click here
                 </span>
               </p>
@@ -122,20 +152,20 @@ export const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-x-10">
-              <div>About</div>
-              <div>Features</div>
-              <div>Pricing</div>
-              <div>Blog</div>
+              <div className="cursor-pointer" onClick={scrollToAbout}>About</div>
+              <div onClick={scrollToFeatures} className="cursor-pointer">Features</div>
+              {/* <div>Pricing</div>
+              <div>Blog</div> */}
             </div>
             <Link href={'/login'} >
             <div className="pl-3 font-gilroyMedium underline">Log in</div></Link>
           </div>
           <div
             className={
-              "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 px-[15px] py-[11px]"
+              "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
             }
           >
-            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white">
+            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={scrollToCTA}>
               <span>
                 {"Register for "}
                 Beta
@@ -143,13 +173,13 @@ export const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className="fade-in  flex items-end justify-center self-stretch pt-6">
-          <div className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap">
+        <div className="fade-in  flex items-end justify-center self-stretch pt-6" onClick={scrollToNew}>
+          <div className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer">
             <div className="rounded-[100px] bg-neutral-800 px-2 py-0.5 text-center text-white">
               New
             </div>
             <div className="text-zinc-700">
-              How DeviceFlow grow your business ?
+              How DeviceFlow help your business ?
             </div>
             {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
           </div>
@@ -168,17 +198,17 @@ export const LandingPage = () => {
             <div className="flex items-center justify-center gap-x-3 text-center font-gilroySemiBold leading-6 tracking-[-0.2px]">
               <div
                 className={
-                  "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 px-[15px] py-[11px]"
+                  "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
                 }
               >
-                <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white">
+                <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={scrollToCTA}>
                   <span>
                     {"Register for "}
                     Beta
                   </span>
                 </div>
               </div>
-              <div className="flex items-center w-[148px] justify-center rounded-xl border border-solid border-gray-100 bg-white px-[15px] py-[11px]">
+              <div className="flex items-center w-[148px] hover:bg-gray-50 justify-center rounded-xl border border-solid border-gray-100 bg-white px-[15px] py-[11px] cursor-pointer">
                 <div className="text-center text-zinc-700">Request Demo</div>
               </div>
             </div>
@@ -246,11 +276,18 @@ export const LandingPage = () => {
           <img src={"/media/landingPage/hero.svg"} />
         </div>
       </div>
-      <Section2 />
-      <Section3 />
+      <div ref={featRef}>
+        <Section2 newRef={newRef}/>
+      </div>
+      <div ref={aboutRef}>
+        <Section3 />
+      </div>
+
       <Integration />
       <Testimonials />
-      <CTA />
+      <div ref={ctaRef}>
+        <CTA />
+      </div>
       <FAQ />
       <Footer />
     </>
