@@ -414,7 +414,7 @@ h2.title::after {
   position: absolute;
   height: 3px;
   border: none;
-  background-color: #f2f6d6;
+  background-color: var(--triangle-bg-color, #f2f6d6);
   top: -0.7rem;
   right: -0.46rem;
 }
@@ -425,7 +425,7 @@ h2.title::after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-top: 6px solid white;
-  border-top-color: #f2f6d6;
+  border-top-color: var(--triangle-border-top-color, #f2f6d6);
   position: absolute;
   top: -8px;
   left: 50%;
