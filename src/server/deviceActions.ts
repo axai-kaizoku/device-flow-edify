@@ -8,15 +8,17 @@ export type StoreDevice = {
   _id?: string;
   team?: string;
   createdAt?: string;
-  device_name?: string;
-  device_type?: string;
-  asset_serial_no?: string | null;
-  serial_no?: string | null;
-  ram?: string | null;
-  processor?: string | null;
-  storage?: string[] | null;
-  custom_model?: string | null;
-  brand?: string | null;
+  qty?: number | null;
+  updatedAt?: string;
+  device_name: string;
+  device_type: string;
+  asset_serial_no: string | null;
+  serial_no: string | null;
+  ram: string | null;
+  processor: string | null;
+  storage: string[] | null;
+  custom_model: string | null;
+  brand: string | null;
   warranty_status?: boolean;
   warranty_expiary_date?: string | null; // Assuming this is a date string
   ownership?: string | null;
@@ -102,7 +104,11 @@ export const createDevices = async (
       purchase_value: Number(device?.purchase_value), // Ensure it's a number
       os: device?.os,
       device_purchase_date: device?.device_purchase_date || null,
-      // image: device?.image,
+      image: [
+        {
+          url: "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png",
+        },
+      ],
       // addressId: device?.addressId,
       // ...(device?.userId !== "" && { userId: device?.userId }),
     };

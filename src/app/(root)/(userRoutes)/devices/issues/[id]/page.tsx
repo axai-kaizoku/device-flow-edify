@@ -277,7 +277,6 @@ async function SignleIssue({ params }: IssuePageProps) {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

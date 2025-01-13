@@ -12,6 +12,7 @@ import {
 } from "@/server/cartActions";
 import { Minus, MoveLeft, Plus } from "lucide-react";
 import { BackBtn } from "../../cart/checkout/_components/back-btn";
+import { useAlert } from "@/hooks/useAlert";
 
 export const DeviceSecx = ({
   data,
@@ -21,6 +22,7 @@ export const DeviceSecx = ({
   cart: Cart;
 }) => {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   // const findItemById = (itemId: string) => {
   //   if (cart?.items?.length > 0) {
@@ -55,10 +57,24 @@ export const DeviceSecx = ({
   };
 
   const handleIncrease = async (device: StoreDevice) => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity); // Update local quantity first
+    const availableQty = data?.qty ? data.qty : 0; // Get available quantity from API
+    const newQuantity = quantity + 1; // Calculate new quantity
+
+    // Check if the new quantity exceeds available quantity
+    if (newQuantity > availableQty) {
+      // Optionally, you can show a message to the user
+      showAlert({
+        isFailure: true,
+        title: "Failed to add to cart",
+        description: "Cannot increase quantity beyond available stock.",
+        key: "stock-error",
+      });
+      return; // Stop execution if the new quantity exceeds available quantity
+    }
+
+    setQuantity(newQuantity); // Update local quantity
     await updateCartItemQuantity(device?._id ?? "", newQuantity); // Call API to update quantity
-    router.refresh();
+    router.refresh(); // Refresh the router
   };
 
   const handleDecrease = async (device: StoreDevice) => {
@@ -144,16 +160,26 @@ export const DeviceSecx = ({
   });
 
   const [currentIdx, setCurrentIdx] = useState(0);
+  const deviceImages =
+    data?.image && data?.image.length === 5
+      ? data?.image
+      : [
+          { url: "/media/store-item/dell1.png" },
+          { url: "/media/store-item/dell2.png" },
+          { url: "/media/store-item/dell3.png" },
+          { url: "/media/store-item/dell4.png" },
+          { url: "/media/store-item/dell5.png" },
+        ];
 
   const handlePrev = () => {
     setCurrentIdx((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : data.image!.length - 1
+      prevIndex > 0 ? prevIndex - 1 : deviceImages!.length - 1
     );
   };
 
   const handleNext = () => {
     setCurrentIdx((prevIndex) =>
-      prevIndex < data.image!.length - 1 ? prevIndex + 1 : 0
+      prevIndex < deviceImages!.length - 1 ? prevIndex + 1 : 0
     );
   };
 
@@ -179,14 +205,14 @@ export const DeviceSecx = ({
             </span>
             <div className="flex gap-1 text-[#A2A3B1] text-base 2xl:text-lg font-gilroySemiBold">
               <span>/</span>
-              <span>{String(data?.image?.length).padStart(2, "0")}</span>
+              <span>{String(deviceImages?.length).padStart(2, "0")}</span>
             </div>
           </div>
 
           <div className="flex justify-center items-center py-4">
             <img
               className="object-contain select-none flex-shrink-0 w-[404px] h-[278px]"
-              src={data?.image![currentIdx]?.url ?? ""}
+              src={deviceImages?.[currentIdx]?.url ?? ""}
               alt={data?.device_name ?? "device"}
             />
           </div>
@@ -200,10 +226,7 @@ export const DeviceSecx = ({
           </div>
 
           <div className="flex justify-between pl-4 pr-3 gap-x-4 pt-2 pb-5 items-center">
-            {(Array.isArray(data.image)
-              ? data.image
-              : [{ url: data.image }]
-            ).map(({ url: src }, i) => (
+            {deviceImages.map(({ url: src }, i) => (
               <div
                 key={src}
                 className={cn(
@@ -230,8 +253,17 @@ export const DeviceSecx = ({
             <div className="font-gilroyBold text-2xl 2xl:text-4xl flex items-baseline gap-x-1.5">
               {`₹${data?.payable ?? ""}`}{" "}
               <span className="text-base font-gilroyMedium 2xl:text-lg line-through">{`₹${data.purchase_value}`}</span>
-              <span className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">
+              {/* <span className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">
                 50% off
+              </span> */}
+              <span>
+                {data?.qty ? (
+                  <div className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">{`Avilable Qty - ${data?.qty}`}</div>
+                ) : (
+                  <div className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-red-100 text-red-600 rounded-full">
+                    Out of stock
+                  </div>
+                )}
               </span>
             </div>
             <div className="flex items-center gap-x-2">
@@ -242,7 +274,7 @@ export const DeviceSecx = ({
                 />
               </div>
               <div className="font-gilroyMedium ">
-                {data?.overallRating ?? ""} / 5.0{" "}
+                {data?.overallRating ? data?.overallRating : "0.0"} / 5.0{" "}
                 <span className="text-[#A2A3B1]">
                   ({data?.overallReviews ?? ""})
                 </span>
