@@ -114,6 +114,9 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
                 active={activeTab === tab?.key}
                 onClick={() => handleTabChange(tab?.key)}
                 label={tab?.label}
+                triangleBackgroundColor="#fff" // Light yellow
+                triangleBorderTopColor="#fff" // Orange
+                className="after:left-[-39%] after:w-[178%]"
               />
             ))}
           </div>
