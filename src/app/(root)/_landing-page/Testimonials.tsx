@@ -11,7 +11,7 @@ export function Testimonials({}) {
           <div className="testimonials" id="testimonial-column1">
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -28,7 +28,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -45,7 +45,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -67,7 +67,7 @@ export function Testimonials({}) {
           <div className="testimonials" id="testimonial-column2">
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -84,7 +84,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -101,7 +101,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -123,7 +123,7 @@ export function Testimonials({}) {
           <div className="testimonials" id="testimonial-column3">
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -140,7 +140,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox
@@ -157,7 +157,7 @@ export function Testimonials({}) {
             </div>
             <div className={`font-gilroy flex w-full flex-col gap-y-6 rounded-3xl border border-solid border-gray-200 bg-white p-8 font-gilroyMedium leading-6 tracking-[0px]`}>
               <div className="flex items-center justify-center gap-x-3">
-                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/assets/profile-image.png" loading="lazy" />
+                <img className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center" src="/media/landingPage/testmonial-image.png" loading="lazy" />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
                     Robert Fox

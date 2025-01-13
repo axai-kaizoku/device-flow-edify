@@ -27,9 +27,8 @@ export default async function MainLayout({
     <div className="relative">
       <div
         className="bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed h-full min-h-screen"
-        // style={{ filter: "blur(200px)" }}
       ></div>
-      {/* <div className="absolute inset-0 bg-black opacity-[3%] backdrop-blur-lg z-10" /> */}
+      <div className="absolute inset-0 bg-black opacity-[3%] backdrop-blur-lg z-10" />
       <div
         className="flex flex-col h-full min-h-screen  fixed z-20 mt-1"
         style={{ top: 1, width: "100%", }}
