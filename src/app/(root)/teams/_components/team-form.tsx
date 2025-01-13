@@ -92,7 +92,7 @@ export const TeamForm = ({
 
         router.refresh();
         closeBtn(false);
-      } catch (error:any) {
+      } catch (error: any) {
         closeBtn(false);
         showAlert({
           title: "Can't update user",
@@ -100,14 +100,17 @@ export const TeamForm = ({
           isFailure: true,
           key: "update-user-failure",
         });
-      }
-      finally{
+      } finally {
         setLoading(false);
       }
     } else {
       setLoading(true);
       try {
-        await createTeam(formData?.title, formData?.description, formData?.image);
+        await createTeam(
+          formData?.title,
+          formData?.description,
+          formData?.image
+        );
         // setLocalAlert(true);
         showAlert({
           title: "WOHOOO!! 🎉",
@@ -118,7 +121,7 @@ export const TeamForm = ({
         setLoading(false);
         router.refresh();
         closeBtn(false);
-      } catch (error:any) {
+      } catch (error: any) {
         closeBtn(false);
         showAlert({
           title: "Can't Create User",
@@ -126,11 +129,9 @@ export const TeamForm = ({
           isFailure: true,
           key: "update-user-failure",
         });
-      }
-      finally{
+      } finally {
         setLoading(false);
       }
-      
     }
   };
 
@@ -138,27 +139,28 @@ export const TeamForm = ({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-  
+
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
-      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
-  
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
+
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
-          console.log("Uploaded image response:", res);
-  
+          // console.log("Uploaded image response:", res);
           setFormData((prev) => ({
             ...prev,
             image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
           }));
-  
+
           setErrors((prev) => ({
             ...prev,
             image: "",
           }));
         } catch (error) {
-          openToast("error","Image upload failed");
+          openToast("error", "Image upload failed");
           setErrors((prev) => ({
             ...prev,
             image: "Failed to upload the image. Please try again.",

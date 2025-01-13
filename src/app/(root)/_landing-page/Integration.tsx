@@ -1,15 +1,17 @@
 import React from "react";
 export function Integration({}) {
-  return <div className={`font-gilroy flex w-full flex-col items-center gap-y-3 bg-white px-36 py-24 text-center tracking-[0px] text-gray-500 `}>
+  return <div className={`font-gilroy flex w-full flex-col items-center gap-y-3 bg-white px-36 pt-24 text-center tracking-[0px] text-gray-500 `}>
         <div className="w-[692px] font-bold leading-6">Integrations</div>
         <div className="w-[692px] text-4xl font-bold leading-[44px] tracking-[-0.32px] text-gray-950">
           Upcoming Integrations
         </div>
         <div className="flex items-end justify-center self-stretch px-56 pt-2 text-xl font-gilroyMedium leading-[30px]">
+          <div>
           <p className="text-center">
-            Soon DeviceFlow will works seamlessly with your favorite apps. Use
-            over 500 tools and apps by just one click.
+            Soon DeviceFlow will works seamlessly with your favorite apps.
           </p>
+          <p>Use over 500 tools and apps by just one click.</p>
+          </div>
         </div>
         <div className="flex items-end justify-center self-stretch pr-[0.32px] pt-16">
           <div className="flex items-center justify-center gap-x-[8.5px] pt-[1.4px] text-center">

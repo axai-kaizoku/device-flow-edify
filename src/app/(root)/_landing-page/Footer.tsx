@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 export function Footer({}) {
   return <div className={`flex w-full flex-col gap-y-2 bg-neutral-800 pt-[74px] mt-10`}>
@@ -65,12 +66,12 @@ export function Footer({}) {
               </div>
             </div>
             <div className="flex flex-col items-center gap-y-3 text-center leading-6 tracking-[-0.2px] text-white">
-              <div className="w-72 rounded-xl bg-zinc-700 px-4 py-3">
+              <div className="w-72 rounded-xl bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black">
                 Register for Beta
               </div>
-              <div className="flex w-72 items-center justify-center rounded-xl border border-solid border-zinc-700 px-[15px] py-[11px]">
+              <Link href={'/login'} className="flex w-72 items-center justify-center rounded-xl border border-solid border-zinc-700 px-[15px] py-[11px] cursor-pointer">
                 <div className="flex-grow text-center">Login</div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

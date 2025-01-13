@@ -47,7 +47,7 @@ export const DeviceReviewsSecx = ({ data }: { data: StoreDevice }) => {
           </div>
 
           <div className="w-[68%] flex flex-col-reverse gap-y-2.5 -mt-4">
-            {data.ratingDetails!.map((v) => (
+            {data?.ratingDetails?.map((v) => (
               <div
                 key={v.stars}
                 className="flex gap-1.5 justify-between items-center"
