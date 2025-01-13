@@ -27,7 +27,7 @@ export const Section3 = () => {
             onMouseLeave={() => {
               setCardHeight1(334);
             }}
-            style={{ transition: "height 1s ease-in-out", height:  cardHeight1 >334 ? cardHeight1 : cardHeight4 <= 334 ? cardHeight4 : 147,   overflow: "hidden" }}
+            style={{ transition: "height 0.5s ease-in-out", height:  cardHeight1 >334 ? cardHeight1 : cardHeight4 <= 334 ? cardHeight4 : 147,   overflow: "hidden" }}
             className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
           >
             <div
@@ -50,7 +50,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              
@@ -74,7 +74,7 @@ export const Section3 = () => {
           </div>
           <div
             style={{
-              transition: "height 1s ease-in-out",
+              transition: "height 0.5s ease-in-out",
               height: cardHeight4 >334 ? cardHeight4 : cardHeight1 <= 334 ? cardHeight1 : 147,
               overflow: "hidden"
             }}
@@ -106,7 +106,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              
@@ -137,7 +137,7 @@ export const Section3 = () => {
             onMouseLeave={() => {
               setCardHeight2(334);
             }}
-            style={{ transition: "height 1s ease-in-out", height:  cardHeight2 >334 ? cardHeight2 : cardHeight5 <= 334 ? cardHeight5 : 147,  overflow: "hidden"  }}
+            style={{ transition: "height 0.5s ease-in-out", height:  cardHeight2 >334 ? cardHeight2 : cardHeight5 <= 334 ? cardHeight5 : 147,  overflow: "hidden"  }}
             className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
           >
                <div
@@ -160,7 +160,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              
@@ -184,7 +184,7 @@ export const Section3 = () => {
           </div>
           <div
             style={{
-              transition: "height 1s ease-in-out",
+              transition: "height 0.5s ease-in-out",
               height: cardHeight5 >334 ? cardHeight5 : cardHeight2 <= 334 ? cardHeight2 : 147,
               overflow: "hidden"
             }}
@@ -216,7 +216,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              
@@ -247,7 +247,7 @@ export const Section3 = () => {
             onMouseLeave={() => {
               setCardHeight3(334);
             }}
-            style={{ transition: "height 1s ease-in-out", height:  cardHeight3 >334 ? cardHeight3 : cardHeight6 <= 334 ? cardHeight6 : 147,   overflow: "hidden" }}
+            style={{ transition: "height 0.5s ease-in-out", height:  cardHeight3 >334 ? cardHeight3 : cardHeight6 <= 334 ? cardHeight6 : 147,   overflow: "hidden" }}
             className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
           >
                <div
@@ -270,7 +270,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              
@@ -294,7 +294,7 @@ export const Section3 = () => {
           </div>
           <div
             style={{
-              transition: "height 1s ease-in-out",
+              transition: "height 0.5s ease-in-out",
               height: cardHeight6 >334 ? cardHeight6 : cardHeight3 <= 334 ? cardHeight3 : 147,
               overflow: "hidden"
             }}
@@ -326,7 +326,7 @@ export const Section3 = () => {
                 </p>
               </div>
               <div style={{
-                height: '100%', transition: "height 1s ease-in-out",
+                height: '100%', transition: "height 0.5s ease-in-out",
                 overflow: "hidden"
               }}>
              

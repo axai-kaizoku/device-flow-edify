@@ -10,11 +10,13 @@ import { Members } from "./admin-conponents/members";
 import { Teams } from "./admin-conponents/Teams";
 import { useEffect, useState } from "react";
 import { DashboardDetails } from "./admin-conponents/interface";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
     null
   );
+  const router = useRouter()
 
   useEffect(() => {
     getDashboardDetils();
@@ -22,7 +24,6 @@ export default function AdminDashboard() {
 
   const getDashboardDetils = async () => {
     const dashboard: DashboardDetails = await getDashboard();
-    console.log(dashboard)
     setDasboardData(dashboard)
   };
 
@@ -59,7 +60,9 @@ export default function AdminDashboard() {
         >
           <TrendingDevices dashboardData={dashboardData}  />
           <div>
-            <img src={'/media/dashboard/store-banner.png'} style={{width: '100%', height: 170}} />
+            <img src={'/media/dashboard/store-banner.png'} style={{width: '100%', height: 170, cursor: 'pointer'}} onClick={() => {
+              router.push('store')
+            }}  />
           </div>
         </div>
       </div>

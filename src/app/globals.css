@@ -394,7 +394,7 @@ h2.title::after {
   }
 }
 .transition-path {
-  transition: d 0.3s ease;
+  transition: d 1s ease;
 }
 .triangle {
   width: 0;

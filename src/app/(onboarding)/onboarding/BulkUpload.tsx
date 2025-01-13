@@ -1,17 +1,16 @@
 "use client";
-import { bulkUploadDevices } from "@/server/deviceActions";
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { checkForDuplicates, parseCSV } from "@/components/bulk-upload/CSVHelper";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
-import { checkForDuplicates, parseCSV } from "@/components/bulk-upload/CSVHelper";
-import { Button } from "@/components/buttons/Button";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 type dataProps = {
   closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
+  setSuccess: any
 };
-function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
+function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) {
   const [csvError, setCsvError] = useState<string | null>(null);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -90,14 +89,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
     formData.append("file", file);
     try {
       const response = await bulkApi(formData); // Call the API
-      showAlert({
-        title: "WOHOOO!! 🎉",
-        description: "Bulk Upload successfully !",
-        isFailure: false,
-        key: "create-team-success",
-      });
-      router.refresh();
-      closeBtn();
+     setSuccess(true)
     } catch (error: any) {
       if (error.message.includes("E11000 duplicate key error")) {
         const duplicateField = error.message.match(/index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/);
@@ -137,24 +129,22 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
     <>
       <div className="flex flex-col gap-3 w-full">
         <div className="w-full flex flex-col gap-6">
+          <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+            Bulk Import
+          </div>
           <div className="w-full flex justify-between gap-4">
-          <Button
-              className="rounded-[9px] font-gilroySemiBold text-[16px] w-[50%] h-[54px] bg-primary text-primary-foreground"
-              type="button"
+            <button
+              className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
               onClick={handleFileUploadClick}
             >
-              Bulk Upload
-            </Button>
-
-            <Button
-              className="rounded-[9px] font-gilroySemiBold text-[16px] w-[50%] h-[54px]  "
-              style={{
-                backgroundColor: "#EDEDED",
-              }}
+              Upload CSV
+            </button>
+            <button
+              className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
               onClick={downloadSampleCSV}
             >
-              Sample csv
-            </Button>
+              Download Sample CSV
+            </button>
           </div>
           <input
             type="file"

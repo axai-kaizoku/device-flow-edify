@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { Org, getCurrentOrg, updateOrg } from "@/server/orgActions";
 import Spinner from "@/components/Spinner";
+import { Icons } from "@/components/icons";
 
 export function CompanyDetails({ setSteps }: any) {
   const [company, setCompany] = useState<Org | null>(null);
@@ -22,11 +23,13 @@ export function CompanyDetails({ setSteps }: any) {
       const formData: any = new FormData();
       formData.append("file", file);
       try {
-        const data = await updateOrg(
-          company?._id,
-          undefined,
-          undefined,
-          formData
+        const data = await updateOrg({
+
+          id:company?._id,
+          title: undefined,
+          description: undefined,
+          logo: formData
+        }
         ); // Send the image in the form data
         getCompany();
       } catch (error) {}
@@ -36,7 +39,7 @@ export function CompanyDetails({ setSteps }: any) {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      await updateOrg(company?._id, company?.name);
+      await updateOrg({id: company?._id, title: company?.name});
       setSteps(2)
     } catch (error) {
       setLoading(false);
@@ -57,7 +60,13 @@ export function CompanyDetails({ setSteps }: any) {
               Setup your organization
             </div>
           </div>
-          <svg
+         {company?.logo ? <div>
+                <img
+                  src={company.logo}
+                  alt="Company Logo"
+                  className="size-28 rounded-full border object-cover"
+                />
+            </div>:  <svg
             width="137"
             height="136"
             viewBox="0 0 137 136"
@@ -102,7 +111,7 @@ export function CompanyDetails({ setSteps }: any) {
               stroke-linecap="round"
               stroke-linejoin="round"
             />
-          </svg>
+          </svg>}
           <div className="flex flex-col justify-end self-stretch pt-[17px]">
             <div className="flex flex-grow flex-wrap items-center justify-center gap-x-[22px] gap-y-[22px] text-[15px] font-medium leading-[normal] text-indigo-950 [max-height:59px] min-[423.75189208984375px]:flex-nowrap">
               <div
@@ -124,7 +133,7 @@ export function CompanyDetails({ setSteps }: any) {
                   />
                 </svg>
                 <div className="flex flex-col items-center">
-                  <div>Upload Logo</div>
+                  {company?.logo ? <div>Edit Logo</div>: <div>Upload Logo</div>}
                 </div>
                 <input
                   type="file"

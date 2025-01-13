@@ -186,7 +186,7 @@ export const DeviceSecx = ({
           <div className="flex justify-center items-center py-4">
             <img
               className="object-contain select-none flex-shrink-0 w-[404px] h-[278px]"
-              src={data?.image![currentIdx].url ?? ""}
+              src={data?.image![currentIdx]?.url ?? ""}
               alt={data?.device_name ?? "device"}
             />
           </div>

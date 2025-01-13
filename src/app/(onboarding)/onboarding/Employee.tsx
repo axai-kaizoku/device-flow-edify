@@ -1,6 +1,19 @@
 "use client";
 
+import {
+  bulkUploadKeys,
+  designations,
+  employments,
+  genders,
+} from "@/app/(root)/people/_components/helper/utils";
+import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { Button } from "@/components/buttons/Button";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
+import { SelectInput } from "@/components/dropdown/select-input";
+import Spinner from "@/components/Spinner";
+import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
+import { cn } from "@/lib/utils";
 import { fetchTeams } from "@/server/teamActions";
 import {
   bulkUploadUsers,
@@ -8,27 +21,11 @@ import {
   CreateUserArgs,
   fetchUsers,
   searchUsers,
-  updateUser,
   User,
 } from "@/server/userActions";
-import { notFound, useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-import { SelectInput } from "@/components/dropdown/select-input";
-import { Icons } from "@/components/icons";
 import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Spinner from "@/components/Spinner";
-import { getImageUrl } from "@/server/orgActions";
-import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
-import {
-  bulkUploadKeys,
-  genders,
-  employments,
-  designations,
-} from "@/app/(root)/people/_components/helper/utils";
-import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { notFound, useRouter } from "next/navigation";
+import { useState } from "react";
 import BulkUpload from "./BulkUpload";
 
 interface UserFormProps {
@@ -176,26 +173,6 @@ export const Employee = ({ setSteps }: any) => {
     }
   };
 
-  const fileImageRef = useRef<HTMLInputElement | null>(null);
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const res = await getImageUrl({ file: file! }, "user");
-    // if (file) {
-    setFormData((prev) => ({ ...prev, image: res.data }));
-    // }
-  };
-
-  const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
-  const handleOfferLetterChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    const res = await getImageUrl({ file: file! }, "device");
-    // if (file) {
-    setFormData((prev) => ({ ...prev, offerLetter: res.data }));
-    // }
-  };
-
   return (
     <>
       <div className="w-full h-screen items-center justify-evenly flex flex-col lg:flex-row p-8">
@@ -226,7 +203,7 @@ export const Employee = ({ setSteps }: any) => {
               }}
               onClick={() => {
                 setSuccess(false);
-                setNext(0)
+                setNext(0);
               }}
             >
               Create New Employee
@@ -245,10 +222,14 @@ export const Employee = ({ setSteps }: any) => {
             {next === 0 && (
               <div className="flex w-[75%] gap-4">
                 <BulkUpload
-                bulkApi={bulkUploadUsers}
-                closeBtn={() => () => {}}
-                requiredKeys={bulkUploadKeys}
-              />
+                  bulkApi={bulkUploadUsers}
+                  closeBtn={() => () => {}}
+                  requiredKeys={bulkUploadKeys}
+                  setSuccess={(success: boolean) => {
+                    setSuccess(success);
+                    setLoading(false);
+                  }}
+                />
               </div>
             )}
             {/* {next === 0 && (
