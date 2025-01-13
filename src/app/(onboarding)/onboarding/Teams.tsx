@@ -55,6 +55,8 @@ export const Teams = ({ setSteps }: any) => {
       setSuccess(true);
     } catch {
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   // Handle department selection

@@ -129,7 +129,7 @@ export const Employee = ({ setSteps }: any) => {
       phone: formData.phone,
       image: formData.image,
       designation: formData.designation,
-      teamId: formData.team.value,
+      // teamId: formData.team.value,
       onboarding_date: formData.onboarding,
       reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
@@ -137,6 +137,11 @@ export const Employee = ({ setSteps }: any) => {
       date_of_birth: formData.dob,
       gender: formData.gender,
     };
+
+    if (formData.team.value && formData.team.value.length !== 0) {
+      // @ts-ignore
+      user.teamId = formData.team.value;
+    }
 
     try {
       setLoading(true);

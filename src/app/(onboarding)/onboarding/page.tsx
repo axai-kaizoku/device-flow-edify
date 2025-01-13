@@ -7,7 +7,7 @@ import { Employee } from "./Employee";
 import { DeviceComponent } from "./Device";
 
 export default function Page() {
-  const [steps, setSteps] = useState(4);
+  const [steps, setSteps] = useState(1);
   return (
     <>
       {steps === 1 && (

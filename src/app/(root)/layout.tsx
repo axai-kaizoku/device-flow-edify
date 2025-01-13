@@ -31,7 +31,7 @@ export default async function MainLayout({
       <div className="absolute inset-0 bg-black opacity-[3%] backdrop-blur-lg z-10" />
       <div
         className="flex flex-col h-full min-h-screen  fixed z-20 mt-1"
-        style={{ top: 1, width: "100%", }}
+        style={{ top: 1, width: "100%" }}
       >
         {/* Header Section */}
         <Header session={session} />

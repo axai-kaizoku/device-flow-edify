@@ -14,11 +14,13 @@ import { getAllResponse, getIssueByUserId } from "@/server/issueActions";
 import { Tab } from "@/app/(root)/teams/_components/Tab";
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
+import { useAlert } from "@/hooks/useAlert";
 
 function DeviceContainer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "devices",
   });
+  const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
 
   const [issues, setIssues] = useState<getAllResponse>([]);
@@ -36,8 +38,13 @@ function DeviceContainer() {
           setIssues(issueData);
         }
       } catch (error) {
-        console.error(`Error fetching ${type} data:`, error);
-        notFound();
+        // console.error(`Error fetching ${type} data:`, error);
+        showAlert({
+          isFailure: true,
+          key: "get-devices-user",
+          title: "Error fetching devices",
+          description: "Can't fetch devices assigned to user",
+        });
         // Optionally, handle error state or show a notification to the user
       } finally {
         setLoading(false);

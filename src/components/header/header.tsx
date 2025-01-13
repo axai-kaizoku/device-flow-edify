@@ -26,7 +26,13 @@ export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
-  const handleMouseEnter = (href:string) => {
+  // useEffect(() => {
+  //   if (session?.user.user.employeeCount === 0) {
+  //     router.push("/onboarding");
+  //   }
+  // }, []);
+
+  const handleMouseEnter = (href: string) => {
     setIsHovered(true);
     router.prefetch(href); // Prefetch the route on hover
   };
@@ -89,6 +95,7 @@ export default function Header({ session }: Props) {
             email: session.user.user.email,
             firstName: session.user.user.firstName ?? "",
             lastName: session.user.user.lastName ?? "",
+            employeeCount: session.user.user.employeeCount ?? 0,
             role: session.user.user.role ?? 1,
             orgId: session.user.user.orgId!,
             teamId: session.user.user.teamId!,
@@ -202,7 +209,9 @@ export default function Header({ session }: Props) {
               <button
                 onClick={() => router.push("/settings")}
                 className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
-                onMouseEnter={()=>{ handleMouseEnter('/settings') }}
+                onMouseEnter={() => {
+                  handleMouseEnter("/settings");
+                }}
                 onMouseLeave={() => setIsHovered(false)}
               >
                 <Settings className="size-5" />

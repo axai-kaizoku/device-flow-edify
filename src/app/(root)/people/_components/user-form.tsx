@@ -144,7 +144,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       phone: formData.phone,
       image: formData.image,
       designation: formData.designation,
-      teamId: formData.team.value,
       onboarding_date: formData.onboarding,
       reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
@@ -152,6 +151,11 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       date_of_birth: formData.dob,
       gender: formData.gender,
     };
+
+    if (formData.team.value && formData.team.value.length !== 0) {
+      // @ts-ignore
+      user.teamId = formData.team.value;
+    }
 
     try {
       if (isEditForm) {
@@ -224,27 +228,29 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-  
+
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
-      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
-  
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
+
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
           console.log("Uploaded image response:", res);
-  
+
           setFormData((prev) => ({
             ...prev,
             image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
           }));
-  
+
           setErrors((prev) => ({
             ...prev,
             image: "",
           }));
         } catch (error) {
-          openToast("error","Image upload failed");
+          openToast("error", "Image upload failed");
           setErrors((prev) => ({
             ...prev,
             image: "Failed to upload the image. Please try again.",
@@ -258,12 +264,13 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       }
     }
   };
-  
 
   const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
   const [offerLetter, setOfferLetter] = useState<File | null>(null);
 
-  const handleOfferLetterChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOfferLetterChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -280,7 +287,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           console.log("Uploaded image response:", res);
           setOfferLetter(res?.fileUrl);
         } catch (error) {
-          openToast("error","Image upload failed");
+          openToast("error", "Image upload failed");
         }
       } else {
         setErrors((prev) => ({

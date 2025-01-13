@@ -9,9 +9,13 @@ export const Teams = ({
     <div className="font-gilroy flex  w-full flex-shrink-0 flex-col gap-y-4 overflow-clip rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-3 pl-[22px] pr-5 pt-[13px] tracking-[0px] backdrop-blur-[24]">
       <div className="flex items-center">
         <div className="flex items-center justify-center gap-x-[18px] pt-[0.08px]">
-          <div className="text-sm font-gilroySemiBold leading-[23px]">Teams</div>
+          <div className="text-sm font-gilroySemiBold leading-[23px]">
+            Teams
+          </div>
           <div className="rounded-[17px] bg-purple-50 px-2 py-0.5 text-center text-xs font-gilroyMedium leading-[19px] text-purple-700">
-          {(dashboardData?.teamsData[0].activeTeams || 0) + (dashboardData?.teamsData[0].inactiveTeams || 0)} Total Teams
+            {(dashboardData?.teamsData?.[0]?.activeTeams || 0) +
+              (dashboardData?.teamsData?.[0]?.inactiveTeams || 0)}{" "}
+            Total Teams
           </div>
         </div>
       </div>
@@ -35,7 +39,7 @@ export const Teams = ({
             </svg>
           </div>
           <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-            {dashboardData?.teamsData[0].activeTeams || 0}
+            {dashboardData?.teamsData?.[0]?.activeTeams || 0}
           </div>
           <div className="text-center  text-[11px]">Active</div>
         </div>
@@ -58,7 +62,7 @@ export const Teams = ({
             </svg>
           </div>
           <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-            {dashboardData?.teamsData[0].inactiveTeams || 0}
+            {dashboardData?.teamsData?.[0]?.inactiveTeams || 0}
           </div>
           <div className="text-center">Deleted</div>
         </div>
