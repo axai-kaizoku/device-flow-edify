@@ -224,9 +224,12 @@ export function CTA({}) {
                     <p className="text-[gray]">For further info:</p>
                     <p className="text-white">{"(+91) 7470873515  "}</p>
                     <p className="text-white">
-                      <span className="whitespace-pre-wrap">
-                        {"contact @edify.club"}
-                      </span>
+                      <a
+                        href="mailto:support@deviceflow.ai"
+                        className="hover:underline cursor-pointer"
+                      >
+                        support@deviceflow.ai
+                      </a>
                     </p>
                   </span>
                 </div>

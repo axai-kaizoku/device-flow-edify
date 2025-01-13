@@ -3,12 +3,18 @@ import React, { useState } from "react";
 export const FAQ = () => {
   // Manage the state of each FAQ item
   const [expanded, setExpanded] = useState(null);
+  const [showAll, setShowAll] = useState(false); // Manages "View More" and "View Less"
 
   // Toggle the expanded state for a specific FAQ
   const toggleFAQ = (index) => {
     setExpanded(expanded === index ? null : index);
   };
 
+  const toggleShowAll = () => {
+    setShowAll(!showAll);
+  };
+
+  
   const faqs = [
     {
       question: "What is DeviceFlow?",
@@ -18,23 +24,53 @@ export const FAQ = () => {
     {
       question: "Who is DeviceFlow for?",
       answer:
-        "DeviceFlow is designed for startups, businesses, and IT teams looking for efficient asset management solutions.",
+        "DeviceFlow is built for startups, IT teams, and growing businesses that want to simplify managing laptops, desktops, accessories, and other office devices.",
     },
     {
       question: "What makes DeviceFlow different?",
       answer:
-        "DeviceFlow offers unique features like easy integration with existing tools, user-friendly interfaces, and advanced tracking capabilities.",
+        "We offer a unified platform for asset management, user onboarding/offboarding, and inventory tracking—saving you time, reducing errors, and providing actionable insights. Plus, we’re designed with startups in mind!",
     },
     {
       question: "Is DeviceFlow compatible with my existing tools?",
-      answer: "Yes, DeviceFlow integrates seamlessly with most existing IT tools.",
+      answer:
+        "Yes! DeviceFlow integrates with popular tools like Slack, Jira, and Microsoft Teams to ensure seamless IT workflows across your organization.",
     },
     {
       question: "Can I try DeviceFlow before purchasing?",
       answer:
-        "Yes, we offer a trial version of DeviceFlow so you can experience its benefits before committing.",
+        "Absolutely! We’re currently offering beta access. Sign up today to get early access and provide feedback to shape the future of IT management.",
+    },
+    {
+      question: "How secure is DeviceFlow?",
+      answer:
+        "Your data’s security is our top priority. DeviceFlow uses industry-standard encryption and follows best practices to ensure your information remains safe and private.",
+    },
+    {
+      question: "How do I get started with DeviceFlow?",
+      answer:
+        "Sign up for our beta program using the form above. Once you’re in, our intuitive platform will guide you through the setup process in minutes.",
+    },
+    {
+      question: "What types of assets can I manage with DeviceFlow?",
+      answer:
+        "You can manage laptops, desktops, monitors, keyboards, mice, headphones, and any other IT-related devices or office accessories.",
+    },
+    {
+      question: "Is there a free version of DeviceFlow?",
+      answer:
+        "We currently offer beta access for free! Once we launch, we’ll provide flexible pricing plans tailored to businesses of all sizes.",
+    },
+    {
+      question: "How do I contact support?",
+      answer:
+        "We’re here to help! Reach out to us anytime at support@deviceflow.ai, and our team will get back to you promptly.",
     },
   ];
+
+  const visibleFaqs = showAll ? faqs : faqs.slice(0, 5);
+
+  
 
   return (
     <div
@@ -46,7 +82,7 @@ export const FAQ = () => {
       <div className="self-stretch text-center text-xl font-gilroyMedium leading-[30px] text-gray-500">
         Everything you need to know about DeviceFlow
       </div>
-      {faqs.map((faq, index) => (
+      {visibleFaqs.map((faq, index) => (
         <div
           key={index}
           className={`flex flex-col w-full ${
@@ -98,11 +134,14 @@ export const FAQ = () => {
           </div>
         </div>
       ))}
-      {faqs.length > 5 && 
-        <div className="pt-3 text-center text-sm font-gilroySemiBold leading-normal underline cursor-pointer">
-          View more
+      {faqs.length > 5 && (
+        <div
+          className="pt-3 text-center text-sm font-gilroySemiBold leading-normal underline cursor-pointer"
+          onClick={toggleShowAll}
+        >
+          {showAll ? "View Less" : "View More"}
         </div>
-      }
+      )}
     </div>
   );
 };
