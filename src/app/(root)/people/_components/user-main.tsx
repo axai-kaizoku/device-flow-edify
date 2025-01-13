@@ -19,7 +19,7 @@ export default function UserMain({
   setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
 }) {
   if (!data) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   const router = useRouter();
@@ -121,13 +121,7 @@ export default function UserMain({
                       {
                         title: "Team",
                         render: (data) => (
-                          <div className="">
-                            {data?.onboarding_date
-                              ? new Date(
-                                  data.onboarding_date
-                                ).toLocaleDateString()
-                              : "N/A"}
-                          </div>
+                          <div className="">{data?.team?.title ?? "-"}</div>
                         ),
                       },
 

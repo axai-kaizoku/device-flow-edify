@@ -31,8 +31,8 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
               </div>
               <div className="flex gap-2 items-center">
                 <img
-                  src={data?.image?.[0].url ?? "/media/mac.jpeg"}
-                  alt={data.device_name ?? "device-"}
+                  src={data?.image?.[0]?.url ?? "/media/mac.jpeg"}
+                  alt={data?.device_name ?? "device-"}
                   className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
                 />
                 <div className="flex flex-col  justify-center">
@@ -118,7 +118,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
               </div>
             </div>
 
-            {data.userId && (
+            {data?.userId && (
               <div className="rounded-2xl w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
                 <div>
                   <h1 className="text-lg font-gilroySemiBold">Assigned Info</h1>
@@ -236,7 +236,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     </span>
                   </div>
                 </div>
-                {data.warranty_status ? (
+                {data?.warranty_status ? (
                   <>
                     <div className="w-fit h-fit text-[#027A48] bg-[#ECFDF3] px-1 py-0.5">
                       In warranty

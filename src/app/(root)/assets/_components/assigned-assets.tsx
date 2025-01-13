@@ -1,4 +1,4 @@
-import { Device, DeviceResponse } from "@/server/deviceActions";
+import { Device, DeviceResponse, StoreDevice } from "@/server/deviceActions";
 
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
@@ -76,12 +76,12 @@ function AssignedAssets({
                           />
                           <div className="relative group">
                             <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
-                              {data?.device_name!.length > 12
-                                ? `${data?.device_name!.slice(0, 12)}...`
-                                : data?.device_name}
+                              {data?.custom_model!.length > 12
+                                ? `${data?.custom_model!.slice(0, 12)}...`
+                                : data?.custom_model}
                             </div>
                             <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
-                              {data?.device_name}
+                              {data?.custom_model}
                             </div>
                           </div>
                         </div>
@@ -95,8 +95,8 @@ function AssignedAssets({
                     },
                     {
                       title: "Assigned On",
-                      render: (record) => {
-                        const date = new Date(record?.assigned_at);
+                      render: (record: StoreDevice) => {
+                        const date = new Date(record?.assigned_at!);
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
                           day: "2-digit",
@@ -107,7 +107,13 @@ function AssignedAssets({
                         return <div>{formattedDate}</div>;
                       },
                     },
-                    { title: "Team", dataIndex: "userName" },
+
+                    {
+                      title: "Team",
+                      render: (record: StoreDevice) => {
+                        return <span>{record?.team ?? "-"}</span>;
+                      },
+                    },
                     {
                       title: "Serial Number",
                       render: (record) => {

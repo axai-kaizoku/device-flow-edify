@@ -6,28 +6,28 @@ import { cache } from "react";
 
 export type StoreDevice = {
   _id?: string;
+  team?: string;
   createdAt?: string;
-  updatedAt?: string;
-  device_name: string;
-  device_type: string;
-  asset_serial_no: string | null;
-  serial_no: string | null;
-  ram: string | null;
-  processor: string | null;
-  storage: string[] | null;
-  custom_model: string | null;
-  brand: string | null;
+  device_name?: string;
+  device_type?: string;
+  asset_serial_no?: string | null;
+  serial_no?: string | null;
+  ram?: string | null;
+  processor?: string | null;
+  storage?: string[] | null;
+  custom_model?: string | null;
+  brand?: string | null;
   warranty_status?: boolean;
-  warranty_expiary_date: string | null; // Assuming this is a date string
-  ownership: string | null;
-  purchase_order: string | null;
-  purchase_value: number | null;
+  warranty_expiary_date?: string | null; // Assuming this is a date string
+  ownership?: string | null;
+  purchase_order?: string | null;
+  purchase_value?: number | null;
   payable?: number | null;
-  os: string | null;
-  image: { url: string; color: string }[] | null; // Array of image objects
+  os?: string | null;
+  image?: { url: string; color: string }[] | null; // Array of image objects
   invoice?: string | null;
   deleted_at?: string | null; // Assuming this is a date string
-  device_purchase_date: string | null; // Assuming this is a date string
+  device_purchase_date?: string | null; // Assuming this is a date string
   assigned_at?: string | null; // Assuming this is a date string
   userName?: string | null;
   email?: string | null;
@@ -35,13 +35,13 @@ export type StoreDevice = {
   city?: string | null;
   addressId?: string | null;
   perfectFor?: { title?: string }[] | null; // Array of objects with `title` property
-  deviceFeatures:
+  deviceFeatures?:
     | {
         title?: string;
         features?: { title: string; value: string }[];
       }[]
     | null; // Array of feature groups with titles and feature lists
-  orgId: string | null;
+  orgId?: string | null;
   ratings?: unknown[]; // Could specify a type if known
   overallReviews?: number | null;
   overallRating?: number | null;

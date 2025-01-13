@@ -11,18 +11,19 @@ interface KeyboardDetailsProps {
   data: KeyboardDetailsInterface;
   setData: (data: Partial<KeyboardDetailsInterface>) => void;
   errors: FormErrors;
+  setErrors?: (errors: FormErrors) => void;
 }
 
 const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
   data,
   setData,
   errors,
+  setErrors,
 }) => {
   const [formData, setFormData] = useState<KeyboardDetailsInterface>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
-  const {openToast} = useToast();
-
+  const [invoiceFile, setInvoiceFile] = useState<string | null>(null);
+  const { openToast } = useToast();
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,13 +55,13 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
           const res = await getImageUrl({ file });
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error","Some Error while uploading the File");
+          openToast("error", "Some Error while uploading the File");
         }
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          invoiceFile: "Only PDF files under 5MB are allowed.",
-        }));
+      } else if (setErrors) {
+        setErrors({
+          ...errors,
+          invoiceFile: "Only PDF/JPEG/PNG/JPG files under 5MB are allowed.",
+        });
       }
     }
   };
@@ -72,7 +73,9 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">Device Details</div>
+      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
+        Device Details
+      </div>
 
       <div className="flex flex-col gap-8 mt-5">
         <FormField
@@ -87,14 +90,14 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
         />
 
         <FormField
-            label="Brand"
-            id="brand"
-            name="brand"
-            type="text"
-            value={formData?.brand}
-            onChange={handleChange}
-            error={errors?.brand}
-            placeholder="eg: Brand..., etc"
+          label="Brand"
+          id="brand"
+          name="brand"
+          type="text"
+          value={formData?.brand}
+          onChange={handleChange}
+          error={errors?.brand}
+          placeholder="eg: Brand..., etc"
         />
 
         <div className="flex flex-col gap-2">

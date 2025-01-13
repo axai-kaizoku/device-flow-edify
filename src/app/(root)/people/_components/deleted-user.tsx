@@ -108,11 +108,7 @@ function DeletedUser({
                   {
                     title: "Team",
                     render: (data) => (
-                      <div className="">
-                        {data?.onboarding_date
-                          ? new Date(data.onboarding_date).toLocaleDateString()
-                          : "N/A"}
-                      </div>
+                      <div className="">{data?.team?.title ?? "-"}</div>
                     ),
                   },
 
@@ -120,8 +116,8 @@ function DeletedUser({
                   //   title: "Assets assigned",
                   //   render: (data: User) => (
                   //     <div className="text-center rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                  //       {data?.devices?.length > 0
-                  //         ? `${data.devices.length} Assigned`
+                  //       {data?.devices?.length! > 0
+                  //         ? `${data?.devices!?.length} Assigned`
                   //         : "N/A"}
                   //     </div>
                   //   ),

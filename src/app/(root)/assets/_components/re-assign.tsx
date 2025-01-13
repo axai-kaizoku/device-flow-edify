@@ -138,7 +138,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                 <>
                   <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                     <img
-                      src={device?.image ?? ""}
+                      src={device?.image![0]?.url ?? ""}
                       alt="team-image"
                       className="w-24 h-20 p-1  object-cover rounded-full "
                     />
@@ -188,22 +188,21 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                 <>
                   <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                     <img
-                      src={device?.image ?? ""}
-                      alt="team-image"
-                      className="w-24 h-20 p-1  object-cover rounded-full "
+                      src={user?.image ?? ""}
+                      alt="user-image"
+                      className="w-20 h-20 p-1  object-cover rounded-full "
                     />
                     <div className=" w-full flex flex-col justify-center ">
                       <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                        {device?.device_name ?? "-"}
+                        {user?.first_name ?? "-"}
                       </h1>
 
                       <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
-                        {device?.ram ?? "RAM"}
-                        <span className="flex text-2xl mx-1 -mt-3">.</span>
-                        {device?.storage ?? "Storage"}
-                        <span className="flex text-2xl mx-1 -mt-3">.</span>
-                        {device?.serial_no ?? "Serial number"}
+                        {user?.designation ?? "designation"}
                       </h1>
+                      <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                        Active
+                      </p>
                     </div>
                   </div>
                 </>

@@ -107,7 +107,7 @@ export default function AssignDevice({
 
             <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
               <img
-                src={userData.image ?? ""}
+                src={userData?.image ?? ""}
                 alt="user-image"
                 className="w-24 h-20 p-1  object-cover rounded-full "
               />
@@ -138,11 +138,11 @@ export default function AssignDevice({
                   fetchOptions={searchDevices}
                   //@ts-ignore
                   initialOptions={fetchDevices}
-                  onSelect={(data: any) => {
+                  onSelect={(data: Device) => {
                     setDevice({
-                      _id: data._id,
-                      device_name: data.device_name,
-                      ram: data.ram,
+                      _id: data?._id,
+                      device_name: data?.device_name,
+                      ram: data?.ram,
                       storage: data?.storage,
                       image: data?.image,
                       serial_no: data?.serial_no,
@@ -160,7 +160,7 @@ export default function AssignDevice({
               </div>
               <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                 <img
-                  src={device?.image ?? ""}
+                  src={device?.image![0]?.url ?? ""}
                   alt="team-image"
                   className="w-24 h-20 p-1  object-cover rounded-full "
                 />

@@ -1,6 +1,6 @@
 // Form.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DeviceType from "./deviceType";
 import { createDevices, Device } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import {
   DevicePage2,
 } from "./_components/types";
 import Spinner from "@/components/Spinner";
-import { ChevronLeft, ChevronRight, Laptop, Monitor } from "lucide-react";
+import { ChevronRight, Monitor } from "lucide-react";
 import KeyboardForm from "./keyBoardForm";
 import MouseForm from "./mouseForm";
 import LaptopForm from "./laptopForm";
@@ -116,10 +116,7 @@ function Form({ closeBtn }: FormProps) {
     const m1 = formData?.mobilePage1;
     const device2 = formData?.laptopPage2;
     const m2 = formData?.mobilePage2;
-    const device3 =
-      formData?.keyboardDetails ||
-      formData?.monitorDetails ||
-      formData?.mouseDetails;
+
     const monitor = formData?.monitorDetails;
     const keyboard = formData?.keyboardDetails;
     const mouse = formData?.mouseDetails;

@@ -77,7 +77,7 @@ export default function ReassignAsset({
 
             <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
               <img
-                src={deviceData.image ?? ""}
+                src={deviceData?.image![0]?.url ?? ""}
                 alt="team-image"
                 className="w-24 h-20 p-1  object-cover rounded-full "
               />
@@ -112,7 +112,7 @@ export default function ReassignAsset({
                   fetchOptions={searchUsers}
                   // @ts-ignore
                   initialOptions={fetchUsers}
-                  onSelect={(data: any) => {
+                  onSelect={(data: User) => {
                     setUser({
                       _id: data._id,
                       first_name: data.first_name,

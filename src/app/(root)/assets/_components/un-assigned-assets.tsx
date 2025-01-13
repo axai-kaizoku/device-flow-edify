@@ -50,7 +50,7 @@ function UnAssignedAssets({
             <Suspense fallback={<div>Loading...</div>}>
               <div className="flex flex-col gap-2">
                 <Table
-                  data={data!.devices ?? []}
+                  data={data!?.devices ?? []}
                   checkboxSelection={{
                     uniqueField: "_id",
                     //logic yet to be done
@@ -68,7 +68,10 @@ function UnAssignedAssets({
                           }
                         >
                           <img
-                            src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                            src={
+                              data?.image![0]?.url ??
+                              "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                            }
                             alt="Device Logo"
                             className="border size-10 rounded-full"
                           />
