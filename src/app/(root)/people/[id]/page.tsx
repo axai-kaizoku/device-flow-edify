@@ -9,7 +9,7 @@ interface UserPageProps {
 }
 
 export default async function UserPage({ params }: UserPageProps) {
-  const user: User = await getUserById(params.id);
+  const user: User = await getUserById(params?.id);
 
   if (!user) {
     return <div>Data not found</div>;
@@ -36,7 +36,7 @@ export default async function UserPage({ params }: UserPageProps) {
               </div>
             </EditUser>
 
-            <DeleteUser id={params.id ?? ""}>
+            <DeleteUser id={params?.id ?? ""}>
               <div className="flex items-center justify-center py-1.5 gap-1  px-5  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
                 <span className="text-[15px]   whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Delete

@@ -19,6 +19,7 @@ import {
   userFilterFields,
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -194,7 +195,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <UserMain data={assets} setUsers={setAssets} />
             )}
@@ -204,7 +207,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <DeletedUser data={assets} setUsers={setAssets} />
             )}

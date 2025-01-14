@@ -41,8 +41,8 @@ const Devices = ({ devices }: DevicesProps) => {
 
   return (
     <div className="flex py-2 gap-5">
-      {devices.length > 0 ? (
-        devices.map((device: Device) => {
+      {devices?.length > 0 ? (
+        devices?.map((device: Device) => {
           const warrantyDays = calculateWarrantyDays(
             device?.warranty_expiary_date!
           );
@@ -50,7 +50,7 @@ const Devices = ({ devices }: DevicesProps) => {
 
           return (
             <div
-              key={device._id}
+              key={device?._id}
               className="flex rounded-[25px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.8)] backdrop-blur-[22.8px]  px-6 py-4 w-1/3"
             >
               {/* Device Information */}

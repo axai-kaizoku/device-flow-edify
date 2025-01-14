@@ -21,6 +21,8 @@ import {
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
 import CreateIssue from "./_components/addDevices/_components/create-issue";
+import Loader from "@/components/deviceFlowLoader";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -31,7 +33,7 @@ function TabDisplay() {
     defaultValue: "assigned_assets",
   });
   const { showAlert } = useAlert();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [assets, setAssets] = useState<DeviceResponse | null>(null);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const [openFilter, setOpenFilter] = useState(false);
@@ -196,7 +198,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px] ">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <AssignedAssets data={assets} setAssets={setAssets} />
             )}
@@ -206,7 +210,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <UnAssignedAssets data={assets} setAssets={setAssets} />
             )}
@@ -216,7 +222,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <InActiveAssets data={assets} setAssets={setAssets} />
             )}

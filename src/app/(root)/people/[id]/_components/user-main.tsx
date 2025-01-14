@@ -275,7 +275,7 @@ const UserGrid = ({ user }: { user: User }) => {
         {/* Third Column */}
         <div className="flex flex-col gap-6">
           {/* First Row (Reversed Order) */}
-          <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] p-6">
+          <div className="w-96 flex items-center bg-transparent bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] p-6">
             <AssetsSection user={user} />
           </div>
 

@@ -153,7 +153,10 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
             {onRegisterClicked && !onSubmitClicked && (
-              <div className=" slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap" id="register" ref={ref}>
+              <div
+                className=" slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
+                ref={ref}
+              >
                 <div
                   className={`font-gilroy w-full text-3xl font-bold leading-[58px] tracking-[0px] text-[gray]`}
                 >

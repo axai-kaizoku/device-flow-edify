@@ -30,7 +30,7 @@ function InActiveAssets({
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
         {data?.devices.length === 0 ? (
-          <div className="flex flex-col gap-6 justify-center items-center py-10">
+          <div className="flex flex-col gap-6 justify-center items-center py-4">
             <assetsIcons.no_assets_display />
             <CreateDevice>
               <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">

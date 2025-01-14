@@ -1,38 +1,3 @@
-// import { cn } from "@/lib/utils";
-// import { cva, VariantProps } from "class-variance-authority";
-
-// const spinnerVariants = cva({
-//   variants: {
-//     variant: {
-//       default:
-//         " border-4 border-gray-300 border-t-4 border-t-black rounded-full animate-spin",
-//     },
-//     size: {
-//       default: "size-7",
-//       sm: "size-5",
-//       lg: "size-8",
-//     },
-//   },
-//   defaultVariants: {
-//     variant: "default",
-//     size: "default",
-//   },
-// });
-
-// interface SpinnerProps extends VariantProps<typeof spinnerVariants> {
-// 	className?: string;
-// }
-
-// const Spinner = ({}:) => {
-//   return (
-//     <div className="flex justify-center items-center">
-//       <div className={cn(spinnerVariants({ variant, size, className }))}></div>
-//     </div>
-//   );
-// };
-
-// export default Spinner;
-
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 

@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 
 export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
-  const router = useRouter()
+  const router = useRouter();
   const boxRef: any = useRef(null); // Reference to the box container
   const elementRef = useRef(null);
   const ctaRef = useRef<HTMLDivElement>(null); // Reference to the CTA section
@@ -117,8 +117,6 @@ export const LandingPage = () => {
     }
   };
 
-
-
   return (
     <>
       <div className="px-8">
@@ -133,7 +131,10 @@ export const LandingPage = () => {
                 {
                   "Welcome to the club!! Join the BETA program to get all the new updates  "
                 }
-                <span className="text-center text-[15px] leading-[18px] underline cursor-pointer" onClick={scrollToCTA}>
+                <span
+                  className="text-center text-[15px] leading-[18px] underline cursor-pointer"
+                  onClick={scrollToCTA}
+                >
                   Click here
                 </span>
               </p>
@@ -161,20 +162,26 @@ export const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-x-10">
-              <div className="cursor-pointer" onClick={scrollToAbout}>About</div>
-              <div onClick={scrollToFeatures} className="cursor-pointer">Features</div>
+              <div className="cursor-pointer" onClick={scrollToAbout}>
+                About
+              </div>
+              <div onClick={scrollToFeatures} className="cursor-pointer">
+                Features
+              </div>
               {/* <div>Pricing</div>
               <div>Blog</div> */}
             </div>
-            <Link href={'/login'} >
-            <div className="pl-3 font-gilroyMedium underline">Log in</div></Link>
+            <Link href={"/login"}>
+              <div className="pl-3 font-gilroyMedium underline">Log in</div>
+            </Link>
           </div>
           <div
+            onClick={scrollToCTA}
             className={
-              "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
+              "flex w-[162px] cursor-pointer items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
             }
           >
-            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={()=>{ router.push('#register') }}>
+            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer">
               <span>
                 {"Register for "}
                 Beta
@@ -183,7 +190,10 @@ export const LandingPage = () => {
           </div>
         </div>
         <div className="fade-in  flex items-end justify-center self-stretch pt-6">
-          <div className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer" onClick={() => router.push('#how-to-deviceflow')}>
+          <div
+            className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer"
+            onClick={() => router.push("#how-to-deviceflow")}
+          >
             <div className="rounded-[100px] bg-neutral-800 px-2 py-0.5 text-center text-white">
               New
             </div>
@@ -206,11 +216,12 @@ export const LandingPage = () => {
           <div className="flex items-center justify-end pl-9">
             <div className="flex items-center justify-center gap-x-3 text-center font-gilroySemiBold leading-6 tracking-[-0.2px]">
               <div
+                onClick={scrollToCTA}
                 className={
-                  "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
+                  "flex w-[162px] cursor-pointer  items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
                 }
               >
-                <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={scrollToCTA}>
+                <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer">
                   <span>
                     {"Register for "}
                     Beta
@@ -286,19 +297,24 @@ export const LandingPage = () => {
         </div>
       </div>
       <div ref={featRef}>
-        <Section2 ref={newRef}/>
+        <Section2 ref={newRef} />
       </div>
       <div ref={aboutRef}>
-        <Section3 ref={aboutRef}/>
+        <Section3 ref={aboutRef} />
       </div>
 
       <Integration />
       <Testimonials />
       <div ref={ctaRef}>
-        <CTA ref={signupref}/>
+        <CTA ref={signupref} />
       </div>
       <FAQ />
-      <Footer scrollToAbout={scrollToAbout} scrollToCTA={scrollToCTA} scrollToFeatures={scrollToFeatures} scrollToSignUp={scrollToSignUp}/>
+      <Footer
+        scrollToAbout={scrollToAbout}
+        scrollToCTA={scrollToCTA}
+        scrollToFeatures={scrollToFeatures}
+        scrollToSignUp={scrollToSignUp}
+      />
     </>
   );
 };

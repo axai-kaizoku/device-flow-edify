@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import { closedIssues, filterIssues, openIssues } from "@/server/filterActions";
 import Spinner from "@/components/Spinner";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function TabDisplay() {
   const [issues, setIssues] = useState<IssueResponse | null>(null);
@@ -97,7 +98,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <IssueTableDisplay
                 data={issues}
@@ -111,7 +114,9 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <ClosedIssueTable data={issues} setIssues={setIssues} />
             )}

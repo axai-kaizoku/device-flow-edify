@@ -1,5 +1,8 @@
 "use client";
-import { checkForDuplicates, parseCSV } from "@/components/bulk-upload/CSVHelper";
+import {
+  checkForDuplicates,
+  parseCSV,
+} from "@/components/bulk-upload/CSVHelper";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
@@ -8,21 +11,29 @@ type dataProps = {
   closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
-  setSuccess: any
+  setSuccess: any;
 };
-function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) {
+function BulkUpload({
+  closeBtn,
+  requiredKeys,
+  bulkApi,
+  setSuccess,
+}: dataProps) {
+  const [loading, setLoading] = useState(false);
   const [csvError, setCsvError] = useState<string | null>(null);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { showAlert } = useAlert();
+
   const { openToast } = useToast();
 
   const validateCSV = (file: File) => {
+    setLoading(true);
     const reader = new FileReader();
     reader.onload = (event) => {
       const csvText = event.target?.result as string;
       if (!csvText) {
         setCsvError("The file is empty or not formatted correctly.");
+        setLoading(false);
         return;
       }
 
@@ -33,6 +44,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
           setCsvError(
             `Invalid number of fields. Expected ${requiredKeys.length} fields but got ${headers.length}.`
           );
+          setLoading(false);
           return;
         }
 
@@ -41,6 +53,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
         );
         if (missingKeys.length > 0) {
           setCsvError(`Missing fields: ${missingKeys.join(", ")}`);
+          setLoading(false);
           return;
         }
 
@@ -51,6 +64,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
 
         if (emptyRows.length > 0) {
           setCsvError(`Some rows are empty`);
+          setLoading(false);
           return;
         }
 
@@ -61,6 +75,7 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
               ", "
             )}`
           );
+          setLoading(false);
           return;
         }
 
@@ -69,11 +84,15 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
         handleBulkUpload(file);
       } catch (err) {
         setCsvError("Error parsing the file. Please ensure it is a valid CSV.");
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     reader.onerror = () => {
       setCsvError("Error reading the file.");
+      setLoading(false);
     };
 
     reader.readAsText(file);
@@ -85,23 +104,32 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
   };
 
   const handleBulkUpload = async (file: File) => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await bulkApi(formData); // Call the API
-     setSuccess(true)
+      await bulkApi(formData); // Call the API
+      setSuccess(true);
+      setLoading(false);
     } catch (error: any) {
       if (error.message.includes("E11000 duplicate key error")) {
-        const duplicateField = error.message.match(/index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/);
+        const duplicateField = error.message.match(
+          /index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/
+        );
         if (duplicateField && duplicateField[3]) {
           // openToast(
           //   "error",
           //   `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
           // );
 
-          setCsvError(`Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`);
+          setCsvError(
+            `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
+          );
         } else {
-          openToast("error", "A duplicate entry error occurred. Please check your data.");
+          openToast(
+            "error",
+            "A duplicate entry error occurred. Please check your data."
+          );
         }
       } else {
         // Generic error handling
@@ -128,36 +156,47 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi, setSuccess }: dataProps) 
   return (
     <>
       <div className="flex flex-col gap-3 w-full">
-        <div className="w-full flex flex-col gap-6">
-          <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
-            Bulk Import
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <img
+              src="/media/bulk_Loader.gif"
+              alt="Loading..."
+              className="w-16 h-16"
+            />
           </div>
-          <div className="w-full flex justify-between gap-4">
-            <button
-              className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
-              onClick={handleFileUploadClick}
-            >
-              Upload CSV
-            </button>
-            <button
-              className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
-              onClick={downloadSampleCSV}
-            >
-              Download Sample CSV
-            </button>
+        ) : (
+          <div className="w-full flex flex-col gap-6">
+            <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+              Bulk Import
+            </div>
+            <div className="w-full flex justify-between gap-4">
+              <button
+                disabled={loading}
+                className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+                onClick={handleFileUploadClick}
+              >
+                Upload CSV
+              </button>
+              <button
+                className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+                onClick={downloadSampleCSV}
+              >
+                Download Sample CSV
+              </button>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              ref={fileInputRef}
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  validateCSV(e.target.files[0]);
+                }
+              }}
+              className="hidden"
+            />
           </div>
-          <input
-            type="file"
-            accept=".csv"
-            ref={fileInputRef}
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                validateCSV(e.target.files[0]);
-              }
-            }}
-            className="hidden"
-          />
-        </div>
+        )}
 
         {csvError && (
           <p className="text-red-500 text-xs font-gilroyMedium transition-all duration-300 mb-4">

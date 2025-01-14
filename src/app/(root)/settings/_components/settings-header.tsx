@@ -6,8 +6,6 @@ import { LogoCompanyModal } from "./logo-company";
 import Link from "next/link";
 
 function SettingsHeader({ data }: { data: Org }) {
-
-
   return (
     <>
       <div className="flex flex-col pt-[13px]">

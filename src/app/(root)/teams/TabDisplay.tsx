@@ -16,7 +16,7 @@ import { Employee } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
-import Spinner from "@/components/Spinner";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 interface TabDisplayProps {
   teams: TeamsResponse;
@@ -109,7 +109,9 @@ function TabDisplay({ orgData }: TabDisplayProps) {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <TeamsMain teams={teams} setTeams={setTeams} />
             )}
@@ -119,7 +121,9 @@ function TabDisplay({ orgData }: TabDisplayProps) {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <DeletedTeams teams={teams} setTeams={setTeams} />
             )}

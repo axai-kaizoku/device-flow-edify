@@ -10,8 +10,8 @@ import CreateAddress from "./create-address";
 function SettingAddress({ data }: { data: Org }) {
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between mb-1">
-        <h1 className="text-gray-400 font-gilroySemiBold  text-lg ">
+      <div className="flex justify-between mb-4">
+        <h1 className="text-gray-400 font-gilroySemiBold mt-2 text-lg ">
           Office Address ({data?.office_address?.length || 0})
         </h1>
 

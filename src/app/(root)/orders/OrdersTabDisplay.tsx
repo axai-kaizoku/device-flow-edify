@@ -6,6 +6,7 @@ import Spinner from "@/components/Spinner";
 import { Tab } from "../teams/_components/Tab";
 import { Icons } from "@/components/icons";
 import AllOrders from "./_components/AllOrders";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function TabDisplay() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -16,7 +17,13 @@ function TabDisplay() {
     switch (activeTab) {
       case "orders":
         return (
-          <Suspense fallback={<Spinner />}>
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
+            }
+          >
             <AllOrders />
           </Suspense>
         );
