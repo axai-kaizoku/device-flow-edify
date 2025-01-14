@@ -9,15 +9,18 @@ import { Section3 } from "./Section3";
 import { Section2 } from "./Section2";
 import { FAQ } from "./FAQ";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
+  const router = useRouter()
   const boxRef: any = useRef(null); // Reference to the box container
   const elementRef = useRef(null);
   const ctaRef = useRef<HTMLDivElement>(null); // Reference to the CTA section
   const featRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const newRef = useRef<HTMLDivElement>(null);
+  const signupref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -108,6 +111,12 @@ export const LandingPage = () => {
     }
   };
 
+  const scrollToSignUp = () => {
+    if (signupref.current) {
+      signupref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
 
 
   return (
@@ -165,7 +174,7 @@ export const LandingPage = () => {
               "flex w-[162px] items-center justify-center rounded-xl border border-solid border-gray-600 bg-neutral-800 hover:bg-black px-[15px] py-[11px]"
             }
           >
-            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={scrollToCTA}>
+            <div className="font-gilroy text-center font-gilroySemiBold leading-6 tracking-[-0.2px] text-white cursor-pointer" onClick={()=>{ router.push('#register') }}>
               <span>
                 {"Register for "}
                 Beta
@@ -173,8 +182,8 @@ export const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className="fade-in  flex items-end justify-center self-stretch pt-6" onClick={scrollToNew}>
-          <div className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer">
+        <div className="fade-in  flex items-end justify-center self-stretch pt-6">
+          <div className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer" onClick={() => router.push('#how-to-deviceflow')}>
             <div className="rounded-[100px] bg-neutral-800 px-2 py-0.5 text-center text-white">
               New
             </div>
@@ -277,19 +286,19 @@ export const LandingPage = () => {
         </div>
       </div>
       <div ref={featRef}>
-        <Section2 newRef={newRef}/>
+        <Section2 ref={newRef}/>
       </div>
       <div ref={aboutRef}>
-        <Section3 />
+        <Section3 ref={aboutRef}/>
       </div>
 
       <Integration />
       <Testimonials />
       <div ref={ctaRef}>
-        <CTA />
+        <CTA ref={signupref}/>
       </div>
       <FAQ />
-      <Footer />
+      <Footer scrollToAbout={scrollToAbout} scrollToCTA={scrollToCTA} scrollToFeatures={scrollToFeatures} scrollToSignUp={scrollToSignUp}/>
     </>
   );
 };

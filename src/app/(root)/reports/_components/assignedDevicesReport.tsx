@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeAlert, openAlert } from "@/app/store/alertSlice";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { FormField } from "../../settings/_components/form-field";
+import Spinner from "@/components/Spinner";
 
 const AssignedDevicesReport = ({
   closeBtn,
@@ -17,11 +18,13 @@ const AssignedDevicesReport = ({
   const [date, setDate] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const isOpen = useSelector((state: any) => state.alert.isOpen);
 
   const handleDeviceDownloadClick = async () => {
+    setLoading(true);
     try {
       const filters = [];
       if (operator === "between" && fromDate && toDate) {
@@ -35,14 +38,17 @@ const AssignedDevicesReport = ({
         const csv = convertToCSV(data?.devices);
 
         downloadCSV(csv, `assigned_devices_report.csv`);
+        setLoading(false);
       } else {
         // alert("No data available");
         dispatch(openAlert());
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error downloading the report:", error);
       // alert("Failed to download the report. Please try again.");
       dispatch(openAlert());
+      setLoading(false);
     }
     // onDownload(filters);
     setFromDate("");
@@ -131,7 +137,7 @@ const AssignedDevicesReport = ({
             className="flex-1 px-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg py-1.5"
             onClick={handleDeviceDownloadClick}
           >
-            Download
+           {loading ? <Spinner/> : "Download"}
           </button>
         </div>
       </div>

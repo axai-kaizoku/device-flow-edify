@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
-export const Section3 = () => {
+export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
   const [cardHeight1, setCardHeight1] = useState(334);
   const [cardHeight4, setCardHeight4] = useState(334);
   const [cardHeight2, setCardHeight2] = useState(334);
@@ -9,7 +9,7 @@ export const Section3 = () => {
   const [cardHeight6, setCardHeight6] = useState(334);
 
   return (
-    <div className={`flex w-full flex-col gap-y-16 bg-zinc-800 px-32 py-20 `}>
+    <div className={`flex w-full flex-col gap-y-16 bg-zinc-800 px-32 py-20 `} ref={ref}>
       <div className="flex items-center px-0.5">
         <div className="font-gilroy text-[52px] font-bold leading-[58px] tracking-[-1.2px]">
           <span>
@@ -359,4 +359,4 @@ export const Section3 = () => {
       </div>
     </div>
   );
-};
+});

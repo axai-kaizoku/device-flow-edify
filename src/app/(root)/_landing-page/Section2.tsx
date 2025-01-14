@@ -1,6 +1,7 @@
+import { forwardRef } from "react"
 import { Slide } from "react-awesome-reveal"
 
-export const Section2 = ({ newRef }: { newRef: React.RefObject<HTMLDivElement> }) => {
+export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
     return(
         <div className=" pl-36 pr-36 ">
         <Slide direction="down" fraction={1} triggerOnce>
@@ -23,7 +24,7 @@ export const Section2 = ({ newRef }: { newRef: React.RefObject<HTMLDivElement> }
           <img src={"/media/landingPage/content-3.png"} width={"49%"} />
         </div>
         <Slide direction="down" fraction={1} triggerOnce>
-          <div ref={newRef}>
+          <div id="how-to-deviceflow">
             <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
               <p className="relative self-stretch font-bold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
                 Three Steps to Hassle-Free <br />
@@ -65,4 +66,4 @@ export const Section2 = ({ newRef }: { newRef: React.RefObject<HTMLDivElement> }
         </div>
       </div>
     )
-}
+});

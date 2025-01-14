@@ -1,6 +1,15 @@
 import Link from "next/link";
 import React from "react";
-export function Footer({}) {
+
+interface FooterProps {
+  scrollToAbout: () => void;
+  scrollToCTA: () => void;
+  scrollToFeatures: ()=> void;
+  scrollToSignUp: ()=> void;
+}
+
+
+export const Footer: React.FC<FooterProps> = ({ scrollToAbout, scrollToCTA, scrollToFeatures, scrollToSignUp }) => {
   return (
     <div
       className={`flex w-full flex-col gap-y-2 bg-neutral-800 pt-[74px] mt-10`}
@@ -79,7 +88,7 @@ export function Footer({}) {
           <div className="flex h-[91px] flex-col items-center">
             <div className="-mt-2 flex h-24 flex-shrink-0 flex-col items-start gap-y-1.5 text-sm leading-5 tracking-[-0.1px] text-gray-600">
               <div className="flex flex-wrap items-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap">
-                <div>About</div>
+                <div className="cursor-pointer hover:underline" onClick={scrollToAbout}>About</div>
                 <a
                   href="mailto:support@deviceflow.ai"
                   className="hover:underline cursor-pointer"
@@ -89,7 +98,7 @@ export function Footer({}) {
               </div>
               <div className="flex flex-col items-start gap-y-1.5">
                 <div className="flex flex-wrap items-center justify-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap">
-                  <div>Login</div>
+                  <Link href={'/login'} className="hover:underline cursor-pointer">Login</Link>
                   <div>
                     <span>
                       {"Ph: "}
@@ -101,9 +110,9 @@ export function Footer({}) {
                   </div>
                 </div>
                 <div className="flex flex-col items-start gap-y-1.5">
-                  <div>Features</div>
+                  <div className="cursor-pointer hover:underline" onClick={scrollToFeatures}>Features</div>
                   <div className="flex items-center justify-center gap-x-0.5">
-                    <div>Beta Signup</div>
+                    <div className="cursor-pointer hover:underline" onClick={scrollToCTA}>Beta Signup</div>
                     {/* <IconArrowTr className="h-5 w-[17px] flex-shrink-0" /> */}
                   </div>
                 </div>
@@ -111,11 +120,11 @@ export function Footer({}) {
             </div>
           </div>
           <div className="flex flex-col items-center gap-y-3 text-center leading-6 tracking-[-0.2px] text-white">
-            <div className="w-72 rounded-xl bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black">
+            <div className="w-72 rounded-xl bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black" onClick={scrollToCTA}>
               Register for Beta
             </div>
             <Link
-              href={"/login"}
+              href={'/login'}
               className="flex w-72 items-center justify-center rounded-xl border border-solid border-zinc-700 px-[15px] py-[11px] cursor-pointer"
             >
               <div className="flex-grow text-center">Login</div>
@@ -128,7 +137,7 @@ export function Footer({}) {
           <div className="font-gilroy flex flex-grow flex-wrap items-center justify-between gap-x-3 gap-y-[9px] text-xs leading-[18px] tracking-[0px] text-gray-400 min-[1430px]:flex-nowrap">
             <div>© 2025 Edify. All rights reserved.</div>
             <div className="flex items-center justify-center gap-x-8">
-              <div>Terms & Conditions ∙ Privacy Policy</div>
+              <div><span className="cursor-pointer hover:underline">Terms & Conditions</span> ∙ <span className="cursor-pointer hover:underline">Privacy Policy</span></div>
               <div className="flex items-center justify-center gap-x-3">
                 {/* <IconFilledTwitter className="h-4 w-4 flex-shrink-0" />
                 <IconOutlineDribbble className="h-4 w-4 flex-shrink-0" />

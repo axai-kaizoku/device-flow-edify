@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-export function CTA({}) {
+import React, { forwardRef, useState } from "react";
+export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const [onRegisterClicked, setOnRegisterClicked] = useState<boolean>(false);
   const [onNextClicked, setOnNextClicked] = useState<boolean>(false);
   const [onSubmitClicked, setSubmitClicked] = useState<boolean>(false);
@@ -153,7 +153,7 @@ export function CTA({}) {
               </div>
             )}
             {onRegisterClicked && !onSubmitClicked && (
-              <div className=" slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap">
+              <div className=" slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap" id="register" ref={ref}>
                 <div
                   className={`font-gilroy w-full text-3xl font-bold leading-[58px] tracking-[0px] text-[gray]`}
                 >
@@ -451,4 +451,4 @@ export function CTA({}) {
       </div>
     </>
   );
-}
+});

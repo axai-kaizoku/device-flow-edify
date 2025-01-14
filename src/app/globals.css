@@ -6,6 +6,11 @@ body {
   -webkit-font-smoothing: antialiased; /* Improves clarity */
   -moz-osx-font-smoothing: grayscale; /* Improves clarity */
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
 /* Hide scrollbar for all browsers */
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */

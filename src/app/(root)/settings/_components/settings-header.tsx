@@ -11,13 +11,13 @@ function SettingsHeader({ data }: { data: Org }) {
   return (
     <>
       <div className="flex flex-col pt-[13px]">
-        <h1 className="text-gray-400 font-gilroySemiBold 2xl:text-lg text-lg mb-3 ">
+        <h1 className="text-gray-400 font-gilroySemiBold 2xl:text-lg text-lg mb-4">
           Settings
         </h1>
 
         <div className="flex justify-start gap-6">
           {/* Company Information Card */}
-          <div className="relative flex-1 flex rounded-[25px] pl-5 py-5 border border-gray-300 bg-white gap-2 h-[185px] w-full max-w-sm items-center">
+          <div className="relative flex-1 flex rounded-[25px] px-5 py-5 border border-gray-300 bg-white gap-2 h-[185px] w-full items-center">
             <div>
               {/* Display the logo */}
               {data.logo ? (

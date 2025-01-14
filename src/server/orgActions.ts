@@ -64,7 +64,7 @@ export const getCurrentOrg = cache(async function <Org>() {
 export async function updateOrg({id,title,description,logo}:{id?: string;
   title?: string;
   description?: string;
-  logo?: string;}): Promise<Org> {
+  logo?: string | null;}): Promise<Org> {
   try {
     const res = await callAPIWithToken<Org>(
       `https://api.edify.club/edifybackend/v1/organisation/${id}`, // API endpoint

@@ -16,7 +16,7 @@ import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 
 // Add open and setOpen props
 export const LogoCompanyModal = ({
@@ -25,7 +25,7 @@ export const LogoCompanyModal = ({
   children,
 }: {
   id: string;
-  logo: string;
+  logo: string | null;
   children: React.ReactNode;
 }) => {
   const [image, setImage] = useState<string | null>(logo); // Track image file
@@ -57,7 +57,7 @@ export const LogoCompanyModal = ({
   // Handle upload logic
   const handleUploadLogo = async () => {
       try {
-         await updateOrg({id:id,logo: image}); // Send the image in the form data
+        await updateOrg({id:id,logo: image}); // Send the image in the form data
         setOpen(false); // Close the modal after successful upload
         router.refresh();
       } catch (error) {
@@ -72,6 +72,7 @@ export const LogoCompanyModal = ({
       await updateOrg({id:id, logo:""}); // Send empty string to remove logo
       setOpen(false); // Close the modal after removal
       router.refresh();
+      setImage('');
     } catch (error) {
       <NotFound />;
     }
@@ -99,7 +100,7 @@ export const LogoCompanyModal = ({
                       className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={handleRemoveLogo}
                     >
-                      <X className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
@@ -146,8 +147,7 @@ export const LogoCompanyModal = ({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <GreyButton onClick={handleRemoveLogo}>Remove</GreyButton>
-          <ErrorButton onClick={handleUploadLogo}>Upload</ErrorButton>
+          <ErrorButton onClick={handleUploadLogo} disabled={image===''}>Upload</ErrorButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
