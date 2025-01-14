@@ -91,7 +91,7 @@ export default async function RootLayout({
   const userRole: number | undefined = session?.user.user.role;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`
           ${gilroyThin.variable} 

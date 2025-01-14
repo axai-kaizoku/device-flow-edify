@@ -6,7 +6,7 @@ import { Employee } from './data';
 //Resolving SSR issue here
 const Org = ({data}:{data:Employee}) => {
 	const [show, setShow] = useState(false);
-
+	console.log(data)
 	useEffect(() => {
 		setShow(true);
 	}, []);

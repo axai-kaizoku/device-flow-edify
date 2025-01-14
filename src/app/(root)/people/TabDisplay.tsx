@@ -441,16 +441,16 @@ function TabDisplay() {
                                 <path
                                   d="M1.81787 1.2684L14.4117 13.1024"
                                   stroke="#AEAEAE"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                                 <path
                                   d="M13.8442 1.19273L2.30198 13.5789"
                                   stroke="#AEAEAE"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                               </svg>
                             )}
@@ -473,16 +473,16 @@ function TabDisplay() {
                               <path
                                 d="M1.80566 8.98486H17.4177"
                                 stroke="#7F7F7F"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M9.61182 16.7909L9.61182 1.17883"
                                 stroke="#7F7F7F"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
 

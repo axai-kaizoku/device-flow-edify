@@ -125,9 +125,9 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
                         <path
                           d="M1.54514 1.16309L6.19092 5.91949L1.54514 10.5652"
                           stroke="#AAAAAA"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </div>

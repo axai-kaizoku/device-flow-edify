@@ -152,9 +152,9 @@ export default function ForgotPassForm() {
                 <path
                   d="M11.0071 3.9082L16.4556 9.35664M16.4556 9.35664L11.0071 14.8051M16.4556 9.35664L2.44531 9.35664"
                   stroke="#F9FAFB"
-                  stroke-width="2.0756"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2.0756"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>

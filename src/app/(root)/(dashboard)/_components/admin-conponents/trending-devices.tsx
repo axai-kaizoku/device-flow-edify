@@ -29,9 +29,9 @@ export function TrendingDevices({
                 <path
                   d="M6.80011 1.66077L1.98185 6.50294L6.63315 11.3451"
                   stroke="#CDCDCD"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
               <svg
@@ -44,9 +44,9 @@ export function TrendingDevices({
                 <path
                   d="M1.98181 1.66077L6.80007 6.50294L2.14877 11.3451"
                   stroke="#CDCDCD"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -73,7 +73,7 @@ export function TrendingDevices({
                       <path
                         d="M0.169922 0.680862H312.276"
                         stroke="#EDEDED"
-                        stroke-width="0.918071"
+                        strokeWidth="0.918071"
                       />
                     </svg>
                     <div className="flex h-16 flex-shrink-0 items-center justify-start gap-x-3.5">

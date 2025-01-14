@@ -264,187 +264,187 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 <path
                   d={paths[1]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[2]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[3]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[4]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[5]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[6]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[7]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[8]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[9]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[10]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[11]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[12]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[13]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[14]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[15]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="0.836158"
-                  stroke-miterlimit="10"
+                  strokeWidth="0.836158"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[16]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.88136"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.88136"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[17]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.88136"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.88136"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[18]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[19]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[20]}
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[21]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.88136"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.88136"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[22]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
                   className="transition-path"
                 />
                 <path
                   d={paths[23]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.88136"
-                  stroke-linejoin="round"
+                  strokeWidth="1.88136"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
                 <path
                   d={paths[24]}
                   fill="#232529"
                   stroke="white"
-                  stroke-width="1.0452"
-                  stroke-miterlimit="10"
-                  stroke-linejoin="round"
+                  strokeWidth="1.0452"
+                  strokeMiterlimit="10"
+                  strokeLinejoin="round"
                   className="transition-path"
                 />
               </g>

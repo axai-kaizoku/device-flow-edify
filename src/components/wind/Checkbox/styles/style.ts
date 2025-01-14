@@ -69,7 +69,7 @@ export const Input = styled.input`
   &:checked + ${Indicator} {
     border-color: ${Colors.info_500};
     background: ${Colors?.info_100};
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%233995E5' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%233995E5' strokeWidth='1.25' strokeLinecap='round' strokeLinejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -90,7 +90,7 @@ export const Input = styled.input`
   &:disabled:checked + ${Indicator} {
     border: ${`1.5px solid ${Colors.grey_50}`};
     background-color: ${Colors.white_3};
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%23DDE2E7' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%23DDE2E7' strokeWidth='1.25' strokeLinecap='round' strokeLinejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -105,7 +105,7 @@ export const Input = styled.input`
   &:hover:disabled:checked + ${Indicator} {
     border: ${`1.5px solid ${Colors.grey_50}`};
     background-color: ${Colors.white_3};
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%23DDE2E7' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.4375 1.125L3.85156 5.5L1.5625 3.3125' stroke='%23DDE2E7' strokeWidth='1.25' strokeLinecap='round' strokeLinejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
   }
