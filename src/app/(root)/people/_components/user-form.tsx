@@ -709,7 +709,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </div>
 
                 <div className="flex w-full flex-wrap items-center gap-4 ">
-                  <div className="-z-10 flex-1">
+                  <div className="z-10 flex-1">
                     <SelectInput
                       value={formData?.team?.name}
                       optionValue={{
@@ -738,9 +738,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                       )}
                     />
 
-                    {errors.designation && (
+                    {errors.team && (
                       <p className="mt-0.5 text-xs opacity-0 text-destructive">
-                        {errors.designation}
+                        {errors.team}
                       </p>
                     )}
                   </div>

@@ -1,8 +1,6 @@
-import { CombinedContainer } from "@/components/container/container";
 import { CreateUserArgs, getUserById, User } from "@/server/userActions";
 import EditUser from "./_components/edit-user";
 import { DeleteUser } from "./_components/delete-user";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import UserGrid from "./_components/user-main";
 import AssignDevice from "./_components/assign-device";
 
@@ -18,7 +16,7 @@ export default async function UserPage({ params }: UserPageProps) {
   }
 
   return (
-    <div className="px-4">
+    <div className="px-4 overflow-y-scroll h-full w-full">
       <div className="flex justify-between w-full items-center pr-36 xl:pr-24">
         <div className="text-gray-500 font-gilroySemiBold">Profile</div>
         <div className="flex gap-5">

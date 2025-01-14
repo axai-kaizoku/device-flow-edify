@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/providers";
-import { ScreenSize } from "@/components/utils/screen-size";
+// import { ScreenSize } from "@/components/utils/screen-size";
 import KbarWrapper from "./KbarWrapper";
 import { getSession } from "@/server/helper";
 import localFont from "next/font/local";
@@ -107,7 +107,7 @@ export default async function RootLayout({
       >
         <KbarWrapper userRole={userRole} /> {/* Render KbarWrapper here */}
         <Providers>
-          <ScreenSize />
+          {/* <ScreenSize /> */}
           {children}
         </Providers>
         <InternetCheck />

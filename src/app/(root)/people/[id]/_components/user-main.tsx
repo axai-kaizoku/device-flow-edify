@@ -16,6 +16,7 @@ import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
+import { StoreBannerCard } from "@/components/store-banner";
 
 const UserGrid = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -38,9 +39,7 @@ const UserGrid = ({ user }: { user: User }) => {
   return (
     <>
       <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
-        {/* First Column */}
         <div className="flex flex-col gap-6">
-          {/* First Row */}
           <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">
               <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
@@ -281,28 +280,7 @@ const UserGrid = ({ user }: { user: User }) => {
           </div>
 
           {/* Second Row */}
-          <div className="w-96 h-36 relative flex  bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4 flex-col">
-            <h1 className="text-[10px] text-[#B1B1B1] border border-[#B2B2B2] w-fit px-2 py-0.5 rounded-full">
-              Store
-            </h1>
-            <div>
-              <div>
-                <h1 className="w-52 font-gilroyMedium text-xl">
-                  Highest Quality, Refurbished & New Devices
-                </h1>
-                <div className="flex absolute top-7 right-4 w-fit justify-center font-gilroyMedium items-center bg-black text-white rounded-full text-base gap-1 py-1 px-2">
-                  Visit <ChevronRight />
-                </div>
-              </div>
-              <h1 className="text-xs text-[#B1B1B1] font-gilroyRegular">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod.
-              </h1>
-            </div>
-            <div>
-              <img src="" />
-            </div>
-          </div>
+          <StoreBannerCard />
         </div>
       </div>
     </>
