@@ -11,6 +11,8 @@ import { Teams } from "./admin-conponents/Teams";
 import { useEffect, useState } from "react";
 import { DashboardDetails } from "./admin-conponents/interface";
 import { useRouter } from "next/navigation";
+import StoreBanner from "../../store/_components/store-banner";
+import { StoreBannerCard } from "@/components/store-banner";
 
 export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
@@ -59,18 +61,7 @@ export default function AdminDashboard() {
           }}
         >
           <TrendingDevices dashboardData={dashboardData} />
-          <div>
-            <img
-              src={"/media/dashboard/store-banner.png"}
-              style={{
-                width: "100%",
-                height: 170,
-                cursor: "pointer",
-                objectFit: "contain",
-              }}
-              onClick={() => router.push("/store")}
-            />
-          </div>
+          <StoreBannerCard />
         </div>
       </div>
     </CombinedContainer>

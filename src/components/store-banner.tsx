@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const StoreBannerCard = ({}) => {
   return (
-    <div className="w-full h-fit relative flex  bg-[#ffffff] bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4 flex-col">
+    <div className="w-full h-fit relative flex  bg-white  backdrop-blur-[22.8px] border border-[#c0c0c099] rounded-[25px] px-6 py-4 flex-col">
       <h1 className="text-[10px] text-[#B1B1B1] border border-[#B2B2B2] w-fit px-3 py-0.5 mb-1 rounded-full">
         Store
       </h1>
@@ -20,15 +20,15 @@ export const StoreBannerCard = ({}) => {
             Visit <ChevronRight className="size-4" />
           </Link>
         </div>
-        <h1 className="text-xs text-[#B1B1B1] w-56 font-gilroyMedium">
+        <h1 className="text-xs text-[#B1B1B1] w-52 font-gilroyMedium">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod.
         </h1>
       </div>
       <div className="absolute right-0 bottom-0">
         <svg
-          width="130"
-          height="120"
+          width="100"
+          height="140"
           viewBox="0 0 230 147"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

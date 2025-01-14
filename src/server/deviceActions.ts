@@ -7,6 +7,7 @@ import { cache } from "react";
 export type StoreDevice = {
   _id?: string;
   team?: string;
+  teams?: string;
   createdAt?: string;
   qty?: number | null;
   updatedAt?: string;

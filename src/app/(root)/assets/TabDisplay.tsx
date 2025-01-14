@@ -241,11 +241,11 @@ function TabDisplay() {
       label: "Assigned Assets",
       component: <AssignedAssets data={assets} setAssets={setAssets} />,
     },
-    {
-      key: "un_assigned_assets",
-      label: "Unassigned Assets",
-      component: <UnAssignedAssets data={assets} setAssets={setAssets} />,
-    },
+    // {
+    //   key: "un_assigned_assets",
+    //   label: "Unassigned Assets",
+    //   component: <UnAssignedAssets data={assets} setAssets={setAssets} />,
+    // },
     {
       key: "inactive_assets",
       label: "Inactive Assets",

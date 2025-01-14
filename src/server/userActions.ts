@@ -69,7 +69,7 @@ export type User = {
   date_of_birth?: string;
   onboarding_date?: string;
   reporting_manager?: Manager;
-  devices?: Device[];
+  devices?: number;
 };
 
 export type CreateUserArgs = {

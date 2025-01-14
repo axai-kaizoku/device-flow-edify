@@ -121,20 +121,22 @@ export default function UserMain({
                       {
                         title: "Team",
                         render: (data) => (
-                          <div className="">{data?.team?.title ?? "-"}</div>
+                          <div className="">
+                            {data?.team?.[0]?.title ?? "-"}
+                          </div>
                         ),
                       },
 
-                      // {
-                      //   title: "People assigned",
-                      //   render: (data: User) => (
-                      //     <div className="text-center rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                      //       {data?.devices?.length > 0
-                      //         ? `${data.devices.length} Assigned`
-                      //         : "N/A"}
-                      //     </div>
-                      //   ),
-                      // },
+                      {
+                        title: "Devices assigned",
+                        render: (data: User) => (
+                          <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                            {data?.devices! > 0
+                              ? `${data.devices} Assigned`
+                              : "-"}
+                          </div>
+                        ),
+                      },
                       {
                         title: "",
                         render: (data) => (

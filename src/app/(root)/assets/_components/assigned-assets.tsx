@@ -111,7 +111,7 @@ function AssignedAssets({
                     {
                       title: "Team",
                       render: (record: StoreDevice) => {
-                        return <span>{record?.team ?? "-"}</span>;
+                        return <span>{record?.teams ?? "-"}</span>;
                       },
                     },
                     {
@@ -147,18 +147,26 @@ function AssignedAssets({
                     },
                     {
                       title: "Warranty Status",
-                      render: (record) => (
-                        <span
-                          className={`${
-                            record?.warranty_status
-                              ? "text-[#027A48] px-3 py-0.5-1 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
-                              : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
-                          }`}
-                        >
-                          {record?.warranty_status ? "Active" : "Inactive"}
-                        </span>
-                      ),
+                      render: (record) => {
+                        // Check if the warranty is active based on expiry date
+                        const isWarrantyActive = record?.warranty_expiary_date
+                          ? new Date(record.warranty_expiary_date) > new Date()
+                          : false;
+
+                        return (
+                          <span
+                            className={`${
+                              isWarrantyActive
+                                ? "text-[#027A48] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
+                                : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
+                            }`}
+                          >
+                            {isWarrantyActive ? "Active" : "Inactive"}
+                          </span>
+                        );
+                      },
                     },
+
                     {
                       title: "",
                       render: (record) => (

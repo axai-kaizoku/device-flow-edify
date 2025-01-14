@@ -75,6 +75,7 @@ export const devicesFields = [
   "warranty_expiary_date",
   "device_purchase_date",
   "payable",
+
   "assigned_at",
   "warranty_status",
   // Fields from the db model that were missing
@@ -111,6 +112,7 @@ export const usersFields = [
   "about",
   "interests_and_hobbies",
   "role",
+  "image",
   "designation",
   "employment_type",
   "onboarding_date",

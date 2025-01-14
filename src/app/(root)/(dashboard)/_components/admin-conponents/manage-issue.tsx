@@ -9,14 +9,14 @@ export function ManageIssue({
   const router = useRouter();
   return (
     <div
-      className={`font-gilroy flex w-full flex-col justify-between items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-2 tracking-[0px] backdrop-blur-[24] `}
+      className={`font-gilroy flex relative w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-2 tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Issues</div>
       </div>
       <div className="self-stretch pr-[0.8px] pt-[3px]">
-        {(dashboardData?.issueData.length || 0) > 0 ? (
-          dashboardData?.issueData.map((response, index) => {
+        {(dashboardData?.issueData?.length || 0) > 0 ? (
+          dashboardData?.issueData?.map((response, index) => {
             const date = new Date(response.createdAt);
             const formattedDate = date.toLocaleDateString("en-GB", {
               day: "2-digit",
@@ -129,7 +129,7 @@ export function ManageIssue({
           </div>
         )}
       </div>
-      <div className="flex w-full items-center justify-center rounded-[49px] bg-black p-[9px]">
+      <div className="flex absolute bottom-3 px-20 items-center justify-center rounded-[49px] bg-black p-[9px]">
         <div
           onClick={() => {
             router.push("issues");

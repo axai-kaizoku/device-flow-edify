@@ -8,10 +8,9 @@ export const ManageOrders = ({
 }) => {
   const router = useRouter();
 
-
   return (
     <div
-      className={`font-gilroy flex w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-4 tracking-[0px] backdrop-blur-[24] `}
+      className={`font-gilroy relative flex w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-4 tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Orders</div>
@@ -241,7 +240,7 @@ export const ManageOrders = ({
           </div>
         )}
         <div
-          className="flex items-center justify-center rounded-[49px] bg-black p-[9px]"
+          className="flex items-center absolute bottom-3 w-fit justify-center rounded-[49px] px-20 whitespace-nowrap right-3 bg-black py-[9px] "
           style={{ marginTop: !dashboardData ? 70 : 0 }}
         >
           <div

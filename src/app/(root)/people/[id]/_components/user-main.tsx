@@ -195,7 +195,7 @@ const UserGrid = ({ user }: { user: User }) => {
                           </div>
                         ) : (
                           <div className="font-gilroyMedium text-gray-500 text-xs">
-                            5 Team Members
+                            Team Members
                           </div>
                         )}
                       </div>

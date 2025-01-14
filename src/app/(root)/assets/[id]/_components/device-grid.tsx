@@ -22,7 +22,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
 
   return (
     <>
-      <div className="w-full h-full flex justify-center items-center">
+      <div className="w-full h-full flex justify-center items-center mb-3">
         <div className="flex w-full h-[96%]  items-start gap-6">
           <div className="w-[58%]  flex justify-between gap-6">
             {/* Device Data */}
