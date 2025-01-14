@@ -48,6 +48,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
     firstN: userData ? userData.first_name : "",
     phone: userData ? userData.phone : "",
     email: userData ? userData.email : "",
+    managementType: "",
     image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
     team: userData?.teamId
@@ -73,6 +74,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
     firstN: "",
     phone: "",
     email: "",
+    managementType: "",
     image: "",
     designation: "",
     team: "",
@@ -113,8 +115,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const validateStepTwo = () => {
     const newErrors = {
       designation: formData.designation ? "" : "Designation is required",
+      managementType: formData.managementType
+        ? ""
+        : "Management type is required",
       // team: formData.team.value ? "" : "Team is required",
-      reportM: formData.reportM.value ? "" : "Reporting Manager is required",
+      reportM:
+        formData.managementType === "Employee" && !formData.reportM.value
+          ? "Reporting Manager is required"
+          : "",
       employment: formData.employment ? "" : "Employment type is required",
       // offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
       onboarding: formData.onboarding ? "" : "Onboarding date is required",
@@ -145,7 +153,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       image: formData.image,
       designation: formData.designation,
       onboarding_date: formData.onboarding,
-      reporting_manager: formData.reportM.value,
+      // reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
       // offerLetter: formData.offerLetter,
       date_of_birth: formData.dob,
@@ -155,6 +163,11 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
     if (formData.team.value && formData.team.value.length !== 0) {
       // @ts-ignore
       user.teamId = formData.team.value;
+    }
+
+    if (formData.reportM.value && formData.reportM.value.length !== 0) {
+      // @ts-ignore
+      user.reporting_manager = formData.reportM.value;
     }
 
     try {
@@ -193,6 +206,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           setFormData({
             firstN: "",
             phone: "",
+            managementType: "",
             email: "",
             image: "",
             designation: "",
@@ -590,34 +604,63 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 <h1 className="2xl:text-2xl text-xl font-gilroySemiBold">
                   Professional Info
                 </h1>
-                <div className="z-50">
-                  <SelectInput
-                    value={formData.reportM.name || ""}
-                    optionValue={{ firstV: "first_name", secondV: "email" }}
-                    key={"user-form-reporting-manager"}
-                    placeholder="Search by name, etc"
-                    // @ts-ignore
-                    fetchOptions={searchUsers}
-                    // @ts-ignore
-                    initialOptions={fetchUsers}
-                    onSelect={(data: any) => {
+                <div className="z-50 flex-1">
+                  <SelectDropdown
+                    options={[
+                      { label: "Upper Management", value: "Upper Management" },
+                      { label: "Employee", value: "Employee" },
+                    ]}
+                    onSelect={(data) =>
                       setFormData((prev) => ({
                         ...prev,
-                        reportM: { name: data.email, value: data._id },
-                      }));
-                    }}
-                    label="Reporting Manager"
+                        managementType: data?.value,
+                      }))
+                    }
+                    label="Management Type"
+                    value={`${formData?.managementType ?? ""}`}
+                    placeholder="eg: Employee"
                     className={cn(
-                      errors.reportM ? "border-destructive/80 border" : ""
+                      errors.managementType
+                        ? "border-destructive/80 "
+                        : "border-[#5F5F5F]",
+                      "rounded-xl border"
                     )}
                   />
-                  {errors.reportM && (
-                    <p className="text-destructive font-gilroyMedium text-xs">
-                      {errors.reportM}
+                  {errors.managementType && (
+                    <p className="mt-0.5 font-gilroyMedium text-xs text-destructive">
+                      {errors.managementType}
                     </p>
                   )}
                 </div>
-
+                {formData.managementType === "Employee" && (
+                  <div className="z-30">
+                    <SelectInput
+                      value={formData.reportM.name || ""}
+                      optionValue={{ firstV: "first_name", secondV: "email" }}
+                      key={"user-form-reporting-manager"}
+                      placeholder="Search by name, etc"
+                      // @ts-ignore
+                      fetchOptions={searchUsers}
+                      // @ts-ignore
+                      initialOptions={fetchUsers}
+                      onSelect={(data: any) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          reportM: { name: data.email, value: data._id },
+                        }));
+                      }}
+                      label="Reporting Manager"
+                      className={cn(
+                        errors.reportM ? "border-destructive/80 border" : ""
+                      )}
+                    />
+                    {errors.reportM && (
+                      <p className="text-destructive font-gilroyMedium text-xs">
+                        {errors.reportM}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="flex w-full flex-wrap items-center gap-4 py-2">
                   <div className="flex-1">
                     <FormField
@@ -666,71 +709,76 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </div>
 
                 <div className="flex w-full flex-wrap items-center gap-4 ">
-                  <div className="flex-1">
-                    <div className="z-20 flex-1">
-                      <SelectInput
-                        value={formData?.team?.name}
-                        optionValue={{
-                          firstV: "title",
-                          secondV: "description",
-                        }}
-                        key={"user-form-team-field"}
-                        placeholder="Search by name, etc"
-                        fetchOptions={async (query) => {
-                          const data = await fetchTeams();
-                          const filtered = data.filter((obj: any) =>
-                            obj.title
-                              .toLowerCase()
-                              .includes(query.toLowerCase())
-                          );
-                          return filtered;
-                        }}
-                        initialOptions={fetchTeams}
-                        onSelect={(data: any) => {
-                          setFormData((prev) => ({
-                            ...prev,
-                            team: { name: data.title, value: data._id },
-                          }));
-                        }}
-                        label="Team"
-                        className={cn(
-                          errors.team ? "border-destructive/80 border" : ""
-                        )}
-                      />
-
-                      {errors.designation && (
-                        <p className="mt-0.5 text-xs opacity-0 text-destructive">
-                          {errors.designation}
-                        </p>
+                  <div className="-z-10 flex-1">
+                    <SelectInput
+                      value={formData?.team?.name}
+                      optionValue={{
+                        firstV: "title",
+                        secondV: "description",
+                      }}
+                      key={"user-form-team-field"}
+                      placeholder="Search by name, etc"
+                      fetchOptions={async (query) => {
+                        const data = await fetchTeams();
+                        const filtered = data.filter((obj: any) =>
+                          obj.title.toLowerCase().includes(query.toLowerCase())
+                        );
+                        return filtered;
+                      }}
+                      initialOptions={fetchTeams}
+                      onSelect={(data: any) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          team: { name: data.title, value: data._id },
+                        }));
+                      }}
+                      label="Team"
+                      className={cn(
+                        errors.team ? "border-destructive/80 border" : ""
                       )}
-                    </div>
+                    />
+
+                    {errors.designation && (
+                      <p className="mt-0.5 text-xs opacity-0 text-destructive">
+                        {errors.designation}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex-1">
-                    <div className="z-20 flex-1">
-                      <SelectDropdown
-                        options={designations}
-                        onSelect={(data) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            designation: data?.value,
-                          }))
-                        }
-                        label="Role"
-                        value={`${formData?.designation ?? ""}`}
-                        placeholder="eg: Full Stack Developer"
-                        className={cn(
-                          errors.designation
-                            ? "border-destructive/80 "
-                            : "border-[#5F5F5F]",
-                          "rounded-xl border"
-                        )}
+                    <div className="flex-1">
+                      <FormField
+                        label="Designation"
+                        id="email"
+                        error={errors.designation}
+                        name="designation"
+                        value={formData?.designation ?? ""}
+                        type="text"
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
+                          const designationRegex =
+                            /^(?=.*[a-zA-Z].*[a-zA-Z])[a-zA-Z\s]{2,50}$/;
+
+                          if (!inputValue || /^[a-zA-Z\s]*$/.test(inputValue)) {
+                            setFormData((prev) => ({
+                              ...prev,
+                              designation: inputValue,
+                            }));
+
+                            // Validate email format on the fly
+                            setErrors((prevErrors) => ({
+                              ...prevErrors,
+                              designation: inputValue
+                                ? designationRegex.test(inputValue)
+                                  ? ""
+                                  : "Designation must be between 2 and 50 letters"
+                                : "Designation is required",
+                            }));
+                          }
+                        }}
+                        maxLength={50}
+                        placeholder="eg. Frontend Developer"
                       />
-                      {errors.designation && (
-                        <p className="mt-0.5 text-xs text-destructive">
-                          {errors.designation}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -782,9 +830,10 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                       {errors.offerLetter}
                     </p>
                   )}
+                  <div className="pointer-events-none h-16 w-full" />
                 </div>
               </div>
-              <div className="flex gap-2 absolute -bottom-4 w-full  mt-4">
+              <div className="flex gap-2 absolute bottom-0 w-full mb-2 mt-4">
                 <Button
                   className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
                   onClick={() => setNext(0)}

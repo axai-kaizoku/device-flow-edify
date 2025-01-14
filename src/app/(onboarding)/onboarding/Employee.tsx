@@ -101,7 +101,7 @@ export const Employee = ({ setSteps }: any) => {
     const newErrors = {
       designation: formData.designation ? "" : "Designation is required",
       // team: formData.team.value ? "" : "Team is required",
-      reportM: formData.reportM.value ? "" : "Reporting Manager is required",
+      // reportM: formData.reportM.value ? "" : "Reporting Manager is required",
       employment: formData.employment ? "" : "Employment type is required",
       // offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
       onboarding: formData.onboarding ? "" : "Onboarding date is required",
@@ -131,7 +131,7 @@ export const Employee = ({ setSteps }: any) => {
       designation: formData.designation,
       // teamId: formData.team.value,
       onboarding_date: formData.onboarding,
-      reporting_manager: formData.reportM.value,
+      // reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
       // offerLetter: formData.offerLetter,
       date_of_birth: formData.dob,
@@ -141,6 +141,11 @@ export const Employee = ({ setSteps }: any) => {
     if (formData.team.value && formData.team.value.length !== 0) {
       // @ts-ignore
       user.teamId = formData.team.value;
+    }
+
+    if (formData.reportM.value && formData.reportM.value.length !== 0) {
+      // @ts-ignore
+      user.reporting_manager = formData.reportM.value;
     }
 
     try {

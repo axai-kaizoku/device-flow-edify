@@ -5,7 +5,7 @@ import React, { useRef, useState } from "react";
 import { type Device } from "@/server/deviceActions";
 import { ChevronRight, Plus, X } from "lucide-react";
 import { createIssue } from "@/server/issueActions";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,6 @@ import { Icons } from "@/components/icons";
 import { type LoggedInUser } from "./devicesPage";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
-import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 
 interface IssueFormProps {
@@ -27,7 +26,6 @@ interface IssueFormProps {
 export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
   const router = useRouter();
   const [next, setNext] = useState(0);
-  const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const fileIssueImages = useRef<HTMLInputElement | null>(null);
   const { openToast } = useToast();
@@ -151,12 +149,8 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     try {
       const res = await createIssue(issue);
       setLoading(false);
-      showAlert({
-        title: "WOHOOO!! 🎉",
-        description: "Issue created successfully !",
-        isFailure: false,
-        key: "create-team-success",
-      });
+      openToast("success", "Issue created!");
+
       router.refresh();
       closeBtn(false);
     } catch (error) {
@@ -196,7 +190,11 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
 
           <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
             <div className="">
-              <img src="/media/mac-2.png" alt="Asset-1" className="w-24 h-20 p-1  object-cover rounded-full "/>
+              <img
+                src="/media/mac-2.png"
+                alt="Asset-1"
+                className="w-24 h-20 p-1  object-cover rounded-full "
+              />
             </div>
             <div>
               <div className="font-gilroySemiBold text-xl">
@@ -212,11 +210,14 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full flex flex-col relative mt-1 h-full">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col relative mt-1 h-full"
+          >
             {next === 0 ? (
               <>
                 <div className="w-full flex flex-col gap-6 h-full">
-                  <div >
+                  <div>
                     <FormField
                       label="Raised by"
                       id="raised_by"
@@ -228,21 +229,21 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                   </div>
                   <div className="flex gap-3 items-center">
                     <FormField
-                        label="Email"
-                        id="email"
-                        value={user?.email ?? ""}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Email"
+                      id="email"
+                      value={user?.email ?? ""}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                     <FormField
-                        label="Role"
-                        id="role"
-                        value={`${user?.role ?? "Frontend Developer"}`}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Role"
+                      id="role"
+                      value={`${user?.role ?? "Frontend Developer"}`}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                   </div>
                   <div className=" w-full ">
                     <div className="z-20">
@@ -310,7 +311,6 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     </div>
                   </div>
                 </div>
-                
 
                 <div className="flex absolute bottom-0 gap-2 w-full">
                   <Button
@@ -438,7 +438,6 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                     )}
                   </div>
                 </div>
-
 
                 <div className="flex gap-2 w-full mt-4">
                   <Button

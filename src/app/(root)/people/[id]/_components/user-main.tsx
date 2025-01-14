@@ -146,59 +146,66 @@ const UserGrid = ({ user }: { user: User }) => {
         {/* Second Column */}
         <div className="flex flex-col gap-6">
           {/* First Row */}
-          <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
-            <div className="flex flex-col gap-2 items-start w-full ">
-              <div className="font-gilroySemiBold  text-lg">
-                Reporting Manager
-              </div>
-              <div className="flex justify-start gap-4 items-start w-full">
-                <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
-                  <img
-                    // src={user?.reporting_manager?.image}
-                    src={user?.reporting_manager?.image || `https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp`}
-                    // Replace with your profile image URL
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+          {user.reporting_manager?.first_name ? (
+            <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
+              <div className="flex flex-col gap-2 items-start w-full ">
+                <div className="font-gilroySemiBold  text-lg">
+                  Reporting Manager
                 </div>
-
-                <div className="flex flex-col relative w-full">
-                  <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
-                    {`${user?.reporting_manager?.first_name} ${user?.reporting_manager?.last_name}`}
-                  </h1>
-                  <div
-                    className="absolute text-[#CDCDCD] text-xs top-4 -right-3 cursor-pointer"
-                    onClick={() => {
-                      router.push(`/people/${user?.reporting_manager?._id}`);
-                    }}
-                  >
-                    <ChevronRight />
+                <div className="flex justify-start gap-4 items-start w-full">
+                  <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
+                    <img
+                      // src={user?.reporting_manager?.image}
+                      src={
+                        user?.reporting_manager?.image ||
+                        `https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp`
+                      }
+                      // Replace with your profile image URL
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
 
-                  <p className="text-gray-500 font-gilroyMedium text-sm">
-                    {user?.reporting_manager?.email}
-                  </p>
-                  <div className="flex gap-2 mt-2 justify-start items-center">
-                    <div className="flex justify-start items-center">
-                      <div className="flex -space-x-5">{renderMembers()}</div>
+                  <div className="flex flex-col relative w-full">
+                    <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
+                      {`${user?.reporting_manager?.first_name ?? ""} ${
+                        user?.reporting_manager?.last_name ?? ""
+                      }`}
+                    </h1>
+                    <div
+                      className="absolute text-[#CDCDCD] text-xs top-4 -right-3 cursor-pointer"
+                      onClick={() => {
+                        router.push(`/people/${user?.reporting_manager?._id}`);
+                      }}
+                    >
+                      <ChevronRight />
                     </div>
 
-                    <div>
-                      {user?.teamId?.employees_count ? (
-                        <div className="font-gilroyMedium text-gray-500 text-xs">
-                          {user?.teamId?.employees_count} Team Members
-                        </div>
-                      ) : (
-                        <div className="font-gilroyMedium text-gray-500 text-xs">
-                          5 Team Members
-                        </div>
-                      )}
+                    <p className="text-gray-500 font-gilroyMedium text-sm">
+                      {user?.reporting_manager?.email}
+                    </p>
+                    <div className="flex gap-2 mt-2 justify-start items-center">
+                      <div className="flex justify-start items-center">
+                        <div className="flex -space-x-5">{renderMembers()}</div>
+                      </div>
+
+                      <div>
+                        {user?.teamId?.employees_count ? (
+                          <div className="font-gilroyMedium text-gray-500 text-xs">
+                            {user?.teamId?.employees_count} Team Members
+                          </div>
+                        ) : (
+                          <div className="font-gilroyMedium text-gray-500 text-xs">
+                            5 Team Members
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : null}
 
           {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">

@@ -14,7 +14,7 @@ export default async function Teams() {
     const teams = await fetchActiveTeams();
     const deletedTeams = await fetchInactiveTeams();
     const heirarchyData: HierarchyResponse = await fetchUserHierarchy();
-    const actualData: Employee = mapEmployeeData(heirarchyData[0]);
+    const actualData: Employee = mapEmployeeData(heirarchyData);
 
     return (
       <CombinedContainer title="Teams" description="Manage your teams">

@@ -29,7 +29,7 @@ const AssetsSection = ({ user }: { user: User }) => {
               <div className="">
                 <img
                   src={`${
-                    device?.image
+                    device?.image?.[0]?.url
                   } || ${"https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"}`}
                   alt="Asset-1"
                   className="size-16 rounded-full"
@@ -37,14 +37,16 @@ const AssetsSection = ({ user }: { user: User }) => {
               </div>
               <div className="flex flex-col ">
                 <div className="font-gilroySemiBold text-lg">
-                  {device?.device_name}
+                  {device?.custom_model ?? ""}
                 </div>
                 <div className="text-[#7C7C7C] font-gilroyMedium text-sm">
-                  {device?.ram} . {device?.storage}
+                  {device?.ram ?? ""} . {device?.storage ?? ""}
                 </div>
-                <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-gilroyMedium text-[#027A48] mt-1 max-w-16">
-                  <div>{device?.device_type}</div>
-                </div>
+                {device?.device_type && (
+                  <div className="bg-[#ECFDF3] flex justify-center items-center rounded-2xl px-2 py-0.5 text-xs font-gilroyMedium text-[#027A48] mt-1 max-w-16">
+                    <div>{device?.device_type ?? ""}</div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -54,7 +56,7 @@ const AssetsSection = ({ user }: { user: User }) => {
               +{totalAssets! - 2} more
             </div>
           )}
-          {totalAssets!==0 && (
+          {totalAssets !== 0 && (
             <ManageAssets userData={user}>
               <div className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full">
                 Manage Assets

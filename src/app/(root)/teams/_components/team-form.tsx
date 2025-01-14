@@ -23,7 +23,6 @@ const DEPARTMENT_OPTIONS = [
   "HR",
   "Finance",
   "Management",
-  "House Keeping",
   "Founder's Office",
   "Technology",
   "Tech",
@@ -186,8 +185,8 @@ export const TeamForm = ({
 
   return (
     <>
-      <div className="flex justify-center items-center gap-6">
-        <div className="flex flex-col  justify-start items-start gap-6">
+      <div className="flex justify-center items-center gap-6 w-full h-full overflow-y-auto">
+        <div className="flex flex-col h-full justify-start items-start gap-6">
           <div className="flex items-center  justify-center gap-4 ">
             <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
             <h3 className="text-xl font-gilroySemiBold  ">
@@ -201,7 +200,7 @@ export const TeamForm = ({
               e.preventDefault();
               handleSubmit();
             }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-6 "
           >
             <div className="group relative">
               <label
@@ -286,7 +285,7 @@ export const TeamForm = ({
                     key={preLabel}
                     type="button"
                     className={cn(
-                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300 text-lg",
+                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full  hover:border-black transition-all duration-300 text-lg",
                       formData.description === preLabel
                         ? "border-white bg-primary text-white"
                         : "hover:border-black hover:text-black"
@@ -297,6 +296,7 @@ export const TeamForm = ({
                   </button>
                 ))}
               </div>
+              <div className="pointer-events-none h-20 w-full" />
               {errors.description && (
                 <p className="text-destructive text-xs font-gilroyMedium">
                   {errors.description}

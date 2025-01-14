@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
     null
   );
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     getDashboardDetils();
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
 
   const getDashboardDetils = async () => {
     const dashboard: DashboardDetails = await getDashboard();
-    setDasboardData(dashboard)
+    setDasboardData(dashboard);
   };
 
   return (
@@ -58,11 +58,18 @@ export default function AdminDashboard() {
             justifyContent: "space-between",
           }}
         >
-          <TrendingDevices dashboardData={dashboardData}  />
+          <TrendingDevices dashboardData={dashboardData} />
           <div>
-            <img src={'/media/dashboard/store-banner.png'} style={{width: '100%', height: 170, cursor: 'pointer'}} onClick={() => {
-              router.push('store')
-            }}  />
+            <img
+              src={"/media/dashboard/store-banner.png"}
+              style={{
+                width: "100%",
+                height: 170,
+                cursor: "pointer",
+                objectFit: "contain",
+              }}
+              onClick={() => router.push("/store")}
+            />
           </div>
         </div>
       </div>

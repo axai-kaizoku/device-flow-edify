@@ -15,10 +15,10 @@ interface DevicePageProps {
 export default async function SingleDevice({ params }: DevicePageProps) {
   const data: StoreDevice = await getDeviceById(params?.id);
   return (
-    <CombinedContainer title="Devices">
+    <CombinedContainer>
       <div className="flex justify-between w-full mt-2">
         <div className="text-[#7F7F7F] font-gilroySemiBold pt-[5px] text-base 2xl:text-lg">
-          Device ID: <span className="text-black">EDIFY-0033378</span>
+          Device ID: <span className="text-black">{data?.serial_no ?? ""}</span>
         </div>
         <div className="flex gap-5 pr-7">
           <div className="flex gap-2.5">
