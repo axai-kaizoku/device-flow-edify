@@ -37,7 +37,7 @@ export default function PaymentMethods({
 
   const handlePayment = (orderId: string, totalPrice: number) => {
     const options = {
-      key: "rzp_test_F05ke1JEbCqXlE", // Use your test/live key here
+      key: "rzp_live_08aII1Mfq4uUFm", // Use your test/live key here
       amount: totalPrice, // Amount in paise
       currency: "INR",
       name: "Edify",
@@ -54,6 +54,7 @@ export default function PaymentMethods({
               setPaymentData({
                 paymentId: response?.razorpay_payment_id,
                 amount: totalPrice,
+                orderId
               })
             );
           }, 0);
