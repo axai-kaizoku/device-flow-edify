@@ -325,14 +325,14 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               onSelect={(data) => {
                 const updatedFormData = {
                   ...formData,
-                  condition: data?.value,
+                  device_condition: data?.value,
                 };
                 setFormData(updatedFormData);
                 setData(updatedFormData);
               }}
               label="Condition"
-              error={errors?.condition}
-              value={`${formData?.condition ?? ""}`}
+              error={errors?.device_condition}
+              value={`${formData?.device_condition ?? ""}`}
               placeholder="eg: Best, etc"
               className="rounded-xl  text-black border border-[#5F5F5F]"
             />

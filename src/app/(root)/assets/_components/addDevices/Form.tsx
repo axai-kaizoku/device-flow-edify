@@ -72,7 +72,7 @@ function Form({ closeBtn }: FormProps) {
       storage: "",
       device_name: "",
       brand: "",
-      condition: "",
+      device_condition: "",
     },
     laptopPage2: {
       serialNumber: "",
@@ -88,7 +88,7 @@ function Form({ closeBtn }: FormProps) {
       storage: "",
       device_name: "",
       brand: "",
-      condition: "",
+      device_condition: "",
     },
     mobilePage2: {
       serialNumber: "",
@@ -137,8 +137,8 @@ function Form({ closeBtn }: FormProps) {
             currentErrors.processor = "Processor is required.";
           if (!device1?.ram) currentErrors.ram = "RAM is required.";
           if (!device1?.storage) currentErrors.storage = "Storage is required.";
-          if (!device1?.condition)
-            currentErrors.condition = "Device Condition is required.";
+          if (!device1?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
         } else if (formData?.deviceType === "mobile") {
           if (!m1?.os) {
             currentErrors.os = "Operating System is required.";
@@ -149,8 +149,8 @@ function Form({ closeBtn }: FormProps) {
             currentErrors.processor = "Processor is required.";
           if (!m1?.ram) currentErrors.ram = "RAM is required.";
           if (!m1?.storage) currentErrors.storage = "Storage is required.";
-          if (!m1?.condition)
-            currentErrors.condition = "Device Condition is required.";
+          if (!m1?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
           if (!m1?.device_name)
             currentErrors.device_name = "Device Name is required.";
         } else if (formData?.deviceType === "monitor") {

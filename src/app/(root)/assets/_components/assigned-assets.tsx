@@ -93,10 +93,16 @@ function AssignedAssets({
                         return <span>{record?.userName ?? "-"}</span>;
                       },
                     },
+
                     {
                       title: "Assigned On",
                       render: (record: StoreDevice) => {
                         const date = new Date(record?.assigned_at!);
+
+                        // Check if the date is valid
+                        if (isNaN(date.getTime())) {
+                          return <div>-</div>; // Return "-" for invalid or missing date
+                        }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
                           day: "2-digit",
@@ -124,7 +130,7 @@ function AssignedAssets({
                       title: "Asset health",
                       render: (record: Device) => {
                         let color = "";
-                        switch (record.device_condition) {
+                        switch (record?.device_condition) {
                           case "Good":
                           case "Best":
                           case "New":

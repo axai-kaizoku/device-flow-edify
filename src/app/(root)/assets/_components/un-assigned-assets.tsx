@@ -85,10 +85,16 @@ function UnAssignedAssets({
                       title: "Serial Number",
                       dataIndex: "serial_no",
                     },
+
                     {
                       title: "Prchased  On",
                       render: (record) => {
                         const date = new Date(record?.device_purchase_date);
+
+                        // Check if the date is valid
+                        if (isNaN(date.getTime())) {
+                          return <div>-</div>; // Return "-" for invalid or missing date
+                        }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
                           day: "2-digit",

@@ -97,6 +97,11 @@ export default function UserMain({
                         render: (record) => {
                           const date = new Date(record?.onboarding_date);
 
+                          // Check if the date is valid
+                          if (isNaN(date.getTime())) {
+                            return <div>-</div>; // Return "-" for invalid or missing date
+                          }
+
                           const formattedDate = date.toLocaleDateString(
                             "en-GB",
                             {
@@ -109,11 +114,14 @@ export default function UserMain({
                           return <div>{formattedDate}</div>;
                         },
                       },
+
                       {
                         title: "Reporting Manager",
                         render: (record: User) => (
                           <div className=" whitespace-nowrap flex text-sm font-gilroyMedium text-[#6C6C6C] gap-1">
-                            <h1>{record?.reporting_manager?.first_name}</h1>
+                            <h1>
+                              {record?.reporting_manager?.first_name ?? "-"}
+                            </h1>
                             <h1>{record?.reporting_manager?.last_name}</h1>
                           </div>
                         ),

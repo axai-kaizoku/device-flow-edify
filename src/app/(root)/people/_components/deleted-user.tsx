@@ -82,10 +82,16 @@ function DeletedUser({
                     title: "Role",
                     dataIndex: "designation",
                   },
+
                   {
                     title: "Joining Date",
                     render: (record) => {
                       const date = new Date(record?.onboarding_date);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>; // Return "-" for invalid or missing date
+                      }
 
                       const formattedDate = date.toLocaleDateString("en-GB", {
                         day: "2-digit",
@@ -112,16 +118,6 @@ function DeletedUser({
                     ),
                   },
 
-                  // {
-                  //   title: "Assets assigned",
-                  //   render: (data: User) => (
-                  //     <div className="text-center rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                  //       {data?.devices?.length! > 0
-                  //         ? `${data?.devices!?.length} Assigned`
-                  //         : "N/A"}
-                  //     </div>
-                  //   ),
-                  // },
                   {
                     title: "",
                     render: (record: User) => (

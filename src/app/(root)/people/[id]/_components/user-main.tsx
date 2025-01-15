@@ -184,11 +184,11 @@ const UserGrid = ({ user }: { user: User }) => {
                       {user?.reporting_manager?.email}
                     </p>
                     <div className="flex gap-2 mt-2 justify-start items-center">
-                      <div className="flex justify-start items-center">
+                      {/* <div className="flex justify-start items-center">
                         <div className="flex -space-x-5">{renderMembers()}</div>
-                      </div>
+                      </div> */}
 
-                      <div>
+                      {/* <div>
                         {user?.teamId?.employees_count ? (
                           <div className="font-gilroyMedium text-gray-500 text-xs">
                             {user?.teamId?.employees_count} Team Members
@@ -198,7 +198,7 @@ const UserGrid = ({ user }: { user: User }) => {
                             Team Members
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

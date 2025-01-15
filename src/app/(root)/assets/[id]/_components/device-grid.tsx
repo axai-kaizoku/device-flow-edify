@@ -84,10 +84,18 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
 
               <div className="flex flex-col ">
                 <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-lg">
-                  RAM & Storage{" "}
+                  RAM
                 </div>
                 <div className="text-black text-base 2xl:text-xl font-gilroySemiBold">
-                  {`${data?.ram ?? "-"} ${data?.storage ?? "-"}`}
+                  {`${data?.ram ?? "-"}`}
+                </div>
+              </div>
+              <div className="flex flex-col ">
+                <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-lg">
+                  Storage
+                </div>
+                <div className="text-black text-base 2xl:text-xl font-gilroySemiBold">
+                  {data?.storage ?? "-"}
                 </div>
               </div>
 
@@ -106,15 +114,6 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                 </div>
                 <div className="text-black text-base 2xl:text-xl font-gilroySemiBold">
                   {data?.serial_no ?? "-"}
-                </div>
-              </div>
-
-              <div className="flex flex-col ">
-                <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-lg">
-                  Device Id
-                </div>
-                <div className="text-black text-base 2xl:text-xl font-gilroySemiBold">
-                  {data?.asset_serial_no ?? "-"}
                 </div>
               </div>
             </div>
@@ -290,11 +289,22 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                       Purchased On
                     </div>
                     <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
-                      {new Date(data?.createdAt!).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                      {(() => {
+                        const date = new Date(data?.createdAt!);
+
+                        // Check if the date is valid
+                        if (isNaN(date.getTime())) {
+                          return "-";
+                        }
+
+                        const formattedDate = date.toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        });
+
+                        return formattedDate;
+                      })()}
                     </div>
                   </div>
 
@@ -303,7 +313,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                       Purchase value
                     </div>
                     <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
-                      {data?.purchase_value ?? "-"}/-
+                      ₹{data?.purchase_value ?? "-"}/-
                     </div>
                   </div>
                 </div>

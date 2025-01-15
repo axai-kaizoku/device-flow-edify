@@ -279,8 +279,8 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
                 setData(updatedFormData);
               }}
               label="Condition"
-              error={errors?.condition}
-              value={`${formData?.condition ?? ""}`}
+              error={errors?.device_condition}
+              value={`${formData?.device_condition ?? ""}`}
               placeholder="eg: Best, etc"
               className="rounded-xl  text-black border border-[#5F5F5F]"
             />
