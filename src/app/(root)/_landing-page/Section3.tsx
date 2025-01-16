@@ -9,9 +9,12 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
   const [cardHeight6, setCardHeight6] = useState(334);
 
   return (
-    <div className={`flex w-full flex-col gap-y-16 max-sm:gap-y-10 bg-zinc-800 max-sm:px-16 px-32 py-20 max-sm:py-14 `} ref={ref}>
-      <div className="flex items-center px-0.5 max-sm:mx-auto">
-        <div className="font-gilroy text-[52px] max-sm:text-2xl font-gilroyBold leading-[58px] tracking-[-1.2px]">
+    <div
+      className={`flex w-full flex-col gap-y-16 max-lg:gap-y-10 bg-zinc-800 max-lg:px-16 px-32 py-20 max-lg:py-14 `}
+      ref={ref}
+    >
+      <div className="flex items-center px-0.5 max-lg:mx-auto">
+        <div className="font-gilroy text-[52px] max-sm:text-2xl max-lg:text-3xl font-gilroyBold leading-[58px] tracking-[-1.2px]">
           <div>
             <span className="text-gray-400">{"Why Choose "}</span>
             <span className="text-white">DeviceFlow?</span>
@@ -77,7 +80,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             </div>
           </div>
-          
+
           <div
             style={{
               transition: "height 0.5s ease-in-out",

@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <>
       <div
-        className={`flex w-full flex-col gap-y-2 bg-neutral-800 pt-[74px] mt-10 max-sm:hidden`}
+        className={`flex w-full flex-col gap-y-2 bg-neutral-800 pt-[74px] mt-10 max-lg:hidden`}
       >
         <div className="flex items-center px-24">
           <div className="flex items-center justify-center gap-x-[6.5px] pt-px">
@@ -188,7 +188,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
       </div>
 
-      <div className="w-full gap-8 bg-neutral-800 pt-[74px] mt-10 mx-auto hidden max-sm:block">
+      <div className="w-full gap-8 bg-neutral-800 pt-[74px] mt-10 mx-auto hidden max-lg:block">
         <div className="w-full mx-auto flex justify-center items-center mb-8">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -266,17 +266,41 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex flex-col gap-3 text-sm font-gilroyRegular text-center">
             <div className="text-[#9098A0]">Company</div>
             <div className="flex flex-col gap-[6px] text-[#555E67]">
-              <div  className="cursor-pointer hover:underline" onClick={scrollToAbout}>About</div>
-              <div className="cursor-pointer hover:underline" onClick={()=>{ router.push('/login');}}>Login</div>
-              <div className="cursor-pointer hover:underline" onClick={scrollToFeatures}>Features</div>
-              <div className="cursor-pointer hover:underline" onClick={scrollToCTA}>Beta Signup</div>
+              <div
+                className="cursor-pointer hover:underline"
+                onClick={scrollToAbout}
+              >
+                About
+              </div>
+              <div
+                className="cursor-pointer hover:underline"
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login
+              </div>
+              <div
+                className="cursor-pointer hover:underline"
+                onClick={scrollToFeatures}
+              >
+                Features
+              </div>
+              <div
+                className="cursor-pointer hover:underline"
+                onClick={scrollToCTA}
+              >
+                Beta Signup
+              </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-3 text-sm font-gilroyRegular text-center mt-4">
             <div className="text-[#9098A0]">Support</div>
             <div className="flex flex-col gap-[6px] text-[#555E67]">
-              <a href="mailto:contact@edify.club hover:underline">contact@edify.club</a>
+              <a href="mailto:contact@edify.club hover:underline">
+                contact@edify.club
+              </a>
               <div className="underline">Ph: +91 9513245671</div>
             </div>
           </div>
@@ -289,9 +313,9 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex gap-8 items-center mx-auto">
             <div>Terms & Conditions ∙ Privacy Policy</div>
             <div className="flex gap-3">
-              <Icons.twitter_icon/>
-              <Icons.dribble_icon/>
-              <Icons.linkedin_icon/>
+              <Icons.twitter_icon />
+              <Icons.dribble_icon />
+              <Icons.linkedin_icon />
             </div>
           </div>
         </div>

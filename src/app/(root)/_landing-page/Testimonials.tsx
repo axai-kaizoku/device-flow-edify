@@ -1,19 +1,18 @@
 import React from "react";
 export function Testimonials({}) {
   return (
-    <div className="max-sm:flex max-sm:flex-col max-sm:mt-6 max-sm:mb-10 ">
+    <div>
       {" "}
       <div
         className={`font-gilroy flex w-full flex-col items-center gap-y-3 bg-white px-36 max-sm:px-28 py-24 max-sm:py-10 text-center tracking-[0px] text-gray-500 `}
       >
-        <div className="w-[692px] font-bold leading-6 max-sm:text-sm max-sm:w-full">
+        <div className="w-[692px] font-gilroySemiBold leading-6 max-sm:text-sm max-lg:text-base max-sm:w-full">
           Testimonials
         </div>
-        <div className="w-[692px] max-sm:text-2xl max-sm:w-[150%] text-4xl font-bold leading-[44px] tracking-[-0.32px] text-gray-950">
+        <div className="w-[692px] max-sm:text-2xl max-lg:text-3xl max-sm:w-[150%] text-4xl font-gilroySemiBold leading-[44px] tracking-[-0.32px] text-gray-950">
           Trusted by 50+ Startups and Founders
         </div>
       </div>
-      
       <div className="testimonials-container max-sm:w-[85%]">
         <div className="testimonial-column">
           <div className="testimonials max-sm:gap-7" id="testimonial-column1">
@@ -64,7 +63,6 @@ export function Testimonials({}) {
                 </p>
               </div>
             </div>
-
 
             <div
               className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
@@ -170,7 +168,7 @@ export function Testimonials({}) {
 
         <div className="testimonial-column">
           <div className="testimonials" id="testimonial-column3">
-          <div
+            <div
               className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">

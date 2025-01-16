@@ -2,9 +2,13 @@ import React from "react";
 
 export function Integration({}) {
   return (
-    <div className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white px-8 pt-16 sm:px-12 lg:px-36 text-center tracking-[0px] text-gray-500`}>
-      <div className="w-full font-bold leading-6 text-xl max-sm:text-sm">Integrations</div>
-      <div className="w-full text-3xl font-bold leading-[40px] max-sm:text-2xl sm:text-4xl max-sm:leading-[30px] text-gray-950">
+    <div
+      className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white px-8 pt-16 sm:px-12 lg:px-36 text-center tracking-[0px] text-gray-500`}
+    >
+      <div className="w-full font-gilroySemiBold leading-6 text-xl max-sm:text-sm max-lg:text-lg">
+        Integrations
+      </div>
+      <div className="w-full max-lg:text-3xl font-gilroySemiBold leading-[40px] max-sm:text-2xl text-4xl max-sm:leading-[30px] text-gray-950">
         Upcoming Integrations
       </div>
       <div className="flex items-end justify-center self-stretch px-8 sm:px-16 pt-2 text-lg max-sm:text-base font-gilroyMedium leading-[30px] max-sm:hidden">
@@ -12,12 +16,14 @@ export function Integration({}) {
           <div className="text-center max-sm:text-sm">
             Soon DeviceFlow will work seamlessly with your favorite apps.
           </div>
-          <div className="max-sm:text-sm">Use over 500 tools and apps with just one click.</div>
+          <div className="max-sm:text-sm">
+            Use over 500 tools and apps with just one click.
+          </div>
         </div>
       </div>
 
       <div className="max-sm:block hidden self-stretch px-8 sm:px-16 pt-2 text-lg max-sm:text-base font-gilroyMedium leading-[30px] ">
-        Soon DeviceFlow will works seamlessly with your favorite apps. 
+        Soon DeviceFlow will works seamlessly with your favorite apps.
       </div>
 
       <div className="flex items-end justify-center self-stretch pr-[0.32px] pt-12 sm:pt-16">
@@ -29,7 +35,7 @@ export function Integration({}) {
             style={{
               flexShrink: 0,
             }}
-            className="max-sm:w-32"
+            className="max-lg:w-32"
           />
         </div>
       </div>
@@ -42,32 +48,84 @@ export function Integration({}) {
             style={{
               flexShrink: 0,
             }}
-            className="max-sm:w-40"
+            className="max-lg:w-40"
           />
         </div>
       </div>
-      <div className="relative max-sm:w-[100%] max-sm:mx-auto flex items-center justify-center max-sm:gap-x-4 gap-x-9 gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-sm:flex-row max-sm:gap-y-6 max-sm:overflow-hidden">
+      <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-x-9 gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
         <div
-          className="absolute max-sm:w-[100px] w-[192px] h-[81px]"
+          className="absolute max-lg:w-[100px] w-[192px] h-[81px]"
           style={{
-            background: "linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
+            background:
+              "linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
             left: 0,
           }}
         />
-        <img src="/media/landingPage/Zendesk.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Zapier.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Stripe.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Notion.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Intercom.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Slack.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Mailchimp.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Google_drive.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Figma.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
-        <img src="/media/landingPage/Dropbox.png" width={80} height={81} className="max-sm:w-8 max-sm:h-8" />
+        <img
+          src="/media/landingPage/Zendesk.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Zapier.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Stripe.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Notion.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Intercom.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Slack.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Mailchimp.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Google_drive.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Figma.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+        <img
+          src="/media/landingPage/Dropbox.png"
+          width={80}
+          height={81}
+          className="max-sm:w-8 max-sm:h-8"
+        />
         <div
           className="absolute max-sm:w-[100px] w-[192px] h-[81px] "
           style={{
-            background: "linear-gradient(269deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
+            background:
+              "linear-gradient(269deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
             right: 0,
           }}
         />

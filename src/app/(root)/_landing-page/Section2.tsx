@@ -4,7 +4,7 @@ import { Slide } from "react-awesome-reveal";
 export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <>
-      <div className=" pl-36 pr-36 max-sm:hidden">
+      <div className=" pl-36 pr-36 max-lg:hidden">
         <Slide direction="down" fraction={1} triggerOnce>
           <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
             <p className="relative self-stretch font-bold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
@@ -67,7 +67,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         </div>
       </div>
 
-      <div className="hidden max-sm:block mb-4 pb-4">
+      <div className="hidden max-lg:block mb-4 pb-4">
         <div className="w-[90%] mx-auto my-4 flex flex-col gap-12 ">
           <div className="gap-3">
             <div className="text-[#6B7280] text-center font-gilroyBold">

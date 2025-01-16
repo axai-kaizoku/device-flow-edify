@@ -14,7 +14,6 @@ export const FAQ = () => {
     setShowAll(!showAll);
   };
 
-  
   const faqs = [
     {
       question: "What is DeviceFlow?",
@@ -70,80 +69,79 @@ export const FAQ = () => {
 
   const visibleFaqs = showAll ? faqs : faqs?.slice(0, 5);
 
-  
-
   return (
-    <div
-  className="flex w-full flex-col items-center gap-y-5 bg-white max-sm:px-4 px-96 max-sm:pb-5 pb-[104px] pt-24 tracking-[0px]"
->
-  <div className="text-xs text-[#6B7280] font-gilroyBold max-sm:block hidden">Faqs</div>
-  <div className="text-center max-sm:text-left max-sm:text-[22px] text-4xl font-gilroyBold leading-[44px] tracking-[-0.32px] text-gray-950">
-    Got Questions? We Have Answers
-  </div>
-  <div className="self-stretch text-center text-xl max-sm:text-sm font-gilroyMedium leading-[30px] text-gray-500">
-    Everything you need to know about DeviceFlow
-  </div>
-  {visibleFaqs?.map((faq, index) => (
-    <div
-      key={index}
-      className={`flex flex-col w-full ${
-        index !== 0 ? "border-t border-gray-300" : ""
-      } pt-6`}
-    >
-      <div
-        className="flex items-start justify-between cursor-pointer"
-        onClick={() => toggleFAQ(index)}
-      >
-        <div className="text-lg max-sm:text-base font-gilroySemiBold leading-7 text-gray-950">
-          {faq?.question}
-        </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="25"
-          viewBox="0 0 24 25"
-          fill="none"
-          className="transition-transform duration-300 max-sm:w-5 max-sm:h-5"
-          style={{
-            transform: expanded === index ? "rotate(45deg)" : "rotate(0)",
-          }}
+    <div className="flex w-full flex-col items-center gap-y-5 bg-white max-lg:px-4 px-96 max-sm:pb-5 pb-[104px] pt-24 tracking-[0px]">
+      <div className="text-sm text-[#6B7280] font-gilroyBold max-lg:block hidden max-lg:text-lg">
+        Faqs
+      </div>
+      <div className="text-center max-sm:text-left max-sm:text-xl max-lg:2xl text-4xl font-gilroyBold leading-[44px]  text-gray-950">
+        Got Questions? We Have Answers
+      </div>
+      <div className="self-stretch text-center text-xl max-sm:text-sm max-lg:text-lg font-gilroyMedium leading-[30px] text-gray-500">
+        Everything you need to know about DeviceFlow
+      </div>
+      {visibleFaqs?.map((faq, index) => (
+        <div
+          key={index}
+          className={`flex flex-col w-full ${
+            index !== 0 ? "border-t border-gray-300" : ""
+          } pt-6`}
         >
-          <path
-            d="M8 12.7998H12M16 12.7998H12M12 12.7998V8.7998M12 12.7998V16.7998"
-            stroke="#030712"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M12 22.7998C17.5228 22.7998 22 18.3227 22 12.7998C22 7.27696 17.5228 2.7998 12 2.7998C6.47715 2.7998 2 7.27696 2 12.7998C2 18.3227 6.47715 22.7998 12 22.7998Z"
-            stroke="#030712"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      <div
-        className={`overflow-hidden transition-all duration-300 ${
-          expanded === index ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <p className="font-gilroyMedium leading-6 text-gray-500 pt-4 max-sm:text-sm max-sm:leading-5">
-          {faq?.answer}
-        </p>
-      </div>
+          <div
+            className="flex items-start justify-between cursor-pointer"
+            onClick={() => toggleFAQ(index)}
+          >
+            <div className="text-lg max-sm:text-base font-gilroySemiBold leading-7 text-gray-950">
+              {faq?.question}
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="25"
+              viewBox="0 0 24 25"
+              fill="none"
+              className="transition-transform duration-300 max-sm:w-5 max-sm:h-5"
+              style={{
+                transform: expanded === index ? "rotate(45deg)" : "rotate(0)",
+              }}
+            >
+              <path
+                d="M8 12.7998H12M16 12.7998H12M12 12.7998V8.7998M12 12.7998V16.7998"
+                stroke="#030712"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 22.7998C17.5228 22.7998 22 18.3227 22 12.7998C22 7.27696 17.5228 2.7998 12 2.7998C6.47715 2.7998 2 7.27696 2 12.7998C2 18.3227 6.47715 22.7998 12 22.7998Z"
+                stroke="#030712"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              expanded === index
+                ? "max-h-[500px] opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            <p className="font-gilroyMedium leading-6 text-gray-500 pt-4 max-sm:text-sm max-sm:leading-5">
+              {faq?.answer}
+            </p>
+          </div>
+        </div>
+      ))}
+      {faqs?.length > 5 && (
+        <div
+          className="pt-3 text-center text-sm font-gilroySemiBold leading-normal underline cursor-pointer max-sm:text-xs"
+          onClick={toggleShowAll}
+        >
+          {showAll ? "View Less" : "View More"}
+        </div>
+      )}
     </div>
-  ))}
-  {faqs?.length > 5 && (
-    <div
-      className="pt-3 text-center text-sm font-gilroySemiBold leading-normal underline cursor-pointer max-sm:text-xs"
-      onClick={toggleShowAll}
-    >
-      {showAll ? "View Less" : "View More"}
-    </div>
-  )}
-</div>
-
   );
 };

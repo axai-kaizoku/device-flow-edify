@@ -121,23 +121,25 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <>
-      <div className={` flex w-full bg-zinc-800 h-[376px] max-sm:h-fit max-sm:py-5 py-[7px] pl-24 max-sm:px-4 max-sm:-mb-16`}>
-        <div
-          className="flex max-sm:flex-col max-sm:justify-between justify-between flex-grow max-sm:flex-wrap items-center max-sm:gap-x-0  gap-x-28 max-sm:gap-y-2 gap-y-24 min-[1430px]:flex-nowrap"
-        >
-          <div className="w-[37%] max-sm:w-full" >
+      <div
+        className={` flex w-full bg-zinc-800 h-[376px] max-lg:h-fit max-lg:py-5 py-[7px] pl-24 max-lg:px-4 max-sm:-mb-16`}
+      >
+        <div className="flex max-lg:flex-col max-sm:justify-between justify-between flex-grow max-lg:flex-wrap items-center max-sm:gap-x-0  gap-x-28 max-lg:gap-y-2 gap-y-24 min-[1430px]:flex-nowrap">
+          <div className="w-[37%] max-lg:w-full">
             {!onRegisterClicked && (
               <div
                 className={`${
                   onRegisterClicked ? "slide-out-left" : ""
-                }  flex w-[494px] max-sm:w-full max-sm:items-center flex-shrink-0 flex-col items-start gap-y-8`}
+                }  flex w-[494px] max-lg:w-full max-lg:items-center flex-shrink-0 flex-col items-start gap-y-8`}
               >
-                <div className="font-gilroy max-sm:mx-auto flex max-sm:justify-center max-sm:items-center items-start self-stretch text-[52px] max-sm:text-3xl font-bold leading-[58px] tracking-[-1.2px] max-sm:w-[90%]">
-                  <div className="max-sm:w-[90%]">
-                    <p className="text-[gray] max-sm:w-full max-sm:text-center">
+                <div className="font-gilroySemiBold max-lg:mx-auto flex max-lg:justify-center max-lg:items-center items-start  text-[52px] max-lg:text-3xl font-bold leading-[58px] tracking-[-1.2px] max-lg:w-[90%]">
+                  <div className="max-lg:w-[90%]">
+                    <p className="text-[gray] max-lg:w-full max-lg:text-center">
                       {"Ready to be a part of "}
                     </p>
-                    <p className="text-white max-sm:w-full max-sm:text-center">BETA program?</p>
+                    <p className="text-white max-lg:w-full max-lg:text-center">
+                      BETA program?
+                    </p>
                   </div>
                 </div>
 
@@ -152,7 +154,11 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
             {onRegisterClicked && !onSubmitClicked && (
-              <div className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap" id="register" ref={ref}>
+              <div
+                className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
+                id="register"
+                ref={ref}
+              >
                 <div
                   className={`font-gilroy w-full text-3xl font-bold leading-[58px] tracking-[0px] text-[gray]`}
                 >
@@ -235,9 +241,8 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
           </div>
-          
-          
-          <div className="w-[55%] max-sm:w-[110%] max-sm:-ml-16">
+
+          <div className="w-[55%] max-sm:w-[110%] max-lg:w-[90%]   max-lg:-ml-16 ">
             <svg
               width="100%"
               height="363"

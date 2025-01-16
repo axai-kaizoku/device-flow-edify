@@ -128,8 +128,8 @@ export const LandingPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-0 max-sm:w-full">
-      <div className="px-8 max-sm:hidden">
+    <div className="flex flex-col gap-0 max-lg:w-full">
+      <div className="px-8 max-lg:hidden">
         <div
           className={
             " fade-in-top flex w-full items-center rounded-xl bg-neutral-800 py-[15px] pl-10 pr-2.5 mt-5"
@@ -156,7 +156,7 @@ export const LandingPage = () => {
 
       <div
         className={
-          " font-gilroy flex w-full flex-col items-center gap-y-8 bg-white tracking-[0px] px-8 max-sm:hidden"
+          " font-gilroy flex w-full flex-col items-center gap-y-8 bg-white tracking-[0px] px-8 max-lg:hidden"
         }
       >
         <div className="fade-in-top flex flex-wrap items-center justify-center gap-x-7 gap-y-5 self-stretch bg-white py-6 pl-12 pr-12 min-[1430px]:flex-nowrap">
@@ -240,7 +240,14 @@ export const LandingPage = () => {
                 </div>
               </div>
               <div className="flex items-center w-[148px] hover:bg-gray-50 justify-center rounded-xl border border-solid border-gray-100 bg-white px-[15px] py-[11px] cursor-pointer">
-                <div className="text-center text-zinc-700" onClick={()=>{ setIsOpen(true);}}>Request Demo</div>
+                <div
+                  className="text-center text-zinc-700"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
+                  Request Demo
+                </div>
               </div>
             </div>
           </div>
@@ -308,7 +315,7 @@ export const LandingPage = () => {
         </div>
       </div>
 
-      <div className="w-full hidden max-sm:block">
+      <div className="w-full hidden max-lg:block">
         <div className="relative flex items-center py-4 ">
           <Icons.burger_icon
             className="absolute left-4 cursor-pointer"
@@ -417,7 +424,7 @@ export const LandingPage = () => {
           <img
             src={"/media/landingPage/Hero-mobile.svg"}
             width="120%"
-            className="py-7 -ml-4"
+            className="py-7 "
           />
         </div>
       </div>
@@ -443,7 +450,7 @@ export const LandingPage = () => {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="rounded-2xl bg-white p-5 shadow-lg text-center">
-          <DemoForm setIsOpen={setIsOpen}/>
+          <DemoForm setIsOpen={setIsOpen} />
         </DialogContent>
       </Dialog>
     </div>
