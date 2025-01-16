@@ -1,25 +1,40 @@
 import React, { useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
+import Spinner from "@/components/Spinner";
 
 interface DemoProps {
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Handles input change events
-    errors: { name: string; cmpname: string; phone: string; email: string }; // Errors object
-    setErrors: React.Dispatch<
-      React.SetStateAction<{
-        name: string;
-        cmpname: string;
-        phone: string;
-        email: string;
-      }>
-    >; // Setter for errors state
-    formData: { name: string; cmpname: string; phone: string; email: string }; // Form data structure
-    setStep: (step: number) => void; // Function to set the current step
-    validateStep: () => boolean;
-  }
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Handles input change events
+  errors: { name: string; cmpname: string; phone: string; email: string; teamSize: string ; }; // Errors object
+  setErrors: React.Dispatch<
+    React.SetStateAction<{
+      name: string;
+      cmpname: string;
+      phone: string;
+      email: string;
+      teamSize: string;
+    }>
+  >; // Setter for errors state
+  formData: { name: string; cmpname: string; phone: string; email: string; teamSize: string }; // Form data structure
+  setStep: (step: number) => void; // Function to set the current step
+  validateStep: () => boolean;
+  handleSubmit: () => void;
+  loading: boolean;
+}
 
-export const DemoPage1 = ({ formData, setErrors, errors, handleChange, setStep, validateStep }:DemoProps) => (
+export const DemoPage1 = ({
+  formData,
+  loading,
+  setErrors,
+  errors,
+  handleChange,
+  setStep,
+  validateStep,
+  handleSubmit
+}: DemoProps) => (
   <div>
-    <div className="text-[#090914] text-3xl font-gilroyBold">Schedule a Demo</div>
+    <div className="text-[#090914] text-3xl font-gilroyBold">
+      Schedule a Demo
+    </div>
 
     <div className="flex flex-col gap-9 mt-9 mb-6">
       <FormField
@@ -45,6 +60,17 @@ export const DemoPage1 = ({ formData, setErrors, errors, handleChange, setStep, 
       />
 
       <FormField
+        label="Team Size"
+        id="teamSize"
+        name="teamSize"
+        type="text"
+        value={formData?.teamSize}
+        onChange={handleChange}
+        error={errors?.teamSize}
+        placeholder="Team Size"
+      />
+
+      <FormField
         label="Email"
         id="email"
         name="email"
@@ -52,8 +78,7 @@ export const DemoPage1 = ({ formData, setErrors, errors, handleChange, setStep, 
         value={formData?.email}
         onChange={(e) => {
           const inputValue = e.target.value;
-          const emailRegex =
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
           if (!inputValue || /^[a-zA-Z0-9@._-]*$/.test(inputValue)) {
             handleChange(e);
@@ -107,12 +132,12 @@ export const DemoPage1 = ({ formData, setErrors, errors, handleChange, setStep, 
     <div
       className="rounded-[9px] bg-black text-white text-base font-gilroySemiBold py-3 cursor-pointer"
       onClick={() => {
-        if(validateStep()){
-            setStep(2)
+        if (validateStep()) {
+          handleSubmit();
         }
-    }} // Move to step 2
+      }} // Move to step 2
     >
-      Request demo
+      {loading? <Spinner/> : "Request demo"}
     </div>
   </div>
 );

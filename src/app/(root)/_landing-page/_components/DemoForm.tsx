@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
 import { DemoPage1 } from "./DemoPage1";
 import { DemoPage2 } from "./DemoPage2";
+import { requestForDemo } from "@/server/loginActions";
+import { useToast } from "@/hooks/useToast";
 
 const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); 
+  const { openToast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     cmpname: "",
     email: "",
     phone: "",
+    teamSize: ""
   });
 
   const [errors, setErrors] = useState({
@@ -17,6 +22,7 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
     phone: "",
     cmpname: "",
     email: "",
+    teamSize: ""
   });
 
   const validateStep = () => {
@@ -25,6 +31,8 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
 
     const newErrors = {
       name: formData?.name ? "" : "Name is required",
+      cmpname: formData?.cmpname ? "" : "Company Name is required",
+      teamSize: formData?.teamSize ? "" : "Team size is required",
       email: formData?.email
         ? emailRegex.test(formData?.email)
           ? ""
@@ -50,6 +58,21 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
       [name]: value,
     }));
   };
+
+  const handleSubmit = async ()=>{
+    setLoading(true);
+    try {
+      const response = await requestForDemo(formData);
+      if(response){
+        setStep(2);
+      }
+    } catch (error) {
+      openToast("error", "Some Error Occured. Try again Later!");
+    }
+    finally{
+      setLoading(false);
+    }
+  }
 
   // // First Step UI
   // const Step1 = () => (
@@ -185,6 +208,8 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
           handleChange={handleChange}
           setStep={setStep}
           validateStep = {validateStep}
+          handleSubmit={handleSubmit}
+          loading = {loading}
         />
       ) : (
         <DemoPage2 setStep={setStep} setIsOpen={setIsOpen}/>

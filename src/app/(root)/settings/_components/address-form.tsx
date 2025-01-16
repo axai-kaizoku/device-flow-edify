@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
-import { createAddress, updateAddress } from "@/server/addressActions";
+import { Address, createAddress, updateAddress } from "@/server/addressActions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
@@ -23,6 +23,7 @@ export const AddressForm = ({
   pinCode = "",
   landmark = "",
   isPrimary = false,
+  totalAddresses,
 }: {
   closeBtn: (value: boolean) => void;
   isEditForm?: boolean;
@@ -35,6 +36,7 @@ export const AddressForm = ({
   pinCode?: string;
   landmark?: string;
   isPrimary?: boolean;
+  totalAddresses: Address[] | undefined;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -63,15 +65,20 @@ export const AddressForm = ({
   }) => {
     const errors: Record<string, string> = {};
 
-    if (!formData.title) errors.title = "Title is required";
-    if (!formData.phone) errors.phone = "Phone number is required";
-    if (!formData.address) errors.address = "Address is required";
-    if (!formData.city) errors.city = "City is required";
-    if (!formData.state) errors.state = "State is required";
-    if (!formData.pinCode) errors.pinCode = "Pin code is required";
+    if (!formData?.title) errors.title = "Title is required";
+    if (!formData?.phone) errors.phone = "Phone number is required";
+    if (!formData?.address) errors.address = "Address is required";
+    if (!formData?.city) errors.city = "City is required";
+    if (!formData?.state) errors.state = "State is required";
+    if (!formData?.pinCode) errors.pinCode = "Pin code is required";
 
     return errors;
   };
+
+  const hasPrimaryAddress = (addresses: { isPrimary: boolean }[]): boolean => {
+    return addresses?.some((address) => address?.isPrimary) || false;
+  };
+
 
   const handleSubmit = async () => {
     const newErrors = validateAddressForm(formData);
@@ -92,7 +99,12 @@ export const AddressForm = ({
       }
     } else {
       try {
-        await createAddress(formData);
+        if(hasPrimaryAddress(totalAddresses)){
+          await createAddress({...formData, isPrimary:false});
+        }
+        else{
+          await createAddress(formData);
+        }
         showAlert({
           isFailure: false,
           description: "New address added !!",
@@ -126,12 +138,16 @@ export const AddressForm = ({
         className="flex relative flex-col gap-8"
       >
         {/* Primary/Secondary Selection */}
-        <PrimarySelector
-          isPrimary={formData?.isPrimary}
-          onSelect={(value) =>
-            setFormData((prev) => ({ ...prev, isPrimary: value }))
-          }
-        />
+        {!totalAddresses?.some(
+            (address: { isPrimary: boolean }) => address?.isPrimary
+          ) && (
+            <PrimarySelector
+              isPrimary={formData?.isPrimary}
+              onSelect={(value) =>
+                setFormData((prev) => ({ ...prev, isPrimary: value }))
+              }
+            />
+          )}
 
         {/* Form Fields */}
         <FormField

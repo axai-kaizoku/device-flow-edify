@@ -112,7 +112,7 @@ export default function Header({ session }: Props) {
   return (
     <>
       {session ? (
-        <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-15 flex justify-between items-center px-12 ">
+        <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 ">
           {/* Logo Section */}
           <div className="flex items-center gap-2">
             <img
@@ -234,7 +234,7 @@ export default function Header({ session }: Props) {
               {dropdownVisible && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg pt-0.5 pb-0.5 border border-[#5F5F5F] font-gilroyMedium"
+                  className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg pt-0.5 pb-0.5 font-gilroyMedium"
                 >
                   <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                     <button

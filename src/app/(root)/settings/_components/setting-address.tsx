@@ -8,6 +8,7 @@ import EditAddress from "./edit-address";
 import CreateAddress from "./create-address";
 
 function SettingAddress({ data }: { data: Org }) {
+  console.log(data);
   return (
     <div className="flex flex-col">
       <div className="flex justify-between mb-4">
@@ -15,7 +16,7 @@ function SettingAddress({ data }: { data: Org }) {
           Office Address ({data?.office_address?.length || 0})
         </h1>
 
-        <CreateAddress>
+        <CreateAddress totalAddresses={data?.office_address}>
           <div className="flex items-center relative py-1.5 gap-1.5   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
             <MapPin className=" size-5 -mt-0.5" />
             <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
