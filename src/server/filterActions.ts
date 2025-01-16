@@ -463,6 +463,7 @@ export const deletedDevices = cache(async function ({
 export const issueFields = [
   "description",
   "title",
+  "issueId",
   "status",
   "createdAt",
   "updatedAt",

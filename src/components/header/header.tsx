@@ -112,7 +112,7 @@ export default function Header({ session }: Props) {
   return (
     <>
       {session ? (
-        <header className="fixed  top-0 font-gilroyRegular py-12 left-0 w-full h-14 bg-transparent backdrop-blur-3xl z-50 flex justify-between items-center px-12 ">
+        <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-15 flex justify-between items-center px-12 ">
           {/* Logo Section */}
           <div className="flex items-center gap-2">
             <img
@@ -219,9 +219,9 @@ export default function Header({ session }: Props) {
             )}
 
             {/* Query Icon */}
-            <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
+            {/* <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
               <CircleHelp className="size-5" />
-            </button>
+            </button> */}
 
             {/* Profile Icon */}
             <div className="relative">

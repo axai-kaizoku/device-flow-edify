@@ -73,24 +73,32 @@ function DeletedUser({
 
                         {/* Truncated Text */}
                         <div className="font-gilroySemiBold text-sm gap-1 flex whitespace-nowrap  text-black ">
-                          {users?.first_name} {users?.last_name}
+                          {users?.first_name ?? "-"} {users?.last_name}
                         </div>
                       </div>
                     ),
                   },
                   {
                     title: "Role",
-                    dataIndex: "designation",
+                    render: (record: User) => (
+                      <div>{record?.designation ?? "-"}</div>
+                    ),
                   },
-
                   {
                     title: "Joining Date",
                     render: (record) => {
-                      const date = new Date(record?.onboarding_date);
+                      const onboardingDate = record?.onboarding_date;
+
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return <div>-</div>; // Return "-" for null, undefined, or empty value
+                      }
+
+                      const date = new Date(onboardingDate);
 
                       // Check if the date is valid
                       if (isNaN(date.getTime())) {
-                        return <div>-</div>; // Return "-" for invalid or missing date
+                        return <div>-</div>; // Return "-" for invalid date
                       }
 
                       const formattedDate = date.toLocaleDateString("en-GB", {
@@ -106,7 +114,7 @@ function DeletedUser({
                     title: "Reporting Manager",
                     render: (record: User) => (
                       <div className=" whitespace-nowrap flex text-sm font-gilroyMedium text-[#6C6C6C] gap-1">
-                        <h1>{record?.reporting_manager?.first_name}</h1>
+                        <h1>{record?.reporting_manager?.first_name ?? "-"}</h1>
                         <h1>{record?.reporting_manager?.last_name}</h1>
                       </div>
                     ),

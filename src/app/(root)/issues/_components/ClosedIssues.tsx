@@ -60,7 +60,7 @@ export default function ClosedIssueTable({
                         alt="Device Logo"
                         className=" size-10 rounded-full"
                       />
-                      <div>{data.deviceDetails?.device_name ?? "-"}</div>
+                      <div>{data?.deviceDetails?.custom_model ?? "-"}</div>
                     </div>
                   ),
                 },
@@ -75,32 +75,51 @@ export default function ClosedIssueTable({
                 },
                 {
                   title: "Issued Id",
-                  dataIndex: "_id",
+                  render: (record: Issues) => (
+                    <div>{record?.issueId ?? "-"}</div>
+                  ),
                 },
+
                 {
                   title: "Raised by",
-                  dataIndex: "userName",
+                  render: (record) => <div>{record?.userName ?? "-"}</div>,
                 },
                 {
                   title: "Closed on",
                   render: (data: Issues) => {
-                    const date = new Date(data?.updatedAt!);
+                    const updateIssue = data?.updatedAt!;
+
+                    // Check if updateIssue is null, undefined, or empty
+                    if (!updateIssue) {
+                      return <div>-</div>; // Return "-" for null, undefined, or empty value
+                    }
+
+                    const date = new Date(updateIssue);
+
+                    // Check if the date is valid
+                    if (isNaN(date.getTime())) {
+                      return <div>-</div>; // Return "-" for invalid date
+                    }
+
                     const formattedDate = date.toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     });
+
                     return <div>{formattedDate}</div>;
                   },
                 },
+
                 {
-                  title: "Issue Type",
-                  dataIndex: "title",
+                  title: "Issue type",
+                  render: (record) => <div>{record?.title ?? "-"}</div>,
                 },
                 {
                   title: "Closed by",
-                  dataIndex: "status",
+                  render: (record) => <div>{record?.status ?? "-"}</div>,
                 },
+
                 {
                   title: "Actions",
                   render: (record: Issues) => (

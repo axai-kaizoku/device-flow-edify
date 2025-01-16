@@ -113,6 +113,7 @@ export type HierarchyUser = {
   first_name?: string;
   last_name?: string;
   email?: string;
+
   designation?: string;
   reporteeCount?: number;
   reportingTo?: string | null;
@@ -323,17 +324,16 @@ export async function userSearchAPI(query: string): Promise<UserResponse> {
   }
 }
 
-// API function to fetch the hierarchy data
 export const fetchUserHierarchy = cache(
   async function (): Promise<HierarchyResponse> {
     try {
       const res = await callAPIWithToken<HierarchyResponse>(
-        "https://api.edify.club/edifybackend/v1/user/hierarchy", // API endpoint for hierarchy
+        "https://api.edify.club/edifybackend/v1/user/hierarchy", // Your API endpoint
         "GET" // HTTP method
       );
-
-      return res?.data;
+      return res?.data; // Ensure the response is correctly mapped to data
     } catch (e) {
+      console.error("Error fetching hierarchy:", e); // Log error from the API
       throw new Error("Failed to fetch user hierarchy");
     }
   }

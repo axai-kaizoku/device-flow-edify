@@ -18,7 +18,6 @@ export default async function Teams() {
 
     return (
       <CombinedContainer title="Teams" description="Manage your teams">
-        {/* {JSON.stringify(deletedTeams)} */}
         <TabDisplay
           teams={teams}
           deletedTeams={deletedTeams}

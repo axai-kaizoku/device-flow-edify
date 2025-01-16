@@ -46,8 +46,7 @@ export default function PaginatedList({
 
   return (
     <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-4 w-full">
-      {/* Grid of Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+      <div className="flex gap-6 flex-wrap ">
         {teams?.teams?.map(
           (team) =>
             team && (

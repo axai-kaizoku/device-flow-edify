@@ -46,7 +46,7 @@ const TeamMembers = ({
 
         <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
           {data?.total
-            ? `${data.total} ${data.total > 1 ? "Members" : "Member"}`
+            ? `${data?.total} ${data?.total > 1 ? "Members" : "Member"}`
             : "N/A"}
         </span>
       </div>
@@ -110,13 +110,14 @@ const TeamMembers = ({
               },
               {
                 title: "Assets assigned",
-                render: (data: User) => (
-                  <div className="text-center w-fit px-2 font-gilroySemiBold rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                    {data?.devices!?.length > 0
-                      ? `${data?.devices!.length} Assigned`
-                      : "N/A"}
-                  </div>
-                ),
+                render: (data: User) =>
+                  data?.devices && data?.devices > 0 ? (
+                    <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                      {`${data?.devices} Assigned`}
+                    </div>
+                  ) : (
+                    <div>-</div>
+                  ),
               },
             ]}
           />

@@ -59,13 +59,7 @@ function InActiveAssets({
                     {
                       title: "Device",
                       render: (data: Device) => (
-                        <div
-                          className=" justify-start flex items-center gap-2 cursor-pointer"
-                          onClick={() => router.push(`/assets/${data?._id}`)}
-                          onMouseEnter={() =>
-                            router.prefetch(`/assets/${data?._id}`)
-                          }
-                        >
+                        <div className=" justify-start flex items-center gap-2 ">
                           <img
                             src={
                               data?.image![0]?.url ||
@@ -76,14 +70,16 @@ function InActiveAssets({
                           />
 
                           <div className="text-[#101828] font-gilroySemiBold text-sm">
-                            {data?.device_name}
+                            {data?.custom_model ?? "-"}
                           </div>
                         </div>
                       ),
                     },
                     {
                       title: "Serial Number",
-                      dataIndex: "serial_no",
+                      render: (record) => {
+                        return <span>{record?.serial_no ?? "-"}</span>;
+                      },
                     },
                     {
                       title: "Prchased  On",
@@ -103,7 +99,7 @@ function InActiveAssets({
                       title: "Asset Condition",
                       render: (record: Device) => {
                         let color = "";
-                        switch (record?.brand) {
+                        switch (record?.device_condition) {
                           case "Good":
                             color = "text-[#FF8000] bg-[#FFFACB] ";
                             break;
@@ -119,26 +115,37 @@ function InActiveAssets({
                           default:
                             color = "text-[#FF8000] bg-[#FFFACB]";
                         }
-                        return (
-                          <span className={`${color} px-3 py-1  rounded-full`}>
-                            {record?.brand ? record?.brand : <>-</>}
+                        return record?.device_condition ? (
+                          <span
+                            className={`${color} px-3 py-0.5 w-fit flex justify-center items-center rounded-full`}
+                          >
+                            {record?.device_condition}
                           </span>
+                        ) : (
+                          "-"
                         );
                       },
                     },
                     {
                       title: "Warranty Status",
-                      render: (record: Device) => (
-                        <span
-                          className={`${
-                            record?.warranty_status
-                              ? "text-[#027A48] px-3 py-1 rounded-full bg-[#ECFDF3]"
-                              : "text-[#F00] rounded-full px-3 py-1  bg-[#FFE0E0] "
-                          }`}
-                        >
-                          {record?.warranty_status ? "Active" : "Inactive"}
-                        </span>
-                      ),
+                      render: (record) => {
+                        // Check if the warranty is active based on expiry date
+                        const isWarrantyActive = record?.warranty_expiary_date
+                          ? new Date(record?.warranty_expiary_date) > new Date()
+                          : false;
+
+                        return (
+                          <span
+                            className={`${
+                              isWarrantyActive
+                                ? "text-[#027A48] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
+                                : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
+                            }`}
+                          >
+                            {isWarrantyActive ? "Active" : "Inactive"}
+                          </span>
+                        );
+                      },
                     },
                     {
                       title: "",

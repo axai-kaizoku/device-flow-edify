@@ -81,7 +81,7 @@ function AssignedAssets({
                                 : data?.custom_model}
                             </div>
                             <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
-                              {data?.custom_model}
+                              {data?.custom_model ?? "-"}
                             </div>
                           </div>
                         </div>
@@ -97,11 +97,18 @@ function AssignedAssets({
                     {
                       title: "Assigned On",
                       render: (record: StoreDevice) => {
-                        const date = new Date(record?.assigned_at!);
+                        const onboardingDate = record?.assigned_at!;
+
+                        // Check if onboardingDate is null, undefined, or empty
+                        if (!onboardingDate) {
+                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                        }
+
+                        const date = new Date(onboardingDate);
 
                         // Check if the date is valid
                         if (isNaN(date.getTime())) {
-                          return <div>-</div>; // Return "-" for invalid or missing date
+                          return <div>-</div>; // Return "-" for invalid date
                         }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
@@ -127,7 +134,7 @@ function AssignedAssets({
                       },
                     },
                     {
-                      title: "Asset health",
+                      title: "Asset Health",
                       render: (record: Device) => {
                         let color = "";
                         switch (record?.device_condition) {
@@ -142,15 +149,18 @@ function AssignedAssets({
                           default:
                             color = "text-[#FF8000] bg-[#FFFACB]";
                         }
-                        return (
+                        return record?.device_condition ? (
                           <span
                             className={`${color} px-3 py-0.5 w-fit flex justify-center items-center rounded-full`}
                           >
-                            {record?.device_condition ?? "-"}
+                            {record?.device_condition}
                           </span>
+                        ) : (
+                          "-"
                         );
                       },
                     },
+
                     {
                       title: "Warranty Status",
                       render: (record) => {

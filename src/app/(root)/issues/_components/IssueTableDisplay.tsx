@@ -64,7 +64,7 @@ function IssueTableDisplay({
                         alt="Device Logo"
                         className=" size-10 rounded-full"
                       />
-                      <div>{data?.deviceDetails?.device_name ?? "-"}</div>
+                      <div>{data?.deviceDetails?.custom_model ?? "-"}</div>
                     </div>
                   ),
                 },
@@ -86,46 +86,57 @@ function IssueTableDisplay({
                             Low
                           </h1>
                         ) : (
-                          <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-gray-300 text-gray-700">
-                            Unknown
-                          </h1>
+                          <h1>-</h1>
                         )}
                       </div>
                     </div>
                   ),
                 },
-
                 {
                   title: "Issued Id",
-                  dataIndex: "_id",
+                  render: (record: Issues) => (
+                    <div>{record?.issueId ?? "-"}</div>
+                  ),
                 },
+
                 {
                   title: "Raised by",
-                  dataIndex: "userName",
+                  render: (record) => <div>{record?.userName ?? "-"}</div>,
                 },
+
                 {
                   title: "Raised on",
-                  render: (data: Issues) => {
-                    const date = new Date(data?.createdAt!);
+                  render: (record) => {
+                    const onboardingDate = record?.createdAt!;
+
+                    // Check if onboardingDate is null, undefined, or empty
+                    if (!onboardingDate) {
+                      return <div>-</div>; // Return "-" for null, undefined, or empty value
+                    }
+
+                    const date = new Date(onboardingDate);
+
+                    // Check if the date is valid
+                    if (isNaN(date.getTime())) {
+                      return <div>-</div>; // Return "-" for invalid date
+                    }
+
                     const formattedDate = date.toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     });
-                    return (
-                      <div className="justify-start flex items-center">
-                        {formattedDate}
-                      </div>
-                    );
+
+                    return <div>{formattedDate}</div>;
                   },
                 },
                 {
                   title: "Issue type",
-                  dataIndex: "title",
+                  render: (record) => <div>{record?.title ?? "-"}</div>,
                 },
                 {
                   title: "Status",
-                  dataIndex: "status",
+                  render: (record) => <div>{record?.status ?? "-"}</div>,
                 },
 
                 {

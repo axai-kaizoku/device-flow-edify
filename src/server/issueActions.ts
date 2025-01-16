@@ -4,6 +4,7 @@ import { cache } from "react";
 
 export type Issues = {
   _id?: string;
+  issueId?: string;
   userId?: string;
   description?: string;
   orgId?: string;
@@ -32,6 +33,7 @@ export type Issues = {
     storage?: string;
     custom_model?: string;
     brand?: string;
+    device_condition?: string;
     warranty_status?: boolean;
     warranty_expiary_date?: string | null;
     ownership?: string;

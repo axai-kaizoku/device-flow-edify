@@ -89,11 +89,18 @@ function UnAssignedAssets({
                     {
                       title: "Prchased  On",
                       render: (record) => {
-                        const date = new Date(record?.device_purchase_date);
+                        const onboardingDate = record?.device_purchase_date;
+
+                        // Check if onboardingDate is null, undefined, or empty
+                        if (!onboardingDate) {
+                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                        }
+
+                        const date = new Date(onboardingDate);
 
                         // Check if the date is valid
                         if (isNaN(date.getTime())) {
-                          return <div>-</div>; // Return "-" for invalid or missing date
+                          return <div>-</div>; // Return "-" for invalid date
                         }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
@@ -106,45 +113,52 @@ function UnAssignedAssets({
                       },
                     },
                     {
-                      title: "Asset Condition",
+                      title: "Asset Health",
                       render: (record: Device) => {
                         let color = "";
-                        switch (record?.brand) {
+                        switch (record?.device_condition) {
                           case "Good":
-                            color = "text-[#FF8000] bg-[#FFFACB] ";
-                            break;
                           case "Best":
-                            color = "text-[#027A48] bg-[#ECFDF3] ";
-                            break;
                           case "New":
-                            color = "text-[#027A48] bg-[#ECFDF3] ";
+                            color = "text-[#027A48] bg-[#ECFDF3]";
                             break;
                           case "Old":
-                            color = "text-[#F00] bg-[#FFE0E0] ";
+                            color = "text-[#F00] bg-[#FFE0E0]";
                             break;
                           default:
                             color = "text-[#FF8000] bg-[#FFFACB]";
                         }
-                        return (
-                          <span className={`${color} px-3 py-1  rounded-full`}>
-                            {record?.brand ? record?.brand : <>-</>}
+                        return record?.device_condition ? (
+                          <span
+                            className={`${color} px-3 py-0.5 w-fit flex justify-center items-center rounded-full`}
+                          >
+                            {record?.device_condition}
                           </span>
+                        ) : (
+                          "-"
                         );
                       },
                     },
                     {
                       title: "Warranty Status",
-                      render: (record: Device) => (
-                        <span
-                          className={`${
-                            record?.warranty_status
-                              ? "text-[#027A48] px-3 py-1 rounded-full bg-[#ECFDF3]"
-                              : "text-[#F00] rounded-full px-3 py-1  bg-[#FFE0E0] "
-                          }`}
-                        >
-                          {record?.warranty_status ? "Active" : "Inactive"}
-                        </span>
-                      ),
+                      render: (record) => {
+                        // Check if the warranty is active based on expiry date
+                        const isWarrantyActive = record?.warranty_expiary_date
+                          ? new Date(record?.warranty_expiary_date) > new Date()
+                          : false;
+
+                        return (
+                          <span
+                            className={`${
+                              isWarrantyActive
+                                ? "text-[#027A48] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
+                                : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
+                            }`}
+                          >
+                            {isWarrantyActive ? "Active" : "Inactive"}
+                          </span>
+                        );
+                      },
                     },
                     {
                       title: "",

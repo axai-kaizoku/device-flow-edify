@@ -48,6 +48,7 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
 
   return (
     <>
+      {JSON.stringify(data)}
       <div className="flex flex-col w-full overflow-hidden h-full gap-3">
         {/* <div className="flex justify-between items-center">
           <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">

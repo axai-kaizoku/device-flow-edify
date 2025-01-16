@@ -14,13 +14,13 @@ const TeamHeader = ({ image, title, description, manager }: Team) => {
       />
       <div>
         <h1 className="text-xl flex gap-3 items-center font-gilroySemiBold text-black">
-          {title}
+          {title ?? "_"}
           <span className="py-1 px-2 text-xs bg-green-100 text-green-600 rounded-full">
             Active
           </span>
         </h1>
         <p className="text-[#7C7C7C] text-base font-gilroyMedium">
-          {description}
+          {description ?? "-"}
         </p>
         <p className="text-sm font-gilroyMedium text-[#ADADAC]">
           Reporting Manager:{" "}

@@ -18,6 +18,7 @@ const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
           placeholder="Search teams"
         />
       </div>
+
       <AddTeamMember teamData={team}>
         <div className="flex items-center justify-center relative py-1.5 gap-1   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
           <Plus className="text-[#6C6C6C]  size-5 -mt-1" />

@@ -89,17 +89,26 @@ export default function UserMain({
                       },
                       {
                         title: "Role",
-                        dataIndex: "designation",
+                        render: (record: User) => (
+                          <div>{record?.designation ?? "-"}</div>
+                        ),
                       },
 
                       {
                         title: "Joining Date",
                         render: (record) => {
-                          const date = new Date(record?.onboarding_date);
+                          const onboardingDate = record?.onboarding_date;
+
+                          // Check if onboardingDate is null, undefined, or empty
+                          if (!onboardingDate) {
+                            return <div>-</div>; // Return "-" for null, undefined, or empty value
+                          }
+
+                          const date = new Date(onboardingDate);
 
                           // Check if the date is valid
                           if (isNaN(date.getTime())) {
-                            return <div>-</div>; // Return "-" for invalid or missing date
+                            return <div>-</div>; // Return "-" for invalid date
                           }
 
                           const formattedDate = date.toLocaleDateString(
@@ -137,14 +146,16 @@ export default function UserMain({
 
                       {
                         title: "Devices assigned",
-                        render: (data: User) => (
-                          <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                            {data?.devices! > 0
-                              ? `${data.devices} Assigned`
-                              : "-"}
-                          </div>
-                        ),
+                        render: (data: User) =>
+                          data?.devices && data?.devices > 0 ? (
+                            <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                              {`${data?.devices} Assigned`}
+                            </div>
+                          ) : (
+                            <div>-</div>
+                          ),
                       },
+
                       {
                         title: "",
                         render: (data) => (

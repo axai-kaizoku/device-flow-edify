@@ -104,9 +104,11 @@ export const TeamCard = ({
 
         {/* Description Section */}
         <div>
-          <p className="font-gilroySemiBold text-2xl line-clamp-2">{title}</p>
+          <p className="font-gilroySemiBold text-2xl line-clamp-2">
+            {title ?? "-"}
+          </p>
           <p className="text-[#7C7C7C] text-base font-gilroyMedium line-clamp-2">
-            {description}
+            {description ?? "-"}
           </p>
         </div>
 

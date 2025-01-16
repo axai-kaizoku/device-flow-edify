@@ -91,7 +91,9 @@ const UserGrid = ({ user }: { user: User }) => {
                   <div className="text-sm text-gray-500 font-gilroySemiBold">
                     Email
                   </div>
-                  <div className="font-gilroySemiBold">{user?.email ?? ""}</div>
+                  <div className="font-gilroySemiBold">
+                    {user?.email ?? "-"}
+                  </div>
                 </div>
               </div>
 
@@ -103,7 +105,9 @@ const UserGrid = ({ user }: { user: User }) => {
                   <div className="text-sm text-gray-500 font-gilroySemiBold">
                     Phone
                   </div>
-                  <div className="font-gilroySemiBold">{user?.phone ?? ""}</div>
+                  <div className="font-gilroySemiBold">
+                    {user?.phone ?? "-"}
+                  </div>
                 </div>
               </div>
 
@@ -113,12 +117,32 @@ const UserGrid = ({ user }: { user: User }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="text-sm text-gray-500 font-gilroySemiBold">
-                    Date of Birth
+                    Date of birth
                   </div>
                   <div className="font-gilroySemiBold">
-                    {new Date(
-                      user?.date_of_birth as string
-                    ).toLocaleDateString()}
+                    {(() => {
+                      const onboardingDate = user?.date_of_birth;
+
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return "-"; // Return "-" for null, undefined, or empty value
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return "-"; // Return "-" for invalid date
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return formattedDate;
+                    })()}
                   </div>
                 </div>
               </div>
@@ -132,9 +156,29 @@ const UserGrid = ({ user }: { user: User }) => {
                     Joining Date
                   </div>
                   <div className="font-gilroySemiBold">
-                    {new Date(
-                      user?.onboarding_date as string
-                    ).toLocaleDateString()}
+                    {(() => {
+                      const onboardingDate = user?.onboarding_date;
+
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return "-"; // Return "-" for null, undefined, or empty value
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return "-"; // Return "-" for invalid date
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return formattedDate;
+                    })()}
                   </div>
                 </div>
               </div>
@@ -167,7 +211,7 @@ const UserGrid = ({ user }: { user: User }) => {
 
                   <div className="flex flex-col relative w-full">
                     <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
-                      {`${user?.reporting_manager?.first_name ?? ""} ${
+                      {`${user?.reporting_manager?.first_name ?? "-"} ${
                         user?.reporting_manager?.last_name ?? ""
                       }`}
                     </h1>
@@ -181,14 +225,13 @@ const UserGrid = ({ user }: { user: User }) => {
                     </div>
 
                     <p className="text-gray-500 font-gilroyMedium text-sm">
-                      {user?.reporting_manager?.email}
+                      {user?.reporting_manager?.email ?? "-"}
                     </p>
-                    <div className="flex gap-2 mt-2 justify-start items-center">
-                      {/* <div className="flex justify-start items-center">
+                    <div className="flex gap-2 mt-2 opacity-0 justify-start items-center">
+                      <div className="flex justify-start items-center">
                         <div className="flex -space-x-5">{renderMembers()}</div>
-                      </div> */}
-
-                      {/* <div>
+                      </div>
+                      <div>
                         {user?.teamId?.employees_count ? (
                           <div className="font-gilroyMedium text-gray-500 text-xs">
                             {user?.teamId?.employees_count} Team Members
@@ -198,7 +241,7 @@ const UserGrid = ({ user }: { user: User }) => {
                             Team Members
                           </div>
                         )}
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
