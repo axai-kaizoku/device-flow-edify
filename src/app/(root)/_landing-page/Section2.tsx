@@ -1,9 +1,10 @@
-import { forwardRef } from "react"
-import { Slide } from "react-awesome-reveal"
+import { forwardRef } from "react";
+import { Slide } from "react-awesome-reveal";
 
 export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
-    return(
-        <div className=" pl-36 pr-36 ">
+  return (
+    <>
+      <div className=" pl-36 pr-36 max-sm:hidden">
         <Slide direction="down" fraction={1} triggerOnce>
           <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
             <p className="relative self-stretch font-bold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
@@ -45,13 +46,13 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         </div>
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
-          
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
-            Manage device allocation, purchases, and inventory with a few clicks.
+              Manage device allocation, purchases, and inventory with a few
+              clicks.
             </div>
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
-          <img src={"/media/landingPage/hassel-free-2.png"} />
+            <img src={"/media/landingPage/hassel-free-2.png"} />
           </Slide>
         </div>
         <div className="flex gap-12 mt-16 pb-11 items-center">
@@ -60,10 +61,90 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
-            Monitor asset lifecycle and optimize your IT workflows seamlessly.
+              Monitor asset lifecycle and optimize your IT workflows seamlessly.
             </div>
           </Slide>
         </div>
       </div>
-    )
+
+      <div className="hidden max-sm:block mb-4 pb-4">
+        <div className="w-[90%] mx-auto my-4 flex flex-col gap-12 ">
+          <div className="gap-3">
+            <div className="text-[#6B7280] text-center font-gilroyBold">
+              About
+            </div>
+            <div className="flex flex-col gap-6">
+              <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
+                Everything You Need to Manage Your IT Infrastructure
+              </div>
+              <img src={"/media/landingPage/Content-3.png"} width={"100%"} />
+              <img src={"/media/landingPage/Content-2.png"} width={"100%"} />
+              <img
+                src={"/media/landingPage/Content.png"}
+                height={504}
+                width={"100%"}
+              />
+            </div>
+          </div>
+
+          <div className="gap-3">
+            <div className="text-[#6B7280] text-center font-gilroyBold">
+              Features
+            </div>
+            <div className="flex flex-col gap-6">
+              <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
+                Three Steps to Hassle-Free IT Management
+              </div>
+              <div className="mt-2 flex flex-col gap-4">
+                <div>
+                  <p className="text-xs text-[#727272] font-gilroyRegular text-center">
+                    Step 1
+                  </p>
+                  <div className="text-black font-gilroySemiBold text-lg w-fit mx-auto mt-2">
+                    Add your devices and users to <br />
+                    DeviceFlow’s intuitive platform.
+                  </div>
+                  <img
+                    src={"/media/landingPage/hassel-free-1.png"}
+                    className="mt-6"
+                    width={"100%"}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-xs text-[#727272] font-gilroyRegular text-center">
+                    Step 2
+                  </p>
+                  <div className="text-black font-gilroySemiBold text-lg w-fit mx-auto mt-2">
+                    Manage device allocation, purchases, <br />
+                    and inventory with a few clicks.
+                  </div>
+                  <img
+                    src={"/media/landingPage/hassel-free-2.png"}
+                    className="mt-6"
+                    width={"100%"}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-xs text-[#727272] font-gilroyRegular text-center">
+                    Step 3
+                  </p>
+                  <div className="text-black font-gilroySemiBold text-lg w-fit mx-auto mt-2">
+                    Monitor asset lifecycle and optimize <br /> your IT
+                    workflows seamlessly.
+                  </div>
+                  <img
+                    src={"/media/landingPage/hassel-free-4.png"}
+                    className="mt-6"
+                    width={"100%"}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 });

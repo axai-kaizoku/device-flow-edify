@@ -38,7 +38,7 @@ const UserGrid = ({ user }: { user: User }) => {
   };
   return (
     <>
-      <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
+      <div className="flex gap-6 mt-2 font-gilroyRegular">
         <div className="flex flex-col gap-6">
           <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">

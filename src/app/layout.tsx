@@ -105,7 +105,7 @@ export default async function RootLayout({
           ${gilroyBlack.variable}
         `}
       >
-        <KbarWrapper userRole={userRole} /> {/* Render KbarWrapper here */}
+        {session?.user && <KbarWrapper userRole={userRole} />} {/* Render KbarWrapper here */}
         <Providers>
           {/* <ScreenSize /> */}
           {children}

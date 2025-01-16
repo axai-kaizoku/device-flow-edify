@@ -121,42 +121,38 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <>
-      <div className={` flex w-full bg-zinc-800 h-[376px] py-[7px] pl-24 `}>
+      <div className={` flex w-full bg-zinc-800 h-[376px] max-sm:h-fit max-sm:py-5 py-[7px] pl-24 max-sm:px-4 max-sm:-mb-16`}>
         <div
-          style={{ justifyContent: "space-between" }}
-          className="flex flex-grow flex-wrap items-center  gap-x-28 gap-y-24 min-[1430px]:flex-nowrap"
+          className="flex max-sm:flex-col max-sm:justify-between justify-between flex-grow max-sm:flex-wrap items-center max-sm:gap-x-0  gap-x-28 max-sm:gap-y-2 gap-y-24 min-[1430px]:flex-nowrap"
         >
-          <div style={{ width: "37%" }}>
+          <div className="w-[37%] max-sm:w-full" >
             {!onRegisterClicked && (
               <div
                 className={`${
                   onRegisterClicked ? "slide-out-left" : ""
-                }  flex w-[494px] flex-shrink-0 flex-col items-start gap-y-8`}
+                }  flex w-[494px] max-sm:w-full max-sm:items-center flex-shrink-0 flex-col items-start gap-y-8`}
               >
-                <div className="font-gilroy flex items-start self-stretch text-[52px] font-bold leading-[58px] tracking-[-1.2px]">
-                  <p>
-                    <span className="text-[gray]">
+                <div className="font-gilroy max-sm:mx-auto flex max-sm:justify-center max-sm:items-center items-start self-stretch text-[52px] max-sm:text-3xl font-bold leading-[58px] tracking-[-1.2px] max-sm:w-[90%]">
+                  <div className="max-sm:w-[90%]">
+                    <p className="text-[gray] max-sm:w-full max-sm:text-center">
                       {"Ready to be a part of "}
-                    </span>
-                    <span className="text-white">BETA program?</span>
-                  </p>
+                    </p>
+                    <p className="text-white max-sm:w-full max-sm:text-center">BETA program?</p>
+                  </div>
                 </div>
 
                 <div
                   onClick={() => {
                     setOnRegisterClicked(true);
                   }}
-                  className="font-inter rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 hover:bg-gray-50 cursor-pointer border border-zinc-800 hover:border-gray-200"
+                  className="font-gilroySemiBold rounded-xl bg-white max-sm:px-5 px-4 max-sm:py-2 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 hover:bg-gray-50 cursor-pointer border border-zinc-800 hover:border-gray-200"
                 >
                   Register
                 </div>
               </div>
             )}
             {onRegisterClicked && !onSubmitClicked && (
-              <div
-                className=" slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
-                ref={ref}
-              >
+              <div className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap" id="register" ref={ref}>
                 <div
                   className={`font-gilroy w-full text-3xl font-bold leading-[58px] tracking-[0px] text-[gray]`}
                 >
@@ -209,20 +205,20 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
             )}
             {onSubmitClicked && (
               <div
-                className={` slide-in-left font-gilroy flex w-full flex-col gap-y-8 pr-[0.02px] leading-[43px] tracking-[0px] `}
+                className={` slide-in-left flex w-[100%] flex-col gap-y-8 pr-[0.02px] leading-[43px] tracking-[0px] `}
               >
                 <div className="h-24 flex-shrink-0">
                   <span>
-                    <p className="text-[52px] font-bold leading-[43px] text-white">
+                    <p className="text-[52px] max-sm:text-[44px] font-bold leading-[43px] text-white">
                       {"Congratulations! "}
                       <span className="text-[gray]" />
                     </p>
-                    <p className="text-3xl font-gilroySemiBold leading-[43px] mt-4 text-[gray]">
+                    <p className="text-3xl max-sm:text-xl font-gilroySemiBold leading-[43px] mt-4 text-[gray]">
                       Our team will contact you soon.
                     </p>
                   </span>
                 </div>
-                <div className="text-xl font-gilroyMedium leading-[43px]">
+                <div className="text-xl font-gilroyMedium leading-[43px] max-sm:leading-[35px]">
                   <span>
                     <p className="text-[gray]">For further info:</p>
                     <p className="text-white">{"(+91) 7470873515  "}</p>
@@ -239,12 +235,15 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             )}
           </div>
-          <div style={{ width: "55%" }}>
+          
+          
+          <div className="w-[55%] max-sm:w-[110%] max-sm:-ml-16">
             <svg
               width="100%"
               height="363"
               viewBox="0 0 740 363"
               fill="none"
+              className=""
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               xmlns="http://www.w3.org/2000/svg"
