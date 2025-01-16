@@ -2,7 +2,7 @@
 
 import { useQueryState } from "nuqs";
 
-import { Search, Download } from "lucide-react"; // Importing icons from lucide-react
+import { Search, Download, Plus } from "lucide-react"; // Importing icons from lucide-react
 
 import Spinner from "@/components/Spinner";
 
@@ -20,6 +20,8 @@ import {
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import CreateTeam from "../teams/_components/create-team";
+import InvitePeople from "./[id]/_components/invite-people";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -261,10 +263,17 @@ function TabDisplay() {
                 className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
                 value={searchTerm || ""}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search People..."
+                placeholder="Search assets..."
               />
             </div>
-
+            <InvitePeople>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Plus className="text-[#6C6C6C]  size-5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Invite People
+                </span>
+              </div>
+            </InvitePeople>
             <div className="relative">
               <button
                 onClick={() => setOpenFilter(!openFilter)}

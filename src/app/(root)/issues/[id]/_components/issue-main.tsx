@@ -397,13 +397,13 @@ const IssueSection = ({ data }: { data: Issues }) => {
               {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
                   {/* Modal Container */}
-                  <div className="relative bg-white rounded-xl p-4 w-[50%]  h-[50%] shadow-lg">
+                  <div className="relative  rounded-xl p-4 w-[80%]  h-[80%] shadow-lg">
                     {/* Close Button */}
                     <button
-                      className="absolute top-4 right-4  focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-sm"
+                      className="absolute top-4 right-4  focus:ring-2 focus:ring-ring text-white focus:ring-offset-2 rounded-sm"
                       onClick={closeModal}
                     >
-                      <X />
+                      <X className="rounded-full bg-gray-600 p-2 size-10" />
                     </button>
 
                     {/* Image Display */}
@@ -417,7 +417,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                       <img
                         src={data?.images![selectedImageIndex]}
                         alt={`modal-image-${selectedImageIndex}`}
-                        className="rounded-lg max-h-[70vh] w-auto"
+                        className="rounded-lg h-[100%] w-auto"
                       />
                       <button
                         className="absolute right-4 top-1/2 transform -translate-y-1/2  bg-black text-white rounded-full p-2 hover:bg-white hover:text-black duration-300"
@@ -428,7 +428,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                     </div>
 
                     {/* Thumbnail Navigation */}
-                    <div className="flex items-center gap-3 overflow-x-auto absolute bottom-4 2xl:left-80 left-60 justify-center">
+                    <div className="flex items-center gap-3 overflow-x-auto  mt-8 justify-center">
                       {data?.images?.map((thumb, idx) => (
                         <img
                           key={idx}
