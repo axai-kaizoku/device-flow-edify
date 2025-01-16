@@ -76,7 +76,7 @@ function AssignedAssets({
                           />
                           <div className="relative group">
                             <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
-                              {data?.custom_model!.length > 12
+                              {data?.custom_model?.length! > 12
                                 ? `${data?.custom_model!.slice(0, 12)}...`
                                 : data?.custom_model}
                             </div>

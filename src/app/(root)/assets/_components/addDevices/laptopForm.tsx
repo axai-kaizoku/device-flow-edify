@@ -229,7 +229,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
             id="model"
             name="model"
             type="text"
-            value={formData?.model}
+            value={formData?.model ?? ""}
             onChange={handleChange}
             error={errors?.model}
             placeholder=" eg: X14D, etc"
@@ -301,14 +301,14 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               onSelect={(data) => {
                 const updatedFormData = {
                   ...formData,
-                  storage: data?.value,
+                  storage: [data?.value],
                 };
                 setFormData(updatedFormData);
                 setData(updatedFormData);
               }}
               label="Storage"
               error={errors?.storage}
-              value={`${formData?.storage ?? ""}`}
+              value={formData?.storage?.[0] ?? ""}
               placeholder="eg: 256GB, etc"
               className="rounded-xl  text-black border border-[#5F5F5F]"
             />
@@ -319,6 +319,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               options={[
                 { label: "Good", value: "Good" },
                 { label: "Best", value: "Best" },
+                { label: "Fair", value: "Fair" },
                 { label: "Old", value: "Old" },
                 { label: "New", value: "New" },
               ]}

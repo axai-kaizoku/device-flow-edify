@@ -21,7 +21,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<DevicePage2>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
-  const {openToast} = useToast();
+  const { openToast } = useToast();
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +53,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
           const res = await getImageUrl({ file });
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error","Some Error while uploading the File");
+          openToast("error", "Some Error while uploading the File");
         }
       } else {
         setErrors((prev) => ({
@@ -149,7 +149,11 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             label="Purchase Date"
             id="purchaseDate"
             name="purchaseDate"
-            value={formData?.purchaseDate}
+            value={
+              formData?.purchaseDate
+                ? new Date(formData.purchaseDate).toISOString().split("T")[0]
+                : ""
+            }
             type="date"
             onChange={handleChange}
             error={errors?.purchaseDate}
@@ -161,7 +165,13 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             label="Warranty Period"
             id="warrantyExpiryDate"
             name="warrantyExpiryDate"
-            value={formData?.warrantyExpiryDate}
+            value={
+              formData?.warrantyExpiryDate
+                ? new Date(formData.warrantyExpiryDate)
+                    .toISOString()
+                    .split("T")[0]
+                : ""
+            }
             type="date"
             onChange={handleChange}
             error={errors?.warrantyExpiryDate}

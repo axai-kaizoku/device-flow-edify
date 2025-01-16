@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "../wind/Icons";
 import {
   AlertTriangle,
-  Bell,
   CircleHelp,
   LogOut,
   Plus,
@@ -11,7 +10,7 @@ import {
   Settings,
   UserRound,
 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Props } from "@/app/(root)/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
@@ -20,23 +19,24 @@ import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components
 import { signOut } from "next-auth/react";
 import { Icons } from "../icons";
 import ReAssign from "@/app/(root)/assets/_components/re-assign";
-// import type { RootState } from "@/app/store/store";
 
 export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (session?.user.user.employeeCount === 0) {
-  //     router.push("/onboarding");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem("employee-count") === "2") {
+      return;
+    } else if (session?.user.user.employeeCount === 0) {
+      sessionStorage.setItem("employee-count", "0");
+      router.push("/onboarding");
+    }
+  }, [session?.user.user.employeeCount]);
 
   const handleMouseEnter = (href: string) => {
     setIsHovered(true);
     router.prefetch(href); // Prefetch the route on hover
   };
-  const pathname = usePathname();
   const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);

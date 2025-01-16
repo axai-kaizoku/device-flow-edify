@@ -1,7 +1,7 @@
 import { FormData } from "./types";
 
 export const createPayload = (formData: FormData) => {
-  const { deviceType } = formData;
+  const { deviceType, userId } = formData;
 
   let payload = {};
 
@@ -78,7 +78,8 @@ export const createPayload = (formData: FormData) => {
   }
 
   return {
-    deviceType,
+    device_type: deviceType,
+    userId: userId,
     ...payload, // Include details dynamically based on type
   };
 };

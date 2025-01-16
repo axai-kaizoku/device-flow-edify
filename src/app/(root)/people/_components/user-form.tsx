@@ -276,6 +276,18 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           image: "Only JPG, JPEG, or PNG files under 1MB are allowed.",
         }));
       }
+    } else {
+      if (formData.gender === "Male") {
+        setFormData((prev) => ({
+          ...prev,
+          image: "//male image", // Ensure `res.url` contains the S3 URL.
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          image: "// female url", // Ensure `res.url` contains the S3 URL.
+        }));
+      }
     }
   };
 
@@ -756,25 +768,18 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                         type="text"
                         onChange={(e) => {
                           const inputValue = e.target.value;
-                          const designationRegex =
-                            /^(?=.*[a-zA-Z].*[a-zA-Z])[a-zA-Z\s]{2,50}$/;
 
-                          if (!inputValue || /^[a-zA-Z\s]*$/.test(inputValue)) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              designation: inputValue,
-                            }));
+                          setFormData((prev) => ({
+                            ...prev,
+                            designation: inputValue,
+                          }));
 
-                            // Validate email format on the fly
-                            setErrors((prevErrors) => ({
-                              ...prevErrors,
-                              designation: inputValue
-                                ? designationRegex.test(inputValue)
-                                  ? ""
-                                  : "Designation must be between 2 and 50 letters"
-                                : "Designation is required",
-                            }));
-                          }
+                          setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            designation: inputValue
+                              ? ""
+                              : "Designation is required",
+                          }));
                         }}
                         maxLength={50}
                         placeholder="eg. Frontend Developer"

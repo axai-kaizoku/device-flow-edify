@@ -91,6 +91,7 @@ export const createDevices = async (
     const deviceData = {
       device_name: device?.device_name || "Default",
       device_type: device?.device_type,
+      device_condition: device?.device_condition,
       asset_serial_no: device?.asset_serial_no || null,
       serial_no: device?.serial_no,
       ram: device?.ram,
@@ -110,9 +111,12 @@ export const createDevices = async (
           url: "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png",
         },
       ],
-      // addressId: device?.addressId,
-      // ...(device?.userId !== "" && { userId: device?.userId }),
     };
+
+    if (device?.userId && device.userId.length > 0) {
+      // @ts-ignore
+      deviceData.userId = device?.userId;
+    }
 
     // API call
     const sess = await getSession();

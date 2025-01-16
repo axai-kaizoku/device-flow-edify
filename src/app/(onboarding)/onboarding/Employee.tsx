@@ -12,7 +12,6 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { fetchTeams } from "@/server/teamActions";
 import {
@@ -24,7 +23,7 @@ import {
   User,
 } from "@/server/userActions";
 import { ChevronRight } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { useState } from "react";
 import BulkUpload from "./BulkUpload";
 
@@ -35,9 +34,7 @@ interface UserFormProps {
 }
 
 export const Employee = ({ setSteps }: any) => {
-  const router = useRouter();
   const { showAlert } = useAlert();
-  const { openToast } = useToast();
   const [success, setSuccess] = useState(false);
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -154,6 +151,7 @@ export const Employee = ({ setSteps }: any) => {
         await createUser(user);
         setLoading(false);
         setSuccess(true);
+        sessionStorage.setItem("employee-count", "1");
         setFormData({
           firstN: "",
           phone: "",

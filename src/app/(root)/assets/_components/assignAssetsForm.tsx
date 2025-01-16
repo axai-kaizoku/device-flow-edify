@@ -21,6 +21,7 @@ const AssignAssetsForm = ({
   const handleSubmit = async () => {
     if (user?._id) {
       setLoading(true);
+      // @ts-ignore
       const res = await updateDevice(device?._id ?? "error", {
         userId: user._id,
       });

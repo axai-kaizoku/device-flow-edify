@@ -144,8 +144,11 @@ export const DeviceSecx = ({
     },
   ];
 
+  const deviceConfig =
+    data?.config && data?.config?.length === 6 ? data?.config : config;
+
   // const modifiedConfig = []
-  const modifiedConfig = config.map((item) => {
+  const modifiedConfig = deviceConfig.map((item) => {
     // Find a matching icon based on the key
     const matchingIcon = icons.find((icon) =>
       item.key.toLowerCase().includes(icon.key.toLowerCase())
@@ -258,7 +261,7 @@ export const DeviceSecx = ({
               </span> */}
               <span>
                 {data?.qty ? (
-                  <div className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">{`Avilable Qty - ${data?.qty}`}</div>
+                  <div className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">{`In stock - ${data?.qty}`}</div>
                 ) : (
                   <div className="py-0.5 mx-1 -mt-2 px-2 text-xs font-gilroyMedium bg-red-100 text-red-600 rounded-full">
                     Out of stock

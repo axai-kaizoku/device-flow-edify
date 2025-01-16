@@ -7,7 +7,7 @@ export interface DevicePage1 {
   model?: string;
   processor?: string;
   ram?: string;
-  storage?: string;
+  storage?: string[];
   device_name?: string;
   brand?: string;
   device_condition?: string;
@@ -16,7 +16,7 @@ export interface DevicePage1 {
 export interface DevicePage2 {
   _id?: string;
   serialNumber: string;
-  invoiceFile: File | null;
+  invoiceFile?: File | null;
   purchaseDate: string;
   warrantyExpiryDate: string;
 }
@@ -24,7 +24,7 @@ export interface DevicePage2 {
 export interface AdvanceDeviceDetails {
   _id?: string;
   serialNumber: string;
-  invoiceFile: File | null;
+  invoiceFile?: File | null;
   purchaseDate: string;
   warrantyExpiryDate: string;
 }
@@ -49,7 +49,7 @@ export interface KeyboardDetailsInterface {
   model: string;
   serialNumber: string;
   purchaseDate: string;
-  invoiceFile: File | null;
+  invoiceFile?: File | null;
   warrantyExpiryDate: string;
   brand: string;
 }
@@ -57,6 +57,7 @@ export interface KeyboardDetailsInterface {
 // Combined FormData interface
 export interface FormData {
   deviceType: string;
+  userId: string | undefined;
   keyboardDetails: KeyboardDetailsInterface;
   laptopPage1: DevicePage1;
   laptopPage2: DevicePage2;

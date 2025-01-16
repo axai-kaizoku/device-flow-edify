@@ -1,15 +1,11 @@
-import { TeamForm } from "@/app/(root)/teams/_components/team-form";
+"use client";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { Input } from "@/components/inputs/Input";
-import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
-import { getImageUrl } from "@/server/orgActions";
 import { createTeam } from "@/server/teamActions";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const DEPARTMENT_OPTIONS = [
   "Quality Control",
@@ -170,7 +166,7 @@ export const Teams = ({ setSteps }: any) => {
                     key={preLabel}
                     type="button"
                     className={cn(
-                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300 text-lg",
+                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full  hover:border-black transition-all duration-300 text-lg",
                       formData.description === preLabel
                         ? "border-white bg-primary text-white"
                         : "hover:border-black hover:text-black"

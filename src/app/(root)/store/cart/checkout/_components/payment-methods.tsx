@@ -52,7 +52,7 @@ export default function PaymentMethods({
           setTimeout(() => {
             dispatch(
               setPaymentData({
-                paymentId: response?.razorpay_payment_id,
+                paymentId: response?.razorpay_payment_id as string,
                 amount: totalPrice,
                 orderId
               })

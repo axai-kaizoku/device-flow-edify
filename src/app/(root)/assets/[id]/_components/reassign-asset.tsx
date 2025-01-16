@@ -41,6 +41,7 @@ export default function ReassignAsset({
 
     setLoading(true);
     try {
+      // @ts-ignore
       await updateDevice(deviceData?._id ?? "", { userId: user?._id });
       setOpen(false);
       openToast("success", "Assigned asset to user !");

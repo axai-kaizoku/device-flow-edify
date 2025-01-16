@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { fetchUsers, searchUsers } from "@/server/userActions";
 import { Input } from "../inputs/Input";
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";

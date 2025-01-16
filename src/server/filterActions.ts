@@ -110,6 +110,7 @@ export const usersFields = [
   "marital_status",
   "physically_handicapped",
   "about",
+  "image",
   "interests_and_hobbies",
   "role",
   "image",
@@ -169,7 +170,6 @@ export const filterUsers = cache(async function ({
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-
       page,
       pageLimit,
     };
