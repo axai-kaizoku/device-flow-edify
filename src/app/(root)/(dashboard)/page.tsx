@@ -19,7 +19,7 @@ export default async function Dashboard() {
         <AdminDashboard />
       ) : null}
 
-      {sess?.user.user.role === 1 ? <UserDashboard /> : null}
+      {sess?.user.user.role === 1 ? <UserDashboard  /> : null}
       {/* <AdminDashboard /> */}
     </>
   );

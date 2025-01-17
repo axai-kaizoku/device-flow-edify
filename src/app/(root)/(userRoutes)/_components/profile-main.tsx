@@ -16,6 +16,8 @@ import { notFound, useRouter } from "next/navigation";
 import { UserData } from "@/app/store/authSlice";
 import AssetsSection from "./user-assets";
 import { StoreBannerCard } from "@/components/store-banner";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import ProfileSkeleton from "./profile-main-skeleton";
 
 const UserGrid = ({ user: data }: { user: UserData }) => {
   const router = useRouter();
@@ -53,15 +55,19 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
+      {user ? (
+        <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
         <div className="flex flex-col gap-6">
           <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">
               <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
                 <img
                   src={
-                    user?.image ??
-                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                    user?.image && user.image.length > 0
+                      ? user?.image
+                      : user?.gender === "Male"
+                      ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                      : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                   }
                   // Replace with your profile image URL
                   alt="Profile"
@@ -281,7 +287,9 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
 
           <StoreBannerCard />
         </div>
-      </div>
+      </div>) : (
+        <ProfileSkeleton/>
+      )}
     </>
   );
 };

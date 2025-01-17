@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
 import { StoreBannerCard } from "@/components/store-banner";
+import ProfileSkeleton from "@/app/(root)/(userRoutes)/_components/profile-main-skeleton";
 
 const UserGrid = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -38,7 +39,7 @@ const UserGrid = ({ user }: { user: User }) => {
   };
   return (
     <>
-      <div className="flex flex-nowrap gap-6 mt-2 font-gilroyRegular">
+      {user ? (<div className="flex flex-nowrap gap-6 mt-2 font-gilroyRegular">
         <div className="flex flex-col gap-6">
           <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">
@@ -325,7 +326,7 @@ const UserGrid = ({ user }: { user: User }) => {
           {/* Second Row */}
           <StoreBannerCard />
         </div>
-      </div>
+      </div>) : (<ProfileSkeleton/>)}
     </>
   );
 };
