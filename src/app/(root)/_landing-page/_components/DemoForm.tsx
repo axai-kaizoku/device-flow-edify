@@ -5,7 +5,7 @@ import { DemoPage2 } from "./DemoPage2";
 import { requestForDemo } from "@/server/loginActions";
 import { useToast } from "@/hooks/useToast";
 
-const DemoForm = ({setIsOpen}:{setIsOpen: ()=> boolean;}) => {
+const DemoForm = ({setIsOpen}:{setIsOpen: ()=> void;}) => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); 
   const { openToast } = useToast();

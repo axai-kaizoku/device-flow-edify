@@ -2,8 +2,9 @@
 import { SIDEBAR } from "@/constants";
 import { usePathname, useRouter } from "next/navigation";
 import SidebarItem from "./sidebar-item";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, LogOut } from "lucide-react";
 import { Props } from "@/app/(root)/layout";
+import { signOut } from "next-auth/react";
 
 export default function SidebarMain({ session }: Props) {
   const pathname = usePathname();
@@ -74,7 +75,7 @@ export default function SidebarMain({ session }: Props) {
         </>
       ) : (
         <>
-          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full">
+          <div className="absolute top-0 flex flex-col mx-auto justify-between gap-8 w-full  h-[50%]">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm dark:bg-gray-800 hover:bg-black hover:text-white
@@ -90,7 +91,7 @@ export default function SidebarMain({ session }: Props) {
               <div></div>
             )}
 
-            <div className="flex flex-col gap-2 mx-auto">
+            <div className="flex flex-col gap-2 mx-auto ">
               {SIDEBAR.UserPages.map((page, i) => (
                 <SidebarItem
                   href={page.path}
@@ -105,6 +106,7 @@ export default function SidebarMain({ session }: Props) {
               ))}
             </div>
 
+  
             {/* <div className="flex gap-2 flex-col">
               {/* <ToggleTheme /> */}
 

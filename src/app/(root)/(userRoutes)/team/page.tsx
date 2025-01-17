@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/Spinner";
 import { UserData } from "@/app/store/authSlice";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export default function TeamPage() {
   const user: UserData = useSelector((state: any) => state.auth.userData);
@@ -32,19 +33,19 @@ export default function TeamPage() {
     fetchData();
   }, [teamState]);
 
-  if (!users) {
-    return (
-      <>
-        <CombinedContainer>
-          <div className="justify-center flex items-center h-[60vh] w-full">
-            <span className="text-2xl font-gilroyMedium">
-              You haven't been added to a team yet :(
-            </span>
-          </div>
-        </CombinedContainer>
-      </>
-    );
-  }
+  // if (!users) {
+  //   return (
+  //     <>
+  //       <CombinedContainer>
+  //         <div className="justify-center flex items-center h-[60vh] w-full">
+  //           <span className="text-2xl font-gilroyMedium">
+  //             You haven't been added to a team yet :(
+  //           </span>
+  //         </div>
+  //       </CombinedContainer>
+  //     </>
+  //   );
+  // }
 
   return (
     <CombinedContainer title="Teams">
@@ -53,8 +54,8 @@ export default function TeamPage() {
           <TeamHeader teamData={teamState} />
         </div>
         {users === null ? (
-          <div className="flex justify-center items-center">
-            <Spinner />
+          <div className="flex justify-center items-center my-10">
+            <DeviceFlowLoader />
           </div>
         ) : (
           <>

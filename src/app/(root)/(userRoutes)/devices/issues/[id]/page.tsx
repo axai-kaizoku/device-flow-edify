@@ -1,5 +1,6 @@
 import { getIssueById, Issues } from "@/server/issueActions";
 import { cn } from "@/lib/utils";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 interface IssuePageProps {
   params: { id: string };
@@ -9,7 +10,10 @@ async function SignleIssue({ params }: IssuePageProps) {
   const data: Issues = await getIssueById(params.id);
 
   return (
-    <div className="w-full pr-8 overflow-y-scroll">
+    <>
+    {
+      data ? (
+        <div className="w-full pr-8 overflow-y-scroll">
       <h1 className="font-gilroySemiBold  text-[#7F7F7F] text-lg px-2 mb-6">
         Issues <span className="text-black text-xl">(ID: {data?._id})</span>
       </h1>
@@ -280,6 +284,11 @@ async function SignleIssue({ params }: IssuePageProps) {
         </div>
       </div>
     </div>
+      ):(
+        <DeviceFlowLoader/>
+      )
+    }
+    </>
   );
 }
 

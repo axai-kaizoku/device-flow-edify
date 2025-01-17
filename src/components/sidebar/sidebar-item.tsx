@@ -69,8 +69,8 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
             !isActive ? <Icons.issue_icon className="size-5"/> : <Icons.issue_icon_white className="size-5"/>
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
-          ) : label === "Profile" ? (
-            <UserRound className="w-5 h-5" />
+          // ) : label === "Profile" ? (
+          //   <UserRound className="w-5 h-5" />
           ) : label === "Devices" ? (
             <Smartphone className="w-5 h-5" />
           ) : label === "Home" ? (

@@ -44,8 +44,8 @@ export default function PaginatedList({
   };
 
   return (
-    <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-4 w-full">
-      <div className="flex gap-6 flex-wrap ">
+    <div className="bg-white pl-[25px]  pr-[18px] pt-[22px] rounded-[33px] pb-4 w-full border ">
+      <div className="flex gap-x-4 gap-y-6 flex-wrap w-full ">
         {teams?.teams?.map(
           (team) =>
             team && (

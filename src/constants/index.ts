@@ -17,7 +17,8 @@ export const SIDEBAR = {
   UserPages: [
     { label: "Home", path: "/", icon: "/media/sidebar/home.svg" },
     { label: "Team", path: "/team", icon: "/media/sidebar/contact.svg" },
-    { label: "Profile", path: "/profile", icon: "/media/sidebar/profile.svg" },
+    // { label: "Profile", path: "/profile", icon: "/media/sidebar/profile.svg" },
+    // { label: "Issues", path: "/issue", icon: "/media/sidebar/calender.svg" },
     { label: "Devices", path: "/devices", icon: "/media/sidebar/devices.svg" },
   ],
   Functions: [

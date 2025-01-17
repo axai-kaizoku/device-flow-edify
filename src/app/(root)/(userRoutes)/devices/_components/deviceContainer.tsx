@@ -15,6 +15,7 @@ import { Tab } from "@/app/(root)/teams/_components/Tab";
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { useAlert } from "@/hooks/useAlert";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function DeviceContainer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -65,9 +66,30 @@ function DeviceContainer() {
   const renderContent = () => {
     switch (activeTab) {
       case "devices":
-        return <Devices devices={devices} />;
+        return (
+          <>
+          {loading ? (
+            <div className="flex justify-center items-center w-full h-[500px]">
+              <DeviceFlowLoader />
+            </div>
+          ) : (<Devices devices={devices} />)
+          }
+          </>
+        );
       case "issues":
-        return <Issue issues={issues} />;
+        return (
+          <>
+          {
+            loading ? (
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
+            ): (
+              <Issue issues={issues} />
+            )
+          }  
+          </>
+        );
 
       default:
         return null;
@@ -124,13 +146,7 @@ function DeviceContainer() {
       <div className="border mt-2"></div>
 
       <div className="mt-4">
-        {loading ? (
-          <div className="flex justify-center items-center h-96">
-            <Spinner />
-          </div>
-        ) : (
-          renderContent()
-        )}
+        {renderContent()}
       </div>
     </>
   );
