@@ -7,7 +7,7 @@ import Welcome from "./_components/welcome-note";
 import SettingPasswords from "./_components/setting-password";
 
 function SignUp() {
-  const [steps, setSteps] = useState(3);
+  const [steps, setSteps] = useState(1);
   return (
     <>
       {steps === 1 && (

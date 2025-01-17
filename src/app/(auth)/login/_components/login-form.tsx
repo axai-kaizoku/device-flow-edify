@@ -59,7 +59,7 @@ export default function LoginForm() {
         <input
           id="email"
           type="email"
-          className="border  p-2 h-[60px] rounded-[8px] border-[#5F5F5F]"
+          className="border p-2 h-[60px] rounded-[8px] border-[#5F5F5F]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"

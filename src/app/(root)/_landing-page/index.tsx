@@ -173,10 +173,10 @@ export const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-x-10">
-              <div className="cursor-pointer" onClick={scrollToAbout}>
+              <div className="cursor-pointer" onClick={scrollToFeatures}>
                 About
               </div>
-              <div onClick={scrollToFeatures} className="cursor-pointer">
+              <div onClick={scrollToAbout} className="cursor-pointer">
                 Features
               </div>
               {/* <div>Pricing</div>
@@ -344,7 +344,7 @@ export const LandingPage = () => {
                   className="py-2 cursor-pointer text-[#191D23] font-gilroySemiBold text-base"
                   onClick={() => {
                     setIsModalVisible(false);
-                    scrollToAbout();
+                    scrollToFeatures();
                   }}
                 >
                   About
@@ -353,7 +353,7 @@ export const LandingPage = () => {
                   className="py-2 cursor-pointer text-[#191D23] font-gilroySemiBold text-base"
                   onClick={() => {
                     setIsModalVisible(false);
-                    scrollToFeatures();
+                    scrollToAbout();
                   }}
                 >
                   Features

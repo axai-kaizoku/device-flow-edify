@@ -1,8 +1,21 @@
+import Spinner from "@/components/Spinner";
+import { useToast } from "@/hooks/useToast";
+import { requestForDemo } from "@/server/loginActions";
 import React, { forwardRef, useState } from "react";
 export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const [onRegisterClicked, setOnRegisterClicked] = useState<boolean>(false);
-  const [onNextClicked, setOnNextClicked] = useState<boolean>(false);
-  const [onSubmitClicked, setSubmitClicked] = useState<boolean>(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const { openToast } = useToast();
+
+  const handleNext = () => {
+    if (currentStep < 3) setCurrentStep(currentStep + 1);
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
+  };
+
   const phoneRegex = /^[0-9]{10}$/;
   const initialPaths = [
     {
@@ -119,6 +132,81 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
     setPaths(initialPaths.map((path) => path.default));
   };
 
+  const [formData, setFormData] = useState({
+    name:"",
+    company_name:"",
+    email:"",
+    phone:""
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    phone: "",
+    company_name: "",
+    email: "",
+    teamSize: ""
+  });
+
+  const validateStep1 = () => {
+    const newErrors = {
+      name: formData?.name ? "" : "Name is required",
+      company_name: formData?.company_name ? "" : "Company Name is required",
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+    return !Object.values(newErrors).some((err) => err);
+  }
+
+  const validateStep2 = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    const newErrors = {
+      // name: formData?.name ? "" : "Name is required",
+      // company_name: formData?.company_name ? "" : "Company Name is required",
+      email: formData?.email
+        ? emailRegex.test(formData?.email)
+          ? ""
+          : "Invalid email format"
+        : "Email is required",
+      phone: formData?.phone
+        ? phoneRegex.test(formData?.phone)
+          ? ""
+          : "Phone number must be 10 digits"
+        : "Phone number is required",
+    };
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+    return !Object.values(newErrors).some((err) => err);
+  };
+
+  // Handle input changes
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async ()=>{
+    setLoading(true);
+    try {
+      const response = await requestForDemo(formData);
+      if(response){
+        handleNext();
+      }
+    } catch (error) {
+      openToast("error", "Some Error Occured. Try again Later!");
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
+
+
   return (
     <>
       <div
@@ -126,7 +214,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
       >
         <div className="flex max-lg:flex-col max-sm:justify-between justify-between flex-grow max-lg:flex-wrap items-center max-sm:gap-x-0  gap-x-28 max-lg:gap-y-2 gap-y-24 min-[1430px]:flex-nowrap">
           <div className="w-[37%] max-lg:w-full">
-            {!onRegisterClicked && (
+            {currentStep===0 && (
               <div
                 className={`${
                   onRegisterClicked ? "slide-out-left" : ""
@@ -145,7 +233,8 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
 
                 <div
                   onClick={() => {
-                    setOnRegisterClicked(true);
+                    // setOnRegisterClicked(true);
+                    handleNext();
                   }}
                   className="font-gilroySemiBold rounded-xl bg-white max-sm:px-5 px-4 max-sm:py-2 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 hover:bg-gray-50 cursor-pointer border border-zinc-800 hover:border-gray-200"
                 >
@@ -153,7 +242,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               </div>
             )}
-            {onRegisterClicked && !onSubmitClicked && (
+            {currentStep===1 && (
               <div
                 className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
                 id="register"
@@ -173,15 +262,80 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                     id="floating_outlined"
                     style={{ border: "1px solid #FFF" }}
                     className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" "
+                    placeholder="Enter Your Name"
+                    value={formData?.name}
+                    name="name"
+                    onChange={handleChange}
                   />
                   <label
                     htmlFor="floating_outlined"
                     style={{ backgroundColor: "#27272A" }}
                     className="absolute text-lg text-white  duration-300 transform -translate-y-6 scale-75 top-2 z-10 origin-[0]   px-1 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
                   >
+                    Name
+                  </label>
+
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.name}</p>
+                </div>
+                <div className="relative" style={{ width: "100%" }}>
+                  <input
+                    type="text"
+                    name="company_name"
+                    value={formData?.company_name}
+                    id="floating_outlined"
+                    style={{ border: "1px solid #FFF" }}
+                    className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder="Enter Your Company Name"
+                    onChange={handleChange}
+                  />
+                  <label
+                    htmlFor="floating_outlined"
+                    style={{ backgroundColor: "#27272A" }}
+                    className="absolute text-lg text-white  duration-300 transform -translate-y-6 scale-75 z-10 origin-[0]   px-1 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
+                  >
                     Company Name
                   </label>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.company_name}</p>
+                </div>
+
+                <div className="flex gap-3">
+                  <div
+                    onClick={() => {
+                      // setSubmitClicked(true);
+                      handleBack();
+                    }}
+                    className="font-inter w-[123px] rounded-xl text-white bg-zinc-700 px-4 py-3 text-center leading-6 tracking-[-0.2px] border border-zinc-800 hover:border-gray-200 cursor-pointer"
+                  >
+                    Back
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      // setSubmitClicked(true);
+                      if(validateStep1()){
+                        handleNext();
+                      }
+                    }}
+                    className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
+                  >
+                    Next
+                  </div>
+                </div>
+              </div>
+            )}
+            {currentStep===2 && (
+              <div
+                className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
+                id="register"
+                ref={ref}
+              >
+                <div
+                  className={`font-gilroy w-full text-3xl font-bold leading-[58px] tracking-[0px] text-[gray]`}
+                >
+                  <span>
+                    {"Register for "}
+                    <span className="text-white">BETA</span>
+                  </span>
                 </div>
                 <div className="relative" style={{ width: "100%" }}>
                   <input
@@ -189,7 +343,65 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                     id="floating_outlined"
                     style={{ border: "1px solid #FFF" }}
                     className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" "
+                    placeholder="Enter Email ID"
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+                      if (!inputValue || /^[a-zA-Z0-9@._-]*$/.test(inputValue)) {
+                        handleChange(e);
+            
+                        // Validate email format on the fly
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          email: inputValue
+                            ? emailRegex.test(inputValue)
+                              ? ""
+                              : "Invalid email format"
+                            : "Email is required",
+                        }));
+                      }
+                    }}
+                    name="email"
+                    value={formData?.email}
+                  />
+                  <label
+                    htmlFor="floating_outlined"
+                    style={{ backgroundColor: "#27272A" }}
+                    className="absolute text-lg text-white  duration-300 transform -translate-y-6 scale-75 top-2 z-10 origin-[0]   px-1 peer-focus:px-2 peer-focus:text-white  scale-100 -translate-y-1/2 top-1/2 top-2 scale-75 -translate-y-4 rtl:translate-x-1/4 rtl:left-auto start-1"
+                  >
+                    Email Id
+                  </label>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.email}</p>
+                </div>
+                <div className="relative" style={{ width: "100%" }}>
+                  <input
+                    type="text"
+                    id="floating_outlined"
+                    style={{ border: "1px solid #FFF" }}
+                    className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder="Enter your Phone Number"
+                    name="phone"
+                    value={formData?.phone}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      const phoneRegex = /^[0-9]{0,10}$/;
+            
+                      if (!inputValue || phoneRegex.test(inputValue)) {
+                        handleChange(e);
+            
+                        // Validate phone number format on the fly
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          phone: inputValue
+                            ? /^[0-9]{10}$/.test(inputValue)
+                              ? ""
+                              : "Phone number must be 10 digits"
+                            : "Phone number is required",
+                        }));
+                      }
+                    }}
+
                   />
                   <label
                     htmlFor="floating_outlined"
@@ -198,18 +410,36 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   >
                     Phone
                   </label>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.phone}</p>
                 </div>
-                <div
-                  onClick={() => {
-                    setSubmitClicked(true);
-                  }}
-                  className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
-                >
-                  Submit
+
+
+                <div className="flex gap-3">
+                  <div
+                    onClick={() => {
+                      // setSubmitClicked(true);
+                      handleBack();
+                    }}
+                    className="font-inter w-[123px] rounded-xl text-white bg-zinc-700 px-4 py-3 text-center leading-6 tracking-[-0.2px] border border-zinc-800 hover:border-gray-200 cursor-pointer"
+                  >
+                    Back
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      // setSubmitClicked(true);
+                      if(validateStep2()){
+                        handleSubmit();
+                      }
+                    }}
+                    className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
+                  >
+                    {loading ? <Spinner/> :  "Submit"}
+                  </div>
                 </div>
               </div>
             )}
-            {onSubmitClicked && (
+            {currentStep === 3 && (
               <div
                 className={` slide-in-left flex w-[100%] flex-col gap-y-8 pr-[0.02px] leading-[43px] tracking-[0px] `}
               >

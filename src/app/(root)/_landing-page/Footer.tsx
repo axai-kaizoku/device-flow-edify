@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <div className="flex flex-wrap items-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap">
                   <div
                     className="cursor-pointer hover:underline"
-                    onClick={scrollToAbout}
+                    onClick={scrollToFeatures}
                   >
                     About
                   </div>
@@ -130,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <div className="flex flex-col items-start gap-y-1.5">
                     <div
                       className="cursor-pointer hover:underline"
-                      onClick={scrollToFeatures}
+                      onClick={scrollToAbout}
                     >
                       Features
                     </div>
@@ -301,7 +301,7 @@ export const Footer: React.FC<FooterProps> = ({
               <a href="mailto:contact@edify.club hover:underline">
                 contact@edify.club
               </a>
-              <div className="underline">Ph: +91 9513245671</div>
+              <a href="tel:+91 9513245671" className="hover:underline">Ph: +91 9513245671</a>
             </div>
           </div>
         </div>
