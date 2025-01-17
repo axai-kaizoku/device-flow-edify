@@ -6,7 +6,6 @@ import { TeamCard } from "./team-card";
 import {
   fetchActiveTeams,
   fetchInactiveTeams,
-  fetchTeams,
   Team,
   TeamsResponse,
 } from "@/server/teamActions";

@@ -69,7 +69,7 @@ export type User = {
   date_of_birth?: string;
   onboarding_date?: string;
   reporting_manager?: Manager;
-  devices?: number;
+  devices?: number | Device;
 };
 
 export type CreateUserArgs = {
@@ -198,6 +198,16 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
       password: "winuall123",
       orgId: sess?.user?.user?.orgId?._id,
     };
+
+    if (!user.image) {
+      if (user.gender === "Male") {
+        user.image =
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png";
+      } else {
+        user.image =
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png";
+      }
+    }
 
     const res = await callAPIWithToken<User>(
       "https://api.edify.club/edifybackend/v1/user", // API endpoint

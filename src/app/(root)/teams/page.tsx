@@ -1,9 +1,5 @@
 import { CombinedContainer } from "@/components/container/container";
-import {
-  fetchActiveTeams,
-  fetchInactiveTeams,
-  fetchTeams,
-} from "@/server/teamActions";
+import { fetchActiveTeams, fetchInactiveTeams } from "@/server/teamActions";
 import TabDisplay from "./TabDisplay";
 import NotFound from "@/app/not-found";
 import { fetchUserHierarchy, HierarchyResponse } from "@/server/userActions";

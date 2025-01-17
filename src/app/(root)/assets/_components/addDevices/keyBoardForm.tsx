@@ -119,7 +119,7 @@ const KeyboardForm: React.FC<KeyboardDetailsProps> = ({
           Upload device invoice
         </label>
         {invoiceFile ? (
-          <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
               src={invoiceFile}
               width="100%"

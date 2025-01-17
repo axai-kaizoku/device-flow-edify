@@ -1,6 +1,6 @@
 import { User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import { Table } from "@/components/wind/Table";
 import Pagination from "../../teams/_components/pagination";
 import { DeleteUser } from "../[id]/_components/delete-user";
@@ -36,7 +36,7 @@ export default function UserMain({
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
         {data?.users?.length === 0 ? (
-          <div className="flex flex-col gap-6 justify-center items-center py-10">
+          <div className="flex flex-col gap-6 justify-center items-center py-8">
             <Icons.no_people_display />
             <CreateUser>
               <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
@@ -66,15 +66,18 @@ export default function UserMain({
                     columns={[
                       {
                         title: "Name",
-                        render: (users: User) => (
+                        render: (user: User) => (
                           <div
                             className="w-28 justify-start flex items-center gap-2 cursor-pointer"
-                            onClick={() => router.push(`/people/${users?._id}`)}
+                            onClick={() => router.push(`/people/${user?._id}`)}
                           >
                             <img
                               src={
-                                users?.image ||
-                                "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                                user?.image && user.image.length > 0
+                                  ? user?.image
+                                  : user?.gender === "Male"
+                                  ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                                  : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                               }
                               alt="Profile Image"
                               className="size-10 object-cover rounded-full"
@@ -82,7 +85,7 @@ export default function UserMain({
 
                             {/* Truncated Text */}
                             <div className="font-gilroySemiBold text-sm gap-1 flex whitespace-nowrap  text-black ">
-                              {users?.first_name} {users?.last_name}
+                              {user?.first_name ?? ""} {user?.last_name ?? ""}
                             </div>
                           </div>
                         ),
@@ -131,7 +134,9 @@ export default function UserMain({
                             <h1>
                               {record?.reporting_manager?.first_name ?? "-"}
                             </h1>
-                            <h1>{record?.reporting_manager?.last_name}</h1>
+                            <h1>
+                              {record?.reporting_manager?.last_name ?? ""}
+                            </h1>
                           </div>
                         ),
                       },

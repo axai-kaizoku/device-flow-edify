@@ -2,7 +2,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useState } from "react";
-import { Icons } from "@/components/icons";
 import { Button } from "@/components/buttons/Button";
 import { User } from "@/server/userActions";
 import Link from "next/link";
@@ -21,7 +20,6 @@ export default function ManageAssets({
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
         <div className="flex relative flex-col w-full h-full gap-6  justify-start items-center">
-          {/* Heading */}
           <div className="flex flex-col gap-1 w-full">
             <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
               <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
@@ -66,13 +64,16 @@ export default function ManageAssets({
               >
                 <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                   <img
-                    src={deviceData?.image ?? ""}
-                    alt="team-image"
-                    className="w-24 h-20 p-1  object-cover rounded-full "
+                    src={
+                      deviceData?.image?.[0]?.url ??
+                      "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                    }
+                    alt="device-image"
+                    className="w-20 h-20 p-1  object-contain border rounded-full "
                   />
                   <div className=" w-full flex flex-col justify-center ">
                     <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                      {deviceData?.device_name ?? "-"}
+                      {deviceData?.custom_model ?? "-"}
                     </h1>
 
                     <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">

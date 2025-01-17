@@ -106,7 +106,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
               <div className="z-10 pt-3">
                 <SelectInput
                   key={"assign-device"}
-                  value={device?.device_name ?? ""}
+                  value={device?.custom_model ?? ""}
                   placeholder="Search by name, serial no, etc"
                   //@ts-ignore
                   fetchOptions={searchDevices}
@@ -117,13 +117,14 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                     setDevice({
                       _id: data._id,
                       device_name: data.device_name,
+                      custom_model: data.custom_model,
                       ram: data.ram,
                       storage: data?.storage,
                       image: data?.image,
                       serial_no: data?.serial_no,
                     });
                   }}
-                  optionValue={{ firstV: "device_name", secondV: "serial_no" }}
+                  optionValue={{ firstV: "custom_model", secondV: "serial_no" }}
                   label="Device assigned*"
                   className={cn(
                     error.length > 0 ? "border-destructive/80 border" : ""
@@ -138,13 +139,16 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                 <>
                   <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                     <img
-                      src={device?.image![0]?.url ?? ""}
+                      src={
+                        device?.image![0]?.url ??
+                        "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                      }
                       alt="team-image"
-                      className="w-24 h-20 p-1  object-cover rounded-full "
+                      className="w-20 h-20 p-1 object-cover rounded-full "
                     />
                     <div className=" w-full flex flex-col justify-center ">
                       <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                        {device?.device_name ?? "-"}
+                        {device?.custom_model ?? "-"}
                       </h1>
 
                       <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
@@ -188,7 +192,11 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                 <>
                   <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                     <img
-                      src={user?.image ?? ""}
+                      src={
+                        user?.image && user.image.length > 0
+                          ? user?.image
+                          : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                      }
                       alt="user-image"
                       className="w-20 h-20 p-1  object-cover rounded-full "
                     />
@@ -206,9 +214,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                     </div>
                   </div>
                 </>
-              ) : (
-                ""
-              )}
+              ) : null}
 
               <div className="flex gap-2 absolute bottom-0 w-full ">
                 <Button

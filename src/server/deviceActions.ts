@@ -301,7 +301,14 @@ export const paginatedDevices = async (page: string): Promise<any> => {
 export const fetchDevices = cache(async function (): Promise<any> {
   try {
     const requestBody = {
-      fields: ["device_name", "serial_no", "ram", "storage", "image"],
+      fields: [
+        "device_name",
+        "custom_model",
+        "serial_no",
+        "ram",
+        "storage",
+        "image",
+      ],
       filters: [],
       page: 1,
       pageLimit: 5,
@@ -324,7 +331,14 @@ export const fetchDevices = cache(async function (): Promise<any> {
 export async function searchDevices(searchQuery: string): Promise<any> {
   try {
     const requestBody = {
-      fields: ["device_name", "serial_no", "ram", "storage", "image"],
+      fields: [
+        "device_name",
+        "custom_model",
+        "serial_no",
+        "ram",
+        "storage",
+        "image",
+      ],
       filters: [], // You can add filters here as per requirement
       page: 1,
       pageLimit: 10, // Number of users to fetch per page

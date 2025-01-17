@@ -44,7 +44,6 @@ export type Org = {
   total_purchased?: number;
 };
 
-
 export const getCurrentOrg = cache(async function <Org>() {
   try {
     const sess = await getSession();
@@ -61,10 +60,17 @@ export const getCurrentOrg = cache(async function <Org>() {
   }
 });
 
-export async function updateOrg({id,title,description,logo}:{id?: string;
+export async function updateOrg({
+  id,
+  title,
+  description,
+  logo,
+}: {
+  id?: string;
   title?: string;
   description?: string;
-  logo?: string | null;}): Promise<Org> {
+  logo?: string | null;
+}): Promise<Org> {
   try {
     const res = await callAPIWithToken<Org>(
       `https://api.edify.club/edifybackend/v1/organisation/${id}`, // API endpoint
@@ -75,18 +81,16 @@ export async function updateOrg({id,title,description,logo}:{id?: string;
         logo,
       }
     );
-    console.log(res.data)
+    console.log(res.data);
     return res?.data;
   } catch (e) {
     throw new Error("Failed to Update org");
   }
 }
 
-
 export const getImageUrl = async (data: { file: File }) => {
   const formData = new FormData();
   formData.append("file", data.file);
-  
 
   try {
     const response = await callAPIWithToken<any>(
@@ -99,7 +103,7 @@ export const getImageUrl = async (data: { file: File }) => {
     );
 
     console.log(response);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error uploading the image:", error);
     throw error;

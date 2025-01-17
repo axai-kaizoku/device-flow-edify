@@ -61,7 +61,7 @@ const AssetsSection = ({ user }: { user: User }) => {
                 router.push("/devices");
               }}
             >
-              Manage Assets
+              View Assets
             </div>
           </div>
         </div>

@@ -1,8 +1,4 @@
-import { IssueResponse, paginatedIssue } from "@/server/issueActions";
 import { CombinedContainer } from "@/components/container/container";
-import IssueTableDisplay from "./_components/IssueTableDisplay";
-import { notFound } from "next/navigation";
-import { filterIssues } from "@/server/filterActions";
 import TabDisplay from "./TabDisplay";
 import NotFound from "@/app/not-found";
 

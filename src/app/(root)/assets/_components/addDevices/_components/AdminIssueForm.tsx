@@ -24,7 +24,7 @@ interface IssueFormProps {
   closeBtn: (value: boolean) => void;
 }
 
-export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
+export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
   const userData = useSelector((state: RootState) => state.auth.userData);
 
   const router = useRouter();
@@ -151,21 +151,17 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
 
     setLoading(true);
     try {
-      const res = await createIssue(issue);
+      await createIssue(issue);
       setLoading(false);
-      showAlert({
-        title: "WOHOOO!! 🎉",
-        description: "Issue created successfully !",
-        isFailure: false,
-        key: "create-team-success",
-      });
+      openToast("success", "Issue created successfully !");
       router.refresh();
       closeBtn(false);
     } catch (error) {
       setLoading(false);
       openToast("error", "Failed to Raise an Issue!");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
 
     setFormData({
       title: "",
@@ -198,11 +194,18 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
 
           <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
             <div className="">
-              <img src="/media/mac-2.png" alt="Asset-1" className="w-24 h-20 p-1  object-cover rounded-full "/>
+              <img
+                src={
+                  device?.image?.[0]?.url ??
+                  "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                }
+                alt="Asset-1"
+                className="w-20 h-20 p-1  object-contain border rounded-full "
+              />
             </div>
             <div>
               <div className="font-gilroySemiBold text-xl">
-                {device?.device_name ?? ""}
+                {device?.custom_model ?? ""}
               </div>
               <div className="text-[#7C7C7C] font-gilroyRegular text-sm">
                 {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{" "}
@@ -214,11 +217,14 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full flex flex-col relative mt-1 h-full">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col relative mt-1 h-full"
+          >
             {next === 0 ? (
               <>
                 <div className="w-full flex flex-col gap-6 h-full">
-                  <div >
+                  <div>
                     <FormField
                       label="Raised by"
                       id="raised_by"
@@ -230,21 +236,21 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                   </div>
                   <div className="flex gap-3 items-center">
                     <FormField
-                        label="Email"
-                        id="email"
-                        value={userData?.email ?? ""}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Email"
+                      id="email"
+                      value={userData?.email ?? ""}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                     <FormField
-                        label="Role"
-                        id="role"
-                        value={`${userData?.role ?? "Frontend Developer"}`}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Designation"
+                      id="designation"
+                      value={`${userData?.role ?? "Frontend Developer"}`}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                   </div>
                   <div className=" w-full ">
                     <div className="z-20">
@@ -312,7 +318,6 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                     </div>
                   </div>
                 </div>
-                
 
                 <div className="flex absolute bottom-0 gap-2 w-full">
                   <Button
@@ -391,7 +396,7 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                         {formData.images.map((image, index) => (
                           <div
                             key={index}
-                            className="relative w-24 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
+                            className="relative w-20 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
                           >
                             <img
                               src={image.url}
@@ -440,7 +445,6 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                     )}
                   </div>
                 </div>
-
 
                 <div className="flex gap-2 w-full mt-4">
                   <Button

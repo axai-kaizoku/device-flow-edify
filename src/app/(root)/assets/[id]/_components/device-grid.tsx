@@ -1,9 +1,6 @@
-import { Icons } from "@/components/icons";
 import { StoreBannerCard } from "@/components/store-banner";
 import { Device } from "@/server/deviceActions";
 import { getUserById, User } from "@/server/userActions";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 
 export const DeviceGrid = async ({ data }: { data: Device }) => {
   let isAssigned: boolean;
@@ -32,8 +29,11 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
               </div>
               <div className="flex gap-2 items-center">
                 <img
-                  src={data?.image?.[0]?.url ?? "/media/mac.jpeg"}
-                  alt={data?.device_name ?? "device-"}
+                  src={
+                    data?.image?.[0]?.url ??
+                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  }
+                  alt={data?.custom_model ?? "device-"}
                   className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
                 />
                 <div className="flex flex-col  justify-center">
@@ -126,8 +126,11 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                 <div className="flex gap-2 items-center">
                   <img
                     src={
-                      assignedTo?.image ??
-                      "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                      assignedTo?.image && assignedTo.image.length > 0
+                        ? assignedTo?.image
+                        : assignedTo.gender === "Male"
+                        ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                     }
                     alt={assignedTo.first_name ?? "assignee-"}
                     className="w-[5rem] h-[5rem] 2xl:w-24 2xl:h-24 rounded-full object-cover"
@@ -244,7 +247,6 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                   <></>
                 )} */}
                   </div>
-
                   <div className="flex flex-col ">
                     <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-base">
                       Warranty
@@ -268,33 +270,24 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                       })()}
                     </div>
                   </div>
-
                   <div className="flex flex-col ">
                     <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-base">
                       Warranty Expiry
                     </div>
                     <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
-                      {new Date(
-                        data?.warranty_expiary_date!
-                      ).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col ">
-                    <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-base">
-                      Purchased On
-                    </div>
-                    <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
                       {(() => {
-                        const date = new Date(data?.createdAt!);
+                        const onboardingDate = data?.warranty_expiary_date;
+
+                        // Check if onboardingDate is null, undefined, or empty
+                        if (!onboardingDate) {
+                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                        }
+
+                        const date = new Date(onboardingDate);
 
                         // Check if the date is valid
                         if (isNaN(date.getTime())) {
-                          return "-";
+                          return <div>-</div>; // Return "-" for invalid date
                         }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
@@ -307,7 +300,37 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                       })()}
                     </div>
                   </div>
+                  <div className="flex flex-col ">
+                    <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-base">
+                      Purchased On
+                    </div>
 
+                    <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
+                      {(() => {
+                        const onboardingDate = data?.device_purchase_date;
+
+                        // Check if onboardingDate is null, undefined, or empty
+                        if (!onboardingDate) {
+                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                        }
+
+                        const date = new Date(onboardingDate);
+
+                        // Check if the date is valid
+                        if (isNaN(date.getTime())) {
+                          return <div>-</div>; // Return "-" for invalid date
+                        }
+
+                        const formattedDate = date.toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        });
+
+                        return formattedDate;
+                      })()}
+                    </div>
+                  </div>
                   <div className="flex flex-col ">
                     <div className="text-[#737373] font-gilroySemiBold text-sm 2xl:text-base">
                       Purchase value
@@ -375,14 +398,29 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     Warranty Expiry
                   </div>
                   <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
-                    {new Date(data?.warranty_expiary_date!).toLocaleDateString(
-                      "en-GB",
-                      {
+                    {(() => {
+                      const onboardingDate = data?.warranty_expiary_date;
+
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return <div>-</div>; // Return "-" for null, undefined, or empty value
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>; // Return "-" for invalid date
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
-                      }
-                    )}
+                      });
+
+                      return formattedDate;
+                    })()}
                   </div>
                 </div>
 
@@ -391,11 +429,29 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     Purchased On
                   </div>
                   <div className="text-black font-gilroySemiBold text-base 2xl:text-lg">
-                    {new Date(data?.createdAt!).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    {(() => {
+                      const onboardingDate = data?.device_purchase_date;
+
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return <div>-</div>; // Return "-" for null, undefined, or empty value
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>; // Return "-" for invalid date
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return formattedDate;
+                    })()}
                   </div>
                 </div>
 

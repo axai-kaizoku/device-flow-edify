@@ -113,7 +113,6 @@ export const usersFields = [
   "image",
   "interests_and_hobbies",
   "role",
-  "image",
   "designation",
   "employment_type",
   "onboarding_date",

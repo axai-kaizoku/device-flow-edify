@@ -21,7 +21,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<DevicePage2>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
-  const {openToast} = useToast();
+  const { openToast } = useToast();
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
           const res = await getImageUrl({ file });
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error","Some Error while uploading the File");
+          openToast("error", "Some Error while uploading the File");
         }
       } else {
         setErrors((prev) => ({
@@ -94,7 +94,7 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
           Upload device invoice
         </label>
         {invoiceFile ? (
-          <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
               src={invoiceFile}
               width="100%"
@@ -131,7 +131,9 @@ const MobileForm2: React.FC<KeyboardDetailsProps> = ({
           onChange={handleFileChange}
         />
         {errors.invoiceFile && (
-          <p className="text-destructive text-xs font-gilroyMedium">{errors?.invoiceFile}</p>
+          <p className="text-destructive text-xs font-gilroyMedium">
+            {errors?.invoiceFile}
+          </p>
         )}
       </div>
 

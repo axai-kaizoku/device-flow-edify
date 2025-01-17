@@ -10,14 +10,13 @@ interface TeamActionsProps {
 const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
   return (
     <div className="flex gap-4 font-gilroyMedium -mb-16">
-      <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+      {/* <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
         <Search size={20} className="text-[#7F7F7F]" />{" "}
-        {/* Lucide icon for search */}
         <input
           className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
           placeholder="Search teams"
         />
-      </div>
+      </div> */}
 
       <AddTeamMember teamData={team}>
         <div className="flex items-center justify-center relative py-1.5 gap-1   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">

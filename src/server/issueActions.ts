@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
+import { Device } from "./deviceActions";
 
 export type Issues = {
   _id?: string;
@@ -19,37 +20,7 @@ export type Issues = {
   userName?: string;
   serial_no?: string;
   email?: string;
-  deviceDetails?: {
-    _id?: string;
-    userId?: string;
-    orgId?: string;
-    addressId?: string;
-    device_name?: string;
-    asset_serial_no?: string;
-    serial_no?: string;
-    device_type?: string;
-    ram?: string;
-    processor?: string;
-    storage?: string;
-    custom_model?: string;
-    brand?: string;
-    device_condition?: string;
-    warranty_status?: boolean;
-    warranty_expiary_date?: string | null;
-    ownership?: string;
-    device_purchase_date?: string;
-    purchase_order?: string;
-    purchase_value?: number;
-    payable?: number;
-    os?: string;
-    is_trending?: boolean;
-    image?: string;
-    deleted_at?: null | string;
-    assigned_at?: string;
-    createdAt?: string;
-    updatedAt?: string;
-    __v?: number;
-  };
+  deviceDetails?: Device;
   userDetails?: {
     name?: string;
     phone?: string;

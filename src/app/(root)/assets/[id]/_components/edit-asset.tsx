@@ -2,16 +2,10 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useEffect, useState } from "react";
-import { Icons } from "@/components/icons";
-import { SelectInput } from "@/components/dropdown/select-input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { Device, updateDevice } from "@/server/deviceActions";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import Form from "../../_components/addDevices/Form";
 
 export default function EditAsset({

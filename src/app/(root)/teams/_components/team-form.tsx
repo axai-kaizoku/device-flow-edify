@@ -69,7 +69,8 @@ export const TeamForm = ({
     const newErrors = {
       title: formData.title ? "" : "Team name is required",
       description: formData.description ? "" : "Team Label is required",
-      image: formData.image ? "" : "Team image is required",
+      // image: formData.image ? "" : "Team image is required",
+      image: "",
     };
 
     setErrors(newErrors);
@@ -148,7 +149,7 @@ export const TeamForm = ({
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
-          // console.log("Uploaded image response:", res);
+          console.log("Uploaded image response:", res);
           setFormData((prev) => ({
             ...prev,
             image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
@@ -171,6 +172,12 @@ export const TeamForm = ({
           image: "Only JPG, JPEG, or PNG files under 1MB are allowed.",
         }));
       }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        image:
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png",
+      }));
     }
   };
 
@@ -234,7 +241,7 @@ export const TeamForm = ({
             <div className="flex flex-col gap-1.5">
               <label className="font-gilroyMedium">Upload team image</label>
               {formData.image ? (
-                <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                   <img
                     src={formData.image}
                     alt={formData.image}
@@ -296,12 +303,12 @@ export const TeamForm = ({
                   </button>
                 ))}
               </div>
-              <div className="pointer-events-none h-20 w-full" />
               {errors.description && (
                 <p className="text-destructive text-xs font-gilroyMedium">
                   {errors.description}
                 </p>
               )}
+              <div className="pointer-events-none h-20 w-full" />
             </div>
 
             <div className="flex w-[93%] gap-3 absolute bottom-6 pt-2 justify-between items-center">

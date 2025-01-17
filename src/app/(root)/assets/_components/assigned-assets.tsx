@@ -69,7 +69,7 @@ function AssignedAssets({
                           <img
                             src={
                               data?.image?.[0]?.url ??
-                              "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                              "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                             }
                             alt="Device Logo"
                             className="size-10 object-cover rounded-full"

@@ -8,7 +8,6 @@ import { issueIcons } from "../icons";
 import Pagination from "../../teams/_components/pagination";
 import { IssueStatusChange } from "./issue-status-change";
 import { openIssues } from "@/server/filterActions";
-import CreateIssue from "../../assets/_components/addDevices/_components/create-issue";
 
 interface IssueTableDisplayProps {
   data: IssueResponse | null;
@@ -58,8 +57,8 @@ function IssueTableDisplay({
                     >
                       <img
                         src={
-                          data?.deviceDetails?.image ??
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwnpCabWZCg86pyyyD71E0s6JrIDZs4CSnqQ&s"
+                          data?.deviceDetails?.image?.[0]?.url ??
+                          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                         }
                         alt="Device Logo"
                         className=" size-10 rounded-full"

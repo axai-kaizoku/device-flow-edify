@@ -21,8 +21,7 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<KeyboardDetailsInterface>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
-  const {openToast} = useToast();
-
+  const { openToast } = useToast();
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +53,7 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
           const res = await getImageUrl({ file });
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error","Some Error while uploading the File");
+          openToast("error", "Some Error while uploading the File");
         }
       } else {
         setErrors((prev) => ({
@@ -72,7 +71,9 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">Mouse Details</div>
+      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
+        Mouse Details
+      </div>
 
       <div className="flex flex-col gap-8 mt-5">
         <FormField
@@ -116,7 +117,7 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
           Upload device invoice
         </label>
         {invoiceFile ? (
-          <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
               src={invoiceFile}
               width="100%"
@@ -183,7 +184,6 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
           />
         </div>
       </div>
-
     </div>
   );
 };

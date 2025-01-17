@@ -15,6 +15,7 @@ import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { notFound, useRouter } from "next/navigation";
 import { UserData } from "@/app/store/authSlice";
 import AssetsSection from "./user-assets";
+import { StoreBannerCard } from "@/components/store-banner";
 
 const UserGrid = ({ user: data }: { user: UserData }) => {
   const router = useRouter();
@@ -53,16 +54,14 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
   return (
     <>
       <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
-        {/* First Column */}
         <div className="flex flex-col gap-6">
-          {/* First Row */}
           <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">
               <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
                 <img
                   src={
-                    user?.image ||
-                    "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                    user?.image ??
+                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                   }
                   // Replace with your profile image URL
                   alt="Profile"
@@ -158,62 +157,56 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
           </div>
         </div>
 
-        {/* Second Column */}
         <div className="flex flex-col gap-6">
-          {/* First Row */}
-          <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
-            <div className="flex flex-col gap-2 items-start w-full ">
-              <div className="font-gilroySemiBold  text-lg">
-                Reporting Manager
-              </div>
-              <div className="flex justify-start gap-4 items-start w-full">
-                <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
-                  <img
-                    // src={user?.reporting_manager?.image}
-                    src={user?.reporting_manager?.image || "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"}
-                    // Replace with your profile image URL
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+          {user?.reporting_manager?.first_name ? (
+            <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
+              <div className="flex flex-col gap-2 items-start w-full ">
+                <div className="font-gilroySemiBold  text-lg">
+                  Reporting Manager
                 </div>
+                <div className="flex justify-start gap-4 items-start w-full">
+                  <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
+                    <img
+                      // src={user?.reporting_manager?.image}
+                      src={
+                        user?.reporting_manager?.image ??
+                        `https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png`
+                      }
+                      // Replace with your profile image URL
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-                <div className="flex flex-col relative w-full">
-                  <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
-                    {`${user?.reporting_manager?.first_name} ${user?.reporting_manager?.last_name}`}
-                  </h1>
-                  {/* <div
-                    className="absolute text-[#CDCDCD] text-xs top-4 -right-3 cursor-pointer"
-                    onClick={() => {
-                      router.push(`/people/${user?.reporting_manager?._id}`);
-                    }}
-                  >
-                    <ChevronRight />
-                  </div> */}
+                  <div className="flex flex-col relative w-full">
+                    <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
+                      {`${user?.reporting_manager?.first_name ?? "-"} `}
+                    </h1>
 
-                  <p className="text-gray-500 font-gilroyMedium text-sm">
-                    {user?.reporting_manager?.email}
-                  </p>
-                  <div className="flex gap-2 mt-2 justify-start items-center">
-                    <div className="flex justify-start items-center">
-                      <div className="flex -space-x-5">{renderMembers()}</div>
-                    </div>
-
-                    <div>
-                      {user?.teamId?.employees_count ? (
-                        <div className="font-gilroyMedium text-gray-500 text-xs">
-                          {user?.teamId?.employees_count} Team Members
-                        </div>
-                      ) : (
-                        <div className="font-gilroyMedium text-gray-500 text-xs">
-                          5 Team Members
-                        </div>
-                      )}
+                    <p className="text-gray-500 font-gilroyMedium text-sm">
+                      {user?.reporting_manager?.email ?? "-"}
+                    </p>
+                    <div className="flex gap-2 mt-2 opacity-0 justify-start items-center">
+                      <div className="flex justify-start items-center">
+                        <div className="flex -space-x-5">{renderMembers()}</div>
+                      </div>
+                      <div>
+                        {user?.teamId?.employees_count ? (
+                          <div className="font-gilroyMedium text-gray-500 text-xs">
+                            {user?.teamId?.employees_count} Team Members
+                          </div>
+                        ) : (
+                          <div className="font-gilroyMedium text-gray-500 text-xs">
+                            Team Members
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : null}
 
           {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
@@ -281,36 +274,12 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
           </div>
         </div>
 
-        {/* Third Column */}
         <div className="flex flex-col gap-6">
-          {/* First Row (Reversed Order) */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] p-6">
             <AssetsSection user={user} />
           </div>
 
-          {/* Second Row */}
-          <div className="w-96 h-36 relative flex  bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4 flex-col">
-            <h1 className="text-[10px] text-[#B1B1B1] border border-[#B2B2B2] w-fit px-2 py-0.5 rounded-full">
-              Store
-            </h1>
-            <div>
-              <div>
-                <h1 className="w-52 font-gilroyMedium text-xl">
-                  Highest Quality, Refurbished & New Devices
-                </h1>
-                <div className="flex absolute top-7 right-4 w-fit justify-center font-gilroyMedium items-center bg-black text-white rounded-full text-base gap-1 py-1 px-2">
-                  Visit <ChevronRight />
-                </div>
-              </div>
-              <h1 className="text-xs text-[#B1B1B1] font-gilroyRegular">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod.
-              </h1>
-            </div>
-            <div>
-              <img src="" />
-            </div>
-          </div>
+          <StoreBannerCard />
         </div>
       </div>
     </>

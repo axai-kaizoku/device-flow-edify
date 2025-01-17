@@ -2,7 +2,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useEffect, useState } from "react";
-import { Icons } from "@/components/icons";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
@@ -107,9 +106,15 @@ export default function AssignDevice({
 
             <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
               <img
-                src={userData?.image ?? ""}
+                src={
+                  userData?.image && userData.image.length > 0
+                    ? userData?.image
+                    : userData.gender === "Male"
+                    ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                    : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
+                }
                 alt="user-image"
-                className="w-24 h-20 p-1  object-cover rounded-full "
+                className="w-20 h-20 p-1 object-cover rounded-full"
               />
               <div className=" w-full flex flex-col justify-center ">
                 <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
@@ -132,7 +137,7 @@ export default function AssignDevice({
               <div className="z-0 pt-3">
                 <SelectInput
                   key={"assign-device"}
-                  value={device?.device_name ?? ""}
+                  value={device?.custom_model ?? ""}
                   placeholder="Search by name, serial no, etc"
                   //@ts-ignore
                   fetchOptions={searchDevices}
@@ -142,13 +147,14 @@ export default function AssignDevice({
                     setDevice({
                       _id: data?._id,
                       device_name: data?.device_name,
+                      custom_model: data?.custom_model,
                       ram: data?.ram,
                       storage: data?.storage,
                       image: data?.image,
                       serial_no: data?.serial_no,
                     });
                   }}
-                  optionValue={{ firstV: "device_name", secondV: "serial_no" }}
+                  optionValue={{ firstV: "custom_model", secondV: "serial_no" }}
                   label="Assigned to*"
                   className={cn(
                     error.length > 0 ? "border-destructive/80 border" : ""
@@ -160,13 +166,16 @@ export default function AssignDevice({
               </div>
               <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
                 <img
-                  src={device?.image![0]?.url ?? ""}
+                  src={
+                    device?.image?.[0]?.url ??
+                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  }
                   alt="team-image"
-                  className="w-24 h-20 p-1  object-cover rounded-full "
+                  className="w-20 h-20 p-1 border object-contain rounded-full "
                 />
                 <div className=" w-full flex flex-col justify-center ">
                   <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                    {device?.device_name ?? "-"}
+                    {device?.custom_model ?? "Device"}
                   </h1>
 
                   <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">

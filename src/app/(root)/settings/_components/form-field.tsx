@@ -21,7 +21,7 @@ export const FormField = ({
   <div className="group relative w-full">
     <label
       htmlFor={id}
-      className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+      className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-sm font-gilroyMedium text-foreground"
     >
       {label}
     </label>

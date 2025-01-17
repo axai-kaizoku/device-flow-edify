@@ -35,6 +35,7 @@ export default function AddTeamMember({
 
   useEffect(() => {
     setError("");
+    setUser({});
   }, [open]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +65,7 @@ export default function AddTeamMember({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
-      <div className="flex justify-center w-full h-full items-start">
+        <div className="flex justify-center w-full h-full items-start">
           <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
             <div className="flex flex-col  w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
@@ -85,9 +86,13 @@ export default function AddTeamMember({
 
             <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
               <img
-                src={teamData.image ?? ""}
+                src={
+                  teamData?.image && teamData.image.length > 0
+                    ? teamData.image
+                    : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
+                }
                 alt="team-image"
-                className="w-24 h-20 p-1  object-cover rounded-full "
+                className="w-20 h-20 p-1  object-cover rounded-full "
               />
               <div className="w-full flex flex-col justify-center">
                 <div className="flex gap-3 items-center">
@@ -130,7 +135,13 @@ export default function AddTeamMember({
                   // @ts-ignore
                   initialOptions={fetchUsers}
                   onSelect={(data: any) => {
-                    setUser({ _id: data._id });
+                    setUser({
+                      _id: data._id,
+                      first_name: data.first_name,
+                      email: data.email,
+                      employment_type: data.employment_type,
+                      designation: data.designation,
+                    });
                   }}
                   label="Add member*"
                   className={cn(
@@ -141,6 +152,34 @@ export default function AddTeamMember({
                   <p className="text-destructive text-sm">{error}</p>
                 )}
               </div>
+
+              {user?.first_name ? (
+                <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+                  <img
+                    src={
+                      user?.image && user.image.length > 0
+                        ? user?.image
+                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                    }
+                    alt="user-image"
+                    className="w-20 h-20 p-1  object-cover rounded-full "
+                  />
+                  <div className=" w-full flex flex-col justify-center ">
+                    <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                      {user?.first_name ?? ""}
+                    </h1>
+                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-base 2xl:text-2xl">
+                      {user?.email ?? ""}
+                    </h1>
+
+                    <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                      {user?.employment_type ?? ""}
+                      <span className="flex text-2xl mx-1 -mt-3">.</span>
+                      {user?.designation ?? ""}
+                    </h1>
+                  </div>
+                </div>
+              ) : null}
 
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                 <Button

@@ -1,26 +1,20 @@
 "use client";
 
 import { useQueryState } from "nuqs";
-
-import { Search, Download, Plus } from "lucide-react"; // Importing icons from lucide-react
-
-import Spinner from "@/components/Spinner";
-
+import { Search, Plus } from "lucide-react";
 import { Icons } from "@/components/icons";
 import UserMain from "./_components/user-main";
-import { User, UserResponse } from "@/server/userActions";
+import { UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tab } from "../teams/_components/Tab";
 import {
   activeUsers,
-  filterUsers,
   inActiveUsers,
   userFilterFields,
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
-import CreateTeam from "../teams/_components/create-team";
 import InvitePeople from "./[id]/_components/invite-people";
 
 const numericFields = ["updatedAt", "createdAt"];

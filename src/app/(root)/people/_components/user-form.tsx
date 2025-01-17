@@ -14,12 +14,7 @@ import {
 } from "@/server/userActions";
 import { notFound, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import {
-  bulkUploadKeys,
-  designations,
-  employments,
-  genders,
-} from "./helper/utils";
+import { bulkUploadKeys, employments, genders } from "./helper/utils";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { FormField } from "../../settings/_components/form-field";
@@ -280,12 +275,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       if (formData.gender === "Male") {
         setFormData((prev) => ({
           ...prev,
-          image: "//male image", // Ensure `res.url` contains the S3 URL.
+          image:
+            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png",
         }));
       } else {
         setFormData((prev) => ({
           ...prev,
-          image: "// female url", // Ensure `res.url` contains the S3 URL.
+          image:
+            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png",
         }));
       }
     }
@@ -429,7 +426,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </label>
 
                 {formData.image ? (
-                  <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                     <img
                       src={formData.image}
                       alt={formData.image}
@@ -794,7 +791,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     Upload Offer Letter
                   </label>
                   {offerLetter ? (
-                    <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+                    <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
                       <iframe
                         src={URL.createObjectURL(offerLetter)}
                         width="100%"

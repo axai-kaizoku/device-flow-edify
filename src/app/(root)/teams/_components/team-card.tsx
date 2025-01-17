@@ -87,7 +87,10 @@ export const TeamCard = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img
-              src={image || defaultImage}
+              src={
+                image ||
+                "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
+              }
               alt="manager-icon"
               className="w-14 h-14 object-cover rounded-full"
             />

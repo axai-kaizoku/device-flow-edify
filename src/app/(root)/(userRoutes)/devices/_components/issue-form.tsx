@@ -193,7 +193,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
               <img
                 src="/media/mac-2.png"
                 alt="Asset-1"
-                className="w-24 h-20 p-1  object-cover rounded-full "
+                className="w-20 h-20 p-1  object-cover rounded-full "
               />
             </div>
             <div>
@@ -389,7 +389,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                         {formData?.images?.map((image, index) => (
                           <div
                             key={index}
-                            className="relative w-24 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
+                            className="relative w-20 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
                           >
                             <img
                               src={image}

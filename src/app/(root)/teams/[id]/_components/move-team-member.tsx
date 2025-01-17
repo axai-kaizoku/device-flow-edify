@@ -29,6 +29,7 @@ export default function MoveTeamMember({
 
   useEffect(() => {
     setError("");
+    setTeam({});
   }, [open]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,48 +77,42 @@ export default function MoveTeamMember({
               </div>
             </div>
 
-            <div className="h-[28vh] w-full bg-[#F1F1F1] border rounded-3xl mb-8 flex items-center gap-6 pl-7">
+            <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 mb-8">
               <img
-                src={userData.image ?? ""}
-                alt="team-image"
-                className="w-24 h-24 object-contain rounded-full border"
+                src={
+                  userData?.image && userData.image.length > 0
+                    ? userData?.image
+                    : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                }
+                alt="userData-image"
+                className="w-20 h-20 p-1  object-cover rounded-full "
               />
-              <div className="h-full w-full flex flex-col justify-center gap-1">
-                <div className="flex gap-3 items-center">
-                  <div className="text-black font-gilroySemiBold text-xl 2xl:text-2xl">
-                    {userData?.first_name ?? "-"}
-                  </div>
-                  <div className="text-[#027A48] h-fit rounded-3xl bg-[#ECFDF3] text-sm 2xl:text-base font-gilroySemiBold flex justify-center items-center px-2 py-0.5">
-                    Active
-                  </div>
-                </div>
-                <div className="text-[#7C7C7C] text-base 2xl:text-lg font-gilroyMedium">
-                  {userData?.designation ?? ""}
-                </div>
+              <div className=" w-full flex flex-col justify-center ">
+                <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                  {userData?.first_name ?? ""}
+                </h1>
+                <h1 className="text-[#7C7C7C] font-gilroyMedium text-base 2xl:text-2xl">
+                  {userData?.email ?? ""}
+                </h1>
 
-                {/* <div className="flex gap-2 items-end">
-                  <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
-                    Reporting Manger:
-                  </div>
-                  <div className="text-black font-gilroySemiBold">
-                    {`${teamData?.manager[0]?.first_name ?? "-"} ${
-                      teamData?.manager[0]?.last_name ?? ""
-                    }`}
-                  </div>
-                </div> */}
+                <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                  {userData?.employment_type ?? ""}
+                  <span className="flex text-2xl mx-1 -mt-3">.</span>
+                  {userData?.designation ?? ""}
+                </h1>
               </div>
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="w-full flex flex-col gap-7 relative h-full"
+              className="w-full flex flex-col gap-7 justify-start relative h-full"
             >
-              <div className="z-0 flex-1">
+              <div className="z-0 ">
                 <SelectInput
                   optionValue={{ firstV: "title", secondV: "description" }}
                   key={"move-team-member-team-field"}
                   value={team?.title ?? ""}
-                  placeholder="Search by name, etc"
+                  placeholder="Search by team name, etc"
                   fetchOptions={async (query) => {
                     const data = await fetchTeams();
                     const filtered = data.filter((obj: any) =>
@@ -127,7 +122,12 @@ export default function MoveTeamMember({
                   }}
                   initialOptions={fetchTeams}
                   onSelect={(data: any) => {
-                    setTeam({ _id: data._id, title: data.title });
+                    setTeam({
+                      _id: data._id,
+                      title: data.title,
+                      description: data.description,
+                      image: data.image,
+                    });
                   }}
                   label="Team"
                   className={cn(
@@ -138,6 +138,42 @@ export default function MoveTeamMember({
                   <p className="text-destructive text-sm">{error}</p>
                 )}
               </div>
+
+              {team?.title ? (
+                <div className="w-full bg-[#f5f5f5] rounded-3xl p-3 flex items-center gap-4">
+                  <img
+                    src={
+                      team?.image && team.image.length > 0
+                        ? team.image
+                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
+                    }
+                    alt="team-image"
+                    className="w-20 h-20 p-1  object-cover rounded-full "
+                  />
+                  <div className="w-full flex flex-col justify-center">
+                    <div className="flex gap-3 items-center">
+                      <div className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                        {team?.title ?? "-"}
+                      </div>
+                      <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                        Active
+                      </div>
+                    </div>
+                    <div className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                      {team?.description ?? ""}
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
+                        Reporting Manger:
+                      </div>
+                      <div className="text-black font-gilroySemiBold">
+                        {`${team?.manager?.[0]?.first_name ?? "-"}`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                 <Button

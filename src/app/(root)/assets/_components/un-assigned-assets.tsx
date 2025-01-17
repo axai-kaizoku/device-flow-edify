@@ -1,3 +1,4 @@
+"use client";
 import { Device, DeviceResponse } from "@/server/deviceActions";
 import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
@@ -5,12 +6,11 @@ import { Table } from "@/components/wind/Table";
 import { SoftDeleteAsset } from "./soft-delete-asset";
 import { Icons } from "@/components/icons";
 import { AssignAsset } from "./assign-asset";
-
 import React, { Suspense, useState } from "react";
-import Error from "@/app/error/page";
 import { unAssignedAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
+
 function UnAssignedAssets({
   data,
   setAssets,
@@ -69,14 +69,14 @@ function UnAssignedAssets({
                         >
                           <img
                             src={
-                              data?.image![0]?.url ??
-                              "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                              data?.image?.[0]?.url ??
+                              "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                             }
                             alt="Device Logo"
                             className="border size-10 rounded-full"
                           />
                           <div className="text-sm text-black font-gilroySemiBold">
-                            {data?.device_name ? data?.device_name : <>-</>}
+                            {data?.custom_model ? data?.custom_model : <>-</>}
                           </div>
                         </div>
                       ),
@@ -87,7 +87,7 @@ function UnAssignedAssets({
                     },
 
                     {
-                      title: "Prchased  On",
+                      title: "Purchased  On",
                       render: (record) => {
                         const onboardingDate = record?.device_purchase_date;
 

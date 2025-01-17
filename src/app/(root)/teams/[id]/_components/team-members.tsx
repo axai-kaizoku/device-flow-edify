@@ -3,7 +3,6 @@ import { Table } from "@/components/wind/Table";
 import {
   getUsersByTeamId,
   User,
-  UserResponse,
   UsersTeamResponse,
 } from "@/server/userActions";
 import { useRouter } from "next/navigation";
@@ -11,25 +10,26 @@ import Pagination from "../../_components/pagination";
 import { useEffect, useState } from "react";
 import { RemoveTeamMember } from "./remove-team-member";
 import MoveTeamMember from "./move-team-member";
-import CreateUser from "@/app/(root)/people/_components/create-user";
 import { teamIcons } from "../../icons";
 import { Icons } from "@/components/icons";
+import { Team } from "@/server/teamActions";
+import AddTeamMember from "./add-team-member";
 
-const TeamMembers = ({ id }: { id: string }) => {
+const TeamMembers = ({ teamData }: { teamData: Team }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState<UsersTeamResponse>();
 
   useEffect(() => {
     const fetch = async () => {
-      const res: UsersTeamResponse = await getUsersByTeamId(id, 1);
+      const res: UsersTeamResponse = await getUsersByTeamId(teamData?._id!, 1);
       setData(res);
     };
     fetch();
   }, []);
 
   const handlePageChange = async (page: number) => {
-    const res: UsersTeamResponse = await getUsersByTeamId(id, page);
+    const res: UsersTeamResponse = await getUsersByTeamId(teamData?._id!, page);
     setData(res);
     setCurrentPage(page);
   };
@@ -40,13 +40,13 @@ const TeamMembers = ({ id }: { id: string }) => {
       style={{ border: "1px solid #F6F6F6" }}
     >
       {data?.users?.length === 0 ? (
-        <div className="flex flex-col gap-6 justify-center items-center py-10">
+        <div className="flex flex-col gap-6 justify-center items-center py-8">
           <teamIcons.no_team_display />
-          <CreateUser>
+          <AddTeamMember teamData={teamData}>
             <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
               Add members
             </div>
-          </CreateUser>
+          </AddTeamMember>
         </div>
       ) : (
         <>
@@ -83,8 +83,11 @@ const TeamMembers = ({ id }: { id: string }) => {
                       >
                         <img
                           src={
-                            data?.image ??
-                            "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                            data?.image && data.image.length > 0
+                              ? data?.image
+                              : data?.gender === "Male"
+                              ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                              : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                           }
                           alt={`${data?.first_name ?? "User"}'s Profile`}
                           className="w-10 h-10 rounded-full border object-cover"

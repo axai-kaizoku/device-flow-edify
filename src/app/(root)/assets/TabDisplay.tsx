@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, Suspense, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQueryState } from "nuqs";
 import { Search } from "lucide-react"; // Importing icons from lucide-react
 
-import Spinner from "@/components/Spinner";
 import AssignedAssets from "./_components/assigned-assets";
 import UnAssignedAssets from "./_components/un-assigned-assets";
 import InActiveAssets from "./_components/in-active-assets";
@@ -20,8 +19,6 @@ import {
   unAssignedAssets,
 } from "@/server/filterActions";
 import { useAlert } from "@/hooks/useAlert";
-import CreateIssue from "./_components/addDevices/_components/create-issue";
-import Loader from "@/components/deviceFlowLoader";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 const numericFields = ["updatedAt", "createdAt"];

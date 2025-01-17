@@ -69,8 +69,8 @@ const TeamMembers = ({
                   >
                     <img
                       src={
-                        data?.image ||
-                        "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                        data?.image ??
+                        "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                       } // Default image if no profile_image exists
                       alt={`${data?.first_name || "User"}'s Profile`}
                       className="w-10 h-10 rounded-full border object-cover"

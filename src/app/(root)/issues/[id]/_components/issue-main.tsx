@@ -57,7 +57,10 @@ const IssueSection = ({ data }: { data: Issues }) => {
         >
           <div className="flex justify-start items-center  gap-4">
             <img
-              src={data?.deviceDetails?.image ?? "-"}
+              src={
+                data?.deviceDetails?.image?.[0]?.url ??
+                "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+              }
               alt="Asset Image"
               className="   object-cover size-20 border  flex justify-center items-center rounded-full"
             />

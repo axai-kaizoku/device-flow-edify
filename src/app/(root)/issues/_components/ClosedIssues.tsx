@@ -9,8 +9,6 @@ import IssueClosedHeader from "./issue-closed-header";
 import { IssueStatusChange } from "./issue-status-change";
 import { closedIssues } from "@/server/filterActions";
 
-const ITEMS_PER_PAGE = 5;
-
 export default function ClosedIssueTable({
   data,
   setIssues,
@@ -54,8 +52,8 @@ export default function ClosedIssueTable({
                     >
                       <img
                         src={
-                          data.deviceDetails?.image ??
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwnpCabWZCg86pyyyD71E0s6JrIDZs4CSnqQ&s"
+                          data?.deviceDetails?.image?.[0]?.url ??
+                          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                         }
                         alt="Device Logo"
                         className=" size-10 rounded-full"

@@ -43,7 +43,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   return (
     <div className="flex flex-col gap-1.5">
       {file ? (
-        <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+        <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
           <iframe
             src={URL.createObjectURL(file)}
             width="100%"

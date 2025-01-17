@@ -28,11 +28,12 @@ const AssetsSection = ({ user }: { user: User }) => {
             <div className="flex justify-start items-center gap-4 py-4 border-b">
               <div className="">
                 <img
-                  src={`${
-                    device?.image?.[0]?.url
-                  } || ${"https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"}`}
+                  src={
+                    device?.image![0]?.url ??
+                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  }
                   alt="Asset-1"
-                  className="size-16 rounded-full"
+                  className="size-16 rounded-full border object-contain"
                 />
               </div>
               <div className="flex flex-col ">

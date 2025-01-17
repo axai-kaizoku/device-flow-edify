@@ -45,10 +45,12 @@ const UserGrid = ({ user }: { user: User }) => {
               <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
                 <img
                   src={
-                    user?.image ||
-                    "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+                    user?.image && user.image.length > 0
+                      ? user?.image
+                      : user?.gender === "Male"
+                      ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
+                      : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                   }
-                  // Replace with your profile image URL
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -59,7 +61,7 @@ const UserGrid = ({ user }: { user: User }) => {
                   {`${user?.first_name ?? ""} ${user?.last_name ?? ""}`}
                 </h1>
                 <p className="text-[#7C7C7C] text-sm font-gilroyMedium whitespace-nowrap">
-                  {user?.designation ?? ""} . {user?.teamId?.title ?? "-"}
+                  {user?.designation ?? ""} . {user?.teamId?.title ?? ""}
                 </p>
                 <div className="flex gap-2 mt-2">
                   <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#ECFDF3]">
@@ -78,7 +80,6 @@ const UserGrid = ({ user }: { user: User }) => {
             </div>
           </div>
 
-          {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex flex-col justify-start gap-5 items-start w-full ">
               <div className="font-gilroySemiBold text-lg">Personal Info.</div>
@@ -189,7 +190,7 @@ const UserGrid = ({ user }: { user: User }) => {
         {/* Second Column */}
         <div className="flex flex-col gap-6">
           {/* First Row */}
-          {user.reporting_manager?.first_name ? (
+          {user?.reporting_manager?.first_name ? (
             <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
               <div className="flex flex-col gap-2 items-start w-full ">
                 <div className="font-gilroySemiBold  text-lg">
@@ -198,12 +199,12 @@ const UserGrid = ({ user }: { user: User }) => {
                 <div className="flex justify-start gap-4 items-start w-full">
                   <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
                     <img
-                      // src={user?.reporting_manager?.image}
                       src={
-                        user?.reporting_manager?.image ||
-                        `https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp`
+                        user?.reporting_manager?.image &&
+                        user.reporting_manager.image.length > 0
+                          ? user?.reporting_manager?.image
+                          : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                       }
-                      // Replace with your profile image URL
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
@@ -249,7 +250,6 @@ const UserGrid = ({ user }: { user: User }) => {
             </div>
           ) : null}
 
-          {/* Second Row */}
           <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex flex-col justify-start gap-5 items-start w-full ">
               <div className="font-gilroySemiBold  text-lg">

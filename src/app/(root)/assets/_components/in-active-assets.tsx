@@ -1,4 +1,4 @@
-//inactive:-
+"use client";
 import { Device, DeviceResponse } from "@/server/deviceActions";
 import React, { Suspense, useState } from "react";
 import Pagination from "../../teams/_components/pagination";
@@ -10,6 +10,7 @@ import { RestoreDevice } from "./restore-assets";
 import { inActiveAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
+
 function InActiveAssets({
   data,
   setAssets,
@@ -62,8 +63,8 @@ function InActiveAssets({
                         <div className=" justify-start flex items-center gap-2 ">
                           <img
                             src={
-                              data?.image![0]?.url ||
-                              "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+                              data?.image?.[0]?.url ??
+                              "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                             }
                             alt="Device Logo"
                             className="size-10 object-cover rounded-full"
@@ -82,9 +83,21 @@ function InActiveAssets({
                       },
                     },
                     {
-                      title: "Prchased  On",
+                      title: "Purchased  On",
                       render: (record) => {
-                        const date = new Date(record?.device_purchase_date);
+                        const onboardingDate = record?.device_purchase_date;
+
+                        // Check if onboardingDate is null, undefined, or empty
+                        if (!onboardingDate) {
+                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                        }
+
+                        const date = new Date(onboardingDate);
+
+                        // Check if the date is valid
+                        if (isNaN(date.getTime())) {
+                          return <div>-</div>; // Return "-" for invalid date
+                        }
 
                         const formattedDate = date.toLocaleDateString("en-GB", {
                           day: "2-digit",

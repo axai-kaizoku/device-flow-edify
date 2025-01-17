@@ -49,7 +49,7 @@ export const fetchTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 6,
+  pageLimit = 200000,
   page = 1,
   isDeleted = false,
 }: FilterApiParams = {}): Promise<any> {
@@ -172,6 +172,11 @@ export async function createTeam(
 ): Promise<Team> {
   try {
     const sess = await getSession();
+    let teamImg = image;
+    if (!image) {
+      teamImg =
+        "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png";
+    }
 
     const res = await callAPIWithToken<Team>(
       "https://api.edify.club/edifybackend/v1/teams", // API endpoint
@@ -179,7 +184,7 @@ export async function createTeam(
       {
         title,
         description,
-        image,
+        image: teamImg,
         orgId: sess?.user?.user?.orgId?._id,
       }
     );

@@ -32,6 +32,20 @@ export default function TeamPage() {
     fetchData();
   }, [teamState]);
 
+  if (!users) {
+    return (
+      <>
+        <CombinedContainer>
+          <div className="justify-center flex items-center h-[60vh] w-full">
+            <span className="text-2xl font-gilroyMedium">
+              You haven't been added to a team yet :(
+            </span>
+          </div>
+        </CombinedContainer>
+      </>
+    );
+  }
+
   return (
     <CombinedContainer title="Teams">
       <div className="bg-white p-3 my-6 rounded-3xl shadow-lg">
