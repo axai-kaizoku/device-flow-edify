@@ -8,8 +8,30 @@ import localFont from "next/font/local";
 import InternetCheck from "./InternetCheck";
 
 export const metadata: Metadata = {
-  title: "DeviceFlow by Edify",
-  description: "A better way to manage assets in orgs",
+  metadataBase: new URL("https://deviceflow.ai"),
+  title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+  description:
+    "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://deviceflow.ai",
+    title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    description:
+      "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+    siteName: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    images: `https://deviceflow.ai/og_main.webp`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    description:
+      "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+    images: `https://deviceflow.ai/og_main.webp`,
+  },
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 const gilroyThin = localFont({
@@ -105,7 +127,7 @@ export default async function RootLayout({
           ${gilroyBlack.variable}
         `}
       >
-        {session?.user && <KbarWrapper userRole={userRole} />} {/* Render KbarWrapper here */}
+        {session?.user && <KbarWrapper userRole={userRole} />}{" "}
         <Providers>
           {/* <ScreenSize /> */}
           {children}

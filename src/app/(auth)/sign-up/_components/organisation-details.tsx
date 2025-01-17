@@ -1,49 +1,49 @@
 import { employments } from "@/app/(root)/people/_components/helper/utils";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-import { SelectInput } from "@/components/dropdown/select-input";
+// import { SelectInput } from "@/components/dropdown/select-input";
 import { cn } from "@/lib/utils";
-import { fetchTeams } from "@/server/teamActions";
-import { fetchUsers, searchUsers } from "@/server/userActions";
+import { signupEmployee } from "@/server/signupActions";
+// import {
+//   fetchManager,
+//   fetchUsers,
+//   searchManager,
+//   searchUsers,
+// } from "@/server/userActions";
 import React, { useState } from "react";
 
-function OrganisationDetails({ setSteps }: any) {
+function OrganisationDetails({ setSteps, token, user }: any) {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    joining_date: "",
-    employement_type: "",
-    role: "",
-
-    reporting_manager: {
-      name: "",
-      value: "",
-    },
-    team: {
-      name: "",
-      value: "",
-    },
+    onboarding_date: "",
+    employment_type: "",
+    designation: "",
+    // reporting_manager: {
+    //   name: "",
+    //   value: "",
+    // },
   });
 
   const [errors, setErrors] = useState({
-    joining_date: "",
-    employement_type: "",
-    role: "",
-
-    reporting_manager: "",
-    team: "",
+    onboarding_date: "",
+    employment_type: "",
+    designation: "",
+    // reporting_manager: "",
   });
 
   const validateFields = (): boolean => {
     const newErrors = {
-      joining_date: formData.joining_date ? "" : "Joining Date is required",
-      employement_type: formData.employement_type
+      onboarding_date: formData.onboarding_date
+        ? ""
+        : "Joining Date is required",
+      employment_type: formData.employment_type
         ? ""
         : "Employment Type is required",
-      role: formData.role ? "" : "Role is required",
-      reporting_manager:
-        formData.reporting_manager.name && formData.reporting_manager.value
-          ? ""
-          : "Reporting Manager is required",
-      team: formData.team.name && formData.team.value ? "" : "Team is required",
+      designation: formData.designation ? "" : "Role is required",
+      // reporting_manager:
+      //   formData.reporting_manager.name && formData.reporting_manager.value
+      //     ? ""
+      //     : "Reporting Manager is required",
     };
 
     setErrors(newErrors);
@@ -52,8 +52,27 @@ function OrganisationDetails({ setSteps }: any) {
 
   const onSubmit = async () => {
     if (validateFields()) {
-      console.log("Form Data:", formData);
-      setSteps(3); // Proceed to next step
+      // console.log("Form Data:", formData);
+      // console.log("token", token);
+      // console.log("user", user);
+      const userData = {
+        token: token,
+        ...formData,
+        ...user,
+      };
+
+      try {
+        setLoading(true);
+        await signupEmployee(userData);
+        setSteps(4);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+
+      // setSteps(4);
     } else {
       console.error("Validation failed. Fix errors before proceeding.");
     }
@@ -71,13 +90,13 @@ function OrganisationDetails({ setSteps }: any) {
         <div
           className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
         >
-          <div className="w-full">
-            <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
-              Hey {"employee_name"}
-            </div>
-            <div className="text-center text-xl font-gilroyMedium  text-zinc-400">
+          <div className="w-full flex flex-col gap-y-4 mb-0">
+            <h1 className="text-center text-3xl font-gilroyBold text-indigo-950">
+              Hey {user.first_name}
+            </h1>
+            <p className="text-center text-sm font-gilroyMedium text-gray-600">
               Enter your organisation details
-            </div>
+            </p>
           </div>
 
           <div className="flex flex-col w-[75%] gap-6">
@@ -86,15 +105,15 @@ function OrganisationDetails({ setSteps }: any) {
                 <FormField
                   placeholder="DD/MM/YYYY"
                   label="Joining Date*"
-                  error={errors.joining_date}
-                  id="joining_date"
-                  name="joining_date"
+                  error={errors.onboarding_date}
+                  id="onboarding_date"
+                  name="onboarding_date"
                   type="date"
-                  value={formData?.joining_date}
+                  value={formData?.onboarding_date}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      joining_date: e.target.value,
+                      onboarding_date: e.target.value,
                     }))
                   }
                 />
@@ -105,22 +124,22 @@ function OrganisationDetails({ setSteps }: any) {
                   onSelect={(data) =>
                     setFormData((prev) => ({
                       ...prev,
-                      gender: data?.value,
+                      employment_type: data?.value,
                     }))
                   }
                   label="Employment type*"
-                  value={`${formData?.employement_type ?? ""}`}
+                  value={`${formData?.employment_type ?? ""}`}
                   placeholder="eg: Male"
                   className={cn(
-                    errors.employement_type
+                    errors.employment_type
                       ? "border-destructive/80 "
                       : "border-[#5F5F5F]",
                     "rounded-xl border"
                   )}
                 />
-                {errors.employement_type && (
+                {errors.employment_type && (
                   <p className="mt-1 text-xs font-gilroyMedium text-destructive">
-                    {errors.employement_type}
+                    {errors.employment_type}
                   </p>
                 )}
               </div>
@@ -128,30 +147,28 @@ function OrganisationDetails({ setSteps }: any) {
             <FormField
               label="Role*"
               placeholder="Role"
-              id="role"
-              error={errors.role}
-              name="role"
-              value={formData?.role ?? "-"}
+              id="designation"
+              error={errors.designation}
+              name="designation"
+              value={formData?.designation ?? "-"}
               type="text"
               onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
-                  role: e.target.value,
+                  designation: e.target.value,
                 }));
-
-                // Validate email format on the fly
               }}
             />
 
-            <SelectInput
+            {/* <SelectInput
               value={formData.reporting_manager.name || ""}
               optionValue={{ firstV: "first_name", secondV: "email" }}
               key={"user-form-reporting-manager"}
               placeholder="Search by name, etc"
               // @ts-ignore
-              fetchOptions={searchUsers}
+              fetchOptions={(query: string) => searchManager(query, token)}
               // @ts-ignore
-              initialOptions={fetchUsers}
+              initialOptions={() => fetchManager(token)}
               onSelect={(data: any) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -167,41 +184,11 @@ function OrganisationDetails({ setSteps }: any) {
               <p className="text-destructive font-gilroyMedium text-xs">
                 {errors.reporting_manager}
               </p>
-            )}
-
-            <SelectInput
-              value={formData?.team?.name}
-              optionValue={{
-                firstV: "title",
-                secondV: "description",
-              }}
-              key={"user-form-team-field"}
-              placeholder="Search by name, etc"
-              fetchOptions={async (query) => {
-                const data = await fetchTeams();
-                return data.filter((obj: any) =>
-                  obj.title.toLowerCase().includes(query.toLowerCase())
-                );
-              }}
-              initialOptions={fetchTeams}
-              onSelect={(data: any) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  team: { name: data.title, value: data._id },
-                }));
-              }}
-              label="Team"
-              className={cn(errors.team ? "border-destructive/80 border" : "")}
-            />
-
-            {errors.team && (
-              <p className="mt-0.5 text-xs text-destructive">{errors.team}</p>
-            )}
+            )} */}
           </div>
           <button
-            onClick={() => {
-              onSubmit();
-            }}
+            onClick={onSubmit}
+            disabled={loading}
             className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
           >
             <div className="text-center text-white">Submit</div>

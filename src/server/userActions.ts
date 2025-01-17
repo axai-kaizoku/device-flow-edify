@@ -1,6 +1,6 @@
 "use server";
 
-import { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { Team } from "./teamActions";
 import { Device } from "./deviceActions";
@@ -133,6 +133,80 @@ export type UserResponse = {
 export type newAllUserResponse = {
   users: UserResponse;
 };
+
+export const fetchManager = cache(async function (token: string): Promise<any> {
+  try {
+    const requestBody = {
+      fields: [
+        "first_name",
+        "email",
+        "designation",
+        "employment_type",
+        "image",
+      ],
+      filters: [],
+      page: 1,
+      pageLimit: 5,
+    };
+
+    const res: AxiosResponse = await axios({
+      url: "https://api.edify.club/edifybackend/v1/user/filter",
+      method: "POST",
+      data: { requestBody },
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(res);
+
+    return res.data.users;
+  } catch (e) {
+    throw new Error("Failed to fetch users");
+  }
+});
+
+export async function searchManager(
+  searchQuery: string,
+  token: string
+): Promise<any> {
+  try {
+    const requestBody = {
+      fields: [
+        "first_name",
+        "email",
+        "designation",
+        "employment_type",
+        "image",
+      ], // Specify fields to be fetched
+      filters: [], // You can add filters here as per requirement
+      page: 1,
+      pageLimit: 20, // Number of users to fetch per page
+    };
+    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    const res: AxiosResponse = await axios({
+      url: apiUrl,
+      method: "POST",
+      data: { requestBody },
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(res);
+
+    return res?.data?.users;
+  } catch (e) {
+    throw new Error("Failed to fetch users");
+  }
+}
 
 export const fetchUsers = cache(async function (): Promise<any> {
   try {
