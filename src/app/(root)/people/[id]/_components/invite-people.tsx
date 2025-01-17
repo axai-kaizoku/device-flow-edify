@@ -35,14 +35,6 @@ export default function InvitePeople({
   const [team, setTeam] = useState<Team>();
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!open) {
-      setLink("");
-      setTeam({});
-      setError("");
-    }
-  }, [open]);
-
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(link);
