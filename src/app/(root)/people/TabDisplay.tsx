@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryState } from "nuqs";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Send } from "lucide-react";
 import { Icons } from "@/components/icons";
 import UserMain from "./_components/user-main";
 import { UserResponse } from "@/server/userActions";
@@ -262,7 +262,7 @@ function TabDisplay() {
             </div>
             <InvitePeople>
               <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <Plus className="text-[#6C6C6C]  size-5" />
+                <Send className="text-[#6C6C6C]  size-4" />
                 <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Invite People
                 </span>

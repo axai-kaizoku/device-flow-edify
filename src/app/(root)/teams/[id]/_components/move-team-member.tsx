@@ -62,15 +62,15 @@ export default function MoveTeamMember({
           <div className="flex flex-col w-[97%] h-full justify-start items-center">
             <div className="flex flex-col gap-1 pb-5 w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <div className="bg-black rounded-full size-12 2xl:size-16 p-2 flex justify-center items-center">
-                  <Icons.user_form_icon className="size-8 2xl:size-11" />
+                <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
+                  <Icons.user_form_icon className="size-6" />
                 </div>
-                <span className="font-gilroySemiBold text-2xl 2xl:text-3xl">
-                  {"Move member"}
+                <span className="font-gilroySemiBold text-xl 2xl:text-2xl">
+                  Move member
                 </span>
               </div>
               <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-lg 2xl:text-xl text-black">
+                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
                   {"Step 1 of 1"}
                 </div>
                 <div className="h-[1px] bg-[#E7E7E7] w-full mb-3"></div>

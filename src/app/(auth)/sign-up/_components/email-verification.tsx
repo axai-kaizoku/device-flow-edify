@@ -1,18 +1,18 @@
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import React, { useEffect, useState } from "react";
-import { RequestOTP } from "@/server/loginActions";
+import { signupReqOTP, verifySignupOTP } from "@/server/signupActions";
 
 function EmailVerification({ setSteps }: any) {
   const [otpSent, setOtpSent] = useState(false); // Tracks if OTP is sent
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
   });
-  const [uId, setUID] = useState("");
   const [timeLeft, setTimeLeft] = useState(0); // Timer starts only when OTP is sent
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [errors, setErrors] = useState({
     email: "",
+    otp: "",
   });
 
   useEffect(() => {
@@ -57,27 +57,47 @@ function EmailVerification({ setSteps }: any) {
     }
   };
 
-  const handleNext = async () => {
-    if (!formData.email) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Email is required",
-      }));
-      return;
-    }
+  const validateFieldsEmail = (): boolean => {
+    const newErrors = {
+      email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+        formData.email
+      )
+        ? ""
+        : "Invalid email format",
+      otp: "",
+    };
 
-    const res = await RequestOTP(formData.email);
-    if (res?.userId) {
-      setUID(res.userId);
-      setTimeLeft(300); // Start the timer (5 minutes)
-      setOtp(new Array(6).fill("")); // Clear OTP input
-      setOtpSent(true); // Hide Send OTP button and show Verify OTP button
-      setErrors((prev) => ({ ...prev, email: "" })); // Clear email error
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Invalid Email ID",
-      }));
+    setErrors(newErrors);
+    return Object.values(newErrors).every((error) => !error);
+  };
+
+  const handleNext = async () => {
+    if (validateFieldsEmail()) {
+      if (!formData.email) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "Email is required",
+        }));
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const res = await signupReqOTP(formData.email);
+        if (res) {
+          setOtpSent(true);
+        }
+        setTimeLeft(300); // Start the timer (5 minutes)
+        setOtp(new Array(6).fill("")); // Clear OTP input
+        setOtpSent(true); // Hide Send OTP button and show Verify OTP button
+        setErrors((prev) => ({ ...prev, email: "" })); // Clear email error
+        setLoading(false);
+      } catch (error) {
+        setOtpSent(false);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -88,6 +108,7 @@ function EmailVerification({ setSteps }: any) {
       )
         ? ""
         : "Invalid email format",
+      otp: otp.join("").length === 6 ? "" : "Invalid otp",
     };
 
     setErrors(newErrors);
@@ -95,12 +116,30 @@ function EmailVerification({ setSteps }: any) {
   };
 
   const handleSubmit = async () => {
-    if (otp.every((num) => num.length === 1)) {
-      // Assuming this verifies OTP (logic can be extended)
-      console.log("OTP Verified:", otp.join(""));
-      setSteps(4); // Proceed to the next step
-    } else {
-      console.error("Invalid OTP");
+    if (validateFields()) {
+      if (otp.every((num) => num.length === 1)) {
+        const otpPass = otp.join("");
+        try {
+          setLoading(true);
+          const res = await verifySignupOTP(formData.email, otpPass);
+          console.log(res);
+          setLoading(false);
+          setSteps(2);
+        } catch (error) {
+          setErrors((prev) => ({
+            ...prev,
+            otp: "Invalid otp",
+          }));
+          setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          otp: "Invalid otp",
+        }));
+      }
     }
   };
 
@@ -114,18 +153,19 @@ function EmailVerification({ setSteps }: any) {
         />
       </div>
       <div className="w-[42%] relative h-full justify-center items-center flex flex-col">
-        <div className="font-gilroySemiBold flex w-full gap-6 flex-col items-center">
-          <div className="w-full">
+        <div className="font-gilroySemiBold flex w-full gap-3 flex-col items-center">
+          <div className="w-full flex flex-col gap-y-4 mb-6">
             <h1 className="text-center text-3xl font-gilroyBold text-indigo-950">
-              Welcome {"employee_name"}
+              Welcome Onboard
             </h1>
-            <p className="text-center text-base font-gilroyMedium text-zinc-400">
-              Create your credentials to access your organization
+            <p className="text-center text-sm font-gilroyMedium text-gray-600">
+              Create your credentials to access your organization{" "}
             </p>
           </div>
-          <div className="w-[75%]">
+          <div className="w-[78%]">
             <FormField
               label="Email"
+              disabled={otpSent}
               id="email"
               error={errors.email}
               name="email"
@@ -138,26 +178,30 @@ function EmailVerification({ setSteps }: any) {
                   email: inputValue,
                 }));
               }}
-              placeholder="jhondoe@winuall.com"
+              className="placeholder:text-gray-300 "
+              placeholder="Enter your email"
             />
           </div>
 
           {!otpSent && (
             <button
               onClick={handleNext}
-              className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
+              disabled={loading}
+              className="flex items-center mt-4 mb-0.5 justify-center h-[50px] w-[78%] rounded-[9.3px] bg-black px-44 py-[13px]"
             >
-              <div className="text-center text-white">Send OTP</div>
+              <div className="text-center text-white whitespace-nowrap text-sm font-gilroySemiBold">
+                Send OTP
+              </div>
             </button>
           )}
 
           {otpSent && timeLeft > 0 && (
             <>
-              <div className="flex justify-center gap-2 space-x-2 mt-5">
+              <div className="flex justify-center gap-2 space-x-2 my-3">
                 {otp.map((data, index) => (
                   <input
                     key={index}
-                    className="w-12 h-12 text-xl text-center border rounded shadow"
+                    className="w-12 h-12 text-xl bg-[#F6F6F6]  border-[#DDDDDD] text-center border rounded-lg"
                     type="text"
                     name="otp"
                     maxLength={1}
@@ -167,27 +211,33 @@ function EmailVerification({ setSteps }: any) {
                     onKeyDown={(e) => handleBackspace(e, index)}
                   />
                 ))}
-              </div>
-              <p className="text-center text-zinc-500 mt-4">
+              </div>{" "}
+              <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
+                {errors.otp}
+              </p>
+              <p className="text-center text-zinc-500 mb-2">
                 {formatTimeLeft()}
               </p>
             </>
           )}
 
-          {otp.every((num) => num.length === 1) && (
+          {otpSent && (
             <button
               onClick={handleSubmit}
-              className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
+              disabled={loading}
+              className="flex items-center my-0.5 justify-center h-[50px] w-[78%] rounded-[9.3px] bg-black px-44 py-[13px]"
             >
-              <div className="text-center text-white">Submit</div>
+              <div className="text-center text-white whitespace-nowrap text-sm font-gilroySemiBold">
+                Submit
+              </div>
             </button>
           )}
 
-          {timeLeft === 0 && (
-            <div className="font-gilroy w-full text-center font-medium leading-[normal] tracking-[0px] mt-5">
+          {otpSent && (
+            <div className="font-gilroy w-full text-center font-medium leading-[normal] tracking-[0px] mt-3">
               <span style={{ cursor: "pointer" }} onClick={handleNext}>
                 <span className="text-center text-neutral-600">
-                  {"Don’t receive code? "}
+                  {"Don't receive code? "}
                 </span>
                 Re-send
               </span>

@@ -1,8 +1,8 @@
-import { ArrowBigRight, ChevronRight, MoveRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-function Welcome({ setSteps }: any) {
+function Welcome() {
   const router = useRouter();
   return (
     <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">

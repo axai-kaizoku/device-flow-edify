@@ -1,26 +1,25 @@
 import React, { useRef, useState } from "react";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import Spinner from "@/components/Spinner";
 import { Icons } from "@/components/icons";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { genders } from "@/app/(root)/people/_components/helper/utils";
 import { cn } from "@/lib/utils";
 
-function PersonalDetails({ setSteps }: any) {
+function PersonalDetails({ setSteps, setUser }: any) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [formData, setFormData] = useState({
-    profile: "",
-    name: "",
-    dob: "",
+    image: "",
+    first_name: "",
+    date_of_birth: "",
     gender: "",
     email: "",
     phone: "",
   });
 
   const [errors, setErrors] = useState({
-    profile: "",
-    name: "",
-    dob: "",
+    image: "",
+    first_name: "",
+    date_of_birth: "",
     gender: "",
     email: "",
     phone: "",
@@ -29,9 +28,9 @@ function PersonalDetails({ setSteps }: any) {
   // Utility for Validation
   const validateFields = (): boolean => {
     const newErrors = {
-      profile: formData.profile ? "" : "Profile image is required",
-      name: formData.name ? "" : "Name is required",
-      dob: formData.dob ? "" : "Date of birth is required",
+      image: "",
+      first_name: formData.first_name ? "" : "Name is required",
+      date_of_birth: formData.date_of_birth ? "" : "Date of birth is required",
       gender: formData.gender ? "" : "Gender is required",
       email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
         formData.email
@@ -49,8 +48,9 @@ function PersonalDetails({ setSteps }: any) {
 
   const onSubmit = async () => {
     if (validateFields()) {
-      console.log("Form Data:", formData);
-      setSteps(2); // Proceed to next step
+      // console.log("Form Data:", formData);
+      setUser({ ...formData });
+      setSteps(3);
     } else {
       console.error("Validation failed. Fix errors before proceeding.");
     }
@@ -61,7 +61,7 @@ function PersonalDetails({ setSteps }: any) {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setFormData((prev) => ({ ...prev, profile: reader.result as string }));
+        setFormData((prev) => ({ ...prev, image: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -80,18 +80,18 @@ function PersonalDetails({ setSteps }: any) {
         <div
           className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
         >
-          <div className="w-full">
-            <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
+          <div className="w-full flex flex-col gap-y-4 mb-0">
+            <h1 className="text-center text-3xl font-gilroyBold text-indigo-950">
               Personal Details
-            </div>
-            <div className="text-center text-xl font-gilroyMedium  text-zinc-400">
+            </h1>
+            <p className="text-center text-sm font-gilroyMedium text-gray-600">
               Enter your details to register in your organization
-            </div>
+            </p>
           </div>
-          {formData?.profile ? (
+          {formData?.image ? (
             <div>
               <img
-                src={formData?.profile}
+                src={formData?.image}
                 alt="Company Logo"
                 className="size-28 rounded-full border object-cover"
               />
@@ -103,7 +103,7 @@ function PersonalDetails({ setSteps }: any) {
             onClick={() => fileInputRef.current?.click()}
             className="px-8 py-2.5 border border-dimgray rounded-lg bg-white"
           >
-            {formData.profile ? "Edit Image" : "Upload Image"}
+            {formData.image ? "Edit Image" : "Upload Image"}
           </button>
           <input
             type="file"
@@ -115,18 +115,16 @@ function PersonalDetails({ setSteps }: any) {
             <FormField
               label="Name*"
               placeholder="Name"
-              id="name"
-              error={errors.name}
+              id="first_name"
+              error={errors.first_name}
               name="email"
-              value={formData?.name ?? ""}
+              value={formData?.first_name ?? ""}
               type="text"
               onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
-                  name: e.target.value,
+                  first_name: e.target.value,
                 }));
-
-                // Validate email format on the fly
               }}
             />
             <div className="flex gap-3">
@@ -134,19 +132,21 @@ function PersonalDetails({ setSteps }: any) {
                 <FormField
                   placeholder="DD/MM/YYYY"
                   label="DOB"
-                  error={errors.dob}
-                  id="dob"
-                  name="dob"
+                  error={errors.date_of_birth}
+                  id="date_of_birth"
+                  name="date_of_birth"
                   value={
-                    formData?.dob
-                      ? new Date(formData.dob).toISOString().split("T")[0]
+                    formData?.date_of_birth
+                      ? new Date(formData.date_of_birth)
+                          .toISOString()
+                          .split("T")[0]
                       : ""
                   }
                   type="date"
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      dob: e.target.value,
+                      date_of_birth: e.target.value,
                     }))
                   }
                 />

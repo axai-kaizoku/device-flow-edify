@@ -10,13 +10,14 @@ import {
 } from "@/server/teamActions";
 import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
-import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
+import { Search, Plus, Download, Loader, Send } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
 import { Employee } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import InvitePeople from "../people/[id]/_components/invite-people";
 
 interface TabDisplayProps {
   teams: TeamsResponse;
@@ -187,6 +188,14 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 </span>
               </div>
             </CreateTeam>
+            <InvitePeople>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Send className="text-[#6C6C6C]  size-4" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Invite People
+                </span>
+              </div>
+            </InvitePeople>
 
             {/* <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={16} /> 
