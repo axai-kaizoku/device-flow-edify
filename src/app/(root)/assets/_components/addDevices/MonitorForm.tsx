@@ -21,6 +21,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<KeyboardDetailsInterface>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const [displayFile, setDisplayFile] = useState("");
   const { openToast } = useToast();
 
   // Handle input changes for text and date fields
@@ -51,6 +52,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
+          setDisplayFile(URL.createObjectURL(file));
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
           openToast("error", "Some Error while uploading the File");
@@ -65,6 +67,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   };
 
   const handleRemoveFile = () => {
+    setDisplayFile("");
     setInvoiceFile(null);
   };
 
@@ -116,14 +119,27 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
         <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
-        {invoiceFile ? (
-          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
+        {displayFile ? (
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-1">
             <iframe
-              src={invoiceFile}
+              src={displayFile}
               width="100%"
               height="100%"
-              title="Offer Letter Preview"
+              title="Invoice Preview"
               className="object-cover"
+              onLoad={(e) => {
+                const iframe = e.currentTarget;
+                // Ensure it's viewable content
+                if (
+                  !iframe.contentDocument ||
+                  iframe.contentDocument.title === ""
+                ) {
+                  openToast(
+                    "error",
+                    "File preview failed. It may not be viewable."
+                  );
+                }
+              }}
             />
             <button
               type="button"

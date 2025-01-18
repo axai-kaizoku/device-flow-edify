@@ -68,8 +68,8 @@ const AssignedDevicesReport = ({
       <div className="mt-5">
         <SelectDropdown
           options={[
-            { label: "Greater Than", value: ">" },
-            { label: "Less Than", value: "<" },
+            { label: "After", value: ">" },
+            { label: "Before", value: "<" },
             { label: "Between", value: "between" },
           ]}
           onSelect={(data) => setOperator(data.value)}

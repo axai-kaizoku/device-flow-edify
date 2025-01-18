@@ -134,15 +134,16 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
 
   const [formData, setFormData] = useState({
     name:"",
-    company_name:"",
+    cmpname:"",
     email:"",
-    phone:""
+    phone:"",
+    type:"register"
   });
 
   const [errors, setErrors] = useState({
     name: "",
     phone: "",
-    company_name: "",
+    cmpname: "",
     email: "",
     teamSize: ""
   });
@@ -150,7 +151,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const validateStep1 = () => {
     const newErrors = {
       name: formData?.name ? "" : "Name is required",
-      company_name: formData?.company_name ? "" : "Company Name is required",
+      cmpname: formData?.cmpname ? "" : "Company Name is required",
     }
 
     setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
@@ -193,7 +194,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const handleSubmit = async ()=>{
     setLoading(true);
     try {
-      const response = await requestForDemo(formData);
+      const response = await requestForDemo({...formData, type:"register"});
       if(response){
         handleNext();
       }
@@ -280,8 +281,8 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 <div className="relative" style={{ width: "100%" }}>
                   <input
                     type="text"
-                    name="company_name"
-                    value={formData?.company_name}
+                    name="cmpname"
+                    value={formData?.cmpname}
                     id="floating_outlined"
                     style={{ border: "1px solid #FFF" }}
                     className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -295,7 +296,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   >
                     Company Name
                   </label>
-                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.company_name}</p>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.cmpname}</p>
                 </div>
 
                 <div className="flex gap-3">

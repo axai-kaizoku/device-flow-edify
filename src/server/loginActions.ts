@@ -9,12 +9,13 @@ type RequestOTPProps = {
 };
 
 type RequestDemoProps = {
-  name: string;
-  email: string;
-  company_name: string;
-  team_size: string;
-  phone: string;
-};
+	name:string;
+	email:string;
+	company_name:string;
+	team_size:string;
+	phone:string;
+	type:string;
+}
 
 export async function RequestOTP(email: string): Promise<RequestOTPProps> {
   const { data } = await callAPI<RequestOTPProps>(
@@ -53,39 +54,32 @@ export async function ResetPass(
   return data;
 }
 
-export async function requestForDemo({
-  name,
-  email,
-  teamSize,
-  cmpname,
-  phone,
-}: {
-  name: string;
-  email: string;
-  teamSize: string;
-  cmpname: string;
-  phone: string;
-}) {
-  try {
-    const { data } = await callAPI<RequestDemoProps>(
-      "https://api.edify.club/edifybackend/v1/auth/user/onboard",
-      "POST",
-      {
-        name,
-        email,
-        company_name: cmpname,
-        team_size: teamSize,
-        phone,
-      },
-      {
-        "Content-Type": "application/json",
-      }
-    );
+export async function requestForDemo({name, email, teamSize, cmpname, phone, type}:{name: string; email: string; teamSize: string; cmpname: string; phone: string; type:string;}){
+	let payload = {};
+	if(type === 'register'){
+		payload = {email,name, company_name: cmpname, phone};
+		console.log(payload)
+	}
+	else{
+		payload = {email,name, company_name: cmpname, team_size: teamSize, phone};
+	}
+	try {
+		const { data } = await callAPI<RequestDemoProps>(
+			'https://api.edify.club/edifybackend/v1/auth/user/onboard',
+			'POST',
+			{	...payload
+			},
+			{
+				'Content-Type': 'application/json',
+			},
+		);
+	
+		return data;
+		
+	} catch (e) {
+		throw new Error(
+			(e as AxiosError)?.message || "Failed to fetch previous orders"
+		  );
+	}
 
-    return data;
-  } catch (e) {
-    throw new Error(
-      (e as AxiosError)?.message || "Failed to fetch previous orders"
-    );
-  }
 }

@@ -318,10 +318,8 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
             <SelectDropdown
               options={[
                 { label: "Good", value: "Good" },
-                { label: "Best", value: "Best" },
+                { label: "Excellent", value: "Excellent" },
                 { label: "Fair", value: "Fair" },
-                { label: "Old", value: "Old" },
-                { label: "New", value: "New" },
               ]}
               onSelect={(data) => {
                 const updatedFormData = {

@@ -346,7 +346,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                         <div
                           key={v?.title}
                           className={cn(
-                            "flex w-full h-[5rem] justify-start items-center rounded-xl pb-1 border pl-5 gap-2",
+                            "flex w-full h-[5rem] justify-start items-center rounded-xl pb-1 border pl-5 gap-2 cursor-pointer group",
                             formData.priority === v.title
                               ? "border-black  border-2"
                               : "border-[#6C6C6C]"
