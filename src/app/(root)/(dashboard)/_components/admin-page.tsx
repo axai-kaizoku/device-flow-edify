@@ -175,8 +175,8 @@ export default function AdminDashboard() {
             <textarea
               id="review-write"
               placeholder="Add a comment"
-              onChange={(e) =>
-                // setFormData((prev) => ({ ...prev, comment: e.target.value }))
+              onChange={(e) =>{}
+              
               }
               rows={6}
               className={cn(
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer" onClick={toggleModal}>
+          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer">
             Submit Feedback
           </div>
         </div>
