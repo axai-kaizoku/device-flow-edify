@@ -1,28 +1,26 @@
+import NotFound from "@/app/not-found";
 import { CombinedContainer } from "@/components/container/container";
 import { fetchActiveTeams, fetchInactiveTeams } from "@/server/teamActions";
+import { HierarchyResponse, fetchUserHierarchy } from "@/server/userActions";
 import TabDisplay from "./TabDisplay";
-import NotFound from "@/app/not-found";
-import { fetchUserHierarchy, HierarchyResponse } from "@/server/userActions";
-import { Employee, mapEmployeeData } from "../_org-chart/_components/data";
 
 export default async function Teams() {
   try {
     const teams = await fetchActiveTeams();
     const deletedTeams = await fetchInactiveTeams();
     const heirarchyData: HierarchyResponse = await fetchUserHierarchy();
-    const actualData: Employee = mapEmployeeData(heirarchyData);
+   
 
     return (
       <CombinedContainer title="Teams" description="Manage your teams">
         <TabDisplay
           teams={teams}
           deletedTeams={deletedTeams}
-          orgData={actualData}
+          orgData={heirarchyData}
         />
       </CombinedContainer>
     );
   } catch (error) {
-    console.error("Error fetching data:", error);
     return (
       <CombinedContainer title="Teams">
         <NotFound />

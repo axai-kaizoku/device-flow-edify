@@ -249,7 +249,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start gap-y-8">
+        <div className="flex flex-col items-start gap-y-8 max-[1428px]:flex-row max-[1428px]:gap-8 max-[1024px]:flex-col ">
           <div
             onMouseEnter={() => {
               setCardHeight3(526);

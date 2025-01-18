@@ -10,7 +10,7 @@ export const ManageOrders = ({
 
   return (
     <div
-      className={`font-gilroy relative flex w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-4 tracking-[0px] backdrop-blur-[24] `}
+      className={`font-gilroy relative flex w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-[13px] pr-[13px] pt-[13px] tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Orders</div>
@@ -26,7 +26,7 @@ export const ManageOrders = ({
               year: "numeric",
             });
             return (
-              <div className="p-1 mb-2" key={`orders-${index}`}>
+              <div className="p-1 " key={`orders-${index}`}>
                 <div
                   style={{
                     width: "100%",
@@ -34,11 +34,11 @@ export const ManageOrders = ({
                     borderRadius: "6.561px",
                     background: "#F4F4F4",
                     paddingTop: 6,
-                    paddingLeft: 6,
+                    paddingLeft: 7,
                     paddingRight: 6,
                   }}
                 >
-                  <div className="flex justify-between gap-2 ">
+                  <div className="flex justify-between items-center gap-2 ">
                     <div className="flex flex-col">
                       <div
                         style={{
@@ -76,6 +76,8 @@ export const ManageOrders = ({
                         justifyContent: "center",
                         alignItems: "center",
                         cursor: "pointer",
+                        marginRight: 2,
+                        marginBottom: 5
                       }}
                       onClick={() => {
                         router.push(`orders/${response.orderId}`);
@@ -241,15 +243,12 @@ export const ManageOrders = ({
         )}
         <div
           className="flex items-center absolute bottom-3 w-fit justify-center rounded-[49px] px-20 whitespace-nowrap right-3 bg-black py-[9px] "
-          style={{ marginTop: !dashboardData ? 70 : 0 }}
+          style={{ marginTop: !dashboardData ? 70 : 0, cursor: "pointer" }}
+          onClick={() => {
+            router.push("orders");
+          }}
         >
-          <div
-            className="text-center text-sm font-gilroySemiBold leading-[normal] text-white"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              router.push("orders");
-            }}
-          >
+          <div className="text-center text-sm font-gilroySemiBold leading-[normal] text-white">
             Manage Orders
           </div>
         </div>

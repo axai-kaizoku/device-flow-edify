@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
   return (
     <CombinedContainer title="Admin Dashboard">
-      <div className="flex gap-3">
+      <div className="flex justify-center items-center mb-7 gap-3 h-full">
         <div
           style={{ width: "75%" }}
           className="flex justify-between gap-3 flex-wrap "
@@ -77,9 +77,9 @@ export default function AdminDashboard() {
           <div style={{ width: "49%" }}>
             <AssetsCount dashboardData={dashboardData} />
           </div>
-          <div className="flex gap-4 w-[100%]">
+          <div className="flex gap-3 w-[100%]">
             <ManageIssue dashboardData={dashboardData} />
-            <div className="flex flex-col gap-5 ">
+            <div className="flex flex-col gap-3 ">
               <Members dashboardData={dashboardData} />
               <Teams dashboardData={dashboardData} />
             </div>
@@ -91,12 +91,12 @@ export default function AdminDashboard() {
             width: "25%",
             display: "flex",
             flexDirection: "column",
-            gap: 4,
+            gap: 6,
             justifyContent: "space-between",
           }}
         >
           <TrendingDevices dashboardData={dashboardData} />
-          <StoreBannerCard />
+          <img src={'/media/dashboard/banner.png'} style={{width: '100%', height: 170}} />
         </div>
       </div>
 

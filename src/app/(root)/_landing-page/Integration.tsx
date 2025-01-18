@@ -52,7 +52,7 @@ export function Integration({}) {
           />
         </div>
       </div>
-      <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-x-9 gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
+      <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-[65px] gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
         <div
           className="absolute max-lg:w-[100px] w-[192px] h-[81px]"
           style={{
@@ -62,63 +62,39 @@ export function Integration({}) {
           }}
         />
         <img
-          src="/media/landingPage/Zendesk.png"
-          width={80}
-          height={81}
+          src="/media/landingPage/gmail.png"
+          style={{width: 70, height: 80}}
+          className="max-sm:w-8 max-sm:h-8"
+        />
+         <img
+          src="/media/landingPage/slack.png"
+          style={{width: 50, height: 50, marginTop: 9}}
           className="max-sm:w-8 max-sm:h-8"
         />
         <img
-          src="/media/landingPage/Zapier.png"
-          width={80}
-          height={81}
+          src="/media/landingPage/zoho.png"
+          style={{width: 124, height: 85}}
           className="max-sm:w-8 max-sm:h-8"
         />
         <img
-          src="/media/landingPage/Stripe.png"
-          width={80}
-          height={81}
+          src="/media/landingPage/keka.png"
+           style={{width: 75, height: 80}}
           className="max-sm:w-8 max-sm:h-8"
         />
-        <img
-          src="/media/landingPage/Notion.png"
-          width={80}
-          height={81}
+         <img
+          src="/media/landingPage/sheet.png"
+          style={{width: 53, height: 59, marginTop: 20}}
           className="max-sm:w-8 max-sm:h-8"
         />
-        <img
-          src="/media/landingPage/Intercom.png"
-          width={80}
-          height={81}
+         <img
+          src="/media/landingPage/asana.png"
+          style={{width: 60, height: 53, marginTop: 19}}
           className="max-sm:w-8 max-sm:h-8"
         />
-        <img
-          src="/media/landingPage/Slack.png"
-          width={80}
-          height={81}
-          className="max-sm:w-8 max-sm:h-8"
-        />
-        <img
-          src="/media/landingPage/Mailchimp.png"
-          width={80}
-          height={81}
-          className="max-sm:w-8 max-sm:h-8"
-        />
-        <img
-          src="/media/landingPage/Google_drive.png"
-          width={80}
-          height={81}
-          className="max-sm:w-8 max-sm:h-8"
-        />
-        <img
-          src="/media/landingPage/Figma.png"
-          width={80}
-          height={81}
-          className="max-sm:w-8 max-sm:h-8"
-        />
-        <img
-          src="/media/landingPage/Dropbox.png"
-          width={80}
-          height={81}
+         
+         <img
+          src="/media/landingPage/razor.png"
+          style={{width: 239, height: 68, marginTop: 16}}
           className="max-sm:w-8 max-sm:h-8"
         />
         <div

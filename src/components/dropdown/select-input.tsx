@@ -48,6 +48,26 @@ export const SelectInput = ({
   useEffect(() => {
     setQuery(value); // Sync input with parent value on updates
   }, [value]);
+  
+  function positionDropdown() {
+    const dropdownButton: any = document.getElementById('dropdown-button')
+    const dropdownList: any = document.getElementById('dropdown-list')
+    const bodyEl = document.querySelector('body')
+    const dropdownHeight = dropdownList.clientHeight
+    const windowHeight = window.innerHeight
+    const dropdownTop = dropdownButton.getBoundingClientRect().top
+  
+    if (windowHeight - dropdownTop < dropdownHeight) {
+      dropdownList.style.bottom = '100%'
+      dropdownList.style.top = 'auto'
+    } else {
+      dropdownList.style.bottom = 'auto'
+      dropdownList.style.top = '100%'
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', positionDropdown)
+  }, [])
 
   // Debounce query updates
   useEffect(() => {
@@ -151,7 +171,7 @@ export const SelectInput = ({
         <div className="">
           <Input
             id={label}
-            className={cn("pr-10 cursor-pointer", className)} // Add padding-right to avoid overlapping the icon
+            className={cn("pr-10 cursor-pointer dropdownButton", className)} // Add padding-right to avoid overlapping the icon
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -174,7 +194,7 @@ export const SelectInput = ({
         </div>
         {isDropdownOpen ? (
           options.length ? (
-            <div className="absolute rounded-xl z-30 w-full mt-2 bg-white border border-primary shadow-lg max-h-52 overflow-y-auto">
+            <div className="absolute dropdown-list rounded-xl z-30 w-full mt-2 bg-white border border-primary shadow-lg max-h-52 overflow-y-auto">
               {options?.map((option, index) => (
                 <div
                   key={option?._id}

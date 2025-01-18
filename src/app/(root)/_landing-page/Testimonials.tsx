@@ -17,7 +17,7 @@ export function Testimonials({}) {
         <div className="testimonial-column">
           <div className="testimonials max-sm:gap-7" id="testimonial-column1">
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 w-h flex  flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -27,21 +27,23 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Shiv Bidani
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500">Cofounder, Streak</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  "I had a great experience buying a refurbished Dell laptop
+                  from Edify; their customer service was exceptionally helpful
+                  and the product quality was excellent. Highly recommended for
+                  their personal touch and efficient service!"
                 </p>
               </div>
             </div>
 
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -51,21 +53,24 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Ashish Ranga
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500">
+                    Cofounder, BM Law (bmlc.in)
+                  </div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  "Edify provided us with high-quality refurbished laptops at
+                  great prices. Excellent service, reliable products, and a
+                  smooth experience. Highly recommended!"
                 </p>
               </div>
             </div>
 
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -75,15 +80,16 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Nitin Gupta
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500"> Cofounder , handpicked</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  "Edify delivered top-notch refurbished laptops with great
+                  performance and affordability. Smooth process and excellent
+                  service. Highly recommended!"
                 </p>
               </div>
             </div>
@@ -93,7 +99,7 @@ export function Testimonials({}) {
         <div className="testimonial-column">
           <div className="testimonials" id="testimonial-column2">
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -103,21 +109,24 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Sandeep
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500">Cofounder, SKS Advisors</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  Edify exceeded our expectations with their high-quality
+                  refurbished laptops. The team ensured a hassle-free
+                  experience, delivering excellent products tailored to our
+                  needs. Their focus on sustainability and customer satisfaction
+                  makes them a standout choice for IT solutions."
                 </p>
               </div>
             </div>
 
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -127,21 +136,24 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Ashish Ranga
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500">
+                    Cofounder, BM Law (bmlc.in)
+                  </div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  "Edify provided us with high-quality refurbished laptops at
+                  great prices. Excellent service, reliable products, and a
+                  smooth experience. Highly recommended!"
                 </p>
               </div>
             </div>
 
             <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+              className={`font-gilroy border-gray-200 w-h flex  flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
@@ -151,94 +163,24 @@ export function Testimonials({}) {
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
+                    Shiv Bidani
                   </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
+                  <div className="text-gray-500">Cofounder, Streak</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
+                  "I had a great experience buying a refurbished Dell laptop
+                  from Edify; their customer service was exceptionally helpful
+                  and the product quality was excellent. Highly recommended for
+                  their personal touch and efficient service!"
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="testimonial-column">
-          <div className="testimonials" id="testimonial-column3">
-            <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
-            >
-              <div className="flex items-center justify-center gap-x-3">
-                <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
-                  loading="lazy"
-                />
-                <div className="flex-grow">
-                  <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
-                  </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
-                </p>
-              </div>
-            </div>
-            <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
-            >
-              <div className="flex items-center justify-center gap-x-3">
-                <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
-                  loading="lazy"
-                />
-                <div className="flex-grow">
-                  <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
-                  </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
-                </p>
-              </div>
-            </div>
-            <div
-              className={`font-gilroy border-gray-200 flex w-full flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
-            >
-              <div className="flex items-center justify-center gap-x-3">
-                <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
-                  loading="lazy"
-                />
-                <div className="flex-grow">
-                  <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Robert Fox
-                  </div>
-                  <div className="text-gray-500">Product Manager, Circle</div>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <p>
-                  "Polio transformed our customer relationships. Our sales have
-                  never been better!"
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </div>
     </div>
   );

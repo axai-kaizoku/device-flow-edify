@@ -496,7 +496,7 @@ export const Employee = ({ setSteps }: any) => {
                         onSelect={(data: any) => {
                           setFormData((prev) => ({
                             ...prev,
-                            reportM: { name: data.email, value: data._id },
+                            reportM: { name: data.first_name, value: data._id },
                           }));
                         }}
                         label="Reporting Manager"

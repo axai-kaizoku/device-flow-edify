@@ -103,10 +103,10 @@ export const Footer: React.FC<FooterProps> = ({
                     About
                   </div>
                   <a
-                    href="mailto:support@deviceflow.ai"
+                    href="mailto:contact@edify.club"
                     className="hover:underline cursor-pointer"
                   >
-                    support@deviceflow.ai
+                    contact@edify.club
                   </a>
                 </div>
                 <div className="flex flex-col items-start gap-y-1.5">
@@ -169,14 +169,31 @@ export const Footer: React.FC<FooterProps> = ({
               <div>© 2025 Edify. All rights reserved.</div>
               <div className="flex items-center justify-center gap-x-8">
                 <div>
-                  <span className="cursor-pointer hover:underline">
+                  <a
+                    target="_blank"
+                    href="https://edify.club/terms-of-services"
+                    className="cursor-pointer hover:underline"
+                  >
                     Terms & Conditions
-                  </span>{" "}
+                  </a>{" "}
                   ∙{" "}
-                  <span className="cursor-pointer hover:underline">
+                  <a
+                    target="_blank"
+                    href="https://edify.club/privacy-policy"
+                    className="cursor-pointer hover:underline"
+                  >
                     Privacy Policy
-                  </span>
+                  </a>
+                  ∙{" "}
+                  <a
+                    target="_blank"
+                    href="https://warranty.edify.club/"
+                    className="cursor-pointer hover:underline"
+                  >
+                    Service and Warranty
+                  </a>
                 </div>
+
                 <div className="flex items-center justify-center gap-x-3">
                   {/* <IconFilledTwitter className="h-4 w-4 flex-shrink-0" />
                   <IconOutlineDribbble className="h-4 w-4 flex-shrink-0" />
@@ -301,7 +318,9 @@ export const Footer: React.FC<FooterProps> = ({
               <a href="mailto:contact@edify.club hover:underline">
                 contact@edify.club
               </a>
-              <a href="tel:+91 9513245671" className="hover:underline">Ph: +91 9513245671</a>
+              <a href="tel:+91 9513245671" className="hover:underline">
+                Ph: +91 9513245671
+              </a>
             </div>
           </div>
         </div>

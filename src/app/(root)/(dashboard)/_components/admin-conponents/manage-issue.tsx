@@ -9,7 +9,7 @@ export function ManageIssue({
   const router = useRouter();
   return (
     <div
-      className={`font-gilroy flex relative w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-5 pr-[19px] pt-2 tracking-[0px] backdrop-blur-[24] `}
+      className={`font-gilroy flex relative w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-[13px] pr-[13px] pt-[13px] tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Issues</div>
@@ -24,7 +24,7 @@ export function ManageIssue({
               year: "numeric",
             });
             return (
-              <div className="p-1 mb-2" key={`issue-${index}`}>
+              <div className="p-1 " key={`issue-${index}`}>
                 <div
                   style={{
                     width: "100%",
@@ -32,11 +32,11 @@ export function ManageIssue({
                     borderRadius: "6.561px",
                     background: "#F4F4F4",
                     paddingTop: 6,
-                    paddingLeft: 6,
+                    paddingLeft: 7,
                     paddingRight: 6,
                   }}
                 >
-                  <div className="flex justify-between gap-2 ">
+                  <div className="flex justify-between items-center gap-2 ">
                     <div className="flex flex-col">
                       <div
                         style={{
@@ -85,6 +85,8 @@ export function ManageIssue({
                         justifyContent: "center",
                         alignItems: "center",
                         cursor: "pointer",
+                        marginRight: 2,
+                        marginBottom: 5
                       }}
                       onClick={() => {
                         router.push(`issues/${response._id}`);
@@ -109,7 +111,7 @@ export function ManageIssue({
             );
           })
         ) : (
-          <div className="flex flex-col justify-center items-center gap-1 mb-4">
+          <div className="flex flex-col justify-center items-center gap-1">
             <img
               src={"/media/dashboard/no-issue.png"}
               style={{ width: "100%", height: 183 }}
@@ -129,14 +131,14 @@ export function ManageIssue({
           </div>
         )}
       </div>
-      <div className="flex absolute bottom-3 px-20 items-center justify-center rounded-[49px] bg-black p-[9px]">
-        <div
-          onClick={() => {
-            router.push("issues");
-          }}
-          className="text-center text-sm font-gilroySemiBold leading-[normal] text-white"
-          style={{ cursor: "pointer" }}
-        >
+      <div
+        onClick={() => {
+          router.push("issues");
+        }}
+        className="flex absolute bottom-3 px-20 items-center justify-center rounded-[49px] bg-black p-[9px]"
+        style={{ cursor: "pointer" }}
+      >
+        <div className="text-center text-sm font-gilroySemiBold leading-[normal] text-white">
           Manage Issues
         </div>
       </div>

@@ -21,8 +21,8 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
           />
         </Slide>
         <div className="flex gap-4 mt-4 pb-11">
-          <img src={"/media/landingPage/Content-2.png"} width={"49%"} />
-          <img src={"/media/landingPage/Content-3.png"} width={"49%"} />
+          <img src={"/media/landingPage/Content-2.png"} width={"55%"}  style={{height: 600}}/>
+          <img src={"/media/landingPage/Content-3.png"} width={"45%"}  style={{height: 600}} />
         </div>
         <Slide direction="down" fraction={1} triggerOnce>
           <div id="how-to-deviceflow">
