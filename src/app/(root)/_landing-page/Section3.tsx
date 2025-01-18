@@ -23,7 +23,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-6 min-[1430px]:flex-nowrap">
-        <div className="flex flex-col items-start gap-y-8">
+        <div className="flex flex-col items-center gap-y-8">
           <div
             onMouseEnter={() => {
               setCardHeight1(526);
@@ -41,7 +41,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   : 147,
               overflow: "hidden",
             }}
-            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
+            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px] max-sm:w-[90%]`}
           >
             <div
               className={
@@ -98,7 +98,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             onMouseLeave={() => {
               setCardHeight4(334);
             }}
-            className="flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]"
+            className="flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px] max-sm:w-[90%]"
           >
             <div
               className={
@@ -138,7 +138,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start gap-y-8">
+        <div className="flex flex-col items-center gap-y-8">
           <div
             onMouseEnter={() => {
               setCardHeight2(526);
@@ -156,7 +156,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   : 147,
               overflow: "hidden",
             }}
-            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
+            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px] max-sm:w-[90%]`}
           >
             <div
               className={
@@ -249,7 +249,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start gap-y-8 max-[1428px]:flex-row max-[1428px]:gap-8 max-[1024px]:flex-col ">
+        <div className="flex flex-col items-center gap-y-8 max-[1428px]:flex-row max-[1428px]:gap-8 max-[1024px]:flex-col ">
           <div
             onMouseEnter={() => {
               setCardHeight3(526);
@@ -267,7 +267,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   : 147,
               overflow: "hidden",
             }}
-            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]`}
+            className={`flex flex-col items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px] max-sm:w-[90%]`}
           >
             <div
               className={
@@ -321,7 +321,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             onMouseLeave={() => {
               setCardHeight6(334);
             }}
-            className="flex flex-col max-sm:hidden items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px]"
+            className="flex flex-col max-sm:hidden items-center justify-center rounded-3xl border border-solid border-zinc-700 bg-zinc-800 p-[3px] max-sm:w-[90%]"
           >
             <div
               className={
