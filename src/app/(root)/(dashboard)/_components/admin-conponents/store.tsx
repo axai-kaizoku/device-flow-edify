@@ -15,15 +15,14 @@ export const DashboardStore = () => {
             <div>
               <div className="text-[21px] leading-6">
                 <span>
-                  <p>Highest Quality</p>
+                  <p>Top-Quality  </p>
                   <p>Refurbished & New</p>
                   <p>Devices</p>
                 </span>
               </div>
               <div className="flex h-[17px] flex-shrink-0 items-end pr-[121px] text-[9px] leading-[11px] text-[darkgray]">
                 <span>
-                  <p>{"Lorem ipsum dolor sit amet, consectetur "}</p>
-                  <p>adipiscing elit, sed do eiusmod.</p>
+                  <p>Affordable, reliable, and ready for work..</p>
                 </span>
               </div>
             </div>
