@@ -187,7 +187,7 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer">
+          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer" onClick={toggleModal}>
             Submit Feedback
           </div>
         </div>

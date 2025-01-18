@@ -165,6 +165,19 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       user.reporting_manager = formData.reportM.value;
     }
 
+    if (formData.managementType && formData.managementType.length !== 0) {
+      let role = 1;
+      if (formData.managementType === "CEO") {
+        role = 4;
+      } else if (formData.managementType === "Upper Management") {
+        role = 3;
+      } else if (formData.managementType === "Employee") {
+        role = 1;
+      }
+      // @ts-ignore
+      user.role = role;
+    }
+
     try {
       if (isEditForm) {
         setLoading(true);
@@ -177,7 +190,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
         } catch (error: any) {
           showAlert({
             title: "Can't update user",
-            description: error.message,
+            description: "Phone no. or email is used already !",
             isFailure: true,
             key: "update-user-failure",
           });
@@ -187,7 +200,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       } else {
         setLoading(true);
         try {
-          await createUser(user);
+          const res = await createUser(user);
+          // console.log(res)
           setLoading(false);
           showAlert({
             title: "WOHOOO!! 🎉",
@@ -616,6 +630,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 <div className="z-50 flex-1">
                   <SelectDropdown
                     options={[
+                      { label: "CEO", value: "CEO" },
                       { label: "Upper Management", value: "Upper Management" },
                       { label: "Employee", value: "Employee" },
                     ]}

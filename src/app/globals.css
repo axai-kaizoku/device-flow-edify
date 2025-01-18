@@ -21,45 +21,6 @@ html {
   display: none; /* Chrome, Safari, Edge */
 }
 
-.label {
-  position: absolute;
-  left: 24px;
-  top: 1.8rem;
-  transform: translateY(-50%);
-  padding: 0;
-  pointer-events: none;
-  transition: all 0.2s ease-in-out;
-  color: light-dark(#424242, #fff); /* Adjust color for dark mode */
-  opacity: 0.5;
-}
-
-.input:focus + .label,
-.input:not(:placeholder-shown) + .label {
-  top: 25px;
-  background-color: light-dark(
-    #fff,
-    #121212
-  ); /* Adjust background for dark mode */
-  left: 16px;
-  padding: 0 8px;
-  transform: translateY(-150%);
-  font-size: 18px;
-  opacity: 1;
-  color: light-dark(#424242, #fff); /* Adjust color for dark mode */
-}
-
-.input {
-  padding-top: 10px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  height: 56px;
-  width: 100%;
-  border-radius: 4px;
-  outline: none;
-  transition: border-color 150ms ease-in-out;
-}
-
 /* Handle dark mode for other elements */
 @layer base {
   :root {
@@ -167,7 +128,7 @@ html {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  margin-left: 87px;
+  /* margin-left: 87px; */
   z-index: 50;
   opacity: 0;
   cursor: pointer;

@@ -122,7 +122,7 @@ function EmailVerification({ setSteps }: any) {
         try {
           setLoading(true);
           const res = await verifySignupOTP(formData.email, otpPass);
-          console.log(res);
+          // console.log(res);
           setLoading(false);
           setSteps(2);
         } catch (error) {

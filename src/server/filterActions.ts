@@ -107,6 +107,7 @@ export const usersFields = [
   "first_name",
   "last_name",
   "gender",
+  "date_of_birth",
   "marital_status",
   "physically_handicapped",
   "about",
