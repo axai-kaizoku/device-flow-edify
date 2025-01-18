@@ -261,7 +261,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
-          console.log("Uploaded image response:", res);
 
           setFormData((prev) => ({
             ...prev,
@@ -321,7 +320,6 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
-          console.log("Uploaded image response:", res);
           setOfferLetter(res?.fileUrl);
         } catch (error) {
           openToast("error", "Image upload failed");

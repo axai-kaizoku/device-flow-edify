@@ -33,7 +33,7 @@ const StoreDeviceCard = memo(
         >
           {product.image ? (
             <img
-              src={product?.image?.[0]?.url ? `http://13.201.202.7/${product?.image?.[0]?.url}` : "/media/mac.jpeg"}
+              src={product?.image?.[0]?.url || "/media/mac.jpeg"}
               alt="product"
               className="w-60 min-w-64 h-36 object-contain"
             />

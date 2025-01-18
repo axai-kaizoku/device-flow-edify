@@ -434,3 +434,34 @@ h2.title::after {
 .input-transition {
   animation: widthTransition 0.2s linear normal; /* Set to linear for smooth transition */
 }
+.hero-card-issue {
+  position: absolute;
+  top: 425px;
+  left: 108px;
+  transform: rotate(-9.781deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-asset {
+  position: absolute;
+  top: 311px;
+  left: 70px;
+  transform: rotate(-9.781deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-order {
+  position: absolute;
+  top: 300px;
+  right: 78px;
+  transform: rotate(6.615deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-banner {
+  position: absolute;
+  top: 600px;
+  right: 100px;
+  transform: rotate(6.615deg);
+  transition: transform 1s ease, top 1s ease, left 0.5s ease;
+}

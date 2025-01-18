@@ -1,4 +1,5 @@
 import React from "react";
+import { Companies } from "./Companies";
 export function Testimonials({}) {
   return (
     <div>
@@ -13,6 +14,7 @@ export function Testimonials({}) {
           Trusted by 50+ Startups and Founders
         </div>
       </div>
+      <Companies />
       <div className="testimonials-container max-sm:w-[85%]">
         <div className="testimonial-column">
           <div className="testimonials max-sm:gap-7" id="testimonial-column1">
@@ -21,8 +23,8 @@ export function Testimonials({}) {
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/streak.png"
                   loading="lazy"
                 />
                 <div className="flex-grow">
@@ -47,8 +49,8 @@ export function Testimonials({}) {
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/law.png"
                   loading="lazy"
                 />
                 <div className="flex-grow">
@@ -74,8 +76,8 @@ export function Testimonials({}) {
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/sorted.png"
                   loading="lazy"
                 />
                 <div className="flex-grow">
@@ -98,40 +100,15 @@ export function Testimonials({}) {
 
         <div className="testimonial-column">
           <div className="testimonials" id="testimonial-column2">
-            <div
-              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
-            >
-              <div className="flex items-center justify-center gap-x-3">
-                <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
-                  loading="lazy"
-                />
-                <div className="flex-grow">
-                  <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
-                    Sandeep
-                  </div>
-                  <div className="text-gray-500">Cofounder, SKS Advisors</div>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <p>
-                  Edify exceeded our expectations with their high-quality
-                  refurbished laptops. The team ensured a hassle-free
-                  experience, delivering excellent products tailored to our
-                  needs. Their focus on sustainability and customer satisfaction
-                  makes them a standout choice for IT solutions."
-                </p>
-              </div>
-            </div>
+          
 
             <div
               className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/law.png"
                   loading="lazy"
                 />
                 <div className="flex-grow">
@@ -151,14 +128,39 @@ export function Testimonials({}) {
                 </p>
               </div>
             </div>
-
+            <div
+              className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
+            >
+              <div className="flex items-center justify-center gap-x-3">
+                <img
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/sks.png"
+                  loading="lazy"
+                />
+                <div className="flex-grow">
+                  <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
+                    Sandeep
+                  </div>
+                  <div className="text-gray-500">Cofounder, SKS Advisors</div>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <p>
+                  Edify exceeded our expectations with their high-quality
+                  refurbished laptops. The team ensured a hassle-free
+                  experience, delivering excellent products tailored to our
+                  needs. Their focus on sustainability and customer satisfaction
+                  makes them a standout choice for IT solutions."
+                </p>
+              </div>
+            </div>
             <div
               className={`font-gilroy border-gray-200 w-h flex  flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
               <div className="flex items-center justify-center gap-x-3">
                 <img
-                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover object-center"
-                  src="/media/landingPage/testmonial-image.png"
+                  className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  src="/media/testmonials/streak.png"
                   loading="lazy"
                 />
                 <div className="flex-grow">

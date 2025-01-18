@@ -30,7 +30,6 @@ function SettingPasswords({ setSteps }: any) {
   };
   const onSubmit = async () => {
     if (validateFields()) {
-      // console.log("Form Data:", formData);
       setSteps(5); // Proceed to next step
     } else {
       console.error("Validation failed. Fix errors before proceeding.");

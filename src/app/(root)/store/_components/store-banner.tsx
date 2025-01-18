@@ -15,14 +15,13 @@ function StoreBanner() {
         {/* Text Content */}
         <div className="flex flex-col gap-6 pt-16">
           <h1 className="text-6xl font-gilroySemiBold flex gap-1 flex-col justify-center items-center">
-            <span>High-quality Tech</span>
-            <span>Gadgets & Accessories</span>{" "}
+            <span>Top-Quality Refurbished</span>
+            <span>& New Devices</span>{" "}
           </h1>
           <h1 className="text-2xl gap-2 font-gilroyMedium text-[#7F7F7F] flex flex-col justify-center items-center">
             <span>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
+            Affordable, reliable, and ready for work.
             </span>
-            <span>industry. Lorem Ipsum has been the industry's standard.</span>{" "}
           </h1>
         </div>
         {/*Icons content*/}

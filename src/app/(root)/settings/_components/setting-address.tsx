@@ -8,7 +8,6 @@ import EditAddress from "./edit-address";
 import CreateAddress from "./create-address";
 
 function SettingAddress({ data }: { data: Org }) {
-  console.log(data);
   return (
     <div className="flex flex-col">
       <div className="flex justify-between mb-4">

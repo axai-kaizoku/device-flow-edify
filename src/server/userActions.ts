@@ -113,7 +113,7 @@ export type HierarchyUser = {
   first_name?: string;
   last_name?: string;
   email?: string;
-
+  profile?: string;
   designation?: string;
   reporteeCount?: number;
   reportingTo?: string | null;
@@ -160,7 +160,6 @@ export const fetchManager = cache(async function (token: string): Promise<any> {
       },
     });
 
-    console.log(res);
 
     return res.data.users;
   } catch (e) {
@@ -200,7 +199,6 @@ export async function searchManager(
       },
     });
 
-    console.log(res);
 
     return res?.data?.users;
   } catch (e) {

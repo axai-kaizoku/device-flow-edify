@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import DemoForm from "./_components/DemoForm";
+import { Companies } from "./Companies";
 
 export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
@@ -64,30 +65,64 @@ export const LandingPage = () => {
     const handleScroll = () => {
       const boxPosition = boxRef.current.getBoundingClientRect().top;
       if (boxPosition < 300) {
+        const screenWidth = window.innerWidth;
         cardsRef.current.forEach((card: any, index: number) => {
           if (index === 0) {
-            const xOffset = 203; // X-offset for each card
-            const yOffset = 625; //
-            card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            if(screenWidth > 1155){
+              const xOffset = 203; // X-offset for each card
+              const yOffset = 625; //
+              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }else{
+              const xOffset = 103; // X-offset for each card
+              const yOffset = 580; //
+              card.style.width = "179px";
+              card.style.height = "252px";
+              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }
+           
           }
           if (index === 1) {
+            if(screenWidth > 1155){
             const xOffset = 235; // X-offset for each card
             const yOffset = 588; //
             card.style.width = "320px";
             card.style.height = "139px";
             card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }else{
+              const xOffset = 140; // X-offset for each card
+              const yOffset = 562; //
+              card.style.width = "280px";
+              card.style.height = "120px";
+              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }
           }
           if (index === 2) {
+            if(screenWidth > 1155){
             const xOffset = -402; // X-offset for each card
             const yOffset = 750; //
             card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }else{
+              const xOffset = -285; // X-offset for each card
+              const yOffset = 705; //
+              card.style.width = "179px";
+              card.style.height = "252px";
+              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }
           }
           if (index === 3) {
+            if(screenWidth > 1155){
             const xOffset = -153; // X-offset for each card
             const yOffset = 625; //
             card.style.width = "200px";
             card.style.height = "115px";
             card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }else{
+              const xOffset = -53; // X-offset for each card
+              const yOffset = 550; //
+              card.style.width = "200px";
+              card.style.height = "115px";
+              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            }
           }
         });
       }
@@ -214,8 +249,8 @@ export const LandingPage = () => {
             {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
           </div>
         </div>
-        <div className="fade-in fltopex w-[826px] items-center justify-center text-center text-[60px] font-bold leading-[88px] tracking-[-3.6px] text-neutral-800">
-          <p>Streamline IT Asset Management with DeviceFlow</p>
+        <div className="fade-in fltopex w-[auto] text-[60px] max-[1155px]:text-[46px] items-center justify-center text-center  font-bold leading-[88px] tracking-[-3.6px] text-neutral-800">
+          <p>Streamline IT Asset Management <br/> with DeviceFlow</p>
         </div>
         <div className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-[darkgray]">
           <p>
@@ -255,59 +290,31 @@ export const LandingPage = () => {
         <div>
           <img
             ref={(el: any) => (cardsRef.current[0] = el)}
-            className="fade-in-left"
+            className="fade-in-left hero-card-issue"
             src={"/media/landingPage/hero-issue.png"}
             width={199}
             height={292}
-            style={{
-              position: "absolute",
-              top: 425,
-              left: 108,
-              transform: "rotate(-9.781deg)",
-              transition: "transform 1s ease, top 1s ease, left 1s ease",
-            }}
           />
           <img
             ref={(el: any) => (cardsRef.current[1] = el)}
-            className="fade-in-left"
+            className="fade-in-left hero-card-asset"
             src={"/media/landingPage/hero-asset.png"}
             width={199}
             height={292}
-            style={{
-              position: "absolute",
-              top: 311,
-              left: 70,
-              transform: "rotate(-9.781deg)",
-              transition: "transform 1s ease, top 1s ease, left 1s ease",
-            }}
           />
           <img
             ref={(el: any) => (cardsRef.current[2] = el)}
-            className="fade-in-right"
+            className="fade-in-right hero-card-order"
             src={"/media/landingPage/hero-order.png"}
             width={199}
             height={292}
-            style={{
-              position: "absolute",
-              top: 300,
-              right: 78,
-              transform: "rotate(6.615deg)",
-              transition: "transform 1s ease, top 1s ease, left 1s ease",
-            }}
           />
           <img
             ref={(el: any) => (cardsRef.current[3] = el)}
-            className="fade-in-right"
+            className="fade-in-right hero-card-banner"
             src={"/media/landingPage/hero-banner.png"}
             width={199}
             height={292}
-            style={{
-              position: "absolute",
-              top: 600,
-              right: 100,
-              transform: "rotate(6.615deg)",
-              transition: "transform 1s ease, top 1s ease, left 0.5s ease",
-            }}
           />
         </div>
         <div ref={boxRef}>
@@ -450,7 +457,7 @@ export const LandingPage = () => {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="rounded-2xl bg-white p-5 shadow-lg text-center">
-          <DemoForm setIsOpen={setIsOpen} />
+          <DemoForm setIsOpen={() => {setIsOpen(false)}} />
         </DialogContent>
       </Dialog>
     </div>

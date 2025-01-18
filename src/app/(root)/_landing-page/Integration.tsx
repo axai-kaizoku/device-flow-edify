@@ -67,7 +67,7 @@ export function Integration({}) {
           className="max-sm:w-8 max-sm:h-8"
         />
          <img
-          src="/media/landingPage/slack.png"
+          src="/media/landingPage/Slack.png"
           style={{width: 50, height: 50, marginTop: 9}}
           className="max-sm:w-8 max-sm:h-8"
         />

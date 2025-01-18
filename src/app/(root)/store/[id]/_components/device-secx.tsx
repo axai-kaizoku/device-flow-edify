@@ -144,6 +144,7 @@ export const DeviceSecx = ({
     },
   ];
 
+
   const deviceConfig =
     data?.config && data?.config?.length === 6 ? data?.config : config;
 
@@ -164,14 +165,13 @@ export const DeviceSecx = ({
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const deviceImages =
-    data?.image && data?.image.length === 5
+    data?.image && data?.image.length === 4
       ? data?.image
       : [
           { url: "/media/store-item/dell1.png" },
           { url: "/media/store-item/dell2.png" },
           { url: "/media/store-item/dell3.png" },
           { url: "/media/store-item/dell4.png" },
-          { url: "/media/store-item/dell5.png" },
         ];
 
   const handlePrev = () => {
@@ -233,7 +233,7 @@ export const DeviceSecx = ({
               <div
                 key={src}
                 className={cn(
-                  "md:size-16 lg:size-[4.5rem]  flex justify-center items-center xl:size-20 rounded ring-2 ",
+                  "md:size-16 lg:size-[4.5rem]  flex justify-center items-center  xl:size-20 xl:w-[6rem] rounded ring-2 ",
                   currentIdx === i ? "ring-black" : "ring-[#D1D1D8]"
                 )}
                 onClick={() => setCurrentIdx(i)}
@@ -285,7 +285,7 @@ export const DeviceSecx = ({
             </div>
           </div>
 
-          <div className="flex gap-x-3 pb-2 pt-4">
+          {/* <div className="flex gap-x-3 pb-2 pt-4">
             <div className="font-gilroyMedium">Select color:</div>
             <div className="flex items-center gap-x-1.5">
               {["#000000"].map((v) => (
@@ -299,7 +299,7 @@ export const DeviceSecx = ({
                 />
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="flex gap-x-3 py-2 items-center">
             {data?.storage?.map((v) => (
