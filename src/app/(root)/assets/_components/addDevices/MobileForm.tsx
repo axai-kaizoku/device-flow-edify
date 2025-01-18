@@ -266,9 +266,8 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
             <SelectDropdown
               options={[
                 { label: "Good", value: "Good" },
-                { label: "Best", value: "Best" },
-                { label: "Old", value: "Old" },
-                { label: "New", value: "New" },
+                { label: "Excellent", value: "Excellent" },
+                { label: "Fair", value: "Fair" },
               ]}
               onSelect={(data) => {
                 const updatedFormData = {

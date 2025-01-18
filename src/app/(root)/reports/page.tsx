@@ -27,7 +27,7 @@ const Reports = () => {
         tag: "people",
       },
       {
-        title: "Deleted Members",
+        title: "Inactive Members",
         description:
           "Download the detailed report containing information on all the deleted members.",
         tag: "people",
@@ -45,17 +45,17 @@ const Reports = () => {
         tag: "assets",
       },
       {
-        title: "Deleted Assets",
+        title: "Inactive Assets",
         description:
           "Download the full report providing insights into assets that have been decommissioned.",
         tag: "assets",
       },
-      {
-        title: "Unassigned Assets",
-        description:
-          "Download the latest report highlighting all the assets not assigned to any Employee in the organisation.",
-        tag: "assets",
-      },
+      // {
+      //   title: "Unassigned Assets",
+      //   description:
+      //     "Download the latest report highlighting all the assets not assigned to any Employee in the organisation.",
+      //   tag: "assets",
+      // },
     ];
 
     return (

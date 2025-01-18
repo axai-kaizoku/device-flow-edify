@@ -68,9 +68,7 @@ export const renderCustomNodeElement = ({
             <p className="text-[9.701px] font-gilroyMedium text-[#7C7C7C]">
               {nodeDatum.attributes?.designation}
             </p>
-            <p className="text-[9.701px] font-gilroyMedium text-[#7C7C7C]">
-              ED001
-            </p>
+           
             {isCEO ? (
               <div className="flex absolute -bottom-3 justify-center items-center rounded-[18.473px] border-[1.385px] border-[#F3F3F3] bg-white py-[5.389px] px-[5.9px]">
                 <div className="text-[10px] text-black font-gilroyMedium">

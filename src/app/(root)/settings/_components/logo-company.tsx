@@ -23,10 +23,12 @@ export const LogoCompanyModal = ({
   id,
   logo,
   children,
+  uploadSuccess
 }: {
   id: string;
   logo: string | null;
   children: React.ReactNode;
+  uploadSuccess?:() => void
 }) => {
   const [image, setImage] = useState<string | null>(logo); // Track image file
   const [open, setOpen] = useState(false); // Modal open state
@@ -61,6 +63,7 @@ export const LogoCompanyModal = ({
     try {
       await updateOrg({ id: id, logo: image }); // Send the image in the form data
       setOpen(false); // Close the modal after successful upload
+      uploadSuccess?.()
       router.refresh();
     } catch (error) {
       openToast("error", "Image upload failed");
@@ -71,7 +74,7 @@ export const LogoCompanyModal = ({
   const handleRemoveLogo = async () => {
     try {
       await updateOrg({ id: id, logo: "" }); // Send empty string to remove logo
-      setOpen(false); // Close the modal after removal
+
       router.refresh();
       setImage("");
     } catch (error) {

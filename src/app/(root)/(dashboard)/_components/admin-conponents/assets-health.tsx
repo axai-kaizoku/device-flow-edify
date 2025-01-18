@@ -9,7 +9,7 @@ export function AssetsHealth({
 }) {
   return (
     <div className={`flex w-full flex-col `}>
-      <div className="font-gilroy flex flex-grow flex-col gap-y-[18px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white px-5 pb-[19px] pt-3 tracking-[0px] backdrop-blur-[24]">
+      <div className="font-gilroy flex flex-grow flex-col gap-y-[18px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white px-5 pb-[19px] pt-[13px] tracking-[0px] backdrop-blur-[24]">
         <div className="flex items-center">
           <div className="text-sm font-gilroySemiBold leading-[23px]">
             Asset Health Status

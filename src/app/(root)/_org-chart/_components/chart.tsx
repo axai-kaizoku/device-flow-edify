@@ -1,14 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
-import {
-  findOriginalNode,
-  mapEmployeeToRawNodeDatum,
-  nodeStyles,
-} from "./utils";
 import { renderCustomNodeElement } from "./RenderNode";
 import { Employee } from "./data";
-import { ChevronUp, Download, Link } from "lucide-react";
+import {
+  findOriginalNode,
+  mapEmployeeToRawNodeDatum
+} from "./utils";
 
 export default function OrgChart({ orgData }: { orgData: Employee }) {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
@@ -48,7 +46,6 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
 
   return (
     <>
-      {JSON.stringify(data)}
       <div className="flex flex-col w-full overflow-hidden h-full gap-3">
         {/* <div className="flex justify-between items-center">
           <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">

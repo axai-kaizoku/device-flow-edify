@@ -12,20 +12,30 @@ import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
 import { Search, Plus, Download, Loader, Send } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
-import { Employee } from "../_org-chart/_components/data";
+import { Employee, mapEmployeeData } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import InvitePeople from "../people/[id]/_components/invite-people";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { HierarchyResponse } from "@/server/userActions";
 
 interface TabDisplayProps {
   teams: TeamsResponse;
   deletedTeams: TeamsResponse;
-  orgData: Employee;
+  orgData: any;
 }
 
 function TabDisplay({ orgData }: TabDisplayProps) {
+  const userData = useSelector((state: RootState) => state.auth.userData);
+  const actualData: Employee = {
+    children: mapEmployeeData(orgData),
+    designation: userData?.orgId.name || '',
+    name: userData?.orgId.name || '',
+    profile: "/media/sidebar/profile.svg",
+  };
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active_teams",
   });
@@ -131,7 +141,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
           </>
         );
       case "org":
-        return <Org data={orgData} />;
+        return <Org data={actualData} />;
       default:
         return null;
     }

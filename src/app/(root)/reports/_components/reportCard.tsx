@@ -11,15 +11,19 @@ import {
   deletedUsers,
   filterDevice,
   filterUsers,
+  inActiveAssets,
+  inActiveUsers,
 } from "@/server/filterActions";
 import { useDispatch, useSelector } from "react-redux";
 import { closeAlert, openAlert } from "@/app/store/alertSlice";
 import { GlobalAlert } from "@/components/global-alert";
 import { DeviceResponse } from "@/server/deviceActions";
 import { UserResponse } from "@/server/userActions";
+import { useToast } from "@/hooks/useToast";
 
 const ReportCard = ({ report, index }: { report: report; index: number }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { openToast } = useToast();
   const dispatch = useDispatch();
 
   // () => setIsOpen(true)
@@ -52,11 +56,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `People_Report.csv`);
       } else {
         // alert("No data available for the selected status.");
-        dispatch(openAlert());
+        openToast("error", "No data Available");
       }
     } catch (error) {
-      console.error("Error downloading the report:", error);
-      dispatch(openAlert());
+      openToast("error", "Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }
@@ -64,7 +67,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
   const handleDownloadDeletedUserReport = async () => {
     try {
-      const deletedUserResponse: UserResponse = await deletedUsers();
+      const deletedUserResponse: UserResponse = await inActiveUsers();
       if (
         deletedUserResponse &&
         deletedUserResponse?.users &&
@@ -74,20 +77,17 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
         downloadCSV(csv, `deleted_users_report.csv`);
       } else {
-        // alert("No data available");
-        dispatch(openAlert());
+        openToast("error", "No data Available");
       }
     } catch (error) {
-      console.error("Error downloading the report:", error);
-      dispatch(openAlert());
-
+      openToast("error", "Error downloading the report");
       // alert("Failed to download the report. Please try again.");
     }
   };
 
   const handleDownloadDeletedAssetsReport = async () => {
     try {
-      const deletedDeviceResponse: DeviceResponse = await deletedDevices();
+      const deletedDeviceResponse: DeviceResponse = await inActiveAssets();
       if (
         deletedDeviceResponse &&
         deletedDeviceResponse?.devices &&
@@ -98,11 +98,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `deleted_assets_report.csv`);
       } else {
         // alert("No data available");
-        dispatch(openAlert());
+        openToast("error", "No data Available");
       }
     } catch (error) {
-      console.error("Error downloading the report:", error);
-      dispatch(openAlert());
+      openToast("error", "Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }
@@ -118,11 +117,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `Device_Report_unassigned.csv`);
       } else {
         // alert("No data available for the selected status.");
-        dispatch(openAlert());
+        openToast("error", "No data Available");
       }
     } catch (error) {
-      console.error("Error downloading the report:", error);
-      dispatch(openAlert());
+      openToast("error", "Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }
@@ -133,9 +131,9 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
       handleDownloadTotalDeviceReport();
     } else if (report?.title === "Total Members") {
       handleDownloadTotalUsersReport();
-    } else if (report?.title === "Deleted Members") {
+    } else if (report?.title === "Inactive Members") {
       handleDownloadDeletedUserReport();
-    } else if (report?.title === "Deleted Assets") {
+    } else if (report?.title === "Inactive Assets") {
       handleDownloadDeletedAssetsReport();
     } else if (report?.title === "Unassigned Assets") {
       handleDownloadUnassignedReport();
