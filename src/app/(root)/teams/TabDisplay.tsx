@@ -34,7 +34,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
     children: mapEmployeeData(orgData),
     designation: userData?.orgId.name || '',
     name: userData?.orgId.name || '',
-    profile: "/media/sidebar/profile.svg",
+    image: "/media/sidebar/profile.svg",
   };
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active_teams",
