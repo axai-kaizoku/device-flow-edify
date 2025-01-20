@@ -1,19 +1,19 @@
 import { Icons } from "@/components/icons";
 import React, { useEffect, useRef, useState } from "react";
 
-interface DropdownProps {
+type FilterDropdownProps = {
   label: string;
   options: { value: string | number; label: string }[];
   selectedValues: string[];
   onChange: (selected: string[]) => void;
-}
+};
 
-const CustomDropdown: React.FC<DropdownProps> = ({
+export const FilterDropdown = ({
   label,
   options,
   selectedValues,
   onChange,
-}) => {
+}: FilterDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -66,7 +66,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <div className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md z-10">
-          <div className="p-3 ">
+          <div className="p-2 ">
             {options.map((option) => (
               <label
                 key={option.value}
@@ -86,18 +86,16 @@ const CustomDropdown: React.FC<DropdownProps> = ({
               </label>
             ))}
           </div>
-          <div className="flex justify-center p-3 items-center w-full">
+          {/* <div className="flex justify-center px-3 pb-3 items-center w-full">
             <button
               onClick={() => setIsOpen(false)}
               className="px-4 py-2 bg-black w-full text-white text-sm font-gilroyMedium rounded-md  focus:outline-none "
             >
               Apply
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>
   );
 };
-
-export default CustomDropdown;

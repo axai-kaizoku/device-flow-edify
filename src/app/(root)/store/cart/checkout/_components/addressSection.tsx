@@ -98,7 +98,7 @@ const AddressSection = ({ allAddresses }: AddressSectionProps) => {
             <span className="text-2xl font-gilroyMedium">
               No addresses found :(
             </span>
-            <CreateAddress>
+            <CreateAddress totalAddresses={allAddresses}>
               <div className="flex items-center  w-fit h-fit rounded-md group cursor-pointer">
                 <span className="font-gilroyMedium underline underline-offset-2">
                   Create new address
@@ -112,7 +112,7 @@ const AddressSection = ({ allAddresses }: AddressSectionProps) => {
       {allAddresses?.length > 0 ? (
         <>
           <div className="h-[1px] bg-[#D1D1D8] w-full mt-8 mb-5"></div>
-          <CreateAddress>
+          <CreateAddress totalAddresses={allAddresses}>
             <div className="flex items-center hover:bg-[#F7F7F7] w-fit h-fit rounded-md py-2 px-4 gap-2 ml-1 group cursor-pointer">
               <Plus className="size-5" />
               <span className="font-gilroyMedium">Add New Address</span>

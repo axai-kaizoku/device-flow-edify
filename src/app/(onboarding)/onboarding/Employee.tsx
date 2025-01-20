@@ -231,11 +231,21 @@ export const Employee = ({ setSteps }: any) => {
               <div className="flex w-[75%] gap-4">
                 <BulkUpload
                   bulkApi={bulkUploadUsers}
-                  closeBtn={() => () => {}}
+                  closeBtn={() => {}}
                   requiredKeys={bulkUploadKeys}
                   setSuccess={(success: boolean) => {
                     setSuccess(success);
                     setLoading(false);
+                  }}
+                  sampleData={{
+                    first_name: "XXXX YYYY",
+                    designation: "Engineer",
+                    email: "demo@exampledemo.com",
+                    phone: "1234567890",
+                    employment_type: "Full time",
+                    date_of_birth: "09/12/1992",
+                    gender: "Male",
+                    onboarding_date: "28/01/2020",
                   }}
                 />
               </div>

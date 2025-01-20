@@ -90,10 +90,25 @@ const DeviceType = ({
         <>
           <div className="flex">
             <BulkUpload
+              sampleData={{
+                model: "XXXX",
+                device_name: "YYYYY",
+                serial_no: "XXXX1234",
+                device_purchase_date: "09/12/2023",
+                ram: "16GB",
+                processor: "Intel Core i5",
+                storage: "256GB",
+                warranty_expiary_date: "21/11/2024",
+                os: "Windows",
+                price: 12000,
+                device_type: "Laptop",
+                brand: "HP",
+                device_condition: "Fair",
+              }}
               closeBtn={closeBtn}
               requiredKeys={[
+                "model",
                 "device_name",
-                "asset_serial_no",
                 "serial_no",
                 "device_purchase_date",
                 "ram",
@@ -102,13 +117,9 @@ const DeviceType = ({
                 "warranty_expiary_date",
                 "os",
                 "price",
-                "ownership",
-                "purchase_order",
                 "device_type",
                 "brand",
-                "model",
-                "condition",
-                "serial_no",
+                "device_condition",
               ]}
               bulkApi={bulkUploadDevices}
             />

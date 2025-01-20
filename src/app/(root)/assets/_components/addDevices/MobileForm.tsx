@@ -1,7 +1,4 @@
-// basicDetailsDevice.tsx
-
-import { Icon } from "@/components/wind/Icons";
-import { getAllDevices } from "@/server/deviceActions";
+"use client";
 import React, { useState } from "react";
 import { DevicePage1 as DevicePage1, FormErrors } from "./_components/types";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
@@ -23,11 +20,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
 }) => {
   const [selectedOS, setSelectedOS] = useState<string | null>(data?.os || "");
   const [formData, setFormData] = useState<DevicePage1>(data);
-  const [deviceOptions, setDeviceOptions] = useState<string[]>([]); // Store device options
-  const [isDeviceDropdownActive, setDeviceDropdownActive] =
-    useState<boolean>(false); // Trigger fetch on focus
 
-  // Handle text inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -49,25 +42,6 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
     setSelectedOS(os);
     setFormData(updatedFormData);
     setData(updatedFormData); // Ensure you setData after updating formData
-  };
-
-  const fetchDevices = async () => {
-    try {
-      const devices = await getAllDevices(); // API call
-      // Map to just device names if the API response returns full device objects
-      const deviceNames = devices.map((device) => device?.device_name);
-      setDeviceOptions(deviceNames);
-    } catch (error) {
-      console.error("Failed to fetch devices:", error);
-    }
-  };
-
-  // Trigger fetch when device_name is focused
-  const handleDeviceNameFocus = () => {
-    if (!isDeviceDropdownActive) {
-      setDeviceDropdownActive(true); // Prevent multiple calls
-      fetchDevices();
-    }
   };
 
   const operatingSystems = [
@@ -137,11 +111,12 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
         <div className="">
           <SelectDropdown
             options={[
-              { label: "Lenovo", value: "Lenovo" },
+              { label: "Realme", value: "Realme" },
               { label: "Apple", value: "Apple" },
-              { label: "Dell", value: "Dell" },
-              { label: "HP", value: "HP" },
-              { label: "ASUS", value: "ASUS" },
+              { label: "Samsung", value: "Samsung" },
+              { label: "OnePlus", value: "OnePlus" },
+              { label: "Xiaomi", value: "Xiaomi" },
+              { label: "Others", value: "Others" },
             ]}
             onSelect={(data) => {
               const updatedFormData = {
@@ -162,13 +137,13 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
         <div>
           <FormField
             label="Device Name"
-            id="device_name"
-            name="device_name"
+            id="custom_model"
+            name="custom_model"
             type="text"
-            value={formData?.device_name}
+            value={formData?.custom_model!}
             onChange={handleChange}
-            error={errors?.device_name}
-            placeholder="eg: Lenovo, etc"
+            error={errors?.custom_model}
+            placeholder="eg: Realme 16s, etc"
             className="outline-[#5F5F5F] border"
           />
         </div>
@@ -179,7 +154,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
             id="model"
             name="model"
             type="text"
-            value={formData?.model}
+            value={formData?.model!}
             onChange={handleChange}
             error={errors?.model}
             placeholder="eg: X14D, etc"
@@ -190,11 +165,17 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
           <div className="z-20 flex-1">
             <SelectDropdown
               options={[
-                { label: "Intel Core i3", value: "Intel Core i3" },
-                { label: "Intel Core i5", value: "Intel Core i5" },
-                { label: "Intel Core i7", value: "Intel Core i7" },
-                { label: "AMD Ryzen 5", value: "AMD Ryzen 5" },
-                { label: "Apple M1", value: "Apple M1" },
+                { label: "Apple A14 Bionic", value: "Apple A14 Bionic" },
+                {
+                  label: "Qualcomm Snapdragon ",
+                  value: "Qualcomm Snapdragon ",
+                },
+                {
+                  label: "MediaTek ",
+                  value: "MediaTek ",
+                },
+                { label: "Exynos ", value: "Exynos " },
+                { label: "Others", value: "Others" },
               ]}
               onSelect={(data) => {
                 const updatedFormData = {
@@ -207,7 +188,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               label="Processor"
               error={errors?.processor}
               value={`${formData?.processor ?? ""}`}
-              placeholder="eg: Intel Core i3, etc"
+              placeholder="eg: MediaTek, etc"
               className="rounded-xl  text-black border border-[#5F5F5F]"
             />
           </div>
@@ -215,10 +196,10 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
             <SelectDropdown
               options={[
                 { label: "4GB", value: "4GB" },
+                { label: "6GB", value: "6GB" },
                 { label: "8GB", value: "8GB" },
+                { label: "12GB", value: "12GB" },
                 { label: "16GB", value: "16GB" },
-                { label: "32GB", value: "32GB" },
-                { label: "64GB", value: "64GB" },
               ]}
               onSelect={(data) => {
                 const updatedFormData = {
@@ -241,16 +222,16 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
           <div className="flex-1">
             <SelectDropdown
               options={[
+                { label: "64GB", value: "64GB" },
                 { label: "128GB", value: "128GB" },
                 { label: "256GB", value: "256GB" },
                 { label: "512GB", value: "512GB" },
                 { label: "1TB", value: "1TB" },
-                { label: "2TB", value: "2TB" },
               ]}
               onSelect={(data) => {
                 const updatedFormData = {
                   ...formData,
-                  storage: data?.value,
+                  storage: [data?.value],
                 };
                 setFormData(updatedFormData);
                 setData(updatedFormData);
@@ -272,7 +253,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               onSelect={(data) => {
                 const updatedFormData = {
                   ...formData,
-                  condition: data?.value,
+                  device_condition: data?.value,
                 };
                 setFormData(updatedFormData);
                 setData(updatedFormData);

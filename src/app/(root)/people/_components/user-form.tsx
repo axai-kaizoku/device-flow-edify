@@ -377,6 +377,16 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 bulkApi={bulkUploadUsers}
                 closeBtn={() => closeBtn(false)}
                 requiredKeys={bulkUploadKeys}
+                sampleData={{
+                  first_name: "XXXX YYYY",
+                  designation: "Engineer",
+                  email: "demo@exampledemo.com",
+                  phone: "1234567890",
+                  employment_type: "Full time",
+                  date_of_birth: "09/12/1992",
+                  gender: "Male",
+                  onboarding_date: "28/01/2020",
+                }}
               />
             </div>
           ) : null
@@ -410,13 +420,11 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 value={formData?.firstN ?? ""}
                 onChange={(e) => {
                   const inputValue = e.target.value;
-                  const nameRegex = /^[A-Za-z\s]*$/; // Allows only alphabets and spaces
+                  const nameRegex = /^[A-Za-z\s]*$/;
 
-                  // Validate input for only alphabets and spaces
                   if (!inputValue || nameRegex.test(inputValue)) {
                     setFormData((prev) => ({ ...prev, firstN: inputValue }));
 
-                    // Optional validation for length or other constraints
                     setErrors((prevErrors) => ({
                       ...prevErrors,
                       firstN: inputValue

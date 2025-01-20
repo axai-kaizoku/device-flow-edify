@@ -4,10 +4,10 @@ import { Slide } from "react-awesome-reveal";
 export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <>
-      <div className=" pl-36 pr-36 max-lg:hidden">
+      <div className="pl-36 pr-36 max-lg:hidden">
         <Slide direction="down" fraction={1} triggerOnce>
           <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
-            <p className="relative self-stretch font-bold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
+            <p className="relative self-stretch font-gilroyBold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
               Everything You Need to <br />
               Manage Your IT Infrastructure
             </p>
@@ -15,19 +15,27 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         </Slide>
         <Slide direction="left" className="pt-16 " fraction={0.5} triggerOnce>
           <img
-            src={"/media/landingPage/Content.png"}
+            src={"/media/landingPage/Content.webp"}
             height={504}
             width={"100%"}
           />
         </Slide>
         <div className="flex gap-4 mt-4 pb-11">
-          <img src={"/media/landingPage/Content-2.png"} width={"55%"}  style={{height: 600}}/>
-          <img src={"/media/landingPage/Content-3.png"} width={"45%"}  style={{height: 600}} />
+          <img
+            src={"/media/landingPage/Content-2.webp"}
+            width={"55%"}
+            style={{ height: 600 }}
+          />
+          <img
+            src={"/media/landingPage/Content-3.webp"}
+            width={"45%"}
+            style={{ height: 600 }}
+          />
         </div>
         <Slide direction="down" fraction={1} triggerOnce>
           <div id="how-to-deviceflow">
             <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
-              <p className="relative self-stretch font-bold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
+              <p className="relative self-stretch font-gilroyBold text-base-600 text-[52px] text-center tracking-[-1.20px] leading-[Truepx]">
                 Three Steps to Hassle-Free <br />
                 IT Management
               </p>
@@ -36,11 +44,11 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         </Slide>
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-1.png"} />
+            <img src={"/media/landingPage/hassel-free-1.webp"} />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
-              Add your devices and users to DeviceFlow’s intuitive platform.
+              Add your devices and users to DeviceFlow's intuitive platform.
             </div>
           </Slide>
         </div>
@@ -52,12 +60,12 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-2.png"} />
+            <img src={"/media/landingPage/hassel-free-2.webp"} />
           </Slide>
         </div>
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-4.png"} />
+            <img src={"/media/landingPage/hassel-free-4.webp"} />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
@@ -77,10 +85,10 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
               <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
                 Everything You Need to Manage Your IT Infrastructure
               </div>
-              <img src={"/media/landingPage/Content-3.png"} width={"100%"} />
-              <img src={"/media/landingPage/Content-2.png"} width={"100%"} />
+              <img src={"/media/landingPage/Content-3.webp"} width={"100%"} />
+              <img src={"/media/landingPage/Content-2.webp"} width={"100%"} />
               <img
-                src={"/media/landingPage/Content.png"}
+                src={"/media/landingPage/Content.webp"}
                 height={504}
                 width={"100%"}
               />
@@ -102,10 +110,10 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                   </p>
                   <div className="text-black font-gilroySemiBold text-lg w-fit mx-auto mt-2">
                     Add your devices and users to <br />
-                    DeviceFlow’s intuitive platform.
+                    DeviceFlow's intuitive platform.
                   </div>
                   <img
-                    src={"/media/landingPage/hassel-free-1.png"}
+                    src={"/media/landingPage/hassel-free-1.webp"}
                     className="mt-6"
                     width={"100%"}
                   />
@@ -120,7 +128,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     and inventory with a few clicks.
                   </div>
                   <img
-                    src={"/media/landingPage/hassel-free-2.png"}
+                    src={"/media/landingPage/hassel-free-2.webp"}
                     className="mt-6"
                     width={"100%"}
                   />
@@ -135,7 +143,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     workflows seamlessly.
                   </div>
                   <img
-                    src={"/media/landingPage/hassel-free-4.png"}
+                    src={"/media/landingPage/hassel-free-4.webp"}
                     className="mt-6"
                     width={"100%"}
                   />
