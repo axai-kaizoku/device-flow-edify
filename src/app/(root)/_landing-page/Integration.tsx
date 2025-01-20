@@ -17,7 +17,7 @@ export function Integration({}) {
             Soon DeviceFlow will work seamlessly with your favorite apps.
           </div>
           <div className="max-sm:text-sm">
-            Use over 500 tools and apps with just one click.
+            Use over 50+ and apps with just one click.
           </div>
         </div>
       </div>
@@ -53,14 +53,6 @@ export function Integration({}) {
         </div>
       </div>
       <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-[65px] gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
-        <div
-          className="absolute max-lg:w-[100px] w-[192px] h-[81px]"
-          style={{
-            background:
-              "linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
-            left: 0,
-          }}
-        />
         <img
           src="/media/landingPage/gmail.png"
           style={{width: 70, height: 80}}
@@ -96,14 +88,6 @@ export function Integration({}) {
           src="/media/landingPage/razor.png"
           style={{width: 239, height: 68, marginTop: 16}}
           className="max-sm:w-8 max-sm:h-8"
-        />
-        <div
-          className="absolute max-sm:w-[100px] w-[192px] h-[81px] "
-          style={{
-            background:
-              "linear-gradient(269deg, #FFF 0%, rgba(255, 255, 255, 0.00) 124.74%)",
-            right: 0,
-          }}
         />
       </div>
     </div>

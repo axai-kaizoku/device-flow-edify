@@ -100,8 +100,6 @@ export function Testimonials({}) {
 
         <div className="testimonial-column">
           <div className="testimonials" id="testimonial-column2">
-          
-
             <div
               className={`font-gilroy border-gray-200 flex w-h flex-col gap-y-6 rounded-3xl max-sm:rounded-[20px] border border-solid  bg-white p-8 max-sm:p-7 font-gilroyMedium leading-6 tracking-[0px]`}
             >
@@ -146,11 +144,14 @@ export function Testimonials({}) {
               </div>
               <div className="flex items-start">
                 <p>
-                  Edify exceeded our expectations with their high-quality
-                  refurbished laptops. The team ensured a hassle-free
-                  experience, delivering excellent products tailored to our
-                  needs. Their focus on sustainability and customer satisfaction
-                  makes them a standout choice for IT solutions."
+                  "Edify has truly set a benchmark with their top-quality
+                  refurbished laptops. The seamless experience they offer—right
+                  from product selection to delivery—reflects their dedication
+                  to excellence. Their commitment to sustainability,
+                  performance, and customer satisfaction makes them an ideal
+                  technology partner for any corporate setup. We are thoroughly
+                  impressed with their solutions and look forward to continued
+                  collaboration"
                 </p>
               </div>
             </div>
@@ -181,8 +182,6 @@ export function Testimonials({}) {
             </div>
           </div>
         </div>
-
-       
       </div>
     </div>
   );
