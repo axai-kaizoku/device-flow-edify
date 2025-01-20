@@ -25,17 +25,17 @@ export const createPayload = (formData: FormData) => {
 
     case "mobile":
       payload = {
-        os: formData?.laptopPage1?.os,
-        custom_model: formData?.laptopPage1?.model,
-        processor: formData?.laptopPage1?.processor,
-        ram: formData?.laptopPage1?.ram,
-        storage: formData?.laptopPage1?.storage,
-        device_name: formData?.laptopPage1?.device_name,
-        brand: formData?.laptopPage1?.brand,
-        device_condition: formData?.laptopPage1?.device_condition,
-        serial_no: formData?.laptopPage2?.serialNumber,
-        device_purchase_date: formData?.laptopPage2?.purchaseDate,
-        warranty_expiary_date: formData?.laptopPage2?.warrantyExpiryDate,
+        os: formData?.mobilePage1?.os,
+        custom_model: formData?.mobilePage1?.model,
+        processor: formData?.mobilePage1?.processor,
+        ram: formData?.mobilePage1?.ram,
+        storage: formData?.mobilePage1?.storage,
+        device_name: formData?.mobilePage1?.device_name,
+        brand: formData?.mobilePage1?.brand,
+        device_condition: formData?.mobilePage1?.device_condition,
+        serial_no: formData?.mobilePage2?.serialNumber,
+        device_purchase_date: formData?.mobilePage2?.purchaseDate,
+        warranty_expiary_date: formData?.mobilePage2?.warrantyExpiryDate,
         // invoice: formData.laptopPage2.invoiceFile
       };
       break;
@@ -53,22 +53,22 @@ export const createPayload = (formData: FormData) => {
 
     case "monitor":
       payload = {
-        custom_model: formData?.keyboardDetails?.model,
-        brand: formData?.keyboardDetails?.brand,
-        serial_no: formData?.keyboardDetails?.serialNumber,
-        device_purchase_date: formData?.keyboardDetails?.purchaseDate,
-        warranty_expiary_date: formData?.keyboardDetails?.warrantyExpiryDate,
+        custom_model: formData?.monitorDetails?.model,
+        brand: formData?.monitorDetails?.brand,
+        serial_no: formData?.monitorDetails?.serialNumber,
+        device_purchase_date: formData?.monitorDetails?.purchaseDate,
+        warranty_expiary_date: formData?.monitorDetails?.warrantyExpiryDate,
         // invoice: formData.monitorDetails.invoiceFile
       };
       break;
 
     case "mouse":
       payload = {
-        custom_model: formData?.keyboardDetails?.model,
-        brand: formData?.keyboardDetails?.brand,
-        serial_no: formData?.keyboardDetails?.serialNumber,
-        device_purchase_date: formData?.keyboardDetails?.purchaseDate,
-        warranty_expiary_date: formData?.keyboardDetails?.warrantyExpiryDate,
+        custom_model: formData?.mouseDetails?.model,
+        brand: formData?.mouseDetails?.brand,
+        serial_no: formData?.mouseDetails?.serialNumber,
+        device_purchase_date: formData?.mouseDetails?.purchaseDate,
+        warranty_expiary_date: formData?.mouseDetails?.warrantyExpiryDate,
         // invoice: formData.mouseDetails.invoiceFile
       };
       break;

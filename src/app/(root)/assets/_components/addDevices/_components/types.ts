@@ -9,6 +9,7 @@ export interface DevicePage1 {
   ram?: string;
   storage?: string[];
   device_name?: string;
+  custom_model?: string;
   brand?: string;
   device_condition?: string;
 }

@@ -11,6 +11,7 @@ type dataProps = {
   closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
+  sampleData: Record<string, string | number>;
   setSuccess: any;
 };
 function BulkUpload({
@@ -18,6 +19,7 @@ function BulkUpload({
   requiredKeys,
   bulkApi,
   setSuccess,
+  sampleData,
 }: dataProps) {
   const [loading, setLoading] = useState(false);
   const [csvError, setCsvError] = useState<string | null>(null);
@@ -117,10 +119,10 @@ function BulkUpload({
           /index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/
         );
         if (duplicateField && duplicateField[3]) {
-          // openToast(
-          //   "error",
-          //   `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
-          // );
+          openToast(
+            "error",
+            `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
+          );
 
           setCsvError(
             `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`

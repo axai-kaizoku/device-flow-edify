@@ -18,15 +18,12 @@ function SettingsHeader({ data }: { data: Org }) {
           <div className="relative flex-1 flex rounded-[25px] px-5 py-5 border border-gray-300 bg-white gap-2 h-[185px] w-full items-center">
             <div>
               {/* Display the logo */}
-              {data.logo ? (
-                <img
-                  src={data.logo}
+              <img
+                  src={data.logo || "media/defaultIcon.webp"}
                   alt="Company Logo"
                   className="size-28 rounded-full border object-cover"
                 />
-              ) : (
-                <Icons.company_logo className="w-28 h-28 text-gray-400" />
-              )}
+              
             </div>
             {/* Modal trigger for editing the logo */}
             <LogoCompanyModal id={data?._id!} logo={data?.logo}>

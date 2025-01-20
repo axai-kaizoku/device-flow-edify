@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { PrimarySelector } from "./primary-selector";
 import { FormField } from "./form-field";
-import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 
 export const AddressForm = ({
@@ -39,7 +38,6 @@ export const AddressForm = ({
   totalAddresses: Address[] | undefined;
 }) => {
   const router = useRouter();
-  const { showAlert } = useAlert();
   const { openToast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -75,10 +73,9 @@ export const AddressForm = ({
     return errors;
   };
 
-  const hasPrimaryAddress = (addresses: { isPrimary: boolean }[]): boolean => {
+  const hasPrimaryAddress = (addresses: Address[]): boolean => {
     return addresses?.some((address) => address?.isPrimary) || false;
   };
-
 
   const handleSubmit = async () => {
     const newErrors = validateAddressForm(formData);
@@ -99,18 +96,12 @@ export const AddressForm = ({
       }
     } else {
       try {
-        if(hasPrimaryAddress(totalAddresses)){
-          await createAddress({...formData, isPrimary:false});
-        }
-        else{
+        if (hasPrimaryAddress(totalAddresses!)) {
+          await createAddress({ ...formData, isPrimary: false });
+        } else {
           await createAddress(formData);
         }
-        showAlert({
-          isFailure: false,
-          description: "New address added !!",
-          title: "WOHOOO!! 🎉",
-          key: "create-address",
-        });
+        openToast("success", "Added new address !!");
         router.refresh();
         closeBtn(false);
       } catch (error) {
@@ -138,16 +129,14 @@ export const AddressForm = ({
         className="flex relative flex-col gap-8"
       >
         {/* Primary/Secondary Selection */}
-        {!totalAddresses?.some(
-            (address: { isPrimary: boolean }) => address?.isPrimary
-          ) && (
-            <PrimarySelector
-              isPrimary={formData?.isPrimary}
-              onSelect={(value) =>
-                setFormData((prev) => ({ ...prev, isPrimary: value }))
-              }
-            />
-          )}
+        {!totalAddresses?.some((address) => address?.isPrimary) && (
+          <PrimarySelector
+            isPrimary={formData?.isPrimary}
+            onSelect={(value) =>
+              setFormData((prev) => ({ ...prev, isPrimary: value }))
+            }
+          />
+        )}
 
         {/* Form Fields */}
         <FormField

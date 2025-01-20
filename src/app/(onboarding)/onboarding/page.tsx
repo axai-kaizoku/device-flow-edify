@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  const [steps, setSteps] = useState(4);
+  const [steps, setSteps] = useState(1);
 
   useEffect(() => {
     if (sessionStorage.getItem("employee-count") === "2") {

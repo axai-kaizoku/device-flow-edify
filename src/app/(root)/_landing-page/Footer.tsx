@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import { Instagram } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -81,11 +82,11 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex items-end justify-center px-24 pt-[34px]">
           <div className="flex flex-grow items-center pr-44">
             <div className="flex flex-grow flex-wrap items-start justify-between gap-x-20 gap-y-2.5 text-gray-400 min-[1430px]:flex-nowrap">
-              <div className="font-inter flex items-center justify-center gap-x-36 text-sm leading-5 tracking-[-0.1px]">
+              <div className="font-gilroyMedium flex items-center justify-center gap-x-36 text-sm leading-5 tracking-[-0.1px]">
                 <div>Company</div>
                 <div>Support</div>
               </div>
-              <div className="font-gilroy font-gilroyMedium leading-6 tracking-[-0.2px]">
+              <div className="font-gilroyMedium leading-6 tracking-[-0.2px]">
                 Ready to grow?
               </div>
             </div>
@@ -95,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="font-inter flex flex-grow flex-wrap items-start justify-between gap-x-20 gap-y-12 pt-2 min-[1430px]:flex-nowrap">
             <div className="flex h-[91px] flex-col items-center">
               <div className="-mt-2 flex h-24 flex-shrink-0 flex-col items-start gap-y-1.5 text-sm leading-5 tracking-[-0.1px] text-gray-600">
-                <div className="flex flex-wrap items-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap">
+                <div className="flex flex-wrap items-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap font-gilroyRegular">
                   <div
                     className="cursor-pointer hover:underline"
                     onClick={scrollToFeatures}
@@ -104,12 +105,12 @@ export const Footer: React.FC<FooterProps> = ({
                   </div>
                   <a
                     href="mailto:contact@edify.club"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline cursor-pointer -ml-1"
                   >
                     contact@edify.club
                   </a>
                 </div>
-                <div className="flex flex-col items-start gap-y-1.5">
+                <div className="flex flex-col items-start gap-y-1.5 font-gilroyRegular">
                   <div className="flex flex-wrap items-center justify-center gap-x-44 gap-y-2.5 min-[1430px]:flex-nowrap">
                     <Link
                       href={"/login"}
@@ -147,7 +148,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-y-3 text-center leading-6 tracking-[-0.2px] text-white">
+            <div className="flex flex-col items-center gap-y-3 text-center leading-6 tracking-[-0.2px] text-white font-gilroyMedium">
               <div
                 className="w-72 rounded-xl bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black"
                 onClick={scrollToCTA}
@@ -165,9 +166,9 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
         <div className="flex flex-col justify-end pt-14">
           <div className="flex items-start justify-center border-t border-solid border-zinc-700 px-24 pb-[60px] pt-[19px]">
-            <div className="font-gilroy flex flex-grow flex-wrap items-center justify-between gap-x-3 gap-y-[9px] text-xs leading-[18px] tracking-[0px] text-gray-400 min-[1430px]:flex-nowrap">
+            <div className="flex flex-grow flex-wrap items-center justify-between gap-x-3 gap-y-[9px] text-xs leading-[18px] tracking-[0px] text-gray-400 min-[1430px]:flex-nowrap font-gilroyRegular">
               <div>© 2025 Edify. All rights reserved.</div>
-              <div className="flex items-center justify-center gap-x-8">
+              <div className="flex items-center justify-center gap-x-8 ">
                 <div>
                   <a
                     target="_blank"
@@ -267,7 +268,7 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
           <div className="flex flex-col items-center gap-y-3 text-center leading-6 tracking-[-0.2px] text-white">
             <div
-              className="w-72 rounded-xl bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black"
+              className="w-72 rounded-xl font-gilroyMedium bg-zinc-700 px-4 py-3 cursor-pointer hover:bg-black"
               onClick={scrollToCTA}
             >
               Register for Beta
@@ -276,7 +277,9 @@ export const Footer: React.FC<FooterProps> = ({
               href={"/login"}
               className="flex w-72 items-center justify-center rounded-xl border border-solid border-zinc-700 px-[15px] py-[11px] cursor-pointer"
             >
-              <div className="flex-grow text-center">Login</div>
+              <div className="flex-grow text-center font-gilroyMedium">
+                Login
+              </div>
             </Link>
           </div>
 
@@ -285,7 +288,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="flex flex-col gap-[6px] text-[#555E67]">
               <div
                 className="cursor-pointer hover:underline"
-                onClick={scrollToAbout}
+                onClick={scrollToFeatures}
               >
                 About
               </div>
@@ -299,7 +302,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div
                 className="cursor-pointer hover:underline"
-                onClick={scrollToFeatures}
+                onClick={scrollToAbout}
               >
                 Features
               </div>
@@ -330,11 +333,39 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col text-[#9098A0] text-xs font-gilroyRegular gap-8 w-full mb-8 px-16 text-center">
           <div>© 2024 Edify. All rights reserved.</div>
           <div className="flex gap-8 items-center mx-auto">
-            <div>Terms & Conditions ∙ Privacy Policy</div>
-            <div className="flex gap-3">
-              <Icons.twitter_icon />
-              <Icons.dribble_icon />
-              <Icons.linkedin_icon />
+            <div>
+              <a
+                target="_blank"
+                href="https://edify.club/terms-of-services"
+                className="cursor-pointer hover:underline"
+              >
+                Terms & Conditions
+              </a>{" "}
+              ∙{" "}
+              <a
+                target="_blank"
+                href="https://edify.club/privacy-policy"
+                className="cursor-pointer hover:underline"
+              >
+                Privacy Policy
+              </a>
+            </div>
+            <div className="flex gap-3 items-center">
+              <a
+                href="https://www.linkedin.com/company/edify-club/"
+                target="_blank"
+              >
+                <Icons.linkedin_icon />
+              </a>
+              <a href="https://www.instagram.com/edify_club/" target="_blank">
+                <Instagram className="size-4" />
+              </a>
+              <a
+                href="https://x.com/edify_club?t=xINA1nE4OivzN6U79c2Myw&s=31"
+                target="_blank"
+              >
+                <Icons.twitter_icon />
+              </a>
             </div>
           </div>
         </div>

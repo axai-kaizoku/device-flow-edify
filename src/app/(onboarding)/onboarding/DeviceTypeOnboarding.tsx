@@ -88,6 +88,21 @@ const DeviceTypeOnboarding: React.FC<DeviceTypeProps> = ({
             "serial_no",
           ]}
           bulkApi={bulkUploadDevices}
+          sampleData={{
+            model: "XXXX",
+            device_name: "YYYYY",
+            serial_no: "XXXX1234",
+            device_purchase_date: "09/12/2023",
+            ram: "16GB",
+            processor: "Intel Core i5",
+            storage: "256GB",
+            warranty_expiary_date: "21/11/2024",
+            os: "Windows",
+            price: 12000,
+            device_type: "Laptop",
+            brand: "HP",
+            device_condition: "Fair",
+          }}
         />
       </div>
 
