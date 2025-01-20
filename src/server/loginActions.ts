@@ -58,7 +58,6 @@ export async function requestForDemo({name, email, teamSize, cmpname, phone, typ
 	let payload = {};
 	if(type === 'register'){
 		payload = {email,name, company_name: cmpname, phone};
-		console.log(payload)
 	}
 	else{
 		payload = {email,name, company_name: cmpname, team_size: teamSize, phone};

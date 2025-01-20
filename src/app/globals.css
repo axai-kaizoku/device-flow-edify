@@ -21,45 +21,6 @@ html {
   display: none; /* Chrome, Safari, Edge */
 }
 
-.label {
-  position: absolute;
-  left: 24px;
-  top: 1.8rem;
-  transform: translateY(-50%);
-  padding: 0;
-  pointer-events: none;
-  transition: all 0.2s ease-in-out;
-  color: light-dark(#424242, #fff); /* Adjust color for dark mode */
-  opacity: 0.5;
-}
-
-.input:focus + .label,
-.input:not(:placeholder-shown) + .label {
-  top: 25px;
-  background-color: light-dark(
-    #fff,
-    #121212
-  ); /* Adjust background for dark mode */
-  left: 16px;
-  padding: 0 8px;
-  transform: translateY(-150%);
-  font-size: 18px;
-  opacity: 1;
-  color: light-dark(#424242, #fff); /* Adjust color for dark mode */
-}
-
-.input {
-  padding-top: 10px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  height: 56px;
-  width: 100%;
-  border-radius: 4px;
-  outline: none;
-  transition: border-color 150ms ease-in-out;
-}
-
 /* Handle dark mode for other elements */
 @layer base {
   :root {
@@ -167,7 +128,7 @@ html {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  margin-left: 87px;
+  /* margin-left: 87px; */
   z-index: 50;
   opacity: 0;
   cursor: pointer;
@@ -472,4 +433,141 @@ h2.title::after {
 
 .input-transition {
   animation: widthTransition 0.2s linear normal; /* Set to linear for smooth transition */
+}
+.hero-card-issue {
+  position: absolute;
+  top: 425px;
+  left: 108px;
+  transform: rotate(-9.781deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-asset {
+  position: absolute;
+  top: 311px;
+  left: 70px;
+  transform: rotate(-9.781deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-order {
+  position: absolute;
+  top: 300px;
+  right: 78px;
+  transform: rotate(6.615deg);
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+
+.hero-card-banner {
+  position: absolute;
+  top: 600px;
+  right: 100px;
+  transform: rotate(6.615deg);
+  transition: transform 1s ease, top 1s ease, left 0.5s ease;
+}
+.marquee {
+  display: flex;
+  block-size: var(--marquee-item-height);
+  position: relative;
+  overflow-x: hidden;
+  mask-image: linear-gradient(
+    to right,
+    hsl(0 0% 0% / 0),
+    hsl(0 0% 0% / 1) 20%,
+    hsl(0 0% 0% / 1) 80%,
+    hsl(0 0% 0% / 0)
+  );
+}
+
+.marquee--8 {
+  --marquee-item-width: 200px;
+  --marquee-item-height: 100px;
+  --marquee-duration: 36s;
+  --marquee-items: 7;
+}
+
+.marquee__item {
+  --marquee-item-offset: max(
+    calc(var(--marquee-item-width) * var(--marquee-items)),
+    calc(100% + var(--marquee-item-width))
+  );
+  --marquee-delay: calc(var(--marquee-duration) / var(--marquee-items) * (var(--marquee-items) - var(--marquee-item-index)) * -1);
+  position: absolute;
+  inset-inline-start: var(--marquee-item-offset);
+  transform: translateX(-50%);
+  animation: go linear var(--marquee-duration) var(--marquee-delay, 0s) infinite;
+}
+
+.marquee--8 .marquee__item:nth-of-type(1) {
+  --marquee-item-index: 1;
+}
+
+.marquee--8 .marquee__item:nth-of-type(2) {
+  --marquee-item-index: 2;
+}
+
+.marquee--8 .marquee__item:nth-of-type(3) {
+  --marquee-item-index: 3;
+}
+
+.marquee--8 .marquee__item:nth-of-type(4) {
+  --marquee-item-index: 4;
+}
+
+.marquee--8 .marquee__item:nth-of-type(5) {
+  --marquee-item-index: 5;
+}
+
+.marquee--8 .marquee__item:nth-of-type(6) {
+  --marquee-item-index: 6;
+}
+
+.marquee--8 .marquee__item:nth-of-type(7) {
+  --marquee-item-index: 7;
+}
+
+.marquee--8 .marquee__item:nth-of-type(8) {
+  --marquee-item-index: 8;
+}
+
+.marquee--3 .marquee__item:nth-of-type(1) {
+  --marquee-item-index: 1;
+}
+
+.marquee--3 .marquee__item:nth-of-type(2) {
+  --marquee-item-index: 2;
+}
+
+.marquee--3 .marquee__item:nth-of-type(3) {
+  --marquee-item-index: 3;
+}
+
+.marquee--6 .marquee__item:nth-of-type(1) {
+  --marquee-item-index: 1;
+}
+
+.marquee--6 .marquee__item:nth-of-type(2) {
+  --marquee-item-index: 2;
+}
+
+.marquee--6 .marquee__item:nth-of-type(3) {
+  --marquee-item-index: 3;
+}
+
+.marquee--6 .marquee__item:nth-of-type(4) {
+  --marquee-item-index: 4;
+}
+
+.marquee--6 .marquee__item:nth-of-type(5) {
+  --marquee-item-index: 5;
+}
+
+.marquee--6 .marquee__item:nth-of-type(6) {
+  --marquee-item-index: 6;
+}
+
+@keyframes go {
+  to {  
+    inset-inline-start: calc(var(--marquee-item-width) * -1);
+  }
 }

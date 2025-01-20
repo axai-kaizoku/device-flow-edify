@@ -151,19 +151,19 @@ const DetailSection = ({ order }: { order: any }) => {
                 <div>Amount</div>
                 <div>₹{order[0]?.cartDetails?.totalPrice}</div>
               </div>
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <div>Discount</div>
                 <div>- ₹0</div>
-              </div>
+              </div> */}
 
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <div>Delivery</div>
                 <div>₹0</div>
-              </div>
-              <div className="flex justify-between">
+              </div> */}
+              {/* <div className="flex justify-between">
                 <div>Tax</div>
                 <div>₹0</div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex justify-between items-center 2xl:py-4 py-3 border border-dashed border-t-[1px] border-b-0 border-l-0 border-r-0">
@@ -179,7 +179,7 @@ const DetailSection = ({ order }: { order: any }) => {
       </div>
 
       <div className="flex flex-col gap-[26.08px] flex-[40%]">
-        <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col gap-[11px] 2xl:py-5 2xl:px-6 py-4 px-5">
+        {/* <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col gap-[11px] 2xl:py-5 2xl:px-6 py-4 px-5">
           <div className="text-black font-gilroySemiBold 2xl:text-xl text-lg">
             Customer Info.
           </div>
@@ -216,13 +216,11 @@ const DetailSection = ({ order }: { order: any }) => {
           </div>
           <div className="w-3/4 2xl:text-lg text-base font-gilroyMedium text-[#667085] flex flex-col gap-2">
             <div>
-              {/* 2nd Floor, SRS Arcade, 15/2 Hosa Rd, Kasavanahalli, Bengaluru,
-              Karnataka 560035 */}
               {order[0]?.cartDetails?.addressId?.city}
             </div>
             <div>(+91) 7470873515</div>
           </div>
-        </div>
+        </div> */}
         <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col gap-[14px] 2xl:py-5 2xl:px-6 py-4 px-5">
           <div className="text-black font-gilroySemiBold 2xl:text-xl text-lg">
             Billing Address

@@ -81,7 +81,6 @@ export async function updateOrg({
         logo,
       }
     );
-    console.log(res.data);
     return res?.data;
   } catch (e) {
     throw new Error("Failed to Update org");
@@ -102,7 +101,6 @@ export const getImageUrl = async (data: { file: File }) => {
       }
     );
 
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error uploading the image:", error);

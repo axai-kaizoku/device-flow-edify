@@ -78,6 +78,7 @@ export const authOptions: NextAuthOptions = {
         token.lastName = user.user[0].last_name;
         token.role = user.user[0].role;
         token.employeeCount = user.user[0].employeeCount;
+        token.designation = user.user[0].designation;
         token.orgId = user.user[0].orgId;
         token.teamId = user.user[0].teamId;
         // @ts-ignore
@@ -97,6 +98,7 @@ export const authOptions: NextAuthOptions = {
         lastName: token.lastName,
         role: token.role,
         employeeCount: token.employeeCount,
+        designation: token.designation,
         orgId: token.orgId,
         teamId: token.teamId,
         addressDetails: token.addressDetails,

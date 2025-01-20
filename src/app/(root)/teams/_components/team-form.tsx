@@ -149,7 +149,6 @@ export const TeamForm = ({
       if (isValidSize && isValidType) {
         try {
           const res = await getImageUrl({ file });
-          console.log("Uploaded image response:", res);
           setFormData((prev) => ({
             ...prev,
             image: res.fileUrl, // Ensure `res.url` contains the S3 URL.

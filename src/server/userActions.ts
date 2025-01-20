@@ -101,6 +101,7 @@ export type Reportee = {
   first_name?: string;
   last_name?: string;
   email?: string;
+  gender?: string;
   designation?: string;
   role: number | string;
   reporteeCount?: number;
@@ -112,8 +113,9 @@ export type HierarchyUser = {
   _id?: string;
   first_name?: string;
   last_name?: string;
+  gender?: string;
   email?: string;
-
+  image?: string;
   designation?: string;
   reporteeCount?: number;
   reportingTo?: string | null;
@@ -160,7 +162,6 @@ export const fetchManager = cache(async function (token: string): Promise<any> {
       },
     });
 
-    console.log(res);
 
     return res.data.users;
   } catch (e) {
@@ -200,7 +201,6 @@ export async function searchManager(
       },
     });
 
-    console.log(res);
 
     return res?.data?.users;
   } catch (e) {

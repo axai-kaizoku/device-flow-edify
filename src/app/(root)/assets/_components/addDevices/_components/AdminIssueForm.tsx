@@ -246,7 +246,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                     <FormField
                       label="Designation"
                       id="designation"
-                      value={`${userData?.role ?? "Frontend Developer"}`}
+                      value={`${userData?.designation ?? "Frontend Developer"}`}
                       disabled
                       type="text"
                       placeholder=""

@@ -1,23 +1,21 @@
 "use client";
+import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
+import { UserData } from "@/app/store/authSlice";
+import { StoreBannerCard } from "@/components/store-banner";
+import { User, getUserById } from "@/server/userActions";
 import {
   Building2,
   Cake,
-  ChevronRight,
   Link,
   Mail,
   MapPin,
   NotepadText,
-  Smartphone,
+  Smartphone
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { getUserById, User } from "@/server/userActions";
-import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { notFound, useRouter } from "next/navigation";
-import { UserData } from "@/app/store/authSlice";
-import AssetsSection from "./user-assets";
-import { StoreBannerCard } from "@/components/store-banner";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { useEffect, useState } from "react";
 import ProfileSkeleton from "./profile-main-skeleton";
+import AssetsSection from "./user-assets";
 
 const UserGrid = ({ user: data }: { user: UserData }) => {
   const router = useRouter();

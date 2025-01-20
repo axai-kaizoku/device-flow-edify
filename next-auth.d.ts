@@ -34,6 +34,8 @@ declare module "next-auth/jwt" {
     lastName?: string;
     role?: number;
     employeeCount?: number;
+    designation:string
+    token:string
     orgId?: Organization;
     teamId: Team;
     addressDetails?: AddressDetails;
@@ -51,6 +53,7 @@ declare module "next-auth" {
         lastName?: string;
         role?: number;
         employeeCount?: number;
+        designation:string
         orgId?: Organization;
         teamId: Team;
         addressDetails?: AddressDetails;
@@ -69,6 +72,7 @@ declare module "next-auth" {
       email: string;
       firstName?: string;
       employeeCount?: number;
+      designation:string;
       lastName?: string;
       role?: number;
       orgId?: Organization;

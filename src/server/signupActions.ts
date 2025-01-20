@@ -89,7 +89,6 @@ export const verifySignupOTP = async (email: string, otp: string) => {
         otp: otp,
       }
     );
-    console.log(res);
     return res?.data;
   } catch (e) {
     throw new Error("Failed to verify otp");
@@ -136,7 +135,6 @@ export const signupEmployee = async ({
         designation,
       }
     );
-    console.log(res);
     return res?.data;
   } catch (e) {
     throw new Error("Failed to create user");

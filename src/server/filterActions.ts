@@ -107,6 +107,7 @@ export const usersFields = [
   "first_name",
   "last_name",
   "gender",
+  "date_of_birth",
   "marital_status",
   "physically_handicapped",
   "about",
@@ -333,7 +334,6 @@ export const assignedAssets = cache(async function ({
     const res = await callAPIWithToken<StoreDevice[]>(apiUrl, "POST", payload);
 
     // Check and return response data
-    console.log(res);
     if (res && res?.data) {
       return res?.data;
     } else {

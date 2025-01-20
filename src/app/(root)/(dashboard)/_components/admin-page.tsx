@@ -1,21 +1,19 @@
 "use client";
 import { CombinedContainer } from "@/components/container/container";
+import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
+import { getDashboard } from "@/server/dashboard";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ManageOrders } from "./admin-conponents/Manage-orders";
+import { Teams } from "./admin-conponents/Teams";
 import { AssetsCount } from "./admin-conponents/assets-count";
 import { AssetsHealth } from "./admin-conponents/assets-health";
-import { ManageIssue } from "./admin-conponents/manage-issue";
-import { TrendingDevices } from "./admin-conponents/trending-devices";
-import { getDashboard } from "@/server/dashboard";
-import { ManageOrders } from "./admin-conponents/Manage-orders";
-import { Members } from "./admin-conponents/members";
-import { Teams } from "./admin-conponents/Teams";
-import { useEffect, useState } from "react";
 import { DashboardDetails } from "./admin-conponents/interface";
-import { useRouter } from "next/navigation";
-import StoreBanner from "../../store/_components/store-banner";
-import { StoreBannerCard } from "@/components/store-banner";
-import { Icons } from "@/components/icons";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ManageIssue } from "./admin-conponents/manage-issue";
+import { Members } from "./admin-conponents/members";
+import { TrendingDevices } from "./admin-conponents/trending-devices";
 
 export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
@@ -96,7 +94,9 @@ export default function AdminDashboard() {
           }}
         >
           <TrendingDevices dashboardData={dashboardData} />
-          <img src={'/media/dashboard/banner.png'} style={{width: '100%', height: 170}} />
+          <img src={'/media/dashboard/banner.png'} onClick={() => {
+            router.push('store')
+          }}  style={{width: '100%', height: 170, cursor: 'pointer'}} />
         </div>
       </div>
 
@@ -175,9 +175,8 @@ export default function AdminDashboard() {
             <textarea
               id="review-write"
               placeholder="Add a comment"
-              onChange={(e) =>
-                // setFormData((prev) => ({ ...prev, comment: e.target.value }))
-                console.log("text")
+              onChange={(e) =>{}
+              
               }
               rows={6}
               className={cn(

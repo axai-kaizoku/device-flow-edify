@@ -10,7 +10,7 @@ export const StoreBannerCard = ({}) => {
       <div>
         <div>
           <h1 className="w-52 font-gilroyMedium text-xl">
-            Highest Quality, Refurbished & New Devices
+          Top-Quality Refurbished & New Devices
           </h1>
 
           <Link
@@ -21,8 +21,7 @@ export const StoreBannerCard = ({}) => {
           </Link>
         </div>
         <h1 className="text-xs text-[#B1B1B1] w-52 font-gilroyMedium">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod.
+        <p>Affordable, reliable, and ready for work..</p>
         </h1>
       </div>
       <div className="absolute right-0 bottom-0">
