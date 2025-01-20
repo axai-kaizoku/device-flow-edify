@@ -17,7 +17,7 @@ export function Integration({}) {
             Soon DeviceFlow will work seamlessly with your favorite apps.
           </div>
           <div className="max-sm:text-sm">
-            Use over 50+ and apps with just one click.
+            Use over 50+ apps with just one click.
           </div>
         </div>
       </div>
