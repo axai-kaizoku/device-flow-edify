@@ -28,8 +28,8 @@ export function Companies({}) {
           className="max-sm:w-8 max-sm:h-8 marquee__item"
         />
          <img
-          src="/media/company/metafin.png"
-          style={{width: 140, height: 38, marginTop: 9}}
+          src="/media/company/apna.png"
+          style={{width: 60, height: 58}}
           className="max-sm:w-8 max-sm:h-8 marquee__item"
         />
          <img
