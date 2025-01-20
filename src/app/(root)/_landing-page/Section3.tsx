@@ -14,7 +14,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
       ref={ref}
     >
       <div className="flex items-center px-0.5 max-lg:mx-auto">
-        <div className="font-gilroy text-[52px] max-sm:text-2xl max-lg:text-3xl font-gilroyBold leading-[58px] tracking-[-1.2px]">
+        <div className="text-[52px] max-sm:text-2xl max-lg:text-3xl font-gilroyBold leading-[58px] tracking-[-1.2px]">
           <div>
             <span className="text-gray-400">{"Why Choose "}</span>
             <span className="text-white">DeviceFlow?</span>
@@ -50,14 +50,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-1.png" />
+                <img src="/media/landingPage/device-flow-1.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Save time with automation.
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>
                   Update your contacts with the latest information on autopilot.
                 </p>
@@ -69,7 +69,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Automatically ensure your contact list stays up-to-date,
                     saving time and effort. Simplify the process of managing
@@ -107,14 +107,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-2.png" />
+                <img src="/media/landingPage/device-flow-2.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Device analysis
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>
                   Get deeper insights into your contacts at a single glance.
                 </p>
@@ -126,7 +126,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Access key details instantly, streamline your
                     decision-making process, and build stronger relationships
@@ -165,14 +165,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-3.png" />
+                <img src="/media/landingPage/device-flow-3.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Reduce IT operational costs.
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>Stay lean with Attio’s lightweight browser extension.</p>
               </div>
               <div
@@ -182,7 +182,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Designed for seamless integration,Boost productivity with
                     its intuitive interface, enabling quick access to key
@@ -220,14 +220,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-4.png" />
+                <img src="/media/landingPage/device-flow-4.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Minimise asset loss.
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>Streamline your workflow with customizable shortcuts.</p>
               </div>
               <div
@@ -237,7 +237,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Save time by automating repetitive tasks, accessing tools
                     faster, and navigating seamlessly. Boost productivity and
@@ -276,14 +276,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-5.png" />
+                <img src="/media/landingPage/device-flow-5.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Quick actions
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>Streamline your workflow with customizable shortcuts.</p>
               </div>
               <div
@@ -293,7 +293,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Simplify complex tasks, save time, and boost productivity
                     with tailored commands at your fingertips. Empower yourself
@@ -330,14 +330,14 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-6.png" />
+                <img src="/media/landingPage/device-flow-6.webp" />
               </div>
               <div className="self-stretch  [max-width:291px]">
-                <div className="font-gilroy text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
+                <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
                   Gain real-time insights
                 </div>
               </div>
-              <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+              <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                 <p>
                   Update your contacts with the latest information on autopilot.
                 </p>
@@ -349,7 +349,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
                   overflow: "hidden",
                 }}
               >
-                <div className="font-inter flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
+                <div className="font-gilroyMedium flex items-start self-stretch leading-6 tracking-[-0.2px] text-gray-400">
                   <p>
                     Keep your contact list accurate and up-to-date without
                     manual effort. Simplify communication, avoid outdated

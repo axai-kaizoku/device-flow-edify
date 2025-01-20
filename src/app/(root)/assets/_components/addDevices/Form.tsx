@@ -89,7 +89,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
       processor: "",
       ram: "",
       storage: [""],
-      device_name: "",
+      custom_model: "",
       brand: "",
       device_condition: "",
     },
@@ -161,7 +161,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             processor: deviceData?.processor ?? "",
             ram: deviceData?.ram ?? "",
             storage: deviceData?.storage ?? [],
-            device_name: deviceData?.device_name ?? "",
+            custom_model: deviceData?.custom_model ?? "",
             brand: deviceData?.brand ?? "",
             device_condition: deviceData?.device_condition ?? "",
           };
@@ -235,8 +235,8 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
           if (!m1?.storage) currentErrors.storage = "Storage is required.";
           if (!m1?.device_condition)
             currentErrors.device_condition = "Device Condition is required.";
-          if (!m1?.device_name)
-            currentErrors.device_name = "Device Name is required.";
+          if (!m1?.device_condition)
+            currentErrors.device_condition = "Device Name is required.";
         } else if (formData?.deviceType === "monitor") {
           // if(!monitor?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
           if (!monitor?.model) currentErrors.model = "Model is required.";

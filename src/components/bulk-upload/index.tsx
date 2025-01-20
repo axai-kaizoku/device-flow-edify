@@ -1,5 +1,4 @@
 "use client";
-import { bulkUploadDevices } from "@/server/deviceActions";
 import React, { useRef, useState } from "react";
 import { checkForDuplicates, parseCSV } from "./CSVHelper";
 import { useRouter } from "next/navigation";
@@ -9,8 +8,14 @@ type dataProps = {
   closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
+  sampleData: Record<string, string|number>;
 };
-function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
+function BulkUpload({
+  closeBtn,
+  requiredKeys,
+  bulkApi,
+  sampleData,
+}: dataProps) {
   const [csvError, setCsvError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -104,25 +109,44 @@ function BulkUpload({ closeBtn, requiredKeys, bulkApi }: dataProps) {
         openToast("error", "An error occurred during bulk upload.");
       }
     } finally {
-      setLoading(false); // Always reset the loading state
+      setLoading(false);
     }
   };
 
   const handleFileUploadClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click(); // Trigger hidden file input click
+      fileInputRef.current.click();
     }
   };
 
-  const downloadSampleCSV = () => {
-    const csvContent = requiredKeys.join(",");
+  // const downloadSampleCSV = () => {
+  //   const csvContent = requiredKeys.join(",");
 
+  //   const blob = new Blob([csvContent], { type: "text/csv" });
+  //   const link = document.createElement("a");
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = "sample.csv";
+  //   link.click();
+  // };
+
+  const downloadSampleCSV = () => {
+    // Create the header row using required keys
+    const csvHeader = requiredKeys.join(",");
+
+    // Create a sample row by mapping keys to provided sample data or default empty values
+    const csvRow = requiredKeys.map((key) => sampleData?.[key] || "").join(",");
+
+    // Combine header and sample data rows
+    const csvContent = `${csvHeader}\n${csvRow}`;
+
+    // Create and trigger the download
     const blob = new Blob([csvContent], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "sample.csv";
     link.click();
   };
+
   return (
     <>
       <div className="flex flex-col gap-3 w-full">

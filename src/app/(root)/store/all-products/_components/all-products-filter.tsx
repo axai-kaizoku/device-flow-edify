@@ -1,12 +1,12 @@
 "use client";
 
 import { SetStateAction, useEffect, useState } from "react";
-import CustomDropdown from "../../_components/filter-dropdown";
 import { MoveLeft } from "lucide-react";
 import { BackBtn } from "../../cart/checkout/_components/back-btn";
 import { StoreDevice } from "@/server/deviceActions";
 import { searchStoreDevices } from "@/server/storeActions";
 import { useAlert } from "@/hooks/useAlert";
+import { FilterDropdown } from "../../_components/filter-dropdown";
 
 export default function AllProductsFilter({
   setData,
@@ -76,7 +76,7 @@ export default function AllProductsFilter({
         </BackBtn>
         <h1 className="font-gilroyMedium text-base tracking-wide">Filters:</h1>
         <div className="flex gap-2.5">
-          <CustomDropdown
+          <FilterDropdown
             label="RAM"
             options={[
               { value: "4GB", label: "4GB" },
@@ -88,18 +88,19 @@ export default function AllProductsFilter({
             onChange={setSelectedRam}
           />
 
-          <CustomDropdown
+          <FilterDropdown
             label="Storage"
             options={[
               { value: "128GB", label: "128GB" },
               { value: "256GB", label: "256GB" },
               { value: "512GB", label: "512GB" },
+              { value: "1TB", label: "1TB" },
             ]}
             selectedValues={selectedStorage}
             onChange={setSelectedStorage}
           />
 
-          <CustomDropdown
+          <FilterDropdown
             label="OS"
             options={[
               { value: "windows", label: "Windows" },
@@ -110,7 +111,7 @@ export default function AllProductsFilter({
             onChange={setSelectedOS}
           />
 
-          <CustomDropdown
+          <FilterDropdown
             label="Brand"
             options={[
               { value: "apple", label: "Apple" },
@@ -125,7 +126,7 @@ export default function AllProductsFilter({
       </div>
       {filters.length > 0 && (
         <span
-          className="font-gilroyMedium text-sm tracking-wide flex items-center cursor-pointer text-red-500"
+          className="font-gilroyMedium text-sm tracking-wide flex items-center cursor-pointer text-black"
           onClick={clearAllFilters}
         >
           Clear All
