@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import { Instagram } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -285,7 +286,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="flex flex-col gap-[6px] text-[#555E67]">
               <div
                 className="cursor-pointer hover:underline"
-                onClick={scrollToAbout}
+                onClick={scrollToFeatures}
               >
                 About
               </div>
@@ -299,7 +300,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div
                 className="cursor-pointer hover:underline"
-                onClick={scrollToFeatures}
+                onClick={scrollToAbout}
               >
                 Features
               </div>
@@ -330,11 +331,33 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col text-[#9098A0] text-xs font-gilroyRegular gap-8 w-full mb-8 px-16 text-center">
           <div>© 2024 Edify. All rights reserved.</div>
           <div className="flex gap-8 items-center mx-auto">
-            <div>Terms & Conditions ∙ Privacy Policy</div>
-            <div className="flex gap-3">
+            <div>
+              <a
+                target="_blank"
+                href="https://edify.club/terms-of-services"
+                className="cursor-pointer hover:underline"
+              >
+                Terms & Conditions
+              </a>{" "}
+              ∙{" "}
+              <a
+                target="_blank"
+                href="https://edify.club/privacy-policy"
+                className="cursor-pointer hover:underline"
+              >
+                Privacy Policy
+              </a>
+            </div>
+            <div className="flex gap-3 items-center">
+              <a href="https://www.linkedin.com/company/edify-club/" target="_blank">
+                <Icons.linkedin_icon />
+              </a>
+              <a href="https://www.instagram.com/edify_club/" target="_blank">
+                <Instagram className="size-4" />
+              </a>
+              <a href="https://x.com/edify_club?t=xINA1nE4OivzN6U79c2Myw&s=31" target="_blank">
               <Icons.twitter_icon />
-              <Icons.dribble_icon />
-              <Icons.linkedin_icon />
+              </a>
             </div>
           </div>
         </div>

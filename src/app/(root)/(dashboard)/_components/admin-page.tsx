@@ -2,7 +2,7 @@
 import { CombinedContainer } from "@/components/container/container";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { getDashboard } from "@/server/dashboard";
+import { getDashboard, sendFeedback } from "@/server/dashboard";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,6 +14,9 @@ import { DashboardDetails } from "./admin-conponents/interface";
 import { ManageIssue } from "./admin-conponents/manage-issue";
 import { Members } from "./admin-conponents/members";
 import { TrendingDevices } from "./admin-conponents/trending-devices";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useToast } from "@/hooks/useToast";
 
 export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
@@ -24,6 +27,33 @@ export default function AdminDashboard() {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  const userData = useSelector((state: RootState) => state.auth.userData);
+  const { openToast } = useToast();
+  const [formData, setFormData] = useState({
+    rating:0,
+    comment:'',
+  });
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, comment: e.target.value }));
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (!formData.rating || !formData.comment) {
+      openToast("error","Please select a rating and add a comment before submitting.");
+      return;
+    }
+
+    try {
+      const response = await sendFeedback(formData);
+      openToast("success","Thank you for your feedback!");
+      toggleModal();
+      setClickedIndex(null);
+      setFormData((prev) => ({ ...prev, rating: 0, comment: "" }));
+    } catch (error) {
+      openToast("error","Failed to submit feedback. Please try again.");
+    }
+  };
 
   // List of emojis with their PNG and GIF versions
   const emojis = [
@@ -31,26 +61,31 @@ export default function AdminDashboard() {
       png: "/media/emojis/worst.png",
       gif: "/media/emojis/worst-gif.gif",
       text: "Worst",
+      id:1
     },
     {
       png: "/media/emojis/bad.png",
       gif: "/media/emojis/bad-gif.gif",
       text: "Bad",
+      id:2
     },
     {
       png: "/media/emojis/fine.png",
       gif: "/media/emojis/fine-gif.gif",
       text: "Fine",
+      id:3
     },
     {
       png: "/media/emojis/good.png",
       gif: "/media/emojis/good-gif.gif",
       text: "Good",
+      id:4
     },
     {
       png: "/media/emojis/great.png",
       gif: "/media/emojis/great-gif.gif",
       text: "Great",
+      id:5
     },
   ];
   useEffect(() => {
@@ -64,7 +99,7 @@ export default function AdminDashboard() {
 
   return (
     <CombinedContainer title="Admin Dashboard">
-      <div className="flex justify-center items-center mb-7 gap-3 h-full">
+      <div className="flex justify-center items-center mb-7 gap-3 h-full" onClick={()=>{setIsModalOpen(false);}}>
         <div
           style={{ width: "75%" }}
           className="flex justify-between gap-3 flex-wrap "
@@ -146,7 +181,10 @@ export default function AdminDashboard() {
             {/* Emoji Feedback Section */}
             <div className="flex justify-center gap-6 my-5">
               {emojis.map((emoji, index) => (
-                <div className="flex flex-col ">
+                <div className="flex flex-col cursor-pointer group" onClick={() => {
+                  setClickedIndex(index);
+                  setFormData((prev) => ({ ...prev, rating: emoji.id }));
+                }}>
                   <img
                     key={index}
                     src={
@@ -158,7 +196,10 @@ export default function AdminDashboard() {
                     className="w-10 h-10 cursor-pointer"
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    onClick={() => setClickedIndex(index)}
+                    onClick={() => {
+                      setClickedIndex(index);
+                      setFormData((prev) => ({ ...prev, rating: emoji.id }));
+                    }}
                   />
 
                   <div
@@ -175,9 +216,7 @@ export default function AdminDashboard() {
             <textarea
               id="review-write"
               placeholder="Add a comment"
-              onChange={(e) =>{}
-              
-              }
+              onChange={handleCommentChange}
               rows={6}
               className={cn(
                 " mb-2 rounded-[8px] placeholder:text-[#767676] placeholder:font-gilroyMedium text-[15px] border border-[#DFDFDF] my-2 font-gilroyMedium text-sm py-3 px-4 outline-none focus:outline-none"
@@ -186,7 +225,7 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer">
+          <div className="bg-black text-white font-gilroySemiBold text-sm p-2.5 rounded-[10px] text-center mt-5 cursor-pointer" onClick={handleSubmitFeedback}>
             Submit Feedback
           </div>
         </div>
