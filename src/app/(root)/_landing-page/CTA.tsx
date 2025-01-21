@@ -133,11 +133,11 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   const [formData, setFormData] = useState({
-    name:"",
-    cmpname:"",
-    email:"",
-    phone:"",
-    type:"register"
+    name: "",
+    cmpname: "",
+    email: "",
+    phone: "",
+    type: "register",
   });
 
   const [errors, setErrors] = useState({
@@ -145,18 +145,18 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
     phone: "",
     cmpname: "",
     email: "",
-    teamSize: ""
+    teamSize: "",
   });
 
   const validateStep1 = () => {
     const newErrors = {
       name: formData?.name ? "" : "Name is required",
       cmpname: formData?.cmpname ? "" : "Company Name is required",
-    }
+    };
 
     setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
     return !Object.values(newErrors).some((err) => err);
-  }
+  };
 
   const validateStep2 = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -183,7 +183,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   // Handle input changes
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -191,22 +191,19 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
     }));
   };
 
-  const handleSubmit = async ()=>{
+  const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await requestForDemo({...formData, type:"register"});
-      if(response){
+      const response = await requestForDemo({ ...formData, type: "register" });
+      if (response) {
         handleNext();
       }
     } catch (error) {
       openToast("error", "Some Error Occured. Try again Later!");
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
-  }
-
-
+  };
 
   return (
     <>
@@ -215,7 +212,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
       >
         <div className="flex max-lg:flex-col max-sm:justify-between justify-between flex-grow max-lg:flex-wrap items-center max-sm:gap-x-0  gap-x-28 max-lg:gap-y-2 gap-y-24 min-[1430px]:flex-nowrap">
           <div className="w-[37%] max-lg:w-full">
-            {currentStep===0 && (
+            {currentStep === 0 && (
               <div
                 className={`${
                   onRegisterClicked ? "slide-out-left" : ""
@@ -243,7 +240,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               </div>
             )}
-            {currentStep===1 && (
+            {currentStep === 1 && (
               <div
                 className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
                 id="register"
@@ -276,7 +273,9 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                     Name
                   </label>
 
-                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.name}</p>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">
+                    {errors.name}
+                  </p>
                 </div>
                 <div className="relative" style={{ width: "100%" }}>
                   <input
@@ -296,7 +295,9 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   >
                     Company Name
                   </label>
-                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.cmpname}</p>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">
+                    {errors.cmpname}
+                  </p>
                 </div>
 
                 <div className="flex gap-3">
@@ -313,7 +314,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   <div
                     onClick={() => {
                       // setSubmitClicked(true);
-                      if(validateStep1()){
+                      if (validateStep1()) {
                         handleNext();
                       }
                     }}
@@ -324,7 +325,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 </div>
               </div>
             )}
-            {currentStep===2 && (
+            {currentStep === 2 && (
               <div
                 className="  max-sm:w-[100%] slide-in-left flex flex-col flex-grow flex-wrap items-start justify-center gap-x-28 gap-y-4 min-[1430px]:flex-nowrap"
                 id="register"
@@ -347,11 +348,15 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                     placeholder="Enter Email ID"
                     onChange={(e) => {
                       const inputValue = e.target.value;
-                      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            
-                      if (!inputValue || /^[a-zA-Z0-9@._-]*$/.test(inputValue)) {
+                      const emailRegex =
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                      if (
+                        !inputValue ||
+                        /^[a-zA-Z0-9@._-]*$/.test(inputValue)
+                      ) {
                         handleChange(e);
-            
+
                         // Validate email format on the fly
                         setErrors((prevErrors) => ({
                           ...prevErrors,
@@ -373,7 +378,9 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   >
                     Email Id
                   </label>
-                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.email}</p>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">
+                    {errors.email}
+                  </p>
                 </div>
                 <div className="relative" style={{ width: "100%" }}>
                   <input
@@ -387,10 +394,10 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       const phoneRegex = /^[0-9]{0,10}$/;
-            
+
                       if (!inputValue || phoneRegex.test(inputValue)) {
                         handleChange(e);
-            
+
                         // Validate phone number format on the fly
                         setErrors((prevErrors) => ({
                           ...prevErrors,
@@ -402,7 +409,6 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                         }));
                       }
                     }}
-
                   />
                   <label
                     htmlFor="floating_outlined"
@@ -411,9 +417,10 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   >
                     Phone
                   </label>
-                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">{errors.phone}</p>
+                  <p className="text-red-500 text-sm font-gilroyRegular my-1.5">
+                    {errors.phone}
+                  </p>
                 </div>
-
 
                 <div className="flex gap-3">
                   <div
@@ -429,13 +436,13 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                   <div
                     onClick={() => {
                       // setSubmitClicked(true);
-                      if(validateStep2()){
+                      if (validateStep2()) {
                         handleSubmit();
                       }
                     }}
                     className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
                   >
-                    {loading ? <Spinner/> :  "Submit"}
+                    {loading ? <Spinner /> : "Submit"}
                   </div>
                 </div>
               </div>
