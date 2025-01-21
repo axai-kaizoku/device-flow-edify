@@ -199,6 +199,7 @@ export const LandingPage = () => {
                 <div className="flex h-full w-full flex-shrink-0 items-center justify-center gap-x-[6.5px] overflow-clip px-3 pb-2.5 pt-[11px]">
                   <img
                     src="/media/landingPage/Deviceflow-logo.png"
+                    alt="deviceflow-logo"
                     width={184}
                     height={41}
                   />
@@ -292,12 +293,14 @@ export const LandingPage = () => {
             ref={(el: any) => (cardsRef.current[0] = el)}
             className="fade-in-left hero-card-issue"
             src={"/media/landingPage/hero-issue.webp"}
+            alt="hero-1"
             width={199}
             height={292}
           />
           <img
             ref={(el: any) => (cardsRef.current[1] = el)}
             className="fade-in-left hero-card-asset"
+            alt="hero-2"
             src={"/media/landingPage/hero-asset.webp"}
             width={199}
             height={292}
@@ -305,6 +308,7 @@ export const LandingPage = () => {
           <img
             ref={(el: any) => (cardsRef.current[2] = el)}
             className="fade-in-right hero-card-order"
+            alt="hero-3"
             src={"/media/landingPage/hero-order.webp"}
             width={199}
             height={292}
@@ -313,12 +317,13 @@ export const LandingPage = () => {
             ref={(el: any) => (cardsRef.current[3] = el)}
             className="fade-in-right hero-card-banner"
             src={"/media/landingPage/hero-banner.webp"}
+            alt="hero-4"
             width={199}
             height={292}
           />
         </div>
         <div ref={boxRef}>
-          <img src={"/media/landingPage/hero.svg"} />
+          <img src={"/media/landingPage/hero.svg"} alt="landing-page" />
         </div>
       </div>
 
@@ -331,6 +336,7 @@ export const LandingPage = () => {
           <div className="flex justify-center w-full mx-auto">
             <img
               src="/media/landingPage/Deviceflow-logo.png"
+              alt="device-flow-png"
               width={170}
               height={41}
             />
@@ -430,6 +436,7 @@ export const LandingPage = () => {
 
           <img
             src={"/media/landingPage/Hero-mobile.svg"}
+            alt="hero-mobile"
             width="120%"
             className="py-7 "
           />

@@ -16,6 +16,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         <Slide direction="left" className="pt-16 " fraction={0.5} triggerOnce>
           <img
             src={"/media/landingPage/Content.webp"}
+            alt="content"
             height={504}
             width={"100%"}
           />
@@ -23,11 +24,13 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         <div className="flex gap-4 mt-4 pb-11">
           <img
             src={"/media/landingPage/Content-2.webp"}
+            alt="content-2"
             width={"55%"}
             style={{ height: 600 }}
           />
           <img
             src={"/media/landingPage/Content-3.webp"}
+            alt="content-3"
             width={"45%"}
             style={{ height: 600 }}
           />
@@ -44,7 +47,10 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
         </Slide>
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-1.webp"} />
+            <img
+              src={"/media/landingPage/hassel-free-1.webp"}
+              alt="hassel-free-1"
+            />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
@@ -60,12 +66,18 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-2.webp"} />
+            <img
+              src={"/media/landingPage/hassel-free-2.webp"}
+              alt="hassel-free-2"
+            />
           </Slide>
         </div>
         <div className="flex gap-12 mt-16 pb-11 items-center">
           <Slide direction="left" fraction={1} triggerOnce>
-            <img src={"/media/landingPage/hassel-free-4.webp"} />
+            <img
+              src={"/media/landingPage/hassel-free-4.webp"}
+              alt="hassel-free-4"
+            />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
             <div className="text-black text-[42px] font-gilroySemiBold  leading-[57.60px]">
@@ -85,10 +97,19 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
               <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
                 Everything You Need to Manage Your IT Infrastructure
               </div>
-              <img src={"/media/landingPage/Content-3.webp"} width={"100%"} />
-              <img src={"/media/landingPage/Content-2.webp"} width={"100%"} />
+              <img
+                src={"/media/landingPage/Content-3.webp"}
+                width={"100%"}
+                alt="content-3"
+              />
+              <img
+                src={"/media/landingPage/Content-2.webp"}
+                width={"100%"}
+                alt="content-2"
+              />
               <img
                 src={"/media/landingPage/Content.webp"}
+                alt="content-1"
                 height={504}
                 width={"100%"}
               />
@@ -114,6 +135,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                   </div>
                   <img
                     src={"/media/landingPage/hassel-free-1.webp"}
+                    alt="hassel-1-mob"
                     className="mt-6"
                     width={"100%"}
                   />
@@ -129,6 +151,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                   </div>
                   <img
                     src={"/media/landingPage/hassel-free-2.webp"}
+                    alt="hassel-2-mob"
                     className="mt-6"
                     width={"100%"}
                   />
@@ -144,6 +167,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                   </div>
                   <img
                     src={"/media/landingPage/hassel-free-4.webp"}
+                    alt="hassel-3-mob"
                     className="mt-6"
                     width={"100%"}
                   />

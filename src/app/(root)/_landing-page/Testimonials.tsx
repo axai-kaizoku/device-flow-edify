@@ -24,6 +24,7 @@ export function Testimonials({}) {
               <div className="flex items-center justify-center gap-x-3">
                 <img
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  alt="streak"
                   src="/media/testmonials/streak.png"
                   loading="lazy"
                 />
@@ -50,6 +51,7 @@ export function Testimonials({}) {
               <div className="flex items-center justify-center gap-x-3">
                 <img
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  alt="law"
                   src="/media/testmonials/law.png"
                   loading="lazy"
                 />
@@ -79,6 +81,7 @@ export function Testimonials({}) {
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
                   src="/media/testmonials/sorted.png"
                   loading="lazy"
+                  alt="sorted"
                 />
                 <div className="flex-grow">
                   <div className="text-lg font-gilroySemiBold leading-7 text-gray-950">
@@ -107,6 +110,7 @@ export function Testimonials({}) {
                 <img
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
                   src="/media/testmonials/law.png"
+                  alt="law"
                   loading="lazy"
                 />
                 <div className="flex-grow">
@@ -132,6 +136,7 @@ export function Testimonials({}) {
               <div className="flex items-center justify-center gap-x-3">
                 <img
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
+                  alt="sks"
                   src="/media/testmonials/sks.png"
                   loading="lazy"
                 />
@@ -162,6 +167,7 @@ export function Testimonials({}) {
                 <img
                   className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-contain object-center"
                   src="/media/testmonials/streak.png"
+                  alt="streak"
                   loading="lazy"
                 />
                 <div className="flex-grow">
