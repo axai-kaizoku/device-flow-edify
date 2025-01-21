@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useDeferredValue } from "react";
 import { useQueryState } from "nuqs";
 import { Search } from "lucide-react"; // Importing icons from lucide-react
 

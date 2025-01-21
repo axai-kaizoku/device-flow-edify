@@ -23,13 +23,14 @@ export function Integration({}) {
       </div>
 
       <div className="max-sm:block hidden self-stretch px-8 sm:px-16 pt-2 text-lg max-sm:text-base font-gilroyMedium leading-[30px] ">
-        Soon DeviceFlow will works seamlessly with your favorite apps.
+        Soon DeviceFlow will work seamlessly with your favorite apps.
       </div>
 
       <div className="flex items-end justify-center self-stretch pr-[0.32px] pt-12 sm:pt-16">
         <div className="flex items-center justify-center gap-x-[8.5px] pt-[1.4px] text-center">
           <img
             src="/media/landingPage/Deviceflow-logo.png"
+            alt="deviceflow-logo"
             width={160}
             height={36}
             style={{
@@ -43,6 +44,7 @@ export function Integration({}) {
         <div className="relative w-full z-0 flex items-center justify-center pt-2.5 text-center">
           <img
             src="/media/landingPage/device-flow-vector.png"
+            alt="device-flow-vector"
             width={"100%"}
             height={100}
             style={{
@@ -55,34 +57,38 @@ export function Integration({}) {
       <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-[65px] gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
         <img
           src="/media/landingPage/gmail.png"
+          alt="gmail"
           className="max-sm:w-[65px] max-sm:h-[50px] md:w-[124px] md:h-[85px]"
         />
-         <img
+        <img
           src="/media/landingPage/Slack.png"
+          alt="Slack"
           className=" max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[53px] md:h-[59px] md:mt-5"
-       
         />
         <img
           src="/media/landingPage/zoho.png"
+          alt="zoho"
           className="max-sm:w-[80px] max-sm:h-[60px] md:w-[124px] md:h-[85px]"
         />
         <img
           src="/media/landingPage/keka.png"
-           className="max-sm:w-[65px] max-sm:h-[45px] md:w-[75px] md:h-[80px]"
-       
+          alt="keka"
+          className="max-sm:w-[65px] max-sm:h-[45px] md:w-[75px] md:h-[80px]"
         />
-         <img
+        <img
           src="/media/landingPage/sheet.png"
+          alt="sheet"
           className=" max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[53px] md:h-[59px] md:mt-5"
         />
-         <img
+        <img
           src="/media/landingPage/asana.png"
+          alt="asana"
           className="max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[60px] md:h-[53px] md:mt-5"
         />
-         
-         <img
+        <img
           src="/media/landingPage/razor.png"
-          style={{width: 239, height: 68, marginTop: 16}}
+          alt="razor"
+          style={{ width: 239, height: 68, marginTop: 16 }}
           className=" max-sm:hidden max-sm:w-8 max-sm:h-8"
         />
       </div>

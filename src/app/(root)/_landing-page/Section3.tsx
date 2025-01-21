@@ -50,7 +50,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-1.webp" />
+                <img
+                  src="/media/landingPage/device-flow-1.webp"
+                  alt="deviceflow-1"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
@@ -107,7 +110,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-2.webp" />
+                <img
+                  src="/media/landingPage/device-flow-2.webp"
+                  alt="deviceflow-2"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
@@ -165,7 +171,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-3.webp" />
+                <img
+                  src="/media/landingPage/device-flow-3.webp"
+                  alt="deviceflow-3"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
@@ -220,7 +229,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-4.webp" />
+                <img
+                  src="/media/landingPage/device-flow-4.webp"
+                  alt="deviceflow-4"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
@@ -276,7 +288,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-5.webp" />
+                <img
+                  src="/media/landingPage/device-flow-5.webp"
+                  alt="deviceflow-5"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
@@ -330,7 +345,10 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               style={{ height: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
-                <img src="/media/landingPage/device-flow-6.webp" />
+                <img
+                  src="/media/landingPage/device-flow-6.webp"
+                  alt="deviceflow-6"
+                />
               </div>
               <div className="self-stretch  [max-width:291px]">
                 <div className=" text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-gray-100">
