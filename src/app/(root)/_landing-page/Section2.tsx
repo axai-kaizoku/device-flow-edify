@@ -76,12 +76,12 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
       </div>
 
       <div className="hidden max-lg:block mb-4 pb-4">
-        <div className="w-[90%] mx-auto my-4 flex flex-col gap-12 ">
+        <div className="w-[90%] mx-auto my-12 flex flex-col gap-20 ">
           <div className="gap-3">
             <div className="text-[#6B7280] text-center font-gilroyBold">
               About
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-12">
               <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
                 Everything You Need to Manage Your IT Infrastructure
               </div>
@@ -103,7 +103,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
               <div className="text-center text-[#1D1F20] font-gilroyBold text-2xl">
                 Three Steps to Hassle-Free IT Management
               </div>
-              <div className="mt-2 flex flex-col gap-4">
+              <div className="mt-2 flex flex-col gap-12">
                 <div>
                   <p className="text-xs text-[#727272] font-gilroyRegular text-center">
                     Step 1

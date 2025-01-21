@@ -6,7 +6,7 @@ export const FAQ = () => {
   const [showAll, setShowAll] = useState(false); // Manages "View More" and "View Less"
 
   // Toggle the expanded state for a specific FAQ
-  const toggleFAQ = (index) => {
+  const toggleFAQ = (index: any) => {
     setExpanded(expanded === index ? null : index);
   };
 
@@ -70,7 +70,7 @@ export const FAQ = () => {
   const visibleFaqs = showAll ? faqs : faqs?.slice(0, 5);
 
   return (
-    <div className="flex w-full flex-col items-center gap-y-5 bg-white max-lg:px-4 px-96 max-sm:pb-5 pb-[104px] pt-24 tracking-[0px]">
+    <div className="flex w-full flex-col items-center gap-y-5 bg-white max-lg:px-4 px-96 max-sm:pb-5 pb-24 pt-24 tracking-[0px]">
       <div className="text-sm text-[#6B7280] font-gilroyBold max-lg:block hidden max-lg:text-lg">
         Faqs
       </div>
