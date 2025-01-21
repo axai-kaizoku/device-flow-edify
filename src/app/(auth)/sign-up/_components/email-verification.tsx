@@ -2,7 +2,7 @@ import { FormField } from "@/app/(root)/settings/_components/form-field";
 import React, { useEffect, useState } from "react";
 import { signupReqOTP, verifySignupOTP } from "@/server/signupActions";
 
-function EmailVerification({ setSteps }: any) {
+function EmailVerification({ setSteps, user, setUser }: any) {
   const [otpSent, setOtpSent] = useState(false); // Tracks if OTP is sent
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -123,6 +123,7 @@ function EmailVerification({ setSteps }: any) {
           setLoading(true);
           const res = await verifySignupOTP(formData.email, otpPass);
           setLoading(false);
+          setUser({ ...user, email: formData.email });
           setSteps(2);
         } catch (error) {
           setErrors((prev) => ({

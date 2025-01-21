@@ -75,7 +75,7 @@ export default function InvitePeopleTeam({
               id="copy-link"
               type="text"
               className={
-                "text-[#025CE5] absolute w-full rounded-md border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm"
+                "text-[#025CE5] w-full rounded-md border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm"
               }
               value={link}
               placeholder=""
@@ -91,7 +91,7 @@ export default function InvitePeopleTeam({
             </button>
           </div>
 
-          <DialogFooter className="flex w-full items-center justify-center mt-14">
+          <DialogFooter className="flex w-full items-center justify-center mt-4">
             <Button
               className="w-full rounded-sm font-gilroyMedium  bg-black text-white  ring-1 ring-black   flex items-center justify-center"
               onClick={() => {
