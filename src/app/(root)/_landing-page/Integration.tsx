@@ -3,7 +3,7 @@ import React from "react";
 export function Integration({}) {
   return (
     <div
-      className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white px-8 pt-24 sm:px-12 lg:px-36 text-center tracking-[0px] text-gray-500`}
+      className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white max-[380px]:px-4 px-8 pt-24 sm:px-12 lg:px-36 text-center tracking-[0px] text-gray-500`}
     >
       <div className="w-full font-gilroySemiBold leading-6 text-xl max-sm:text-sm max-lg:text-lg">
         Integrations
@@ -57,13 +57,12 @@ export function Integration({}) {
       <div className="relative max-lg:w-[100%] max-lg:mx-auto flex items-center justify-center max-lg:gap-x-4 gap-[65px] gap-y-9 self-stretch pt-[3.5px] min-[1430px]:flex-nowrap max-lg:flex-row max-lg:gap-y-6 max-lg:overflow-hidden">
         <img
           src="/media/landingPage/gmail.png"
-          alt="gmail"
-          className="max-sm:w-[65px] max-sm:h-[50px] md:w-[124px] md:h-[85px]"
+          className="max-sm:w-[65px] max-sm:h-[50px] md:w-[63px] md:h-[79px] md:mt-2"
         />
         <img
           src="/media/landingPage/Slack.png"
-          alt="Slack"
-          className=" max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[53px] md:h-[59px] md:mt-5"
+          className=" max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[46px] md:h-[49px] md:mt-5"
+       
         />
         <img
           src="/media/landingPage/zoho.png"
