@@ -480,7 +480,7 @@ h2.title::after {
 }
 
 .marquee--8 {
-  --marquee-item-width: 200px;
+  --marquee-item-width: 150px;
   --marquee-item-height: 100px;
   --marquee-duration: 36s;
   --marquee-items: 7;

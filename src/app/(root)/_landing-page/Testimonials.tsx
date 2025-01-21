@@ -5,7 +5,7 @@ export function Testimonials({}) {
     <div>
       {" "}
       <div
-        className={`font-gilroy flex w-full flex-col items-center gap-y-3 bg-white px-36 max-sm:px-28 py-24 max-sm:py-10 text-center tracking-[0px] text-gray-500 `}
+        className={`font-gilroy flex w-full flex-col items-center gap-y-3 bg-white px-36 max-sm:px-28 py-24 max-sm:pt-24 max-sm:pb-10 text-center tracking-[0px] text-gray-500 `}
       >
         <div className="w-[692px] font-gilroySemiBold leading-6 max-sm:text-sm max-lg:text-base max-sm:w-full">
           Testimonials
