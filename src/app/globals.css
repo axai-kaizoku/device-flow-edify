@@ -442,6 +442,25 @@ h2.title::after {
   transition: transform 1s ease, top 1s ease, left 1s ease;
 }
 
+@media screen and (max-width: 1155px) {
+  .hero-card-issue {
+    position: absolute;
+    top: 425px;
+    left: 75px;
+    transform: rotate(-9.781deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+@media screen and (min-width: 1155px) and (max-width: 1266px) {
+  .hero-card-issue {
+    position: absolute;
+    top: 425px;
+    left: 50px;
+    transform: rotate(-9.781deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+
 .hero-card-asset {
   position: absolute;
   top: 311px;
@@ -449,6 +468,28 @@ h2.title::after {
   transform: rotate(-9.781deg);
   transition: transform 1s ease, top 1s ease, left 1s ease;
 }
+
+@media screen and (max-width: 1155px) {
+  .hero-card-asset {
+    position: absolute;
+    top: 311px;
+    left: 34px;
+    transform: rotate(-9.781deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+
+@media screen and (min-width: 1155px) and (max-width: 1266px) {
+  .hero-card-asset {
+    position: absolute;
+    top: 311px;
+    left: 14px;
+    transform: rotate(-9.781deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+
+
 
 .hero-card-order {
   position: absolute;
@@ -458,6 +499,26 @@ h2.title::after {
   transition: transform 1s ease, top 1s ease, left 1s ease;
 }
 
+@media screen and (max-width: 1155px) {
+  .hero-card-order {
+    position: absolute;
+    top: 300px;
+    right: 34px;
+    transform: rotate(6.615deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+
+@media screen and (min-width: 1155px) and (max-width: 1266px) {
+  .hero-card-order {
+    position: absolute;
+    top: 300px;
+    right: 24px;
+    transform: rotate(6.615deg);
+    transition: transform 1s ease, top 1s ease, left 1s ease;
+  }
+}
+
 .hero-card-banner {
   position: absolute;
   top: 600px;
@@ -465,6 +526,28 @@ h2.title::after {
   transform: rotate(6.615deg);
   transition: transform 1s ease, top 1s ease, left 0.5s ease;
 }
+
+@media screen and (max-width: 1155px) {
+  .hero-card-banner {
+    position: absolute;
+    top: 600px;
+    right: 60px;
+    transform: rotate(6.615deg);
+    transition: transform 1s ease, top 1s ease, left 0.5s ease;
+  }
+}
+
+@media screen and (min-width: 1155px) and (max-width: 1266px) {
+  .hero-card-banner {
+    position: absolute;
+    top: 600px;
+    right: 47px;
+    transform: rotate(6.615deg);
+    transition: transform 1s ease, top 1s ease, left 0.5s ease;
+  }
+}
+
+
 .marquee {
   display: flex;
   block-size: var(--marquee-item-height);

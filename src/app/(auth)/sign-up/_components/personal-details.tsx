@@ -4,15 +4,16 @@ import { Icons } from "@/components/icons";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { genders } from "@/app/(root)/people/_components/helper/utils";
 import { cn } from "@/lib/utils";
+import { ChevronLeft } from "lucide-react";
 
-function PersonalDetails({ setSteps, setUser }: any) {
+function PersonalDetails({ setSteps, setUser, user }: any) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [formData, setFormData] = useState({
     image: "",
     first_name: "",
     date_of_birth: "",
     gender: "",
-    email: "",
+    email: user?.email,
     phone: "",
   });
 
@@ -68,193 +69,200 @@ function PersonalDetails({ setSteps, setUser }: any) {
   };
 
   return (
-    <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
-      <div className="w-[46%]  h-[auto]">
-        <img
-          src="/media/Onboarding/companyDetails.png"
-          alt="edify-background"
-          width={"100%"}
-        />
+    <>
+      <div className="absolute flex gap-1 text-[#7F7F7F] items-center ml-8 mt-10 font-gilroyMedium cursor-pointer" onClick={()=>{setSteps((prev:number)=> prev-1)}}>
+        <ChevronLeft/>
+        <div>Back</div>
       </div>
-      <div className="w-[42%] relative h-full justify-center items-center flex flex-col">
-        <div
-          className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
-        >
-          <div className="w-full flex flex-col gap-y-4 mb-0">
-            <h1 className="text-center text-3xl font-gilroyBold text-indigo-950">
-              Personal Details
-            </h1>
-            <p className="text-center text-sm font-gilroyMedium text-gray-600">
-              Enter your details to register in your organization
-            </p>
-          </div>
-          {formData?.image ? (
-            <div>
-              <img
-                src={formData?.image}
-                alt="Company Logo"
-                className="size-28 rounded-full border object-cover"
-              />
-            </div>
-          ) : (
-            <Icons.personal_detail_sign_up />
-          )}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="px-8 py-2.5 border border-dimgray rounded-lg bg-white"
-          >
-            {formData.image ? "Edit Image" : "Upload Image"}
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleUploadLogo}
+      <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
+        <div className="w-[46%]  h-[auto]">
+          <img
+            src="/media/Onboarding/companyDetails.png"
+            alt="edify-background"
+            width={"100%"}
           />
-          <div className="flex flex-col w-[75%] gap-6">
-            <FormField
-              label="Name*"
-              placeholder="Name"
-              id="first_name"
-              error={errors.first_name}
-              name="email"
-              value={formData?.first_name ?? ""}
-              type="text"
-              onChange={(e) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  first_name: e.target.value,
-                }));
-              }}
-            />
-            <div className="flex gap-3">
-              <div className="w-1/2">
-                <FormField
-                  placeholder="DD/MM/YYYY"
-                  label="DOB"
-                  error={errors.date_of_birth}
-                  id="date_of_birth"
-                  name="date_of_birth"
-                  value={
-                    formData?.date_of_birth
-                      ? new Date(formData.date_of_birth)
-                          .toISOString()
-                          .split("T")[0]
-                      : ""
-                  }
-                  type="date"
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      date_of_birth: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className="z-20 w-1/2">
-                <SelectDropdown
-                  options={genders}
-                  onSelect={(data) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      gender: data?.value,
-                    }))
-                  }
-                  label="Gender"
-                  value={`${formData?.gender ?? ""}`}
-                  placeholder="eg: Male"
-                  className={cn(
-                    errors.gender
-                      ? "border-destructive/80 "
-                      : "border-[#5F5F5F]",
-                    "rounded-xl border"
-                  )}
-                />
-                {errors.gender && (
-                  <p className="mt-1 text-xs font-gilroyMedium text-destructive">
-                    {errors.gender}
-                  </p>
-                )}
-              </div>
+        </div>
+        <div className="w-[42%] relative h-full justify-center items-center flex flex-col">
+          <div
+            className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
+          >
+            <div className="w-full flex flex-col gap-y-4 mb-0">
+              <h1 className="text-center text-3xl font-gilroyBold text-indigo-950">
+                Personal Details
+              </h1>
+              <p className="text-center text-sm font-gilroyMedium text-gray-600">
+                Enter your details to register in your organization
+              </p>
             </div>
-            <div className="flex gap-3">
+            {formData?.image ? (
+              <div>
+                <img
+                  src={formData?.image}
+                  alt="Company Logo"
+                  className="size-28 rounded-full border object-cover"
+                />
+              </div>
+            ) : (
+              <Icons.personal_detail_sign_up />
+            )}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="px-8 py-2.5 border border-dimgray rounded-lg bg-white"
+            >
+              {formData.image ? "Edit Image" : "Upload Image"}
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleUploadLogo}
+            />
+            <div className="flex flex-col w-[75%] gap-6">
               <FormField
-                label="Email"
-                id="email"
-                error={errors.email}
+                label="Name*"
+                placeholder="Name"
+                id="first_name"
+                error={errors.first_name}
                 name="email"
-                value={formData?.email ?? ""}
+                value={formData?.first_name ?? ""}
                 type="text"
                 onChange={(e) => {
-                  const inputValue = e.target.value;
-                  const emailRegex =
-                    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-                  if (!inputValue || /^[a-zA-Z0-9@._-]*$/.test(inputValue)) {
-                    setFormData((prev) => ({
-                      ...prev,
-                      email: inputValue,
-                    }));
-
-                    // Validate email format on the fly
-                    setErrors((prevErrors) => ({
-                      ...prevErrors,
-                      email: inputValue
-                        ? emailRegex.test(inputValue)
-                          ? ""
-                          : "Invalid email format"
-                        : "Email is required",
-                    }));
-                  }
+                  setFormData((prev) => ({
+                    ...prev,
+                    first_name: e.target.value,
+                  }));
                 }}
-                maxLength={50}
-                placeholder="jhondoe@winuall.com"
               />
-              <FormField
-                label="Phone"
-                id="phone"
-                name="phone"
-                error={errors.phone}
-                value={formData?.phone ?? ""}
-                type="tel"
-                onChange={(e) => {
-                  const inputValue = e.target.value;
-                  const phoneRegex = /^[0-9]{0,10}$/;
+              <div className="flex gap-3">
+                <div className="w-1/2">
+                  <FormField
+                    placeholder="DD/MM/YYYY"
+                    label="DOB"
+                    error={errors.date_of_birth}
+                    id="date_of_birth"
+                    name="date_of_birth"
+                    value={
+                      formData?.date_of_birth
+                        ? new Date(formData.date_of_birth)
+                            .toISOString()
+                            .split("T")[0]
+                        : ""
+                    }
+                    type="date"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        date_of_birth: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="z-20 w-1/2">
+                  <SelectDropdown
+                    options={genders}
+                    onSelect={(data) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        gender: data?.value,
+                      }))
+                    }
+                    label="Gender"
+                    value={`${formData?.gender ?? ""}`}
+                    placeholder="eg: Male"
+                    className={cn(
+                      errors.gender
+                        ? "border-destructive/80 "
+                        : "border-[#5F5F5F]",
+                      "rounded-xl border"
+                    )}
+                  />
+                  {errors.gender && (
+                    <p className="mt-1 text-xs font-gilroyMedium text-destructive">
+                      {errors.gender}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <FormField
+                  label="Email"
+                  id="email"
+                  error={errors.email}
+                  name="email"
+                  value={formData?.email ?? ""}
+                  type="text"
+                  disabled={true}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const emailRegex =
+                      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-                  // Allow only numbers (or empty string) and prevent invalid input
-                  if (!inputValue || phoneRegex.test(inputValue)) {
-                    setFormData((prev) => ({
-                      ...prev,
-                      phone: inputValue,
-                    }));
+                    if (!inputValue || /^[a-zA-Z0-9@._-]*$/.test(inputValue)) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: inputValue,
+                      }));
 
-                    // Validate phone number format on the fly
-                    setErrors((prevErrors) => ({
-                      ...prevErrors,
-                      phone: inputValue
-                        ? /^[0-9]{10}$/.test(inputValue)
-                          ? ""
-                          : "Phone number must be 10 digits"
-                        : "Phone number is required",
-                    }));
-                  }
-                }}
-                maxLength={10}
-                placeholder="eg: 9876543210"
-              />
+                      // Validate email format on the fly
+                      setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: inputValue
+                          ? emailRegex.test(inputValue)
+                            ? ""
+                            : "Invalid email format"
+                          : "Email is required",
+                      }));
+                    }
+                  }}
+                  maxLength={50}
+                  placeholder="jhondoe@winuall.com"
+                />
+                <FormField
+                  label="Phone"
+                  id="phone"
+                  name="phone"
+                  error={errors.phone}
+                  value={formData?.phone ?? ""}
+                  type="tel"
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const phoneRegex = /^[0-9]{0,10}$/;
+
+                    // Allow only numbers (or empty string) and prevent invalid input
+                    if (!inputValue || phoneRegex.test(inputValue)) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone: inputValue,
+                      }));
+
+                      // Validate phone number format on the fly
+                      setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phone: inputValue
+                          ? /^[0-9]{10}$/.test(inputValue)
+                            ? ""
+                            : "Phone number must be 10 digits"
+                          : "Phone number is required",
+                      }));
+                    }
+                  }}
+                  maxLength={10}
+                  placeholder="eg: 9876543210"
+                />
+              </div>
             </div>
+            <button
+              onClick={() => {
+                onSubmit();
+              }}
+              className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
+            >
+              <div className="text-center text-white">Next</div>
+            </button>
           </div>
-          <button
-            onClick={() => {
-              onSubmit();
-            }}
-            className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
-          >
-            <div className="text-center text-white">Next</div>
-          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
