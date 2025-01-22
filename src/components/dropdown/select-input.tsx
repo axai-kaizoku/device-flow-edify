@@ -48,26 +48,26 @@ export const SelectInput = ({
   useEffect(() => {
     setQuery(value); // Sync input with parent value on updates
   }, [value]);
-  
+
   function positionDropdown() {
-    const dropdownButton: any = document.getElementById('dropdown-button')
-    const dropdownList: any = document.getElementById('dropdown-list')
-    const bodyEl = document.querySelector('body')
-    const dropdownHeight = dropdownList.clientHeight
-    const windowHeight = window.innerHeight
-    const dropdownTop = dropdownButton.getBoundingClientRect().top
-  
+    const dropdownButton: any = document.getElementById("dropdown-button");
+    const dropdownList: any = document.getElementById("dropdown-list");
+    const bodyEl = document.querySelector("body");
+    const dropdownHeight = dropdownList.clientHeight;
+    const windowHeight = window.innerHeight;
+    const dropdownTop = dropdownButton.getBoundingClientRect().top;
+
     if (windowHeight - dropdownTop < dropdownHeight) {
-      dropdownList.style.bottom = '100%'
-      dropdownList.style.top = 'auto'
+      dropdownList.style.bottom = "100%";
+      dropdownList.style.top = "auto";
     } else {
-      dropdownList.style.bottom = 'auto'
-      dropdownList.style.top = '100%'
+      dropdownList.style.bottom = "auto";
+      dropdownList.style.top = "100%";
     }
   }
   useEffect(() => {
-    window.addEventListener('scroll', positionDropdown)
-  }, [])
+    window.addEventListener("scroll", positionDropdown);
+  }, []);
 
   // Debounce query updates
   useEffect(() => {
@@ -77,13 +77,17 @@ export const SelectInput = ({
 
   // Fetch options based on debounced query
   useEffect(() => {
+    if (!isDropdownOpen) return; // Don't call API when dropdown is closed
+
     const fetchData = async () => {
       try {
-        const apiData = debouncedQuery
-          ? await fetchOptions(debouncedQuery)
-          : await initialOptions();
-
-        setOptions([...apiData]);
+        if (debouncedQuery) {
+          const apiData = await fetchOptions(debouncedQuery);
+          setOptions([...apiData]);
+        } else {
+          const apiData = await initialOptions();
+          setOptions([...apiData]);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -159,6 +163,13 @@ export const SelectInput = ({
     onSelect(option);
   };
 
+  const handleFocus = () => {
+    setIsDropdownOpen(true);
+    if (!options.length) {
+      initialOptions().then(setOptions).catch(console.error);
+    }
+  };
+
   return (
     <>
       <div className="group relative z-40" ref={dropdownRef}>
@@ -178,7 +189,7 @@ export const SelectInput = ({
               setIsDropdownOpen(true);
               setHighlightedIndex(null);
             }}
-            onFocus={() => setIsDropdownOpen(true)}
+            onFocus={handleFocus}
             placeholder={placeholder ?? "Search or select"}
             type="text"
           />
