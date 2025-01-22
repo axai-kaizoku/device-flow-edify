@@ -248,7 +248,9 @@ export const LandingPage = () => {
             {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
           </div>
         </div>
-        <div className="fade-in fltopex w-[auto] text-[60px] max-[1155px]:text-[46px] items-center justify-center text-center  font-bold leading-[88px] tracking-[-1px] text-neutral-800">
+        <div className="fade-in fltopex w-auto text-center font-bold leading-[88px] tracking-[-1px] text-neutral-800 
+              text-[60px] sm:text-[45px] md:text-[46px] lg:text-[50px] xl:text-[60px] 
+              items-center justify-center">
           <p>
             Streamline IT Asset Management <br /> with DeviceFlow
           </p>

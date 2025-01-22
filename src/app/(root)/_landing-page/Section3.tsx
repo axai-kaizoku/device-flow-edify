@@ -23,7 +23,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-6 min-[1430px]:flex-nowrap">
-        <div className="flex flex-col items-center gap-y-8">
+        <div className="flex flex-col items-center gap-y-8 max-[1428px]:flex-row max-[1428px]:gap-8 max-[1024px]:flex-col ">
           <div
             onMouseEnter={() => {
               setCardHeight1(526);
@@ -144,7 +144,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-y-8">
+        <div className="flex flex-col items-center gap-y-8 max-[1428px]:flex-row max-[1428px]:gap-8 max-[1024px]:flex-col ">
           <div
             onMouseEnter={() => {
               setCardHeight2(526);
