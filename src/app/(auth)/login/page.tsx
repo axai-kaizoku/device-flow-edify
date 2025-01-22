@@ -5,7 +5,7 @@ export default function Login() {
     <div className="w-full h-screen justify-around flex flex-col lg:flex-row p-8 max-lg:p-2">
       <div className="w-[46%] h-full max-lg:hidden">
         <img
-          src="/media/Loginpage.svg"
+          src="/media/Loginpage.webp"
           alt="edify-background"
           width={"100%"}
           style={{ height: 720 }}

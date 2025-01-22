@@ -101,7 +101,7 @@ export default function ForgotPassForm() {
         setError("Passwords do not match");
         return;
       }
-      const res = await ResetPass(uId, otp.toString(), password);
+      const res = await ResetPass(uId, otp.join("").toString(), password);
       if (res.message === "Invalid or Expired otp") {
         setError("Invalid or Expired OTP");
       } else {

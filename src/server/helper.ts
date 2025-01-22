@@ -20,7 +20,6 @@ interface APIResponse<T> {
   status: number;
 }
 
-// Main function using axios
 export async function callAPIWithToken<T>(
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",

@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Icon } from "../wind/Icons";
 import {
   AlertTriangle,
-  CircleHelp,
   LogOut,
   Plus,
   RefreshCw,
+  Search,
   Settings,
   UserRound,
 } from "lucide-react";
@@ -115,9 +114,14 @@ export default function Header({ session }: Props) {
       {session ? (
         <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 ">
           {/* Logo Section */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={()=>{
-            router.push('/');
-          }} onMouseEnter={()=> handleMouseEnter('/')} onMouseLeave={() => setIsHovered(false)}>
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              router.push("/");
+            }}
+            onMouseEnter={() => handleMouseEnter("/")}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <img
               src="/media/Deviceflow.png"
               alt="Logo"
@@ -131,7 +135,7 @@ export default function Header({ session }: Props) {
               {/* Search Bar */}
               <div className="bg-transparent overflow-hidden flex justify-between items-center border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
                 <div className="flex gap-2 items-center">
-                  <Icon type="OutlinedSearch" color="gray" />
+                  <Search className="text-gray-500 size-[1.16rem]" />
                   <input
                     type="text"
                     placeholder={`Search ${currentPlaceholder}...`}
@@ -228,7 +232,7 @@ export default function Header({ session }: Props) {
 
             {/* Profile Icon */}
             {session?.user?.user?.role !== 1 ? (
-              (<div className="relative">
+              <div className="relative">
                 <button
                   onClick={toggleDropdown}
                   className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
@@ -284,8 +288,8 @@ export default function Header({ session }: Props) {
                     </div>
                   </div>
                 )}
-              </div>)
-            ) :(
+              </div>
+            ) : (
               <div
                 className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
@@ -295,10 +299,7 @@ export default function Header({ session }: Props) {
               >
                 <LogOut className="w-5 h-5" />
               </div>
-
-            )
-            
-            }
+            )}
           </div>
         </header>
       ) : null}

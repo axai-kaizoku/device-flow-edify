@@ -162,7 +162,6 @@ export const fetchManager = cache(async function (token: string): Promise<any> {
       },
     });
 
-
     return res.data.users;
   } catch (e) {
     throw new Error("Failed to fetch users");
@@ -200,7 +199,6 @@ export async function searchManager(
         "Content-Type": "application/json",
       },
     });
-
 
     return res?.data?.users;
   } catch (e) {
@@ -269,7 +267,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
     const sess = await getSession();
     const user = {
       ...userData,
-      password: "winuall123",
+      // password: "winuall123",
       orgId: sess?.user?.user?.orgId?._id,
     };
 
