@@ -13,9 +13,11 @@ import CreateDevice from "./addDevices/_components/create-device";
 function AssignedAssets({
   data,
   setAssets,
+  onRefresh,
 }: {
   data: DeviceResponse | null;
   setAssets: any;
+  onRefresh: () => Promise<void>;
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -187,7 +189,7 @@ function AssignedAssets({
                       title: "",
                       render: (record) => (
                         <div className="flex gap-5 -ml-2 items-center">
-                          <SoftDeleteAsset id={record?._id}>
+                          <SoftDeleteAsset id={record?._id} onRefresh={onRefresh}>
                             <Icons.table_delete className="size-6" />
                           </SoftDeleteAsset>
                           <Link

@@ -14,9 +14,11 @@ import CreateUser from "./create-user";
 export default function UserMain({
   data,
   setUsers,
+  onRefresh
 }: {
   data: UserResponse | null;
   setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
+  onRefresh: () => Promise<void>;
 }) {
   if (!data) {
     return <Spinner />;
@@ -171,10 +173,10 @@ export default function UserMain({
                       >
                         <Icons.table_delete className="size-6" />
                       </button> */}
-                            <DeleteUser id={data?._id}>
+                            <DeleteUser id={data?._id} onRefresh={onRefresh}>
                               <Icons.table_delete className="size-6" />
                             </DeleteUser>
-                            <EditUser userData={data}>
+                            <EditUser userData={data} onRefresh={onRefresh}>
                               <Icons.table_edit className="size-5" />
                             </EditUser>
                           </div>

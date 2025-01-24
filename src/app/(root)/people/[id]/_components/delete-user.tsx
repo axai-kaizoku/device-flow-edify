@@ -20,9 +20,11 @@ import Spinner, { spinnerVariants } from "@/components/Spinner";
 export const DeleteUser = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -38,8 +40,9 @@ export const DeleteUser = ({
         setLoading(false);
         openToast("success", "Successfully deleted user !");
         setOpen(false);
-        router.push("/people?tab=active_people");
-        router.refresh();
+        onRefresh();
+        // router.push("/people?tab=active_people");
+        // router.refresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the user.",

@@ -19,9 +19,11 @@ import { useToast } from "@/hooks/useToast";
 export const RestoreUser = ({
   id,
   children,
+  onRefresh
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -64,7 +66,7 @@ export const RestoreUser = ({
                   await updateUser(id!, { deleted_at: null });
                   setOpen(false);
                   openToast('success', 'User restored Successfully! ');
-                  router.refresh();
+                  onRefresh();
                 } catch (e: any) {
                   openToast('error', 'Some Error Occured! Please try again later.');
                 } finally {

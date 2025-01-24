@@ -12,9 +12,11 @@ import { Table } from "@/components/wind/Table";
 function DeletedUser({
   data,
   setUsers,
+  onRefresh,
 }: {
   data: UserResponse | null;
   setUsers: React.Dispatch<SetStateAction<UserResponse | null>>;
+  onRefresh: () => Promise<void>;
 }) {
   const router = useRouter();
 
@@ -133,11 +135,11 @@ function DeletedUser({
                     title: "",
                     render: (record: User) => (
                       <div className="flex gap-5 -ml-2 justify-center items-center">
-                        <PermanentUserDelete id={record?._id!}>
+                        <PermanentUserDelete id={record?._id!} onRefresh={onRefresh}>
                           <Icons.table_delete className="size-6" />
                         </PermanentUserDelete>
 
-                        <RestoreUser id={record?._id!}>
+                        <RestoreUser id={record?._id!} onRefresh={onRefresh}>
                           <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                             Restore
                           </div>

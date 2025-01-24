@@ -5,8 +5,10 @@ import { useState } from "react";
 
 export default function CreateTeam({
   children,
+  onRefresh
 }: {
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -22,7 +24,7 @@ export default function CreateTeam({
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger>{children}</SheetTrigger>
           <SheetContent>
-            <TeamForm closeBtn={setOpen} />
+            <TeamForm closeBtn={setOpen} onRefresh={onRefresh}/>
           </SheetContent>
         </Sheet>
       </div>

@@ -18,9 +18,11 @@ import { useToast } from "@/hooks/useToast";
 export const PermanentUserDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -63,7 +65,8 @@ export const PermanentUserDelete = ({
                   await updateUser(id!, { orgId: null });
                   openToast('success',"User Deleted Successfully!");
                   setOpen(false);
-                  router.push("/people?tab=inactive_people");
+                  onRefresh();
+                  // router.push("/people?tab=inactive_people");
 
                   router.refresh();
                 } catch (e: any) {
