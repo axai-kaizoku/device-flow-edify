@@ -182,7 +182,6 @@ export const LandingPage = () => {
                 </span>
               </p>
             </div>
-            {/* <IconOutlineCancel className="h-5 w-5 flex-shrink-0" /> */}
           </div>
         </div>
       </div>
@@ -325,7 +324,7 @@ export const LandingPage = () => {
           />
         </div>
         <div ref={boxRef}>
-          <img src={"/media/landingPage/hero.svg"} alt="landing-page" />
+          <img src={"/media/landingPage/hero.svg"} alt="landing-page" width={"auto"} height={"auto"}/>
         </div>
       </div>
 

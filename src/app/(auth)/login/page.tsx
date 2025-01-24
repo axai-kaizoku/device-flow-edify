@@ -8,6 +8,7 @@ export default function Login() {
           src="/media/Loginpage.webp"
           alt="edify-background"
           width={"100%"}
+          className="object-contain"
           style={{ height: 720 }}
         />
       </div>

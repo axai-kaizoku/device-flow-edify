@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
-import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { User } from "@/server/userActions";
 import { ChevronRight } from "lucide-react";

@@ -1,7 +1,5 @@
 import { CombinedContainer } from "@/components/container/container";
 import React from "react";
-import AllReports from "./_components/allReports";
-import { Icon } from "@/components/wind/Icons";
 import ReportSection from "./_components/reportSection";
 import NotFound from "@/app/not-found";
 
