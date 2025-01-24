@@ -1,5 +1,4 @@
 "use client";
-import Error from "@/app/error/page";
 import NotFound from "@/app/not-found";
 import { CombinedContainer } from "@/components/container/container";
 

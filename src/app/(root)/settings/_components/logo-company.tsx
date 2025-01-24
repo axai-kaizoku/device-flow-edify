@@ -10,25 +10,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState, useRef } from "react";
-import { ErrorButton, GreyButton } from "@/components/wind/Buttons";
 import { getImageUrl, updateOrg } from "@/server/orgActions";
 import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 import { Trash2, X } from "lucide-react";
+import { Button } from "@/components/buttons/Button";
 
 // Add open and setOpen props
 export const LogoCompanyModal = ({
   id,
   logo,
   children,
-  uploadSuccess
+  uploadSuccess,
 }: {
   id: string;
   logo: string | null;
   children: React.ReactNode;
-  uploadSuccess?:() => void
+  uploadSuccess?: () => void;
 }) => {
   const [image, setImage] = useState<string | null>(logo); // Track image file
   const [open, setOpen] = useState(false); // Modal open state
@@ -63,7 +63,7 @@ export const LogoCompanyModal = ({
     try {
       await updateOrg({ id: id, logo: image }); // Send the image in the form data
       setOpen(false); // Close the modal after successful upload
-      uploadSuccess?.()
+      uploadSuccess?.();
       router.refresh();
     } catch (error) {
       openToast("error", "Image upload failed");
@@ -151,12 +151,31 @@ export const LogoCompanyModal = ({
             </div>
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <ErrorButton onClick={handleUploadLogo} disabled={image === ""}>
+        <DialogFooter >
+          <Button
+            className="w-1/2 rounded-md bg-[#D92D20] text-white"
+            onClick={handleUploadLogo}
+            disabled={image === ""}
+          >
             Upload
-          </ErrorButton>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
+
+{
+  /* <Button
+              className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="w-1/2 rounded-md bg-[#D92D20] text-white"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button> */
+}

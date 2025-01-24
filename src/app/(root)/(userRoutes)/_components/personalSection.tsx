@@ -1,4 +1,3 @@
-import { Textarea } from "@/components/wind/Input";
 import InfoDisplay from "./infoDisplay";
 import AboutDisplay from "./aboutDisplay";
 

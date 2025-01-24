@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+// import BundleAnalyzer from "@next/bundle-analyzer";
+
 const nextConfig = {
   reactStrictMode: false,
   typescript: {
@@ -45,5 +48,13 @@ const nextConfig = {
     },
   },
 };
+
+// const withBundleAnalyzer = BundleAnalyzer({
+//   enabled: process.env.ANALYZE === "true",
+// });
+// analyzing command
+// ANALYZE=true yarn build
+
+// export default withBundleAnalyzer(nextConfig);
 
 export default nextConfig;
