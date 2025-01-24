@@ -50,6 +50,8 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             <img
               src={"/media/landingPage/hassel-free-1.webp"}
               alt="hassel-free-1"
+              width={"100%"}
+              height={504}
             />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
@@ -69,6 +71,8 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             <img
               src={"/media/landingPage/hassel-free-2.webp"}
               alt="hassel-free-2"
+              width={"100%"}
+              height={504}
             />
           </Slide>
         </div>
@@ -77,6 +81,8 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             <img
               src={"/media/landingPage/hassel-free-4.webp"}
               alt="hassel-free-4"
+              width="100%"
+              height={504}
             />
           </Slide>
           <Slide direction="right" fraction={1} triggerOnce>
@@ -138,6 +144,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     alt="hassel-1-mob"
                     className="mt-6"
                     width={"100%"}
+                    height={504}  
                   />
                 </div>
 
@@ -154,6 +161,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     alt="hassel-2-mob"
                     className="mt-6"
                     width={"100%"}
+                    height={504}
                   />
                 </div>
 
@@ -170,6 +178,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     alt="hassel-3-mob"
                     className="mt-6"
                     width={"100%"}
+                    height={504}
                   />
                 </div>
               </div>
