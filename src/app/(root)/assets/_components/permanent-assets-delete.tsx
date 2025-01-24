@@ -17,9 +17,11 @@ import { Icons } from "@/components/icons";
 export const PermanentAssetsDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -60,8 +62,9 @@ export const PermanentAssetsDelete = ({
                 try {
                   await updateDevice(id!, { orgId: null });
                   setOpen(false);
-                  router.push("/assets?tab=inactive_assets");
-                  router.refresh();
+                  onRefresh();
+                  // router.push("/assets?tab=inactive_assets");
+                  // router.refresh();
                 } catch (e: any) {}
               }
             }}

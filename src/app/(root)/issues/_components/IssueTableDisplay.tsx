@@ -13,12 +13,14 @@ interface IssueTableDisplayProps {
   data: IssueResponse | null;
   countIssues: IssueResponse | null;
   setIssues: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }
 
 function IssueTableDisplay({
   data,
   setIssues,
   countIssues,
+  onRefresh
 }: IssueTableDisplayProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -145,6 +147,7 @@ function IssueTableDisplay({
                       reOpen={false}
                       id={record?._id!}
                       issueData={record}
+                      onRefresh={onRefresh}
                     >
                       <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-5 py-1.5 text-white font-gilroyMedium">
                         Mark as resolved

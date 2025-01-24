@@ -14,9 +14,11 @@ import CreateDevice from "./addDevices/_components/create-device";
 function InActiveAssets({
   data,
   setAssets,
+  onRefresh,
 }: {
   data: DeviceResponse | null;
   setAssets: React.Dispatch<React.SetStateAction<DeviceResponse | null>>;
+  onRefresh: () => Promise<void>;
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -164,11 +166,11 @@ function InActiveAssets({
                       title: "",
                       render: (record: Device) => (
                         <div className="flex gap-5 -ml-2">
-                          <PermanentAssetsDelete id={record?._id!}>
+                          <PermanentAssetsDelete id={record?._id!} onRefresh={onRefresh}>
                             <Icons.table_delete className="size-6" />
                           </PermanentAssetsDelete>
 
-                          <RestoreDevice id={record?._id!}>
+                          <RestoreDevice id={record?._id!} onRefresh={onRefresh}>
                             <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                               Restore
                             </div>

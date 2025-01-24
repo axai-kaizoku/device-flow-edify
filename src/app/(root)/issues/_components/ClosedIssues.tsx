@@ -12,9 +12,11 @@ import { closedIssues } from "@/server/filterActions";
 export default function ClosedIssueTable({
   data,
   setIssues,
+  onRefresh
 }: {
   data: IssueResponse | null;
   setIssues: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,6 +127,7 @@ export default function ClosedIssueTable({
                       id={record?._id!}
                       issueData={record}
                       reOpen={true}
+                      onRefresh={onRefresh}
                     >
                       <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                         Reopen

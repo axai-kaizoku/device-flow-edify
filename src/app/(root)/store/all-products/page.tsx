@@ -8,6 +8,7 @@ import Spinner from "@/components/Spinner";
 import { useSearchParams } from "next/navigation";
 import AllProductsFilter from "./_components/all-products-filter";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import NoProducts from "./_components/NoProducts";
 
 export default function AllProducts() {
   const [data, setData] = useState<StoreDevice[]>([]);
@@ -61,7 +62,7 @@ export default function AllProducts() {
             })}
           </div>
         ) : (
-          <p>No products found.</p>
+          <NoProducts/>
         )
       ) : (
         <div className="w-full h-[60vh] flex justify-center items-center">

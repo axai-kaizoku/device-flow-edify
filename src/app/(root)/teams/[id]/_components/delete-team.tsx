@@ -19,9 +19,11 @@ import { useToast } from "@/hooks/useToast";
 export const DeleteTeam = ({
   id,
   children,
+  onRefresh
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -34,8 +36,8 @@ export const DeleteTeam = ({
         await deleteTeam(id);
         setOpen(false);
         openToast('success', "Team Deleted Successfully!");
-        router.push("/teams");
-        router.refresh();
+        // router.push("/teams");
+        onRefresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the team.",

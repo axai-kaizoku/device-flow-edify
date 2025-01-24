@@ -91,6 +91,38 @@ function TabDisplay() {
     fetchTabData();
   }, [activeTab]);
 
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+  
+      const query = {
+        searchQuery: searchTerm || "",
+      };
+  
+      let updatedIssues: IssueResponse;
+      if (activeTab === "open") {
+        const count = await filterIssues(query);
+        setCountIssues(count);
+        updatedIssues = await openIssues(query);
+      } else {
+        updatedIssues = await closedIssues(query);
+      }
+  
+      setIssues(updatedIssues); // Update issues state with refreshed data
+    } catch (error) {
+      console.error("Error refreshing issues data:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to refresh data",
+        isFailure: true,
+        key: "refresh-error-issues",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   const renderContent = () => {
     switch (activeTab) {
       case "open":
@@ -103,6 +135,7 @@ function TabDisplay() {
             ) : (
               <IssueTableDisplay
                 data={issues}
+                onRefresh={refreshData}
                 countIssues={countIssues}
                 setIssues={setIssues}
               />
@@ -117,7 +150,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <ClosedIssueTable data={issues} setIssues={setIssues} />
+              <ClosedIssueTable data={issues} setIssues={setIssues} onRefresh={refreshData}/>
             )}
           </>
         );

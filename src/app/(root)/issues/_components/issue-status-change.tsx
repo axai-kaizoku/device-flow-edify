@@ -21,12 +21,14 @@ export const IssueStatusChange = ({
   children,
   reOpen,
   className,
+  onRefresh,
 }: {
   id: string;
   issueData: Issues;
   children: React.ReactNode;
   reOpen: boolean;
   className?: string;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -73,8 +75,7 @@ export const IssueStatusChange = ({
                     status: reOpen ? "Open" : "Closed",
                   });
                   setOpen(false);
-
-                  router.refresh(); // Optionally, refresh the page or reroute
+                  onRefresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

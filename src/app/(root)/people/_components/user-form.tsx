@@ -30,9 +30,10 @@ interface UserFormProps {
   closeBtn: (state: boolean) => void;
   isEditForm?: boolean;
   userData?: CreateUserArgs | User;
+  onRefresh: () => Promise<void>;
 }
 
-export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
+export const UserForm = ({ closeBtn, isEditForm, userData, onRefresh }: UserFormProps) => {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { openToast } = useToast();
@@ -43,12 +44,12 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
     firstN: userData ? userData.first_name : "",
     phone: userData ? userData.phone : "",
     email: userData ? userData.email : "",
-    managementType: "",
+    managementType: userData?.role ? (userData.role === 4 ? "CEO" : userData.role === 3 ? "Upper Management" : "Employee") : "",
     image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
-    team: userData?.teamId
+    team: userData?.team[0]._id
       ? // @ts-ignore
-        { name: userData.teamId.title, value: userData.teamId._id }
+        { name: userData.team[0].title, value: userData.team[0]._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
@@ -185,7 +186,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           await updateUser(userData?._id!, user);
           setLoading(false);
           openToast("success", "User update success !");
-          router.refresh();
+          onRefresh();
+          // router.refresh();
           closeBtn(false);
         } catch (error: any) {
           showAlert({
@@ -695,10 +697,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   <div className="flex-1">
                     <FormField
                       label="Onboarding Date"
-                      id="onboarding_date"
+                      id="onboarding"
                       error={errors.onboarding}
                       name="Joining Date"
-                      value={formData?.onboarding ?? ""}
+                      value={
+                        formData?.onboarding
+                          ? new Date(formData.onboarding).toISOString().split("T")[0]
+                          : ""
+                      }
                       type="date"
                       onChange={(e) =>
                         setFormData((prev) => ({

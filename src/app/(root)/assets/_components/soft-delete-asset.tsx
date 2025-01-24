@@ -18,9 +18,11 @@ import { useAlert } from "@/hooks/useAlert";
 export const SoftDeleteAsset = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -31,8 +33,9 @@ export const SoftDeleteAsset = ({
       try {
         await deleteDevice(id);
         setOpen(false);
-        router.push("/assets?tab=un_assigned_assets");
-        router.refresh();
+        // router.push("/assets?tab=un_assigned_assets");
+        // router.refresh();
+        onRefresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the asset.",
