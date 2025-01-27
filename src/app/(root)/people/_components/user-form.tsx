@@ -33,7 +33,12 @@ interface UserFormProps {
   onRefresh: () => Promise<void>;
 }
 
-export const UserForm = ({ closeBtn, isEditForm, userData, onRefresh }: UserFormProps) => {
+export const UserForm = ({
+  closeBtn,
+  isEditForm,
+  userData,
+  onRefresh,
+}: UserFormProps) => {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { openToast } = useToast();
@@ -44,7 +49,13 @@ export const UserForm = ({ closeBtn, isEditForm, userData, onRefresh }: UserForm
     firstN: userData ? userData.first_name : "",
     phone: userData ? userData.phone : "",
     email: userData ? userData.email : "",
-    managementType: userData?.role ? (userData.role === 4 ? "CEO" : userData.role === 3 ? "Upper Management" : "Employee") : "",
+    managementType: userData?.role
+      ? userData.role === 4
+        ? "CEO"
+        : userData.role === 3
+        ? "Upper Management"
+        : "Employee"
+      : "",
     image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
     team: userData?.team[0]._id
@@ -702,7 +713,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData, onRefresh }: UserForm
                       name="Joining Date"
                       value={
                         formData?.onboarding
-                          ? new Date(formData.onboarding).toISOString().split("T")[0]
+                          ? new Date(formData.onboarding)
+                              .toISOString()
+                              .split("T")[0]
                           : ""
                       }
                       type="date"
@@ -785,7 +798,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData, onRefresh }: UserForm
                     <div className="flex-1">
                       <FormField
                         label="Designation"
-                        id="email"
+                        id="designation"
                         error={errors.designation}
                         name="designation"
                         value={formData?.designation ?? ""}

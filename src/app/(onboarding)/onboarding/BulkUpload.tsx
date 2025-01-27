@@ -3,19 +3,15 @@ import {
   checkForDuplicates,
   parseCSV,
 } from "@/components/bulk-upload/CSVHelper";
-import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
-import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 type dataProps = {
-  closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
   sampleData: Record<string, string | number>;
   setSuccess: any;
 };
 function BulkUpload({
-  closeBtn,
   requiredKeys,
   bulkApi,
   setSuccess,
@@ -23,7 +19,6 @@ function BulkUpload({
 }: dataProps) {
   const [loading, setLoading] = useState(false);
   const [csvError, setCsvError] = useState<string | null>(null);
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { openToast } = useToast();
@@ -111,6 +106,15 @@ function BulkUpload({
     formData.append("file", file);
     try {
       await bulkApi(formData); // Call the API
+
+      const employeeCount = sessionStorage.getItem("employee-count");
+      if (employeeCount) {
+        const empCountInt = parseInt(employeeCount);
+        if (empCountInt >= 0) {
+          sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+        }
+      }
+
       setSuccess(true);
       setLoading(false);
     } catch (error: any) {
@@ -137,6 +141,8 @@ function BulkUpload({
         // Generic error handling
         openToast("error", `${"An error occurred during bulk upload."}`);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,8 +153,16 @@ function BulkUpload({
   };
 
   const downloadSampleCSV = () => {
-    const csvContent = requiredKeys.join(",");
+    // Create the header row using required keys
+    const csvHeader = requiredKeys.join(",");
 
+    // Create a sample row by mapping keys to provided sample data or default empty values
+    const csvRow = requiredKeys.map((key) => sampleData?.[key] || "").join(",");
+
+    // Combine header and sample data rows
+    const csvContent = `${csvHeader}\n${csvRow}`;
+
+    // Create and trigger the download
     const blob = new Blob([csvContent], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -167,7 +181,7 @@ function BulkUpload({
             />
           </div>
         ) : (
-          <div className="w-full flex flex-col gap-6">
+          <div className="w-full flex flex-col gap-4">
             <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
               Bulk Import
             </div>

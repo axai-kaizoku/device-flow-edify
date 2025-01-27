@@ -24,8 +24,13 @@ export default function Header({ session }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    if (sessionStorage.getItem("employee-count") === "2") {
-      return;
+    if (sessionStorage.getItem("employee-count")) {
+      const count = parseInt(sessionStorage.getItem("employee-count")!);
+      if (count >= 2) {
+        return;
+      } else {
+        router.push("/onboarding");
+      }
     } else if (session?.user.user.employeeCount === 0) {
       sessionStorage.setItem("employee-count", "0");
       router.push("/onboarding");
