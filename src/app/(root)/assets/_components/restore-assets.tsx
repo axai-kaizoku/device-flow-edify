@@ -18,9 +18,11 @@ import { Icons } from "@/components/icons";
 export const RestoreDevice = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -63,7 +65,8 @@ export const RestoreDevice = ({
                 try {
                   await updateDevice(id!, { deleted_at: null });
                   setOpen(false);
-                  router.refresh();
+                  // router.refresh();
+                  onRefresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

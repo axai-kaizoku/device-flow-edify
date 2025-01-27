@@ -87,6 +87,31 @@ function TabDisplay() {
     }
   };
 
+  const refreshUserData = async () => {
+    try {
+      setLoading(true);
+      const query = { searchQuery: searchTerm || "", filters: filters || [] };
+      let res = null;
+      if (activeTab === "active_people") {
+        res = await activeUsers(query);
+      } else if (activeTab === "inactive_people") {
+        res = await inActiveUsers(query);
+      }
+      setAssets(res); // Update the state with fresh data
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to refresh data",
+        isFailure: true,
+        key: "refresh-error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   // Trigger search and filter on searchTerm, filters, or pageLength change
   useEffect(() => {
     handleSearchAndFilter();
@@ -152,6 +177,8 @@ function TabDisplay() {
     setOpenFilter(false); // Close the filter modal
     handleResetFilters(); // Reset the filters
   };
+
+
   useEffect(() => {
     const fetchTabData = async () => {
       try {
@@ -195,7 +222,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <UserMain data={assets} setUsers={setAssets} />
+              <UserMain data={assets} setUsers={setAssets} onRefresh={refreshUserData}/>
             )}
           </>
         );
@@ -207,7 +234,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <DeletedUser data={assets} setUsers={setAssets} />
+              <DeletedUser data={assets} setUsers={setAssets} onRefresh={refreshUserData}/>
             )}
           </>
         );
@@ -220,12 +247,10 @@ function TabDisplay() {
     {
       key: "active_people",
       label: "Active People",
-      component: <UserMain data={assets} setUsers={setAssets} />,
     },
     {
       key: "inactive_people",
       label: "Inactive People",
-      component: <DeletedUser data={assets} setUsers={setAssets} />,
     },
   ];
   return (

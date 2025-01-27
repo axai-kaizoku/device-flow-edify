@@ -36,6 +36,7 @@ export const TeamForm = ({
   title,
   description,
   image,
+  onRefresh,
 }: {
   closeBtn: (value: boolean) => void;
   isEditForm?: boolean;
@@ -43,6 +44,7 @@ export const TeamForm = ({
   title?: string;
   description?: string;
   image?: string;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -89,8 +91,8 @@ export const TeamForm = ({
 
         setLoading(false);
         openToast("success", "Team updated successfully !");
-
-        router.refresh();
+        onRefresh();
+        // router.refresh();
         closeBtn(false);
       } catch (error: any) {
         closeBtn(false);
@@ -119,7 +121,7 @@ export const TeamForm = ({
           key: "create-team-success",
         });
         setLoading(false);
-        router.refresh();
+        onRefresh();
         closeBtn(false);
       } catch (error: any) {
         closeBtn(false);

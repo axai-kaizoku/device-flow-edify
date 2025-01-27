@@ -114,6 +114,36 @@ function TabDisplay({ orgData }: TabDisplayProps) {
     fetchTabData();
   }, [activeTab]);
 
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      const query = {
+        searchQuery: searchTerm || "",
+      };
+      let res: TeamsResponse | null = null;
+  
+      if (activeTab === "active_teams") {
+        res = await fetchActiveTeams(query);
+      } else if (activeTab === "inactive_teams") {
+        res = await fetchInactiveTeams(query);
+      }
+  
+      // Update the state with fresh data
+      setTeams(res);
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+      showAlert({
+        title: "Something went wrong !!",
+        description: "Failed to refresh data. Please try again.",
+        isFailure: true,
+        key: "refresh-error-team",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   const renderContent = () => {
     switch (activeTab) {
       case "active_teams":
@@ -124,7 +154,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <TeamsMain teams={teams} setTeams={setTeams} />
+              <TeamsMain teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
             )}
           </>
         );
@@ -136,7 +166,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <DeletedTeams teams={teams} setTeams={setTeams} />
+              <DeletedTeams teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
             )}
           </>
         );

@@ -19,9 +19,11 @@ import { useToast } from "@/hooks/useToast";
 export const PermanentTeamDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -65,7 +67,8 @@ export const PermanentTeamDelete = ({
                   updateTeam(id!, { orgId: null });
                   setOpen(false);
                   openToast('success', "Team Deleted Successfully!");
-                  router.refresh();
+                  // router.refresh();
+                  onRefresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

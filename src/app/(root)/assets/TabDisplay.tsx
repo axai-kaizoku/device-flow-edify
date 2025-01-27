@@ -89,6 +89,33 @@ function TabDisplay() {
     }
   };
 
+  const refreshAssetsData = async () => {
+    try {
+      setLoading(true);
+      const query = { searchQuery: searchTerm || "", filters: filters || [] };
+      let res = null;
+      if (activeTab === "assigned_assets") {
+        res = await assignedAssets(query);
+      } else if (activeTab === "un_assigned_assets") {
+        res = await unAssignedAssets(query);
+      }
+      else if (activeTab === "inactive_assets") {
+        res = await inActiveAssets(query);
+      }
+      setAssets(res); // Update the state with fresh data
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to refresh data",
+        isFailure: true,
+        key: "refresh-error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Trigger search and filter on searchTerm, filters, or pageLength change
   useEffect(() => {
     handleSearchAndFilter();
@@ -199,7 +226,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <AssignedAssets data={assets} setAssets={setAssets} />
+              <AssignedAssets data={assets} setAssets={setAssets} onRefresh={refreshAssetsData}/>
             )}
           </>
         );
@@ -211,7 +238,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <UnAssignedAssets data={assets} setAssets={setAssets} />
+              <UnAssignedAssets data={assets} setAssets={setAssets} onRefresh={refreshAssetsData}/>
             )}
           </>
         );
@@ -223,7 +250,7 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <InActiveAssets data={assets} setAssets={setAssets} />
+              <InActiveAssets data={assets} setAssets={setAssets} onRefresh={refreshAssetsData}/>
             )}
           </>
         );
