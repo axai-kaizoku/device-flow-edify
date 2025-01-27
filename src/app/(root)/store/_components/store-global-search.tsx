@@ -1,46 +1,20 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const StoreGlobalSearch = () => {
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isFocused, setIsFocused] = useState(false);
-  const [term, setTerm] = useState("");
-  const [debouncedTerm, setDebouncedTerm] = useState(term);
+  const [term, setTerm] = useState(searchParams.get("q") || ""); // Initialize with query param if available
 
-  // Debounce effect for search term
+  // Update URL when `term` changes
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedTerm(term);
-    }, 300); // Adjust debounce timing as needed
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [term]);
-
-  // Router update only when debounced term changes
-  useEffect(() => {
-    if (debouncedTerm) {
-      if (!pathname.startsWith("/store/all-products")) {
-        router.push(`/store/all-products?q=${encodeURIComponent(debouncedTerm)}`);
-      } else if (!pathname.includes(`q=${encodeURIComponent(debouncedTerm)}`)) {
-        router.replace(`/store/all-products?q=${encodeURIComponent(debouncedTerm)}`);
-      }
-    } else if (debouncedTerm === "") {
-      // Clear query when the search term is empty
-      if (pathname.startsWith("/store/all-products")) {
-        router.replace("/store/all-products");
-      }
-    }
-  }, [debouncedTerm, pathname, router]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTerm(e.target.value);
-  };
+    const query = term ? `?q=${encodeURIComponent(term)}` : "";
+    router.replace(`/store/all-products${query}`);
+  }, [term, router]);
 
   return (
     <div
@@ -57,7 +31,7 @@ export const StoreGlobalSearch = () => {
           isFocused ? "input-transition" : "w-0"
         )}
         value={term}
-        onChange={handleSearch}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTerm(e.target.value)}
         autoFocus={isFocused}
         placeholder="Search"
       />
