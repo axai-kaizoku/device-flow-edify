@@ -156,8 +156,8 @@ export const DeviceComponent = () => {
           if (!m1?.storage) currentErrors.storage = "Storage is required.";
           if (!m1?.device_condition)
             currentErrors.device_condition = "Device Condition is required.";
-          if (!m1?.device_name)
-            currentErrors.device_name = "Device Name is required.";
+          if (!m1?.custom_model)
+            currentErrors.custom_model = "Device Name is required.";
         } else if (formData?.deviceType === "monitor") {
           // if(!monitor?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
           if (!monitor?.model) currentErrors.model = "Model is required.";
@@ -238,11 +238,16 @@ export const DeviceComponent = () => {
       try {
         const payload: any = createPayload(formData);
         await createDevices(payload);
-        setSuccess(true);
+
         const employeeCount = sessionStorage.getItem("employee-count");
-        if (parseInt(employeeCount!) > 0) {
-          sessionStorage.setItem("employee-count", "2");
+        if (employeeCount) {
+          const empCountInt = parseInt(employeeCount);
+          if (empCountInt > 0) {
+            sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+          }
         }
+
+        setSuccess(true);
       } catch (error) {
         setIsLoading(false);
         openToast("error", "Failed to created Device !");
@@ -272,7 +277,7 @@ export const DeviceComponent = () => {
           </Button>
         </div>
       ) : (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-4">
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Add Devices
@@ -285,15 +290,25 @@ export const DeviceComponent = () => {
           {step === 0 && (
             <div className="flex w-[75%] gap-4">
               <DeviceTypeOnboarding
+                setFormData={setFormData}
+                setSuccess={setSuccess}
                 data={formData?.deviceType}
                 setData={(data: string) =>
                   setFormData((prev) => ({ ...prev, deviceType: data }))
                 }
                 error={errors?.deviceType}
-                closeBtn={() => {}}
                 setTotalSteps={(steps: number) => {
                   setTotalStep(steps);
                 }}
+                // setSuccess={setSuccess}
+                // data={formData?.deviceType}
+                // setData={(data: string) =>
+                //   setFormData((prev) => ({ ...prev, deviceType: data }))
+                // }
+                // error={errors?.deviceType}
+                // setTotalSteps={(steps: number) => {
+                //   setTotalStep(steps);
+                // }}
               />
             </div>
           )}

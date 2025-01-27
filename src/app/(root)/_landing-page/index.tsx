@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import DemoForm from "./_components/DemoForm";
-import { Companies } from "./Companies";
 
 export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
@@ -247,12 +246,14 @@ export const LandingPage = () => {
             {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
           </div>
         </div>
-        <div className="fade-in fltopex w-auto text-center font-bold leading-[88px] tracking-[-1px] text-neutral-800 
+        <div
+          className="fade-in fltopex w-auto text-center font-bold leading-[88px] tracking-[-1px] text-neutral-800 
               text-[60px] sm:text-[45px] md:text-[46px] lg:text-[50px] xl:text-[60px] 
-              items-center justify-center">
-          <p>
+              items-center justify-center"
+        >
+          <h1>
             Streamline IT Asset Management <br /> with DeviceFlow
-          </p>
+          </h1>
         </div>
         <div className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-[darkgray]">
           <p>
@@ -324,7 +325,12 @@ export const LandingPage = () => {
           />
         </div>
         <div ref={boxRef}>
-          <img src={"/media/landingPage/hero.svg"} alt="landing-page" width={"auto"} height={"auto"}/>
+          <img
+            src={"/media/landingPage/hero.svg"}
+            alt="landing-page"
+            width={"auto"}
+            height={"auto"}
+          />
         </div>
       </div>
 
@@ -436,7 +442,7 @@ export const LandingPage = () => {
           </div>
 
           <img
-            src={"/media/landingPage/Hero-mobile.svg"}
+            src={"/media/landingPage/Hero-mobile.webp"}
             alt="hero-mobile"
             width="120%"
             className="py-7 "

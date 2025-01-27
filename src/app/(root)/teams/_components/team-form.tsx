@@ -97,10 +97,10 @@ export const TeamForm = ({
       } catch (error: any) {
         closeBtn(false);
         showAlert({
-          title: "Can't update user",
-          description: error.message,
+          title: "Can't update team",
+          description: "Error updating team !",
           isFailure: true,
-          key: "update-user-failure",
+          key: "update-team-failure",
         });
       } finally {
         setLoading(false);
@@ -113,7 +113,6 @@ export const TeamForm = ({
           formData?.description,
           formData?.image
         );
-        // setLocalAlert(true);
         showAlert({
           title: "WOHOOO!! 🎉",
           description: "Team created successfully !",
@@ -126,18 +125,16 @@ export const TeamForm = ({
       } catch (error: any) {
         closeBtn(false);
         showAlert({
-          title: "Can't Create User",
-          description: error.message,
+          title: "Can't create team",
+          description: "Error creating team !",
           isFailure: true,
-          key: "update-user-failure",
+          key: "create-team-failure",
         });
       } finally {
         setLoading(false);
       }
     }
   };
-
-  // Handle file selection
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -186,7 +183,6 @@ export const TeamForm = ({
     setFormData((prev) => ({ ...prev, image: "" }));
   };
 
-  // Handle department selection
   const handleDepartmentSelect = (department: string) => {
     setFormData((prev) => ({ ...prev, description: department }));
   };
@@ -197,7 +193,7 @@ export const TeamForm = ({
         <div className="flex flex-col h-full justify-start items-start gap-6">
           <div className="flex items-center  justify-center gap-4 ">
             <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
-            <h3 className="text-xl font-gilroySemiBold  ">
+            <h3 className="text-xl font-gilroySemiBold">
               {isEditForm ? "Edit Team" : "Create new team"}
             </h3>
           </div>
@@ -208,7 +204,7 @@ export const TeamForm = ({
               e.preventDefault();
               handleSubmit();
             }}
-            className="flex flex-col gap-6 "
+            className="flex flex-col gap-6"
           >
             <div className="group relative">
               <label
@@ -218,7 +214,6 @@ export const TeamForm = ({
                 Team Name
               </label>
               <Input
-                maxLength={20}
                 id="team-name"
                 className={cn(
                   errors.title
@@ -334,8 +329,7 @@ export const TeamForm = ({
                   </>
                 ) : (
                   <>
-                    Submit
-                    <Icons.arrowRight className="size-2" />
+                    Submit <Icons.arrowRight className="size-2" />
                   </>
                 )}
               </Button>

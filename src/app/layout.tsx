@@ -1,5 +1,6 @@
+// import "./globals.css";
+import "./globals.min.css";
 import type { Metadata } from "next";
-import "./globals.css";
 import Providers from "@/providers";
 import KbarWrapper from "./KbarWrapper";
 import { getSession } from "@/server/helper";
@@ -33,29 +34,6 @@ export const metadata: Metadata = {
   },
 };
 
-const gilroyThin = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Thin.ttf",
-  // weight: "100",
-  display: "block",
-  variable: "--font-gilroy-thin",
-});
-
-const gilroyExtraLight = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-UltraLight.ttf",
-  // weight: "200",
-  display: "block",
-
-  variable: "--font-gilroy-extralight",
-});
-
-const gilroyLight = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Light.ttf",
-  // weight: "300",
-  display: "block",
-
-  variable: "--font-gilroy-light",
-});
-
 const gilroyRegular = localFont({
   src: "../../public/fonts/gilroy2/Gilroy-Regular.ttf",
   // weight: "400",
@@ -87,22 +65,6 @@ const gilroyBold = localFont({
   variable: "--font-gilroy-bold",
 });
 
-const gilroyExtraBold = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Extrabold.ttf",
-  // weight: "800",
-  display: "block",
-
-  variable: "--font-gilroy-extrabold",
-});
-
-const gilroyBlack = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Heavy.ttf",
-  // weight: "900",
-  display: "block",
-
-  variable: "--font-gilroy-black",
-});
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -115,15 +77,10 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`
-          ${gilroyThin.variable} 
-          ${gilroyExtraLight.variable} 
-          ${gilroyLight.variable} 
           ${gilroyRegular.variable} 
           ${gilroyMedium.variable} 
           ${gilroySemiBold.variable} 
-          ${gilroyBold.variable} 
-          ${gilroyExtraBold.variable} 
-          ${gilroyBlack.variable}
+          ${gilroyBold.variable}
         `}
       >
         {session?.user && <KbarWrapper userRole={userRole} />}{" "}

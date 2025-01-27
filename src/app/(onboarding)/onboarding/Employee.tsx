@@ -149,9 +149,18 @@ export const Employee = ({ setSteps }: any) => {
       setLoading(true);
       try {
         await createUser(user);
+
+        const employeeCount = sessionStorage.getItem("employee-count");
+        if (employeeCount) {
+          const empCountInt = parseInt(employeeCount);
+          if (empCountInt >= 0) {
+            sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+          }
+        }
+
         setLoading(false);
         setSuccess(true);
-        sessionStorage.setItem("employee-count", "1");
+
         setFormData({
           firstN: "",
           phone: "",
@@ -231,7 +240,6 @@ export const Employee = ({ setSteps }: any) => {
               <div className="flex w-[75%] gap-4">
                 <BulkUpload
                   bulkApi={bulkUploadUsers}
-                  closeBtn={() => {}}
                   requiredKeys={bulkUploadKeys}
                   setSuccess={(success: boolean) => {
                     setSuccess(success);
@@ -615,30 +623,32 @@ export const Employee = ({ setSteps }: any) => {
                       </div>
 
                       <div className="flex-1">
-                        <div className="z-20 flex-1">
-                          <SelectDropdown
-                            options={designations}
-                            onSelect={(data) =>
+                        <div className="flex-1">
+                          <FormField
+                            label="Designation"
+                            id="designation"
+                            error={errors.designation}
+                            name="designation"
+                            value={formData?.designation ?? ""}
+                            type="text"
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+
                               setFormData((prev) => ({
                                 ...prev,
-                                designation: data?.value,
-                              }))
-                            }
-                            label="Role"
-                            value={`${formData?.designation ?? ""}`}
-                            placeholder="eg: Full Stack Developer"
-                            className={cn(
-                              errors.designation
-                                ? "border-destructive/80 "
-                                : "border-[#5F5F5F]",
-                              "rounded-xl border"
-                            )}
+                                designation: inputValue,
+                              }));
+
+                              setErrors((prevErrors) => ({
+                                ...prevErrors,
+                                designation: inputValue
+                                  ? ""
+                                  : "Designation is required",
+                              }));
+                            }}
+                            maxLength={50}
+                            placeholder="eg. Frontend Developer"
                           />
-                          {errors.designation && (
-                            <p className="mt-0.5 text-xs text-destructive">
-                              {errors.designation}
-                            </p>
-                          )}
                         </div>
                       </div>
                     </div>

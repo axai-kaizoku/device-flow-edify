@@ -14,7 +14,7 @@ function Welcome() {
         />
       </div>
       <div className="w-[42%]  h-full justify-center items-center flex flex-col">
-        <div className="w-full flex flex-col gap-6 justify-center items-center">
+        <div className="w-full flex flex-col gap-0 justify-center items-center">
           <svg
             width="85"
             height="86"
@@ -48,12 +48,13 @@ function Welcome() {
             />
           </svg>
 
-          <div className="text-center text-3xl font-gilroyBold text-indigo-950">
+          <h1 className="text-center text-3xl font-gilroyBold my-3 text-indigo-950">
             Welcome to DeviceFlow
-          </div>
-          <div className="text-center text-base -mt-3 font-gilroyMedium  text-[#52525B]">
-            Your have been successfully registered in DeviceFlow
-          </div>
+          </h1>
+          <p className="text-center text-base text-pretty my-1 font-gilroyMedium  text-[#52525B]">
+            Successfully registered with DeviceFlow, your login details have
+            been emailed.
+          </p>
         </div>
 
         <button
