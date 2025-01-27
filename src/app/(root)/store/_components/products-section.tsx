@@ -9,6 +9,7 @@ import { useQueryState } from "nuqs";
 import { useAlert } from "@/hooks/useAlert";
 import { getTrendingDevice, getLatestReleases } from "@/server/storeActions";
 import { ProductSlider } from "./product-slider";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export const ProductsSection = ({ cart }: { cart: any }) => {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -58,7 +59,10 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full my-20">
+
+              <DeviceFlowLoader />
+              </div>
             ) : (
               <ProductSlider key={"best-sellers"} data={products} cart={cart} />
             )}
@@ -68,7 +72,10 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full my-20">
+
+              <DeviceFlowLoader />
+              </div>
             ) : (
               <ProductSlider
                 key={"latest-release"}

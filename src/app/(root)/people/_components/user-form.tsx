@@ -42,6 +42,21 @@ export const UserForm = ({
   const router = useRouter();
   const { showAlert } = useAlert();
   const { openToast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -272,6 +287,8 @@ export const UserForm = ({
       );
 
       if (isValidSize && isValidType) {
+        setIsUploading(true);
+        simulateProgress();
         try {
           const res = await getImageUrl({ file });
 
@@ -290,6 +307,9 @@ export const UserForm = ({
             ...prev,
             image: "Failed to upload the image. Please try again.",
           }));
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
         }
       } else {
         setErrors((prev) => ({
@@ -331,11 +351,17 @@ export const UserForm = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
+        setIsUploading(true);
+        simulateProgress();
         try {
           const res = await getImageUrl({ file });
           setOfferLetter(res?.fileUrl);
         } catch (error) {
           openToast("error", "Image upload failed");
+        }
+        finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
         }
       } else {
         setErrors((prev) => ({
@@ -458,7 +484,20 @@ export const UserForm = ({
                   Upload picture
                 </label>
 
-                {formData.image ? (
+                {isUploading ? (
+                  <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                    <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                      <div
+                        className="h-2 bg-black rounded-full"
+                        style={{
+                          width: `${progress}%`,
+                          transition: "width 0.1s linear",
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-black">{progress}%</span>
+                  </div>
+                ) : formData.image ? (
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                     <img
                       src={formData.image}
@@ -830,10 +869,25 @@ export const UserForm = ({
                   <label className="font-gilroyMedium text-black text-base">
                     Upload Offer Letter
                   </label>
-                  {offerLetter ? (
+                  {isUploading ? (
+                  <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                    <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                      <div
+                        className="h-2 bg-black rounded-full"
+                        style={{
+                          width: `${progress}%`,
+                          transition: "width 0.1s linear",
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-black">{progress}%</span>
+                  </div>):
+                    
+                  offerLetter ? 
+                  (
                     <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
                       <iframe
-                        src={URL.createObjectURL(offerLetter)}
+                        src={offerLetter}
                         width="100%"
                         height="100%"
                         title="Offer Letter Preview"
