@@ -51,6 +51,21 @@ export const TeamForm = ({
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
   const { showAlert } = useAlert();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   // Local state for form data
   const [formData, setFormData] = useState({
@@ -97,10 +112,10 @@ export const TeamForm = ({
       } catch (error: any) {
         closeBtn(false);
         showAlert({
-          title: "Can't update user",
-          description: error.message,
+          title: "Can't update team",
+          description: "Error updating team !",
           isFailure: true,
-          key: "update-user-failure",
+          key: "update-team-failure",
         });
       } finally {
         setLoading(false);
@@ -113,7 +128,6 @@ export const TeamForm = ({
           formData?.description,
           formData?.image
         );
-        // setLocalAlert(true);
         showAlert({
           title: "WOHOOO!! 🎉",
           description: "Team created successfully !",
@@ -126,18 +140,16 @@ export const TeamForm = ({
       } catch (error: any) {
         closeBtn(false);
         showAlert({
-          title: "Can't Create User",
-          description: error.message,
+          title: "Can't create team",
+          description: "Error creating team !",
           isFailure: true,
-          key: "update-user-failure",
+          key: "create-team-failure",
         });
       } finally {
         setLoading(false);
       }
     }
   };
-
-  // Handle file selection
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -149,6 +161,8 @@ export const TeamForm = ({
       );
 
       if (isValidSize && isValidType) {
+        setIsUploading(true);
+        simulateProgress();
         try {
           const res = await getImageUrl({ file });
           setFormData((prev) => ({
@@ -166,6 +180,9 @@ export const TeamForm = ({
             ...prev,
             image: "Failed to upload the image. Please try again.",
           }));
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
         }
       } else {
         setErrors((prev) => ({
@@ -186,7 +203,6 @@ export const TeamForm = ({
     setFormData((prev) => ({ ...prev, image: "" }));
   };
 
-  // Handle department selection
   const handleDepartmentSelect = (department: string) => {
     setFormData((prev) => ({ ...prev, description: department }));
   };
@@ -197,7 +213,7 @@ export const TeamForm = ({
         <div className="flex flex-col h-full justify-start items-start gap-6">
           <div className="flex items-center  justify-center gap-4 ">
             <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
-            <h3 className="text-xl font-gilroySemiBold  ">
+            <h3 className="text-xl font-gilroySemiBold">
               {isEditForm ? "Edit Team" : "Create new team"}
             </h3>
           </div>
@@ -208,7 +224,7 @@ export const TeamForm = ({
               e.preventDefault();
               handleSubmit();
             }}
-            className="flex flex-col gap-6 "
+            className="flex flex-col gap-6"
           >
             <div className="group relative">
               <label
@@ -218,7 +234,6 @@ export const TeamForm = ({
                 Team Name
               </label>
               <Input
-                maxLength={20}
                 id="team-name"
                 className={cn(
                   errors.title
@@ -241,7 +256,20 @@ export const TeamForm = ({
 
             <div className="flex flex-col gap-1.5">
               <label className="font-gilroyMedium">Upload team image</label>
-              {formData.image ? (
+              {isUploading ? (
+                <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                  <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                    <div
+                      className="h-2 bg-black rounded-full"
+                      style={{
+                        width: `${progress}%`,
+                        transition: "width 0.1s linear",
+                      }}
+                    ></div>
+                  </div>
+                  <span className="text-sm text-black">{progress}%</span>
+                </div>
+              ) : formData.image ? (
                 <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                   <img
                     src={formData.image}
@@ -334,8 +362,7 @@ export const TeamForm = ({
                   </>
                 ) : (
                   <>
-                    Submit
-                    <Icons.arrowRight className="size-2" />
+                    Submit <Icons.arrowRight className="size-2" />
                   </>
                 )}
               </Button>

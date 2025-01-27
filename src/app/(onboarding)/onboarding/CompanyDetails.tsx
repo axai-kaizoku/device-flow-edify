@@ -60,7 +60,7 @@ export function CompanyDetails({ setSteps }: any) {
           </div>
           {company?.logo ? (
             <div className="relative flex-1 flex-col rounded-[25px] px-5 py-5 bg-white gap-2 h-[136px]  items-center">
-              <div className="w-full flex justify-centerx">
+              <div className="w-full flex justify-center">
                 {/* Display the logo */}
                 {company.logo ? (
                   <img

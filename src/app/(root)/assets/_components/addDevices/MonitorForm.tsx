@@ -23,6 +23,21 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [displayFile, setDisplayFile] = useState("");
   const { openToast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,12 +65,17 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
+        setIsUploading(true);
+        simulateProgress();
         try {
           const res = await getImageUrl({ file });
           setDisplayFile(URL.createObjectURL(file));
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
           openToast("error", "Some Error while uploading the File");
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
         }
       } else {
         setErrors((prev) => ({
@@ -119,7 +139,20 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
         <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
-        {displayFile ? (
+        {isUploading ? (
+          <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+            <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-2 bg-black rounded-full"
+                style={{
+                  width: `${progress}%`,
+                  transition: "width 0.1s linear",
+                }}
+              ></div>
+            </div>
+            <span className="text-sm text-black">{progress}%</span>
+          </div>
+        ) : invoiceFile ? (
           <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-1">
             <iframe
               src={displayFile}
@@ -134,10 +167,10 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
                   !iframe.contentDocument ||
                   iframe.contentDocument.title === ""
                 ) {
-                  openToast(
-                    "error",
-                    "File preview failed. It may not be viewable."
-                  );
+                  // openToast(
+                  //   "error",
+                  //   "File preview failed. It may not be viewable."
+                  // );
                 }
               }}
             />

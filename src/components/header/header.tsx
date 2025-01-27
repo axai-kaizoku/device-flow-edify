@@ -279,7 +279,12 @@ export default function Header({ session }: Props) {
 
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
-                        onClick={() => signOut()}
+                        onClick={() => 
+                          
+                          // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
+                          signOut()
+                           
+                          }
                         className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
                         <LogOut className="size-4" />
@@ -293,9 +298,11 @@ export default function Header({ session }: Props) {
               <div
                 className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
-                onClick={() => {
-                  signOut();
-                }} // Center align the button
+                onClick={() => 
+                  // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
+                  signOut()
+
+                } // Center align the button
               >
                 <LogOut className="w-5 h-5" />
               </div>

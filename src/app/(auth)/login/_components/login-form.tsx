@@ -31,6 +31,7 @@ export default function LoginForm() {
         email,
         password,
         redirect: false,
+        // callbackUrl: "https://app.deviceflow.ai"
       });
       setLoading(false);
 

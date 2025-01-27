@@ -173,8 +173,12 @@ function SignUp() {
 
   return (
     <>
-      {steps === 1 && <EmailVerificaion user={user} setUser={setUser} setSteps={setSteps}  />}
-      {steps === 2 && <PersonalDetails setSteps={setSteps} user={user} setUser={setUser} />}
+      {steps === 1 && (
+        <EmailVerificaion user={user} setUser={setUser} setSteps={setSteps} />
+      )}
+      {steps === 2 && (
+        <PersonalDetails setSteps={setSteps} user={user} setUser={setUser} />
+      )}
       {steps === 3 && (
         <OrganisationDetails
           setSteps={setSteps}

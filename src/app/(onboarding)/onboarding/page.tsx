@@ -12,9 +12,15 @@ export default function Page() {
   const [steps, setSteps] = useState(1);
 
   useEffect(() => {
-    if (sessionStorage.getItem("employee-count") === "2") {
-      router.push("/");
+    if (sessionStorage.getItem("employee-count")) {
+      const count = parseInt(sessionStorage.getItem("employee-count")!);
+      if (count >= 2) {
+        router.push("/");
+      }
     }
+    // if (sessionStorage.getItem("employee-count") === "2") {
+    //   router.push("/");
+    // }
   }, [router]);
 
   return (

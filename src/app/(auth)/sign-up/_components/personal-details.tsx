@@ -77,7 +77,7 @@ function PersonalDetails({ setSteps, setUser, user }: any) {
       <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
         <div className="w-[46%]  h-[auto]">
           <img
-            src="/media/Onboarding/companyDetails.png"
+            src="/media/Onboarding/employee.png"
             alt="edify-background"
             width={"100%"}
           />

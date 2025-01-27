@@ -220,7 +220,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 placeholder="Search teams..."
               />
             </div>
-            <CreateTeam>
+            <CreateTeam onRefresh={refreshData}>
               <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
                 <Plus className="text-[#6C6C6C]  size-5" />
                 <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
