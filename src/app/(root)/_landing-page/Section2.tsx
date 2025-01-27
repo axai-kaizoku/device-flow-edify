@@ -144,7 +144,7 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
                     alt="hassel-1-mob"
                     className="mt-6"
                     width={"100%"}
-                    height={504}  
+                    height={504}
                   />
                 </div>
 

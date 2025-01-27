@@ -10,21 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       boxShadow: {
-        'inner-click': '3px 2px 22px 1px rgba(0, 0, 0, 0.24)'
+        "inner-click": "3px 2px 22px 1px rgba(0, 0, 0, 0.24)",
       },
       scale: {
-        '98': '0.98', // Slightly scale down on click
+        "98": "0.98", // Slightly scale down on click
       },
       fontFamily: {
-        gilroyThin: ["var(--font-gilroy-thin)", "sans-serif"],
-        gilroyExtraLight: ["var(--font-gilroy-extralight)", "sans-serif"],
-        gilroyLight: ["var(--font-gilroy-light)", "sans-serif"],
         gilroyRegular: ["var(--font-gilroy-regular)", "sans-serif"],
         gilroyMedium: ["var(--font-gilroy-medium)", "sans-serif"],
         gilroySemiBold: ["var(--font-gilroy-semibold)", "sans-serif"],
         gilroyBold: ["var(--font-gilroy-bold)", "sans-serif"],
-        gilroyExtraBold: ["var(--font-gilroy-extrabold)", "sans-serif"],
-        gilroyBlack: ["var(--font-gilroy-black)", "sans-serif"],
       },
       keyframes: {
         "caret-blink": {
@@ -45,7 +40,7 @@ const config: Config = {
         },
         "pop-center": {
           "0%": { transform: "scale(0)", opacity: "0" },
-          "25%": { transform: "scale(0.25)", opacity: "0.25"},
+          "25%": { transform: "scale(0.25)", opacity: "0.25" },
           "50%": { transform: "scale(0.5)", opacity: "0.5" },
           "75%": { transform: "scale(0.75)", opacity: "0.75" },
           "100%": { transform: "scale(1)", opacity: "1" },
@@ -61,7 +56,7 @@ const config: Config = {
       },
       animation: {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
-        "fade-in":"fade-in 1s ease-in-out",
+        "fade-in": "fade-in 1s ease-in-out",
         "tick-fall": "tick-fall 0.1s ease-out",
         "pop-center": "pop-center 1s ease-in",
         "scale-up-center": "scale-up-center 2s ease-in-out",
