@@ -10,31 +10,25 @@ import { FilterDropdown } from "../../_components/filter-dropdown";
 
 export default function AllProductsFilter({
   setData,
+  setFilterData,
 }: {
   setData: React.Dispatch<SetStateAction<StoreDevice[]>>;
+  setFilterData: React.Dispatch<SetStateAction<{ ram: string; storage: string; os: string; brand: string; searchTerm:string; }>>;
 }) {
   const { showAlert } = useAlert();
-  const [selectedRam, setSelectedRam] = useState<string[]>([]);
-  const [selectedStorage, setSelectedStorage] = useState<string[]>([]);
-  const [selectedOS, setSelectedOS] = useState<string[]>([]);
-  const [selectedBrand, setSelectedBrand] = useState<string[]>([]);
+  const [selectedRam, setSelectedRam] = useState<string | null>(null);
+  const [selectedStorage, setSelectedStorage] = useState<string | null>(null);
+  const [selectedOS, setSelectedOS] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [filters, setFilters] = useState<string[][]>([]);
 
   const updateFilters = () => {
-    let newFilters: string[][] = [];
+    const newFilters: string[][] = [];
 
-    selectedRam.forEach((ram) => {
-      newFilters.push(["ram", "Like", ram]);
-    });
-    selectedStorage.forEach((storage) => {
-      newFilters.push(["storage", "Like", storage]);
-    });
-    selectedOS.forEach((os) => {
-      newFilters.push(["os", "Like", os]);
-    });
-    selectedBrand.forEach((brand) => {
-      newFilters.push(["brand", "Like", brand]);
-    });
+    if (selectedRam) newFilters.push(["ram", "Like", selectedRam]);
+    if (selectedStorage) newFilters.push(["storage", "Like", selectedStorage]);
+    if (selectedOS) newFilters.push(["os", "Like", selectedOS]);
+    if (selectedBrand) newFilters.push(["brand", "Like", selectedBrand]);
 
     setFilters(newFilters);
   };
@@ -61,11 +55,12 @@ export default function AllProductsFilter({
   }, [filters]);
 
   const clearAllFilters = () => {
-    setSelectedRam([]);
-    setSelectedStorage([]);
-    setSelectedOS([]);
-    setSelectedBrand([]);
+    setSelectedRam(null);
+    setSelectedStorage(null);
+    setSelectedOS(null);
+    setSelectedBrand(null);
     setFilters([]); // Clear all filters
+    setFilterData({ ram: "", storage: "", os: "", brand: "",searchTerm:"" }); 
   };
 
   return (
@@ -84,8 +79,11 @@ export default function AllProductsFilter({
               { value: "8GB", label: "8GB" },
               { value: "16GB", label: "16GB" },
             ]}
-            selectedValues={selectedRam}
-            onChange={setSelectedRam}
+            selectedValue={selectedRam}
+            onChange={(value)=>{
+              setSelectedRam(value);
+              setFilterData((prev) => ({ ...prev, ram: value }));
+            }}
           />
 
           <FilterDropdown
@@ -96,8 +94,11 @@ export default function AllProductsFilter({
               { value: "512GB", label: "512GB" },
               { value: "1TB", label: "1TB" },
             ]}
-            selectedValues={selectedStorage}
-            onChange={setSelectedStorage}
+            selectedValue={selectedStorage}
+            onChange={(value)=>{
+              setSelectedStorage(value);
+              setFilterData((prev) => ({ ...prev, storage: value }));
+            }}
           />
 
           <FilterDropdown
@@ -107,8 +108,11 @@ export default function AllProductsFilter({
               { value: "mac", label: "Mac" },
               { value: "linux", label: "Linux" },
             ]}
-            selectedValues={selectedOS}
-            onChange={setSelectedOS}
+            selectedValue={selectedOS}
+            onChange={(value)=>{
+              setSelectedOS(value);
+              setFilterData((prev) => ({ ...prev, os: value }));
+            }}
           />
 
           <FilterDropdown
@@ -119,8 +123,11 @@ export default function AllProductsFilter({
               { value: "lenovo", label: "Lenovo" },
               { value: "acer", label: "Acer" },
             ]}
-            selectedValues={selectedBrand}
-            onChange={setSelectedBrand}
+            selectedValue={selectedBrand}
+            onChange={(value)=>{
+              setSelectedBrand(value);
+              setFilterData((prev) => ({ ...prev, brand: value }));
+            }}
           />
         </div>
       </div>

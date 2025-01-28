@@ -8,6 +8,7 @@ import { getStoreDevices } from "@/server/storeActions";
 import { useAlert } from "@/hooks/useAlert";
 import { DeviceWithQty } from "@/server/cartActions";
 import { StoreDeviceCard } from "./store-device-card";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export const AllProductsSection = ({ cart }: { cart: any }) => {
   const { showAlert } = useAlert();
@@ -49,7 +50,7 @@ export const AllProductsSection = ({ cart }: { cart: any }) => {
       <div className="mt-6 w-full">
         {loading ? (
           <div className="flex justify-center items-center h-24">
-            <Spinner />
+            <DeviceFlowLoader />
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-8 w-full">
