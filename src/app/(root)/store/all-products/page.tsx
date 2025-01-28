@@ -4,7 +4,6 @@ import { Cart, DeviceWithQty, getCart } from "@/server/cartActions";
 import { StoreDeviceCard } from "../_components/store-device-card";
 import { useEffect, useState } from "react";
 import { StoreDevice } from "@/server/deviceActions";
-import Spinner from "@/components/Spinner";
 import { useSearchParams } from "next/navigation";
 import AllProductsFilter from "./_components/all-products-filter";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
@@ -15,6 +14,13 @@ export default function AllProducts() {
   const [cart, setCart] = useState<Cart>();
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
+  const [filterData, setFilterData] = useState({
+    ram:"",
+    storage:"",
+    os:"",
+    brand:"",
+    searchTerm:"",
+  });
 
   const searchQuery = searchParams?.get("q") || "";
 
@@ -46,7 +52,7 @@ export default function AllProducts() {
 
   return (
     <div className="py-6 px-[5.5rem] flex flex-col gap-9 bg-white">
-      <AllProductsFilter setData={setData} />
+      <AllProductsFilter setData={setData} setFilterData={setFilterData}/>
       {!loading ? (
         data.length > 0 ? (
           <div className="grid grid-cols-4 gap-x-10 gap-y-8 w-full ">
@@ -62,7 +68,7 @@ export default function AllProducts() {
             })}
           </div>
         ) : (
-          <NoProducts/>
+          <NoProducts filterData={filterData}/>
         )
       ) : (
         <div className="w-full h-[60vh] flex justify-center items-center">

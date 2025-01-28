@@ -134,3 +134,48 @@ export const createDeviceReview = async function ({
     throw new Error((e as AxiosError)?.message);
   }
 };
+
+
+export const requestLaptop = async function ({
+  ram,
+  storage,
+  os,
+  brand,
+  searchTerm,
+}: {
+  ram: string;
+  storage: string;
+  os: string;
+  brand: string;
+  searchTerm: string;
+}): Promise<any> {
+  try {
+    // Define the payload
+    const payload = {
+      ram,
+      storage,
+      os,
+      brand,
+      searchTerm,
+    };
+
+    // API call
+    const res = await callAPIWithToken<any>(
+      "https://api.edify.club/edifybackend/v1/devices/requestlaptop",
+      "POST",
+      payload
+    );
+
+    // Check and return response data
+    if (res && res?.data) {
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to request a laptop. Please try again later."
+    );
+  }
+};

@@ -4,14 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 type FilterDropdownProps = {
   label: string;
   options: { value: string | number; label: string }[];
-  selectedValues: string[];
-  onChange: (selected: string[]) => void;
+  selectedValue: string | null;
+  onChange: (selected: string) => void;
 };
 
 export const FilterDropdown = ({
   label,
   options,
-  selectedValues,
+  selectedValue,
   onChange,
 }: FilterDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +38,7 @@ export const FilterDropdown = ({
   };
 
   const handleOptionClick = (value: string) => {
-    const newSelectedValues = selectedValues.includes(value)
-      ? selectedValues.filter((item) => item !== value)
-      : [...selectedValues, value];
-
-    onChange(newSelectedValues);
+    onChange(value); 
   };
 
   return (
@@ -55,10 +51,10 @@ export const FilterDropdown = ({
         <Icons.arrow_down
           className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
-        {selectedValues.length > 0 && (
-          <div className=" absolute top-0 right-0 rounded-full text-white size-3.5 bg-red-500 flex justify-center items-center">
-            <span className=" text-[10px] font-gilroyMedium">
-              {selectedValues.length}
+        {selectedValue && (
+          <div className="absolute top-0 right-0 rounded-full text-white size-3.5 bg-red-500 flex justify-center items-center">
+            <span className="text-[10px] font-gilroyMedium">
+              1
             </span>
           </div>
         )}
@@ -74,9 +70,10 @@ export const FilterDropdown = ({
                 className="flex w-full h-fit items-center gap-2 py-2 px-3 rounded-md hover:bg-gray-100 cursor-pointer"
               >
                 <input
-                  type="checkbox"
+                  type="radio" // Changed to radio
                   id={option.label}
-                  checked={selectedValues.includes(option.value.toString())}
+                  name={label} // Ensure only one option can be selected at a time
+                  checked={selectedValue === option.value.toString()} // Compare to selectedValue
                   onChange={() => handleOptionClick(option.value.toString())}
                   className="size-4 text-black checked:text-black border-gray-300 rounded-md"
                 />
