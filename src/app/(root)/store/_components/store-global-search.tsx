@@ -1,11 +1,12 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const StoreGlobalSearch = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isFocused, setIsFocused] = useState(false);
   const [term, setTerm] = useState(searchParams.get("q") || ""); // Initialize with query param if available
@@ -13,7 +14,9 @@ export const StoreGlobalSearch = () => {
   // Update URL when `term` changes
   useEffect(() => {
     const query = term ? `?q=${encodeURIComponent(term)}` : "";
-    router.replace(`/store/all-products${query}`);
+    if (pathname.startsWith("/store/all-products")) {
+      router.replace(`/store/all-products${query}`);
+    }
   }, [term, router]);
 
   return (
@@ -31,7 +34,9 @@ export const StoreGlobalSearch = () => {
           isFocused ? "input-transition" : "w-0"
         )}
         value={term}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTerm(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTerm(e.target.value)
+        }
         autoFocus={isFocused}
         placeholder="Search"
       />

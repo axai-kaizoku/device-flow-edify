@@ -73,7 +73,7 @@ export const UserForm = ({
       : "",
     image: userData ? userData.image : "",
     designation: userData ? userData.designation : "",
-    team: userData?.team[0]._id
+    team: userData?.team?.[0]._id
       ? // @ts-ignore
         { name: userData.team[0].title, value: userData.team[0]._id }
       : { name: "", value: "" },
@@ -358,8 +358,7 @@ export const UserForm = ({
           setOfferLetter(res?.fileUrl);
         } catch (error) {
           openToast("error", "Image upload failed");
-        }
-        finally {
+        } finally {
           setIsUploading(false); // Stop showing the progress bar
           setProgress(0);
         }
@@ -870,21 +869,19 @@ export const UserForm = ({
                     Upload Offer Letter
                   </label>
                   {isUploading ? (
-                  <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
-                    <div className="w-3/4 h-2 bg-gray-200 rounded-full">
-                      <div
-                        className="h-2 bg-black rounded-full"
-                        style={{
-                          width: `${progress}%`,
-                          transition: "width 0.1s linear",
-                        }}
-                      ></div>
+                    <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                      <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                        <div
+                          className="h-2 bg-black rounded-full"
+                          style={{
+                            width: `${progress}%`,
+                            transition: "width 0.1s linear",
+                          }}
+                        ></div>
+                      </div>
+                      <span className="text-sm text-black">{progress}%</span>
                     </div>
-                    <span className="text-sm text-black">{progress}%</span>
-                  </div>):
-                    
-                  offerLetter ? 
-                  (
+                  ) : offerLetter ? (
                     <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
                       <iframe
                         src={offerLetter}
