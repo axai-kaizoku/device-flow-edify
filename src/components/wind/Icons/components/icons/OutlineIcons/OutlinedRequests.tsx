@@ -19,7 +19,7 @@ export const OutlinedRequests = ({
       style={style}
       onClick={onClick}
     >
-      <g clip-path="url(#clip0_3746_78896)">
+      <g clipPath="url(#clip0_3746_78896)">
         <path
           fillRule="evenodd"
           clipRule="evenodd"

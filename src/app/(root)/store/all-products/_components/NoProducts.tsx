@@ -1,31 +1,28 @@
 "use client";
 import Spinner from "@/components/Spinner";
+import { requestLaptop } from "@/server/storeActions";
 import React, { useState } from "react";
 
-const NoProducts = () => {
+const NoProducts = ({filterData}:{filterData:{ram:string; storage: string; os: string; brand:string; searchTerm:string;}}) => {
   const [loading, setLoading] = useState(false);
   const [requested, setRequested] = useState(false);
 
   const handleRequestLaptop = async () => {
     setLoading(true);
-    // try {
-    //   const response = await fetch("/api/request-laptop", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ query: "laptop_request" }),
-    //   });
+    try {
+      const response = await requestLaptop(filterData);
 
-    //   if (response.ok) {
-    //     setRequested(true);
-    //   } else {
-    //     console.error("Failed to request laptop");
-    //   }
-    // } catch (error) {
-    //   console.error("Error while requesting laptop:", error);
-    //   setRequested(true);
-    // } finally {
-    //   setLoading(false);
-    // }
+      if (response.ok) {
+        setRequested(true);
+      } else {
+        console.error("Failed to request laptop");
+      }
+    } catch (error) {
+      console.error("Error while requesting laptop:", error);
+      setRequested(true);
+    } finally {
+      setLoading(false);
+    }
     setLoading(false);
     setRequested(true);
   };
