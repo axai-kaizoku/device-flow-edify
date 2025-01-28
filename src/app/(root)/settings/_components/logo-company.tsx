@@ -35,6 +35,21 @@ export const LogoCompanyModal = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { openToast } = useToast();
   const router = useRouter();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   // Handle file selection
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,11 +61,16 @@ export const LogoCompanyModal = ({
       );
 
       if (isValidSize && isValidType) {
+        setIsUploading(true);
+        simulateProgress();
         try {
           const res = await getImageUrl({ file });
           setImage(res.fileUrl);
         } catch (error) {
           openToast("error", "Image upload failed");
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
         }
       } else {
         openToast("error", "Image Size too large");
@@ -94,7 +114,20 @@ export const LogoCompanyModal = ({
                 Upload Organization Image
               </label>
 
-              {image ? (
+              {isUploading ? (
+                <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                  <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                    <div
+                      className="h-2 bg-black rounded-full"
+                      style={{
+                        width: `${progress}%`,
+                        transition: "width 0.1s linear",
+                      }}
+                    ></div>
+                  </div>
+                  <span className="text-sm text-black">{progress}%</span>
+                </div>
+              ) : image ? (
                 <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                   <img
                     src={image}
@@ -151,7 +184,7 @@ export const LogoCompanyModal = ({
             </div>
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter >
+        <DialogFooter>
           <Button
             className="w-1/2 rounded-md bg-[#D92D20] text-white"
             onClick={handleUploadLogo}
