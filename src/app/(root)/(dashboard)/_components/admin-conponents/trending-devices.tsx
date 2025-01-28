@@ -6,6 +6,8 @@ export function TrendingDevices({
 }: {
   dashboardData: DashboardDetails | null;
 }) {
+
+  console.log(dashboardData)
   const router = useRouter();
   return (
     <div className={`flex w-full flex-col `}>
@@ -47,8 +49,8 @@ export function TrendingDevices({
                     <div className="flex h-16 flex-shrink-0 items-center justify-evenly gap-x-3.5">
                       <div className="flex flex-col items-center self-stretch">
                         <img
-                          src="/media/mac-2.png"
-                          style={{ height: 64, width: 101 }}
+                          src={response?.image?.[0]?.url || "/media/mac-2.png"}
+                          style={{ height: 64, width: 101, objectFit: 'cover' }}
                         />
                       </div>
                       <div className="flex flex-col items-start gap-y-[1.9px]">

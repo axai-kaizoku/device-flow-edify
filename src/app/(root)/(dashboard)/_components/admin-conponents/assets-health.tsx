@@ -17,10 +17,10 @@ export function AssetsHealth({
         </div>
         <div className="flex flex-wrap items-start justify-center gap-x-5 gap-y-5 text-center text-[11px] font-gilroyMedium leading-[17px] text-slate-600 min-[461px]:flex-nowrap">
           {(dashboardData?.deviceConditionData?.length || 0) > 0 ? (
-            dashboardData?.deviceConditionData?.map((response) => {
+            dashboardData?.deviceConditionData?.map((response, index: number) => {
               if (response._id === "Excellent") {
                 return (
-                  <div className="flex w-[127px]  flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
+                  <div key={`excel-${index}`} className="flex w-[127px]  flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
                     <div className="relative z-0 flex items-center  text-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export function AssetsHealth({
               }
               if (response._id === "Good") {
                 return (
-                  <div className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
+                  <div key={`good-${index}`} className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
                     <div className="relative z-0 flex items-center  text-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ export function AssetsHealth({
               }
               if (response._id === "Fair") {
                 return (
-                  <div className=" w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
+                  <div key={`fair-${index}`} className=" w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
                     <div className="relative z-0 flex items-center  text-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

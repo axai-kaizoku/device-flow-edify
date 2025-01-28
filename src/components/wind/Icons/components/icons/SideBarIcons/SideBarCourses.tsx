@@ -14,7 +14,7 @@ export const SideBarCourses = ({ size, color, style, onClick }: IconProps) => {
       style={style}
       onClick={onClick}
     >
-      <g clip-path="url(#clip0_1644_53812)">
+      <g clipPath="url(#clip0_1644_53812)">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
