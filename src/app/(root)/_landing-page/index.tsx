@@ -214,7 +214,7 @@ export const LandingPage = () => {
               {/* <div>Pricing</div>
               <div>Blog</div> */}
             </div>
-            <Link href={"/login"}>
+            <Link href={"https://app.deviceflow.ai/login"}>
               <div className="pl-3 font-gilroyMedium underline">Log in</div>
             </Link>
           </div>
@@ -383,7 +383,7 @@ export const LandingPage = () => {
                 <li
                   className="py-3 cursor-pointer text-[#191D23] font-gilroySemiBold text-base underline"
                   onClick={() => {
-                    router.push("/login");
+                    router.push("https://app.deviceflow.ai/login");
                   }}
                 >
                   Log in
