@@ -255,12 +255,12 @@ export const LandingPage = () => {
             Streamline IT Asset Management <br /> with DeviceFlow
           </h1>
         </div>
-        <div className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-[darkgray]">
-          <p>
-            Simplify your office's IT workflows with seamless asset, user, and
-            inventory management.
-          </p>
-        </div>
+
+        <h1 className="fade-in flex w-[548px] items-center justify-center text-center text-[22px] font-gilroyMedium leading-8 tracking-[-0.3px] text-[#757575]">
+          Simplify your office's IT workflows with seamless asset, user, and
+          inventory management.
+        </h1>
+
         <div className="fade-in flex items-center justify-center self-stretch">
           <div className="flex items-center justify-end pl-9">
             <div className="flex items-center justify-center gap-x-3 text-center font-gilroySemiBold leading-6 tracking-[-0.2px]">

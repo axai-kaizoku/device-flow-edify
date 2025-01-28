@@ -13,22 +13,6 @@ import { useToast } from "@/hooks/useToast";
 import { useAlert } from "@/hooks/useAlert";
 import { X } from "lucide-react";
 
-const DEPARTMENT_OPTIONS = [
-  "Backend",
-  "Frontend",
-  "Quality Control",
-  "Design",
-  "Amazon Logistics",
-  "Procurement",
-  "HR",
-  "Finance",
-  "Management",
-  "Founder's Office",
-  "Technology",
-  "Tech",
-  "Others",
-];
-
 export const TeamForm = ({
   closeBtn,
   isEditForm,
@@ -85,7 +69,7 @@ export const TeamForm = ({
     // Manual validation
     const newErrors = {
       title: formData.title ? "" : "Team name is required",
-      description: formData.description ? "" : "Team Label is required",
+      description: formData.description ? "" : "Department is required",
       // image: formData.image ? "" : "Team image is required",
       image: "",
     };
@@ -210,7 +194,7 @@ export const TeamForm = ({
   return (
     <>
       <div className="flex justify-center items-center gap-6 w-full h-full overflow-y-auto">
-        <div className="flex flex-col h-full justify-start items-start gap-6">
+        <div className="flex flex-col h-full w-full justify-start items-start gap-6">
           <div className="flex items-center  justify-center gap-4 ">
             <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
             <h3 className="text-xl font-gilroySemiBold">
@@ -224,7 +208,7 @@ export const TeamForm = ({
               e.preventDefault();
               handleSubmit();
             }}
-            className="flex flex-col gap-6"
+            className="flex flex-col w-full gap-6"
           >
             <div className="group relative">
               <label
@@ -250,6 +234,37 @@ export const TeamForm = ({
               {errors.title && (
                 <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
                   {errors.title}
+                </p>
+              )}
+            </div>
+
+            <div className="group relative mt-2">
+              <label
+                htmlFor="team-department"
+                className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+              >
+                Department
+              </label>
+              <Input
+                id="team-department"
+                className={cn(
+                  errors.description
+                    ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
+                    : "h-12"
+                )}
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                placeholder="eg: Tech"
+                type="text"
+              />
+              {errors.description && (
+                <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
+                  {errors.description}
                 </p>
               )}
             </div>
@@ -311,35 +326,6 @@ export const TeamForm = ({
               )}
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="font-gilroyMedium my-1">
-                Choose Department
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {DEPARTMENT_OPTIONS.map((preLabel) => (
-                  <button
-                    key={preLabel}
-                    type="button"
-                    className={cn(
-                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full  hover:border-black transition-all duration-300 text-lg",
-                      formData.description === preLabel
-                        ? "border-white bg-primary text-white"
-                        : "hover:border-black hover:text-black"
-                    )}
-                    onClick={() => handleDepartmentSelect(preLabel)}
-                  >
-                    {preLabel}
-                  </button>
-                ))}
-              </div>
-              {errors.description && (
-                <p className="text-destructive text-xs font-gilroyMedium">
-                  {errors.description}
-                </p>
-              )}
-              <div className="pointer-events-none h-20 w-full" />
-            </div>
-
             <div className="flex w-[93%] gap-3 absolute bottom-6 pt-2 justify-between items-center">
               <Button
                 type="button"
@@ -373,3 +359,12 @@ export const TeamForm = ({
     </>
   );
 };
+
+
+
+
+
+
+
+
+
