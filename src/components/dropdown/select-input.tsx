@@ -49,26 +49,6 @@ export const SelectInput = ({
     setQuery(value); // Sync input with parent value on updates
   }, [value]);
 
-  function positionDropdown() {
-    const dropdownButton: any = document.getElementById("dropdown-button");
-    const dropdownList: any = document.getElementById("dropdown-list");
-    const bodyEl = document.querySelector("body");
-    const dropdownHeight = dropdownList.clientHeight;
-    const windowHeight = window.innerHeight;
-    const dropdownTop = dropdownButton.getBoundingClientRect().top;
-
-    if (windowHeight - dropdownTop < dropdownHeight) {
-      dropdownList.style.bottom = "100%";
-      dropdownList.style.top = "auto";
-    } else {
-      dropdownList.style.bottom = "auto";
-      dropdownList.style.top = "100%";
-    }
-  }
-  useEffect(() => {
-    window.addEventListener("scroll", positionDropdown);
-  }, []);
-
   // Debounce query updates
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedQuery(query), 300);
