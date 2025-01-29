@@ -628,3 +628,7 @@ h2.title::after {
     inset-inline-start: calc(var(--marquee-item-width) * -1);
   }
 }
+
+.onboarding-org-card {
+transition: transform 1s ease, top 1s ease, left 1s ease;
+}

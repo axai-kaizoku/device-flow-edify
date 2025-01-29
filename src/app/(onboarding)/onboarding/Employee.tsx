@@ -182,6 +182,7 @@ export const Employee = ({ setSteps }: any) => {
           isFailure: true,
           key: "create-user-failure",
         });
+        setNext(0)
       }
 
       setLoading(false);
@@ -194,7 +195,7 @@ export const Employee = ({ setSteps }: any) => {
     <>
       <div className="w-full h-screen items-center justify-evenly flex flex-col lg:flex-row p-8">
         {success ? (
-          <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+          <div className="w-full relative h-full justify-center items-center flex flex-col gap-6">
             <div className="w-full">
               <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
                 Employee Added!!
@@ -227,7 +228,7 @@ export const Employee = ({ setSteps }: any) => {
             </Button>
           </div>
         ) : (
-          <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+          <div className="w-full relative h-full justify-center items-center flex flex-col gap-6">
             <div className="w-full">
               <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
                 Add employees
@@ -676,13 +677,6 @@ export const Employee = ({ setSteps }: any) => {
             </form>
           </div>
         )}
-        <div className="w-[46%]  h-[auto]">
-          <img
-            src="/media/Onboarding/employee.png"
-            alt="edify-background"
-            width={"100%"}
-          />
-        </div>
       </div>
     </>
   );

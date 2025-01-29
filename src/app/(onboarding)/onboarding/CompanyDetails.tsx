@@ -46,7 +46,7 @@ export function CompanyDetails({ setSteps }: any) {
   };
   return (
     <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
-      <div className="w-[42%] relative h-full justify-center items-center flex flex-col">
+      <div className=" relative h-full justify-center items-center flex flex-col">
         <div
           className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
         >
@@ -191,13 +191,7 @@ export function CompanyDetails({ setSteps }: any) {
           </button>
         </div>
       </div>
-      <div className="w-[46%]  h-[auto]">
-        <img
-          src="/media/Onboarding/companyDetails.png"
-          alt="edify-background"
-          width={"100%"}
-        />
-      </div>
+      
     </div>
   );
 }

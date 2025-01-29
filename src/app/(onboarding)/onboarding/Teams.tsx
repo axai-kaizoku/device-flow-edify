@@ -63,7 +63,7 @@ export const Teams = ({ setSteps }: any) => {
   return (
     <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
       {!success ? (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className="w-full relative h-full justify-center items-center flex flex-col gap-6">
           <div
             className={`font-gilroySemiBold flex w-full gap-6 flex-col items-center  leading-[normal] tracking-[0px]`}
           >
@@ -199,7 +199,7 @@ export const Teams = ({ setSteps }: any) => {
           </form>
         </div>
       ) : (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className="w-full relative h-full justify-center items-center flex flex-col gap-6">
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Team Created!!
@@ -231,13 +231,6 @@ export const Teams = ({ setSteps }: any) => {
           </Button>
         </div>
       )}
-      <div className="w-[46%]  h-[auto]">
-        <img
-          src="/media/Onboarding/teams.png"
-          alt="edify-background"
-          width={"100%"}
-        />
-      </div>
     </div>
   );
 };

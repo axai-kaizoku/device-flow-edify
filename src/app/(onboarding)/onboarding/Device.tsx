@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createDevices } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import {
@@ -29,7 +29,7 @@ import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
-export const DeviceComponent = () => {
+export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: boolean) => void}) => {
   // const { showAlert } = useAlert();
   const { openToast } = useToast();
   const [step, setStep] = useState<number>(0);
@@ -232,6 +232,14 @@ export const DeviceComponent = () => {
   const handlePrevStep = () => {
     setStep((prevStep) => (prevStep >= 1 ? prevStep - 1 : prevStep));
   };
+
+  useEffect(() => {
+   if(success){
+    setSuccess(true);
+    setWelcomeScreen(true)
+   }
+  }, [success])
+
   const handleSubmit = async () => {
     if (validate()) {
       setIsLoading(true);
@@ -248,16 +256,20 @@ export const DeviceComponent = () => {
         }
 
         setSuccess(true);
+        setWelcomeScreen(true)
       } catch (error) {
         setIsLoading(false);
+        setSuccess(false)
+        setWelcomeScreen(false)
+        setStep(0)
         openToast("error", "Failed to created Device !");
       }
     }
   };
   return (
-    <div className="w-full h-screen justify-evenly  items-center flex flex-col lg:flex-row p-8">
+    <div className={`w-full ${success ? 'h-[auto]': 'h-screen'} justify-evenly  items-center flex flex-col lg:flex-row p-8`}>
       {success ? (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className={`w-full relative ${success ? 'h-[auto]': 'h-full'} justify-center items-center flex flex-col gap-6`}>
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Great!! Setup complete
@@ -277,7 +289,7 @@ export const DeviceComponent = () => {
           </Button>
         </div>
       ) : (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-4">
+        <div className="w-full relative h-full justify-center items-center flex flex-col gap-4">
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Add Devices
@@ -418,13 +430,6 @@ export const DeviceComponent = () => {
           </div>
         </div>
       )}
-      <div className="w-[46%] flex justify-center  h-[auto]">
-        <img
-          src="/media/Onboarding/device.png"
-          alt="edify-background"
-          style={{ width: "80%", height: 500 }}
-        />
-      </div>
     </div>
   );
 };
