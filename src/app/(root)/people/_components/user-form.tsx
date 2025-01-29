@@ -61,35 +61,35 @@ export const UserForm = ({
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstN: userData ? userData.first_name : "",
-    phone: userData ? userData.phone : "",
-    email: userData ? userData.email : "",
+    firstN: userData ? userData?.first_name : "",
+    phone: userData ? userData?.phone : "",
+    email: userData ? userData?.email : "",
     managementType: userData?.role
-      ? userData.role === 4
+      ? userData?.role === 4
         ? "CEO"
         : userData.role === 3
         ? "Upper Management"
         : "Employee"
       : "",
-    image: userData ? userData.image : "",
-    designation: userData ? userData.designation : "",
-    team: userData?.team?.[0]._id
+    image: userData ? userData?.image : "",
+    designation: userData ? userData?.designation : "",
+    team: userData?.team[0]?._id
       ? // @ts-ignore
-        { name: userData.team[0].title, value: userData.team[0]._id }
+        { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
           // @ts-ignore
-          name: userData.reporting_manager.email,
+          name: userData?.reporting_manager?.email,
           // @ts-ignore
-          value: userData.reporting_manager._id,
+          value: userData?.reporting_manager?._id,
         }
       : { name: "", value: "" },
-    gender: userData ? userData.gender : "",
-    offerLetter: userData ? userData.offerLetter : "",
-    employment: userData ? userData.employment_type : "",
-    dob: userData ? userData.date_of_birth : "",
-    onboarding: userData ? userData.onboarding_date : "",
+    gender: userData ? userData?.gender : "",
+    offerLetter: userData ? userData?.offerLetter : "",
+    employment: userData ? userData?.employment_type : "",
+    dob: userData ? userData?.date_of_birth : "",
+    onboarding: userData ? userData?.onboarding_date : "",
   });
 
   const [errors, setErrors] = useState({

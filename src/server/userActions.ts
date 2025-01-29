@@ -62,7 +62,7 @@ export type User = {
   role?: number;
   designation?: string;
   image?: string;
-  teamId?: Team;
+  team?: [{ _id: string; title: string }];
   employment_type?: string;
   created_at?: string;
   __v?: number;
@@ -88,7 +88,7 @@ export type CreateUserArgs = {
   role?: number;
   designation?: string;
   image?: string;
-  teamId?: string | null;
+  team?: [{ _id: string; title: string }];
   employment_type?: string;
   date_of_birth?: string;
   onboarding_date?: string;
