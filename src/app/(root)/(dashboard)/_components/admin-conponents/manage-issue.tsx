@@ -135,7 +135,7 @@ export function ManageIssue({
         onClick={() => {
           router.push("issues");
         }}
-        className="flex absolute bottom-3 px-20 items-center justify-center rounded-[49px] bg-black p-[9px]"
+        className="flex absolute w-[90%] bottom-3  items-center justify-center rounded-[49px] bg-black p-[9px]"
         style={{ cursor: "pointer" }}
       >
         <div className="text-center text-sm font-gilroySemiBold leading-[normal] text-white">
