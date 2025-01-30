@@ -32,6 +32,7 @@ interface TeamCardProps {
   description?: string;
   image?: string;
   employees_count?: number;
+  team_code?: string;
   _id?: string;
   active_manager?: { _id: string; first_name: string; image?: string }[];
   active_employees?: { _id: string; first_name: string; image?: string }[];
@@ -47,6 +48,7 @@ export const TeamCard = ({
   active_manager,
   active_employees,
   buttons,
+  team_code,
 }: TeamCardProps) => {
   const defaultImage =
     "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
@@ -107,9 +109,14 @@ export const TeamCard = ({
 
         {/* Description Section */}
         <div>
-          <p className="font-gilroySemiBold text-2xl line-clamp-2">
-            {title ?? "-"}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="font-gilroySemiBold text-2xl line-clamp-2">
+              {title ?? "-"}
+            </p>
+            <p className="font-gilroySemiBold text-base text-[#7C7C7C] line-clamp-2">
+              ({team_code ?? "-"})
+            </p>
+          </div>
           <p className="text-[#7C7C7C] text-base font-gilroyMedium line-clamp-2">
             {description ?? "-"}
           </p>

@@ -88,7 +88,8 @@ export type CreateUserArgs = {
   role?: number;
   designation?: string;
   image?: string;
-  team?: [{ _id: string; title: string }];
+  team?: [{ _id: string; title: string; team_code: string }];
+  teamId?:Team;
   employment_type?: string;
   date_of_birth?: string;
   onboarding_date?: string;
