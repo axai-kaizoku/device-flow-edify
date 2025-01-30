@@ -4,15 +4,25 @@ import { AllProductsSection } from "./_components/all-products-section";
 import { getCart } from "@/server/cartActions";
 
 export default async function Store() {
-  const cart = await getCart();
+  try {
+    const cart = await getCart();
 
-  return (
-    <>
-      <div className="flex min-h-screen flex-col w-full">
-        <StoreBanner />
-        <ProductsSection cart={cart} />
-        <AllProductsSection cart={cart} />
-      </div>
-    </>
-  );
+    return (
+      <>
+        <div className="flex min-h-screen flex-col w-full">
+          <StoreBanner />
+          <ProductsSection cart={cart} />
+          <AllProductsSection cart={cart} />
+        </div>
+      </>
+    );
+  } catch (error) {
+    return (
+      <>
+        <div className="flex min-h-screen flex-col w-full">
+          Some Error Occured
+        </div>
+      </>
+    );
+  }
 }

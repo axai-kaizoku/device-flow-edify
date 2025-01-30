@@ -14,6 +14,7 @@ export type Team = {
   deleted_at?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  team_code?: string;
   orgId?: string | null;
   __v?: number;
   manager?: {
@@ -43,6 +44,7 @@ const teamFields = [
   "employees_count",
   "orgId",
   "deleted_at",
+  "team_code"
 ];
 
 export const fetchTeams = cache(async function ({

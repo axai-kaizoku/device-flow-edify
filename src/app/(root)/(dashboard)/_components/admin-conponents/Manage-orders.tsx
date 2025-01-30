@@ -242,7 +242,7 @@ export const ManageOrders = ({
           </div>
         )}
         <div
-          className="flex items-center absolute bottom-3 w-fit justify-center rounded-[49px] px-20 whitespace-nowrap right-3 bg-black py-[9px] "
+          className="flex items-center absolute bottom-3 w-[90%] justify-center rounded-[49px]  whitespace-nowrap right-3 bg-black py-[9px] "
           style={{ marginTop: !dashboardData ? 70 : 0, cursor: "pointer" }}
           onClick={() => {
             router.push("orders");

@@ -38,10 +38,10 @@ export default async function MainLayout({
         <div className="h-14 pointer-events-none w-full" />
 
         {/* Main Content Section */}
-        <div className="flex flex-grow h-[calc(100vh-9rem)] w-full ">
+        <div className="flex flex-grow  w-full  justify-center items-center">
           {/* Sidebar */}
           <div
-            className="fixed mt-11 left-0 w-36 h-[calc(100vh-4rem)] bg-transparent"
+            className="fixed left-0 w-36 bg-transparent"
             style={{ zIndex: 10 }}
           >
             <Sidebar session={session} />

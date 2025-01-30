@@ -75,7 +75,7 @@ export const UserForm = ({
     designation: userData ? userData?.designation : "",
     team: userData?.team[0]?._id
       ? // @ts-ignore
-        { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
+      { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
@@ -424,6 +424,7 @@ export const UserForm = ({
                   date_of_birth: "09/12/1992",
                   gender: "Male",
                   onboarding_date: "28/01/2020",
+                  team_code: "ABCDEF"
                 }}
               />
             </div>
