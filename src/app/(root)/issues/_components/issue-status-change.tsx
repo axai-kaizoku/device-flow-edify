@@ -14,6 +14,7 @@ import { Issues, updateIssue } from "@/server/issueActions"; // Import the updat
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const IssueStatusChange = ({
   id,
@@ -41,7 +42,7 @@ export const IssueStatusChange = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div>
-            <Icons.warning_restore />
+            <WarningIcon />
           </div>
         </div>
 

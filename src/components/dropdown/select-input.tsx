@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Input } from "../inputs/Input";
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
+import DropdownArrowUp from "@/icons/DropdownArrowUp";
 
 export type Option = {
   _id: string;
@@ -175,7 +176,7 @@ export const SelectInput = ({
           />
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
-            <Icons.dropdownArrowUp
+            <DropdownArrowUp
               className={cn(
                 "size-3 ml-4 mr-3.5 text-gray-500",
                 isDropdownOpen ? "" : "transform -scale-y-100"

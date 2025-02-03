@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { Trash } from "lucide-react"; // Icons for slider and cart
-import { Icons } from "@/components/icons";
 import { StoreDevice } from "@/server/deviceActions";
 import { addItemToCart, removeItemFromCart } from "@/server/cartActions";
 import { useRouter } from "next/navigation";
 
 import { memo } from "react";
+import ProductReviewStars from "@/icons/ProductReviewStars";
+import ProductCardCart from "@/icons/ProductCardCart";
+import StoreProductIcons from "@/icons/StoreProductIcons";
 
 const StoreDeviceCard = memo(
   ({ product, res }: { product: StoreDevice; res: number }) => {
@@ -38,7 +40,7 @@ const StoreDeviceCard = memo(
               className="w-60 min-w-64 h-36 object-contain"
             />
           ) : (
-            <Icons.product_card_image className="w-60 h-36" />
+            <StoreProductIcons.product_card_image className="w-60 h-36" />
           )}
         </div>
 
@@ -50,7 +52,7 @@ const StoreDeviceCard = memo(
                 : product.device_name}{" "}
             </h2>
             <h2 className="flex items-center gap-1 justify-center">
-              <Icons.review_star className="size-4" />
+              <ProductReviewStars.review_star className="size-4" />
               <div className="flex items-end gap-1">
                 <span className="text-sm font-gilroyMedium">4.6</span>
                 <span className="text-[#A2A3B1] text-xs font-gilroyMedium">
@@ -81,7 +83,7 @@ const StoreDeviceCard = memo(
               </div>
             ) : (
               <div className="size-7 hover:bg-[#F7F7F7] justify-center items-center mb-0.5 flex rounded-lg ">
-                <Icons.product_card_cart
+                <ProductCardCart
                   className="size-[1.35rem] cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -150,7 +152,7 @@ export { StoreDeviceCard };
 //                 : product.device_name}{" "}
 //             </h2>
 //             <h2 className="flex items-center gap-1 justify-center">
-//               <Icons.review_star className="size-4" />
+//               <ProductReviewStars.review_star className="size-4" />
 //               <div className="flex items-end gap-1">
 //                 <span className="text-sm font-gilroyMedium">4.6</span>
 //                 <span className="text-[#A2A3B1] text-xs font-gilroyMedium">
@@ -181,7 +183,7 @@ export { StoreDeviceCard };
 //               </div>
 //             ) : (
 //               <div className="size-7 hover:bg-[#F7F7F7] justify-center items-center mb-0.5 flex rounded-lg ">
-//                 <Icons.product_card_cart
+//                 <ProductCardCart 
 //                   className="size-[1.35rem] cursor-pointer"
 //                   onClick={(e) => {
 //                     e.stopPropagation();

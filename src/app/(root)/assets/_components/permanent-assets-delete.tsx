@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const PermanentAssetsDelete = ({
   id,
@@ -33,7 +34,7 @@ export const PermanentAssetsDelete = ({
         {/* Warning Icon */}
         <div className="flex mb-1 justify-center ">
           <div>
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
         </div>
 

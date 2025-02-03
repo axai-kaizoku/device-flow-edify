@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { DevicePage1 as DevicePage1, FormErrors } from "./_components/types";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-import { Icons } from "@/components/icons";
+import AndroidIcon from "@/icons/AndroidIcon";
+import AppleIcon from "@/icons/AppleIcon";
 
 interface BasicDetailsProps {
   data: DevicePage1;
@@ -49,13 +50,13 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
       id: "android",
       name: "Android",
       description: "Android 13, Android 14, Android 15",
-      icon: <Icons.android_icon className="-ml-1 size-7 p-0 " />,
+      icon: <AndroidIcon className="-ml-1 size-7 p-0 " />,
     },
     {
       id: "apple",
       name: "Apple",
       description: "ios 10, ios 12, ios 13",
-      icon: <Icons.apple_icon className="-ml-0.5 mb-1 size-6" />,
+      icon: <AppleIcon className="-ml-0.5 mb-1 size-6" />,
     },
   ];
 

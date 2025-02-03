@@ -3,13 +3,13 @@ import { Device, DeviceResponse, StoreDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
 import { SoftDeleteAsset } from "./soft-delete-asset";
-import { Icons } from "@/components/icons";
 import Link from "next/link";
 import Pagination from "../../teams/_components/pagination";
 import { Table } from "@/components/wind/Table";
 import { assignedAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
 function AssignedAssets({
   data,
   setAssets,
@@ -190,7 +190,7 @@ function AssignedAssets({
                       render: (record) => (
                         <div className="flex gap-5 -ml-2 items-center">
                           <SoftDeleteAsset id={record?._id} onRefresh={onRefresh}>
-                            <Icons.table_delete className="size-6" />
+                            <DeleteTableIcon className="size-6" />
                           </SoftDeleteAsset>
                           <Link
                             href={`/assets/${record?._id}`}

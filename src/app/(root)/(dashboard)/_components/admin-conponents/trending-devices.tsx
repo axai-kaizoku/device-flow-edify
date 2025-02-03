@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation";
 import { DashboardDetails } from "./interface";
+import HorizontalLine from "@/icons/HorizontalLine";
+import DotSeperator from "@/icons/DotSeperator";
 
 export function TrendingDevices({
   dashboardData,
@@ -33,19 +35,7 @@ export function TrendingDevices({
                       router.push(`store/${response._id}`);
                     }}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="313"
-                      height="2"
-                      viewBox="0 0 313 2"
-                      fill="none"
-                    >
-                      <path
-                        d="M0.169922 0.680862H312.276"
-                        stroke="#EDEDED"
-                        strokeWidth="0.918071"
-                      />
-                    </svg>
+                    <HorizontalLine/>
                     <div className="flex h-16 flex-shrink-0 items-center justify-evenly gap-x-3.5">
                       <div className="flex flex-col items-center self-stretch">
                         <img
@@ -60,20 +50,7 @@ export function TrendingDevices({
                         <div className="flex items-center gap-x-[2.8px] text-sm font-gilroyMedium leading-[normal] text-[gray]">
                           <div>{response.ram}</div>
                           <div className="flex flex-col items-center pb-[3.4px]">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="4"
-                              height="4"
-                              viewBox="0 0 4 4"
-                              fill="none"
-                            >
-                              <circle
-                                cx="1.55049"
-                                cy="2.36009"
-                                r="1.46693"
-                                fill="#7C7C7C"
-                              />
-                            </svg>
+                            <DotSeperator/>
                           </div>
                           <div>{response.storage}</div>
                         </div>

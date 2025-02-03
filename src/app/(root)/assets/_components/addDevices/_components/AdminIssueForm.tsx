@@ -11,13 +11,15 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Icons } from "@/components/icons";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useToast } from "@/hooks/useToast";
+import IssueFormIcons from "@/icons/IssueFormIcons";
+import UploadImageIcon from "@/icons/UploadImageIcon";
+import NavBarIcons from "@/icons/NavBarIcons";
 
 interface IssueFormProps {
   device: Device;
@@ -103,17 +105,17 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
 
   const severityArray = [
     {
-      icon: <Icons.low_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.low_issue_icon className="size-10" />,
       title: "Low",
       desc: `Small glitch, doesn't slow us down can wait a bit!`,
     },
     {
-      icon: <Icons.medium_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.medium_issue_icon className="size-10" />,
       title: "Medium",
       desc: `Noticeable issue, but nothing that'll break the flow fix soon!`,
     },
     {
-      icon: <Icons.high_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.high_issue_icon className="size-10" />,
       title: "Critical",
       desc: `Major issue, needs immediate attention—fix now!`,
     },
@@ -178,7 +180,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
           <div className="flex flex-col  w-full">
             <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
               <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                <Icons.issue_icon_white className="size-5 2xl:size-11 mb-0.5" />
+                <NavBarIcons.issue_icon_white className="size-5 2xl:size-11 mb-0.5" />
               </div>
               <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
                 Report an issue
@@ -413,7 +415,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                         ))}
                         {formData.images.length === 0 ? (
                           <div className="flex flex-col justify-center items-center w-full mx-auto">
-                            <Icons.uploadImage className="text-blue-500 w-6 h-6" />
+                            <UploadImageIcon className="text-blue-500 w-6 h-6" />
                             <span className="text-[#0EA5E9]">
                               Click to upload
                             </span>

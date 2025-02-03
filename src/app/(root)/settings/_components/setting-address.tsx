@@ -1,11 +1,12 @@
 "use client";
-import { Icons } from "@/components/icons";
 import { Org } from "@/server/orgActions";
 import { MapPin, Pencil, Trash2 } from "lucide-react";
 import React from "react";
 import { DeleteAddress } from "./delete-address";
 import EditAddress from "./edit-address";
 import CreateAddress from "./create-address";
+import LocationGreenIcon from "@/icons/LocationGreenIcon";
+import LocationOrange from "@/icons/LocationOrange";
 
 function SettingAddress({ data }: { data: Org }) {
   return (
@@ -32,9 +33,9 @@ function SettingAddress({ data }: { data: Org }) {
           >
             <div className="flex items-center gap-2">
               {address?.isPrimary ? (
-                <Icons.settings_green_location />
+                <LocationGreenIcon />
               ) : (
-                <Icons.settings_orange_location />
+                <LocationOrange />
               )}
               <div>
                 <div className="flex gap-8">

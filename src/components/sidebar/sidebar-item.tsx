@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icons } from "../icons";
+import NavBarIcons from "@/icons/NavBarIcons";
 
 type SidebarItemProps = {
   href: string;
@@ -62,11 +63,11 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           ) : label === "Orders" ? (
             <ShoppingBag className="w-5 h-5" />
           ) : label === "Reports" ? (
-            !isActive ? <Icons.reports_icon className="size-5"/> : <Icons.reports_icon_white className="size-5"/>
+            !isActive ? <NavBarIcons.reports_icon className="size-5"/> : <NavBarIcons.reports_icon_white className="size-5"/>
           ) : label === "Onboarding" ? (
             <Upload className="w-5 h-5" />
           ) : label === "Issues" ? (
-            !isActive ? <Icons.issue_icon className="size-5"/> : <Icons.issue_icon_white className="size-5"/>
+            !isActive ? <NavBarIcons.issue_icon className="size-5"/> : <NavBarIcons.issue_icon_white className="size-5"/>
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
           // ) : label === "Profile" ? (

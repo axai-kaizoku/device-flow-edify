@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
+import CalanderIcon from "@/icons/CalanderIcon";
 
 export const Input = React.forwardRef<
   HTMLInputElement,
@@ -29,7 +30,7 @@ export const Input = React.forwardRef<
             input?.click();
           }}
         >
-          <Icons.calander className="cursor-pointer" />
+          <CalanderIcon className="cursor-pointer" />
         </button>
       )}
     </div>

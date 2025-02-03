@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import { useRouter } from "next/navigation";
 import { Device, getAllDevicesProp } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 import { IssueForm } from "./issue-form";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
+import NoAssetAssignedIcon from "@/icons/NoAssetAssignedIcon";
 
 export type LoggedInUser = UserData;
 
@@ -166,7 +166,7 @@ const Devices = ({ devices }: DevicesProps) => {
       ) : (
         <div className="flex w-full justify-center items-center">
           {" "}
-          <Icons.no_asset_assigned />
+          <NoAssetAssignedIcon />
         </div>
       )}
 

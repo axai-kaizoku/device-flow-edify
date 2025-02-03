@@ -206,9 +206,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     {`${assignedTo?.reporting_manager?.first_name ?? "-"} ${
                       assignedTo?.reporting_manager?.last_name ?? ""
                     }`}{" "}
-                    {/* {assignedTo.reporting_manager?.first_name && (
-                      <Icons.open_user_view />
-                    )} */}
+                    
                   </div>
                 </div>
 

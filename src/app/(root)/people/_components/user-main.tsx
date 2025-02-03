@@ -10,6 +10,8 @@ import Spinner from "@/components/Spinner";
 import { Icons } from "../icons";
 
 import CreateUser from "./create-user";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import EditTableIcon from "@/icons/EditTableIcon";
 
 export default function UserMain({
   data,
@@ -171,13 +173,13 @@ export default function UserMain({
                         className="flex flex-col"
                         onClick={() => handleRemoveUser(data)}
                       >
-                        <Icons.table_delete className="size-6" />
+                        <DeleteTableIcon className="size-6" />
                       </button> */}
                             <DeleteUser id={data?._id} onRefresh={onRefresh}>
-                              <Icons.table_delete className="size-6" />
+                              <DeleteTableIcon className="size-6" />
                             </DeleteUser>
                             <EditUser userData={data} onRefresh={onRefresh}>
-                              <Icons.table_edit className="size-5" />
+                              <EditTableIcon className="size-5" />
                             </EditUser>
                           </div>
                         ),

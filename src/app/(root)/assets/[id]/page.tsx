@@ -1,5 +1,4 @@
 import { CombinedContainer } from "@/components/container/container";
-import { Icons } from "@/components/icons";
 import { Device, getDeviceById, StoreDevice } from "@/server/deviceActions";
 import { AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { DeleteAsset } from "./_components/delete-asset";
@@ -8,6 +7,8 @@ import ReassignAsset from "./_components/reassign-asset";
 import { DeviceGrid } from "./_components/device-grid";
 import CreateIssue from "../_components/addDevices/_components/create-issue";
 import EditAsset from "./_components/edit-asset";
+import EditTableIcon from "@/icons/EditTableIcon";
+import UserDetailIcons from "@/icons/UserDetailedViewIcons";
 
 interface DevicePageProps {
   params: { id: string };
@@ -26,7 +27,7 @@ export default async function SingleDevice({ params }: DevicePageProps) {
             {data?.userId ? (
               <UnassignAsset id={params?.id ?? ""}>
                 <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <Icons.unassign_asset className="text-black size-5" />
+                  <UserDetailIcons.unassign_asset className="text-black size-5" />
                   <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                     Unassign
                   </span>
@@ -36,7 +37,7 @@ export default async function SingleDevice({ params }: DevicePageProps) {
             {data?.userId ? (
               <ReassignAsset deviceData={data}>
                 <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <Icons.reassign_asset className="text-black size-5" />
+                  <UserDetailIcons.reassign_asset className="text-black size-5" />
                   <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                     Reassign
                   </span>
@@ -45,7 +46,7 @@ export default async function SingleDevice({ params }: DevicePageProps) {
             ) : (
               <ReassignAsset deviceData={data}>
                 <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <Icons.reassign_asset className="text-black size-5" />
+                  <UserDetailIcons.reassign_asset className="text-black size-5" />
                   <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                     Assign
                   </span>
@@ -55,7 +56,7 @@ export default async function SingleDevice({ params }: DevicePageProps) {
 
             <EditAsset deviceData={data}>
               <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <Icons.table_edit className="text-black size-5" />
+                <EditTableIcon className="text-black size-5" />
                 <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Edit
                 </span>
@@ -64,7 +65,7 @@ export default async function SingleDevice({ params }: DevicePageProps) {
 
             <DeleteAsset id={params?.id ?? ""}>
               <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <Icons.delete_asset className="text-black size-5" />
+                <UserDetailIcons.delete_asset className="text-black size-5" />
                 <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
                   Delete
                 </span>

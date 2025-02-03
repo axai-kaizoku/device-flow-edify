@@ -16,6 +16,7 @@ import Spinner from "@/components/Spinner";
 import { updateTeam } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
 import { useToast } from "@/hooks/useToast";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const RestoreTeam = ({
   id,
@@ -37,7 +38,7 @@ export const RestoreTeam = ({
         {/* Warning Icon */}
         <div className="flex justify-center">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50 ring-8 ring-yellow-100 text-yellow-400">
-            <Icons.warning_restore />
+            <WarningIcon />
             {/* Lucide-react icon */}
           </div>
         </div>

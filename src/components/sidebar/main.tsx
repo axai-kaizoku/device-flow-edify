@@ -2,9 +2,8 @@
 import { SIDEBAR } from "@/constants";
 import { usePathname, useRouter } from "next/navigation";
 import SidebarItem from "./sidebar-item";
-import { ChevronLeft, LogOut } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Props } from "@/app/(root)/layout";
-import { signOut } from "next-auth/react";
 
 export default function SidebarMain({ session }: Props) {
   const pathname = usePathname();

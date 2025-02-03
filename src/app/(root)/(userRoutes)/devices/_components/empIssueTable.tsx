@@ -5,6 +5,7 @@ import { getAllResponse, Issues } from "@/server/issueActions";
 import { useRouter } from "next/navigation";
 import Pagination from "@/app/(root)/teams/_components/pagination";
 import { issueIcons } from "@/app/(root)/issues/icons";
+import { ChevronRight } from "lucide-react";
 const ITEMS_PER_PAGE = 5;
 
 function EmpIssueTable({ data }: { data: getAllResponse }) {
@@ -115,21 +116,7 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
                         router.push(`/devices/issues/${data?._id}`)
                       }
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="8"
-                        height="12"
-                        viewBox="0 0 8 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M1.54514 1.16309L6.19092 5.91949L1.54514 10.5652"
-                          stroke="#AAAAAA"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <ChevronRight className="text-[#82898e]"/>
                     </div>
                   ),
                 },

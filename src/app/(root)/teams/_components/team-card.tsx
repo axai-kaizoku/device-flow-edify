@@ -1,6 +1,7 @@
 "use client";
 
 import { Icons } from "@/components/icons";
+import TeamsNoMemberIcon from "@/icons/TeamsNoMemberIcon";
 import Link from "next/link";
 
 const MemberIcon = ({
@@ -16,7 +17,7 @@ const MemberIcon = ({
     }`}
   >
     {isPlaceholder ? (
-      <Icons.team_no_memeber_logo className="w-4 h-4" />
+      <TeamsNoMemberIcon className="w-4 h-4" />
     ) : (
       <img
         src={src}

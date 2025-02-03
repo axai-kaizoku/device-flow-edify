@@ -1,4 +1,5 @@
-import { Icons } from "@/components/icons";
+
+import StoreProductIcons from "@/icons/StoreProductIcons";
 import { StoreDevice } from "@/server/deviceActions";
 import { BusFront, MonitorCheck } from "lucide-react";
 
@@ -6,7 +7,7 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
   const icons = [
     {
       key: "dev",
-      icon: <Icons.both_arrows />,
+      icon: <StoreProductIcons.both_arrows />,
     },
     {
       key: "finance",
@@ -41,7 +42,7 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
 
           // Return the object with icon and title
           return {
-            icon: matchingIcon ? matchingIcon.icon : <Icons.both_arrows />,
+            icon: matchingIcon ? matchingIcon.icon : <StoreProductIcons.both_arrows />,
             title: item.title || "Default Title",
           };
         });

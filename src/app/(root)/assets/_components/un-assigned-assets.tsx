@@ -4,12 +4,12 @@ import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
 import { SoftDeleteAsset } from "./soft-delete-asset";
-import { Icons } from "@/components/icons";
 import { AssignAsset } from "./assign-asset";
 import React, { Suspense, useState } from "react";
 import { unAssignedAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
 
 function UnAssignedAssets({
   data,
@@ -167,7 +167,7 @@ function UnAssignedAssets({
                       render: (record: Device) => (
                         <div className="flex gap-5 -ml-2 ">
                           <SoftDeleteAsset id={record?._id ?? "error"} onRefresh={onRefresh}>
-                            <Icons.table_delete className="size-6" />
+                            <DeleteTableIcon className="size-6" />
                           </SoftDeleteAsset>
                           <AssignAsset device={record}>
                             <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">

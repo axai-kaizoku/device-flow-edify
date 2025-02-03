@@ -4,12 +4,12 @@ import React, { Suspense, useState } from "react";
 import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
-import { Icons } from "@/components/icons";
 import { PermanentAssetsDelete } from "./permanent-assets-delete";
 import { RestoreDevice } from "./restore-assets";
 import { inActiveAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
 
 function InActiveAssets({
   data,
@@ -167,7 +167,7 @@ function InActiveAssets({
                       render: (record: Device) => (
                         <div className="flex gap-5 -ml-2">
                           <PermanentAssetsDelete id={record?._id!} onRefresh={onRefresh}>
-                            <Icons.table_delete className="size-6" />
+                            <DeleteTableIcon className="size-6" />
                           </PermanentAssetsDelete>
 
                           <RestoreDevice id={record?._id!} onRefresh={onRefresh}>

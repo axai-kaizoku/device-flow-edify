@@ -2,7 +2,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useEffect, useState } from "react";
-import { Icons } from "@/components/icons";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
@@ -12,6 +11,7 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Device, updateDevice } from "@/server/deviceActions";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 export default function ReassignAsset({
   children,
@@ -63,7 +63,7 @@ export default function ReassignAsset({
           <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
             <div className="flex flex-col  w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <Icons.user_form_icon className="size-9 2xl:size-11 bg-black rounded-full p-1" />
+                <UserFormProfileIcon className="size-9 2xl:size-11 bg-black rounded-full p-1" />
 
                 <h1 className="font-gilroySemiBold text-xl 2xl:text-3xl">
                   Assign Asset
