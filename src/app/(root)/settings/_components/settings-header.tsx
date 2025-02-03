@@ -1,9 +1,11 @@
 "use client";
-import { Icons } from "@/components/icons";
 import { Org } from "@/server/orgActions";
 import React, { useState } from "react";
 import { LogoCompanyModal } from "./logo-company";
 import Link from "next/link";
+import EmployeeIconGreen from "@/icons/EmployeeIconGreen";
+import SettingsEdit from "@/icons/SettingsEdit";
+import AssetsIconGreen from "@/icons/AssetsIconGreen";
 
 function SettingsHeader({ data }: { data: Org }) {
   return (
@@ -27,7 +29,7 @@ function SettingsHeader({ data }: { data: Org }) {
             </div>
             {/* Modal trigger for editing the logo */}
             <LogoCompanyModal id={data?._id!} logo={data?.logo}>
-              <Icons.settings_edit className="absolute left-[4.7rem] bottom-8 cursor-pointer" />
+              <SettingsEdit className="absolute left-[4.7rem] bottom-8 cursor-pointer" />
             </LogoCompanyModal>
 
             <div className="flex flex-col gap-1">
@@ -59,7 +61,7 @@ function SettingsHeader({ data }: { data: Org }) {
               </div> */}
             </div>
             <div className="flex items-center gap-4">
-              <Icons.settings_employee_info />
+              <EmployeeIconGreen />
               <div className="flex flex-col ">
                 <h2 className="text-[#737373] text-base font-gilroySemiBold">
                   Active Employees
@@ -87,7 +89,7 @@ function SettingsHeader({ data }: { data: Org }) {
               </div> */}
             </div>
             <div className="flex items-center gap-4">
-              <Icons.settings_assets />
+              <AssetsIconGreen />
               <div className="flex flex-col ">
                 <h2 className="text-[#737373] text-base font-gilroySemiBold">
                   Active Assets

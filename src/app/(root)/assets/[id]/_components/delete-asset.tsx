@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAlert } from "@/hooks/useAlert";
+import WarningDelete from "@/icons/WarningDelete";
 import { deleteDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -51,7 +51,7 @@ export const DeleteAsset = ({
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
           <div className="flex justify-center">
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
 
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">

@@ -1,6 +1,5 @@
 "use client";
 import { CombinedContainer } from "@/components/container/container";
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { getDashboard, sendFeedback } from "@/server/dashboard";
 import { X } from "lucide-react";
@@ -17,6 +16,7 @@ import { TrendingDevices } from "./admin-conponents/trending-devices";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useToast } from "@/hooks/useToast";
+import FeedBackIcon from "@/icons/FeedBackIcon";
 
 export default function AdminDashboard() {
   const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
         style={{ boxShadow: "0px 0px 13.154px 0px rgba(0, 0, 0, 0.40)" }}
         onClick={toggleModal}
       >
-        <Icons.feedback_icon />
+        <FeedBackIcon />
         <div>Feedback</div>
       </div>
 

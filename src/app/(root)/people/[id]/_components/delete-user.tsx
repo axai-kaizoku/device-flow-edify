@@ -16,6 +16,7 @@ import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteUser = ({
   id,
@@ -65,7 +66,7 @@ export const DeleteUser = ({
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
           <div className="flex justify-center">
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
 
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">

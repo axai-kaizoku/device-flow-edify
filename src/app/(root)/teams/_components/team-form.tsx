@@ -11,7 +11,7 @@ import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
 import { useToast } from "@/hooks/useToast";
 import { useAlert } from "@/hooks/useAlert";
-import { X } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 
 export const TeamForm = ({
   closeBtn,
@@ -344,11 +344,11 @@ export const TeamForm = ({
                   <Spinner className={spinnerVariants({ size: "sm" })} />
                 ) : isEditForm ? (
                   <>
-                    Edit Team <Icons.arrowRight className="size-4" />
+                    Edit Team <ChevronRight className="size-6" />
                   </>
                 ) : (
                   <>
-                    Submit <Icons.arrowRight className="size-2" />
+                    Submit <ChevronRight className="size-4" />
                   </>
                 )}
               </Button>

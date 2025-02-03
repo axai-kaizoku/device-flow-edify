@@ -8,6 +8,7 @@ import Pagination from "../../teams/_components/pagination";
 import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
 import { Table } from "@/components/wind/Table";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
 
 function DeletedUser({
   data,
@@ -136,7 +137,7 @@ function DeletedUser({
                     render: (record: User) => (
                       <div className="flex gap-5 -ml-2 justify-center items-center">
                         <PermanentUserDelete id={record?._id!} onRefresh={onRefresh}>
-                          <Icons.table_delete className="size-6" />
+                          <DeleteTableIcon className="size-6" />
                         </PermanentUserDelete>
 
                         <RestoreUser id={record?._id!} onRefresh={onRefresh}>

@@ -12,6 +12,7 @@ import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { fetchTeams, Team } from "@/server/teamActions";
 import { cn } from "@/lib/utils";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 export default function MoveTeamMember({
   children,
@@ -63,7 +64,7 @@ export default function MoveTeamMember({
             <div className="flex flex-col gap-1 pb-5 w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
                 <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-                  <Icons.user_form_icon className="size-6" />
+                  <UserFormProfileIcon className="size-6" />
                 </div>
                 <span className="font-gilroySemiBold text-xl 2xl:text-2xl">
                   Move member

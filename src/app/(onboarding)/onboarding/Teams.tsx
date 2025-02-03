@@ -2,6 +2,7 @@
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { Button } from "@/components/buttons/Button";
 import { Input } from "@/components/inputs/Input";
+import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
 import { cn } from "@/lib/utils";
 import { createTeam } from "@/server/teamActions";
 import { useRouter } from "next/navigation";
@@ -75,52 +76,7 @@ export const Teams = ({ setSteps }: any) => {
                 Add all the teams in organizations
               </div>
             </div>
-            <svg
-              width="95"
-              height="95"
-              viewBox="0 0 95 95"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="47.8759"
-                cy="47.5625"
-                r="45.9714"
-                fill="#ECF0FF"
-                stroke="#465FF1"
-                strokeWidth="2.31302"
-              />
-              <path
-                d="M48.3652 55.0189V51.2432"
-                stroke="#465FF1"
-                strokeWidth="2.31302"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M57.584 38.1323C60.0992 38.1323 62.1232 40.1712 62.1232 42.6864V47.8059C58.4621 49.949 53.6253 51.2438 48.3569 51.2438C43.0885 51.2438 38.2666 49.949 34.6055 47.8059V42.6715C34.6055 40.1563 36.6444 38.1323 39.1595 38.1323H57.584Z"
-                stroke="#465FF1"
-                strokeWidth="2.31302"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M53.574 38.1257V37.581C53.574 35.7654 52.1006 34.292 50.285 34.292H46.4453C44.6296 34.292 43.1562 35.7654 43.1562 37.581V38.1257"
-                stroke="#465FF1"
-                strokeWidth="2.31302"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M34.6426 53.2422L34.9239 56.9762C35.1144 59.4928 37.2113 61.438 39.7339 61.438H56.9961C59.5187 61.438 61.6156 59.4928 61.8061 56.9762L62.0874 53.2422"
-                stroke="#465FF1"
-                strokeWidth="2.31302"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <CompanyOnbardingIcon/>
           </div>
           <form
             onSubmit={(e) => {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCart } from "@/server/cartActions";
 import { CartOverviewWrapper } from "./cart-overview-wrapper";
+import VerticalSeperator from "@/icons/VerticalSeperator";
 // import { usePathname } from "next/navigation";
 
 export const CartOverview = async () => {
@@ -38,20 +39,7 @@ export const CartOverview = async () => {
 
         {totalQty > 1 && (
           <div className="ml-4 flex items-center gap-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="2"
-              height="36"
-              viewBox="0 0 2 36"
-              fill="none"
-            >
-              <path
-                d="M1.00928 1.20744L1.00928 34.5311"
-                stroke="#E8E8E8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <VerticalSeperator/>
             <div className="text-[#7C7C7C] text-xs font-gilroyMedium">
               +{totalQty - 1} more
             </div>

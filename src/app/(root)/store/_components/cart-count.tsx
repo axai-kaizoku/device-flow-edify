@@ -1,6 +1,5 @@
-// "use client";
 
-import { Icons } from "@/components/icons";
+import CartIcon from "@/icons/CartIcon";
 import { getCart } from "@/server/cartActions";
 import Link from "next/link";
 // import { useRouter } from "next/navigation";
@@ -50,7 +49,7 @@ export const CartComponent = async () => {
       <div className="size-3.5 absolute top-0 left-0 rounded-full bg-red-500 text-white flex justify-center items-center text-[10px]">
         {totalQty}
       </div>
-      <Icons.product_cart className="size-[1.3rem]" />
+      <CartIcon className="size-[1.3rem]" />
     </Link>
   );
 };

@@ -7,6 +7,8 @@ import { Icons } from "@/components/icons";
 import { teamIcons } from "../icons";
 import { TeamsResponse } from "@/server/teamActions";
 import CreateTeam from "./create-team";
+import { Trash2 } from "lucide-react";
+import EditPencilIcon from "@/icons/EditPencilIcon";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
@@ -36,13 +38,12 @@ export default function TeamsMain({ teams, setTeams, onRefresh }: TeamsMainProps
             <>
               <DeleteTeam id={team._id!} onRefresh={onRefresh}>
                 <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.trashUpper />
-                  <Icons.trash className="size-4 cursor-pointer" />
+                  <Trash2 className="size-5 cursor-pointer" />
                 </div>
               </DeleteTeam>
               <EditTeam {...team} onRefresh={onRefresh}>
                 <div className="group duration-300 hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.edit className="w-5 h-5 text-gray-600 group-hover:text-black cursor-pointer" />
+                  <EditPencilIcon className="w-5 h-5 text-gray-600 group-hover:text-black cursor-pointer" />
                 </div>
               </EditTeam>
             </>

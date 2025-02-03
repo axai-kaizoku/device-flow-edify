@@ -5,6 +5,7 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { genders } from "@/app/(root)/people/_components/helper/utils";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
+import SignUpIcon from "@/icons/SignUpIcon";
 
 function PersonalDetails({ setSteps, setUser, user }: any) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -103,7 +104,7 @@ function PersonalDetails({ setSteps, setUser, user }: any) {
                 />
               </div>
             ) : (
-              <Icons.personal_detail_sign_up />
+              <SignUpIcon />
             )}
             <button
               onClick={() => fileInputRef.current?.click()}

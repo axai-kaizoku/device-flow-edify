@@ -14,6 +14,8 @@ import { teamIcons } from "../../icons";
 import { Icons } from "@/components/icons";
 import { Team } from "@/server/teamActions";
 import AddTeamMember from "./add-team-member";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import EditTableIcon from "@/icons/EditTableIcon";
 
 const TeamMembers = ({ teamData }: { teamData: Team }) => {
   const router = useRouter();
@@ -153,10 +155,10 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                     render: (data) => (
                       <div className="flex justify-start items-center gap-5 2xl:gap-10 -ml-2">
                         <RemoveTeamMember userData={data}>
-                          <Icons.table_delete className="size-6" />
+                          <DeleteTableIcon className="size-6" />
                         </RemoveTeamMember>
                         <MoveTeamMember userData={data}>
-                          <Icons.table_edit className="size-5" />
+                          <EditTableIcon className="size-5" />
                         </MoveTeamMember>
                       </div>
                     ),

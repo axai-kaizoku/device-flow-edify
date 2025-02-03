@@ -12,8 +12,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const SoftDeleteAsset = ({
   id,
@@ -58,7 +58,7 @@ export const SoftDeleteAsset = ({
           {/* Warning Icon */}
           <div className="flex justify-center  mb-1">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 

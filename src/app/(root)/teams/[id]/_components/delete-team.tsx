@@ -15,6 +15,7 @@ import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteTeam = ({
   id,
@@ -60,7 +61,7 @@ export const DeleteTeam = ({
           {/* Warning Icon */}
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 

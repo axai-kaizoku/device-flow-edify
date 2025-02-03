@@ -1,10 +1,10 @@
 "use client";
 
-import { Icons } from "@/components/icons";
 import { StoreDevice } from "@/server/deviceActions";
 import { Cart, DeviceWithQty } from "@/server/cartActions";
 import { StoreDeviceCard } from "./store-device-card";
 import { useMemo } from "react";
+import StoreProductIcons from "@/icons/StoreProductIcons";
 
 export const ProductSlider = ({
   data,
@@ -64,7 +64,7 @@ export const ProductSlider = ({
           className="absolute top-[30%] -left-7  z-10"
           onClick={slideLeft}
         >
-          <Icons.product_card_left_arrow />
+          <StoreProductIcons.product_card_left_arrow />
         </button>
 
         {/* Product Cards Container */}
@@ -102,7 +102,7 @@ export const ProductSlider = ({
           className="absolute top-[30%] -right-7  z-10"
           onClick={slideRight}
         >
-          <Icons.product_card_right_arrow />
+          <StoreProductIcons.product_card_right_arrow />
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -27,7 +28,7 @@ export const StoreGlobalSearch = () => {
       )}
       onClick={() => setIsFocused(true)}
     >
-      <Icons.store_search className="size-[1.35rem] mb-0.5" />
+      <Search className="size-[1.35rem] mb-0.5" />
       <input
         className={cn(
           "flex-grow duration-300 -mt-0.5 ease-in-out bg-transparent placeholder:text-[#7F7F7F] text-sm font-gilroyMedium whitespace-nowrap outline-none focus:outline-none",

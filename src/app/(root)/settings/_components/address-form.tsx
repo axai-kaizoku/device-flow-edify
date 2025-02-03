@@ -9,6 +9,7 @@ import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { PrimarySelector } from "./primary-selector";
 import { FormField } from "./form-field";
 import { useToast } from "@/hooks/useToast";
+import { ChevronRight } from "lucide-react";
 
 export const AddressForm = ({
   closeBtn,
@@ -236,7 +237,7 @@ export const AddressForm = ({
             ) : (
               <>
                 {isEditForm ? "Edit Address" : "Submit"}
-                <Icons.arrowRight className="size-5" />
+                <ChevronRight className="size-6" />
               </>
             )}
           </Button>

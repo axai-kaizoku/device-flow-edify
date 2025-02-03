@@ -18,6 +18,7 @@ import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 export default function AddTeamMember({
   children,
@@ -70,7 +71,7 @@ export default function AddTeamMember({
             <div className="flex flex-col  w-full">
               <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
                 <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                  <Icons.user_form_icon className="size-6 2xl:size-8" />
+                  <UserFormProfileIcon className="size-6 2xl:size-8" />
                 </div>
                 <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
                   {"Add Employee"}

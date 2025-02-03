@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Icons } from "./icons";
 import { Button } from "./buttons/Button";
+import WarningDelete from "@/icons/WarningDelete";
+import AlertSuccess from "@/icons/AlertSuccess";
 
 export const GlobalAlert = ({
   isOpen,
@@ -30,7 +32,7 @@ export const GlobalAlert = ({
           {/* Warning Icon */}
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 
@@ -59,7 +61,7 @@ export const GlobalAlert = ({
           {/* Warning Icon */}
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.success_checkmark />
+              <AlertSuccess />
             </div>
           </div>
 

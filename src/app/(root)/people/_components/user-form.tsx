@@ -18,13 +18,14 @@ import { bulkUploadKeys, employments, genders } from "./helper/utils";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { FormField } from "../../settings/_components/form-field";
-import { Icons } from "@/components/icons";
 import { ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Spinner from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
+import UploadImageIcon from "@/icons/UploadImageIcon";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -395,7 +396,7 @@ export const UserForm = ({
       <div className="flex relative flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
         <div className="flex justify-start items-center gap-4 font-gilroySemiBold">
           <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-            <Icons.user_form_icon className="size-6" />
+            <UserFormProfileIcon className="size-6" />
           </div>
           <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
             {isEditForm ? "Edit Employee " : "Add Employee"}
@@ -518,7 +519,7 @@ export const UserForm = ({
                     onClick={() => fileImageRef.current?.click()}
                   >
                     <div className="flex flex-col justify-center items-center">
-                      <Icons.uploadImage className="size-5" />
+                      <UploadImageIcon className="size-5" />
                       <span className="text-[#0EA5E9]">Click to upload</span>
                       <p className="text-xs text-neutral-400">
                         JPG, JPEG, PNG less than 1MB
@@ -905,7 +906,7 @@ export const UserForm = ({
                       onClick={() => fileOfferLetterRef?.current?.click()}
                     >
                       <div className="flex flex-col justify-center items-center">
-                        <Icons.uploadImage className="size-5" />
+                        <UploadImageIcon className="size-5" />
                         <span className="text-[#0EA5E9]">Click to upload</span>
                         <p className="text-xs text-neutral-400">
                           PDF/JPEG/PNG/JPG under 5MB

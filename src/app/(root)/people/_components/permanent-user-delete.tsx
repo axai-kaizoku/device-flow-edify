@@ -11,9 +11,9 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
 import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const PermanentUserDelete = ({
   id,
@@ -35,7 +35,7 @@ export const PermanentUserDelete = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div>
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
         </div>
 

@@ -18,6 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import { createSignupLink } from "@/server/signupActions";
 import { Input } from "@/components/inputs/Input";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 export default function InvitePeople({
   children,
@@ -122,7 +123,7 @@ export default function InvitePeople({
                   <div className="flex flex-col gap-1 pb-5 w-full">
                     <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
                       <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-                        <Icons.user_form_icon className="size-6" />
+                        <UserFormProfileIcon className="size-6" />
                       </div>
                       <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
                         Invite people

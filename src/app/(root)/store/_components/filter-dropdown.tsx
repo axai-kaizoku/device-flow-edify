@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import StoreProductIcons from "@/icons/StoreProductIcons";
 import React, { useEffect, useRef, useState } from "react";
 
 type FilterDropdownProps = {
@@ -48,7 +49,7 @@ export const FilterDropdown = ({
         onClick={toggleDropdown}
       >
         <span className="font-gilroyMedium text-sm">{label}</span>
-        <Icons.arrow_down
+        <StoreProductIcons.arrow_down
           className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
         {selectedValue && (

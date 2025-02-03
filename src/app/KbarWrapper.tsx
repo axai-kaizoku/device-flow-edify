@@ -1,5 +1,6 @@
 "use client"; // Ensure this is a client-side component
 import { Icons } from "@/components/icons";
+import KBarIcons from "@/icons/KBarIcons";
 import {
   KBarProvider,
   KBarPortal,
@@ -42,7 +43,7 @@ const EmpActions = [
     name: "Devices",
     shortcut: ["D"],
     keywords: "devices",
-    logo: <Icons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
+    logo: <KBarIcons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
     perform: () => (window.location.pathname = "/devices"),
   },
   {
@@ -51,7 +52,7 @@ const EmpActions = [
     shortcut: ["T"],
     keywords: "teams",
     perform: () => (window.location.pathname = "/teams"),
-    logo: <Icons.team_icon className="text-[#6C6C6C] size-[22px] mb-0.5" />,
+    logo: <KBarIcons.team_icon className="text-[#6C6C6C] size-[22px] mb-0.5" />,
   },
 ];
 
@@ -83,7 +84,7 @@ const adminActions = [
   {
     id: "people",
     name: "People",
-    logo: <Icons.people_icon className="text-[#6C6C6C] size-6 mb-0.5" />,
+    logo: <KBarIcons.people_icon className="text-[#6C6C6C] size-6 mb-0.5" />,
     shortcut: ["P"],
     keywords: "people",
     perform: () => (window.location.pathname = "/people"),
@@ -92,7 +93,7 @@ const adminActions = [
     id: "assets",
     name: "Assets",
     shortcut: ["A"],
-    logo: <Icons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
+    logo: <KBarIcons.assets_icon className="text-[#6C6C6C] size-5 mb-0.5" />,
     keywords: "assets",
     perform: () => (window.location.pathname = "/assets"),
   },
@@ -178,7 +179,7 @@ export default function KbarWrapper({
                   className="w-full border-none border-gray-300 rounded-md focus:outline-none"
                 />
               </div>
-              <Icons.kbar_icon />
+              <KBarIcons.kbar_icon />
             </div>
 
             <div className="h-[1px] w-[200%] bg-[#E8E8E8] mb-2 -ml-10"></div>

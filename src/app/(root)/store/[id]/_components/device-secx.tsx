@@ -13,6 +13,9 @@ import {
 import { Minus, MoveLeft, Plus } from "lucide-react";
 import { BackBtn } from "../../cart/checkout/_components/back-btn";
 import { useAlert } from "@/hooks/useAlert";
+import LeftArrowIcon from "@/icons/LeftArrowIcon";
+import RightArrowIcon from "@/icons/RightArrowIcon";
+import StoreProductIcons from "@/icons/StoreProductIcons";
 
 export const DeviceSecx = ({
   data,
@@ -93,27 +96,27 @@ export const DeviceSecx = ({
   const icons = [
     {
       key: "screen",
-      icon: <Icons.screen_size />,
+      icon: <StoreProductIcons.screen_size />,
     },
     {
       key: "processor",
-      icon: <Icons.processor />,
+      icon: <StoreProductIcons.processor />,
     },
     {
       key: "generation",
-      icon: <Icons.processor_generation />,
+      icon: <StoreProductIcons.processor_generation />,
     },
     {
       key: "ram",
-      icon: <Icons.camera_main />,
+      icon: <StoreProductIcons.camera_main />,
     },
     {
       key: "touch",
-      icon: <Icons.camera_front />,
+      icon: <StoreProductIcons.camera_front />,
     },
     {
       key: "storage",
-      icon: <Icons.battery_capacity />,
+      icon: <StoreProductIcons.battery_capacity />,
     },
   ];
 
@@ -157,7 +160,7 @@ export const DeviceSecx = ({
 
     // Return the object with icon, key, and value
     return {
-      icon: matchingIcon ? matchingIcon.icon : <Icons.screen_size />,
+      icon: matchingIcon ? matchingIcon.icon : <StoreProductIcons.screen_size />,
       key: item.key,
       value: item.value,
     };
@@ -221,8 +224,8 @@ export const DeviceSecx = ({
           </div>
 
           <div className="flex pl-2 gap-x-10 py-3 items-center">
-            <Icons.arrow_left onClick={handlePrev} className="cursor-pointer" />
-            <Icons.arrow_right
+            <LeftArrowIcon onClick={handlePrev} className="cursor-pointer" />
+            <RightArrowIcon
               onClick={handleNext}
               className="cursor-pointer"
             />
@@ -383,7 +386,7 @@ export const DeviceSecx = ({
 
           <div className="flex py-2 gap-1 items-center">
             <div>
-              <Icons.share_telegram />
+              <StoreProductIcons.share_telegram />
             </div>
             <div className="font-gilroySemiBold text-base 2xl:text-lg py-1">
               Recommend to employee

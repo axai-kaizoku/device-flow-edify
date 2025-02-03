@@ -7,6 +7,8 @@ import { Icons } from "@/components/icons";
 import { TeamsResponse } from "@/server/teamActions";
 import { teamIcons } from "../icons";
 import CreateTeam from "./create-team";
+import { Trash2 } from "lucide-react";
+import RestoreIcon from "@/icons/RestoreIcon";
 
 interface DeletedTeamsProps {
   teams: TeamsResponse | null;
@@ -36,14 +38,13 @@ export default function DeletedTeams({ teams, setTeams, onRefresh }: DeletedTeam
             <div className="flex gap-4">
               <PermanentTeamDelete id={team?._id!} onRefresh={onRefresh}>
                 <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.trashUpper />
-                  <Icons.trash className="size-4 cursor-pointer" />
+                  <Trash2 className="size-5 cursor-pointer" />
                 </div>
               </PermanentTeamDelete>
 
               <RestoreTeam id={team?._id!} onRefresh={onRefresh}>
                 <div className="group duration-300 hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.restore className="size-5 cursor-pointer" />
+                  <RestoreIcon className="size-5 cursor-pointer" />
                 </div>
               </RestoreTeam>
             </div>

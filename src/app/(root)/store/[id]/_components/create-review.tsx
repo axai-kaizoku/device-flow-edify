@@ -15,6 +15,7 @@ import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { cn } from "@/lib/utils";
+import ProductReviewStars from "@/icons/ProductReviewStars";
 
 export const CreateReview = ({
   children,
@@ -165,9 +166,9 @@ const RatingStarComp = ({
           className="cursor-pointer"
         >
           {index < rating ? (
-            <Icons.star_filled className={`${className} text-yellow-500`} />
+            <ProductReviewStars.star_filled className={`${className} text-yellow-500`} />
           ) : (
-            <Icons.star_unfilled className={`${className} text-gray-300`} />
+            <ProductReviewStars.star_unfilled className={`${className} text-gray-300`} />
           )}
         </div>
       ))}

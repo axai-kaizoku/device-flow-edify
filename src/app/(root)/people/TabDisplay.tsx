@@ -1,8 +1,7 @@
 "use client";
 
 import { useQueryState } from "nuqs";
-import { Search, Plus, Send } from "lucide-react";
-import { Icons } from "@/components/icons";
+import { Search, Plus, Send, X } from "lucide-react";
 import UserMain from "./_components/user-main";
 import { UserResponse } from "@/server/userActions";
 import DeletedUser from "./_components/deleted-user";
@@ -16,6 +15,7 @@ import {
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import InvitePeople from "./[id]/_components/invite-people";
+import FilterTabIcon from "@/icons/FilterTabIcon";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -298,7 +298,7 @@ function TabDisplay() {
                 onClick={() => setOpenFilter(!openFilter)}
                 className="flex items-center py-1.5 gap-1 px-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
               >
-                <Icons.tab_filter className="size-5" />
+                <FilterTabIcon className="size-5" />
                 <span className="text-base font-gilroyMedium pr-1">Filter</span>
                 {appliedFiltersCount > 0 && (
                   <span className="font-gilroySemiBold text-xs  bg-red-500 text-white rounded-full size-5 flex justify-center items-center">
@@ -457,30 +457,7 @@ function TabDisplay() {
                               className="w-32 font-gilroyMedium placeholder:text-gray-400 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                             />
                             {index > 0 && (
-                              <svg
-                                onClick={() => removeFilter(index)}
-                                className="size-3 cursor-pointer text-gray-500 hover:text-gray-700 transition-all duration-200"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="15"
-                                viewBox="0 0 16 15"
-                                fill="none"
-                              >
-                                <path
-                                  d="M1.81787 1.2684L14.4117 13.1024"
-                                  stroke="#AEAEAE"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M13.8442 1.19273L2.30198 13.5789"
-                                  stroke="#AEAEAE"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
+                              <X className="size-3 cursor-pointer w-4 h-4 text-gray-500 hover:text-gray-700 transition-all duration-200" onClick={() => removeFilter(index)}/>
                             )}
                           </div>
                         ))}
@@ -490,29 +467,7 @@ function TabDisplay() {
                             onClick={addFilter}
                             className="cursor-pointer flex items-center gap-2 py-2  text-[#4A4A4A] hover:text-black rounded-md transition-all duration-300"
                           >
-                            <svg
-                              className="size-3 -mt-0.5 "
-                              width="19"
-                              height="18"
-                              viewBox="0 0 19 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M1.80566 8.98486H17.4177"
-                                stroke="#7F7F7F"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M9.61182 16.7909L9.61182 1.17883"
-                                stroke="#7F7F7F"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+                            <Plus className="size-4 -mt-0.5 text-gray-500"/>
 
                             <h1 className="text-[#7F7F7F] text-sm font-gilroyRegular">
                               Add Filter
