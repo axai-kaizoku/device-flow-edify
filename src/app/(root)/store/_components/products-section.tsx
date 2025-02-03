@@ -108,7 +108,7 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full py-1.5 p-24 bg-white">
+    <div className="flex flex-col items-center w-full max-[1380px]:w-[90vw] py-1.5 p-24 bg-white">
       <h1 className="font-gilroySemiBold text-4xl py-8">Best Seller</h1>
 
       <div className="relative flex flex-col items-center w-full">

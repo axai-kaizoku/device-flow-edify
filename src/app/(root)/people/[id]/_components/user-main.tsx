@@ -39,9 +39,10 @@ const UserGrid = ({ user }: { user: User }) => {
   };
   return (
     <>
-      {user ? (<div className="flex flex-nowrap gap-6 mt-2 font-gilroyRegular">
+      {user ? 
+      (<div className="flex flex-nowrap gap-6 mt-2 font-gilroyRegular w-full">
         <div className="flex flex-col gap-6">
-          <div className="w-96 h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
+          <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex justify-start gap-4 items-start w-full ">
               <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
                 <img
@@ -81,19 +82,19 @@ const UserGrid = ({ user }: { user: User }) => {
             </div>
           </div>
 
-          <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
+          <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex flex-col justify-start gap-5 items-start w-full ">
               <div className="font-gilroySemiBold text-lg">Personal Info.</div>
 
-              <div className="flex gap-4 items-center">
+              <div className="flex gap-4 items-center w-full">
                 <div className="p-3 bg-gray-100 rounded-2xl">
                   <Mail className="size-6 text-gray-600" />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                   <div className="text-sm text-gray-500 font-gilroySemiBold">
                     Email
                   </div>
-                  <div className="font-gilroySemiBold">
+                  <div className="font-gilroySemiBold text-wrap w-full">
                     {user?.email ?? "-"}
                   </div>
                 </div>
@@ -192,7 +193,7 @@ const UserGrid = ({ user }: { user: User }) => {
         <div className="flex flex-col gap-6">
           {/* First Row */}
           {user?.reporting_manager?.first_name ? (
-            <div className="w-96 px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
+            <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] px-6 py-4 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px]">
               <div className="flex flex-col gap-2 items-start w-full ">
                 <div className="font-gilroySemiBold  text-lg">
                   Reporting Manager
@@ -251,7 +252,7 @@ const UserGrid = ({ user }: { user: User }) => {
             </div>
           ) : null}
 
-          <div className="w-96 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
+          <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] px-6 py-4">
             <div className="flex flex-col justify-start gap-5 items-start w-full ">
               <div className="font-gilroySemiBold  text-lg">
                 Organisation Info.
@@ -319,7 +320,7 @@ const UserGrid = ({ user }: { user: User }) => {
         {/* Third Column */}
         <div className="flex flex-col gap-6">
           {/* First Row (Reversed Order) */}
-          <div className="w-96 flex items-center bg-transparent bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] p-6">
+          <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] flex items-center bg-transparent bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-[25px] p-6">
             <AssetsSection user={user} />
           </div>
 

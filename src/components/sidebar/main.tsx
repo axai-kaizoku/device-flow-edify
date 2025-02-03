@@ -10,10 +10,10 @@ export default function SidebarMain({ session }: Props) {
   const router = useRouter();
 
   return (
-    <section className="flex flex-col z-[1000] relative mx-auto items-center justify-center  bg-transparent">
+    <section className="flex flex-col z-[1000] relative mx-auto items-center justify-start min-h-screen  bg-transparent">
       {session?.user.user.role === 2 ? (
         <>
-          <div className="relative top-0 flex flex-col mx-auto justify-end gap-5 w-full">
+          <div className="absolute -top-2 flex flex-col mx-auto justify-end gap-5 max-[1400px]:gap-4 w-full">
             {pathname !== "/" ? (
               <div
                 className="bg-white backdrop-blur-sm cursor-pointer dark:bg-gray-800 hover:bg-black hover:text-white

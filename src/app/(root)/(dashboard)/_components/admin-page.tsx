@@ -98,7 +98,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <CombinedContainer title="Admin Dashboard">
+    <CombinedContainer title="Admin Dashboard" className="max-[1410px]:pt-8 pt-0">
       <div className="flex justify-center items-center mb-7 gap-3 h-full" onClick={()=>{setIsModalOpen(false);}}>
         <div
           style={{ width: "75%" }}
