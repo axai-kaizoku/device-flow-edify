@@ -145,7 +145,7 @@ function DeviceContainer() {
       </div>
       <div className="border mt-2"></div>
 
-      <div className="mt-4">
+      <div className="mt-4 overflow-auto">
         {renderContent()}
       </div>
     </>

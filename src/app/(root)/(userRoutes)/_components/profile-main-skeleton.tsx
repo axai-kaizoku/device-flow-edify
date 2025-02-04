@@ -6,7 +6,7 @@ const ProfileSkeleton = () => {
       {/* Column 1 */}
       <div className="flex flex-col gap-6">
         {/* Card 1 */}
-        <div className="w-96 h-40 flex items-center bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] h-40 flex items-center bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
           <div className="flex justify-start gap-4 items-start w-full">
             <div className="w-[90px] h-[90px] bg-gray-300 rounded-full flex-shrink-0"></div>
             <div className="flex flex-col w-full">
@@ -20,7 +20,7 @@ const ProfileSkeleton = () => {
           </div>
         </div>
         {/* Card 2 */}
-        <div className="w-96 bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
           <div className="flex flex-col gap-5">
             <div className="w-1/3 h-5 bg-gray-300 rounded"></div>
             {[...Array(4)].map((_, idx) => (
@@ -39,7 +39,7 @@ const ProfileSkeleton = () => {
       {/* Column 2 */}
       <div className="flex flex-col gap-6">
         {/* Card 1 */}
-        <div className="w-96 bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
           <div className="flex flex-col gap-4">
             <div className="w-1/3 h-5 bg-gray-300 rounded"></div>
             <div className="flex items-start gap-4">
@@ -52,7 +52,7 @@ const ProfileSkeleton = () => {
           </div>
         </div>
         {/* Card 2 */}
-        <div className="w-96 bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] bg-gray-200 animate-pulse rounded-[25px] px-6 py-4">
           <div className="flex flex-col gap-5">
             <div className="w-1/3 h-5 bg-gray-300 rounded"></div>
             {[...Array(4)].map((_, idx) => (
@@ -71,11 +71,11 @@ const ProfileSkeleton = () => {
       {/* Column 3 */}
       <div className="flex flex-col gap-6">
         {/* Card 1 */}
-        <div className="w-96 bg-gray-200 animate-pulse rounded-[25px] p-6">
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] bg-gray-200 animate-pulse rounded-[25px] p-6">
           <div className="w-full h-32 bg-gray-300 rounded"></div>
         </div>
         {/* Card 2 */}
-        <div className="w-96 bg-gray-200 animate-pulse rounded-[25px] p-6"></div>
+        <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] bg-gray-200 animate-pulse rounded-[25px] p-6"></div>
       </div>
     </div>
   );

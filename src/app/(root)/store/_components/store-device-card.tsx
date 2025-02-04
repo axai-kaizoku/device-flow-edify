@@ -30,7 +30,7 @@ const StoreDeviceCard = memo(
     return (
       <div className="h-[53vh] w-[17vw]">
         <div
-          className="py-14 cursor-pointer px-2 w-full flex justify-center items-center bg-[#F7F7F7] rounded-3xl"
+          className="py-14 overflow-x-hidden cursor-pointer px-2 w-full flex justify-center items-center bg-[#F7F7F7] rounded-3xl"
           onClick={() => router.push(`/store/${product._id}`)}
         >
           {product.image ? (

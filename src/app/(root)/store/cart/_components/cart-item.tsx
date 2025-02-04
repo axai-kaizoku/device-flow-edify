@@ -78,12 +78,14 @@ export const CartItem = ({ data }: { data: DeviceWithQty }) => {
               >
                 {data?.device_name ?? ""}
               </span>
-              <div className="flex gap-2 items-center -mt-0.5 font-gilroyMedium">
-                <span className="text-sm text-[#A2A3B1]">Model:</span>
-                <span className="text-base text-[#17183B]">
-                  {data?.custom_model ?? "i5 5th gen"}
-                </span>
-                <div className="py-0.5 mx-1  px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">
+              <div className="flex gap-2 items-center -mt-0.5 font-gilroyMedium flex-wrap">
+                <div className="flex items-center">
+                  <span className="text-sm text-[#A2A3B1]">Model:</span>
+                  <span className="text-base text-[#17183B]">
+                    {data?.custom_model ?? "i5 5th gen"}
+                  </span>
+                </div>
+                <div className="py-0.5 mx-1 max-[1347px]:-ml-1  px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">
                   {`Avilable qty: ${data?.qty}`}
                 </div>
               </div>

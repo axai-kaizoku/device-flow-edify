@@ -14,7 +14,7 @@ export function ManageIssue({
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Issues</div>
       </div>
-      <div className="self-stretch pr-[0.8px] pt-[3px]">
+      <div className="self-stretch pr-[0.8px] pt-[3px] flex flex-col gap-2">
         {(dashboardData?.issueData?.length || 0) > 0 ? (
           dashboardData?.issueData?.map((response, index) => {
             const date = new Date(response.createdAt);
@@ -24,7 +24,7 @@ export function ManageIssue({
               year: "numeric",
             });
             return (
-              <div className="p-1 " key={`issue-${index}`}>
+              <div className="" key={`issue-${index}`}>
                 <div
                   style={{
                     width: "100%",
@@ -36,8 +36,8 @@ export function ManageIssue({
                     paddingRight: 6,
                   }}
                 >
-                  <div className="flex justify-between items-center gap-2 ">
-                    <div className="flex flex-col">
+                  <div className="flex justify-between items-center gap-2 w-full">
+                    <div className="flex flex-col max-[1350px]:w-[80%]">
                       <div
                         style={{
                           color: "#000",
@@ -49,7 +49,8 @@ export function ManageIssue({
                       >
                         {response.title}
                       </div>
-                      <div className="flex gap-2">
+
+                      <div className="flex gap-2 ">
                         <div
                           style={{
                             color: "#737791",
@@ -74,6 +75,7 @@ export function ManageIssue({
                         </div>
                       </div>
                     </div>
+
                     <div
                       style={{
                         borderRadius: 5.672,
@@ -88,6 +90,7 @@ export function ManageIssue({
                         marginRight: 2,
                         marginBottom: 5
                       }}
+                      className=""
                       onClick={() => {
                         router.push(`issues/${response._id}`);
                       }}
@@ -100,6 +103,7 @@ export function ManageIssue({
                           fontWeight: "500",
                           lineHeight: "14.179px",
                         }}
+                        className=""
                       >
                         {" "}
                         View More

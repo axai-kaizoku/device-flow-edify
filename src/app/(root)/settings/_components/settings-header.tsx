@@ -18,7 +18,7 @@ function SettingsHeader({ data }: { data: Org }) {
         <div className="flex justify-start gap-6">
           {/* Company Information Card */}
           <div className="relative flex-1 flex rounded-[25px] px-5 py-5 border border-gray-300 bg-white gap-2 h-[185px] w-full items-center">
-            <div>
+            <div className="size-28">
               {/* Display the logo */}
               <img
                   src={data.logo || "media/defaultIcon.webp"}
@@ -63,16 +63,16 @@ function SettingsHeader({ data }: { data: Org }) {
             <div className="flex items-center gap-4">
               <EmployeeIconGreen />
               <div className="flex flex-col ">
-                <h2 className="text-[#737373] text-base font-gilroySemiBold">
+                <h2 className="text-[#737373] text-base max-[1200px]:text-sm font-gilroySemiBold">
                   Active Employees
                 </h2>
-                <h1 className="text-primary text-[1.35rem] font-gilroySemiBold">
+                <h1 className="text-primary text-[1.35rem] max-[1200px]:text-lg font-gilroySemiBold">
                   {`${data?.total_users ?? "N/A"} Members`}
                 </h1>
               </div>
             </div>
             <Link href={"/people"}>
-              <button className="bg-primary mt-3 text-white py-2 px-6 rounded-full w-full font-gilroySemiBold text-lg">
+              <button className="bg-primary mt-3 text-white py-2 px-6 max-[1200px]:px-2 rounded-full w-full font-gilroySemiBold text-lg max-[1200px]:text-base">
                 Manage Employees
               </button>
             </Link>
@@ -91,16 +91,16 @@ function SettingsHeader({ data }: { data: Org }) {
             <div className="flex items-center gap-4">
               <AssetsIconGreen />
               <div className="flex flex-col ">
-                <h2 className="text-[#737373] text-base font-gilroySemiBold">
+                <h2 className="text-[#737373] text-base max-[1200px]:text-sm font-gilroySemiBold">
                   Active Assets
                 </h2>
-                <h1 className="text-primary text-[1.35rem] font-gilroySemiBold">
+                <h1 className="text-primary text-[1.35rem] max-[1200px]:text-lg font-gilroySemiBold">
                   {`${data?.total_devices ?? "N/A"} Devices`}
                 </h1>
               </div>
             </div>
             <Link href={"/assets"}>
-              <button className="bg-primary mt-3 text-white py-2 px-6 text-lg  rounded-full w-full font-gilroySemiBold">
+              <button className="bg-primary mt-3 text-white py-2 px-6 max-[1200px]:px-2 text-lg max-[1200px]:text-base rounded-full w-full font-gilroySemiBold">
                 Manage Assets
               </button>
             </Link>

@@ -38,17 +38,17 @@ export default async function MainLayout({
         <div className="h-14 pointer-events-none w-full" />
 
         {/* Main Content Section */}
-        <div className="flex flex-grow  w-full  justify-center items-center">
+        <div className="flex flex-grow  w-full  h-[calc(100vh-9rem)]">
           {/* Sidebar */}
           <div
-            className="fixed left-0 w-36 bg-transparent"
+            className="fixed  mt-11 left-0 w-36 h-[calc(100vh-4rem)] bg-transparent"
             style={{ zIndex: 10 }}
           >
             <Sidebar session={session} />
           </div>
 
           {/* Main Content */}
-          <div className="ml-36 mt-4 w-full z-10">
+          <div className="ml-36 mt-2 w-full z-10">
             <div className="h-8 pointer-events-none w-full" />
             {children}
           </div>

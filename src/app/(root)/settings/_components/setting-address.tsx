@@ -29,7 +29,7 @@ function SettingAddress({ data }: { data: Org }) {
         {data?.office_address?.map((address) => (
           <div
             key={address?._id}
-            className="flex flex-col relative w-[30%] rounded-[25px] border border-gray-300 bg-white backdrop-blur-md  px-5 pb-5 pt-4 "
+            className="flex flex-col relative w-[calc(33.33%-24px)] rounded-[25px] border border-gray-300 bg-white backdrop-blur-md  px-5 pb-5 pt-4 "
           >
             <div className="flex items-center gap-2">
               {address?.isPrimary ? (
