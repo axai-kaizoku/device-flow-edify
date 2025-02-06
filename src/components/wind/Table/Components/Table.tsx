@@ -29,6 +29,7 @@ export const Table = ({
   className,
   footer,
   selectedIds,
+  setSelectedIds
 }: TableProps) => {
   const [activeColumn, setActiveColumn] = useState<string>("");
   const [initialData, setInitialData] = useState<Array<any>>([]);
@@ -43,6 +44,9 @@ export const Table = ({
     pagination?.itemsPerPage,
     pagination?.type === "serverSide"
   );
+  const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
+
+  // Reference
 
   // Reference
 
@@ -67,42 +71,49 @@ export const Table = ({
     setColumnData(columnArray);
   };
 
-  const handleCheckBox = (uniqueValue, checked) => {
-    let newArray = [];
-    initialData.map((data) => {
-      if (data?.[`${checkboxSelection?.uniqueField}`] == uniqueValue) {
-        newArray.push({ ...data, isChecked: checked });
+  const handleCheckBox = (uniqueValue: string, checked: boolean) => {
+    setSelectedRowIds((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (checked) {
+        newSelected.add(uniqueValue);
       } else {
-        newArray.push({ ...data });
+        newSelected.delete(uniqueValue);
       }
+
+      // Callback to notify parent about selection changes
+      const selectedItems = initialData.filter((data) =>
+        newSelected.has(data?.[`${checkboxSelection?.uniqueField}`])
+      );
+      checkboxSelection?.onSelectionChange?.(selectedItems);
+
+      return newSelected;
     });
-
-    //return checked items
-    const filterSelectedItem = newArray.filter(
-      (data) => data?.isChecked === true
-    );
-    checkboxSelection?.onSelectionChange &&
-      checkboxSelection?.onSelectionChange(filterSelectedItem);
-
-    setSelectedRowCount(filterSelectedItem.length);
-    setInitialData(newArray);
   };
 
+  useEffect(()=>{
+    const selectedRowIdsArray = Array.from(selectedRowIds);
+    setSelectedIds(selectedRowIdsArray);
+  },[selectedRowIds]);
+
   const handleHeaderCheckBox = (checked: boolean) => {
-    let newArray = [];
-    initialData.map((data) => {
-      newArray.push({ ...data, isChecked: checked });
+    setSelectedRowIds((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      activePageData.forEach((row) => {
+        if (checked) {
+          newSelected.add(row[`${checkboxSelection?.uniqueField}`]);
+        } else {
+          newSelected.delete(row[`${checkboxSelection?.uniqueField}`]);
+        }
+      });
+
+      // Callback to notify parent about selection changes
+      const selectedItems = initialData.filter((data) =>
+        newSelected.has(data?.[`${checkboxSelection?.uniqueField}`])
+      );
+      checkboxSelection?.onSelectionChange?.(selectedItems);
+
+      return newSelected;
     });
-
-    //return checked items
-    const filterSelectedItem = newArray.filter(
-      (data) => data?.isChecked === true
-    );
-    checkboxSelection?.onSelectionChange &&
-      checkboxSelection?.onSelectionChange(filterSelectedItem);
-
-    setSelectedRowCount(filterSelectedItem.length);
-    setInitialData(newArray);
   };
 
   const handleHeaderCheckBoxState = () => {
@@ -277,7 +288,9 @@ export const Table = ({
               <Checkbox
                 value="master"
                 size="lg"
-                checked={record?.isChecked}
+                checked={selectedRowIds.has(
+                  record?.[`${checkboxSelection?.uniqueField}`]
+                )}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleCheckBox(
                     record?.[`${checkboxSelection?.uniqueField}`],
@@ -452,6 +465,7 @@ export interface TableProps {
   columns: Array<ColumnType>;
   footer?: boolean;
   selectedIds: string[];
+  setSelectedIds: (state:any)=> void;
   pagination?: {
     //Pagination is from server or client by default(client)
     type?: "serverSide" | "clientSide";
