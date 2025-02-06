@@ -28,6 +28,7 @@ export const Table = ({
   emptyTableMessage,
   className,
   footer,
+  selectedIds,
 }: TableProps) => {
   const [activeColumn, setActiveColumn] = useState<string>("");
   const [initialData, setInitialData] = useState<Array<any>>([]);
@@ -42,6 +43,8 @@ export const Table = ({
     pagination?.itemsPerPage,
     pagination?.type === "serverSide"
   );
+
+  // Reference
 
   const loadData = (data) => {
     let newArray = [];
@@ -269,7 +272,7 @@ export const Table = ({
     return (
       <TableRow>
         <>
-          {/* {checkboxSelection && (
+          {checkboxSelection && (
             <TableCell>
               <Checkbox
                 value="master"
@@ -283,7 +286,7 @@ export const Table = ({
                 }
               ></Checkbox>
             </TableCell>
-          )} */}
+          )}
           {columnData?.map((colData: ColumnType, index: number) => {
             return colData?.dataIndex ? (
               //Render by dataIndex
@@ -321,7 +324,7 @@ export const Table = ({
             <TableTag>
               <TableHeader>
                 <TableHeadRow>
-                  {/* {checkboxSelection && (
+                  {checkboxSelection && (
                     <TableCell
                       style={{ textAlign: "left", marginLeft: "12px" }}
                     >
@@ -332,7 +335,7 @@ export const Table = ({
                         onChange={(e) => handleHeaderCheckBox(e.target.checked)}
                       ></Checkbox>
                     </TableCell>
-                  )} */}
+                  )}
                   <>
                     {columnData?.map((header: ColumnWithSortingType, index) => (
                       <TableCell
@@ -448,6 +451,7 @@ export interface TableProps {
   data: Array<any>;
   columns: Array<ColumnType>;
   footer?: boolean;
+  selectedIds: string[];
   pagination?: {
     //Pagination is from server or client by default(client)
     type?: "serverSide" | "clientSide";

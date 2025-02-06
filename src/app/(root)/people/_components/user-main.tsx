@@ -1,4 +1,4 @@
-import { User, UserResponse } from "@/server/userActions";
+import { bulkDeleteUsers, User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Table } from "@/components/wind/Table";
@@ -12,6 +12,8 @@ import { Icons } from "../icons";
 import CreateUser from "./create-user";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
+import { useToast } from "@/hooks/useToast";
+import { DeleteModal } from "./deleteUserModal";
 
 export default function UserMain({
   data,
@@ -28,6 +30,9 @@ export default function UserMain({
 
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { openToast } = useToast();
+  const [open, setOpen] = useState(false);
   // const [users, setUsers] = useState(data);
 
   const handlePageChange = async (page: number) => {
@@ -35,6 +40,36 @@ export default function UserMain({
     setUsers(res);
     setCurrentPage(page);
   };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      openToast("error", `No user selected for deletion`);
+      return;
+    }
+
+    // const confirmDelete = window.confirm(
+    //   `Are you sure you want to delete ${selectedIds.length} users?`
+    // );
+    // if (!confirmDelete) return;
+
+    try {
+      const res = await bulkDeleteUsers(selectedIds, "soft");
+      if (res.status !== 200) throw new Error("Failed to delete users");
+      setOpen(false);
+      openToast("success", "Users deleted successfully!");
+      setSelectedIds([]); // Clear selection after deletion
+      await onRefresh(); // Refresh data after deletion
+    } catch (error) {
+      openToast("error", `Failed to delete Users : ${error}`);
+    }
+  };
+
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
+
+  // console.log(selectedIds);
 
   return (
     <>
@@ -51,21 +86,36 @@ export default function UserMain({
         ) : (
           <>
             <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-              <div className=" flex gap-3 w-fit">
-                <h1 className="text-xl font-gilroySemiBold pl-6">
-                  Total People
-                </h1>
-                <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                  {data?.total} People
-                </h1>
+              <div className="flex justify-between items-center">
+                <div className=" flex gap-3 w-fit">
+                  <h1 className="text-xl font-gilroySemiBold pl-6">
+                    Total People
+                  </h1>
+                  <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                    {data?.total} People
+                  </h1>
+                </div>
+
+                {selectedIds.length > 0 && (
+                    <DeleteModal handleBulkDelete={handleBulkDelete} open={open} setOpen={setOpen}>
+                      <button
+                        // onClick={handleBulkDelete}
+                        className="bg-black flex items-center gap-2 text-white px-3 py-1 font-gilroySemiBold w-fit mr-8 rounded-full"
+                      >
+                        Delete
+                      </button>
+                    </DeleteModal>
+                    // {selectedIds.length} Users
+                )}
               </div>
               <Suspense fallback={<div>Loading...</div>}>
                 <div className="flex flex-col  w-full">
                   <Table
                     data={data?.users ?? []}
+                    selectedIds={selectedIds}
                     checkboxSelection={{
                       uniqueField: "_id",
-                      onSelectionChange: (e) => console.log(e),
+                      onSelectionChange: handleSelectionChange
                     }}
                     columns={[
                       {

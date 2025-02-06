@@ -1,17 +1,23 @@
 "use client";
 import Spinner from "@/components/Spinner";
 import { requestLaptop } from "@/server/storeActions";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
-const NoProducts = ({filterData}:{filterData:{ram:string; storage: string; os: string; brand:string; searchTerm:string;}}) => {
+const NoProducts = ({filterData, searchQuery}:{filterData:{ram:string; storage: string; os: string; brand:string; searchTerm:string;}, searchQuery:string;}) => {
   const [loading, setLoading] = useState(false);
   const [requested, setRequested] = useState(false);
+  const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const searchQuery = searchParams?.get("q") || "";
+  // const userData = useSelector((state: RootState) => state.auth.userData);
+
+  // console.log(userData);
 
   const handleRequestLaptop = async () => {
     setLoading(true);
     try {
-      const response = await requestLaptop(filterData);
-
+      const response = await requestLaptop({...filterData, searchTerm:searchQuery});
       if (response.ok) {
         setRequested(true);
       } else {
@@ -49,18 +55,21 @@ const NoProducts = ({filterData}:{filterData:{ram:string; storage: string; os: s
             </>
           )}
         </p>
-        {/* <button
-          className="bg-black text-white py-2.5 px-6 rounded-[4px] text-base font-gilroySemiBold"
+        <button
+          className="bg-black text-white py-2.5 px-6 rounded-[4px] text-base font-gilroySemiBold cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
             if (!loading && !requested) {
               handleRequestLaptop();
             }
+            else{
+              router.replace('/store/all-products');
+            }
           }}
           disabled={loading || requested} // Disable button when loading or already requested
         >
           {loading ? <Spinner /> : requested ? "Done" : "Request Laptop"}
-        </button> */}
+        </button>
       </div>
     </div>
   );

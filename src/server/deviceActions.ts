@@ -230,6 +230,24 @@ export const bulkUploadDevices = async (
   }
 };
 
+export const bulkDeleteAssets = async (deviceIds: string[], type:string): Promise<any> => {
+  try {
+    console.log(deviceIds);
+    const response = await callAPIWithToken(
+      type !== "soft"? "https://api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true" :"https://api.edify.club/edifybackend/v1/devices/bulk-delete",
+      "POST",
+      { deviceIds },
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    console.log(response);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //Search api
 export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
   try {
