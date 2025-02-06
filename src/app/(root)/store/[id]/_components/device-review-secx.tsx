@@ -24,8 +24,8 @@ export const DeviceReviewsSecx = ({ data }: { data: StoreDevice }) => {
   };
 
   return (
-    <section className="px-[8.5rem] flex flex-col pt-5 pb-4 border border-black">
-      <div className="px-5 py-3 border border-black">
+    <section className="px-[8.5rem] flex flex-col pt-5 pb-4 ">
+      <div className="px-5 py-3 ">
         <h3 className="text-[#0D0C22] font-gilroyMedium text-xl 2xl:text-2xl pb-2">
           Reviews
         </h3>

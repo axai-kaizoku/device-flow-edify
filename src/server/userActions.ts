@@ -360,6 +360,27 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
     throw error;
   }
 };
+
+export const bulkDeleteUsers = async (userIds: string[], type:string): Promise<any> => {
+  try {
+    console.log(userIds);
+    const response = await callAPIWithToken(
+      type !== "soft"? "https://api.edify.club/edifybackend/v1/user/bulk-delete?permanent=true" :"https://api.edify.club/edifybackend/v1/user/bulk-delete",
+      "POST",
+      { userIds },
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    console.log(response)
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 export type UsersTeamResponse = {
   users: User[];
   total: number;

@@ -1,4 +1,9 @@
-import { Device, DeviceResponse, StoreDevice } from "@/server/deviceActions";
+import {
+  bulkDeleteAssets,
+  Device,
+  DeviceResponse,
+  StoreDevice,
+} from "@/server/deviceActions";
 
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
@@ -10,6 +15,8 @@ import { assignedAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import { useToast } from "@/hooks/useToast";
+import { DeleteModal } from "../../people/_components/deleteUserModal";
 function AssignedAssets({
   data,
   setAssets,
@@ -21,11 +28,42 @@ function AssignedAssets({
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { openToast } = useToast();
+  const [open, setOpen] = useState(false);
 
   const handlePageChange = async (page: number) => {
     const res = await assignedAssets({ page });
     setAssets(res);
     setCurrentPage(page);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      openToast("error", `No Asset selected for deletion`);
+      return;
+    }
+
+    // const confirmDelete = window.confirm(
+    //   `Are you sure you want to delete ${selectedIds.length} users?`
+    // );
+    // if (!confirmDelete) return;
+
+    try {
+      const res = await bulkDeleteAssets(selectedIds, "soft");
+
+      if (res.status !== 200) throw new Error("Failed to delete Assets");
+
+      openToast("success", "Assets deleted successfully!");
+      setSelectedIds([]); // Clear selection after deletion
+      await onRefresh(); // Refresh data after deletion
+    } catch (error) {
+      openToast("error", `Failed to delete Assets : ${error}`);
+    }
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
   };
 
   return (
@@ -43,19 +81,40 @@ function AssignedAssets({
         ) : (
           <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
             {" "}
-            <div className=" flex gap-3 w-fit">
-              <h1 className="text-xl pl-6 font-gilroySemiBold">Total Assets</h1>
-              <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                {data?.total} Assets
-              </h1>
+            <div className="flex justify-between items-center">
+              <div className=" flex gap-3 w-fit">
+                <h1 className="text-xl pl-6 font-gilroySemiBold">
+                  Total Assets
+                </h1>
+                <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                  {data?.total} Assets
+                </h1>
+              </div>
+
+              {selectedIds.length > 0 && (
+                <DeleteModal
+                  handleBulkDelete={handleBulkDelete}
+                  open={open}
+                  setOpen={setOpen}
+                >
+                  <button
+                    // onClick={handleBulkDelete}
+                    className="bg-black flex items-center gap-2 text-white px-3 py-1 font-gilroySemiBold w-fit mr-8 rounded-full"
+                  >
+                    Delete
+                  </button>
+                </DeleteModal>
+                // {selectedIds.length} Users
+              )}
             </div>
             <Suspense fallback={<div>Loading...</div>}>
               <div className="flex flex-col gap-2">
                 <Table
                   data={data?.devices ?? []}
+                  selectedIds={selectedIds}
                   checkboxSelection={{
                     uniqueField: "_id",
-                    onSelectionChange: (e) => console.log(e),
+                    onSelectionChange: handleSelectionChange,
                   }}
                   columns={[
                     {
@@ -189,7 +248,10 @@ function AssignedAssets({
                       title: "",
                       render: (record) => (
                         <div className="flex gap-5 -ml-2 items-center">
-                          <SoftDeleteAsset id={record?._id} onRefresh={onRefresh}>
+                          <SoftDeleteAsset
+                            id={record?._id}
+                            onRefresh={onRefresh}
+                          >
                             <DeleteTableIcon className="size-6" />
                           </SoftDeleteAsset>
                           <Link

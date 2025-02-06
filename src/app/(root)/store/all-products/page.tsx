@@ -68,7 +68,7 @@ export default function AllProducts() {
             })}
           </div>
         ) : (
-          <NoProducts filterData={filterData}/>
+          <NoProducts filterData={filterData} searchQuery={searchQuery}/>
         )
       ) : (
         <div className="w-full h-[60vh] flex justify-center items-center">

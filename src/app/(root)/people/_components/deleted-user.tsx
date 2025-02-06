@@ -1,4 +1,4 @@
-import { User, UserResponse } from "@/server/userActions";
+import { bulkDeleteUsers, User, UserResponse } from "@/server/userActions";
 import React, { SetStateAction, useState } from "react";
 import { Icons } from "../icons";
 import CreateUser from "./create-user";
@@ -9,6 +9,9 @@ import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
 import { Table } from "@/components/wind/Table";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import { useToast } from "@/hooks/useToast";
+import { DeleteModal } from "./deleteUserModal";
+
 
 function DeletedUser({
   data,
@@ -20,13 +23,43 @@ function DeletedUser({
   onRefresh: () => Promise<void>;
 }) {
   const router = useRouter();
-
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { openToast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
+  const [open, setOpen] = useState(false);
 
   const handlePageChange = async (page: number) => {
     const res = await inActiveUsers({ page });
     setUsers(res);
     setCurrentPage(page);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      openToast("error", `No user selected for deletion`);
+      return;
+    }
+
+    // const confirmDelete = window.confirm(
+    //   `Are you sure you want to delete ${selectedIds.length} users?`
+    // );
+    // if (!confirmDelete) return;
+
+    try {
+      const res = await bulkDeleteUsers(selectedIds, "permanent");
+
+      if (res.status !== 200) throw new Error("Failed to delete users");
+
+      openToast("success", "Users deleted successfully!");
+      setSelectedIds([]); // Clear selection after deletion
+      await onRefresh(); // Refresh data after deletion
+    } catch (error) {
+      openToast("error", `Failed to delete Users : ${error}`);
+    }
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
   };
 
   return (
@@ -43,19 +76,37 @@ function DeletedUser({
           </div>
         ) : (
           <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-            <div className=" flex gap-3 w-fit">
-              <h1 className="text-xl font-gilroySemiBold pl-6">People</h1>
-              <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                {data?.total} People
-              </h1>
+            <div className="flex justify-between items-center">
+              <div className=" flex gap-3 w-fit">
+                <h1 className="text-xl font-gilroySemiBold pl-6">People</h1>
+                <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                  {data?.total} People
+                </h1>
+              </div>
+
+              {selectedIds.length > 0 && (
+                <DeleteModal
+                  handleBulkDelete={handleBulkDelete}
+                  open={open}
+                  setOpen={setOpen}
+                >
+                  <button
+                    // onClick={handleBulkDelete}
+                    className="bg-black flex items-center gap-2 text-white px-3 py-1 font-gilroySemiBold w-fit mr-8 rounded-full"
+                  >
+                    Delete
+                  </button>
+                </DeleteModal>
+                // {selectedIds.length} Users
+              )}
             </div>
             <div className="flex flex-col ">
               <Table
                 data={data?.users ?? []}
+                selectedIds={selectedIds}
                 checkboxSelection={{
                   uniqueField: "_id",
-                  //logic yet to be done
-                  onSelectionChange: (e) => console.log(e),
+                  onSelectionChange: handleSelectionChange,
                 }}
                 columns={[
                   {
@@ -136,7 +187,10 @@ function DeletedUser({
                     title: "",
                     render: (record: User) => (
                       <div className="flex gap-5 -ml-2 justify-center items-center">
-                        <PermanentUserDelete id={record?._id!} onRefresh={onRefresh}>
+                        <PermanentUserDelete
+                          id={record?._id!}
+                          onRefresh={onRefresh}
+                        >
                           <DeleteTableIcon className="size-6" />
                         </PermanentUserDelete>
 
