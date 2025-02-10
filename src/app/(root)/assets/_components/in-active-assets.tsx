@@ -112,6 +112,7 @@ function InActiveAssets({
                 <Table
                   data={data?.devices ?? []}
                   selectedIds={selectedIds}
+                  setSelectedIds={setSelectedIds}
                   checkboxSelection={{
                     uniqueField: "_id",
                     onSelectionChange: handleSelectionChange,

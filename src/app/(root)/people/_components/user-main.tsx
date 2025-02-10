@@ -113,6 +113,7 @@ export default function UserMain({
                   <Table
                     data={data?.users ?? []}
                     selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
                     checkboxSelection={{
                       uniqueField: "_id",
                       onSelectionChange: handleSelectionChange
