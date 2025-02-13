@@ -72,8 +72,10 @@ function TabDisplay() {
       let res: any;
       if (activeTab === "inactive_assets") {
         res = await inActiveAssets(query);
-      } else {
-        res = await filterDevice(query);
+      } else if (activeTab === "un_assigned_assets") {
+        res = await unAssignedAssets(query);
+      } else{
+        res = await assignedAssets(query);
       }
       setAssets(res);
       setLoading(false);
@@ -266,11 +268,11 @@ function TabDisplay() {
       label: "Assigned Assets",
       component: <AssignedAssets data={assets} setAssets={setAssets} />,
     },
-    // {
-    //   key: "un_assigned_assets",
-    //   label: "Unassigned Assets",
-    //   component: <UnAssignedAssets data={assets} setAssets={setAssets} />,
-    // },
+    {
+      key: "un_assigned_assets",
+      label: "Unassigned Assets",
+      component: <UnAssignedAssets data={assets} setAssets={setAssets} />,
+    },
     {
       key: "inactive_assets",
       label: "Inactive Assets",

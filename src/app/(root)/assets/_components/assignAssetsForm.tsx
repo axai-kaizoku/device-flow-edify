@@ -10,9 +10,11 @@ import Spinner from "@/components/Spinner";
 const AssignAssetsForm = ({
   closeBtn,
   device,
+  onRefresh
 }: {
   closeBtn: (boo: boolean) => void;
   device: Device;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -26,8 +28,7 @@ const AssignAssetsForm = ({
         userId: user._id,
       });
       setLoading(false);
-      router.push("/assets?tab=un_assigned_assets");
-      router.refresh();
+      onRefresh();
     }
     closeBtn(false);
   };

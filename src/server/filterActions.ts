@@ -320,7 +320,7 @@ export const assignedAssets = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters?.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? [...filters, ["userId", "not null" ]] : [["userId", "not null" ]],
       page,
       pageLimit,
     };
@@ -357,7 +357,7 @@ export const unAssignedAssets = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters?.length > 0 ? filters : [],
+      filters: filters?.length > 0 ? [...filters, ["userId", "null" ]] : [["userId", "null" ]],
       page: page,
       pageLimit,
     };
