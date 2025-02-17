@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
 import { deleteDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
@@ -25,13 +26,16 @@ export const DeleteAsset = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { showAlert } = useAlert();
+  const {openToast} = useToast();
 
   const handleDelete = async () => {
     if (id) {
       try {
         await deleteDevice(id);
         setOpen(false);
-        router.refresh();
+        openToast('success', "Asset deleted Successfully!");
+        router.push('/assets');
+        // router.refresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete asset.",

@@ -20,11 +20,16 @@ export default function ClosedIssueTable({
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handlePageChange = async (page: number) => {
     const res = await closedIssues({ page });
     setIssues(res);
     setCurrentPage(page);
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
   };
 
   return (
@@ -39,10 +44,12 @@ export default function ClosedIssueTable({
             <IssueClosedHeader data={data} />
             <Table
               data={data?.issues ?? []}
+              selectedIds={selectedIds}
+              setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
-                onSelectionChange: (e) => console.log(e),
+                onSelectionChange: handleSelectionChange,
               }}
               columns={[
                 {

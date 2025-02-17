@@ -14,6 +14,7 @@ import { Button } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
 import { useAlert } from "@/hooks/useAlert";
 import WarningDelete from "@/icons/WarningDelete";
+import { useToast } from "@/hooks/useToast";
 
 export const SoftDeleteAsset = ({
   id,
@@ -27,6 +28,7 @@ export const SoftDeleteAsset = ({
   const router = useRouter();
   const { showAlert } = useAlert();
   const [open, setOpen] = useState(false);
+  const { openToast } = useToast();
 
   const handleDelete = async () => {
     if (id) {
@@ -35,6 +37,7 @@ export const SoftDeleteAsset = ({
         setOpen(false);
         // router.push("/assets?tab=un_assigned_assets");
         // router.refresh();
+        openToast('success', "Asset deleted Successfully!");
         onRefresh();
       } catch (e: any) {
         showAlert({

@@ -41,6 +41,7 @@ export const DeleteUser = ({
         setLoading(false);
         openToast("success", "Successfully deleted user !");
         setOpen(false);
+        router.push('/people');
         onRefresh();
         // router.push("/people?tab=active_people");
         // router.refresh();
