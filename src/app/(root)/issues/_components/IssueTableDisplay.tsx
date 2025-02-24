@@ -24,11 +24,16 @@ function IssueTableDisplay({
 }: IssueTableDisplayProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handlePageChange = async (page: number) => {
     const res = await openIssues({ page });
     setIssues(res);
     setCurrentPage(page);
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
   };
 
   return (
@@ -44,10 +49,12 @@ function IssueTableDisplay({
           <div className="flex flex-col">
             <Table
               data={data?.issues!}
+              selectedIds={selectedIds}
+              setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
-                onSelectionChange: (e) => console.log(e),
+                onSelectionChange: handleSelectionChange,
               }}
               columns={[
                 {

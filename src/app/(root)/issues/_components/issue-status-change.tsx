@@ -76,7 +76,7 @@ export const IssueStatusChange = ({
                     status: reOpen ? "Open" : "Closed",
                   });
                   setOpen(false);
-                  onRefresh();
+                  router.refresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||
