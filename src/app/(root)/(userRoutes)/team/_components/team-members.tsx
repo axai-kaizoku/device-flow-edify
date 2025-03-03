@@ -20,6 +20,11 @@ const TeamMembers = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState<UsersTeamResponse>();
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -61,6 +66,8 @@ const TeamMembers = ({
             <div className="flex flex-col">
               <Table
                 data={data?.users ?? []}
+                selectedIds={selectedIds}
+                setSelectedIds={setSelectedIds}
                 checkboxSelection={{
                   uniqueField: "_id",
                   //logic yet to be done

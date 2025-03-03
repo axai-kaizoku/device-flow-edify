@@ -12,6 +12,12 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
+
   // Calculate the start and end indices for the current page
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentIssues = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -38,6 +44,8 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
           <div className="flex flex-col gap-2">
             <Table
               data={currentIssues}
+              selectedIds={selectedIds}
+                setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 // logic yet to be done
