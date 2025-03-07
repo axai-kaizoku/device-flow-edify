@@ -76,7 +76,7 @@ export default function Login() {
               <LoginForm />
             </div>
             <div className="flex text-xs lg:text-sm absolute max-lg:w-full bottom-10 text-[#9E9E9E] left-9 max-lg:left-4 max-lg:text-center justify-items-start">
-              Copyright 2024 Edify by Winuall All rights Reserved
+              Copyright 2024 Edify All rights Reserved
             </div>
           </div>
         </div>
