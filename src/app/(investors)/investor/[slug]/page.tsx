@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import FeaturesSection from "./_components/company-section";
 import Brands from "./_components/brands";
 import { Icons } from "@/components/icons";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Section2 } from "@/app/(root)/_landing-page/Section2";
 import { Section3 } from "@/app/(root)/_landing-page/Section3";
 import { Testimonials } from "@/app/(root)/_landing-page/Testimonials";
@@ -14,6 +14,7 @@ import { Footer } from "@/app/(root)/_landing-page/Footer";
 import { Integration } from "@/app/(root)/_landing-page/Integration";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import DemoForm from "@/app/(root)/_landing-page/_components/DemoForm";
+import { INVESTOR_DETAILS } from "./constant";
 
 const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,8 @@ const Page = () => {
   const signupref = useRef<HTMLDivElement>(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { slug }: {slug: string} = useParams();
+  const investorDetails = Object.values(INVESTOR_DETAILS).find((item) => item.slug === slug);
 
   const scrollToCTA = () => {
     if (ctaRef.current) {
@@ -115,10 +118,10 @@ const Page = () => {
 
           <span className="text-[#797979] font-gilroyBold text-xl">x</span>
 
-          <img src="/media/logo/deviceflow-white.svg" />
+          <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "225px", height: "30px"} : {width: "139px", height: "auto"}} />
         </div>
 
-        <div className="fade-in  flex items-end justify-center self-stretch pt-6">
+        {/* <div className="fade-in  flex items-end justify-center self-stretch pt-6">
           <div
             className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer"
             onClick={() => router.push("#how-to-deviceflow")}
@@ -127,12 +130,11 @@ const Page = () => {
               Offer
             </div>
             <div className="text-zinc-700">
-              Get access to 12 months of DeviceFlow access for FREE being a
-              BLUME portfolio company!
+              Get access to 12 months of DeviceFlow access for FREE being a {investorDetails?.name} company!
             </div>
-            {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
+            <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" />
           </div>
-        </div>
+        </div> */}
         <div
           className="fade-in fltopex w-auto text-center font-bold leading-[88px] tracking-[-1px] text-neutral-800 
               text-[60px] sm:text-[45px] md:text-[46px] lg:text-[50px] xl:text-[60px] 
@@ -262,7 +264,7 @@ const Page = () => {
 
               <span className="text-[#797979] font-gilroyBold text-xl">x</span>
 
-              <img src="/media/logo/deviceflow-white.svg" width={100} height={150}/>
+              <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "113px", height: "17px"} : {width: ['peak-xv','ipv'].includes(slug) ? "120px": slug === "prime-vp" ? "80px" : "60px", height: "25px"}} />
             </div>
           </div>
 
