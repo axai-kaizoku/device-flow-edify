@@ -118,7 +118,10 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col justify-end pt-14">
           <div className="flex items-start justify-center border-t border-solid border-zinc-700 px-24 pb-[60px] pt-[19px]">
             <div className="flex flex-grow flex-wrap items-center justify-between gap-x-3 gap-y-[9px] text-xs leading-[18px] tracking-[0px] text-gray-300 min-[1430px]:flex-nowrap font-gilroyRegular">
-              <div>© 2025 Edify. All rights reserved.</div>
+              <div className="flex flex-col items-center gap-y-1">
+                <div>© 2025 Edify. All rights reserved.</div>
+                <div>Kuzagan Services Private Limited</div>
+              </div>
               <div className="flex items-center justify-center gap-x-8 ">
                 <div>
                   <a
