@@ -211,8 +211,6 @@ export const LandingPage = () => {
               <div onClick={scrollToAbout} className="cursor-pointer">
                 Features
               </div>
-              {/* <div>Pricing</div>
-              <div>Blog</div> */}
             </div>
             <Link href={"/login"}>
               <div className="pl-3 font-gilroyMedium underline">Log in</div>

@@ -91,8 +91,6 @@ const Page = () => {
               <div onClick={scrollToAbout} className="cursor-pointer">
                 Features
               </div>
-              <div>Pricing</div>
-              <div>Blog</div>
             </div>
             <Link href={"/login"}>
               <div className="pl-3 font-gilroyMedium underline">Log in</div>
@@ -259,7 +257,7 @@ const Page = () => {
 
         <div className="w-[80%] mx-auto text-center mt-11">
           <div className="w-full flex justify-center mb-12">
-            <div className="border border-[#B0B0B0] bg-[linear-gradient(145deg,#000,#656565)] overflow-hidden shadow-[inset_0px_-1px_1px_1px_rgba(204,199,199,0.20),inset_0px_1px_1px_1px_rgba(204,199,199,0.20),0px_13px_20px_-1px_rgba(0,0,0,0.20)] px-4 py-3 rounded-[22px] flex gap-6 items-center w-fit">
+            <div className="border border-[#B0B0B0] bg-[linear-gradient(145deg,#000,#656565)] overflow-hidden shadow-[inset_0px_-1px_1px_1px_rgba(204,199,199,0.20),inset_0px_1px_1px_1px_rgba(204,199,199,0.20),0px_13px_20px_-1px_rgba(0,0,0,0.20)] px-4 py-3 rounded-[22px] flex gap-3 items-center w-fit">
               <img src="/media/logo/deviceflow-white.svg" width={100} height={150}/>
 
               <span className="text-[#797979] font-gilroyBold text-xl">x</span>
