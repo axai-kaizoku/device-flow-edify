@@ -264,7 +264,7 @@ const Page = () => {
 
               <span className="text-[#797979] font-gilroyBold text-xl">x</span>
 
-              <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "113px", height: "17px"} : {width: ['peak-xv','ipv'].includes(slug) ? "120px": slug === "prime-vp" ? "80px" : "60px", height: "25px"}} />
+              <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "108px", height: "17px"} : {width: ['peak-xv','ipv'].includes(slug) ? "100px": slug === "prime-vp" ? "80px" : "60px", height: "25px"}} />
             </div>
           </div>
 
