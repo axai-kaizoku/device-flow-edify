@@ -1,133 +1,34 @@
 "use client";
-import { Integration } from "./Integration";
-import { Testimonials } from "./Testimonials";
-import { CTA } from "./CTA";
-import { Footer } from "./Footer";
-import { useEffect, useRef, useState } from "react";
-import { Section3 } from "./Section3";
-import { Section2 } from "./Section2";
-import { FAQ } from "./FAQ";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
+import FeaturesSection from "./_components/company-section";
+import Brands from "./_components/brands";
 import { Icons } from "@/components/icons";
+import { useParams, useRouter } from "next/navigation";
+import { Section2 } from "@/app/(root)/_landing-page/Section2";
+import { Section3 } from "@/app/(root)/_landing-page/Section3";
+import { Testimonials } from "@/app/(root)/_landing-page/Testimonials";
+import { CTA } from "@/app/(root)/_landing-page/CTA";
+import { FAQ } from "@/app/(root)/_landing-page/FAQ";
+import { Footer } from "@/app/(root)/_landing-page/Footer";
+import { Integration } from "@/app/(root)/_landing-page/Integration";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import DemoForm from "./_components/DemoForm";
+import DemoForm from "@/app/(root)/_landing-page/_components/DemoForm";
+import { INVESTOR_DETAILS } from "./constant";
 
-export const LandingPage = () => {
-  const cardsRef: any = useRef([]); // Reference to all the 3 cards
+const Page = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const boxRef: any = useRef(null); // Reference to the box container
   const elementRef = useRef(null);
   const ctaRef = useRef<HTMLDivElement>(null); // Reference to the CTA section
   const featRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const newRef = useRef<HTMLDivElement>(null);
   const signupref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        rootMargin: "0px",
-        threshold: 0.1,
-      }
-    );
-
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      if (elementRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const boxPosition = boxRef.current.getBoundingClientRect().top;
-      if (boxPosition < 300) {
-        const screenWidth = window.innerWidth;
-        cardsRef.current.forEach((card: any, index: number) => {
-          if (index === 0) {
-            if (screenWidth > 1155) {
-              const xOffset = 203; // X-offset for each card
-              const yOffset = 625; //
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            } else {
-              const xOffset = 103; // X-offset for each card
-              const yOffset = 580; //
-              card.style.width = "179px";
-              card.style.height = "252px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            }
-          }
-          if (index === 1) {
-            if (screenWidth > 1155) {
-              const xOffset = 235; // X-offset for each card
-              const yOffset = 588; //
-              card.style.width = "320px";
-              card.style.height = "139px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            } else {
-              const xOffset = 140; // X-offset for each card
-              const yOffset = 562; //
-              card.style.width = "280px";
-              card.style.height = "120px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            }
-          }
-          if (index === 2) {
-            if (screenWidth > 1155) {
-              const xOffset = -402; // X-offset for each card
-              const yOffset = 750; //
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            } else {
-              const xOffset = -285; // X-offset for each card
-              const yOffset = 705; //
-              card.style.width = "179px";
-              card.style.height = "252px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            }
-          }
-          if (index === 3) {
-            if (screenWidth > 1155) {
-              const xOffset = -153; // X-offset for each card
-              const yOffset = 625; //
-              card.style.width = "200px";
-              card.style.height = "115px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            } else {
-              const xOffset = -53; // X-offset for each card
-              const yOffset = 550; //
-              card.style.width = "200px";
-              card.style.height = "115px";
-              card.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            }
-          }
-        });
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { slug }: {slug: string} = useParams();
+  const investorDetails = Object.values(INVESTOR_DETAILS).find((item) => item.slug === slug);
 
   const scrollToCTA = () => {
     if (ctaRef.current) {
@@ -159,35 +60,14 @@ export const LandingPage = () => {
     }
   };
 
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
   return (
     <div className="flex flex-col gap-0 max-lg:w-full">
-      <div className="px-8 max-lg:hidden">
-        <div
-          className={
-            " fade-in-top flex w-full items-center rounded-xl bg-neutral-800 py-[15px] pl-10 pr-2.5 mt-5"
-          }
-        >
-          <div className=" flex flex-grow flex-wrap items-center justify-center gap-x-2.5 gap-y-[9px] min-[1355px]:flex-nowrap">
-            <div className="flex h-[18px] w-[1285px] flex-shrink-0 items-center justify-center text-center text-lg font-gilroySemiBold leading-[18px] tracking-[0px] text-white">
-              <p>
-                {
-                  "Welcome to the club!! Join the BETA program to get all the new updates  "
-                }
-                <span
-                  className="text-center text-[15px] leading-[18px] underline cursor-pointer"
-                  onClick={scrollToCTA}
-                >
-                  Click here
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div
         className={
-          " font-gilroyMedium flex w-full flex-col items-center gap-y-8 bg-white tracking-[0px] px-8 max-lg:hidden"
+          "bg-[url('/media/Grid.svg')] bg-cover font-gilroyMedium flex w-full flex-col items-center gap-y-8 tracking-[0px]  max-lg:hidden"
         }
       >
         <div className="fade-in-top flex flex-wrap items-center justify-center gap-x-7 gap-y-5 self-stretch bg-white py-6 pl-12 pr-12 min-[1430px]:flex-nowrap">
@@ -230,20 +110,29 @@ export const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className="fade-in  flex items-end justify-center self-stretch pt-6">
+
+        <div className="border border-[#B0B0B0] bg-[linear-gradient(145deg,#000,#656565)] shadow-[inset_0px_-1px_1px_1px_rgba(204,199,199,0.20),inset_0px_1px_1px_1px_rgba(204,199,199,0.20),0px_13px_20px_-1px_rgba(0,0,0,0.20)] px-8 py-5 rounded-[22px] flex gap-6 items-center">
+          <img src="/media/logo/deviceflow-white.svg" />
+
+          <span className="text-[#797979] font-gilroyBold text-xl">x</span>
+
+          <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "225px", height: "30px"} : {width: "139px", height: "auto"}} />
+        </div>
+
+        {/* <div className="fade-in  flex items-end justify-center self-stretch pt-6">
           <div
             className="font-inter flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-[100px] bg-zinc-100 py-0.5 pl-0.5 pr-2 text-sm leading-5 tracking-[-0.1px] min-[1430px]:flex-nowrap cursor-pointer"
             onClick={() => router.push("#how-to-deviceflow")}
           >
             <div className="rounded-[100px] bg-neutral-800 px-2 py-0.5 text-center text-white">
-              New
+              Offer
             </div>
             <div className="text-zinc-700">
-              How DeviceFlow help your business ?
+              Get access to 12 months of DeviceFlow access for FREE being a {investorDetails?.name} company!
             </div>
-            {/* <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" /> */}
+            <IconOutlineArrowRight className="h-[13px] w-3.5 flex-shrink-0" />
           </div>
-        </div>
+        </div> */}
         <div
           className="fade-in fltopex w-auto text-center font-bold leading-[88px] tracking-[-1px] text-neutral-800 
               text-[60px] sm:text-[45px] md:text-[46px] lg:text-[50px] xl:text-[60px] 
@@ -287,48 +176,6 @@ export const LandingPage = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <img
-            ref={(el: any) => (cardsRef.current[0] = el)}
-            className="fade-in-left hero-card-issue"
-            src={"/media/landingPage/hero-issue.webp"}
-            alt="hero-1"
-            width={199}
-            height={292}
-          />
-          <img
-            ref={(el: any) => (cardsRef.current[1] = el)}
-            className="fade-in-left hero-card-asset"
-            alt="hero-2"
-            src={"/media/landingPage/hero-asset.webp"}
-            width={199}
-            height={292}
-          />
-          <img
-            ref={(el: any) => (cardsRef.current[2] = el)}
-            className="fade-in-right hero-card-order"
-            alt="hero-3"
-            src={"/media/landingPage/hero-order.webp"}
-            width={199}
-            height={292}
-          />
-          <img
-            ref={(el: any) => (cardsRef.current[3] = el)}
-            className="fade-in-right hero-card-banner"
-            src={"/media/landingPage/hero-banner.webp"}
-            alt="hero-4"
-            width={199}
-            height={292}
-          />
-        </div>
-        <div ref={boxRef}>
-          <img
-            src={"/media/landingPage/hero.svg"}
-            alt="landing-page"
-            width={"auto"}
-            height={"auto"}
-          />
         </div>
       </div>
 
@@ -409,6 +256,16 @@ export const LandingPage = () => {
         )}
 
         <div className="w-[80%] mx-auto text-center mt-11">
+          <div className="w-full flex justify-center mb-12">
+            <div className="border border-[#B0B0B0] bg-[linear-gradient(145deg,#000,#656565)] overflow-hidden shadow-[inset_0px_-1px_1px_1px_rgba(204,199,199,0.20),inset_0px_1px_1px_1px_rgba(204,199,199,0.20),0px_13px_20px_-1px_rgba(0,0,0,0.20)] px-4 py-3 rounded-[22px] flex gap-3 items-center w-fit">
+              <img src="/media/logo/deviceflow-white.svg" width={100} height={150}/>
+
+              <span className="text-[#797979] font-gilroyBold text-xl">x</span>
+
+              <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "108px", height: "17px"} : {width: ['peak-xv','ipv'].includes(slug) ? "100px": slug === "prime-vp" ? "80px" : "60px", height: "25px"}} />
+            </div>
+          </div>
+
           <div className="font-gilroyBold text-[#1D1F20] text-[35px] leading-[1.2]">
             Streamline IT Asset
             <br /> Management with
@@ -438,15 +295,17 @@ export const LandingPage = () => {
               </div>
             </div>
           </div>
-
-          <img
-            src={"/media/landingPage/Hero-mobile.webp"}
-            alt="hero-mobile"
-            width="120%"
-            className="py-7 "
-          />
         </div>
       </div>
+
+      <div className="w-full flex justify-center items-center mt-24">
+        <FeaturesSection />
+      </div>
+
+      <div className="bg-[url('/media/brands-bg.svg')] bg-cover bg-center flex justify-center items-center mt-24 pt-24 pb-20">
+        <Brands />
+      </div>
+
       <div ref={featRef}>
         <Section2 ref={newRef} />
       </div>
@@ -479,3 +338,5 @@ export const LandingPage = () => {
     </div>
   );
 };
+
+export default Page;
