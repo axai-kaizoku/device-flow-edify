@@ -15,7 +15,7 @@ interface DevicePageProps {
 }
 
 export default async function SingleDevice({ params }: DevicePageProps) {
-  const data: StoreDevice = await getDeviceById(params?.id);
+  const data: any = await getDeviceById(params?.id);
   return (
     <CombinedContainer>
       <div className="flex justify-between w-full mt-2">

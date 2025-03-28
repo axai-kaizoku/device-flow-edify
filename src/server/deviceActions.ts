@@ -265,7 +265,7 @@ export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
   try {
     // Make the GET request to fetch a single device by ID
     const res = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      `https://7030-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/${deviceId}`,
       "GET"
     );
 
@@ -286,7 +286,7 @@ export const getDevicesByUserId = cache(
       if (sess?.user && sess?.user?.user.userId) {
         // Make the GET request to fetch Devices of user ID
         const res = await callAPIWithToken<getAllDevicesProp>(
-          `https://api.edify.club/edifybackend/v1/devices/userDetails`,
+          `https://7030-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/userDetails`,
           "GET"
         );
 

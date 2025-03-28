@@ -1,8 +1,9 @@
 import { StoreBannerCard } from "@/components/store-banner";
 import { Device } from "@/server/deviceActions";
 import { getUserById, User } from "@/server/userActions";
+import QualityCheck from "./quality-check";
 
-export const DeviceGrid = async ({ data }: { data: Device }) => {
+export const DeviceGrid = async ({ data }: { data: any }) => {
   let isAssigned: boolean;
   if (!data.userId || data.userId === null || data.userId.length < 0) {
     isAssigned = false;
@@ -16,6 +17,7 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
   } catch (error) {
     assignedTo = {};
   }
+  
 
   return (
     <>
@@ -206,7 +208,6 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
                     {`${assignedTo?.reporting_manager?.first_name ?? "-"} ${
                       assignedTo?.reporting_manager?.last_name ?? ""
                     }`}{" "}
-                    
                   </div>
                 </div>
 
@@ -464,6 +465,8 @@ export const DeviceGrid = async ({ data }: { data: Device }) => {
               </div>
 
               <StoreBannerCard />
+
+              <QualityCheck data={data}/>
             </div>
           ) : null}
         </div>
