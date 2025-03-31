@@ -63,15 +63,23 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           ) : label === "Orders" ? (
             <ShoppingBag className="w-5 h-5" />
           ) : label === "Reports" ? (
-            !isActive ? <NavBarIcons.reports_icon className="size-5"/> : <NavBarIcons.reports_icon_white className="size-5"/>
+            !isActive ? (
+              <NavBarIcons.reports_icon className="size-5" />
+            ) : (
+              <NavBarIcons.reports_icon_white className="size-5" />
+            )
           ) : label === "Onboarding" ? (
             <Upload className="w-5 h-5" />
           ) : label === "Issues" ? (
-            !isActive ? <NavBarIcons.issue_icon className="size-5"/> : <NavBarIcons.issue_icon_white className="size-5"/>
+            !isActive ? (
+              <NavBarIcons.issue_icon className="size-5" />
+            ) : (
+              <NavBarIcons.issue_icon_white className="size-5" />
+            )
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
-          // ) : label === "Profile" ? (
-          //   <UserRound className="w-5 h-5" />
+          ) : label === "Diagonistic" ? (
+            <UserRound className="w-5 h-5" />
           ) : label === "Devices" ? (
             <Smartphone className="w-5 h-5" />
           ) : label === "Home" ? (
@@ -80,7 +88,6 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
             <div />
           )}
         </div>
-
       </div>
       <div className="text-black text-xs font-gilroyMedium py-1 px-2 whitespace-nowrap">
         {label}

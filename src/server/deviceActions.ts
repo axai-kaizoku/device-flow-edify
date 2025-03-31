@@ -230,11 +230,16 @@ export const bulkUploadDevices = async (
   }
 };
 
-export const bulkDeleteAssets = async (deviceIds: string[], type:string): Promise<any> => {
+export const bulkDeleteAssets = async (
+  deviceIds: string[],
+  type: string
+): Promise<any> => {
   try {
     console.log(deviceIds);
     const response = await callAPIWithToken(
-      type !== "soft"? "https://api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true" :"https://api.edify.club/edifybackend/v1/devices/bulk-delete",
+      type !== "soft"
+        ? "https://api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true"
+        : "https://api.edify.club/edifybackend/v1/devices/bulk-delete",
       "POST",
       { deviceIds },
       {
@@ -261,21 +266,118 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 }
 
 // Get Device by ID
-export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+// export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+//   try {
+//     // Make the GET request to fetch a single device by ID
+//     const res = await callAPIWithToken<Device>(
+//       `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+//       "GET"
+//     );
+
+//     // Return the fetched device
+//     return res?.data;
+//   } catch (error) {
+//     throw new Error((error as AxiosError)?.message);
+//   }
+// });
+export const getDeviceById = async (deviceId: string): Promise<any> => {
   try {
-    // Make the GET request to fetch a single device by ID
-    const res = await callAPIWithToken<Device>(
-      `https://7030-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/${deviceId}`,
-      "GET"
+    const query = `
+      query GetProduct($id: String!) {
+        products(where: { slug: $id }) {
+          _id
+          slug
+          device_name
+          purchase_value
+          color
+          image
+          latest_release
+          brand
+          ram
+          processor
+          storage
+          perfectFor {
+            id
+            title
+          }
+          device_condition
+          display_size
+          deviceFeatures
+          description
+          config
+          qty
+          is_trending
+          payable
+          similarProducts {
+            device_name
+            brand
+            _id
+            slug
+            purchase_value
+            storage
+            ram
+            payable
+            description
+            image
+            reviews {
+              _id
+              comment
+              rating
+              createdAt
+            }
+            reviewAggregates {
+              overallReviews
+              overallRating
+              ratingDetails {
+                stars
+                percentage
+                reviewsCount
+              }
+            }
+          }
+          reviews {
+            _id
+            comment
+            rating
+            createdAt
+          }
+          reviewAggregates {
+            overallReviews
+            overallRating
+            ratingDetails {
+              stars
+              percentage
+              reviewsCount
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(
+      "https://d23b-49-207-193-67.ngrok-free.app/graphql",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query,
+          variables: { id: deviceId },
+        }),
+      }
     );
 
-    // Return the fetched device
-    return res?.data;
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
-  }
-});
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
 
+    const { data } = await response.json();
+    return data; // Assuming the query returns an array and you want the first item
+  } catch (error) {
+    throw new Error(`Error fetching device: ${error.message}`);
+  }
+};
 // Getting Devices by User ID
 
 export const getDevicesByUserId = cache(
