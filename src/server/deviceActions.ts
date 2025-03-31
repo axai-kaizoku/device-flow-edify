@@ -128,7 +128,7 @@ export const createDevices = async (
     };
 
     const res = await callAPIWithToken<Device>(
-      "https://api.edify.club/edifybackend/v1/devices",
+      "https://gcp-api.edify.club/edifybackend/v1/devices",
       "POST",
       payload
     );
@@ -157,7 +157,7 @@ export const getAllDevices = cache(
   async function (): Promise<getAllDevicesProp> {
     try {
       const res = await callAPIWithToken<getAllDevicesProp>(
-        "https://api.edify.club/edifybackend/v1/devices",
+        "https://gcp-api.edify.club/edifybackend/v1/devices",
         "GET"
       );
 
@@ -182,7 +182,7 @@ export const updateDevice = async (
   try {
     // API call
     const res = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
       "PUT",
       deviceData
     );
@@ -199,7 +199,7 @@ export async function deleteDevice(
 ): Promise<Device | undefined> {
   try {
     const deleletedDevice = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
       "DELETE"
     );
 
@@ -217,7 +217,7 @@ export const bulkUploadDevices = async (
   try {
     // Call the API with multipart/form-data
     const response = await callAPIWithToken<Device>(
-      "https://api.edify.club/edifybackend/v1/devices/upload",
+      "https://gcp-api.edify.club/edifybackend/v1/devices/upload",
       "POST",
       formData,
       {
@@ -238,8 +238,8 @@ export const bulkDeleteAssets = async (
     console.log(deviceIds);
     const response = await callAPIWithToken(
       type !== "soft"
-        ? "https://api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true"
-        : "https://api.edify.club/edifybackend/v1/devices/bulk-delete",
+        ? "https://gcp-api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true"
+        : "https://gcp-api.edify.club/edifybackend/v1/devices/bulk-delete",
       "POST",
       { deviceIds },
       {
@@ -256,7 +256,7 @@ export const bulkDeleteAssets = async (
 //Search api
 export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
   try {
-    const url = `https://api.edify.club/edifybackend/v1/devices/search?query=${query}`;
+    const url = `https://gcp-api.edify.club/edifybackend/v1/devices/search?query=${query}`;
     const res = await callAPIWithToken<DeviceResponse>(url, "GET");
 
     return res?.data;
@@ -270,7 +270,7 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 //   try {
 //     // Make the GET request to fetch a single device by ID
 //     const res = await callAPIWithToken<Device>(
-//       `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+//       `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
 //       "GET"
 //     );
 
@@ -407,7 +407,7 @@ export const getDevicesByUserId = cache(
 export const paginatedDevices = async (page: string): Promise<any> => {
   try {
     const res = await callAPIWithToken<DeviceResponse>(
-      `https://api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
       "GET"
     );
     return res?.data;
@@ -434,7 +434,7 @@ export const fetchDevices = cache(async function (): Promise<any> {
     };
 
     const res = await callAPIWithToken<DeviceResponse>(
-      "https://api.edify.club/edifybackend/v1/devices/filter",
+      "https://gcp-api.edify.club/edifybackend/v1/devices/filter",
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
@@ -463,7 +463,7 @@ export async function searchDevices(searchQuery: string): Promise<any> {
       pageLimit: 10, // Number of users to fetch per page
     };
 
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 

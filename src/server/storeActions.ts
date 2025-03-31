@@ -21,7 +21,7 @@ export const searchStoreDevices = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/assets${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/assets${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -50,7 +50,7 @@ export const getStoreDevices = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets",
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets",
         "POST",
         payload
       );
@@ -71,7 +71,7 @@ export const getTrendingDevice = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets?query=trending",
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets?query=trending",
         "POST",
         payload
       );
@@ -92,7 +92,7 @@ export const getLatestReleases = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets?query=latest",
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets?query=latest",
         "POST",
         payload
       );
@@ -117,7 +117,7 @@ export const createDeviceReview = async function ({
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<StoreDevicesRes>(
-      "https://api.edify.club/edifybackend/v1/reviews",
+      "https://gcp-api.edify.club/edifybackend/v1/reviews",
       "POST",
       {
         userId: sess?.user.user.userId,
@@ -134,7 +134,6 @@ export const createDeviceReview = async function ({
     throw new Error((e as AxiosError)?.message);
   }
 };
-
 
 export const requestLaptop = async function ({
   ram,
@@ -161,7 +160,7 @@ export const requestLaptop = async function ({
 
     // API call
     const res = await callAPIWithToken<any>(
-      "https://api.edify.club/edifybackend/v1/devices/requestlaptop",
+      "https://gcp-api.edify.club/edifybackend/v1/devices/requestlaptop",
       "POST",
       payload
     );

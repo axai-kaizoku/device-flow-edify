@@ -138,7 +138,7 @@ export const deletedUsers = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -175,7 +175,7 @@ export const filterUsers = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -214,7 +214,7 @@ export const activeUsers = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -252,7 +252,7 @@ export const inActiveUsers = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -289,7 +289,7 @@ export const filterDevice = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -320,13 +320,16 @@ export const assignedAssets = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters?.length > 0 ? [...filters, ["userId", "not null" ]] : [["userId", "not null" ]],
+      filters:
+        filters?.length > 0
+          ? [...filters, ["userId", "not null"]]
+          : [["userId", "not null"]],
       page,
       pageLimit,
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -357,13 +360,16 @@ export const unAssignedAssets = cache(async function ({
   try {
     const payload = {
       fields,
-      filters: filters?.length > 0 ? [...filters, ["userId", "null" ]] : [["userId", "null" ]],
+      filters:
+        filters?.length > 0
+          ? [...filters, ["userId", "null"]]
+          : [["userId", "null"]],
       page: page,
       pageLimit,
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -402,7 +408,7 @@ export const inActiveAssets = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -438,7 +444,7 @@ export const deletedDevices = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -488,7 +494,7 @@ export const openIssues = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/issue/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -525,7 +531,7 @@ export const closedIssues = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/issue/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -562,7 +568,7 @@ export const filterIssues = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/issue/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/issue/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 

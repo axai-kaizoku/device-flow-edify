@@ -9,13 +9,14 @@ import { callAPIWithToken, getSession } from "./helper";
 //   }
 //   return result;
 // }
+
+const qcUrl = "https://e97e-49-207-232-225.ngrok-free.app";
 export async function qualityCheck(userId: string) {
   try {
     const payload = {
       userId: userId,
     };
-    const apiUrl =
-      "https://d921-13-235-211-22.ngrok-free.app/edifybackend/v1/quality-check/check-quality-checks";
+    const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/check-quality-checks`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     // console.log(response, "ITEM ADDED TO CART");
@@ -29,8 +30,7 @@ export async function uniqueIdGeneration(userId: string) {
     const payload = {
       userId: userId,
     };
-    const apiUrl =
-      "https://d921-13-235-211-22.ngrok-free.app/edifybackend/v1/quality-check/unique-id";
+    const apiUrl = `{qcUrl}/edifybackend/v1/quality-check/unique-id`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     // console.log(response, "ITEM ADDED TO CART");

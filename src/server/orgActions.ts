@@ -49,7 +49,7 @@ export const getCurrentOrg = cache(async function <Org>() {
     const sess = await getSession();
     const orgId = sess?.user?.user?.orgId?._id;
     const res = await callAPIWithToken<Org>(
-      `https://api.edify.club/edifybackend/v1/organisation/${orgId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/organisation/${orgId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -73,7 +73,7 @@ export async function updateOrg({
 }): Promise<Org> {
   try {
     const res = await callAPIWithToken<Org>(
-      `https://api.edify.club/edifybackend/v1/organisation/${id}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/organisation/${id}`, // API endpoint
       "PUT", // HTTP method
       {
         title,
@@ -93,7 +93,7 @@ export const getImageUrl = async (data: { file: File }) => {
 
   try {
     const response = await callAPIWithToken<any>(
-      "https://api.edify.club/edifybackend/v1/file/upload",
+      "https://gcp-api.edify.club/edifybackend/v1/file/upload",
       "POST",
       formData,
       {
