@@ -3,6 +3,7 @@ import {
   Calendar,
   ChartColumnBig,
   LayoutDashboard,
+  ScanLine,
   Settings,
   Settings2,
   ShoppingBag,
@@ -79,7 +80,7 @@ const SidebarItem = ({ href, label, isActive }: SidebarItemProps) => {
           ) : label === "Settings" ? (
             <Wrench className="w-5 h-5" />
           ) : label === "Diagonistic" ? (
-            <UserRound className="w-5 h-5" />
+            <ScanLine className="w-5 h-5" />
           ) : label === "Devices" ? (
             <Smartphone className="w-5 h-5" />
           ) : label === "Home" ? (

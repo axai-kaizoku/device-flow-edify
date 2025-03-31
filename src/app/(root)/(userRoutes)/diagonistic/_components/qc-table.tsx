@@ -1,11 +1,13 @@
+import generateQCReport from "@/app/(root)/people/_components/pdf-generator";
 import Pagination from "@/app/(root)/teams/_components/pagination";
 import { Table } from "@/components/wind/Table";
-import { QcReportResponse } from "@/server/checkMateActions";
+import { downloadReport, QcReportResponse } from "@/server/checkMateActions";
 import React, { Suspense, useState } from "react";
 
 function QcTable({
   data,
   setPagination,
+  sessionRole,
 }: {
   data: QcReportResponse;
   setPagination: React.Dispatch<
@@ -14,6 +16,7 @@ function QcTable({
       limit: number;
     }>
   >;
+  sessionRole?: number;
 }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +24,12 @@ function QcTable({
   const handlePageChange = (page: number) => {
     setPagination((prev) => ({ ...prev, page }));
     setCurrentPage(page);
+  };
+
+  const handleDownloadReport = async (recordData: any) => {
+    console.log("Row data:", recordData);
+    const res = await downloadReport({ userId: recordData._id });
+    generateQCReport(res.data);
   };
 
   return (
@@ -49,6 +58,24 @@ function QcTable({
                 onSelectionChange: setSelectedIds,
               }}
               columns={[
+                sessionRole === 2 && {
+                  title: "User Name",
+                  render: (record) => (
+                    <div className="w-28 flex items-center gap-2">
+                      <img
+                        src={
+                          record.user_image ??
+                          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
+                        }
+                        alt="Device"
+                        className="w-10 h-10 object-cover rounded-full"
+                      />
+                      <div className="font-gilroySemiBold text-sm text-black truncate">
+                        {record.name}
+                      </div>
+                    </div>
+                  ),
+                },
                 {
                   title: "Device Name",
                   render: (record) => (
@@ -61,12 +88,13 @@ function QcTable({
                         alt="Device"
                         className="w-10 h-10 object-cover rounded-full"
                       />
-                      <div className="font-gilroySemiBold text-sm text-black">
+                      <div className="font-gilroySemiBold text-sm text-black truncate">
                         {record.device_name}
                       </div>
                     </div>
                   ),
                 },
+
                 {
                   title: "Asset Health",
                   render: (record) => {
@@ -85,6 +113,7 @@ function QcTable({
                     );
                   },
                 },
+
                 {
                   title: "Warranty Status",
                   render: (record) => {
@@ -134,8 +163,14 @@ function QcTable({
                 },
                 {
                   title: "",
-                  render: () => (
-                    <button className="bg-black text-white font-gilroySemiBold rounded-full px-4 py-1">
+                  render: (record) => (
+                    <button
+                      className="bg-black text-white font-gilroySemiBold rounded-full px-4 py-1"
+                      onClick={() => {
+                        console.log(record?._id);
+                        handleDownloadReport(record);
+                      }}
+                    >
                       Download Report
                     </button>
                   ),

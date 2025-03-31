@@ -13,6 +13,7 @@ export const SIDEBAR = {
     { label: "Orders", path: "/orders" },
     { label: "Issues", path: "/issues" },
     { label: "Reports", path: "/reports" },
+    { label: "Diagonistic", path: "/diagonistic" },
   ],
   UserPages: [
     { label: "Home", path: "/" },

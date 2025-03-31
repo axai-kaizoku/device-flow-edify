@@ -5,6 +5,7 @@ import { DiagonisticIcons } from "./_components/icons";
 import {
   QcReportResponse,
   qcReportTable,
+  qcReportTableAdmin,
   qualityCheck,
   uniqueIdGeneration,
 } from "@/server/checkMateActions";
@@ -12,12 +13,14 @@ import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import LoginKey from "./_components/login-key";
 import QcTable from "./_components/qc-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getSession } from "@/server/helper";
 
 export default function Diagonistic() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  const [session, setSession] = useState<any>(null);
+  const [sessLoader, setSessLoader] = useState(false);
   const [downloadClicked, setDownloadClicked] = useState(false);
   const [qualityData, setQualityData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,16 +43,45 @@ export default function Diagonistic() {
     [searchParams]
   );
 
-  // Fetch QC Reports on pagination changes if the table is visible
+  // Get session and role (assume admin role is indicated by a specific value, e.g. 2)
   useEffect(() => {
-    if (searchParams.get("showTable")) {
+    async function handleSession() {
+      setSessLoader(true);
+      const sess = await getSession();
+      console.log("Session loaded:", sess);
+      setSession(sess?.user?.user?.role);
+      setSessLoader(false);
+    }
+    handleSession();
+  }, []);
+
+  // Helper: choose fetch function based on role.
+  const fetchQcReports = async (page: number, limit: number) => {
+    console.log("Fetching QC reports for role:", session);
+    if (session === 2) {
+      console.log("Using qcReportTableAdmin");
+      return await qcReportTableAdmin(page, limit);
+    } else {
+      console.log("Using qcReportTable");
+      return await qcReportTable(page, limit);
+    }
+  };
+
+  useEffect(() => {
+    // For admin, fetch data regardless; for others, only if "showTable" is set
+    if (session !== null && (session === 2 || searchParams.get("showTable"))) {
       (async () => {
         console.log("Fetching QC Report for page:", pagination.page);
-        const res = await qcReportTable(pagination.page, pagination.limit);
-        setQcReports(res);
+        try {
+          const res = await fetchQcReports(pagination.page, pagination.limit);
+          console.log("Fetched reports:", res);
+          setQcReports(res);
+        } catch (error) {
+          console.error("Error fetching QC reports:", error);
+        }
       })();
     }
-  }, [pagination.page, pagination.limit, searchParams]);
+  }, [pagination.page, pagination.limit, searchParams, session]);
 
   const handleDownloadSoftware = async () => {
     setLoading(true);
@@ -87,82 +119,108 @@ export default function Diagonistic() {
   // Initial fetch on clicking "View Reports"
   const handleViewReports = async () => {
     router.push(pathname + "?" + createQueryString("showTable", "true"));
-    const res = await qcReportTable(pagination.page, pagination.limit);
-    setQcReports(res);
-    setPagination({ limit: res.limit, page: res.page });
+    try {
+      const res = await fetchQcReports(pagination.page, pagination.limit);
+      console.log("View Reports fetched:", res);
+      setQcReports(res);
+      setPagination({ limit: res.limit, page: res.page });
+    } catch (error) {
+      console.error("Error in handleViewReports:", error);
+    }
   };
-
+  // Show loader until session is loaded
+  if (sessLoader) {
+    return (
+      <CombinedContainer title="Diagnostics">
+        <div className="flex items-center justify-center h-full">
+          <DeviceFlowLoader />
+        </div>
+      </CombinedContainer>
+    );
+  }
   return (
     <CombinedContainer title="Diagnostics">
-      <div className="flex flex-col pt-[14px]">
-        <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
-          Diagnostics
-        </h1>
-        <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
-          Device QC Reports
-        </h2>
-        {searchParams.get("showTable") ? (
-          <QcTable data={qcReports} setPagination={setPagination} />
+      {session === 2 ? (
+        sessLoader || qcReports === null ? (
+          <DeviceFlowLoader />
         ) : (
-          <div className="rounded-[21px] mt-14 border border-[#F6F6F6] h-[66dvh] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5 justify-center items-center">
-            {uniqueId ? (
-              <LoginKey otpString={uniqueId} onDone={handleLoginKeyDone} />
-            ) : (
-              <>
-                <div className="flex flex-col justify-center items-center">
-                  <DiagonisticIcons.analyse_device />
-                  <h1 className="text-3xl font-gilroySemiBold">
-                    Analyze your device
-                  </h1>
-                  <p className="text-base text-[#4E4D4D] py-3 font-gilroyMedium">
-                    Detailed insights & full specs of your laptop
-                  </p>
-                </div>
-                {loading && (
-                  <div className="py-2 text-base">
-                    <DeviceFlowLoader />
+          <QcTable
+            data={qcReports}
+            setPagination={setPagination}
+            sessionRole={session}
+          />
+        )
+      ) : (
+        <div className="flex flex-col pt-[14px]">
+          <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
+            Diagnostics
+          </h1>
+          <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
+            Device QC Reports
+          </h2>
+          {searchParams.get("showTable") ? (
+            <QcTable data={qcReports} setPagination={setPagination} />
+          ) : (
+            <div className="rounded-[21px] mt-14 border border-[#F6F6F6] h-[66dvh] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5 justify-center items-center">
+              {uniqueId ? (
+                <LoginKey otpString={uniqueId} onDone={handleLoginKeyDone} />
+              ) : (
+                <>
+                  <div className="flex flex-col justify-center items-center">
+                    <DiagonisticIcons.analyse_device />
+                    <h1 className="text-3xl font-gilroySemiBold">
+                      Analyze your device
+                    </h1>
+                    <p className="text-base text-[#4E4D4D] py-3 font-gilroyMedium">
+                      Detailed insights & full specs of your laptop
+                    </p>
                   </div>
-                )}
-                {!downloadClicked && !loading && (
-                  <button
-                    className="py-2 bg-black font-gilroySemiBold border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white rounded-lg w-1/4"
-                    onClick={handleDownloadSoftware}
-                  >
-                    Download Software
-                  </button>
-                )}
-                {downloadClicked && !loading && qualityData && (
-                  <>
-                    {qualityData.success ? (
-                      <div className="flex w-1/3 gap-2">
+                  {loading && (
+                    <div className="py-2 text-base">
+                      <DeviceFlowLoader />
+                    </div>
+                  )}
+                  {!downloadClicked && !loading && (
+                    <button
+                      className="py-2 bg-black font-gilroySemiBold border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white rounded-lg w-1/4"
+                      onClick={handleDownloadSoftware}
+                    >
+                      Download Software
+                    </button>
+                  )}
+                  {downloadClicked && !loading && qualityData && (
+                    <>
+                      {qualityData.success ? (
+                        <div className="flex w-1/3 gap-2">
+                          <button
+                            onClick={handleUniqueGeneration}
+                            className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
+                          >
+                            Scan Device
+                          </button>
+                          <button
+                            className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
+                            onClick={handleViewReports}
+                          >
+                            View Reports
+                          </button>
+                        </div>
+                      ) : (
                         <button
                           onClick={handleUniqueGeneration}
-                          className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
+                          className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/4"
                         >
                           Scan Device
                         </button>
-                        <button
-                          className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
-                          onClick={handleViewReports}
-                        >
-                          View Reports
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={handleUniqueGeneration}
-                        className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/4"
-                      >
-                        Scan Device
-                      </button>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        )}
-      </div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </CombinedContainer>
   );
 }
