@@ -19,7 +19,7 @@ type RequestDemoProps = {
 
 export async function RequestOTP(email: string): Promise<RequestOTPProps> {
   const { data } = await callAPI<RequestOTPProps>(
-    "https://api.edify.club/edifybackend/v1/auth/request-password-reset",
+    "https://gcp-api.edify.club/edifybackend/v1/auth/request-password-reset",
     "POST",
     { email },
     {
@@ -40,7 +40,7 @@ export async function ResetPass(
   password: string
 ): Promise<ResetPassProps> {
   const { data } = await callAPI<ResetPassProps>(
-    "https://api.edify.club/edifybackend/v1/auth/verify-otp",
+    "https://gcp-api.edify.club/edifybackend/v1/auth/verify-otp",
     "POST",
     {
       userId,
@@ -85,7 +85,7 @@ export async function requestForDemo({
   }
   try {
     const { data } = await callAPI<RequestDemoProps>(
-      "https://api.edify.club/edifybackend/v1/auth/user/onboard",
+      "https://gcp-api.edify.club/edifybackend/v1/auth/user/onboard",
       "POST",
       { ...payload },
       {

@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const res = await fetch(
-          "https://api.edify.club/edifybackend/v1/auth/login",
+          "https://gcp-api.edify.club/edifybackend/v1/auth/login",
           {
             method: "POST",
             body: JSON.stringify(credentials),
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       async profile(profile, tokens) {
         const res = await fetch(
-          "https://api.edify.club/edifybackend/v1/auth/login",
+          "https://gcp-api.edify.club/edifybackend/v1/auth/login",
           {
             method: "POST",
             headers: {

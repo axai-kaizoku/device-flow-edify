@@ -89,7 +89,7 @@ export type CreateUserArgs = {
   designation?: string;
   image?: string;
   team?: [{ _id: string; title: string; team_code: string }];
-  teamId?:Team;
+  teamId?: Team;
   employment_type?: string;
   date_of_birth?: string;
   onboarding_date?: string;
@@ -153,7 +153,7 @@ export const fetchManager = cache(async function (token: string): Promise<any> {
     };
 
     const res: AxiosResponse = await axios({
-      url: "https://api.edify.club/edifybackend/v1/user/filter",
+      url: "https://gcp-api.edify.club/edifybackend/v1/user/filter",
       method: "POST",
       data: { requestBody },
 
@@ -186,7 +186,7 @@ export async function searchManager(
       page: 1,
       pageLimit: 20, // Number of users to fetch per page
     };
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -223,7 +223,7 @@ export const fetchUsers = cache(async function (): Promise<any> {
     };
 
     const res = await callAPIWithToken<UserResponse>(
-      "https://api.edify.club/edifybackend/v1/user/filter",
+      "https://gcp-api.edify.club/edifybackend/v1/user/filter",
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
@@ -248,7 +248,7 @@ export async function searchUsers(searchQuery: string): Promise<any> {
       page: 1,
       pageLimit: 10, // Number of users to fetch per page
     };
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -283,7 +283,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
     }
 
     const res = await callAPIWithToken<User>(
-      "https://api.edify.club/edifybackend/v1/user", // API endpoint
+      "https://gcp-api.edify.club/edifybackend/v1/user", // API endpoint
       "POST", // HTTP method
       user
     );
@@ -299,7 +299,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 export const getUserById = cache(async function <User>(userId: string) {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -316,7 +316,7 @@ export async function updateUser(
 ): Promise<User> {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${id}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${id}`, // API endpoint
       "PUT", // HTTP method
       userData
     );
@@ -334,7 +334,7 @@ export async function updateUser(
 export async function deleteUser<User>(userId: string) {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
       "DELETE",
       null
     );
@@ -348,7 +348,7 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
   try {
     // Call the API with multipart/form-data
     const response = await callAPIWithToken<User>(
-      "https://api.edify.club/edifybackend/v1/user/bulk-upload",
+      "https://gcp-api.edify.club/edifybackend/v1/user/bulk-upload",
       "POST",
       formData,
       {
@@ -361,25 +361,28 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
   }
 };
 
-export const bulkDeleteUsers = async (userIds: string[], type:string): Promise<any> => {
+export const bulkDeleteUsers = async (
+  userIds: string[],
+  type: string
+): Promise<any> => {
   try {
     console.log(userIds);
     const response = await callAPIWithToken(
-      type !== "soft"? "https://api.edify.club/edifybackend/v1/user/bulk-delete?permanent=true" :"https://api.edify.club/edifybackend/v1/user/bulk-delete",
+      type !== "soft"
+        ? "https://gcp-api.edify.club/edifybackend/v1/user/bulk-delete?permanent=true"
+        : "https://gcp-api.edify.club/edifybackend/v1/user/bulk-delete",
       "POST",
       { userIds },
       {
         "Content-Type": "application/json",
       }
     );
-    console.log(response)
+    console.log(response);
     return response;
   } catch (error) {
     throw error;
   }
 };
-
-
 
 export type UsersTeamResponse = {
   users: User[];
@@ -395,7 +398,7 @@ export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<UsersTeamResponse>(
-      `https://api.edify.club/edifybackend/v1/user/teams`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/teams`, // API endpoint
       "POST", // HTTP method
       {
         teamId,
@@ -416,7 +419,7 @@ export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
 //Search api
 export async function userSearchAPI(query: string): Promise<UserResponse> {
   try {
-    const url = `https://api.edify.club/edifybackend/v1/user/search?query=${query}`;
+    const url = `https://gcp-api.edify.club/edifybackend/v1/user/search?query=${query}`;
     const res = await callAPIWithToken<UserResponse>(url, "GET");
 
     return res?.data;
@@ -432,7 +435,7 @@ export const fetchUserHierarchy = cache(
   async function (): Promise<HierarchyResponse> {
     try {
       const res = await callAPIWithToken<HierarchyResponse>(
-        "https://api.edify.club/edifybackend/v1/user/hierarchy", // Your API endpoint
+        "https://gcp-api.edify.club/edifybackend/v1/user/hierarchy", // Your API endpoint
         "GET" // HTTP method
       );
       return res?.data; // Ensure the response is correctly mapped to data

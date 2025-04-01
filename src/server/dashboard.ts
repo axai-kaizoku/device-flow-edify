@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 export const getDashboard = cache(async function <Org>() {
   try {
     const res = await callAPIWithToken<Org>(
-      `https://api.edify.club/edifybackend/v1/organisation/dashboard`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/organisation/dashboard`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -29,25 +29,22 @@ export async function sendFeedback({
   const payload = {
     rating,
     comment,
-    orgId:sess?.user?.user?.orgId?._id,
-    userId:sess?.user.user.userId,
+    orgId: sess?.user?.user?.orgId?._id,
+    userId: sess?.user.user.userId,
   };
 
   try {
     const { data } = await callAPI(
-      'https://api.edify.club/edifybackend/v1/auth/user/onboard?feedback=true',
-      'POST',
+      "https://gcp-api.edify.club/edifybackend/v1/auth/user/onboard?feedback=true",
+      "POST",
       payload,
       {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       }
     );
 
     return data;
   } catch (e) {
-    throw new Error(
-      (e as AxiosError)?.message || 'Failed to submit feedback'
-    );
+    throw new Error((e as AxiosError)?.message || "Failed to submit feedback");
   }
 }
-

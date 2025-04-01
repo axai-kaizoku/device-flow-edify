@@ -128,7 +128,7 @@ export const createDevices = async (
     };
 
     const res = await callAPIWithToken<Device>(
-      "https://api.edify.club/edifybackend/v1/devices",
+      "https://gcp-api.edify.club/edifybackend/v1/devices",
       "POST",
       payload
     );
@@ -157,7 +157,7 @@ export const getAllDevices = cache(
   async function (): Promise<getAllDevicesProp> {
     try {
       const res = await callAPIWithToken<getAllDevicesProp>(
-        "https://api.edify.club/edifybackend/v1/devices",
+        "https://gcp-api.edify.club/edifybackend/v1/devices",
         "GET"
       );
 
@@ -182,7 +182,7 @@ export const updateDevice = async (
   try {
     // API call
     const res = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
       "PUT",
       deviceData
     );
@@ -199,7 +199,7 @@ export async function deleteDevice(
 ): Promise<Device | undefined> {
   try {
     const deleletedDevice = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
       "DELETE"
     );
 
@@ -217,7 +217,7 @@ export const bulkUploadDevices = async (
   try {
     // Call the API with multipart/form-data
     const response = await callAPIWithToken<Device>(
-      "https://api.edify.club/edifybackend/v1/devices/upload",
+      "https://gcp-api.edify.club/edifybackend/v1/devices/upload",
       "POST",
       formData,
       {
@@ -230,11 +230,16 @@ export const bulkUploadDevices = async (
   }
 };
 
-export const bulkDeleteAssets = async (deviceIds: string[], type:string): Promise<any> => {
+export const bulkDeleteAssets = async (
+  deviceIds: string[],
+  type: string
+): Promise<any> => {
   try {
     console.log(deviceIds);
     const response = await callAPIWithToken(
-      type !== "soft"? "https://api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true" :"https://api.edify.club/edifybackend/v1/devices/bulk-delete",
+      type !== "soft"
+        ? "https://gcp-api.edify.club/edifybackend/v1/devices/bulk-delete?permanent=true"
+        : "https://gcp-api.edify.club/edifybackend/v1/devices/bulk-delete",
       "POST",
       { deviceIds },
       {
@@ -251,7 +256,7 @@ export const bulkDeleteAssets = async (deviceIds: string[], type:string): Promis
 //Search api
 export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
   try {
-    const url = `https://api.edify.club/edifybackend/v1/devices/search?query=${query}`;
+    const url = `https://gcp-api.edify.club/edifybackend/v1/devices/search?query=${query}`;
     const res = await callAPIWithToken<DeviceResponse>(url, "GET");
 
     return res?.data;
@@ -261,21 +266,118 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 }
 
 // Get Device by ID
-export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+// export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+//   try {
+//     // Make the GET request to fetch a single device by ID
+//     const res = await callAPIWithToken<Device>(
+//       `https://gcp-api.edify.club/edifybackend/v1/devices/${deviceId}`,
+//       "GET"
+//     );
+
+//     // Return the fetched device
+//     return res?.data;
+//   } catch (error) {
+//     throw new Error((error as AxiosError)?.message);
+//   }
+// });
+export const getDeviceById = async (deviceId: string): Promise<any> => {
   try {
-    // Make the GET request to fetch a single device by ID
-    const res = await callAPIWithToken<Device>(
-      `https://api.edify.club/edifybackend/v1/devices/${deviceId}`,
-      "GET"
+    const query = `
+      query GetProduct($id: String!) {
+        products(where: { slug: $id }) {
+          _id
+          slug
+          device_name
+          purchase_value
+          color
+          image
+          latest_release
+          brand
+          ram
+          processor
+          storage
+          perfectFor {
+            id
+            title
+          }
+          device_condition
+          display_size
+          deviceFeatures
+          description
+          config
+          qty
+          is_trending
+          payable
+          similarProducts {
+            device_name
+            brand
+            _id
+            slug
+            purchase_value
+            storage
+            ram
+            payable
+            description
+            image
+            reviews {
+              _id
+              comment
+              rating
+              createdAt
+            }
+            reviewAggregates {
+              overallReviews
+              overallRating
+              ratingDetails {
+                stars
+                percentage
+                reviewsCount
+              }
+            }
+          }
+          reviews {
+            _id
+            comment
+            rating
+            createdAt
+          }
+          reviewAggregates {
+            overallReviews
+            overallRating
+            ratingDetails {
+              stars
+              percentage
+              reviewsCount
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(
+      "https://d23b-49-207-193-67.ngrok-free.app/graphql",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query,
+          variables: { id: deviceId },
+        }),
+      }
     );
 
-    // Return the fetched device
-    return res?.data;
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
-  }
-});
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
 
+    const { data } = await response.json();
+    return data; // Assuming the query returns an array and you want the first item
+  } catch (error) {
+    throw new Error(`Error fetching device: ${error.message}`);
+  }
+};
 // Getting Devices by User ID
 
 export const getDevicesByUserId = cache(
@@ -286,7 +388,7 @@ export const getDevicesByUserId = cache(
       if (sess?.user && sess?.user?.user.userId) {
         // Make the GET request to fetch Devices of user ID
         const res = await callAPIWithToken<getAllDevicesProp>(
-          `https://api.edify.club/edifybackend/v1/devices/userDetails`,
+          `https://7030-13-235-211-22.ngrok-free.app/edifybackend/v1/devices/userDetails`,
           "GET"
         );
 
@@ -305,7 +407,7 @@ export const getDevicesByUserId = cache(
 export const paginatedDevices = async (page: string): Promise<any> => {
   try {
     const res = await callAPIWithToken<DeviceResponse>(
-      `https://api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
+      `https://gcp-api.edify.club/edifybackend/v1/devices/paginated?page=${page}`,
       "GET"
     );
     return res?.data;
@@ -332,7 +434,7 @@ export const fetchDevices = cache(async function (): Promise<any> {
     };
 
     const res = await callAPIWithToken<DeviceResponse>(
-      "https://api.edify.club/edifybackend/v1/devices/filter",
+      "https://gcp-api.edify.club/edifybackend/v1/devices/filter",
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
@@ -361,7 +463,7 @@ export async function searchDevices(searchQuery: string): Promise<any> {
       pageLimit: 10, // Number of users to fetch per page
     };
 
-    const apiUrl = `https://api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
