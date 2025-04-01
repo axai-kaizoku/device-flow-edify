@@ -8,22 +8,34 @@ const generateQCReport = (qcData: Record<string, any> | null | undefined) => {
 
   const doc = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text("QC Report", 90, 10);
+  // Title Styling
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text("Quality Check Report", 70, 15);
+  
+  let y = 30;
+  doc.setFontSize(12);
 
-  let y = 20;
-  doc.setFontSize(10);
+  // Draw a border around the content
+  doc.setLineWidth(0.5);
+  doc.rect(10, 25, 190, 250);
 
   for (const [key, value] of Object.entries(qcData)) {
-    doc.text(`${key}: ${value}`, 10, y);
-    y += 7;
-    if (y > 280) {
+    doc.setFont("helvetica", "bold");
+    doc.text(`${key}:`, 15, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(`${value}`, 80, y);
+    y += 8;
+    
+    // Page Break Handling
+    if (y > 270) {
       doc.addPage();
-      y = 20;
+      y = 30;
+      doc.rect(10, 25, 190, 250);
     }
   }
 
-  doc.save(`QC_Report_${qcData.serial_no || "Unknown"}.pdf`);
+  doc.save(`QC_Report_${qcData?.serial_no || "Unknown"}.pdf`);
 };
 
 export default generateQCReport;

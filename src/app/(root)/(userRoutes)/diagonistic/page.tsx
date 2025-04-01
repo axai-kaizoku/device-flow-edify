@@ -14,6 +14,7 @@ import LoginKey from "./_components/login-key";
 import QcTable from "./_components/qc-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getSession } from "@/server/helper";
+import { Download } from "lucide-react";
 
 export default function Diagonistic() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function Diagonistic() {
   const [loading, setLoading] = useState(false);
   const [uniqueId, setUniqueId] = useState(null);
   const [qcReports, setQcReports] = useState<QcReportResponse>(null);
+  const [downloadModal, setDownloadModal] = useState(false);
   const [pagination, setPagination] = useState<{ page: number; limit: number }>(
     {
       page: 1,
@@ -102,7 +104,7 @@ export default function Diagonistic() {
     try {
       const uniqueIdData = await uniqueIdGeneration();
       console.log("Unique ID Response:", uniqueIdData);
-      setUniqueId(uniqueIdData.uniqueId);
+      setUniqueId(uniqueIdData?.uniqueId);
     } catch (error) {
       console.error("Error during unique ID generation:", error);
     } finally {
@@ -151,67 +153,99 @@ export default function Diagonistic() {
           />
         )
       ) : (
-        <div className="flex flex-col pt-[14px]">
+        <div className="flex flex-col pt-[24px]">
           <h1 className="text-gray-400 font-gilroyMedium 2xl:text-lg text-base">
             Diagnostics
           </h1>
-          <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
-            Device QC Reports
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="2xl:text-3xl text-2xl font-gilroyBold pt-[10px]">
+              Device QC Reports
+            </h2>
+
+            {downloadClicked && (
+              <div className="flex flex-col relative">
+                <div
+                  className="flex  items-center py-1.5 gap-1  px-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300 cursor-pointer"
+                  onClick={() => setDownloadModal(!downloadModal)}
+                >
+                  <Download size={20} className="text-[#7F7F7F]" />{" "}
+                  <div>Download Software</div>
+                </div>
+
+                {downloadModal && (
+                  <div className="border px-1 py-1 border-[#344054] bg-white rounded-2xl z-30 absolute gap-4 top-12">
+                    <p className="py-2 cursor-pointer px-14 w-full text-center hover:bg-gray-50 rounded-xl text-sm text-[#344054] font-gilroyMedium">Windows</p>
+                    <p className="py-2 cursor-pointer px-14 w-full text-center hover:bg-gray-50 rounded-xl text-nowrap text-sm text-[#344054] font-gilroyMedium">Apple Mac</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           {searchParams.get("showTable") ? (
-            <QcTable data={qcReports} setPagination={setPagination} />
+            <QcTable
+              data={qcReports}
+              setPagination={setPagination}
+              sessionRole={session}
+            />
           ) : (
-            <div className="rounded-[21px] mt-14 border border-[#F6F6F6] h-[66dvh] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5 justify-center items-center">
+            <div className="rounded-[21px] mt-6 border border-[#F6F6F6] h-[66dvh] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5 justify-center items-center">
               {uniqueId ? (
                 <LoginKey otpString={uniqueId} onDone={handleLoginKeyDone} />
               ) : (
                 <>
-                  <div className="flex flex-col justify-center items-center">
-                    <DiagonisticIcons.analyse_device />
-                    <h1 className="text-3xl font-gilroySemiBold">
-                      Analyze your device
-                    </h1>
-                    <p className="text-base text-[#4E4D4D] py-3 font-gilroyMedium">
-                      Detailed insights & full specs of your laptop
-                    </p>
-                  </div>
-                  {loading && (
-                    <div className="py-2 text-base">
-                      <DeviceFlowLoader />
-                    </div>
-                  )}
-                  {!downloadClicked && !loading && (
-                    <button
-                      className="py-2 bg-black font-gilroySemiBold border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white rounded-lg w-1/4"
-                      onClick={handleDownloadSoftware}
-                    >
-                      Download Software
-                    </button>
-                  )}
-                  {downloadClicked && !loading && qualityData && (
+                  {loading ? (
+                    <CombinedContainer title="Diagnostics">
+                      <div className="flex items-center justify-center h-full">
+                        <DeviceFlowLoader />
+                      </div>
+                    </CombinedContainer>
+                  ) : (
                     <>
-                      {qualityData.success ? (
-                        <div className="flex w-1/3 gap-2">
-                          <button
-                            onClick={handleUniqueGeneration}
-                            className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
-                          >
-                            Scan Device
-                          </button>
-                          <button
-                            className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
-                            onClick={handleViewReports}
-                          >
-                            View Reports
-                          </button>
-                        </div>
-                      ) : (
+                      <div className="flex flex-col justify-center items-center">
+                        <DiagonisticIcons.analyse_device />
+                        <h1 className="text-3xl font-gilroySemiBold">
+                          Analyze your device
+                        </h1>
+                        <p className="text-base text-[#4E4D4D] py-3 font-gilroyMedium">
+                          Detailed insights & full specs of your laptop
+                        </p>
+                      </div>
+
+                      {!downloadClicked && !loading && (
                         <button
-                          onClick={handleUniqueGeneration}
-                          className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/4"
+                          className="py-2 bg-black font-gilroySemiBold border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white rounded-lg w-1/4"
+                          onClick={handleDownloadSoftware}
                         >
-                          Scan Device
+                          Download Software
                         </button>
+                      )}
+
+                      {downloadClicked && !loading && qualityData && (
+                        <>
+                          {qualityData.success ? (
+                            <div className="flex w-1/3 gap-2">
+                              <button
+                                onClick={handleUniqueGeneration}
+                                className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/2"
+                              >
+                                Scan Device
+                              </button>
+                              <button
+                                className="py-2 border duration-200 border-black bg-white  text-black font-gilroySemiBold rounded-lg w-1/2"
+                                onClick={handleViewReports}
+                              >
+                                View Reports
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={handleUniqueGeneration}
+                              className="py-2 border hover:border hover:text-black duration-200 hover:border-black hover:bg-white text-white bg-black font-gilroySemiBold rounded-lg w-1/4"
+                            >
+                              Scan Device
+                            </button>
+                          )}
+                        </>
                       )}
                     </>
                   )}

@@ -10,7 +10,7 @@ import { callAPIWithToken, getSession } from "./helper";
 //   return result;
 // }
 
-const qcUrl = "https://e97e-49-207-232-225.ngrok-free.app";
+const qcUrl = "https://e819-49-207-213-73.ngrok-free.app";
 
 export async function qualityCheck() {
   try {
@@ -113,7 +113,13 @@ export async function qcReportTableAdmin(page: number, limit: number) {
 
 export async function downloadReport({ userId }: { userId: string }) {
   try {
-    const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/employee-report/${userId}`;
+    const session = await getSession();
+    let apiUrl="";
+    if (session.user.user.role == 1) {
+       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/employee-report/${userId}`;
+    } else {
+       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/admin-report/${userId}`;
+    }
 
     const response = await callAPIWithToken<QcReportResponse>(apiUrl, "GET");
     // console.log(response, "ITEM ADDED TO CART");
