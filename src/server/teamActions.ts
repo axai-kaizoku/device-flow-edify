@@ -14,6 +14,7 @@ export type Team = {
   deleted_at?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  team_code?: string;
   orgId?: string | null;
   __v?: number;
   manager?: {
@@ -43,13 +44,14 @@ const teamFields = [
   "employees_count",
   "orgId",
   "deleted_at",
+  "team_code",
 ];
 
 export const fetchTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 5,
+  pageLimit = 200000,
   page = 1,
   isDeleted = false,
 }: FilterApiParams = {}): Promise<any> {
@@ -61,15 +63,17 @@ export const fetchTeams = cache(async function ({
       page,
       isDeleted,
     };
+    // console.log("teams api");
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
     // API call
     const res = await callAPIWithToken<TeamsResponse>(apiUrl, "POST", payload);
     // Check if response has data
+    // console.log(res.data, "TEam actions");
     if (res && res?.data) {
       return res?.data.teams;
     } else {
@@ -87,7 +91,7 @@ export const fetchActiveTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 5,
+  pageLimit = 6,
   page = 1,
   isDeleted = false,
 }: FilterApiParams = {}): Promise<any> {
@@ -99,15 +103,17 @@ export const fetchActiveTeams = cache(async function ({
       page,
       isDeleted,
     };
+    // console.log("teams api");
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
     // API call
     const res = await callAPIWithToken<TeamsResponse>(apiUrl, "POST", payload);
     // Check if response has data
+    // console.log(res.data, "TEam actions");
     if (res && res?.data) {
       return res?.data;
     } else {
@@ -126,7 +132,7 @@ export const fetchInactiveTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 5,
+  pageLimit = 6,
   page = 1,
   isDeleted = true,
 }: FilterApiParams = {}): Promise<any> {
@@ -140,7 +146,7 @@ export const fetchInactiveTeams = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -168,14 +174,19 @@ export async function createTeam(
 ): Promise<Team> {
   try {
     const sess = await getSession();
+    let teamImg = image;
+    if (!image) {
+      teamImg =
+        "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png";
+    }
 
     const res = await callAPIWithToken<Team>(
-      "https://api.edify.club/edifybackend/v1/teams", // API endpoint
+      "https://gcp-api.edify.club/edifybackend/v1/teams", // API endpoint
       "POST", // HTTP method
       {
         title,
         description,
-        image,
+        image: teamImg,
         orgId: sess?.user?.user?.orgId?._id,
       }
     );
@@ -189,7 +200,7 @@ export async function createTeam(
 export const getTeamById = cache(async function <Team>(teamId: string) {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -206,7 +217,7 @@ export async function updateTeam(
 ): Promise<Team> {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://api.edify.club/edifybackend/v1/teams/${id}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/teams/${id}`, // API endpoint
       "PUT", // HTTP method
       {
         ...team,
@@ -221,7 +232,7 @@ export async function updateTeam(
 export async function deleteTeam<Team>(teamId: string) {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
       "DELETE",
       null
     );

@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import ProductReviewStars from "@/icons/ProductReviewStars";
 
 export const RatingStarComp = ({
   rating,
@@ -18,13 +19,13 @@ export const RatingStarComp = ({
     <div className="flex flex-row items-center gap-0">
       {/* Render filled stars */}
       {Array.from({ length: filledStars }).map((_, i) => (
-        <Icons.star_filled className={className} key={`filled-${i}`} />
+        <ProductReviewStars.star_filled className={className} key={`filled-${i}`} />
       ))}
       {/* Render half-filled star if applicable */}
-      {isHalfFilled && <Icons.star_half_filled className={className} />}
+      {isHalfFilled && <ProductReviewStars.star_half_filled className={className} />}
       {/* Render unfilled stars */}
       {Array.from({ length: unfilledStars }).map((_, i) => (
-        <Icons.star_unfilled key={`unfilled-${i}`} className={className} />
+        <ProductReviewStars.star_unfilled key={`unfilled-${i}`} className={className} />
       ))}
     </div>
   );

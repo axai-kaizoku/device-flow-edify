@@ -11,18 +11,22 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
+import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const PermanentUserDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -31,7 +35,7 @@ export const PermanentUserDelete = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div>
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
         </div>
 
@@ -59,11 +63,15 @@ export const PermanentUserDelete = ({
               if (id) {
                 try {
                   await updateUser(id!, { orgId: null });
+                  openToast('success',"User Deleted Successfully!");
                   setOpen(false);
-                  router.push("/people?tab=inactive_people");
+                  onRefresh();
+                  // router.push("/people?tab=inactive_people");
 
                   router.refresh();
-                } catch (e: any) {}
+                } catch (e: any) {
+                  openToast('error',"Some Error Occured! Please try again later");
+                }
               }
             }}
           >

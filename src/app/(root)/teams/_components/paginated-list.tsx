@@ -6,7 +6,6 @@ import { TeamCard } from "./team-card";
 import {
   fetchActiveTeams,
   fetchInactiveTeams,
-  fetchTeams,
   Team,
   TeamsResponse,
 } from "@/server/teamActions";
@@ -45,9 +44,8 @@ export default function PaginatedList({
   };
 
   return (
-    <div className="bg-white pl-[29px]  pr-[22px] pt-[22px] rounded-[33px] pb-4 w-full">
-      {/* Grid of Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+    <div className="bg-white pl-[25px]  pr-[18px] pt-[22px] rounded-[33px] pb-4 w-full border ">
+      <div className="flex gap-x-4 gap-y-6 flex-wrap w-full ">
         {teams?.teams?.map(
           (team) =>
             team && (

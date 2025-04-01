@@ -15,6 +15,7 @@ import { Icons } from "@/components/icons";
 import { updateUser, User } from "@/server/userActions";
 import { useToast } from "@/hooks/useToast";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const RemoveTeamMember = ({
   userData,
@@ -53,7 +54,7 @@ export const RemoveTeamMember = ({
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 

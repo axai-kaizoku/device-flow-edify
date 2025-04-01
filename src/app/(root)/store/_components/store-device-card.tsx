@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { Trash } from "lucide-react"; // Icons for slider and cart
-import { Icons } from "@/components/icons";
 import { StoreDevice } from "@/server/deviceActions";
 import { addItemToCart, removeItemFromCart } from "@/server/cartActions";
 import { useRouter } from "next/navigation";
 
 import { memo } from "react";
+import ProductReviewStars from "@/icons/ProductReviewStars";
+import ProductCardCart from "@/icons/ProductCardCart";
+import StoreProductIcons from "@/icons/StoreProductIcons";
 
 const StoreDeviceCard = memo(
   ({ product, res }: { product: StoreDevice; res: number }) => {
@@ -28,17 +30,17 @@ const StoreDeviceCard = memo(
     return (
       <div className="h-[53vh] w-[17vw]">
         <div
-          className="py-14 cursor-pointer px-2 w-full flex justify-center items-center bg-[#F7F7F7] rounded-3xl"
+          className="py-14 overflow-x-hidden cursor-pointer px-2 w-full flex justify-center items-center bg-[#F7F7F7] rounded-3xl"
           onClick={() => router.push(`/store/${product._id}`)}
         >
           {product.image ? (
             <img
-              src={product?.image[0].url ?? "/media/mac.jpeg"}
+              src={product?.image?.[0]?.url || "/media/mac.jpeg"}
               alt="product"
               className="w-60 min-w-64 h-36 object-contain"
             />
           ) : (
-            <Icons.product_card_image className="w-60 h-36" />
+            <StoreProductIcons.product_card_image className="w-60 h-36" />
           )}
         </div>
 
@@ -50,7 +52,7 @@ const StoreDeviceCard = memo(
                 : product.device_name}{" "}
             </h2>
             <h2 className="flex items-center gap-1 justify-center">
-              <Icons.review_star className="size-4" />
+              <ProductReviewStars.review_star className="size-4" />
               <div className="flex items-end gap-1">
                 <span className="text-sm font-gilroyMedium">4.6</span>
                 <span className="text-[#A2A3B1] text-xs font-gilroyMedium">
@@ -81,7 +83,7 @@ const StoreDeviceCard = memo(
               </div>
             ) : (
               <div className="size-7 hover:bg-[#F7F7F7] justify-center items-center mb-0.5 flex rounded-lg ">
-                <Icons.product_card_cart
+                <ProductCardCart
                   className="size-[1.35rem] cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -150,7 +152,7 @@ export { StoreDeviceCard };
 //                 : product.device_name}{" "}
 //             </h2>
 //             <h2 className="flex items-center gap-1 justify-center">
-//               <Icons.review_star className="size-4" />
+//               <ProductReviewStars.review_star className="size-4" />
 //               <div className="flex items-end gap-1">
 //                 <span className="text-sm font-gilroyMedium">4.6</span>
 //                 <span className="text-[#A2A3B1] text-xs font-gilroyMedium">
@@ -181,7 +183,7 @@ export { StoreDeviceCard };
 //               </div>
 //             ) : (
 //               <div className="size-7 hover:bg-[#F7F7F7] justify-center items-center mb-0.5 flex rounded-lg ">
-//                 <Icons.product_card_cart
+//                 <ProductCardCart 
 //                   className="size-[1.35rem] cursor-pointer"
 //                   onClick={(e) => {
 //                     e.stopPropagation();

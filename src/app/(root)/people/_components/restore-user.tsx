@@ -12,19 +12,23 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
-import { Icons } from "@/components/icons";
 import { updateUser } from "@/server/userActions";
+import { useToast } from "@/hooks/useToast";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const RestoreUser = ({
   id,
   children,
+  onRefresh
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -32,7 +36,7 @@ export const RestoreUser = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <Icons.warning_restore />
+          <WarningIcon />
         </div>
 
         {/* Title */}
@@ -61,8 +65,10 @@ export const RestoreUser = ({
                 try {
                   await updateUser(id!, { deleted_at: null });
                   setOpen(false);
-                  router.refresh();
+                  openToast('success', 'User restored Successfully! ');
+                  onRefresh();
                 } catch (e: any) {
+                  openToast('error', 'Some Error Occured! Please try again later.');
                 } finally {
                   setLoading(false); // End loading
                 }

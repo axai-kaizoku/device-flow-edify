@@ -1,6 +1,6 @@
 "use server";
 
-import { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { Team } from "./teamActions";
 import { Device } from "./deviceActions";
@@ -29,6 +29,7 @@ type Org = {
 type Manager = {
   deleted_at: null;
   _id: string;
+  image: string;
   first_name: string;
   last_name: string;
   password: string;
@@ -61,14 +62,14 @@ export type User = {
   role?: number;
   designation?: string;
   image?: string;
-  teamId?: Team;
+  team?: [{ _id: string; title: string }];
   employment_type?: string;
   created_at?: string;
   __v?: number;
   date_of_birth?: string;
   onboarding_date?: string;
   reporting_manager?: Manager;
-  devices?: Device[];
+  devices?: number | Device;
 };
 
 export type CreateUserArgs = {
@@ -87,7 +88,8 @@ export type CreateUserArgs = {
   role?: number;
   designation?: string;
   image?: string;
-  teamId?: string | null;
+  team?: [{ _id: string; title: string; team_code: string }];
+  teamId?: Team;
   employment_type?: string;
   date_of_birth?: string;
   onboarding_date?: string;
@@ -100,6 +102,7 @@ export type Reportee = {
   first_name?: string;
   last_name?: string;
   email?: string;
+  gender?: string;
   designation?: string;
   role: number | string;
   reporteeCount?: number;
@@ -111,7 +114,9 @@ export type HierarchyUser = {
   _id?: string;
   first_name?: string;
   last_name?: string;
+  gender?: string;
   email?: string;
+  image?: string;
   designation?: string;
   reporteeCount?: number;
   reportingTo?: string | null;
@@ -132,6 +137,76 @@ export type newAllUserResponse = {
   users: UserResponse;
 };
 
+export const fetchManager = cache(async function (token: string): Promise<any> {
+  try {
+    const requestBody = {
+      fields: [
+        "first_name",
+        "email",
+        "designation",
+        "employment_type",
+        "image",
+      ],
+      filters: [],
+      page: 1,
+      pageLimit: 5,
+    };
+
+    const res: AxiosResponse = await axios({
+      url: "https://gcp-api.edify.club/edifybackend/v1/user/filter",
+      method: "POST",
+      data: { requestBody },
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return res.data.users;
+  } catch (e) {
+    throw new Error("Failed to fetch users");
+  }
+});
+
+export async function searchManager(
+  searchQuery: string,
+  token: string
+): Promise<any> {
+  try {
+    const requestBody = {
+      fields: [
+        "first_name",
+        "email",
+        "designation",
+        "employment_type",
+        "image",
+      ], // Specify fields to be fetched
+      filters: [], // You can add filters here as per requirement
+      page: 1,
+      pageLimit: 20, // Number of users to fetch per page
+    };
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    const res: AxiosResponse = await axios({
+      url: apiUrl,
+      method: "POST",
+      data: { requestBody },
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return res?.data?.users;
+  } catch (e) {
+    throw new Error("Failed to fetch users");
+  }
+}
+
 export const fetchUsers = cache(async function (): Promise<any> {
   try {
     const requestBody = {
@@ -148,7 +223,7 @@ export const fetchUsers = cache(async function (): Promise<any> {
     };
 
     const res = await callAPIWithToken<UserResponse>(
-      "https://api.edify.club/edifybackend/v1/user/filter",
+      "https://gcp-api.edify.club/edifybackend/v1/user/filter",
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
@@ -173,7 +248,7 @@ export async function searchUsers(searchQuery: string): Promise<any> {
       page: 1,
       pageLimit: 10, // Number of users to fetch per page
     };
-    const apiUrl = `https://api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -193,12 +268,22 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
     const sess = await getSession();
     const user = {
       ...userData,
-      password: "winuall123",
+      // password: "winuall123",
       orgId: sess?.user?.user?.orgId?._id,
     };
 
+    if (!user.image) {
+      if (user.gender === "Male") {
+        user.image =
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png";
+      } else {
+        user.image =
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png";
+      }
+    }
+
     const res = await callAPIWithToken<User>(
-      "https://api.edify.club/edifybackend/v1/user", // API endpoint
+      "https://gcp-api.edify.club/edifybackend/v1/user", // API endpoint
       "POST", // HTTP method
       user
     );
@@ -214,7 +299,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 export const getUserById = cache(async function <User>(userId: string) {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -231,20 +316,25 @@ export async function updateUser(
 ): Promise<User> {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${id}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${id}`, // API endpoint
       "PUT", // HTTP method
       userData
     );
     return res?.data;
-  } catch (e) {
-    throw new Error("Failed to Update user");
+  } catch (e: any) {
+    if (e?.message?.includes("E11000 duplicate key error")) {
+      // Customize the error response for duplicate email
+      throw new Error("A user with this Email or Phone already exists.");
+    }
+    // Default error message
+    throw new Error("Failed to Update User. Please try again.");
   }
 }
 
 export async function deleteUser<User>(userId: string) {
   try {
     const res = await callAPIWithToken<User>(
-      `https://api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/${userId}`, // API endpoint
       "DELETE",
       null
     );
@@ -258,7 +348,7 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
   try {
     // Call the API with multipart/form-data
     const response = await callAPIWithToken<User>(
-      "https://api.edify.club/edifybackend/v1/user/bulk-upload",
+      "https://gcp-api.edify.club/edifybackend/v1/user/bulk-upload",
       "POST",
       formData,
       {
@@ -270,6 +360,30 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
     throw error;
   }
 };
+
+export const bulkDeleteUsers = async (
+  userIds: string[],
+  type: string
+): Promise<any> => {
+  try {
+    console.log(userIds);
+    const response = await callAPIWithToken(
+      type !== "soft"
+        ? "https://gcp-api.edify.club/edifybackend/v1/user/bulk-delete?permanent=true"
+        : "https://gcp-api.edify.club/edifybackend/v1/user/bulk-delete",
+      "POST",
+      { userIds },
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    console.log(response);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export type UsersTeamResponse = {
   users: User[];
   total: number;
@@ -284,7 +398,7 @@ export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<UsersTeamResponse>(
-      `https://api.edify.club/edifybackend/v1/user/teams`, // API endpoint
+      `https://gcp-api.edify.club/edifybackend/v1/user/teams`, // API endpoint
       "POST", // HTTP method
       {
         teamId,
@@ -305,7 +419,7 @@ export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
 //Search api
 export async function userSearchAPI(query: string): Promise<UserResponse> {
   try {
-    const url = `https://api.edify.club/edifybackend/v1/user/search?query=${query}`;
+    const url = `https://gcp-api.edify.club/edifybackend/v1/user/search?query=${query}`;
     const res = await callAPIWithToken<UserResponse>(url, "GET");
 
     return res?.data;
@@ -317,17 +431,16 @@ export async function userSearchAPI(query: string): Promise<UserResponse> {
   }
 }
 
-// API function to fetch the hierarchy data
 export const fetchUserHierarchy = cache(
   async function (): Promise<HierarchyResponse> {
     try {
       const res = await callAPIWithToken<HierarchyResponse>(
-        "https://api.edify.club/edifybackend/v1/user/hierarchy", // API endpoint for hierarchy
+        "https://gcp-api.edify.club/edifybackend/v1/user/hierarchy", // Your API endpoint
         "GET" // HTTP method
       );
-
-      return res?.data;
+      return res?.data; // Ensure the response is correctly mapped to data
     } catch (e) {
+      console.error("Error fetching hierarchy:", e); // Log error from the API
       throw new Error("Failed to fetch user hierarchy");
     }
   }

@@ -8,7 +8,7 @@ const TeamHeader = ({ teamData: team }: { teamData: TeamHeaderProps }) => {
       <img
         src={
           team?.image ??
-          "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp"
+          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
         }
         alt="team-image"
         className="size-20 object-cover rounded-full"
@@ -26,10 +26,9 @@ const TeamHeader = ({ teamData: team }: { teamData: TeamHeaderProps }) => {
         <p className="text-sm font-gilroyMedium text-[#ADADAC]">
           Reporting Manager: {/* Logic yet to be done */}
           <span className="font-gilroySemiBold text-lg text-black">
-            {/* {`${team?.manager[0].first_name ?? "No Manager"} ${
-              team?.manager[0].last_name ?? ""
-            }`} */}
-            Logic yet to be done
+            {`${team?.manager?.[0].first_name ?? "No Manager"} ${
+              team?.manager?.[0].last_name ?? ""
+            }`}
           </span>
         </p>
       </div>

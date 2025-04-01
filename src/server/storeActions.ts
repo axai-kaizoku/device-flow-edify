@@ -1,15 +1,58 @@
 // 'use server';
 import { AxiosError } from "axios";
-import { StoreDevicesRes } from "./deviceActions";
+import { Device, StoreDevicesRes } from "./deviceActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
+import { devicesFields, FilterApiParams } from "./filterActions";
+
+export const searchStoreDevices = cache(async function ({
+  filters = [],
+  fields = devicesFields,
+  searchQuery = "",
+  pageLength = 9000000,
+  page = 1,
+}: FilterApiParams = {}): Promise<any> {
+  try {
+    const payload = {
+      fields,
+      filters: filters?.length > 0 ? filters : [],
+      pageLimit: pageLength,
+      page,
+    };
+
+    // Construct the URL with an optional search query
+    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/assets${
+      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+    }`;
+
+    // API call
+    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
+
+    // Check and return response data
+    if (res && res?.data) {
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to filter devices. Please try again later."
+    );
+  }
+});
 
 export const getStoreDevices = cache(
   async function (): Promise<StoreDevicesRes> {
+    const payload = {
+      fields: devicesFields,
+      filters: [],
+    };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets",
-        "GET"
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets",
+        "POST",
+        payload
       );
 
       return res?.data;
@@ -22,25 +65,15 @@ export const getStoreDevices = cache(
 
 export const getTrendingDevice = cache(
   async function (): Promise<StoreDevicesRes> {
+    const payload = {
+      fields: devicesFields,
+      filters: [],
+    };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets?query=trending",
-        "GET"
-      );
-
-      return res?.data;
-    } catch (e) {
-      // redirect('/login');
-      throw new Error((e as AxiosError)?.message);
-    }
-  }
-);
-export const getBestSellers = cache(
-  async function (): Promise<StoreDevicesRes> {
-    try {
-      const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets?query=trending",
-        "GET"
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets?query=trending",
+        "POST",
+        payload
       );
 
       return res?.data;
@@ -53,10 +86,15 @@ export const getBestSellers = cache(
 
 export const getLatestReleases = cache(
   async function (): Promise<StoreDevicesRes> {
+    const payload = {
+      fields: devicesFields,
+      filters: [],
+    };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://api.edify.club/edifybackend/v1/devices/assets?query=latest",
-        "GET"
+        "https://gcp-api.edify.club/edifybackend/v1/devices/assets?query=latest",
+        "POST",
+        payload
       );
 
       return res?.data;
@@ -79,7 +117,7 @@ export const createDeviceReview = async function ({
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<StoreDevicesRes>(
-      "https://api.edify.club/edifybackend/v1/reviews",
+      "https://gcp-api.edify.club/edifybackend/v1/reviews",
       "POST",
       {
         userId: sess?.user.user.userId,
@@ -94,5 +132,49 @@ export const createDeviceReview = async function ({
   } catch (e) {
     console.error("Failed to add review");
     throw new Error((e as AxiosError)?.message);
+  }
+};
+
+export const requestLaptop = async function ({
+  ram,
+  storage,
+  os,
+  brand,
+  searchTerm,
+}: {
+  ram: string;
+  storage: string;
+  os: string;
+  brand: string;
+  searchTerm: string;
+}): Promise<any> {
+  try {
+    // Define the payload
+    const payload = {
+      ram,
+      storage,
+      os,
+      brand,
+      searchTerm,
+    };
+
+    // API call
+    const res = await callAPIWithToken<any>(
+      "https://gcp-api.edify.club/edifybackend/v1/devices/requestlaptop",
+      "POST",
+      payload
+    );
+
+    // Check and return response data
+    if (res && res?.data) {
+      return res?.data;
+    } else {
+      throw new Error("No data received from the API");
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message ||
+        "Failed to request a laptop. Please try again later."
+    );
   }
 };

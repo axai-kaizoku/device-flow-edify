@@ -101,7 +101,7 @@ export default function ForgotPassForm() {
         setError("Passwords do not match");
         return;
       }
-      const res = await ResetPass(uId, otp.toString(), password);
+      const res = await ResetPass(uId, otp.join("").toString(), password);
       if (res.message === "Invalid or Expired otp") {
         setError("Invalid or Expired OTP");
       } else {
@@ -117,7 +117,7 @@ export default function ForgotPassForm() {
   const obscuredEmail = email.replace(/(.{4})[^@]*(?=@)/, "$1****");
 
   return done ? (
-    <div className=" h-fit justify-center items-center  flex flex-col gap-3  rounded w-[423px] lg:w-auto">
+    <div className=" h-fit justify-center items-center  flex flex-col gap-3  rounded w-[423px] max-lg:w-full lg:w-auto">
       <div
         className={`font-gilroy flex w-full flex-col items-center gap-y-[17px] px-6 text-center leading-[26px] tracking-[0px] `}
       >
@@ -138,7 +138,7 @@ export default function ForgotPassForm() {
             }}
             className="flex flex-wrap items-center justify-center gap-x-[9.3px] gap-y-[9.3px] rounded-[9.3px] bg-black p-[13px] text-center min-[471.4842834472656px]:flex-nowrap"
           >
-            <div className="text-left text-[17px] font-semibold leading-[29px] tracking-[-0.21px] text-white">
+            <div className="text-left text-[17px] font-gilroySemiBold leading-[29px] tracking-[-0.21px] text-white">
               Back to LogIn
             </div>
             <div className="flex h-[19px] w-[19px] flex-shrink-0 flex-col items-center">
@@ -152,9 +152,9 @@ export default function ForgotPassForm() {
                 <path
                   d="M11.0071 3.9082L16.4556 9.35664M16.4556 9.35664L11.0071 14.8051M16.4556 9.35664L2.44531 9.35664"
                   stroke="#F9FAFB"
-                  stroke-width="2.0756"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2.0756"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -163,15 +163,15 @@ export default function ForgotPassForm() {
       </div>{" "}
     </div>
   ) : (
-    <div className=" h-fit justify-center items-center  flex flex-col gap-3  rounded w-[423px] lg:w-auto">
+    <div className=" h-fit justify-center items-center  flex flex-col gap-3  rounded w-[423px] max-lg:w-full lg:w-auto">
       <div
         className={`font-gilroySemiBold flex w-full flex-col items-center gap-y-4 leading-[normal] tracking-[0px]`}
       >
-        <div className="text-center text-[40px] font-gilroyBold leading-[normal]">
+        <div className="text-center text-[40px] max-lg:text-4xl font-gilroyBold leading-[normal]">
           Reset Password
         </div>
         <div
-          className="text-center leading-[normal]"
+          className="text-center font-gilroyMedium max-lg:text-sm leading-[normal]"
           style={{ color: "#4E4D4D" }}
         >
           {next === 1
@@ -287,14 +287,14 @@ export default function ForgotPassForm() {
           ) : next === 0 ? (
             <button
               onClick={handleNext}
-              className="flex items-center mt-5 justify-center h-[56px] w-[433px] rounded-[9.3px] bg-black px-44 py-[13px]"
+              className="flex items-center mt-5 justify-center h-[56px] w-[433px] max-lg:w-full rounded-[9.3px] bg-black px-44 max-lg:px-0 py-[13px]"
             >
               <div className="text-center text-white">Send OTP</div>
             </button>
           ) : (
             <button
               onClick={handleReset}
-              className="flex items-center mt-5 justify-center h-[56px] w-full rounded-[9.3px] bg-black px-44 py-[13px]"
+              className="flex items-center mt-5 justify-center h-[56px] w-full rounded-[9.3px] bg-black px-44 max-lg:px-0 py-[13px]"
             >
               <div className="text-center text-white">Submit</div>
             </button>
@@ -317,7 +317,7 @@ export default function ForgotPassForm() {
 
       {next === 0 && (
         <Link href="/login" className="text-center text-neutral-950">
-          <button className="flex h-[56px] w-[433px] items-center justify-center rounded-[9.3px] bg-zinc-100 ">
+          <button className="flex h-[56px] max-lg:w-full w-[433px] items-center justify-center rounded-[9.3px] bg-zinc-100 ">
             Back to Login
           </button>
         </Link>

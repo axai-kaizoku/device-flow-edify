@@ -7,8 +7,9 @@ import Link from "next/link";
 import { StoreDevice } from "@/server/deviceActions";
 import { useQueryState } from "nuqs";
 import { useAlert } from "@/hooks/useAlert";
-import { getBestSellers, getLatestReleases } from "@/server/storeActions";
+import { getTrendingDevice, getLatestReleases } from "@/server/storeActions";
 import { ProductSlider } from "./product-slider";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export const ProductsSection = ({ cart }: { cart: any }) => {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -26,7 +27,7 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         setLoading(true);
         switch (activeTab) {
           case "best_sellers":
-            response = await getBestSellers();
+            response = await getTrendingDevice();
             break;
           case "latest_release":
             response = await getLatestReleases();
@@ -58,7 +59,10 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full my-20">
+
+              <DeviceFlowLoader />
+              </div>
             ) : (
               <ProductSlider key={"best-sellers"} data={products} cart={cart} />
             )}
@@ -68,7 +72,10 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full my-20">
+
+              <DeviceFlowLoader />
+              </div>
             ) : (
               <ProductSlider
                 key={"latest-release"}
@@ -101,7 +108,7 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full py-1.5 p-24 bg-white">
+    <div className="flex flex-col items-center w-full max-[1380px]:w-[90vw] py-1.5 p-24 bg-white">
       <h1 className="font-gilroySemiBold text-4xl py-8">Best Seller</h1>
 
       <div className="relative flex flex-col items-center w-full">
@@ -114,6 +121,9 @@ export const ProductsSection = ({ cart }: { cart: any }) => {
                 active={activeTab === tab?.key}
                 onClick={() => handleTabChange(tab?.key)}
                 label={tab?.label}
+                triangleBackgroundColor="#fff" // Light yellow
+                triangleBorderTopColor="#fff" // Orange
+                className="after:left-[-39%] after:w-[178%]"
               />
             ))}
           </div>

@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const res = await fetch(
-          "https://api.edify.club/edifybackend/v1/auth/login",
+          "https://gcp-api.edify.club/edifybackend/v1/auth/login",
           {
             method: "POST",
             body: JSON.stringify(credentials),
@@ -40,9 +40,8 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       async profile(profile, tokens) {
-
         const res = await fetch(
-          "https://api.edify.club/edifybackend/v1/auth/login",
+          "https://gcp-api.edify.club/edifybackend/v1/auth/login",
           {
             method: "POST",
             headers: {
@@ -78,6 +77,8 @@ export const authOptions: NextAuthOptions = {
         token.firstName = user.user[0].first_name;
         token.lastName = user.user[0].last_name;
         token.role = user.user[0].role;
+        token.employeeCount = user.user[0].employeeCount;
+        token.designation = user.user[0].designation;
         token.orgId = user.user[0].orgId;
         token.teamId = user.user[0].teamId;
         // @ts-ignore
@@ -96,6 +97,8 @@ export const authOptions: NextAuthOptions = {
         firstName: token.firstName,
         lastName: token.lastName,
         role: token.role,
+        employeeCount: token.employeeCount,
+        designation: token.designation,
         orgId: token.orgId,
         teamId: token.teamId,
         addressDetails: token.addressDetails,

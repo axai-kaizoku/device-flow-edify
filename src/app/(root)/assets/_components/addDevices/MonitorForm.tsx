@@ -4,6 +4,8 @@ import React, { useRef, useState } from "react";
 import { FormErrors, KeyboardDetailsInterface } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { X } from "lucide-react";
+import { getImageUrl } from "@/server/orgActions";
+import { useToast } from "@/hooks/useToast";
 
 interface KeyboardDetailsProps {
   data: KeyboardDetailsInterface;
@@ -19,7 +21,23 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<KeyboardDetailsInterface>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const [displayFile, setDisplayFile] = useState("");
+  const { openToast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +53,7 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   };
 
   // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -47,7 +65,18 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setInvoiceFile(file);
+        setIsUploading(true);
+        simulateProgress();
+        try {
+          const res = await getImageUrl({ file });
+          setDisplayFile(URL.createObjectURL(file));
+          setInvoiceFile(res?.fileUrl);
+        } catch (error) {
+          openToast("error", "Some Error while uploading the File");
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -58,13 +87,16 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
   };
 
   const handleRemoveFile = () => {
+    setDisplayFile("");
     setInvoiceFile(null);
   };
 
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">Monitor Details</div>
+      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
+        Monitor Details
+      </div>
 
       <div className="flex flex-col gap-8 mt-5">
         <FormField
@@ -107,14 +139,40 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
         <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
-        {invoiceFile ? (
-          <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+        {isUploading ? (
+          <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+            <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-2 bg-black rounded-full"
+                style={{
+                  width: `${progress}%`,
+                  transition: "width 0.1s linear",
+                }}
+              ></div>
+            </div>
+            <span className="text-sm text-black">{progress}%</span>
+          </div>
+        ) : invoiceFile ? (
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-1">
             <iframe
-              src={URL.createObjectURL(invoiceFile)}
+              src={displayFile}
               width="100%"
               height="100%"
-              title="Offer Letter Preview"
+              title="Invoice Preview"
               className="object-cover"
+              onLoad={(e) => {
+                const iframe = e.currentTarget;
+                // Ensure it's viewable content
+                if (
+                  !iframe.contentDocument ||
+                  iframe.contentDocument.title === ""
+                ) {
+                  // openToast(
+                  //   "error",
+                  //   "File preview failed. It may not be viewable."
+                  // );
+                }
+              }}
             />
             <button
               type="button"
@@ -145,7 +203,9 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
           onChange={handleFileChange}
         />
         {errors.invoiceFile && (
-          <p className="text-destructive text-xs font-gilroyMedium">{errors?.invoiceFile}</p>
+          <p className="text-destructive text-xs font-gilroyMedium">
+            {errors?.invoiceFile}
+          </p>
         )}
       </div>
 
@@ -175,7 +235,6 @@ const MonitorForm: React.FC<KeyboardDetailsProps> = ({
           />
         </div>
       </div>
-
     </div>
   );
 };

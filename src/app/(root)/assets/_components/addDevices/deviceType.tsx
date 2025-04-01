@@ -1,39 +1,50 @@
 "use client";
 
-import {
-  Keyboard,
-  Laptop,
-  Laptop2,
-  Monitor,
-  Mouse,
-  Smartphone,
-  SmartphoneCharging,
-  Star,
-} from "lucide-react";
-import React, { useState } from "react";
+import { Keyboard, Laptop2, Monitor, Mouse, Smartphone } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { bulkUploadDevices } from "@/server/deviceActions";
 import BulkUpload from "@/components/bulk-upload";
-import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { SelectInput } from "@/components/dropdown/select-input";
+import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import { FormData } from "./_components/types";
 
 type DeviceTypeProps = {
   data: string;
   setData: (newData: string) => void;
   error?: string;
   closeBtn: () => void;
-
+  isEditForm?: boolean;
   setTotalSteps: (steps: number) => void;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  userName?: string;
 };
 
-const DeviceType: React.FC<DeviceTypeProps> = ({
+const DeviceType = ({
   data,
   setData,
   error,
   closeBtn,
   setTotalSteps,
-}) => {
+  isEditForm,
+  formData: { userId },
+  setFormData,
+  userName,
+}: DeviceTypeProps) => {
   const [selectedDevice, setSelectedDevice] = useState<string | null>(
-    data || ""
+    data ?? ""
   );
+  const [user, setUser] = useState<User>({ _id: userId });
+
+  useEffect(() => {
+    setSelectedDevice(data ?? "");
+    const count = deviceList.filter((val) => val.id === data);
+    setTotalSteps(count?.[0]?.steps);
+    setData(data);
+    if (user._id) {
+      setFormData((prev) => ({ ...prev, userId: user._id }));
+    }
+  }, [data, user._id]);
 
   const handleSelect = (device: string) => {
     setSelectedDevice(device);
@@ -75,39 +86,53 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
 
   return (
     <div className="w-full">
-      <div className="flex">
-        <BulkUpload
-          closeBtn={closeBtn}
-          requiredKeys={[
-            "device_name",
-            "asset_serial_no",
-            "serial_no",
-            "device_purchase_date",
-            "ram",
-            "processor",
-            "storage",
-            "warranty_expiary_date",
-            "os",
-            "price",
-            "ownership",
-            "purchase_order",
-            "device_type",
-            "brand",
-            "model",
-            "condition",
-            "serial_no",
-          ]}
-          bulkApi={bulkUploadDevices}
-        />
-      </div>
-
-      <div className="flex items-center justify-center mt-8 mb-4">
-        <div className="border-t border-gray-400 w-7"></div>
-        <span className="mx-4 font-gilroySemiBold 2xl:text-lg text-base text-gray-400">
-          OR
-        </span>
-        <div className="border-t border-[#B1B1B1] w-7"></div>
-      </div>
+      {!isEditForm ? (
+        <>
+          <div className="flex">
+            <BulkUpload
+              sampleData={{
+                model: "XXXX",
+                device_name: "YYYYY",
+                serial_no: "XXXX1234",
+                device_purchase_date: "09/12/2023",
+                ram: "16GB",
+                processor: "Intel Core i5",
+                storage: "256GB",
+                warranty_expiary_date: "21/11/2024",
+                os: "Windows",
+                price: 12000,
+                device_type: "Laptop",
+                brand: "HP",
+                device_condition: "Fair",
+              }}
+              closeBtn={closeBtn}
+              requiredKeys={[
+                "model",
+                "device_name",
+                "serial_no",
+                "device_purchase_date",
+                "ram",
+                "processor",
+                "storage",
+                "warranty_expiary_date",
+                "os",
+                "price",
+                "device_type",
+                "brand",
+                "device_condition",
+              ]}
+              bulkApi={bulkUploadDevices}
+            />
+          </div>
+          <div className="flex items-center justify-center mt-8 mb-4">
+            <div className="border-t border-gray-400 w-7"></div>
+            <span className="mx-4 font-gilroySemiBold 2xl:text-lg text-base text-gray-400">
+              OR
+            </span>
+            <div className="border-t border-[#B1B1B1] w-7"></div>
+          </div>
+        </>
+      ) : null}
 
       <div className="flex flex-col gap-6 mb-19">
         <div className="font-gilroySemiBold 2xl:text-2xl text-xl">
@@ -122,7 +147,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
                   ? "col-span-2"
                   : ""
               } flex items-center border-[2px] rounded-xl p-2 text-lg cursor-pointer ${
-                selectedDevice === device?.id
+                selectedDevice === device.id
                   ? "border-black"
                   : "border-[#D5D5D5]"
               }`}
@@ -135,7 +160,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
                 type="radio"
                 id={device?.id}
                 name="device"
-                checked={selectedDevice === device?.id}
+                checked={selectedDevice === device.id}
                 onChange={() => {
                   setTotalSteps(device?.steps);
                   handleSelect(device?.id);
@@ -145,7 +170,7 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
               <label
                 htmlFor={device?.id}
                 className={`cursor-pointer ${
-                  selectedDevice === device?.id ? "text-black" : "text-gray-600"
+                  selectedDevice === device.id ? "text-black" : "text-gray-600"
                 } flex justify-center items-center gap-3 py-1.5 px-2`}
               >
                 <span className="text-black">{device?.logo}</span>
@@ -160,6 +185,31 @@ const DeviceType: React.FC<DeviceTypeProps> = ({
               {error}
             </p>
           )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 mt-2 mb-19">
+        <div className="font-gilroySemiBold 2xl:text-2xl text-xl">
+          Device Assign to
+        </div>
+
+        <div className="pt-3 w-full">
+          <SelectInput
+            fetchOptions={searchUsers}
+            initialOptions={fetchUsers}
+            optionValue={{ firstV: "first_name", secondV: "email" }}
+            key={"assign-assets-form"}
+            placeholder="Search by name, email, etc."
+            onSelect={(data: User) => {
+              setUser({
+                email: data.email!,
+                _id: data._id!,
+                first_name: data.first_name!,
+              });
+            }}
+            label="Assigning To"
+            value={userName ? userName : user?.first_name!}
+          />
         </div>
       </div>
     </div>

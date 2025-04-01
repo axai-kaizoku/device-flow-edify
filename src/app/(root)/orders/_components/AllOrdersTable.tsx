@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Pagination from "../../teams/_components/pagination";
 import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
-import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { User } from "@/server/userActions";
 import { ChevronRight } from "lucide-react";
@@ -11,6 +10,11 @@ import { orderIcons } from "../icons";
 const ITEMS_PER_PAGE = 5;
 function AllOrdersTable({ data }: { data: any[] }) {
   const router = useRouter();
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -44,10 +48,12 @@ function AllOrdersTable({ data }: { data: any[] }) {
           <div className="flex flex-col mt-5">
             <Table
               data={currentOrder}
+              selectedIds={selectedIds}
+              setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
-                onSelectionChange: (e) => console.log(e),
+                onSelectionChange: handleSelectionChange,
               }}
               columns={[
                 {

@@ -5,10 +5,20 @@ interface TabProps {
   onClick: () => void;
   id?: string;
   label: string;
+  triangleBackgroundColor?: string; // Background color for ::before
+  triangleBorderTopColor?: string; // Border-top color for ::after
   className?: string; // Optional width for the line
 }
 
-export function Tab({ active, onClick, label, className, id }: TabProps) {
+export function Tab({
+  active,
+  onClick,
+  label,
+  className,
+  id,
+  triangleBackgroundColor = "#f2f6d6",
+  triangleBorderTopColor = "#f2f6d6",
+}: TabProps) {
   return (
     <div
       id={id}
@@ -31,7 +41,14 @@ export function Tab({ active, onClick, label, className, id }: TabProps) {
         {label}
       </span>
       {active && (
-        <div onClick={(e) => e.stopPropagation()} className="triangle"></div>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="triangle"
+          style={{
+            "--triangle-bg-color": triangleBackgroundColor,
+            "--triangle-border-top-color": triangleBorderTopColor,
+          }}
+        ></div>
       )}
     </div>
   );

@@ -8,26 +8,32 @@ import { issueIcons } from "../icons";
 import Pagination from "../../teams/_components/pagination";
 import { IssueStatusChange } from "./issue-status-change";
 import { openIssues } from "@/server/filterActions";
-import CreateIssue from "../../assets/_components/addDevices/_components/create-issue";
 
 interface IssueTableDisplayProps {
   data: IssueResponse | null;
   countIssues: IssueResponse | null;
   setIssues: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }
 
 function IssueTableDisplay({
   data,
   setIssues,
   countIssues,
+  onRefresh
 }: IssueTableDisplayProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handlePageChange = async (page: number) => {
     const res = await openIssues({ page });
     setIssues(res);
     setCurrentPage(page);
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
   };
 
   return (
@@ -43,10 +49,12 @@ function IssueTableDisplay({
           <div className="flex flex-col">
             <Table
               data={data?.issues!}
+              selectedIds={selectedIds}
+              setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
-                onSelectionChange: (e) => console.log(e),
+                onSelectionChange: handleSelectionChange,
               }}
               columns={[
                 {
@@ -58,13 +66,13 @@ function IssueTableDisplay({
                     >
                       <img
                         src={
-                          data?.deviceDetails?.image ??
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwnpCabWZCg86pyyyD71E0s6JrIDZs4CSnqQ&s"
+                          data?.deviceDetails?.image?.[0]?.url ??
+                          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                         }
                         alt="Device Logo"
                         className=" size-10 rounded-full"
                       />
-                      <div>{data?.deviceDetails?.device_name ?? "-"}</div>
+                      <div>{data?.deviceDetails?.custom_model ?? "-"}</div>
                     </div>
                   ),
                 },
@@ -86,46 +94,57 @@ function IssueTableDisplay({
                             Low
                           </h1>
                         ) : (
-                          <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-gray-300 text-gray-700">
-                            Unknown
-                          </h1>
+                          <h1>-</h1>
                         )}
                       </div>
                     </div>
                   ),
                 },
-
                 {
                   title: "Issued Id",
-                  dataIndex: "_id",
+                  render: (record: Issues) => (
+                    <div>{record?.issueId ?? "-"}</div>
+                  ),
                 },
+
                 {
                   title: "Raised by",
-                  dataIndex: "userName",
+                  render: (record) => <div>{record?.userName ?? "-"}</div>,
                 },
+
                 {
                   title: "Raised on",
-                  render: (data: Issues) => {
-                    const date = new Date(data?.createdAt!);
+                  render: (record) => {
+                    const onboardingDate = record?.createdAt!;
+
+                    // Check if onboardingDate is null, undefined, or empty
+                    if (!onboardingDate) {
+                      return <div>-</div>; // Return "-" for null, undefined, or empty value
+                    }
+
+                    const date = new Date(onboardingDate);
+
+                    // Check if the date is valid
+                    if (isNaN(date.getTime())) {
+                      return <div>-</div>; // Return "-" for invalid date
+                    }
+
                     const formattedDate = date.toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     });
-                    return (
-                      <div className="justify-start flex items-center">
-                        {formattedDate}
-                      </div>
-                    );
+
+                    return <div>{formattedDate}</div>;
                   },
                 },
                 {
                   title: "Issue type",
-                  dataIndex: "title",
+                  render: (record) => <div>{record?.title ?? "-"}</div>,
                 },
                 {
                   title: "Status",
-                  dataIndex: "status",
+                  render: (record) => <div>{record?.status ?? "-"}</div>,
                 },
 
                 {
@@ -135,6 +154,7 @@ function IssueTableDisplay({
                       reOpen={false}
                       id={record?._id!}
                       issueData={record}
+                      onRefresh={onRefresh}
                     >
                       <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-5 py-1.5 text-white font-gilroyMedium">
                         Mark as resolved

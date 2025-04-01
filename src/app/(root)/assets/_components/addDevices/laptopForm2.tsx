@@ -4,6 +4,8 @@ import React, { useRef, useState } from "react";
 import { DevicePage2, FormErrors } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { X } from "lucide-react";
+import { getImageUrl } from "@/server/orgActions";
+import { useToast } from "@/hooks/useToast";
 
 interface KeyboardDetailsProps {
   data: DevicePage2;
@@ -19,6 +21,23 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   const [formData, setFormData] = useState<DevicePage2>(data);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const [displayFile, setDisplayFile] = useState("");
+  const { openToast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   // Handle input changes for text and date fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +53,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   };
 
   // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -46,7 +65,18 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setInvoiceFile(file);
+        setIsUploading(true);
+        simulateProgress();
+        try {
+          const res = await getImageUrl({ file });
+          setDisplayFile(URL.createObjectURL(file));
+          setInvoiceFile(res?.fileUrl);
+        } catch (error) {
+          openToast("error", "Some Error while uploading the File");
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -57,6 +87,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   };
 
   const handleRemoveFile = () => {
+    setDisplayFile("");
     setInvoiceFile(null);
   };
 
@@ -93,14 +124,40 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
         <label className="font-gilroyMedium text-black text-base">
           Upload device invoice
         </label>
-        {invoiceFile ? (
-          <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+        {isUploading ? (
+          <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+            <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-2 bg-black rounded-full"
+                style={{
+                  width: `${progress}%`,
+                  transition: "width 0.1s linear",
+                }}
+              ></div>
+            </div>
+            <span className="text-sm text-black">{progress}%</span>
+          </div>
+        ) : invoiceFile ? (
+          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
             <iframe
-              src={URL.createObjectURL(invoiceFile)}
+              src={displayFile}
               width="100%"
               height="100%"
-              title="Offer Letter Preview"
+              title="Invoice Preview"
               className="object-cover"
+              onLoad={(e) => {
+                const iframe = e.currentTarget;
+                // Ensure it's viewable content
+                if (
+                  !iframe.contentDocument ||
+                  iframe.contentDocument.title === ""
+                ) {
+                  // openToast(
+                  //   "error",
+                  //   "File preview failed. It may not be viewable."
+                  // );
+                }
+              }}
             />
             <button
               type="button"
@@ -141,7 +198,11 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             label="Purchase Date"
             id="purchaseDate"
             name="purchaseDate"
-            value={formData?.purchaseDate}
+            value={
+              formData?.purchaseDate
+                ? new Date(formData.purchaseDate).toISOString().split("T")[0]
+                : ""
+            }
             type="date"
             onChange={handleChange}
             error={errors?.purchaseDate}
@@ -153,7 +214,13 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
             label="Warranty Period"
             id="warrantyExpiryDate"
             name="warrantyExpiryDate"
-            value={formData?.warrantyExpiryDate}
+            value={
+              formData?.warrantyExpiryDate
+                ? new Date(formData.warrantyExpiryDate)
+                    .toISOString()
+                    .split("T")[0]
+                : ""
+            }
             type="date"
             onChange={handleChange}
             error={errors?.warrantyExpiryDate}

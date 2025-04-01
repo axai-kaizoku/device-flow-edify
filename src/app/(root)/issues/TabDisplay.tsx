@@ -1,6 +1,6 @@
 "use client";
 
-import { IssueResponse, Issues, updateIssue } from "@/server/issueActions";
+import { IssueResponse, Issues } from "@/server/issueActions";
 import { useQueryState } from "nuqs";
 import { ArrowUpDown, Check, Download, Plus, Search } from "lucide-react";
 import { Tab } from "../teams/_components/Tab";
@@ -9,7 +9,7 @@ import ClosedIssueTable from "./_components/ClosedIssues";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import { closedIssues, filterIssues, openIssues } from "@/server/filterActions";
-import Spinner from "@/components/Spinner";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function TabDisplay() {
   const [issues, setIssues] = useState<IssueResponse | null>(null);
@@ -91,16 +91,51 @@ function TabDisplay() {
     fetchTabData();
   }, [activeTab]);
 
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+  
+      const query = {
+        searchQuery: searchTerm || "",
+      };
+  
+      let updatedIssues: IssueResponse;
+      if (activeTab === "open") {
+        const count = await filterIssues(query);
+        setCountIssues(count);
+        updatedIssues = await openIssues(query);
+      } else {
+        updatedIssues = await closedIssues(query);
+      }
+  
+      setIssues(updatedIssues); // Update issues state with refreshed data
+    } catch (error) {
+      console.error("Error refreshing issues data:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to refresh data",
+        isFailure: true,
+        key: "refresh-error-issues",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   const renderContent = () => {
     switch (activeTab) {
       case "open":
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
               <IssueTableDisplay
                 data={issues}
+                onRefresh={refreshData}
                 countIssues={countIssues}
                 setIssues={setIssues}
               />
@@ -111,9 +146,11 @@ function TabDisplay() {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
-              <ClosedIssueTable data={issues} setIssues={setIssues} />
+              <ClosedIssueTable data={issues} setIssues={setIssues} onRefresh={refreshData}/>
             )}
           </>
         );
@@ -156,14 +193,14 @@ function TabDisplay() {
             />
           </div>
 
-          {activeTab !== "open" && (
+          {/* {activeTab !== "open" && (
             <div className="relative px-4 flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Check className="text-[#7F7F7F] size-5" />
               <div className="font-gilroyMedium text-sm text-[#7F7F7F]">
                 Reopen
               </div>
             </div>
-          )}
+          )} */}
 
           {/* <div className="flex justify-between items-center gap-2 text-nowrap px-4 py-2.5 text-[#7F7F7F] border border-[#7F7F7F] rounded-full">
             <ArrowUpDown className="text-[#7F7F7F] size-6" />

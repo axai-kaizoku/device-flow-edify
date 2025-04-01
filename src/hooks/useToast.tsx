@@ -1,7 +1,7 @@
 import React from "react";
 import { toast, Slide } from "react-toastify";
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import ToastIcons from "@/icons/ToastIcons";
 
 type ToastType = "success" | "error";
 
@@ -13,13 +13,13 @@ export const useToast = () => {
 
     switch (type) {
       case "error":
-        Icon = <Icons.toast_error />;
+        Icon = <ToastIcons.toast_error />;
         containerStyles = "bg-[#FFE5E8] text-[#FF0000]";
         textStyles = "text-[#FF0000]";
         break;
 
       case "success":
-        Icon = <Icons.toast_success />;
+        Icon = <ToastIcons.toast_success />;
         containerStyles = "bg-[#ECFDF3] text-[#0D9B00]";
         textStyles = "text-[#0D9B00]";
         break;

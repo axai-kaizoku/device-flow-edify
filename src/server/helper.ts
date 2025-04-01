@@ -2,6 +2,7 @@
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 export const getSession = async () => {
   const session = await getServerSession(authOptions);
@@ -14,52 +15,11 @@ export const getTokenFromSession = async () => {
   return token;
 };
 
-// Enhanced function with inbuilt token retrieval
-// export async function callAPIWithToken<T>(
-// 	url: string,
-// 	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-// 	body: any = null,
-// ): Promise<T> {
-// 	// Retrieve the token from the session
-// 	const token = await getTokenFromSession();
-
-// 	if (!token) {
-// 		// Handle case where token is not available
-// 		throw new Error('Unauthorized: No token available.');
-// 	}
-
-// 	try {
-// 		// Make the API call with the token in the Authorization header
-// 		const response = await fetch(url, {
-// 			method,
-// 			headers: {
-// 				'Content-Type': 'application/json',
-// 				Authorization: `Bearer ${token}`,
-// 			},
-// 			body: body ? JSON.stringify(body) : null,
-// 		});
-
-// 		if (!response.ok) {
-// 			throw new Error(`Error: ${response}`);
-// 		}
-
-// 		// Parse and return the response as JSON
-// 		return await response.json();
-// 	} catch (error: any) {
-// 		// Handle errors and redirect to login if unauthorized
-// 		console.error('API call failed:', error);
-// 		throw new Error(error.message);
-// 	}
-// }
-
-import axios, { AxiosError, AxiosResponse } from "axios";
-
 interface APIResponse<T> {
   data: T;
   status: number;
 }
 
-// Main function using axios
 export async function callAPIWithToken<T>(
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -113,3 +73,27 @@ export async function callAPIWithToken<T>(
     throw new Error("An unexpected error occurred during the API request");
   }
 }
+
+export const callAPI = async <T>(
+  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  body?: any,
+  headers?: Record<string, string>
+): Promise<APIResponse<T>> => {
+  try {
+    const response: AxiosResponse<T> = await axios({
+      url,
+      method,
+      data: method !== "GET" ? body : undefined,
+      headers,
+    });
+
+    return {
+      data: response.data,
+      status: response.status,
+    };
+  } catch (error: any) {
+    console.error("API call failed:", error.message);
+    throw new Error(error.response?.data?.message || "API request failed");
+  }
+};

@@ -24,8 +24,8 @@ export const DeviceReviewsSecx = ({ data }: { data: StoreDevice }) => {
   };
 
   return (
-    <section className="px-[8.5rem] flex flex-col pt-5 pb-4">
-      <div className="px-5 py-3">
+    <section className="px-[8.5rem] flex flex-col pt-5 pb-4 ">
+      <div className="px-5 py-3 ">
         <h3 className="text-[#0D0C22] font-gilroyMedium text-xl 2xl:text-2xl pb-2">
           Reviews
         </h3>
@@ -34,23 +34,23 @@ export const DeviceReviewsSecx = ({ data }: { data: StoreDevice }) => {
             <h2 className="font-gilroyBold text-6xl 2xl:text-[5rem]">
               {overallRating}
             </h2>
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-end flex-wrap">
               <RatingStarComp rating={overallRating ?? ""} className="size-7" />
               <span className="text-[#858585] font-gilroyMedium text-base">{`(${overallReviews} Reviews)`}</span>
             </div>
 
             <CreateReview deviceId={data?._id ?? ""}>
-              <span className="rounded-md  bg-black text-white hover:text-black hover:bg-white hover:ring-1 hover:ring-black font-gilroyMedium text-base 2xl:text-2xl  flex justify-center items-center w-72 h-10 mt-2">
+              <span className="rounded-md  bg-black text-white hover:text-black hover:bg-white hover:ring-1 hover:ring-black font-gilroyMedium text-base 2xl:text-2xl  flex justify-center items-center h-10 mt-2">
                 Write a Review
               </span>
             </CreateReview>
           </div>
 
           <div className="w-[68%] flex flex-col-reverse gap-y-2.5 -mt-4">
-            {data.ratingDetails!.map((v) => (
+            {data?.ratingDetails?.map((v) => (
               <div
                 key={v.stars}
-                className="flex gap-1.5 justify-between items-center"
+                className="flex gap-4 max-[1300px]:gap-6 justify-between items-center"
               >
                 <div className="whitespace-nowrap font-gilroyMedium w-[7%]">{`${v.stars} stars`}</div>
                 <div className="rounded-2xl h-[6px] relative bg-[#F2F6FB]  w-[83%]">

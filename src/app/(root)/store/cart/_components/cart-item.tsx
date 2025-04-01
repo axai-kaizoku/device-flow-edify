@@ -8,16 +8,40 @@ import {
   updateCartItemQuantity,
 } from "@/server/cartActions";
 import { useRouter } from "next/navigation";
+import { useAlert } from "@/hooks/useAlert";
 
 export const CartItem = ({ data }: { data: DeviceWithQty }) => {
   const router = useRouter();
+  const { showAlert } = useAlert();
   const [quantity, setQuantity] = useState(data?.quantity);
 
+  // const handleAddToCart = async (device: DeviceWithQty) => {
+
+  //   const newQuantity = quantity + 1;
+  //   setQuantity(newQuantity); // Update local quantity first
+  //   await updateCartItemQuantity(device?._id!, newQuantity); // Call API to update quantity
+  //   router.refresh();
+  // };
+
   const handleAddToCart = async (device: DeviceWithQty) => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity); // Update local quantity first
-    await updateCartItemQuantity(device?._id!, newQuantity); // Call API to update quantity
-    router.refresh();
+    const availableQty = data?.qty ? data.qty : 0; // Get available quantity from API
+    const newQuantity = quantity + 1; // Calculate new quantity
+
+    // Check if the new quantity exceeds available quantity
+    if (newQuantity > availableQty) {
+      // Optionally, you can show a message to the user
+      showAlert({
+        isFailure: true,
+        title: "Failed to add to cart",
+        description: "Cannot increase quantity beyond available stock.",
+        key: "stock-error",
+      });
+      return; // Stop execution if the new quantity exceeds available quantity
+    }
+
+    setQuantity(newQuantity); // Update local quantity
+    await updateCartItemQuantity(device?._id ?? "", newQuantity); // Call API to update quantity
+    router.refresh(); // Refresh the router
   };
 
   const handleRemoveFromCart = async (device: DeviceWithQty) => {
@@ -54,12 +78,16 @@ export const CartItem = ({ data }: { data: DeviceWithQty }) => {
               >
                 {data?.device_name ?? ""}
               </span>
-              <div className="flex gap-2 items-center -mt-0.5 font-gilroyMedium">
-                <span className="text-sm text-[#A2A3B1]">Model:</span>
-                <span className="text-base text-[#17183B]">
-                  {data?.custom_model ?? ""}
-                  i5 5th gen
-                </span>
+              <div className="flex gap-2 items-center -mt-0.5 font-gilroyMedium flex-wrap">
+                <div className="flex items-center">
+                  <span className="text-sm text-[#A2A3B1]">Model:</span>
+                  <span className="text-base text-[#17183B]">
+                    {data?.custom_model ?? "i5 5th gen"}
+                  </span>
+                </div>
+                <div className="py-0.5 mx-1 max-[1347px]:-ml-1  px-2 text-xs font-gilroyMedium bg-green-100 text-green-600 rounded-full">
+                  {`Avilable qty: ${data?.qty}`}
+                </div>
               </div>
               <span className="text-xs text-green-600 font-gilroyMedium">
                 Free Shipping

@@ -9,12 +9,14 @@ export default function EditTeam({
   title,
   description,
   image,
+  onRefresh
 }: {
   children: React.ReactNode;
   _id?: string;
   title?: string;
   description?: string;
   image?: string;
+  onRefresh: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -29,6 +31,7 @@ export default function EditTeam({
           title={title}
           description={description}
           image={image}
+          onRefresh={onRefresh}
         />
       </SheetContent>
     </Sheet>

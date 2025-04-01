@@ -14,65 +14,90 @@ import {
 } from "@/server/userActions";
 import { notFound, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import {
-  bulkUploadKeys,
-  designations,
-  employments,
-  genders,
-} from "./helper/utils";
+import { bulkUploadKeys, employments, genders } from "./helper/utils";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { FormField } from "../../settings/_components/form-field";
-import { Icons } from "@/components/icons";
 import { ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Spinner from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
+import UploadImageIcon from "@/icons/UploadImageIcon";
+import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
   isEditForm?: boolean;
   userData?: CreateUserArgs | User;
+  onRefresh: () => Promise<void>;
 }
 
-export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
+export const UserForm = ({
+  closeBtn,
+  isEditForm,
+  userData,
+  onRefresh,
+}: UserFormProps) => {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { openToast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress every 100ms
+  };
 
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstN: userData ? userData.first_name : "",
-    phone: userData ? userData.phone : "",
-    email: userData ? userData.email : "",
-    image: userData ? userData.image : "",
-    designation: userData ? userData.designation : "",
-    team: userData?.teamId
+    firstN: userData ? userData?.first_name : "",
+    phone: userData ? userData?.phone : "",
+    email: userData ? userData?.email : "",
+    managementType: userData?.role
+      ? userData?.role === 4
+        ? "CEO"
+        : userData.role === 3
+        ? "Upper Management"
+        : "Employee"
+      : "",
+    image: userData ? userData?.image : "",
+    designation: userData ? userData?.designation : "",
+    team: userData?.team[0]?._id
       ? // @ts-ignore
-        { name: userData.teamId.title, value: userData.teamId._id }
+      { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
           // @ts-ignore
-          name: userData.reporting_manager.email,
+          name: userData?.reporting_manager?.email,
           // @ts-ignore
-          value: userData.reporting_manager._id,
+          value: userData?.reporting_manager?._id,
         }
       : { name: "", value: "" },
-    gender: userData ? userData.gender : "",
-    offerLetter: userData ? userData.offerLetter : "",
-    employment: userData ? userData.employment_type : "",
-    dob: userData ? userData.date_of_birth : "",
-    onboarding: userData ? userData.onboarding_date : "",
+    gender: userData ? userData?.gender : "",
+    offerLetter: userData ? userData?.offerLetter : "",
+    employment: userData ? userData?.employment_type : "",
+    dob: userData ? userData?.date_of_birth : "",
+    onboarding: userData ? userData?.onboarding_date : "",
   });
 
   const [errors, setErrors] = useState({
     firstN: "",
     phone: "",
     email: "",
+    managementType: "",
     image: "",
     designation: "",
     team: "",
@@ -113,8 +138,14 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const validateStepTwo = () => {
     const newErrors = {
       designation: formData.designation ? "" : "Designation is required",
+      managementType: formData.managementType
+        ? ""
+        : "Management type is required",
       // team: formData.team.value ? "" : "Team is required",
-      reportM: formData.reportM.value ? "" : "Reporting Manager is required",
+      reportM:
+        formData.managementType === "Employee" && !formData.reportM.value
+          ? "Reporting Manager is required"
+          : "",
       employment: formData.employment ? "" : "Employment type is required",
       // offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
       onboarding: formData.onboarding ? "" : "Onboarding date is required",
@@ -144,14 +175,36 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       phone: formData.phone,
       image: formData.image,
       designation: formData.designation,
-      teamId: formData.team.value,
       onboarding_date: formData.onboarding,
-      reporting_manager: formData.reportM.value,
+      // reporting_manager: formData.reportM.value,
       employment_type: formData.employment,
       // offerLetter: formData.offerLetter,
       date_of_birth: formData.dob,
       gender: formData.gender,
     };
+
+    if (formData.team.value && formData.team.value.length !== 0) {
+      // @ts-ignore
+      user.teamId = formData.team.value;
+    }
+
+    if (formData.reportM.value && formData.reportM.value.length !== 0) {
+      // @ts-ignore
+      user.reporting_manager = formData.reportM.value;
+    }
+
+    if (formData.managementType && formData.managementType.length !== 0) {
+      let role = 1;
+      if (formData.managementType === "CEO") {
+        role = 4;
+      } else if (formData.managementType === "Upper Management") {
+        role = 3;
+      } else if (formData.managementType === "Employee") {
+        role = 1;
+      }
+      // @ts-ignore
+      user.role = role;
+    }
 
     try {
       if (isEditForm) {
@@ -160,20 +213,24 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           await updateUser(userData?._id!, user);
           setLoading(false);
           openToast("success", "User update success !");
-          router.refresh();
+          onRefresh();
+          // router.refresh();
           closeBtn(false);
-        } catch (error) {
+        } catch (error: any) {
           showAlert({
             title: "Can't update user",
-            description: "Something went wrong !!",
+            description: "Phone no. or email is used already !",
             isFailure: true,
             key: "update-user-failure",
           });
+        } finally {
+          setLoading(false);
         }
       } else {
         setLoading(true);
         try {
-          await createUser(user);
+          const res = await createUser(user);
+          // console.log(res)
           setLoading(false);
           showAlert({
             title: "WOHOOO!! 🎉",
@@ -187,6 +244,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
           setFormData({
             firstN: "",
             phone: "",
+            managementType: "",
             email: "",
             image: "",
             designation: "",
@@ -206,6 +264,8 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
             isFailure: true,
             key: "create-user-failure",
           });
+        } finally {
+          setLoading(false);
         }
 
         setLoading(false);
@@ -217,8 +277,10 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
 
   const fileImageRef = useRef<HTMLInputElement | null>(null);
   // Handle file selection
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const isValidSize = file.size <= 1024 * 1024; // 1MB
       const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
@@ -226,16 +288,48 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       );
 
       if (isValidSize && isValidType) {
-        const res = await getImageUrl({ file }, "team");
-        setFormData((prev) => ({ ...prev, image: res.data }));
-        setErrors((prev) => ({
-          ...prev,
-          image: "",
-        }));
+        setIsUploading(true);
+        simulateProgress();
+        try {
+          const res = await getImageUrl({ file });
+
+          setFormData((prev) => ({
+            ...prev,
+            image: res.fileUrl, // Ensure `res.url` contains the S3 URL.
+          }));
+
+          setErrors((prev) => ({
+            ...prev,
+            image: "",
+          }));
+        } catch (error) {
+          openToast("error", "Image upload failed");
+          setErrors((prev) => ({
+            ...prev,
+            image: "Failed to upload the image. Please try again.",
+          }));
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
           image: "Only JPG, JPEG, or PNG files under 1MB are allowed.",
+        }));
+      }
+    } else {
+      if (formData.gender === "Male") {
+        setFormData((prev) => ({
+          ...prev,
+          image:
+            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png",
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          image:
+            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png",
         }));
       }
     }
@@ -244,7 +338,9 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
   const fileOfferLetterRef = useRef<HTMLInputElement | null>(null);
   const [offerLetter, setOfferLetter] = useState<File | null>(null);
 
-  const handleOfferLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOfferLetterChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       const isValidSize = file.size <= 1024 * 1024 * 5; // Max 5MB size
@@ -256,7 +352,17 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       ].includes(file.type);
 
       if (isValidSize && isValidType) {
-        setOfferLetter(file);
+        setIsUploading(true);
+        simulateProgress();
+        try {
+          const res = await getImageUrl({ file });
+          setOfferLetter(res?.fileUrl);
+        } catch (error) {
+          openToast("error", "Image upload failed");
+        } finally {
+          setIsUploading(false); // Stop showing the progress bar
+          setProgress(0);
+        }
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -290,7 +396,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
       <div className="flex relative flex-col justify-start items-start pb-1 px-1 space-y-4 gap-1 h-full">
         <div className="flex justify-start items-center gap-4 font-gilroySemiBold">
           <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-            <Icons.user_form_icon className="size-6" />
+            <UserFormProfileIcon className="size-6" />
           </div>
           <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
             {isEditForm ? "Edit Employee " : "Add Employee"}
@@ -310,6 +416,17 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 bulkApi={bulkUploadUsers}
                 closeBtn={() => closeBtn(false)}
                 requiredKeys={bulkUploadKeys}
+                sampleData={{
+                  first_name: "XXXX YYYY",
+                  designation: "Engineer",
+                  email: "demo@exampledemo.com",
+                  phone: "1234567890",
+                  employment_type: "Full time",
+                  date_of_birth: "09/12/1992",
+                  gender: "Male",
+                  onboarding_date: "28/01/2020",
+                  team_code: "ABCDEF"
+                }}
               />
             </div>
           ) : null
@@ -341,9 +458,23 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 error={errors.firstN}
                 id="name"
                 value={formData?.firstN ?? ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, firstN: e.target.value }))
-                }
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  const nameRegex = /^[A-Za-z\s]*$/;
+
+                  if (!inputValue || nameRegex.test(inputValue)) {
+                    setFormData((prev) => ({ ...prev, firstN: inputValue }));
+
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      firstN: inputValue
+                        ? inputValue.length >= 2 && inputValue.length <= 35
+                          ? ""
+                          : "Name must be between 2 and 35 characters"
+                        : "Name is required",
+                    }));
+                  }
+                }}
                 maxLength={35}
                 minLength={2}
                 type="text"
@@ -354,8 +485,21 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   Upload picture
                 </label>
 
-                {formData.image ? (
-                  <div className="relative w-24 h-20 rounded-xl overflow-hidden group">
+                {isUploading ? (
+                  <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                    <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                      <div
+                        className="h-2 bg-black rounded-full"
+                        style={{
+                          width: `${progress}%`,
+                          transition: "width 0.1s linear",
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-black">{progress}%</span>
+                  </div>
+                ) : formData.image ? (
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
                     <img
                       src={formData.image}
                       alt={formData.image}
@@ -375,7 +519,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                     onClick={() => fileImageRef.current?.click()}
                   >
                     <div className="flex flex-col justify-center items-center">
-                      <Icons.uploadImage className="size-5" />
+                      <UploadImageIcon className="size-5" />
                       <span className="text-[#0EA5E9]">Click to upload</span>
                       <p className="text-xs text-neutral-400">
                         JPG, JPEG, PNG less than 1MB
@@ -542,42 +686,78 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 <h1 className="2xl:text-2xl text-xl font-gilroySemiBold">
                   Professional Info
                 </h1>
-                <div className="z-50">
-                  <SelectInput
-                    value={formData.reportM.name || ""}
-                    optionValue={{ firstV: "first_name", secondV: "email" }}
-                    key={"user-form-reporting-manager"}
-                    placeholder="Search by name, etc"
-                    // @ts-ignore
-                    fetchOptions={searchUsers}
-                    // @ts-ignore
-                    initialOptions={fetchUsers}
-                    onSelect={(data: any) => {
+                <div className="z-50 flex-1">
+                  <SelectDropdown
+                    options={[
+                      { label: "CEO", value: "CEO" },
+                      { label: "Upper Management", value: "Upper Management" },
+                      { label: "Employee", value: "Employee" },
+                    ]}
+                    onSelect={(data) =>
                       setFormData((prev) => ({
                         ...prev,
-                        reportM: { name: data.email, value: data._id },
-                      }));
-                    }}
-                    label="Reporting Manager"
+                        managementType: data?.value,
+                      }))
+                    }
+                    label="Management Type"
+                    value={`${formData?.managementType ?? ""}`}
+                    placeholder="eg: Employee"
                     className={cn(
-                      errors.reportM ? "border-destructive/80 border" : ""
+                      errors.managementType
+                        ? "border-destructive/80 "
+                        : "border-[#5F5F5F]",
+                      "rounded-xl border"
                     )}
                   />
-                  {errors.reportM && (
-                    <p className="text-destructive font-gilroyMedium text-xs">
-                      {errors.reportM}
+                  {errors.managementType && (
+                    <p className="mt-0.5 font-gilroyMedium text-xs text-destructive">
+                      {errors.managementType}
                     </p>
                   )}
                 </div>
-
+                {formData.managementType === "Employee" && (
+                  <div className="z-30">
+                    <SelectInput
+                      value={formData.reportM.name || ""}
+                      optionValue={{ firstV: "first_name", secondV: "email" }}
+                      key={"user-form-reporting-manager"}
+                      placeholder="Search by name, etc"
+                      // @ts-ignore
+                      fetchOptions={searchUsers}
+                      // @ts-ignore
+                      initialOptions={fetchUsers}
+                      onSelect={(data: any) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          reportM: { name: data.email, value: data._id },
+                        }));
+                      }}
+                      label="Reporting Manager"
+                      className={cn(
+                        errors.reportM ? "border-destructive/80 border" : ""
+                      )}
+                    />
+                    {errors.reportM && (
+                      <p className="text-destructive font-gilroyMedium text-xs">
+                        {errors.reportM}
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="flex w-full flex-wrap items-center gap-4 py-2">
                   <div className="flex-1">
                     <FormField
                       label="Onboarding Date"
-                      id="onboarding_date"
+                      id="onboarding"
                       error={errors.onboarding}
                       name="Joining Date"
-                      value={formData?.onboarding ?? ""}
+                      value={
+                        formData?.onboarding
+                          ? new Date(formData.onboarding)
+                              .toISOString()
+                              .split("T")[0]
+                          : ""
+                      }
                       type="date"
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -618,71 +798,69 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                 </div>
 
                 <div className="flex w-full flex-wrap items-center gap-4 ">
-                  <div className="flex-1">
-                    <div className="z-20 flex-1">
-                      <SelectInput
-                        value={formData?.team?.name}
-                        optionValue={{
-                          firstV: "title",
-                          secondV: "description",
-                        }}
-                        key={"user-form-team-field"}
-                        placeholder="Search by name, etc"
-                        fetchOptions={async (query) => {
-                          const data = await fetchTeams();
-                          const filtered = data.filter((obj: any) =>
-                            obj.title
-                              .toLowerCase()
-                              .includes(query.toLowerCase())
-                          );
-                          return filtered;
-                        }}
-                        initialOptions={fetchTeams}
-                        onSelect={(data: any) => {
-                          setFormData((prev) => ({
-                            ...prev,
-                            team: { name: data.title, value: data._id },
-                          }));
-                        }}
-                        label="Team"
-                        className={cn(
-                          errors.team ? "border-destructive/80 border" : ""
-                        )}
-                      />
-
-                      {errors.designation && (
-                        <p className="mt-0.5 text-xs opacity-0 text-destructive">
-                          {errors.designation}
-                        </p>
+                  <div className="z-10 flex-1">
+                    <SelectInput
+                      value={formData?.team?.name}
+                      optionValue={{
+                        firstV: "title",
+                        secondV: "description",
+                      }}
+                      key={"user-form-team-field"}
+                      placeholder="Search by name, etc"
+                      fetchOptions={async (query) => {
+                        const data = await fetchTeams();
+                        const filtered = data.filter((obj: any) =>
+                          obj.title.toLowerCase().includes(query.toLowerCase())
+                        );
+                        return filtered;
+                      }}
+                      initialOptions={fetchTeams}
+                      onSelect={(data: any) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          team: { name: data.title, value: data._id },
+                        }));
+                      }}
+                      label="Team"
+                      className={cn(
+                        errors.team ? "border-destructive/80 border" : ""
                       )}
-                    </div>
+                    />
+
+                    {errors.team && (
+                      <p className="mt-0.5 text-xs opacity-0 text-destructive">
+                        {errors.team}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex-1">
-                    <div className="z-20 flex-1">
-                      <SelectDropdown
-                        options={designations}
-                        onSelect={(data) =>
+                    <div className="flex-1">
+                      <FormField
+                        label="Designation"
+                        id="designation"
+                        error={errors.designation}
+                        name="designation"
+                        value={formData?.designation ?? ""}
+                        type="text"
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
+
                           setFormData((prev) => ({
                             ...prev,
-                            designation: data?.value,
-                          }))
-                        }
-                        label="Role"
-                        value={`${formData?.designation ?? ""}`}
-                        placeholder="eg: Full Stack Developer"
-                        className={cn(
-                          errors.designation
-                            ? "border-destructive/80 "
-                            : "border-[#5F5F5F]",
-                          "rounded-xl border"
-                        )}
+                            designation: inputValue,
+                          }));
+
+                          setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            designation: inputValue
+                              ? ""
+                              : "Designation is required",
+                          }));
+                        }}
+                        maxLength={50}
+                        placeholder="eg. Frontend Developer"
                       />
-                      {errors.designation && (
-                        <p className="mt-0.5 text-xs text-destructive">
-                          {errors.designation}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -692,10 +870,23 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                   <label className="font-gilroyMedium text-black text-base">
                     Upload Offer Letter
                   </label>
-                  {offerLetter ? (
-                    <div className="relative w-24 h-20 bg-[#F5F5F5] rounded-xl p-4">
+                  {isUploading ? (
+                    <div className="w-full h-24 flex flex-col items-center justify-center gap-2">
+                      <div className="w-3/4 h-2 bg-gray-200 rounded-full">
+                        <div
+                          className="h-2 bg-black rounded-full"
+                          style={{
+                            width: `${progress}%`,
+                            transition: "width 0.1s linear",
+                          }}
+                        ></div>
+                      </div>
+                      <span className="text-sm text-black">{progress}%</span>
+                    </div>
+                  ) : offerLetter ? (
+                    <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
                       <iframe
-                        src={URL.createObjectURL(offerLetter)}
+                        src={offerLetter}
                         width="100%"
                         height="100%"
                         title="Offer Letter Preview"
@@ -715,7 +906,7 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                       onClick={() => fileOfferLetterRef?.current?.click()}
                     >
                       <div className="flex flex-col justify-center items-center">
-                        <Icons.uploadImage className="size-5" />
+                        <UploadImageIcon className="size-5" />
                         <span className="text-[#0EA5E9]">Click to upload</span>
                         <p className="text-xs text-neutral-400">
                           PDF/JPEG/PNG/JPG under 5MB
@@ -734,9 +925,10 @@ export const UserForm = ({ closeBtn, isEditForm, userData }: UserFormProps) => {
                       {errors.offerLetter}
                     </p>
                   )}
+                  <div className="pointer-events-none h-16 w-full" />
                 </div>
               </div>
-              <div className="flex gap-2 absolute -bottom-4 w-full  mt-4">
+              <div className="flex gap-2 absolute bottom-0 w-full mb-2 mt-4">
                 <Button
                   className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
                   onClick={() => setNext(0)}

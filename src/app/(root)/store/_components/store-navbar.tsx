@@ -1,8 +1,8 @@
-import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { StoreGlobalSearch } from "./store-global-search";
 import { CartComponent } from "./cart-count";
 import { StoreNavbarWrapper } from "./store-navbar-wrapper";
+import EdifyLogo from "@/icons/EdifyLogo";
 
 export default function StoreNavbar() {
   return (
@@ -11,7 +11,7 @@ export default function StoreNavbar() {
         <nav className="flex items-center justify-between w-full h-full">
           <div className="flex justify-between w-[68%] 2xl:w-[65%] items-center">
             <Link href="/store">
-              <Icons.product_logo />
+              <EdifyLogo />
             </Link>
             <div className="flex text-base font-gilroySemiBold text-black gap-12">
               <Link href="/store?tab=best_sellers#best_sellers">

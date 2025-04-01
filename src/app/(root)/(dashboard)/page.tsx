@@ -13,8 +13,13 @@ export default async function Dashboard() {
   return (
     <>
       {/* {JSON.stringify(sess, null, 2)} */}
-      {sess?.user.user.role === 2 ? <AdminDashboard /> : null}
-      {sess?.user.user.role === 1 ? <UserDashboard /> : null}
+      {sess?.user.user.role === 2 ||
+      sess?.user.user.role === 3 ||
+      sess?.user.user.role === 4 ? (
+        <AdminDashboard />
+      ) : null}
+
+      {sess?.user.user.role === 1 ? <UserDashboard  /> : null}
       {/* <AdminDashboard /> */}
     </>
   );

@@ -10,6 +10,8 @@ import {
 } from "../components/ui/dialog";
 import { Button } from "../components/buttons/Button";
 import { Icons } from "../components/icons";
+import WarningDelete from "@/icons/WarningDelete";
+import AlertSuccess from "@/icons/AlertSuccess";
 
 interface AlertContextValue {
   showAlert: (options: AlertOptions) => void;
@@ -56,9 +58,9 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
                 }`}
               >
                 {currentAlert.isFailure ? (
-                  <Icons.warning_delete />
+                  <WarningDelete />
                 ) : (
-                  <Icons.success_checkmark />
+                  <AlertSuccess />
                 )}
               </div>
             </div>

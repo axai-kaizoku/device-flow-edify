@@ -14,7 +14,7 @@ export const RenderIcon = ({report}:{report:report}) =>{
             </div>
           </div>
         );
-      } else if (report?.title.toLowerCase().startsWith('deleted')) {
+      } else if (report?.title.toLowerCase().startsWith('inactive')) {
         return (
           <div className='bg-[#FFE8E8] rounded-[17px] w-11 h-11 flex justify-center items-center'>
             <div className='rounded-[13px] bg-[#FED9D9] p-2 w-9 h-9 flex justify-center items-center'>

@@ -1,21 +1,22 @@
 "use client";
-import { Icons } from "@/components/icons";
 import { Org } from "@/server/orgActions";
 import { MapPin, Pencil, Trash2 } from "lucide-react";
 import React from "react";
 import { DeleteAddress } from "./delete-address";
 import EditAddress from "./edit-address";
 import CreateAddress from "./create-address";
+import LocationGreenIcon from "@/icons/LocationGreenIcon";
+import LocationOrange from "@/icons/LocationOrange";
 
 function SettingAddress({ data }: { data: Org }) {
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between mb-1">
-        <h1 className="text-gray-400 font-gilroySemiBold  text-lg ">
+      <div className="flex justify-between mb-4">
+        <h1 className="text-gray-400 font-gilroySemiBold mt-2 text-lg ">
           Office Address ({data?.office_address?.length || 0})
         </h1>
 
-        <CreateAddress>
+        <CreateAddress totalAddresses={data?.office_address}>
           <div className="flex items-center relative py-1.5 gap-1.5   pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
             <MapPin className=" size-5 -mt-0.5" />
             <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
@@ -28,13 +29,13 @@ function SettingAddress({ data }: { data: Org }) {
         {data?.office_address?.map((address) => (
           <div
             key={address?._id}
-            className="flex flex-col relative w-[30%] rounded-[25px] border border-gray-300 bg-white backdrop-blur-md  px-5 pb-5 pt-4 "
+            className="flex flex-col relative w-[calc(33.33%-24px)] rounded-[25px] border border-gray-300 bg-white backdrop-blur-md  px-5 pb-5 pt-4 "
           >
             <div className="flex items-center gap-2">
               {address?.isPrimary ? (
-                <Icons.settings_green_location />
+                <LocationGreenIcon />
               ) : (
-                <Icons.settings_orange_location />
+                <LocationOrange />
               )}
               <div>
                 <div className="flex gap-8">

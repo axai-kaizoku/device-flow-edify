@@ -19,14 +19,14 @@ export default async function TeamPage({ params }: TeamPageProps) {
         <div className="bg-white p-3 my-6  rounded-3xl shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <TeamHeader
-              image={data?.image ?? ""}
+              image={data?.image}
               title={data?.title ?? "-"}
               description={data?.description ?? "-"}
               manager={data.manager}
             />
             <TeamActions team={data} />
           </div>
-          <TeamMembers id={params?.id ?? ""} />
+          <TeamMembers teamData={data} />
         </div>
       </CombinedContainer>
     );

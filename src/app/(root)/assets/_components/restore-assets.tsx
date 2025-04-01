@@ -13,14 +13,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import Spinner from "@/components/Spinner";
-import { Icons } from "@/components/icons";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const RestoreDevice = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -33,7 +35,7 @@ export const RestoreDevice = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <Icons.warning_restore />
+          <WarningIcon />
         </div>
 
         {/* Title */}
@@ -63,7 +65,8 @@ export const RestoreDevice = ({
                 try {
                   await updateDevice(id!, { deleted_at: null });
                   setOpen(false);
-                  router.refresh();
+                  // router.refresh();
+                  onRefresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

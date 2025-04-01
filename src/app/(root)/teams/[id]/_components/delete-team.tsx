@@ -14,16 +14,21 @@ import { deleteTeam } from "@/server/teamActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
+import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteTeam = ({
   id,
   children,
+  onRefresh
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
+  const { openToast } = useToast();
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -31,8 +36,9 @@ export const DeleteTeam = ({
       try {
         await deleteTeam(id);
         setOpen(false);
-        router.push("/teams");
-        router.refresh();
+        openToast('success', "Team Deleted Successfully!");
+        // router.push("/teams");
+        onRefresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the team.",
@@ -55,7 +61,7 @@ export const DeleteTeam = ({
           {/* Warning Icon */}
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 

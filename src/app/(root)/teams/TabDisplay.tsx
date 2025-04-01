@@ -10,21 +10,32 @@ import {
 } from "@/server/teamActions";
 import TeamsMain from "./_components/teams-main";
 import DeletedTeams from "./_components/deleted-teams";
-import { Search, Plus, Download, Loader } from "lucide-react"; // Importing icons from lucide-react
+import { Search, Plus, Download, Loader, Send } from "lucide-react"; // Importing icons from lucide-react
 import CreateTeam from "./_components/create-team";
-import { Employee } from "../_org-chart/_components/data";
+import { Employee, mapEmployeeData } from "../_org-chart/_components/data";
 import Org from "../_org-chart/_components/orgChart";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
-import Spinner from "@/components/Spinner";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import InvitePeople from "../people/[id]/_components/invite-people";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { HierarchyResponse } from "@/server/userActions";
 
 interface TabDisplayProps {
   teams: TeamsResponse;
   deletedTeams: TeamsResponse;
-  orgData: Employee;
+  orgData: any;
 }
 
 function TabDisplay({ orgData }: TabDisplayProps) {
+  const userData = useSelector((state: RootState) => state.auth.userData);
+  const actualData: Employee = {
+    children: mapEmployeeData(orgData),
+    designation: userData?.orgId.name || '',
+    name: userData?.orgId.name || '',
+    image: "/media/sidebar/profile.svg",
+  };
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active_teams",
   });
@@ -103,15 +114,47 @@ function TabDisplay({ orgData }: TabDisplayProps) {
     fetchTabData();
   }, [activeTab]);
 
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      const query = {
+        searchQuery: searchTerm || "",
+      };
+      let res: TeamsResponse | null = null;
+  
+      if (activeTab === "active_teams") {
+        res = await fetchActiveTeams(query);
+      } else if (activeTab === "inactive_teams") {
+        res = await fetchInactiveTeams(query);
+      }
+  
+      // Update the state with fresh data
+      setTeams(res);
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+      showAlert({
+        title: "Something went wrong !!",
+        description: "Failed to refresh data. Please try again.",
+        isFailure: true,
+        key: "refresh-error-team",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   const renderContent = () => {
     switch (activeTab) {
       case "active_teams":
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
-              <TeamsMain teams={teams} setTeams={setTeams} />
+              <TeamsMain teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
             )}
           </>
         );
@@ -119,14 +162,16 @@ function TabDisplay({ orgData }: TabDisplayProps) {
         return (
           <>
             {loading ? (
-              <Spinner />
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
             ) : (
-              <DeletedTeams teams={teams} setTeams={setTeams} />
+              <DeletedTeams teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
             )}
           </>
         );
       case "org":
-        return <Org data={orgData} />;
+        return <Org data={actualData} />;
       default:
         return null;
     }
@@ -175,7 +220,7 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 placeholder="Search teams..."
               />
             </div>
-            <CreateTeam>
+            <CreateTeam onRefresh={refreshData}>
               <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
                 <Plus className="text-[#6C6C6C]  size-5" />
                 <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
@@ -183,6 +228,14 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 </span>
               </div>
             </CreateTeam>
+            <InvitePeople>
+              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+                <Send className="text-[#6C6C6C]  size-4" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                  Invite People
+                </span>
+              </div>
+            </InvitePeople>
 
             {/* <button className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
               <Download size={16} /> 

@@ -37,7 +37,7 @@ export default function PaymentMethods({
 
   const handlePayment = (orderId: string, totalPrice: number) => {
     const options = {
-      key: "rzp_test_F05ke1JEbCqXlE", // Use your test/live key here
+      key: "rzp_live_08aII1Mfq4uUFm", // Use your test/live key here
       amount: totalPrice, // Amount in paise
       currency: "INR",
       name: "Edify",
@@ -48,13 +48,16 @@ export default function PaymentMethods({
       handler: function (response: any) {
         if (response?.razorpay_payment_id) {
           router.refresh();
-          dispatch(
-            setPaymentData({
-              paymentId: response?.razorpay_payment_id,
-              amount: totalPrice,
-            })
-          );
           router.push(`/store/cart/checkout/payment-success`);
+          setTimeout(() => {
+            dispatch(
+              setPaymentData({
+                paymentId: response?.razorpay_payment_id as string,
+                amount: totalPrice,
+                orderId
+              })
+            );
+          }, 0);
         }
       },
       prefill: {

@@ -14,17 +14,22 @@ import { updateTeam } from "@/server/teamActions";
 import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
+import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const PermanentTeamDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [initText, setInitText] = useState("Are you sure?");
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -33,7 +38,7 @@ export const PermanentTeamDelete = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
         </div>
 
@@ -62,8 +67,9 @@ export const PermanentTeamDelete = ({
                 try {
                   updateTeam(id!, { orgId: null });
                   setOpen(false);
-
-                  router.refresh();
+                  openToast('success', "Team Deleted Successfully!");
+                  // router.refresh();
+                  onRefresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

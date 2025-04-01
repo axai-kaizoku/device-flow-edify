@@ -7,19 +7,22 @@ import { Icons } from "@/components/icons";
 import { TeamsResponse } from "@/server/teamActions";
 import { teamIcons } from "../icons";
 import CreateTeam from "./create-team";
+import { Trash2 } from "lucide-react";
+import RestoreIcon from "@/icons/RestoreIcon";
 
 interface DeletedTeamsProps {
   teams: TeamsResponse | null;
   setTeams: React.Dispatch<React.SetStateAction<TeamsResponse | null>>;
+  onRefresh: () => Promise<void>;
 }
 
-export default function DeletedTeams({ teams, setTeams }: DeletedTeamsProps) {
+export default function DeletedTeams({ teams, setTeams, onRefresh }: DeletedTeamsProps) {
   return (
     <>
       {teams?.teams?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <teamIcons.no_team_display />
-          <CreateTeam>
+          <CreateTeam onRefresh={onRefresh}>
             <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
               Add Team
             </div>
@@ -33,16 +36,15 @@ export default function DeletedTeams({ teams, setTeams }: DeletedTeamsProps) {
           setTeams={setTeams}
           renderButtons={(team) => (
             <div className="flex gap-4">
-              <PermanentTeamDelete id={team?._id!}>
+              <PermanentTeamDelete id={team?._id!} onRefresh={onRefresh}>
                 <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.trashUpper />
-                  <Icons.trash className="size-4 cursor-pointer" />
+                  <Trash2 className="size-5 cursor-pointer" />
                 </div>
               </PermanentTeamDelete>
 
-              <RestoreTeam id={team?._id!}>
+              <RestoreTeam id={team?._id!} onRefresh={onRefresh}>
                 <div className="group duration-300 hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Icons.restore className="size-5 cursor-pointer" />
+                  <RestoreIcon className="size-5 cursor-pointer" />
                 </div>
               </RestoreTeam>
             </div>

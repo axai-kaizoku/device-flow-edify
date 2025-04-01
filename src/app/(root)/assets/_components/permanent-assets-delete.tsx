@@ -13,13 +13,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const PermanentAssetsDelete = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -31,7 +34,7 @@ export const PermanentAssetsDelete = ({
         {/* Warning Icon */}
         <div className="flex mb-1 justify-center ">
           <div>
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
         </div>
 
@@ -60,8 +63,9 @@ export const PermanentAssetsDelete = ({
                 try {
                   await updateDevice(id!, { orgId: null });
                   setOpen(false);
-                  router.push("/assets?tab=inactive_assets");
-                  router.refresh();
+                  onRefresh();
+                  // router.push("/assets?tab=inactive_assets");
+                  // router.refresh();
                 } catch (e: any) {}
               }
             }}

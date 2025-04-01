@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { fetchUsers, searchUsers } from "@/server/userActions";
 import { Input } from "../inputs/Input";
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
+import DropdownArrowUp from "@/icons/DropdownArrowUp";
 
 export type Option = {
   _id: string;
@@ -58,13 +58,17 @@ export const SelectInput = ({
 
   // Fetch options based on debounced query
   useEffect(() => {
+    if (!isDropdownOpen) return; // Don't call API when dropdown is closed
+
     const fetchData = async () => {
       try {
-        const apiData = debouncedQuery
-          ? await fetchOptions(debouncedQuery)
-          : await initialOptions();
-
-        setOptions([...apiData]);
+        if (debouncedQuery) {
+          const apiData = await fetchOptions(debouncedQuery);
+          setOptions([...apiData]);
+        } else {
+          const apiData = await initialOptions();
+          setOptions([...apiData]);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -140,6 +144,13 @@ export const SelectInput = ({
     onSelect(option);
   };
 
+  const handleFocus = () => {
+    setIsDropdownOpen(true);
+    if (!options.length) {
+      initialOptions().then(setOptions).catch(console.error);
+    }
+  };
+
   return (
     <>
       <div className="group relative z-40" ref={dropdownRef}>
@@ -152,20 +163,20 @@ export const SelectInput = ({
         <div className="">
           <Input
             id={label}
-            className={cn("pr-10 cursor-pointer", className)} // Add padding-right to avoid overlapping the icon
+            className={cn("pr-10 cursor-pointer dropdownButton", className)} // Add padding-right to avoid overlapping the icon
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setIsDropdownOpen(true);
               setHighlightedIndex(null);
             }}
-            onFocus={() => setIsDropdownOpen(true)}
+            onFocus={handleFocus}
             placeholder={placeholder ?? "Search or select"}
             type="text"
           />
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
-            <Icons.dropdownArrowUp
+            <DropdownArrowUp
               className={cn(
                 "size-3 ml-4 mr-3.5 text-gray-500",
                 isDropdownOpen ? "" : "transform -scale-y-100"
@@ -175,7 +186,7 @@ export const SelectInput = ({
         </div>
         {isDropdownOpen ? (
           options.length ? (
-            <div className="absolute rounded-xl z-30 w-full mt-2 bg-white border border-primary shadow-lg max-h-52 overflow-y-auto">
+            <div className="absolute dropdown-list rounded-xl z-30 w-full mt-2 bg-white border border-primary shadow-lg max-h-52 overflow-y-auto">
               {options?.map((option, index) => (
                 <div
                   key={option?._id}

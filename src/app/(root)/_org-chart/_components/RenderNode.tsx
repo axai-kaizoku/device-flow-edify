@@ -57,7 +57,7 @@ export const renderCustomNodeElement = ({
               ></div>
             )}
             <img
-              src={nodeDatum?.profile || "https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://fdczvxmwwjwpwbeeqcth.supabase.co/storage/v1/object/public/images/50dab922-5d48-4c6b-8725-7fd0755d9334/3a3f2d35-8167-4708-9ef0-bdaa980989f9.png"}
+              src={nodeDatum?.image || "https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://fdczvxmwwjwpwbeeqcth.supabase.co/storage/v1/object/public/images/50dab922-5d48-4c6b-8725-7fd0755d9334/3a3f2d35-8167-4708-9ef0-bdaa980989f9.png"}
               alt={nodeDatum?.name}
               className="w-12 h-12 rounded-[50.775px] object-fit"
             />
@@ -68,23 +68,21 @@ export const renderCustomNodeElement = ({
             <p className="text-[9.701px] font-gilroyMedium text-[#7C7C7C]">
               {nodeDatum.attributes?.designation}
             </p>
-            <p className="text-[9.701px] font-gilroyMedium text-[#7C7C7C]">
-              ED001
-            </p>
+           
             {isCEO ? (
               <div className="flex absolute -bottom-3 justify-center items-center rounded-[18.473px] border-[1.385px] border-[#F3F3F3] bg-white py-[5.389px] px-[5.9px]">
-                <div className="text-[8.108px] text-black font-gilroyMedium">
+                <div className="text-[10px] text-black font-gilroyMedium">
                   {childrenCount} Members
                 </div>
-                <ChevronDown className="text-black w-[10px] h-[10px]" />
+                <ChevronDown className="text-black w-[12px] h-[10px]" />
               </div>
             ) : (
               childrenCount > 0 && (
                 <div className="flex absolute -bottom-3 justify-center items-center rounded-[18.473px] border-[1.385px] border-[#F3F3F3] bg-white py-[5.389px] px-[5.9px]">
-                  <div className="text-[8.108px] text-black font-gilroyMedium">
+                  <div className="text-[10px] text-black font-gilroyMedium">
                     {childrenCount} Members
                   </div>
-                  <ChevronDown className="text-black w-[10px] h-[10px]" />
+                  <ChevronDown className="text-black w-[12px] h-[10px]" />
                 </div>
               )
             )}

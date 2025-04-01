@@ -1,39 +1,38 @@
+// import "./globals.css";
+import "./globals.min.css";
 import type { Metadata } from "next";
-import "./globals.css";
 import Providers from "@/providers";
-import { ScreenSize } from "@/components/utils/screen-size";
 import KbarWrapper from "./KbarWrapper";
 import { getSession } from "@/server/helper";
 import localFont from "next/font/local";
 import InternetCheck from "./InternetCheck";
 
 export const metadata: Metadata = {
-  title: "DeviceFlow by Edify",
-  description: "A better way to manage assets in orgs",
+  metadataBase: new URL("https://deviceflow.ai"),
+  title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+  description:
+    "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://deviceflow.ai",
+    title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    description:
+      "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+    siteName: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    images: `https://deviceflow.ai/og_main.webp`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DeviceFlow - Track and Optimize IT Asset Management | By Edify",
+    description:
+      "DeviceFlow by Edify is your comprehensive solution for tracking, managing, and optimizing IT assets. Gain actionable insights, improve efficiency, and reduce costs with our intuitive SaaS platform.",
+    images: `https://deviceflow.ai/og_main.webp`,
+  },
+  icons: {
+    icon: "/logo.png",
+  },
 };
-
-const gilroyThin = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Thin.ttf",
-  // weight: "100",
-  display: "block",
-  variable: "--font-gilroy-thin",
-});
-
-const gilroyExtraLight = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-UltraLight.ttf",
-  // weight: "200",
-  display: "block",
-
-  variable: "--font-gilroy-extralight",
-});
-
-const gilroyLight = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Light.ttf",
-  // weight: "300",
-  display: "block",
-
-  variable: "--font-gilroy-light",
-});
 
 const gilroyRegular = localFont({
   src: "../../public/fonts/gilroy2/Gilroy-Regular.ttf",
@@ -52,7 +51,7 @@ const gilroyMedium = localFont({
 });
 
 const gilroySemiBold = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-SemiBold.ttf",
+  src: "../../public/fonts/gilroy2/Gilroy-Semibold.ttf",
   // weight: "100 1000",
   display: "block",
   variable: "--font-gilroy-semibold",
@@ -66,22 +65,6 @@ const gilroyBold = localFont({
   variable: "--font-gilroy-bold",
 });
 
-const gilroyExtraBold = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-ExtraBold.ttf",
-  // weight: "800",
-  display: "block",
-
-  variable: "--font-gilroy-extrabold",
-});
-
-const gilroyBlack = localFont({
-  src: "../../public/fonts/gilroy2/Gilroy-Heavy.ttf",
-  // weight: "900",
-  display: "block",
-
-  variable: "--font-gilroy-black",
-});
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -91,25 +74,17 @@ export default async function RootLayout({
   const userRole: number | undefined = session?.user.user.role;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`
-          ${gilroyThin.variable} 
-          ${gilroyExtraLight.variable} 
-          ${gilroyLight.variable} 
           ${gilroyRegular.variable} 
           ${gilroyMedium.variable} 
           ${gilroySemiBold.variable} 
-          ${gilroyBold.variable} 
-          ${gilroyExtraBold.variable} 
-          ${gilroyBlack.variable}
+          ${gilroyBold.variable}
         `}
       >
-        <KbarWrapper userRole={userRole} /> {/* Render KbarWrapper here */}
-        <Providers>
-          <ScreenSize />
-          {children}
-        </Providers>
+        {session?.user && <KbarWrapper userRole={userRole} />}{" "}
+        <Providers>{children}</Providers>
         <InternetCheck />
       </body>
     </html>

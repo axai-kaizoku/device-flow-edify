@@ -12,27 +12,33 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
+import WarningDelete from "@/icons/WarningDelete";
+import { useToast } from "@/hooks/useToast";
 
 export const SoftDeleteAsset = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
   const [open, setOpen] = useState(false);
+  const { openToast } = useToast();
 
   const handleDelete = async () => {
     if (id) {
       try {
         await deleteDevice(id);
         setOpen(false);
-        router.push("/assets?tab=un_assigned_assets");
-        router.refresh();
+        // router.push("/assets?tab=un_assigned_assets");
+        // router.refresh();
+        openToast('success', "Asset deleted Successfully!");
+        onRefresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the asset.",
@@ -55,7 +61,7 @@ export const SoftDeleteAsset = ({
           {/* Warning Icon */}
           <div className="flex justify-center  mb-1">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
-              <Icons.warning_delete />
+              <WarningDelete />
             </div>
           </div>
 

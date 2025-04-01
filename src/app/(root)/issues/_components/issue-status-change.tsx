@@ -14,6 +14,7 @@ import { Issues, updateIssue } from "@/server/issueActions"; // Import the updat
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const IssueStatusChange = ({
   id,
@@ -21,12 +22,14 @@ export const IssueStatusChange = ({
   children,
   reOpen,
   className,
+  onRefresh,
 }: {
   id: string;
   issueData: Issues;
   children: React.ReactNode;
   reOpen: boolean;
   className?: string;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -39,7 +42,7 @@ export const IssueStatusChange = ({
         {/* Warning Icon */}
         <div className="flex justify-center ">
           <div>
-            <Icons.warning_restore />
+            <WarningIcon />
           </div>
         </div>
 
@@ -73,8 +76,7 @@ export const IssueStatusChange = ({
                     status: reOpen ? "Open" : "Closed",
                   });
                   setOpen(false);
-
-                  router.refresh(); // Optionally, refresh the page or reroute
+                  router.refresh();
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

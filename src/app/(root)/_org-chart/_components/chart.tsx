@@ -1,14 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
-import {
-  findOriginalNode,
-  mapEmployeeToRawNodeDatum,
-  nodeStyles,
-} from "./utils";
 import { renderCustomNodeElement } from "./RenderNode";
 import { Employee } from "./data";
-import { ChevronUp, Download, Link } from "lucide-react";
+import {
+  findOriginalNode,
+  mapEmployeeToRawNodeDatum
+} from "./utils";
 
 export default function OrgChart({ orgData }: { orgData: Employee }) {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
@@ -73,7 +71,7 @@ export default function OrgChart({ orgData }: { orgData: Employee }) {
         </div> */}
         <div
           id="treeWrapper"
-          className="w-full rounded-[49px]  h-[calc(70vh-35px)] p-8 bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
+          className="w-full rounded-[49px]  h-[calc(70vh-35px)]  bg-gray-50 dark:bg-gray-400 overflow-auto transition-colors border-[4px] bg-[url('/media/DottedBG.svg')] bg-cover bg-top bg-fixed bg-[rgba(247, 247, 247, 0.80)] border-[rgba(232, 232, 232, 0.50)]"
         >
           <Tree
             data={data}

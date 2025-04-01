@@ -1,17 +1,15 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Icon } from "../wind/Icons";
 import {
   AlertTriangle,
-  Bell,
-  CircleHelp,
   LogOut,
   Plus,
   RefreshCw,
+  Search,
   Settings,
   UserRound,
 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Props } from "@/app/(root)/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
@@ -20,11 +18,26 @@ import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components
 import { signOut } from "next-auth/react";
 import { Icons } from "../icons";
 import ReAssign from "@/app/(root)/assets/_components/re-assign";
-// import type { RootState } from "@/app/store/store";
+import KBarIcon from "@/icons/KBarIcons";
+import ViewProfileIcon from "@/icons/ViewProfileIcon";
 
 export default function Header({ session }: Props) {
+  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("employee-count") === "2") {
+      return;
+    } else if (session?.user.user.employeeCount === 0) {
+      sessionStorage.setItem("employee-count", "0");
+      router.push("/onboarding");
+    }
+  }, [session?.user.user.employeeCount]);
+
+  const handleMouseEnter = (href: string) => {
+    setIsHovered(true);
+    router.prefetch(href); // Prefetch the route on hover
+  };
   const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
@@ -81,8 +94,10 @@ export default function Header({ session }: Props) {
             token: session.user.user.token,
             userId: session.user.user.userId,
             email: session.user.user.email,
-            firstName: session.user.user.firstName ?? "",
-            lastName: session.user.user.lastName ?? "",
+            firstName: session.user.user.firstName!,
+            lastName: session.user.user.lastName!,
+            employeeCount: session.user.user.employeeCount ?? 0,
+            designation: session.user.user.designation,
             role: session.user.user.role ?? 1,
             orgId: session.user.user.orgId!,
             teamId: session.user.user.teamId!,
@@ -99,9 +114,16 @@ export default function Header({ session }: Props) {
   return (
     <>
       {session ? (
-        <header className="fixed  top-0 font-gilroyRegular py-12 left-0 w-full h-14 bg-transparent backdrop-blur-3xl z-50 flex justify-between items-center px-12 ">
+        <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 ">
           {/* Logo Section */}
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              router.push("/");
+            }}
+            onMouseEnter={() => handleMouseEnter("/")}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <img
               src="/media/Deviceflow.png"
               alt="Logo"
@@ -115,7 +137,7 @@ export default function Header({ session }: Props) {
               {/* Search Bar */}
               <div className="bg-transparent overflow-hidden flex justify-between items-center border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
                 <div className="flex gap-2 items-center">
-                  <Icon type="OutlinedSearch" color="gray" />
+                  <Search className="text-gray-500 size-[1.16rem]" />
                   <input
                     type="text"
                     placeholder={`Search ${currentPlaceholder}...`}
@@ -130,7 +152,7 @@ export default function Header({ session }: Props) {
                   />
                 </div>
 
-                <Icons.kbar_icon />
+                <KBarIcon.kbar_icon />
               </div>
 
               {/* Action Buttons */}
@@ -196,74 +218,83 @@ export default function Header({ session }: Props) {
               <button
                 onClick={() => router.push("/settings")}
                 className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
+                onMouseEnter={() => {
+                  handleMouseEnter("/settings");
+                }}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 <Settings className="size-5" />
               </button>
             )}
 
             {/* Query Icon */}
-            <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
+            {/* <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
               <CircleHelp className="size-5" />
-            </button>
+            </button> */}
 
             {/* Profile Icon */}
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
-              >
-                <UserRound className="size-5" />
-              </button>
-              {dropdownVisible && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg pt-0.5 pb-0.5 border border-[#5F5F5F] font-gilroyMedium"
+            {session?.user?.user?.role !== 1 ? (
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
                 >
-                  <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
-                    <button
-                      onClick={() => {
-                        if (session.user.user.role === 2) {
-                          router.push(`/people/${session.user.user.userId}`);
-                        } else {
-                          router.push("/profile");
-                        }
-                        setDropdownVisible(false);
-                      }}
-                      className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
+                  <UserRound className="size-5" />
+                </button>
+                {dropdownVisible && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg pt-0.5 pb-0.5 font-gilroyMedium"
+                  >
+                    <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                      <button
+                        onClick={() => {
+                          if (session.user.user.role === 2) {
+                            router.push(`/people/${session.user.user.userId}`);
+                          } else {
+                            router.push("/profile");
+                          }
+                          setDropdownVisible(false);
+                        }}
+                        className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
-                        <path
-                          d="M8.05589 3.62866H4.92486C4.50966 3.62866 4.11147 3.7936 3.81788 4.08719C3.52429 4.38078 3.35935 4.77897 3.35935 5.19417V14.5872C3.35935 15.0024 3.52429 15.4006 3.81788 15.6942C4.11147 15.9878 4.50966 16.1528 4.92486 16.1528H14.3179C14.7331 16.1528 15.1313 15.9878 15.4249 15.6942C15.7185 15.4006 15.8834 15.0024 15.8834 14.5872V11.4562M9.6214 9.89071L15.8834 3.62866M15.8834 3.62866V7.54244M15.8834 3.62866H11.9697"
-                          stroke="#000000"
-                          stroke-width="1.56551"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      View Profile{" "}
-                    </button>
-                  </div>
+                        <ViewProfileIcon/>
+                        View Profile{" "}
+                      </button>
+                    </div>
 
-                  <div className="h-[1px] bg-[#F3F3F3]"></div>
+                    <div className="h-[1px] bg-[#F3F3F3]"></div>
 
-                  <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
-                    <button
-                      onClick={() => signOut()}
-                      className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
-                    >
-                      <LogOut className="size-4" />
-                      <div>Logout</div>
-                    </button>
+                    <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
+                      <button
+                        onClick={() => 
+                          
+                          // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
+                          signOut()
+                           
+                          }
+                        className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
+                      >
+                        <LogOut className="size-4" />
+                        <div>Logout</div>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <div
+                className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer"
+                style={{ marginLeft: "auto", marginRight: "auto" }}
+                onClick={() => 
+                  // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
+                  signOut()
+
+                } // Center align the button
+              >
+                <LogOut className="w-5 h-5" />
+              </div>
+            )}
           </div>
         </header>
       ) : null}

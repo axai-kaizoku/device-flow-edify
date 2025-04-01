@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/useToast";
+import WarningDelete from "@/icons/WarningDelete";
 import { updateDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -54,7 +54,7 @@ export const UnassignAsset = ({
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
           <div className="flex justify-center">
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
 
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">

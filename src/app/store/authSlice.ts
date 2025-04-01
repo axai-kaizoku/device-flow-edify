@@ -5,6 +5,8 @@ export type UserData = {
   userId: string;
   email: string;
   firstName: string;
+  employeeCount: number;
+  designation:string
   lastName: string;
   role: number;
   orgId: {

@@ -8,17 +8,57 @@ export const DeviceDetailedSecx = ({ data }: { data: StoreDevice }) => {
   const [viewMore, setViewMore] = useState(false);
   const [viewFeat, setViewFeat] = useState(1);
 
+  const mockFeatures = [
+    {
+      title: "Display",
+      features: [
+        {
+          title: "Screen diagonal",
+          value: '14"',
+        },
+        {
+          title: "The screen resolution",
+          value: "1920x1080",
+        },
+        {
+          title: "The screen refresh rate",
+          value: "120 Hz",
+        },
+        {
+          title: "Screen type",
+          value: "IPS",
+        },
+      ],
+    },
+    {
+      title: "CPU",
+      features: [
+        {
+          title: "CPU",
+          value: "AMD Ryzen 5 5600U",
+        },
+        {
+          title: "Number of cores",
+          value: "6",
+        },
+      ],
+    },
+  ];
+
+  const deviceFeatures =
+    data?.deviceFeatures && data.deviceFeatures.length !== 0
+      ? data?.deviceFeatures
+      : mockFeatures;
+
   useEffect(() => {
     // Set viewFeat based on the number of device features
-    setViewFeat(
-      data?.deviceFeatures?.length! > 1 ? 1 : data?.deviceFeatures?.length!
-    );
+    setViewFeat(deviceFeatures.length! > 1 ? 1 : deviceFeatures.length!);
   }, [data]);
 
   const handleViewMore = () => {
     setViewMore(!viewMore);
     // If viewMore is true, show all features; otherwise, show only one
-    setViewFeat(viewMore ? 1 : data?.deviceFeatures?.length!);
+    setViewFeat(viewMore ? 1 : deviceFeatures.length!);
   };
 
   return (
@@ -27,7 +67,7 @@ export const DeviceDetailedSecx = ({ data }: { data: StoreDevice }) => {
       <p className="text-pretty py-3.5 font-gilroySemiBold text-[#9D9D9D] text-sm 2xl:text-base">
         {data?.description ?? ""}
       </p>
-      {data?.deviceFeatures!.slice(0, viewFeat).map((feat) => (
+      {deviceFeatures.slice(0, viewFeat).map((feat) => (
         <div key={feat?.title}>
           <h3 className="text-xl 2xl:text-2xl font-gilroySemiBold pt-4 pb-3">
             {feat?.title}
@@ -44,7 +84,7 @@ export const DeviceDetailedSecx = ({ data }: { data: StoreDevice }) => {
         </div>
       ))}
 
-      {data?.deviceFeatures?.length! > 1 && (
+      {deviceFeatures.length! > 1 && (
         <div className="flex items-center justify-center py-4">
           <button
             onClick={handleViewMore}

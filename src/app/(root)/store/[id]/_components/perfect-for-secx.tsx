@@ -1,4 +1,5 @@
-import { Icons } from "@/components/icons";
+
+import StoreProductIcons from "@/icons/StoreProductIcons";
 import { StoreDevice } from "@/server/deviceActions";
 import { BusFront, MonitorCheck } from "lucide-react";
 
@@ -6,7 +7,7 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
   const icons = [
     {
       key: "dev",
-      icon: <Icons.both_arrows />,
+      icon: <StoreProductIcons.both_arrows />,
     },
     {
       key: "finance",
@@ -18,37 +19,34 @@ export const PerfectForSecx = ({ data }: { data: StoreDevice }) => {
     },
   ];
 
-  const modifiedPerfectFor = data?.perfectFor!.map((item) => {
-    // Find a matching icon based on the title
-    const matchingIcon = icons.find((icon) =>
-      item?.title!.toLowerCase().includes(icon.key.toLowerCase())
-    );
+  const mockPerfectFor = [
+    {
+      title: "Graphic Designers",
+    },
+    {
+      title: "Engineering Team",
+    },
+    {
+      title: "IT Professionals",
+    },
+  ];
 
-    // Return the object with icon and title
-    return {
-      icon: matchingIcon ? matchingIcon.icon : <Icons.both_arrows />,
-      title: item.title,
-    };
-  });
+  const modifiedPerfectFor =
+    data?.perfectFor && data.perfectFor.length > 0
+      ? data.perfectFor
+      : mockPerfectFor.map((item) => {
+          // Find a matching icon based on the title
+          const matchingIcon = icons.find((icon) =>
+            item.title?.toLowerCase().includes(icon.key.toLowerCase())
+          );
 
-  // const perfectFor = [
-  //   {
-  //     icon: <Icons.both_arrows />,
-  //     title: "Development Team",
-  //   },
-  //   {
-  //     icon: <Icons.both_arrows />,
-  //     title: "Development Team",
-  //   },
-  //   {
-  //     icon: <Icons.both_arrows />,
-  //     title: "Development Team",
-  //   },
-  //   {
-  //     icon: <Icons.both_arrows />,
-  //     title: "Development Team",
-  //   },
-  // ];
+          // Return the object with icon and title
+          return {
+            icon: matchingIcon ? matchingIcon.icon : <StoreProductIcons.both_arrows />,
+            title: item.title || "Default Title",
+          };
+        });
+
   return (
     <section className="px-32 pt-16 pb-6">
       <h2 className="text-2xl 2xl:text-3xl font-gilroySemiBold">Perfect for</h2>

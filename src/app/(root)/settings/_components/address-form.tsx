@@ -2,14 +2,14 @@
 
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
-import { createAddress, updateAddress } from "@/server/addressActions";
+import { Address, createAddress, updateAddress } from "@/server/addressActions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { PrimarySelector } from "./primary-selector";
 import { FormField } from "./form-field";
-import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
+import { ChevronRight } from "lucide-react";
 
 export const AddressForm = ({
   closeBtn,
@@ -23,6 +23,7 @@ export const AddressForm = ({
   pinCode = "",
   landmark = "",
   isPrimary = false,
+  totalAddresses,
 }: {
   closeBtn: (value: boolean) => void;
   isEditForm?: boolean;
@@ -35,9 +36,9 @@ export const AddressForm = ({
   pinCode?: string;
   landmark?: string;
   isPrimary?: boolean;
+  totalAddresses: Address[] | undefined;
 }) => {
   const router = useRouter();
-  const { showAlert } = useAlert();
   const { openToast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -63,14 +64,18 @@ export const AddressForm = ({
   }) => {
     const errors: Record<string, string> = {};
 
-    if (!formData.title) errors.title = "Title is required";
-    if (!formData.phone) errors.phone = "Phone number is required";
-    if (!formData.address) errors.address = "Address is required";
-    if (!formData.city) errors.city = "City is required";
-    if (!formData.state) errors.state = "State is required";
-    if (!formData.pinCode) errors.pinCode = "Pin code is required";
+    if (!formData?.title) errors.title = "Title is required";
+    if (!formData?.phone) errors.phone = "Phone number is required";
+    if (!formData?.address) errors.address = "Address is required";
+    if (!formData?.city) errors.city = "City is required";
+    if (!formData?.state) errors.state = "State is required";
+    if (!formData?.pinCode) errors.pinCode = "Pin code is required";
 
     return errors;
+  };
+
+  const hasPrimaryAddress = (addresses: Address[]): boolean => {
+    return addresses?.some((address) => address?.isPrimary) || false;
   };
 
   const handleSubmit = async () => {
@@ -92,13 +97,12 @@ export const AddressForm = ({
       }
     } else {
       try {
-        await createAddress(formData);
-        showAlert({
-          isFailure: false,
-          description: "New address added !!",
-          title: "WOHOOO!! 🎉",
-          key: "create-address",
-        });
+        if (hasPrimaryAddress(totalAddresses!)) {
+          await createAddress({ ...formData, isPrimary: false });
+        } else {
+          await createAddress(formData);
+        }
+        openToast("success", "Added new address !!");
         router.refresh();
         closeBtn(false);
       } catch (error) {
@@ -126,12 +130,14 @@ export const AddressForm = ({
         className="flex relative flex-col gap-8"
       >
         {/* Primary/Secondary Selection */}
-        <PrimarySelector
-          isPrimary={formData?.isPrimary}
-          onSelect={(value) =>
-            setFormData((prev) => ({ ...prev, isPrimary: value }))
-          }
-        />
+        {!totalAddresses?.some((address) => address?.isPrimary) && (
+          <PrimarySelector
+            isPrimary={formData?.isPrimary}
+            onSelect={(value) =>
+              setFormData((prev) => ({ ...prev, isPrimary: value }))
+            }
+          />
+        )}
 
         {/* Form Fields */}
         <FormField
@@ -231,7 +237,7 @@ export const AddressForm = ({
             ) : (
               <>
                 {isEditForm ? "Edit Address" : "Submit"}
-                <Icons.arrowRight className="size-5" />
+                <ChevronRight className="size-6" />
               </>
             )}
           </Button>

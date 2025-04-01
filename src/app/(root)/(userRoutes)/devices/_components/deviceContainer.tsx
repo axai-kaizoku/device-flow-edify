@@ -14,11 +14,14 @@ import { getAllResponse, getIssueByUserId } from "@/server/issueActions";
 import { Tab } from "@/app/(root)/teams/_components/Tab";
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
+import { useAlert } from "@/hooks/useAlert";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function DeviceContainer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "devices",
   });
+  const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
 
   const [issues, setIssues] = useState<getAllResponse>([]);
@@ -36,8 +39,13 @@ function DeviceContainer() {
           setIssues(issueData);
         }
       } catch (error) {
-        console.error(`Error fetching ${type} data:`, error);
-        notFound();
+        // console.error(`Error fetching ${type} data:`, error);
+        showAlert({
+          isFailure: true,
+          key: "get-devices-user",
+          title: "Error fetching devices",
+          description: "Can't fetch devices assigned to user",
+        });
         // Optionally, handle error state or show a notification to the user
       } finally {
         setLoading(false);
@@ -58,9 +66,30 @@ function DeviceContainer() {
   const renderContent = () => {
     switch (activeTab) {
       case "devices":
-        return <Devices devices={devices} />;
+        return (
+          <>
+          {loading ? (
+            <div className="flex justify-center items-center w-full h-[500px]">
+              <DeviceFlowLoader />
+            </div>
+          ) : (<Devices devices={devices} />)
+          }
+          </>
+        );
       case "issues":
-        return <Issue issues={issues} />;
+        return (
+          <>
+          {
+            loading ? (
+              <div className="flex justify-center items-center w-full h-[500px]">
+                <DeviceFlowLoader />
+              </div>
+            ): (
+              <Issue issues={issues} />
+            )
+          }  
+          </>
+        );
 
       default:
         return null;
@@ -101,10 +130,11 @@ function DeviceContainer() {
             ))}
           </div>
 
-          <div className="flex  items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
+          <div className="flex opacity-0 pointer-events-none items-center py-1.5 gap-1  pl-3 pr-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
             <Search size={20} className="text-[#7F7F7F]" />
 
             <input
+              disabled
               className=" bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
               // value={searchTerm || ""}
               // onChange={(e) => setSearchTerm(e.target.value)}
@@ -115,14 +145,8 @@ function DeviceContainer() {
       </div>
       <div className="border mt-2"></div>
 
-      <div className="mt-4">
-        {loading ? (
-          <div className="flex justify-center items-center h-96">
-            <Spinner />
-          </div>
-        ) : (
-          renderContent()
-        )}
+      <div className="mt-4 overflow-auto">
+        {renderContent()}
       </div>
     </>
   );

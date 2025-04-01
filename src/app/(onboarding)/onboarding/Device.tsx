@@ -1,7 +1,6 @@
-// Form.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { createDevices, Device } from "@/server/deviceActions";
+import { createDevices } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import {
   FormData,
@@ -22,7 +21,7 @@ import MobileForm from "../../(root)/assets/_components/addDevices/MobileForm";
 import MobileForm2 from "../../(root)/assets/_components/addDevices/MobileForm2";
 import MonitorForm from "../../(root)/assets/_components/addDevices/MonitorForm";
 import { createPayload } from "../../(root)/assets/_components/addDevices/_components/createPayload";
-import { useAlert } from "@/hooks/useAlert";
+// import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/buttons/Button";
 import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
@@ -30,8 +29,8 @@ import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
-export const DeviceComponent = () => {
-  const { showAlert } = useAlert();
+export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: boolean) => void}) => {
+  // const { showAlert } = useAlert();
   const { openToast } = useToast();
   const [step, setStep] = useState<number>(0);
   const [success, setSuccess] = useState(false);
@@ -39,8 +38,10 @@ export const DeviceComponent = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+
   const [formData, setFormData] = useState<FormData>({
     deviceType: "",
+    userId: "",
     keyboardDetails: {
       model: "",
       invoiceFile: null,
@@ -70,10 +71,10 @@ export const DeviceComponent = () => {
       model: "",
       processor: "",
       ram: "",
-      storage: "",
+      storage: [""],
       device_name: "",
       brand: "",
-      condition: "",
+      device_condition: "",
     },
     laptopPage2: {
       serialNumber: "",
@@ -86,10 +87,10 @@ export const DeviceComponent = () => {
       model: "",
       processor: "",
       ram: "",
-      storage: "",
+      storage: [""],
       device_name: "",
       brand: "",
-      condition: "",
+      device_condition: "",
     },
     mobilePage2: {
       serialNumber: "",
@@ -141,8 +142,8 @@ export const DeviceComponent = () => {
             currentErrors.processor = "Processor is required.";
           if (!device1?.ram) currentErrors.ram = "RAM is required.";
           if (!device1?.storage) currentErrors.storage = "Storage is required.";
-          if (!device1?.condition)
-            currentErrors.condition = "Device Condition is required.";
+          if (!device1?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
         } else if (formData?.deviceType === "mobile") {
           if (!m1?.os) {
             currentErrors.os = "Operating System is required.";
@@ -153,10 +154,10 @@ export const DeviceComponent = () => {
             currentErrors.processor = "Processor is required.";
           if (!m1?.ram) currentErrors.ram = "RAM is required.";
           if (!m1?.storage) currentErrors.storage = "Storage is required.";
-          if (!m1?.condition)
-            currentErrors.condition = "Device Condition is required.";
-          if (!m1?.device_name)
-            currentErrors.device_name = "Device Name is required.";
+          if (!m1?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
+          if (!m1?.custom_model)
+            currentErrors.custom_model = "Device Name is required.";
         } else if (formData?.deviceType === "monitor") {
           // if(!monitor?.invoiceFile) currentErrors.invoiceFile = "Incoice File is required.";
           if (!monitor?.model) currentErrors.model = "Model is required.";
@@ -231,69 +232,99 @@ export const DeviceComponent = () => {
   const handlePrevStep = () => {
     setStep((prevStep) => (prevStep >= 1 ? prevStep - 1 : prevStep));
   };
+
+  useEffect(() => {
+   if(success){
+    setSuccess(true);
+    setWelcomeScreen(true)
+   }
+  }, [success])
+
   const handleSubmit = async () => {
     if (validate()) {
       setIsLoading(true);
       try {
         const payload: any = createPayload(formData);
-        const response = await createDevices(payload);
-        setSuccess(true)
+        await createDevices(payload);
+
+        const employeeCount = sessionStorage.getItem("employee-count");
+        if (employeeCount) {
+          const empCountInt = parseInt(employeeCount);
+          if (empCountInt > 0) {
+            sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+          }
+        }
+
+        setSuccess(true);
+        setWelcomeScreen(true)
       } catch (error) {
         setIsLoading(false);
+        setSuccess(false)
+        setWelcomeScreen(false)
+        setStep(0)
         openToast("error", "Failed to created Device !");
-        // Optionally, handle the error and display a message to the user
       }
     }
   };
   return (
-    <div className="w-full h-screen justify-evenly  items-center flex flex-col lg:flex-row p-8">
+    <div className={`w-full ${success ? 'h-[auto]': 'h-screen'} justify-evenly  items-center flex flex-col lg:flex-row p-8`}>
       {success ? (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className={`w-full relative ${success ? 'h-[auto]': 'h-full'} justify-center items-center flex flex-col gap-6`}>
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
-            Great!! Setup complete
+              Great!! Setup complete
             </div>
             <div className="text-center text-md mt-2 font-gilroySemiBold leading-[normal] text-zinc-400">
-            Your are ready to manage assets with DeviceFlow
+              Your are ready to manage assets with DeviceFlow
             </div>
           </div>
           <Button
             className="rounded-[9px] font-gilroySemiBold text-[16px]   w-[75%] h-[56px] bg-primary text-primary-foreground"
             type="button"
             onClick={() => {
-            router.push('/')
+              router.push("/");
             }}
           >
             Done
           </Button>
         </div>
       ) : (
-        <div className="w-[42%] relative h-full justify-center items-center flex flex-col gap-6">
+        <div className="w-full relative h-full justify-center items-center flex flex-col gap-4">
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Add Devices
             </div>
             <div className="text-center text-xl font-gilroyMedium leading-[normal] text-zinc-400">
-            Add all the devices in organisation
+              Add all the devices in organisation
             </div>
           </div>
-          
+
           {step === 0 && (
             <div className="flex w-[75%] gap-4">
-             <DeviceTypeOnboarding
+              <DeviceTypeOnboarding
+                setFormData={setFormData}
+                setSuccess={setSuccess}
                 data={formData?.deviceType}
                 setData={(data: string) =>
                   setFormData((prev) => ({ ...prev, deviceType: data }))
                 }
                 error={errors?.deviceType}
-                closeBtn={() => {}}
                 setTotalSteps={(steps: number) => {
                   setTotalStep(steps);
                 }}
+                // setSuccess={setSuccess}
+                // data={formData?.deviceType}
+                // setData={(data: string) =>
+                //   setFormData((prev) => ({ ...prev, deviceType: data }))
+                // }
+                // error={errors?.deviceType}
+                // setTotalSteps={(steps: number) => {
+                //   setTotalStep(steps);
+                // }}
               />
             </div>
           )}
-       
+
           <div className="flex flex-col w-[86%] justify-start items-start pb-1 px-1 space-y-4 gap-1">
             {step === 1 && formData?.deviceType === "keyboard" ? (
               <KeyboardForm
@@ -383,7 +414,7 @@ export const DeviceComponent = () => {
                   type="button"
                   className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[9px] h-[56px] font-gilroySemiBold text-base w-full transition duration-300"
                   onClick={handleSubmit}
-                  disabled={isLoading} 
+                  disabled={isLoading}
                 >
                   <div className="flex items-center gap-2">
                     <span>Submit</span>
@@ -392,20 +423,13 @@ export const DeviceComponent = () => {
                     ) : (
                       <ChevronRight color="white" className="size-4" />
                     )}
-                 </div>
+                  </div>
                 </Button>
               )}
             </div>
           </div>
         </div>
       )}
-      <div className="w-[46%] flex justify-center  h-[auto]">
-      <img
-           src="/media/Onboarding/device.png"
-          alt="edify-background"
-          style={{width: '80%', height: 500}}
-        />
-      </div>
     </div>
   );
 };

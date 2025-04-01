@@ -2,7 +2,7 @@
 import { ChevronRight, Monitor } from "lucide-react";
 import React, { useState } from "react";
 import { SelectInput } from "@/components/dropdown/select-input";
-import { fetchUsers, searchUsers } from "@/server/userActions";
+import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import { Device, updateDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
@@ -10,9 +10,11 @@ import Spinner from "@/components/Spinner";
 const AssignAssetsForm = ({
   closeBtn,
   device,
+  onRefresh
 }: {
   closeBtn: (boo: boolean) => void;
   device: Device;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -21,12 +23,12 @@ const AssignAssetsForm = ({
   const handleSubmit = async () => {
     if (user?._id) {
       setLoading(true);
+      // @ts-ignore
       const res = await updateDevice(device?._id ?? "error", {
         userId: user._id,
       });
       setLoading(false);
-      router.push("/assets?tab=un_assigned_assets");
-      router.refresh();
+      onRefresh();
     }
     closeBtn(false);
   };
@@ -74,8 +76,8 @@ const AssignAssetsForm = ({
             key={"assign-assets-form"}
             placeholder="Search by name, email, etc."
             // logic yet to be implemented
-            onSelect={(data: any) => {
-              setUser({ email: data.email, _id: data._id });
+            onSelect={(data: User) => {
+              setUser({ email: data.email!, _id: data._id! });
             }}
             label="Assigning To"
             value={user?.email ?? ""}

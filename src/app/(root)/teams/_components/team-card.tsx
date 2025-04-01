@@ -1,6 +1,7 @@
 "use client";
 
 import { Icons } from "@/components/icons";
+import TeamsNoMemberIcon from "@/icons/TeamsNoMemberIcon";
 import Link from "next/link";
 
 const MemberIcon = ({
@@ -16,7 +17,7 @@ const MemberIcon = ({
     }`}
   >
     {isPlaceholder ? (
-      <Icons.team_no_memeber_logo className="w-4 h-4" />
+      <TeamsNoMemberIcon className="w-4 h-4" />
     ) : (
       <img
         src={src}
@@ -32,6 +33,7 @@ interface TeamCardProps {
   description?: string;
   image?: string;
   employees_count?: number;
+  team_code?: string;
   _id?: string;
   active_manager?: { _id: string; first_name: string; image?: string }[];
   active_employees?: { _id: string; first_name: string; image?: string }[];
@@ -47,6 +49,7 @@ export const TeamCard = ({
   active_manager,
   active_employees,
   buttons,
+  team_code,
 }: TeamCardProps) => {
   const defaultImage =
     "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
@@ -77,7 +80,7 @@ export const TeamCard = ({
   return (
     <div
       className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
- relative rounded-[25px] w-96 2xl:w-[402px] p-4 flex flex-col transition-all"
+ relative rounded-[25px] max-lg:w-[calc(50%-16px)] max-2xl:w-[calc(33.33%-16px)] 2xl:w-[402px] p-4 flex flex-col transition-all "
     >
       <Link
         href={`/teams/${_id}`}
@@ -87,7 +90,10 @@ export const TeamCard = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img
-              src={active_manager?.[0]?.image || defaultImage}
+              src={
+                image ||
+                "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
+              }
               alt="manager-icon"
               className="w-14 h-14 object-cover rounded-full"
             />
@@ -104,9 +110,16 @@ export const TeamCard = ({
 
         {/* Description Section */}
         <div>
-          <p className="font-gilroySemiBold text-2xl line-clamp-2">{title}</p>
+          <div className="flex items-center gap-2">
+            <p className="font-gilroySemiBold text-2xl line-clamp-2">
+              {title ?? "-"}
+            </p>
+            <p className="font-gilroySemiBold text-base text-[#7C7C7C] line-clamp-2">
+              ({team_code ?? "-"})
+            </p>
+          </div>
           <p className="text-[#7C7C7C] text-base font-gilroyMedium line-clamp-2">
-            {description}
+            {description ?? "-"}
           </p>
         </div>
 

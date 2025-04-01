@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import { useRouter } from "next/navigation";
 import { Device, getAllDevicesProp } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 import { IssueForm } from "./issue-form";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
+import NoAssetAssignedIcon from "@/icons/NoAssetAssignedIcon";
 
 export type LoggedInUser = UserData;
 
@@ -40,9 +40,9 @@ const Devices = ({ devices }: DevicesProps) => {
   };
 
   return (
-    <div className="flex py-2 gap-5">
-      {devices.length > 0 ? (
-        devices.map((device: Device) => {
+    <div className="flex py-2 gap-5 flex-wrap">
+      {devices?.length > 0 ? (
+        devices?.map((device: Device) => {
           const warrantyDays = calculateWarrantyDays(
             device?.warranty_expiary_date!
           );
@@ -50,8 +50,8 @@ const Devices = ({ devices }: DevicesProps) => {
 
           return (
             <div
-              key={device._id}
-              className="flex rounded-[25px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.8)] backdrop-blur-[22.8px]  px-6 py-4 w-1/3"
+              key={device?._id}
+              className="flex rounded-[25px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.8)] backdrop-blur-[22.8px]  px-6 py-4 max-xl:w-[calc(50%-20px)] max-2xl:w-[calc(33.33%-20px)]"
             >
               {/* Device Information */}
               <div
@@ -166,7 +166,7 @@ const Devices = ({ devices }: DevicesProps) => {
       ) : (
         <div className="flex w-full justify-center items-center">
           {" "}
-          <Icons.no_asset_assigned />
+          <NoAssetAssignedIcon />
         </div>
       )}
 

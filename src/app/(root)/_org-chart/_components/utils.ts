@@ -8,6 +8,8 @@ export const mapEmployeeToRawNodeDatum: any = (
 	maxInitialLevel = 1,
 ) => ({
 	name: employee.name,
+	image: employee.image,
+	gender: employee.gender,
 	attributes: {
 		designation: employee.designation,
 		childrenCount: employee.children?.length || 0,

@@ -16,13 +16,16 @@ import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
+import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteUser = ({
   id,
   children,
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
+  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -38,8 +41,10 @@ export const DeleteUser = ({
         setLoading(false);
         openToast("success", "Successfully deleted user !");
         setOpen(false);
-        router.push("/people?tab=active_people");
-        router.refresh();
+        router.push('/people');
+        onRefresh();
+        // router.push("/people?tab=active_people");
+        // router.refresh();
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the user.",
@@ -62,7 +67,7 @@ export const DeleteUser = ({
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
           <div className="flex justify-center">
-            <Icons.warning_delete />
+            <WarningDelete />
           </div>
 
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">

@@ -15,6 +15,8 @@ import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { updateTeam } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
+import { useToast } from "@/hooks/useToast";
+import WarningIcon from "@/icons/WarningIcon";
 
 export const RestoreTeam = ({
   id,
@@ -27,6 +29,7 @@ export const RestoreTeam = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Loading state for restore action
   const [initText, setInitText] = useState("Restore Team");
+  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -35,7 +38,7 @@ export const RestoreTeam = ({
         {/* Warning Icon */}
         <div className="flex justify-center">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50 ring-8 ring-yellow-100 text-yellow-400">
-            <Icons.warning_restore />
+            <WarningIcon />
             {/* Lucide-react icon */}
           </div>
         </div>
@@ -68,6 +71,7 @@ export const RestoreTeam = ({
                 try {
                   await updateTeam(id!, { deleted_at: null });
                   setOpen(false);
+                  openToast("success", "Team Restored Successfully!");
                   router.push("/teams");
                   router.refresh();
                 } catch (e: any) {
@@ -76,6 +80,7 @@ export const RestoreTeam = ({
                     e.message ||
                     "Failed to restore the device.";
                   setInitText(errorMessage);
+                  openToast("error", errorMessage);
                 } finally {
                   setLoading(false); // End loading
                 }

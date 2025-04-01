@@ -1,10 +1,24 @@
 "use client";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { Search } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const StoreGlobalSearch = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isFocused, setIsFocused] = useState(false);
+  const [term, setTerm] = useState(searchParams.get("q") || ""); // Initialize with query param if available
+
+  // Update URL when `term` changes
+  useEffect(() => {
+    const query = term ? `?q=${encodeURIComponent(term)}` : "";
+    if (pathname.startsWith("/store/all-products")) {
+      router.replace(`/store/all-products${query}`);
+    }
+  }, [term, router]);
 
   return (
     <div
@@ -14,19 +28,19 @@ export const StoreGlobalSearch = () => {
       )}
       onClick={() => setIsFocused(true)}
     >
-      <Icons.store_search className="size-[1.35rem] mb-0.5" />
+      <Search className="size-[1.35rem] mb-0.5" />
       <input
         className={cn(
-          "flex-grow  duration-300 -mt-0.5 ease-in-out bg-transparent placeholder:text-[#7F7F7F] text-sm font-gilroyMedium whitespace-nowrap outline-none focus:outline-none",
+          "flex-grow duration-300 -mt-0.5 ease-in-out bg-transparent placeholder:text-[#7F7F7F] text-sm font-gilroyMedium whitespace-nowrap outline-none focus:outline-none",
           isFocused ? "input-transition" : "w-0"
         )}
-        onBlur={() => setIsFocused(false)}
+        value={term}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTerm(e.target.value)
+        }
         autoFocus={isFocused}
         placeholder="Search"
       />
     </div>
   );
 };
-
-// value={searchTerm || ""}
-// onChange={(e) => setSearchTerm(e.target.value)}

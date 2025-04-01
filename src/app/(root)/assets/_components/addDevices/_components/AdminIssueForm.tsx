@@ -11,20 +11,22 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Icons } from "@/components/icons";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useToast } from "@/hooks/useToast";
+import IssueFormIcons from "@/icons/IssueFormIcons";
+import UploadImageIcon from "@/icons/UploadImageIcon";
+import NavBarIcons from "@/icons/NavBarIcons";
 
 interface IssueFormProps {
   device: Device;
   closeBtn: (value: boolean) => void;
 }
 
-export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
+export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
   const userData = useSelector((state: RootState) => state.auth.userData);
 
   const router = useRouter();
@@ -103,17 +105,17 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
 
   const severityArray = [
     {
-      icon: <Icons.low_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.low_issue_icon className="size-10" />,
       title: "Low",
       desc: `Small glitch, doesn't slow us down can wait a bit!`,
     },
     {
-      icon: <Icons.medium_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.medium_issue_icon className="size-10" />,
       title: "Medium",
       desc: `Noticeable issue, but nothing that'll break the flow fix soon!`,
     },
     {
-      icon: <Icons.high_issue_icon className="size-10" />,
+      icon: <IssueFormIcons.high_issue_icon className="size-10" />,
       title: "Critical",
       desc: `Major issue, needs immediate attention—fix now!`,
     },
@@ -151,21 +153,17 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
 
     setLoading(true);
     try {
-      const res = await createIssue(issue);
+      await createIssue(issue);
       setLoading(false);
-      showAlert({
-        title: "WOHOOO!! 🎉",
-        description: "Issue created successfully !",
-        isFailure: false,
-        key: "create-team-success",
-      });
+      openToast("success", "Issue created successfully !");
       router.refresh();
       closeBtn(false);
     } catch (error) {
       setLoading(false);
       openToast("error", "Failed to Raise an Issue!");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
 
     setFormData({
       title: "",
@@ -182,7 +180,7 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
           <div className="flex flex-col  w-full">
             <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
               <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                <Icons.issue_icon_white className="size-5 2xl:size-11 mb-0.5" />
+                <NavBarIcons.issue_icon_white className="size-5 2xl:size-11 mb-0.5" />
               </div>
               <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
                 Report an issue
@@ -198,11 +196,18 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
 
           <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
             <div className="">
-              <img src="/media/mac-2.png" alt="Asset-1" className="w-24 h-20 p-1  object-cover rounded-full "/>
+              <img
+                src={
+                  device?.image?.[0]?.url ??
+                  "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                }
+                alt="Asset-1"
+                className="w-20 h-20 p-1  object-contain border rounded-full "
+              />
             </div>
             <div>
               <div className="font-gilroySemiBold text-xl">
-                {device?.device_name ?? ""}
+                {device?.custom_model ?? ""}
               </div>
               <div className="text-[#7C7C7C] font-gilroyRegular text-sm">
                 {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{" "}
@@ -214,11 +219,14 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full flex flex-col relative mt-1 h-full">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col relative mt-1 h-full"
+          >
             {next === 0 ? (
               <>
                 <div className="w-full flex flex-col gap-6 h-full">
-                  <div >
+                  <div>
                     <FormField
                       label="Raised by"
                       id="raised_by"
@@ -230,21 +238,21 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                   </div>
                   <div className="flex gap-3 items-center">
                     <FormField
-                        label="Email"
-                        id="email"
-                        value={userData?.email ?? ""}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Email"
+                      id="email"
+                      value={userData?.email ?? ""}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                     <FormField
-                        label="Role"
-                        id="role"
-                        value={`${userData?.role ?? "Frontend Developer"}`}
-                        disabled
-                        type="text"
-                        placeholder=""
-                      />
+                      label="Designation"
+                      id="designation"
+                      value={`${userData?.designation ?? "Frontend Developer"}`}
+                      disabled
+                      type="text"
+                      placeholder=""
+                    />
                   </div>
                   <div className=" w-full ">
                     <div className="z-20">
@@ -312,7 +320,6 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                     </div>
                   </div>
                 </div>
-                
 
                 <div className="flex absolute bottom-0 gap-2 w-full">
                   <Button
@@ -348,7 +355,7 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                         <div
                           key={v.title}
                           className={cn(
-                            "flex w-full h-[5rem] justify-start items-center rounded-xl pb-1 border pl-5 gap-2",
+                            "flex w-full h-[5rem] justify-start items-center rounded-xl pb-1 border pl-5 gap-2 cursor-pointer group",
                             formData.priority === v.title
                               ? "border-black  border-2"
                               : "border-[#6C6C6C]"
@@ -391,7 +398,7 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                         {formData.images.map((image, index) => (
                           <div
                             key={index}
-                            className="relative w-24 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
+                            className="relative w-20 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
                           >
                             <img
                               src={image.url}
@@ -408,7 +415,7 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                         ))}
                         {formData.images.length === 0 ? (
                           <div className="flex flex-col justify-center items-center w-full mx-auto">
-                            <Icons.uploadImage className="text-blue-500 w-6 h-6" />
+                            <UploadImageIcon className="text-blue-500 w-6 h-6" />
                             <span className="text-[#0EA5E9]">
                               Click to upload
                             </span>
@@ -440,7 +447,6 @@ export function AdminIssueForm({device, closeBtn }: IssueFormProps) {
                     )}
                   </div>
                 </div>
-
 
                 <div className="flex gap-2 w-full mt-4">
                   <Button

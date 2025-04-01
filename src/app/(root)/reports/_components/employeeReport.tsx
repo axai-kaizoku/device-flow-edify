@@ -7,6 +7,7 @@ import { closeAlert, openAlert } from "@/app/store/alertSlice";
 import { GlobalAlert } from "@/components/global-alert";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { FormField } from "../../settings/_components/form-field";
+import Spinner from "@/components/Spinner";
 
 const EmployeeReport = ({
   closeBtn,
@@ -19,8 +20,10 @@ const EmployeeReport = ({
   const [date, setDate] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleDownloadClick = async () => {
+    setLoading(true);
     try {
       const filters = [];
       if (operator === "between" && fromDate && toDate) {
@@ -35,14 +38,15 @@ const EmployeeReport = ({
 
         downloadCSV(csv, `user_report.csv`);
         closeBtn(false);
+        setLoading(false);
       } else {
         dispatch(openAlert());
-
+        setLoading(false);
         // alert("No data available");
       }
     } catch (error) {
       dispatch(openAlert());
-
+      setLoading(false);
       // alert("Failed to download the report. Please try again.");
     }
     // onDownload(filters);
@@ -62,8 +66,8 @@ const EmployeeReport = ({
       <div className="mt-5">
         <SelectDropdown
           options={[
-            { label: "Greater Than", value: ">" },
-            { label: "Less Than", value: "<" },
+            { label: "After", value: ">" },
+            { label: "Before", value: "<" },
             { label: "Between", value: "between" },
           ]}
           onSelect={(data) => setOperator(data.value)}
@@ -122,7 +126,7 @@ const EmployeeReport = ({
             className="flex-1 text-white bg-black rounded-[49px] font-gilroySemiBold text-lg px-1 py-1.5"
             onClick={handleDownloadClick}
           >
-            Download
+            {loading ? <Spinner/> : "Download"}
           </button>
         </div>
       </div>
