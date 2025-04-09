@@ -1,7 +1,5 @@
 import { StoreBannerCard } from "@/components/store-banner";
-import { Device } from "@/server/deviceActions";
 import { getUserById, User } from "@/server/userActions";
-import QualityCheck from "./quality-check";
 
 export const DeviceGrid = async ({ data }: { data: any }) => {
   let isAssigned: boolean;
@@ -17,15 +15,14 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
   } catch (error) {
     assignedTo = {};
   }
-  
 
   return (
     <>
-      <div className="w-full h-full flex justify-center items-center mb-6">
+      <div className="w-full h-full flex justify-center items-center mb-6 hide-scrollbar">
         <div className="flex w-full h-[96%]  items-start gap-6">
           <div className="w-[58%]  flex justify-between gap-6">
             {/* Device Data */}
-            <div className="rounded-2xl w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col justify-start gap-3">
+            <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col justify-start gap-3">
               <div>
                 <h1 className="font-gilroySemiBold text-lg">Device Info</h1>
               </div>
@@ -121,7 +118,7 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
             </div>
 
             {data?.userId ? (
-              <div className="rounded-2xl w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
+              <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
                 <div>
                   <h1 className="text-lg font-gilroySemiBold">Assigned Info</h1>
                 </div>
@@ -226,7 +223,7 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
               </div>
             ) : (
               <div className="w-[52%] h-full flex flex-col  gap-6">
-                <div className=" px-6 py-4 w-full border border-[#C3C3C34F] bg-white rounded-2xl  2xl:p-7 flex flex-col gap-3">
+                <div className=" px-6 py-4 w-full border border-[#C3C3C34F] bg-white rounded-lg  2xl:p-7 flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <div className=" font-gilroySemiBold flex w-full items-center justify-between text-lg 2xl:text-xl">
                       <h1 className="text-lg">Device Status</h1>
@@ -347,7 +344,7 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
 
           {data?.userId ? (
             <div className="w-[38%] h-full flex flex-col  gap-6">
-              <div className=" px-6 py-4 w-full border border-[#C3C3C34F] bg-white rounded-2xl  2xl:p-7 flex flex-col gap-3">
+              <div className=" px-6 py-4 w-full border border-[#C3C3C34F] bg-white rounded-lg  2xl:p-7 flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                   <div className=" font-gilroySemiBold flex w-full items-center justify-between text-lg 2xl:text-xl">
                     <h1 className="text-lg">Device Status</h1>
@@ -465,8 +462,6 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
               </div>
 
               <StoreBannerCard />
-
-              <QualityCheck data={data}/>
             </div>
           ) : null}
         </div>

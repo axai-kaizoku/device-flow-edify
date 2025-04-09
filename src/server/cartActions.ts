@@ -30,7 +30,7 @@ export const removeItemFromCart = async (itemId: string): Promise<void> => {
   try {
     // Make the DELETE request to remove the item from the cart
     await callAPIWithToken(
-      `https://gcp-api.edify.club/edifybackend/v1/cart/item/quantity`,
+      `https://staging.deviceflow.ai/edifybackend/v1/cart/item/quantity`,
       "PATCH",
       { itemId, quantity: 0 }
     );
@@ -46,7 +46,7 @@ export const getCart = cache(async function () {
     if (sess?.user && sess?.user?.user.userId) {
       // Fetch Cart data
       const response = await callAPIWithToken<Cart>(
-        `https://gcp-api.edify.club/edifybackend/v1/cart`,
+        `https://staging.deviceflow.ai/edifybackend/v1/cart`,
         "GET"
       );
 
@@ -66,7 +66,7 @@ export const updateCartItemQuantity = async (
 ): Promise<void> => {
   try {
     const response = await callAPIWithToken<any>(
-      `https://gcp-api.edify.club/edifybackend/v1/cart/item/quantity`,
+      `https://staging.deviceflow.ai/edifybackend/v1/cart/item/quantity`,
       "PATCH",
       { itemId: itemId, quantity: quantity }
     );
@@ -83,7 +83,7 @@ export async function addItemToCart(itemId: string, quantity: number) {
         quantity,
       },
     };
-    const apiUrl = "https://gcp-api.edify.club/edifybackend/v1/cart/addItem";
+    const apiUrl = "https://staging.deviceflow.ai/edifybackend/v1/cart/addItem";
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     // console.log(response, "ITEM ADDED TO CART");
@@ -100,7 +100,7 @@ export const getPaymentMethods = async (price: number) => {
     if (sess?.user && sess?.user?.user.userId) {
       // Fetch Cart data
       const response = await callAPIWithToken<any>(
-        `https://gcp-api.edify.club/edifybackend/v1/payments/methods?amount=${price}`,
+        `https://staging.deviceflow.ai/edifybackend/v1/payments/methods?amount=${price}`,
         "GET"
       );
 
@@ -120,7 +120,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
       paymentOption,
     };
     const apiUrl =
-      "https://gcp-api.edify.club/edifybackend/v1/payments/initiate";
+      "https://staging.deviceflow.ai/edifybackend/v1/payments/initiate";
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     //@ts-ignore
@@ -133,7 +133,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
       orderId,
     };
     const checkoutUrl =
-      "https://gcp-api.edify.club/edifybackend/v1/cart/checkout";
+      "https://staging.deviceflow.ai/edifybackend/v1/cart/checkout";
 
     const checkoutRes = await callAPIWithToken(
       checkoutUrl,
@@ -151,7 +151,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
 export const updateCartAddress = async (addressId: string): Promise<void> => {
   try {
     const response = await callAPIWithToken<any>(
-      `https://gcp-api.edify.club/edifybackend/v1/cart/address`,
+      `https://staging.deviceflow.ai/edifybackend/v1/cart/address`,
       "PATCH",
       { addressId }
     );

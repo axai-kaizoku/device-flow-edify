@@ -19,11 +19,11 @@ import WarningIcon from "@/icons/WarningIcon";
 export const RestoreUser = ({
   id,
   children,
-  onRefresh
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -65,10 +65,13 @@ export const RestoreUser = ({
                 try {
                   await updateUser(id!, { deleted_at: null });
                   setOpen(false);
-                  openToast('success', 'User restored Successfully! ');
-                  onRefresh();
+                  openToast("success", "User restored Successfully! ");
+                  // onRefresh();
                 } catch (e: any) {
-                  openToast('error', 'Some Error Occured! Please try again later.');
+                  openToast(
+                    "error",
+                    "Some Error Occured! Please try again later."
+                  );
                 } finally {
                   setLoading(false); // End loading
                 }

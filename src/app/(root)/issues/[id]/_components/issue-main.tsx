@@ -467,7 +467,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                 data.status!.toLowerCase() === "open"
                   ? "bg-[#027A47] "
                   : "bg-black",
-                "flex-1 rounded-[49px] py-2 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-lg text-white"
+                "flex-1 rounded-md py-2 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-[13px] text-white"
               )}
             >
               {data?.status!.toLowerCase() === "open"

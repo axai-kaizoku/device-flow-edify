@@ -32,8 +32,8 @@ function TabDisplay({ orgData }: TabDisplayProps) {
   const userData = useSelector((state: RootState) => state.auth.userData);
   const actualData: Employee = {
     children: mapEmployeeData(orgData),
-    designation: userData?.orgId.name || '',
-    name: userData?.orgId.name || '',
+    designation: userData?.orgId.name || "",
+    name: userData?.orgId.name || "",
     image: "/media/sidebar/profile.svg",
   };
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -121,13 +121,13 @@ function TabDisplay({ orgData }: TabDisplayProps) {
         searchQuery: searchTerm || "",
       };
       let res: TeamsResponse | null = null;
-  
+
       if (activeTab === "active_teams") {
         res = await fetchActiveTeams(query);
       } else if (activeTab === "inactive_teams") {
         res = await fetchInactiveTeams(query);
       }
-  
+
       // Update the state with fresh data
       setTeams(res);
     } catch (error) {
@@ -142,7 +142,6 @@ function TabDisplay({ orgData }: TabDisplayProps) {
       setLoading(false);
     }
   };
-  
 
   const renderContent = () => {
     switch (activeTab) {
@@ -154,7 +153,11 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <TeamsMain teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
+              <TeamsMain
+                teams={teams}
+                setTeams={setTeams}
+                onRefresh={refreshData}
+              />
             )}
           </>
         );
@@ -166,7 +169,11 @@ function TabDisplay({ orgData }: TabDisplayProps) {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <DeletedTeams teams={teams} setTeams={setTeams} onRefresh={refreshData}/>
+              <DeletedTeams
+                teams={teams}
+                setTeams={setTeams}
+                onRefresh={refreshData}
+              />
             )}
           </>
         );

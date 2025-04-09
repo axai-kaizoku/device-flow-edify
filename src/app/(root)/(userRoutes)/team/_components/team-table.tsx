@@ -19,6 +19,7 @@ export default function TeamTable({ data }: { data: User[] }) {
       <div className="flex flex-col">
         <Table
           data={currentTeams}
+          isLoading={false}
           checkboxSelection={{
             uniqueField: "_id",
             //logic yet to be done
@@ -84,14 +85,6 @@ export default function TeamTable({ data }: { data: User[] }) {
               ),
             },
           ]}
-        />
-      </div>
-      <div className="my-4">
-        <Pagination
-          currentPage={currentPage}
-          itemsPerPage={ITEMS_PER_PAGE}
-          onPageChange={handlePageChange}
-          totalItems={totalTeams}
         />
       </div>
     </>

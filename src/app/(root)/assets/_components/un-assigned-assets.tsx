@@ -31,11 +31,19 @@ function UnAssignedAssets({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { openToast } = useToast();
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (page: number) => {
-    const res = await unAssignedAssets({ page });
-    setAssets(res);
-    setCurrentPage(page);
+    setIsLoading(true); // Set loading to true when changing pages
+    try {
+      const res = await unAssignedAssets({ page });
+      setAssets(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching Members:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false when done
+    }
   };
 
   const handleBulkDelete = async () => {
@@ -69,7 +77,7 @@ function UnAssignedAssets({
   return (
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {data?.devices?.length === 0 ? (
+        {!isLoading && data?.devices?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
             <assetsIcons.no_assets_display />
             <CreateDevice>

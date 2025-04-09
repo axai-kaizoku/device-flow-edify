@@ -22,7 +22,7 @@ export const PermanentUserDelete = ({
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -63,14 +63,17 @@ export const PermanentUserDelete = ({
               if (id) {
                 try {
                   await updateUser(id!, { orgId: null });
-                  openToast('success',"User Deleted Successfully!");
+                  openToast("success", "User Deleted Successfully!");
                   setOpen(false);
-                  onRefresh();
+                  // onRefresh();
                   // router.push("/people?tab=inactive_people");
 
                   router.refresh();
                 } catch (e: any) {
-                  openToast('error',"Some Error Occured! Please try again later");
+                  openToast(
+                    "error",
+                    "Some Error Occured! Please try again later"
+                  );
                 }
               }
             }}

@@ -25,7 +25,7 @@ export const DeleteUser = ({
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -41,8 +41,8 @@ export const DeleteUser = ({
         setLoading(false);
         openToast("success", "Successfully deleted user !");
         setOpen(false);
-        router.push('/people');
-        onRefresh();
+        router.push("/people");
+        // onRefresh();
         // router.push("/people?tab=active_people");
         // router.refresh();
       } catch (e: any) {

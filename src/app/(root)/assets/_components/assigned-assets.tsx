@@ -17,25 +17,36 @@ import CreateDevice from "./addDevices/_components/create-device";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import { useToast } from "@/hooks/useToast";
 import { DeleteModal } from "../../people/_components/deleteUserModal";
+
 function AssignedAssets({
   data,
   setAssets,
   onRefresh,
+  assetsText = "All Assets",
 }: {
   data: DeviceResponse | null;
-  setAssets: any;
-  onRefresh: () => Promise<void>;
+  setAssets?: any;
+  onRefresh?: () => Promise<void>;
+  assetsText?: string;
 }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { openToast } = useToast();
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (page: number) => {
-    const res = await assignedAssets({ page });
-    setAssets(res);
-    setCurrentPage(page);
+    setIsLoading(true); // Set loading to true when changing pages
+    try {
+      const res = await assignedAssets({ page });
+      setAssets(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false when done
+    }
   };
 
   const handleBulkDelete = async () => {
@@ -68,23 +79,26 @@ function AssignedAssets({
 
   return (
     <>
-      <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {data?.devices?.length === 0 ? (
+      <>
+        {!isLoading && data?.devices?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
             <assetsIcons.no_assets_display />
             <CreateDevice>
-              <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
-                Add Device
+              <div className="flex items-center relative py-2 border-2 border-black gap-1  pl-3 pr-3  text-white  rounded-lg bg-black transition-all duration-300">
+                {/* <AssetsTabIcon className=" size-5" color="#fff" /> */}
+                <span className="text-sm whitespace-nowrap  font-gilroyMedium rounded-lg ">
+                  Add Device
+                </span>
               </div>
             </CreateDevice>
           </div>
         ) : (
-          <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+          <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
             {" "}
             <div className="flex justify-between items-center">
               <div className=" flex gap-3 w-fit">
                 <h1 className="text-xl pl-6 font-gilroySemiBold">
-                  Total Assets
+                  {assetsText}
                 </h1>
                 <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
                   {data?.total} Assets
@@ -110,8 +124,9 @@ function AssignedAssets({
             <Suspense fallback={<div>Loading...</div>}>
               <div className="flex flex-col gap-2">
                 <Table
-                  data={data?.devices ?? []}
+                  data={data?.devices}
                   selectedIds={selectedIds}
+                  isLoading={isLoading}
                   setSelectedIds={setSelectedIds}
                   checkboxSelection={{
                     uniqueField: "_id",
@@ -261,7 +276,7 @@ function AssignedAssets({
                               router.prefetch(`/assets/${record?._id}`)
                             }
                           >
-                            <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
+                            <div className="rounded-md text-white bg-black font-gilroySemiBold text-[13px] py-2 px-4">
                               Manage
                             </div>
                           </Link>
@@ -270,18 +285,11 @@ function AssignedAssets({
                     },
                   ]}
                 />
-                <div className="mt-1">
-                  <Pagination
-                    current_page={currentPage}
-                    total_pages={data?.total_pages!}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
               </div>
             </Suspense>
           </div>
         )}
-      </div>
+      </>
     </>
   );
 }

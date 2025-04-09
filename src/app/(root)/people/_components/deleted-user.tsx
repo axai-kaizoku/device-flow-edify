@@ -12,26 +12,33 @@ import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import { useToast } from "@/hooks/useToast";
 import { DeleteModal } from "./deleteUserModal";
 
-
 function DeletedUser({
   data,
   setUsers,
   onRefresh,
 }: {
   data: UserResponse | null;
-  setUsers: React.Dispatch<SetStateAction<UserResponse | null>>;
-  onRefresh: () => Promise<void>;
+  setUsers?: React.Dispatch<SetStateAction<UserResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }) {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { openToast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (page: number) => {
-    const res = await inActiveUsers({ page });
-    setUsers(res);
-    setCurrentPage(page);
+    setIsLoading(true); // Set loading to true when changing pages
+    try {
+      const res = await inActiveUsers({ page });
+      setUsers(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching Members:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false when done
+    }
   };
 
   const handleBulkDelete = async () => {
@@ -52,7 +59,7 @@ function DeletedUser({
 
       openToast("success", "Users deleted successfully!");
       setSelectedIds([]); // Clear selection after deletion
-      await onRefresh(); // Refresh data after deletion
+      // await onRefresh(); // Refresh data after deletion
     } catch (error) {
       openToast("error", `Failed to delete Users : ${error}`);
     }
@@ -65,7 +72,7 @@ function DeletedUser({
   return (
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {data?.users?.length === 0 ? (
+        {!isLoading && data?.users?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
             <Icons.no_people_display />
             <CreateUser>
@@ -105,6 +112,7 @@ function DeletedUser({
                 data={data?.users ?? []}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
+                isLoading={isLoading}
                 checkboxSelection={{
                   uniqueField: "_id",
                   onSelectionChange: handleSelectionChange,
@@ -190,12 +198,12 @@ function DeletedUser({
                       <div className="flex gap-5 -ml-2 justify-center items-center">
                         <PermanentUserDelete
                           id={record?._id!}
-                          onRefresh={onRefresh}
+                          // onRefresh={onRefresh}
                         >
                           <DeleteTableIcon className="size-6" />
                         </PermanentUserDelete>
 
-                        <RestoreUser id={record?._id!} onRefresh={onRefresh}>
+                        <RestoreUser id={record?._id!}>
                           <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
                             Restore
                           </div>
@@ -206,13 +214,13 @@ function DeletedUser({
                 ]}
               />
               {/* Pagination Control */}
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 <Pagination
                   current_page={currentPage}
                   total_pages={data?.total_pages!}
                   onPageChange={handlePageChange}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         )}

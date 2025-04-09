@@ -58,7 +58,7 @@ const Reports = () => {
 
     return (
       <CombinedContainer title="Reports">
-        <div className="w-full h-[80vh] pt-[15px] font-gilroyRegular">
+        <div className="w-full h-[80vh] pt-[15px] pl-2 font-gilroyRegular">
           <ReportSection reportData={reportData} />
         </div>
       </CombinedContainer>

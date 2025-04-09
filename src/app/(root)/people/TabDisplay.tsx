@@ -110,7 +110,6 @@ function TabDisplay() {
       setLoading(false);
     }
   };
-  
 
   // Trigger search and filter on searchTerm, filters, or pageLength change
   useEffect(() => {
@@ -178,7 +177,6 @@ function TabDisplay() {
     handleResetFilters(); // Reset the filters
   };
 
-
   useEffect(() => {
     const fetchTabData = async () => {
       try {
@@ -222,7 +220,11 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <UserMain data={assets} setUsers={setAssets} onRefresh={refreshUserData}/>
+              <UserMain
+                data={assets}
+                setUsers={setAssets}
+                onRefresh={refreshUserData}
+              />
             )}
           </>
         );
@@ -234,7 +236,11 @@ function TabDisplay() {
                 <DeviceFlowLoader />
               </div>
             ) : (
-              <DeletedUser data={assets} setUsers={setAssets} onRefresh={refreshUserData}/>
+              <DeletedUser
+                data={assets}
+                setUsers={setAssets}
+                onRefresh={refreshUserData}
+              />
             )}
           </>
         );
@@ -255,15 +261,8 @@ function TabDisplay() {
   ];
   return (
     <>
-      <div className="flex flex-col pt-[14px]">
-        {/* {JSON.stringify(assets)} */}
-        <h1 className="text-[#7F7F7F] font-gilroyMedium 2xl:text-lg text-base">
-          People
-        </h1>
-        <h1 className="2xl:text-3xl text-2xl pt-[10px] font-gilroyBold ">
-          Manage People
-        </h1>
-        <div className="flex items-center justify-between -mt-2">
+      <div className="flex flex-col  mt-[88px]">
+        <div className="flex items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
           <div className="flex items-center w-full -mb-9 -mt-1 gap-12">
             {tabs?.map((tab) => (
               <Tab
@@ -275,20 +274,23 @@ function TabDisplay() {
             ))}
           </div>
 
-          <div className="flex gap-2">
-            <div className="flex  items-center py-1.5 gap-1  px-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-              <Search size={20} className="text-[#7F7F7F]" />{" "}
-              <input
-                className="bg-transparent text-base  font-gilroyMedium whitespace-nowrap focus:outline-none"
-                value={searchTerm || ""}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search assets..."
-              />
+          <div className="flex gap-4">
+            <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 ">
+              <div className="flex gap-2 justify-center items-center">
+                <Search className=" size-[1.16rem]" />
+                <input
+                  type="text"
+                  value={searchTerm || ""}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search People..."
+                  className={`flex-grow bg-transparent outline-none text-black placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 `}
+                />
+              </div>
             </div>
             <InvitePeople>
-              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <Send className="text-[#6C6C6C]  size-4" />
-                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)]  p-[6px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                <Send className="  size-4 -mt-0.5" />
+                <span className="text-[15px]  pr-1 whitespace-nowrap group-hover:text-white font-gilroyMedium rounded-lg ">
                   Invite People
                 </span>
               </div>
@@ -296,13 +298,17 @@ function TabDisplay() {
             <div className="relative">
               <button
                 onClick={() => setOpenFilter(!openFilter)}
-                className="flex items-center py-1.5 gap-1 px-3 text-[#7F7F7F] border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300"
+                className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)]  p-[6px] gap-1 hover:bg-black hover:text-white hover:border-white group"
               >
-                <FilterTabIcon className="size-5" />
-                <span className="text-base font-gilroyMedium pr-1">Filter</span>
+                <span className="text-[15px]  pr-1 whitespace-nowrap group-hover:text-white text-center font-gilroyMedium rounded-lg">
+                  More Filters
+                </span>
                 {appliedFiltersCount > 0 && (
-                  <span className="font-gilroySemiBold text-xs  bg-red-500 text-white rounded-full size-5 flex justify-center items-center">
-                    <h1> {appliedFiltersCount}</h1>
+                  <span className="font-gilroySemiBold text-xs absolute -right-1 -top-2  bg-red-500 text-white rounded-full size-4 flex justify-center items-center">
+                    <h1 className="text-[8px] font-gilroySemiBold">
+                      {" "}
+                      {appliedFiltersCount}
+                    </h1>
                   </span>
                 )}
               </button>
@@ -457,7 +463,10 @@ function TabDisplay() {
                               className="w-32 font-gilroyMedium placeholder:text-gray-400 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
                             />
                             {index > 0 && (
-                              <X className="size-3 cursor-pointer w-4 h-4 text-gray-500 hover:text-gray-700 transition-all duration-200" onClick={() => removeFilter(index)}/>
+                              <X
+                                className="size-3 cursor-pointer w-4 h-4 text-gray-500 hover:text-gray-700 transition-all duration-200"
+                                onClick={() => removeFilter(index)}
+                              />
                             )}
                           </div>
                         ))}
@@ -467,7 +476,7 @@ function TabDisplay() {
                             onClick={addFilter}
                             className="cursor-pointer flex items-center gap-2 py-2  text-[#4A4A4A] hover:text-black rounded-md transition-all duration-300"
                           >
-                            <Plus className="size-4 -mt-0.5 text-gray-500"/>
+                            <Plus className="size-4 -mt-0.5 text-gray-500" />
 
                             <h1 className="text-[#7F7F7F] text-sm font-gilroyRegular">
                               Add Filter
@@ -497,7 +506,6 @@ function TabDisplay() {
           </div>
         </div>
       </div>
-      <div className="border mt-2"></div>
 
       <div className="mt-4">{renderContent()}</div>
     </>

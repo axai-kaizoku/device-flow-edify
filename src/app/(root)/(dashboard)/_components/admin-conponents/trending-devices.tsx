@@ -9,13 +9,12 @@ export function TrendingDevices({
   dashboardData: DashboardDetails | null;
 }) {
 
-  console.log(dashboardData)
   const router = useRouter();
   return (
     <div className={`flex w-full flex-col `}>
       {(dashboardData?.deviceStatusData?.[0]?.trendingDevices?.length || 0) >
       0 ? (
-        <div className="font-gilroy flex flex-grow flex-col items-center justify-center gap-y-[5px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-2 pl-[5.2px] pr-[4.7px] pt-[13px] leading-[normal] tracking-[0px] backdrop-blur-[24]">
+        <div className="font-gilroy flex flex-grow flex-col items-center justify-center gap-y-[5px] rounded-2xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-2 pl-[5.2px] pr-[4.7px] pt-[13px] leading-[normal] tracking-[0px] backdrop-blur-[24]">
           <div className="flex items-center justify-between gap-x-4 self-stretch pl-4 pr-8">
             <div className="flex flex-col items-center">
               <div className="text-sm font-gilroySemiBold leading-[23px]">

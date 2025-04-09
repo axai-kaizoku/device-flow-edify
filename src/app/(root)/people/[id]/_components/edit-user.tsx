@@ -8,11 +8,11 @@ import { CreateUserArgs } from "@/server/userActions";
 export default function EditUser({
   children,
   userData,
-  onRefresh
+  onRefresh,
 }: {
   children: React.ReactNode;
   userData?: CreateUserArgs;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -20,7 +20,12 @@ export default function EditUser({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
-        <UserForm closeBtn={setOpen} isEditForm={true} userData={userData} onRefresh={onRefresh}/>
+        <UserForm
+          closeBtn={setOpen}
+          isEditForm={true}
+          userData={userData}
+          onRefresh={onRefresh}
+        />
       </SheetContent>
     </Sheet>
   );

@@ -66,7 +66,7 @@ export const fetchTeams = cache(async function ({
     // console.log("teams api");
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -91,9 +91,9 @@ export const fetchActiveTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 6,
+  pageLimit = 10000,
   page = 1,
-  isDeleted = false,
+  isDeleted,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
@@ -106,7 +106,7 @@ export const fetchActiveTeams = cache(async function ({
     // console.log("teams api");
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -132,7 +132,7 @@ export const fetchInactiveTeams = cache(async function ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
-  pageLimit = 6,
+  pageLimit = 10000,
   page = 1,
   isDeleted = true,
 }: FilterApiParams = {}): Promise<any> {
@@ -146,7 +146,7 @@ export const fetchInactiveTeams = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/teams/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/teams/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -181,7 +181,7 @@ export async function createTeam(
     }
 
     const res = await callAPIWithToken<Team>(
-      "https://gcp-api.edify.club/edifybackend/v1/teams", // API endpoint
+      "https://staging.deviceflow.ai/edifybackend/v1/teams", // API endpoint
       "POST", // HTTP method
       {
         title,
@@ -200,7 +200,7 @@ export async function createTeam(
 export const getTeamById = cache(async function <Team>(teamId: string) {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://gcp-api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/teams/${teamId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -217,7 +217,7 @@ export async function updateTeam(
 ): Promise<Team> {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://gcp-api.edify.club/edifybackend/v1/teams/${id}`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/teams/${id}`, // API endpoint
       "PUT", // HTTP method
       {
         ...team,
@@ -232,7 +232,7 @@ export async function updateTeam(
 export async function deleteTeam<Team>(teamId: string) {
   try {
     const res = await callAPIWithToken<Team>(
-      `https://gcp-api.edify.club/edifybackend/v1/teams/${teamId}`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/teams/${teamId}`, // API endpoint
       "DELETE",
       null
     );

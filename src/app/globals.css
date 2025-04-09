@@ -630,5 +630,13 @@ h2.title::after {
 }
 
 .onboarding-org-card {
-transition: transform 1s ease, top 1s ease, left 1s ease;
+  transition: transform 1s ease, top 1s ease, left 1s ease;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

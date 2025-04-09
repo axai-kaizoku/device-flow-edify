@@ -84,7 +84,7 @@ export default function InvitePeople({
               id="copy-link"
               type="text"
               className={
-                "text-[#025CE5] w-full rounded-md border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm"
+                "text-[#025CE5] select-none w-full rounded-md border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm"
               }
               value={link}
               placeholder=""
@@ -218,6 +218,7 @@ export default function InvitePeople({
                       <Button
                         className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
                         onClick={() => setOpen(false)}
+                        type="button"
                       >
                         Close
                       </Button>

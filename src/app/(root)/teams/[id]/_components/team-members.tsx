@@ -16,36 +16,42 @@ import { Team } from "@/server/teamActions";
 import AddTeamMember from "./add-team-member";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
+import AllIntegrationsDisplay from "@/app/(root)/integrations/_components/installed/all-integration-display";
 
 const TeamMembers = ({ teamData }: { teamData: Team }) => {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+
   const [data, setData] = useState<UsersTeamResponse>();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const handleSelectionChange = (selected: string[]) => {
     setSelectedIds(selected);
   };
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   useEffect(() => {
-    const fetch = async () => {
-      const res: UsersTeamResponse = await getUsersByTeamId(teamData?._id!, 1);
-      setData(res);
+    const fetchData = async () => {
+      setIsLoading(true); // Set loading to true when starting fetch
+      try {
+        const res: UsersTeamResponse = await getUsersByTeamId(
+          teamData?._id!,
+          1
+        );
+        setData(res);
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false when done
+      }
     };
-    fetch();
+    fetchData();
   }, []);
-
-  const handlePageChange = async (page: number) => {
-    const res: UsersTeamResponse = await getUsersByTeamId(teamData?._id!, page);
-    setData(res);
-    setCurrentPage(page);
-  };
 
   return (
     <div
-      className="rounded-2xl flex flex-col "
+      className="rounded-[5px] flex flex-col "
       style={{ border: "1px solid #F6F6F6" }}
     >
-      {data?.users?.length === 0 ? (
+      {!isLoading && data?.users?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-8">
           <teamIcons.no_team_display />
           <AddTeamMember teamData={teamData}>
@@ -69,18 +75,19 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
           </div>
           {/* <TeamTable data={users} />
            */}
-
+          {/* {JSON.stringify(data)} */}
           <>
             <div className="flex flex-col">
               <Table
                 data={data?.users ?? []}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
-                checkboxSelection={{
-                  uniqueField: "_id",
-                  //logic yet to be done
-                  onSelectionChange: handleSelectionChange,
-                }}
+                isLoading={isLoading}
+                // checkboxSelection={{
+                //   uniqueField: "_id",
+                //   //logic yet to be done
+                //   onSelectionChange: handleSelectionChange,
+                // }}
                 columns={[
                   {
                     title: "Name",
@@ -147,14 +154,56 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                   },
                   {
                     title: "Assets assigned",
-                    render: (data: User) =>
-                      data?.devices && data?.devices > 0 ? (
+                    render: (user: User) =>
+                      user?.devices && user?.devices?.length > 0 ? (
                         <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                          {`${data?.devices} Assigned`}
+                          {`${user?.devices?.length} Assigned`}
                         </div>
                       ) : (
                         <div>-</div>
                       ),
+                  },
+                  {
+                    title: "Subscriptions",
+                    render: (record: User) => {
+                      // const filteredIntegrations = (
+                      //   record?.subscriptions ?? []
+                      // ).filter((i) => i.platform !== selectedPlatform);
+                      const integrations = record?.integrations.filter(
+                        (int) => int.image
+                      );
+
+                      if (integrations?.length === 0) {
+                        return <span className="text-gray-400">-</span>;
+                      }
+
+                      const firstThree = integrations?.slice(0, 3);
+                      const extraCount = integrations?.length - 3;
+
+                      return (
+                        <AllIntegrationsDisplay
+                          data={record}
+                          allIntegrations={integrations}
+                        >
+                          <div className="flex items-center gap-2">
+                            {firstThree?.map((i, index) => (
+                              <img
+                                key={index}
+                                src={i?.image ?? ""}
+                                className="size-8 object-cover rounded-full"
+                                alt="Integration"
+                              />
+                            ))}
+
+                            {extraCount > 0 && (
+                              <span className="text-sm text-gray-500 font-gilroySemiBold">
+                                +{extraCount}
+                              </span>
+                            )}
+                          </div>
+                        </AllIntegrationsDisplay>
+                      );
+                    },
                   },
                   {
                     title: "Actions",
@@ -170,13 +219,6 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                     ),
                   },
                 ]}
-              />
-            </div>
-            <div className="my-4">
-              <Pagination
-                current_page={currentPage}
-                total_pages={data?.total_pages!}
-                onPageChange={handlePageChange}
               />
             </div>
           </>

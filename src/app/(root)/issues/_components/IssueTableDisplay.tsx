@@ -8,28 +8,39 @@ import { issueIcons } from "../icons";
 import Pagination from "../../teams/_components/pagination";
 import { IssueStatusChange } from "./issue-status-change";
 import { openIssues } from "@/server/filterActions";
+import IssueClosedHeader from "./issue-closed-header";
 
 interface IssueTableDisplayProps {
   data: IssueResponse | null;
-  countIssues: IssueResponse | null;
-  setIssues: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
+  countIssues?: IssueResponse | null;
+  setIssues?: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
   onRefresh?: () => Promise<void>;
+  issuesText?: string;
 }
 
 function IssueTableDisplay({
   data,
   setIssues,
   countIssues,
-  onRefresh
+  onRefresh,
+  issuesText,
 }: IssueTableDisplayProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (page: number) => {
-    const res = await openIssues({ page });
-    setIssues(res);
-    setCurrentPage(page);
+    setIsLoading(true);
+    try {
+      const res = await openIssues({ page });
+      setIssues(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Failed to Fetch Issues");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSelectionChange = (selected: string[]) => {
@@ -37,20 +48,25 @@ function IssueTableDisplay({
   };
 
   return (
-    <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-      {data?.issues.length === 0 ? (
+    <>
+      {!isLoading && data?.issues.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <issueIcons.no_issues_icon />
         </div>
       ) : (
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-          <OpenHeader countIssues={countIssues} />
+        <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+          {issuesText?.toLowerCase().includes("open") ? (
+            <OpenHeader countIssues={countIssues} />
+          ) : (
+            <IssueClosedHeader data={data} />
+          )}
 
           <div className="flex flex-col">
             <Table
               data={data?.issues!}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
+              isLoading={isLoading}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
@@ -148,34 +164,28 @@ function IssueTableDisplay({
                 },
 
                 {
-                  title: "Actions",
-                  render: (record: Issues) => (
-                    <IssueStatusChange
-                      reOpen={false}
-                      id={record?._id!}
-                      issueData={record}
-                      onRefresh={onRefresh}
-                    >
-                      <div className="rounded-full bg-[#027A14] text-sm 2xl:text-base whitespace-nowrap px-5 py-1.5 text-white font-gilroyMedium">
-                        Mark as resolved
-                      </div>
-                    </IssueStatusChange>
-                  ),
+                  title:
+                    issuesText?.toLowerCase().includes("open") && "Actions",
+                  render: (record: Issues) =>
+                    issuesText?.toLowerCase().includes("open") && (
+                      <IssueStatusChange
+                        reOpen={false}
+                        id={record?._id!}
+                        issueData={record}
+                        onRefresh={onRefresh}
+                      >
+                        <div className="rounded-md bg-[#027A14] text-[13px]  whitespace-nowrap px-4 py-2 text-white font-gilroyMedium">
+                          Mark as resolved
+                        </div>
+                      </IssueStatusChange>
+                    ),
                 },
               ]}
             />
-            {/* Pagination Control */}
-            <div className="mt-2">
-              <Pagination
-                current_page={currentPage}
-                total_pages={data?.total_pages!}
-                onPageChange={handlePageChange}
-              />
-            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -21,6 +21,7 @@ const TeamMembers = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState<UsersTeamResponse>();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectionChange = (selected: string[]) => {
     setSelectedIds(selected);
@@ -35,22 +36,29 @@ const TeamMembers = ({
   }, []);
 
   const handlePageChange = async (page: number) => {
-    const res: UsersTeamResponse = await getUsersByTeamId(id, page);
-    setData(res);
-    setCurrentPage(page);
+    setIsLoading(true);
+    try {
+      const res: UsersTeamResponse = await getUsersByTeamId(id, page);
+      setData(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching Members:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div
-      className="rounded-2xl flex flex-col"
+      className="rounded-[10px] flex flex-col"
       style={{ border: "1px solid #F6F6F6" }}
     >
-      {data?.users?.length === 0 ? (
+      {!isLoading && data?.users?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-8">
           <Icons.no_people_display />
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col overflow-auto">
           <div className="flex gap-3 p-3 items-center">
             <h2 className="text-lg pl-3 font-gilroySemiBold text-gray-800">
               Team Members
@@ -67,6 +75,7 @@ const TeamMembers = ({
               <Table
                 data={data?.users ?? []}
                 selectedIds={selectedIds}
+                isLoading={isLoading}
                 setSelectedIds={setSelectedIds}
                 checkboxSelection={{
                   uniqueField: "_id",
@@ -127,23 +136,16 @@ const TeamMembers = ({
                   },
                   {
                     title: "Assets assigned",
-                    render: (data: User) =>
-                      data?.devices && data?.devices > 0 ? (
+                    render: (user: User) =>
+                      user?.devices && user?.devices?.length > 0 ? (
                         <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
-                          {`${data?.devices} Assigned`}
+                          {`${user?.devices?.length} Assigned`}
                         </div>
                       ) : (
                         <div>-</div>
                       ),
                   },
                 ]}
-              />
-            </div>
-            <div className="my-4">
-              <Pagination
-                current_page={currentPage}
-                total_pages={data?.total_pages!}
-                onPageChange={handlePageChange}
               />
             </div>
           </>

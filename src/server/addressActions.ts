@@ -19,7 +19,7 @@ export type Address = {
 export const getAddress = cache(async function (): Promise<Address[]> {
   try {
     const res = await callAPIWithToken<Address[]>(
-      "https://gcp-api.edify.club/edifybackend/v1/address",
+      "https://staging.deviceflow.ai/edifybackend/v1/address",
       "GET"
     );
     return res?.data;
@@ -33,7 +33,7 @@ export async function createAddress(address: Address): Promise<Address> {
     const sess = await getSession();
 
     const res = await callAPIWithToken<Address>(
-      "https://gcp-api.edify.club/edifybackend/v1/address", // API endpoint
+      "https://staging.deviceflow.ai/edifybackend/v1/address", // API endpoint
       "POST", // HTTP method
       {
         userId: sess?.user?.user.userId,
@@ -54,7 +54,7 @@ export async function updateAddress(
 ): Promise<Address> {
   try {
     const res = await callAPIWithToken<Address>(
-      `https://gcp-api.edify.club/edifybackend/v1/address/${id}`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/address/${id}`, // API endpoint
       "PUT", // HTTP method
       {
         ...address,
@@ -69,7 +69,7 @@ export async function updateAddress(
 export async function deleteAddress<Address>(addressId: string) {
   try {
     const res = await callAPIWithToken<Address>(
-      `https://gcp-api.edify.club/edifybackend/v1/address/${addressId}`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/address/${addressId}`, // API endpoint
       "DELETE",
       null
     );

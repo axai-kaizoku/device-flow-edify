@@ -37,16 +37,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    turbo: {
-      rules: {
-        ".svg": {
-          loaders: ["@svgr/webpack"],
-          as: ".js",
-        },
-      },
-    },
-  },
 };
 
 // const withBundleAnalyzer = BundleAnalyzer({

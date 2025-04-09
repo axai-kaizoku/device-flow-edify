@@ -9,7 +9,7 @@ import {
   Settings,
   UserRound,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Props } from "@/app/(root)/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/app/store/authSlice";
@@ -47,7 +47,7 @@ export default function Header({ session }: Props) {
   const placeholders = ["Assets", "People", "Teams", "Issues"];
   const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
   const [animationState, setAnimationState] = useState(false);
-
+  const pathname = usePathname();
   useEffect(() => {
     let index = 0;
 
@@ -67,6 +67,9 @@ export default function Header({ session }: Props) {
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
+  const pathParts = pathname.split("/").filter(Boolean);
+  const pageName =
+    pathname === "/" ? "Dashboard" : pathParts[0].replace(/-/g, " ");
 
   // Closing dropdown on outside click
   useEffect(() => {
@@ -114,9 +117,9 @@ export default function Header({ session }: Props) {
   return (
     <>
       {session ? (
-        <header className="fixed  top-0 left-0 right-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 ">
+        <header className="bg-white border border-b border-t-0 border-l-0 border-r-0  top-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 pl-4">
           {/* Logo Section */}
-          <div
+          {/* <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => {
               router.push("/");
@@ -129,22 +132,26 @@ export default function Header({ session }: Props) {
               alt="Logo"
               className="2xl:w-[170px] w-[150px] 2xl:h-10 h-9"
             />
-          </div>
+          </div> */}
+
+          <h1 className="font-gilroySemiBold  w-40 capitalize text-lg text-[#7f7f7f]">
+            {pageName}
+          </h1>
 
           {/* Middle Search and Actions */}
-          <div className="flex justify-center items-center ml-16">
-            <div className="flex items-center gap-x-4 lg:gap-x-1 2xl:gap-x-4 bg-transparent border border-gray-400 bg-opacity-90 rounded-[2.6rem] px-1 py-1">
+          <div className="flex justify-center items-center ">
+            <div className="flex items-center gap-x-2 bg-transparent  bg-opacity-90  px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-gray-400 rounded-[calc(2.5rem+1px)] px-2 py-1.5">
+              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-1.5">
                 <div className="flex gap-2 items-center">
-                  <Search className="text-gray-500 size-[1.16rem]" />
+                  <Search className=" size-[1.16rem]" />
                   <input
                     type="text"
                     placeholder={`Search ${currentPlaceholder}...`}
                     onChange={(e) => setInputValue(e.target.value)} // Update input value
                     onFocus={() => setIsFocused(true)} // Mark as focused
                     onBlur={() => setIsFocused(false)} // Remove focus
-                    className={`flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-500 placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
+                    className={`flex-grow bg-transparent outline-none text-black placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
                       !isFocused && inputValue === "" && animationState
                         ? "animate-slide-up"
                         : ""
@@ -160,53 +167,54 @@ export default function Header({ session }: Props) {
                 <>
                   {" "}
                   <CreateDevice>
-                    <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black hover:text-white hover:border-white group">
-                      <div className="rounded-full border p-1 border-gray-400 border-dashed group-hover:border-white">
-                        <Plus className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+                    <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
+                      <div className=" p-1 border-gray-400  group-hover:border-white">
+                        <Plus className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white" />
                       </div>
-                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                      <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                         Add Device
                       </div>
                     </div>
                   </CreateDevice>
                   <ReAssign>
-                    <div className="flex cursor-pointer gap-2 items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group">
-                      <div className="rounded-full border border-gray-400 p-1 border-dashed group-hover:border-white">
-                        <RefreshCw className="size-4 lg:size-3.5 2xl:size-4 text-gray-500 group-hover:text-white" />
+                    <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
+                      <div className=" p-1  group-hover:border-white">
+                        <RefreshCw className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white" />
                       </div>
 
-                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                      <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                         Re/Assign
                       </div>
                     </div>
                   </ReAssign>
                   <CreateUser>
-                    <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
-                      <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
-                        <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
+                    <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                      <div className=" group-hover:border-white group">
+                        <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white  " />
                       </div>
-                      <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                      <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                         Add Employee
                       </div>
                     </div>
                   </CreateUser>{" "}
                 </>
               ) : (
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    router.push("/devices");
-                  }}
-                >
-                  <div className="flex gap-2 cursor-pointer items-center rounded-full border border-gray-400 p-[6px] pr-[12px] hover:bg-black group hover:text-white hover:border-white">
-                    <div className="rounded-full p-1 border border-gray-400 border-dashed group-hover:border-white group">
-                      <AlertTriangle className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white text-gray-600" />
-                    </div>
-                    <div className="text-gray-500 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                      Report an Issue
-                    </div>
-                  </div>
-                </div>
+                // <div
+                //   className="cursor-pointer"
+                //   onClick={() => {
+                //     router.push("/devices");
+                //   }}
+                // >
+                //   <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                //     <div className=" group-hover:border-white group">
+                //       <AlertTriangle className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white  " />
+                //     </div>
+                //     <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                //       Report an Issue
+                //     </div>
+                //   </div>
+                // </div>
+                ""
               )}
             </div>
           </div>
@@ -226,7 +234,6 @@ export default function Header({ session }: Props) {
                 <Settings className="size-5" />
               </button>
             )}
-
             {/* Query Icon */}
             {/* <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
               <CircleHelp className="size-5" />
@@ -258,7 +265,7 @@ export default function Header({ session }: Props) {
                         }}
                         className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
-                        <ViewProfileIcon/>
+                        <ViewProfileIcon />
                         View Profile{" "}
                       </button>
                     </div>
@@ -267,12 +274,10 @@ export default function Header({ session }: Props) {
 
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
-                        onClick={() => 
-                          
+                        onClick={() =>
                           // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
                           signOut()
-                           
-                          }
+                        }
                         className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
                         <LogOut className="size-4" />
@@ -286,10 +291,9 @@ export default function Header({ session }: Props) {
               <div
                 className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
-                onClick={() => 
+                onClick={() =>
                   // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
                   signOut()
-
                 } // Center align the button
               >
                 <LogOut className="w-5 h-5" />

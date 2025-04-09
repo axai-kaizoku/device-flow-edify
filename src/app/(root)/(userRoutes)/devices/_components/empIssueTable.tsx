@@ -20,18 +20,17 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
 
   // Calculate the start and end indices for the current page
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentIssues = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   return (
-    <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
+    <div>
       {data?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-4">
           <issueIcons.no_issues_icon />
         </div>
       ) : (
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+        <div className="rounded-[10px] mt-2 border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           {" "}
           <div className=" flex gap-3 w-fit">
             <h1 className="2xl:text-xl text-lg pl-6 font-gilroySemiBold">
@@ -43,9 +42,9 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
           </div>
           <div className="flex flex-col gap-2">
             <Table
-              data={currentIssues}
+              data={data}
               selectedIds={selectedIds}
-                setSelectedIds={setSelectedIds}
+              setSelectedIds={setSelectedIds}
               checkboxSelection={{
                 uniqueField: "_id",
                 // logic yet to be done
@@ -124,22 +123,12 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
                         router.push(`/devices/issues/${data?._id}`)
                       }
                     >
-                      <ChevronRight className="text-[#82898e]"/>
+                      <ChevronRight className="text-[#82898e]" />
                     </div>
                   ),
                 },
               ]}
             />
-
-            {/* Pagination Control */}
-            <div className="mt-1">
-              <Pagination
-                current_page={currentPage}
-                per_page={ITEMS_PER_PAGE}
-                total_pages={5}
-                onPageChange={handlePageChange}
-              />
-            </div>
           </div>
         </div>
       )}

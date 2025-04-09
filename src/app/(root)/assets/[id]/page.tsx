@@ -18,66 +18,64 @@ export default async function SingleDevice({ params }: DevicePageProps) {
   const data: any = await getDeviceById(params?.id);
   return (
     <CombinedContainer>
-      <div className="flex justify-between w-full mt-2">
-        <div className="text-[#7F7F7F] font-gilroySemiBold pt-[5px] text-base 2xl:text-lg">
-          Device ID: <span className="text-black">{data?.serial_no ?? ""}</span>
+      <div className="flex gap-4 sticky top-0 z-50  items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+        <div className="flex  items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 ">
+          <div className=" text-[#7F7F7F] text-nowrap text-sm font-gilroySemiBold">
+            Device ID:{" "}
+            <span className="text-black">{data?.serial_no ?? ""}</span>
+          </div>
         </div>
+
         <div className="flex gap-5 pr-7">
           <div className="flex gap-2.5">
             {data?.userId ? (
               <UnassignAsset id={params?.id ?? ""}>
-                <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <UserDetailIcons.unassign_asset className="text-black size-5" />
-                  <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                  <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Unassign
-                  </span>
+                  </div>
                 </div>
               </UnassignAsset>
             ) : null}
             {data?.userId ? (
               <ReassignAsset deviceData={data}>
-                <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <UserDetailIcons.reassign_asset className="text-black size-5" />
-                  <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                  <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Reassign
-                  </span>
+                  </div>
                 </div>
               </ReassignAsset>
             ) : (
               <ReassignAsset deviceData={data}>
-                <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                  <UserDetailIcons.reassign_asset className="text-black size-5" />
-                  <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+                <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                  <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                     Assign
-                  </span>
+                  </div>
                 </div>
               </ReassignAsset>
             )}
 
             <EditAsset deviceData={data}>
-              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <EditTableIcon className="text-black size-5" />
-                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                   Edit
-                </span>
+                </div>
               </div>
             </EditAsset>
 
             <DeleteAsset id={params?.id ?? ""}>
-              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <UserDetailIcons.delete_asset className="text-black size-5" />
-                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                   Delete
-                </span>
+                </div>
               </div>
             </DeleteAsset>
 
             <CreateIssue device={data}>
-              <div className="flex items-center relative py-1.5 gap-1  pl-3 pr-3  text-[#7F7F7F] group border border-gray-400 rounded-full hover:text-black hover:border-black transition-all duration-300">
-                <AlertTriangle className="text-[#6C6C6C] size-[18px] mb-0.5" />
-                <span className="text-[15px]  pr-1 whitespace-nowrap text-[#6C6C6C] group-hover:text-black font-gilroyMedium rounded-lg ">
+              <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
+                <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                   Add Issue
-                </span>
+                </div>
               </div>
             </CreateIssue>
             {/* <div className="rounded-full border border-[#6C6C6C] w-10 h-10 flex justify-center items-center cursor-pointer">

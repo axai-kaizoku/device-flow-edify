@@ -12,7 +12,7 @@ const MemberIcon = ({
   isPlaceholder: boolean;
 }) => (
   <div
-    className={`w-10 h-10 rounded-full border-2 border-white flex items-center justify-center ${
+    className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center ${
       isPlaceholder ? "bg-gray-200 text-gray-500" : ""
     }`}
   >
@@ -80,7 +80,7 @@ export const TeamCard = ({
   return (
     <div
       className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
- relative rounded-[25px] max-lg:w-[calc(50%-16px)] max-2xl:w-[calc(33.33%-16px)] 2xl:w-[402px] p-4 flex flex-col transition-all "
+ relative rounded-lg max-lg:w-[calc(50%-16px)] max-2xl:w-[calc(33.33%-16px)]  p-4 flex flex-col transition-all "
     >
       <Link
         href={`/teams/${_id}`}
@@ -88,20 +88,20 @@ export const TeamCard = ({
       >
         {/* Header Section */}
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <img
               src={
                 image ||
                 "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
               }
               alt="manager-icon"
-              className="w-14 h-14 object-cover rounded-full"
+              className="w-12 h-12 object-cover rounded-full"
             />
             <div className="-mt-1 flex-col flex">
-              <h1 className="text-lg 2xl:text-xl font-gilroySemiBold">
+              <h1 className="text-base 2xl:text-lg font-gilroySemiBold">
                 {active_manager?.[0]?.first_name || "No Manager"}
               </h1>
-              <p className="text-base font-gilroyMedium text-[#7C7C7C] -mt-1">
+              <p className="text-sm font-gilroyMedium text-[#7C7C7C] -mt-1">
                 Manager
               </p>
             </div>
@@ -111,21 +111,21 @@ export const TeamCard = ({
         {/* Description Section */}
         <div>
           <div className="flex items-center gap-2">
-            <p className="font-gilroySemiBold text-2xl line-clamp-2">
+            <p className="font-gilroySemiBold text-xl line-clamp-2">
               {title ?? "-"}
             </p>
-            <p className="font-gilroySemiBold text-base text-[#7C7C7C] line-clamp-2">
+            {/* <p className="font-gilroySemiBold text-sm text-[#7C7C7C] line-clamp-2">
               ({team_code ?? "-"})
-            </p>
+            </p> */}
           </div>
-          <p className="text-[#7C7C7C] text-base font-gilroyMedium line-clamp-2">
+          <p className="text-[#7C7C7C] text-sm font-gilroyMedium line-clamp-2">
             {description ?? "-"}
           </p>
         </div>
 
         {/* Members Section */}
         <div className="flex -mt-3 items-center justify-between">
-          <h1 className="text-base 2xl:text-lg font-gilroyMedium text-[#7C7C7C]">
+          <h1 className="text-sm 2xl:text-lg font-gilroyMedium ">
             {employees_count === 0
               ? "No Members Yet"
               : `${employees_count} Active Members`}

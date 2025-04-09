@@ -144,7 +144,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
   return (
     <>
-      <div className="bg-white border border-[rgba(195, 195, 195, 0.31)] rounded-[33px] p-5 flex flex-col justify-between gap-4">
+      <div className="bg-white border border-[rgba(195, 195, 195, 0.31)] rounded-lg p-5 flex flex-col justify-between gap-4">
         {/* Title with Icon */}
         <div className="flex justify-start items-center gap-3.5">
           <RenderIcon report={report} />
@@ -160,7 +160,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
         {/* Button as Sheet Trigger */}
         <button
-          className="bg-black text-white rounded-[49px] py-2 px-20 font-gilroySemiBold 2xl:text-lg text-base"
+          className="bg-black text-white rounded-md py-2  font-gilroySemiBold text-sm"
           onClick={handleDownloadAction}
         >
           Download

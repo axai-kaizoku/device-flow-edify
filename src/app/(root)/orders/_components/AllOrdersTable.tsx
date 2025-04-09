@@ -1,15 +1,15 @@
 "use client";
-import React, { useState } from "react";
-import Pagination from "../../teams/_components/pagination";
-import { useRouter } from "next/navigation";
 import { Table } from "@/components/wind/Table";
-import Link from "next/link";
 import { User } from "@/server/userActions";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { orderIcons } from "../icons";
 const ITEMS_PER_PAGE = 5;
 function AllOrdersTable({ data }: { data: any[] }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const handleSelectionChange = (selected: string[]) => {
@@ -27,7 +27,7 @@ function AllOrdersTable({ data }: { data: any[] }) {
   const handlePageChange = (page: number) => setCurrentPage(page);
   return (
     <>
-      {data?.length === 0 ? (
+      {!isLoading && data?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <orderIcons.no_order_display />
 
@@ -38,9 +38,9 @@ function AllOrdersTable({ data }: { data: any[] }) {
           </Link>
         </div>
       ) : (
-        <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
+        <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
           <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6 pt-5">
-            <h1 className="2xl:text-lg text-xl font-gilroySemiBold">Orders</h1>
+            <h1 className="font-gilroySemiBold">Total Orders</h1>
             <h1 className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
               {data?.length} Orders
             </h1>
@@ -50,6 +50,7 @@ function AllOrdersTable({ data }: { data: any[] }) {
               data={currentOrder}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
+              isLoading={isLoading}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done
@@ -145,14 +146,14 @@ function AllOrdersTable({ data }: { data: any[] }) {
             />
             {/* Pagination Control */}
           </div>
-          <div className="my-2">
+          {/* <div className="my-2">
             <Pagination
               current_page={currentPage}
               per_page={ITEMS_PER_PAGE}
               total_pages={totalPages}
               onPageChange={handlePageChange}
             />
-          </div>
+          </div> */}
         </div>
       )}
     </>

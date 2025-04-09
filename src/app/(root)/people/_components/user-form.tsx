@@ -31,7 +31,7 @@ interface UserFormProps {
   closeBtn: (state: boolean) => void;
   isEditForm?: boolean;
   userData?: CreateUserArgs | User;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }
 
 export const UserForm = ({
@@ -76,7 +76,7 @@ export const UserForm = ({
     designation: userData ? userData?.designation : "",
     team: userData?.team[0]?._id
       ? // @ts-ignore
-      { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
+        { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
@@ -213,7 +213,7 @@ export const UserForm = ({
           await updateUser(userData?._id!, user);
           setLoading(false);
           openToast("success", "User update success !");
-          onRefresh();
+          // onRefresh();
           // router.refresh();
           closeBtn(false);
         } catch (error: any) {
@@ -425,7 +425,7 @@ export const UserForm = ({
                   date_of_birth: "09/12/1992",
                   gender: "Male",
                   onboarding_date: "28/01/2020",
-                  team_code: "ABCDEF"
+                  team_code: "ABCDEF",
                 }}
               />
             </div>

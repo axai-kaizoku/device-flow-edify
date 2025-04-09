@@ -10,7 +10,7 @@ import { callAPIWithToken, getSession } from "./helper";
 //   return result;
 // }
 
-const qcUrl = "https://e819-49-207-213-73.ngrok-free.app";
+const qcUrl = "https://staging.deviceflow.ai";
 
 export async function qualityCheck() {
   try {
@@ -111,17 +111,36 @@ export async function qcReportTableAdmin(page: number, limit: number) {
   }
 }
 
+export type ReportData = {
+  success: boolean;
+  data: {
+    serial_no: string;
+    processor: string;
+    score: string;
+    Name: string;
+    Device: string;
+    Ram: string;
+    Storage: string;
+    "Processor Generation": string;
+    "Screen Size(in Inches)": string;
+    "Battery Health": string;
+    "Backup In Minute": string;
+    "Reported On": string;
+    [key: string]: string; // For additional dynamic checks
+  };
+};
+
 export async function downloadReport({ userId }: { userId: string }) {
   try {
     const session = await getSession();
-    let apiUrl="";
+    let apiUrl = "";
     if (session.user.user.role == 1) {
-       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/employee-report/${userId}`;
+      apiUrl = `${qcUrl}/edifybackend/v1/quality-check/employee-report/${userId}`;
     } else {
-       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/admin-report/${userId}`;
+      apiUrl = `${qcUrl}/edifybackend/v1/quality-check/admin-report/${userId}`;
     }
 
-    const response = await callAPIWithToken<QcReportResponse>(apiUrl, "GET");
+    const response = await callAPIWithToken<ReportData>(apiUrl, "GET");
     // console.log(response, "ITEM ADDED TO CART");
     // console.log(response.data);
     return response?.data;

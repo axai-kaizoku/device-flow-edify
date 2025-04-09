@@ -13,7 +13,7 @@ export const InnerContainer = ({ children, className }: ChildrenProps) => {
   return (
     <section
       className={cn(
-        "flex  rounded-3xl  px-3 py-4 flex-col w-[97%] overflow-y-auto h-full min-h-[90vh] 2xl:min-h-[70vh]",
+        "flex  rounded-3xl  px-3 py-4 flex-col w-[97%] overflow-y-auto h-full min-h-[90vh]  mt-14 2xl:mt-0 2xl:min-h-[70vh]",
         className
       )}
     >
@@ -24,7 +24,7 @@ export const InnerContainer = ({ children, className }: ChildrenProps) => {
 
 export const OuterContainer = ({ children }: ChildrenProps) => {
   return (
-    <div className="flex flex-col w-full justify-center h-[83vh]">
+    <div className="flex hide-scrollbar flex-col w-full justify-center h-[83vh]">
       {children}
     </div>
   );

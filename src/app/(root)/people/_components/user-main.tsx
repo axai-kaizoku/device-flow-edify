@@ -14,32 +14,40 @@ import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
 import { useToast } from "@/hooks/useToast";
 import { DeleteModal } from "./deleteUserModal";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
 
 export default function UserMain({
   data,
+  peopleText = "Total People",
   setUsers,
-  onRefresh
+  onRefresh,
 }: {
   data: UserResponse | null;
-  setUsers: React.Dispatch<React.SetStateAction<UserResponse | null>>;
-  onRefresh: () => Promise<void>;
+  peopleText?: string;
+  setUsers?: React.Dispatch<React.SetStateAction<UserResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }) {
-  if (!data) {
-    return <Spinner />;
-  }
-
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { openToast } = useToast();
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // const [users, setUsers] = useState(data);
 
-  const handlePageChange = async (page: number) => {
-    const res = await activeUsers({ page });
-    setUsers(res);
-    setCurrentPage(page);
-  };
+  // const handlePageChange = async (page: number) => {
+  //   setIsLoading(true); // Set loading to true when changing pages
+  //   try {
+  //     const res = await activeUsers({ page });
+  //     setUsers(res);
+  //     setCurrentPage(page);
+  //   } catch (error) {
+  //     console.error("Error fetching Members:", error);
+  //   } finally {
+  //     setIsLoading(false); // Set loading to false when done
+  //   }
+  // };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
@@ -58,12 +66,11 @@ export default function UserMain({
       setOpen(false);
       openToast("success", "Users deleted successfully!");
       setSelectedIds([]); // Clear selection after deletion
-      await onRefresh(); // Refresh data after deletion
+      // await onRefresh(); // Refresh data after deletion
     } catch (error) {
       openToast("error", `Failed to delete Users : ${error}`);
     }
   };
-
 
   const handleSelectionChange = (selected: string[]) => {
     setSelectedIds(selected);
@@ -73,8 +80,9 @@ export default function UserMain({
 
   return (
     <>
-      <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {data?.users?.length === 0 ? (
+      {/* {JSON.stringify(data?.users[0])} */}
+      <div>
+        {!isLoading && data?.users?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-8">
             <Icons.no_people_display />
             <CreateUser>
@@ -85,11 +93,11 @@ export default function UserMain({
           </div>
         ) : (
           <>
-            <div className="rounded-[21px] border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+            <div className="rounded-lg border border-[#F6F6F6] bg-white backdrop-blur-[22.8px] pt-5 pb-2 mt-4 flex flex-col gap-5">
               <div className="flex justify-between items-center">
                 <div className=" flex gap-3 w-fit">
                   <h1 className="text-xl font-gilroySemiBold pl-6">
-                    Total People
+                    {peopleText}
                   </h1>
                   <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
                     {data?.total} People
@@ -97,26 +105,37 @@ export default function UserMain({
                 </div>
 
                 {selectedIds.length > 0 && (
-                    <DeleteModal handleBulkDelete={handleBulkDelete} open={open} setOpen={setOpen}>
-                      <button
-                        // onClick={handleBulkDelete}
-                        className="bg-black flex items-center gap-2 text-white px-3 py-1 font-gilroySemiBold w-fit mr-8 rounded-full"
-                      >
-                        Delete
-                      </button>
-                    </DeleteModal>
-                    // {selectedIds.length} Users
+                  <DeleteModal
+                    handleBulkDelete={handleBulkDelete}
+                    open={open}
+                    setOpen={setOpen}
+                  >
+                    <button
+                      // onClick={handleBulkDelete}
+                      className="bg-black text-sm flex items-center gap-2 text-white px-3 py-0.5 font-gilroySemiBold w-fit mr-8 rounded-md"
+                    >
+                      Delete
+                    </button>
+                  </DeleteModal>
+                  // {selectedIds.length} Users
                 )}
               </div>
-              <Suspense fallback={<div>Loading...</div>}>
-                <div className="flex flex-col  w-full">
+              <Suspense
+                fallback={
+                  <div>
+                    <DeviceFlowLoader />
+                  </div>
+                }
+              >
+                <div className="flex flex-col h-full w-full">
                   <Table
                     data={data?.users ?? []}
                     selectedIds={selectedIds}
+                    isLoading={isLoading}
                     setSelectedIds={setSelectedIds}
                     checkboxSelection={{
                       uniqueField: "_id",
-                      onSelectionChange: handleSelectionChange
+                      onSelectionChange: handleSelectionChange,
                     }}
                     columns={[
                       {
@@ -195,15 +214,56 @@ export default function UserMain({
                           </div>
                         ),
                       },
+                      // {
+                      //   title: "Team",
+                      //   render: (data) => (
+                      //     <div className="">
+                      //       {data?.team?.[0]?.title ?? "-"}
+                      //     </div>
+                      //   ),
+                      // },
                       {
-                        title: "Team",
-                        render: (data) => (
-                          <div className="">
-                            {data?.team?.[0]?.title ?? "-"}
-                          </div>
-                        ),
-                      },
+                        title: "Subscriptions",
+                        render: (record: User) => {
+                          // const filteredIntegrations = (
+                          //   record?.subscriptions ?? []
+                          // ).filter((i) => i.platform !== selectedPlatform);
+                          const integrations = record?.integrations.filter(
+                            (int) => int.image
+                          );
 
+                          if (integrations?.length === 0) {
+                            return <span className="text-gray-400">-</span>;
+                          }
+
+                          const firstThree = integrations?.slice(0, 3);
+                          const extraCount = integrations?.length - 3;
+
+                          return (
+                            <AllIntegrationsDisplay
+                              data={record}
+                              allIntegrations={integrations}
+                            >
+                              <div className="flex items-center gap-2">
+                                {firstThree?.map((i, index) => (
+                                  <img
+                                    key={index}
+                                    src={i?.image ?? ""}
+                                    className="size-8 object-cover rounded-full"
+                                    alt="Integration"
+                                  />
+                                ))}
+
+                                {extraCount > 0 && (
+                                  <span className="text-sm text-gray-500 font-gilroySemiBold">
+                                    +{extraCount}
+                                  </span>
+                                )}
+                              </div>
+                            </AllIntegrationsDisplay>
+                          );
+                        },
+                      },
                       {
                         title: "Devices assigned",
                         render: (data: User) =>
@@ -226,10 +286,10 @@ export default function UserMain({
                       >
                         <DeleteTableIcon className="size-6" />
                       </button> */}
-                            <DeleteUser id={data?._id} onRefresh={onRefresh}>
+                            <DeleteUser id={data?._id}>
                               <DeleteTableIcon className="size-6" />
                             </DeleteUser>
-                            <EditUser userData={data} onRefresh={onRefresh}>
+                            <EditUser userData={data}>
                               <EditTableIcon className="size-5" />
                             </EditUser>
                           </div>
@@ -237,13 +297,13 @@ export default function UserMain({
                       },
                     ]}
                   />
-                  <div className="mt-2">
+                  {/* <div className="mt-2">
                     <Pagination
                       current_page={currentPage}
                       total_pages={data?.total_pages!}
                       onPageChange={handlePageChange}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </Suspense>
             </div>

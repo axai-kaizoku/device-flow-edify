@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 export const getDashboard = cache(async function <Org>() {
   try {
     const res = await callAPIWithToken<Org>(
-      `https://gcp-api.edify.club/edifybackend/v1/organisation/dashboard`, // API endpoint
+      `https://staging.deviceflow.ai/edifybackend/v1/organisation/dashboard`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -35,7 +35,7 @@ export async function sendFeedback({
 
   try {
     const { data } = await callAPI(
-      "https://gcp-api.edify.club/edifybackend/v1/auth/user/onboard?feedback=true",
+      "https://staging.deviceflow.ai/edifybackend/v1/auth/user/onboard?feedback=true",
       "POST",
       payload,
       {

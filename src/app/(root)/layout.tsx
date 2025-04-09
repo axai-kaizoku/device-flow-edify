@@ -25,32 +25,25 @@ export default async function MainLayout({
 
   return (
     <div className="relative">
+      {/* <div className="bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed h-full min-h-screen"></div> */}
+      {/* <div className="absolute inset-0 bg-black opacity-[3%] backdrop-blur-lg z-10" /> */}
       <div
-        className="bg-[url('/media/BG.svg')] bg-cover bg-top bg-fixed h-full min-h-screen"
-      ></div>
-      <div className="absolute inset-0 bg-black opacity-[3%] backdrop-blur-lg z-10" />
-      <div
-        className="flex flex-col h-full min-h-screen  fixed z-20 mt-1"
-        style={{ top: 1, width: "100%" }}
+        className="flex flex-row h-full min-h-screen  fixed z-20"
+        style={{ width: "100%" }}
       >
-        {/* Header Section */}
-        <Header session={session} />
-        <div className="h-14 pointer-events-none w-full" />
-
         {/* Main Content Section */}
-        <div className="flex flex-grow  w-full  h-[calc(100vh-9rem)]">
+        <div className="flex flex-grow  w-full  ">
           {/* Sidebar */}
-          <div
-            className="fixed  mt-11 left-0 w-36 h-[calc(100vh-4rem)] bg-transparent"
-            style={{ zIndex: 10 }}
-          >
+          <div className="fixed top-0 z-30 left-0 w-56 h-full bg-transparent border bg-white">
             <Sidebar session={session} />
           </div>
 
-          {/* Main Content */}
-          <div className="ml-36 mt-2 w-full z-10">
-            <div className="h-8 pointer-events-none w-full" />
-            {children}
+          <div className="flex flex-col w-full h-full ml-56">
+            {/* Header Section */}
+            <Header session={session} />
+
+            {/* Main Content */}
+            <div className=" w-full z-10 bg-[#FAFBFC] h-full">{children}</div>
           </div>
         </div>
       </div>

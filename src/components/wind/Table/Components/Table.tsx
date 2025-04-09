@@ -19,6 +19,8 @@ import { deepCopy, returnTrueValue } from "./utility";
 import { Checkbox } from "@/components/wind/Checkbox/index";
 import { EmptyTable } from "./EmptyTable";
 import { SortArrow } from "../Icons/SortArrow";
+import { Skeleton } from "../../Skeleton";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export const Table = ({
   data,
@@ -29,7 +31,8 @@ export const Table = ({
   className,
   footer,
   selectedIds,
-  setSelectedIds
+  setSelectedIds,
+  isLoading,
 }: TableProps) => {
   const [activeColumn, setActiveColumn] = useState<string>("");
   const [initialData, setInitialData] = useState<Array<any>>([]);
@@ -49,6 +52,62 @@ export const Table = ({
   // Reference
 
   // Reference
+
+  // Skeleton Table Component
+  const SkeletonTable = ({
+    columns,
+    checkboxSelection,
+    rows = 5,
+  }: {
+    columns: ColumnType[];
+    checkboxSelection?: boolean;
+    rows?: number;
+  }) => {
+    return (
+      <TableContainer>
+        <TableTag>
+          <TableHeader>
+            <TableHeadRow>
+              {checkboxSelection && (
+                <TableCell style={{ textAlign: "left", marginLeft: "12px" }}>
+                  <Skeleton width="20px" height="20px" />
+                </TableCell>
+              )}
+              {columns.map((_, index) => (
+                <TableCell key={index} style={{ padding: "12px 16px" }}>
+                  <Skeleton width="70%" height="20px" />
+                </TableCell>
+              ))}
+            </TableHeadRow>
+          </TableHeader>
+          <TableBody className="h-full ">
+            {Array.from({ length: rows }).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {checkboxSelection && (
+                  <TableCell>
+                    <Skeleton
+                      width="20px"
+                      height="40px"
+                      delay={rowIndex * 0.1}
+                    />
+                  </TableCell>
+                )}
+                {columns.map((_, cellIndex) => (
+                  <TableCell key={`${rowIndex}-${cellIndex}`}>
+                    <Skeleton
+                      width={cellIndex % 3 === 0 ? "90%" : "70%"}
+                      height="20px"
+                      delay={rowIndex * 0.1 + cellIndex * 0.05}
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </TableTag>
+      </TableContainer>
+    );
+  };
 
   const loadData = (data) => {
     let newArray = [];
@@ -90,10 +149,10 @@ export const Table = ({
     });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const selectedRowIdsArray = Array.from(selectedRowIds);
     setSelectedIds(selectedRowIdsArray);
-  },[selectedRowIds]);
+  }, [selectedRowIds]);
 
   const handleHeaderCheckBox = (checked: boolean) => {
     setSelectedRowIds((prevSelected) => {
@@ -331,9 +390,14 @@ export const Table = ({
 
   return (
     <>
-      {initialData?.length > 0 ? (
+      {isLoading ? (
+        <SkeletonTable
+          columns={columns}
+          checkboxSelection={checkboxSelection}
+        />
+      ) : initialData?.length > 0 ? (
         <div>
-          <TableContainer className={className}>
+          <TableContainer className={`${className} hide-scrollbar`}>
             <TableTag>
               <TableHeader>
                 <TableHeadRow>
@@ -341,12 +405,13 @@ export const Table = ({
                     <TableCell
                       style={{ textAlign: "left", marginLeft: "12px" }}
                     >
-                      <Checkbox
+                      {/* <Checkbox
                         value="master"
                         size="lg"
                         checked={handleHeaderCheckBoxState()}
                         onChange={(e) => handleHeaderCheckBox(e.target.checked)}
-                      ></Checkbox>
+                      ></Checkbox> */}
+                      <div></div>
                     </TableCell>
                   )}
                   <>
@@ -454,7 +519,7 @@ export const Table = ({
           )}
         </div>
       ) : (
-        <EmptyTable title={emptyTableMessage || "No Data Found"} />
+        <EmptyTable title={emptyTableMessage || <DeviceFlowLoader />} />
       )}
     </>
   );
@@ -464,8 +529,9 @@ export interface TableProps {
   data: Array<any>;
   columns: Array<ColumnType>;
   footer?: boolean;
+  isLoading?: boolean;
   selectedIds: string[];
-  setSelectedIds: (state:any)=> void;
+  setSelectedIds: (state: any) => void;
   pagination?: {
     //Pagination is from server or client by default(client)
     type?: "serverSide" | "clientSide";

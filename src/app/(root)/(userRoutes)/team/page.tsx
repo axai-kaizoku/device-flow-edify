@@ -14,11 +14,13 @@ export default function TeamPage() {
   const user: UserData = useSelector((state: any) => state.auth.userData);
   const [users, setUsers] = useState<UsersTeamResponse | null>(null);
   const teamState = user?.teamId;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!teamState?._id) return;
 
     const fetchData = async () => {
+      setLoading(true);
       try {
         const fetchedUsers: UsersTeamResponse = await getUsersByTeamId(
           teamState._id,
@@ -27,6 +29,8 @@ export default function TeamPage() {
         setUsers(fetchedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -49,11 +53,11 @@ export default function TeamPage() {
 
   return (
     <CombinedContainer title="Teams">
-      <div className="bg-white p-3 my-6 rounded-3xl shadow-lg">
+      <div className=" p-3 bg-white rounded-[10px] ">
         <div className="flex items-center mb-6 pt-2 pl-3">
           <TeamHeader teamData={teamState} />
         </div>
-        {users === null ? (
+        {users === null || loading ? (
           <div className="flex justify-center items-center my-10">
             <DeviceFlowLoader />
           </div>

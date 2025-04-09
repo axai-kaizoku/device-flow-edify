@@ -9,7 +9,7 @@ export function ManageIssue({
   const router = useRouter();
   return (
     <div
-      className={`font-gilroy flex relative w-full flex-col items-start gap-y-[11px] rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-[13px] pr-[13px] pt-[13px] tracking-[0px] backdrop-blur-[24] `}
+      className={`font-gilroy flex relative w-full h-full flex-col items-start gap-y-[11px] rounded-2xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-[13px] pr-[13px] pt-[13px] tracking-[0px] backdrop-blur-[24] `}
     >
       <div className="flex items-center self-stretch px-[1.3px]">
         <div className="text-sm font-gilroySemiBold leading-[23px]">Issues</div>
@@ -115,7 +115,7 @@ export function ManageIssue({
             );
           })
         ) : (
-          <div className="flex flex-col justify-center items-center gap-1">
+          <div className="flex flex-col h-full justify-center items-center gap-1">
             <img
               src={"/media/dashboard/no-issue.png"}
               style={{ width: "100%", height: 183 }}
@@ -134,17 +134,6 @@ export function ManageIssue({
             </div>
           </div>
         )}
-      </div>
-      <div
-        onClick={() => {
-          router.push("issues");
-        }}
-        className="flex absolute w-[90%] bottom-3  items-center justify-center rounded-[49px] bg-black p-[9px]"
-        style={{ cursor: "pointer" }}
-      >
-        <div className="text-center text-sm font-gilroySemiBold leading-[normal] text-white">
-          Manage Issues
-        </div>
       </div>
     </div>
   );

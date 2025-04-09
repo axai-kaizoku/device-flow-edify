@@ -12,7 +12,7 @@ import { closedIssues } from "@/server/filterActions";
 export default function ClosedIssueTable({
   data,
   setIssues,
-  onRefresh
+  onRefresh,
 }: {
   data: IssueResponse | null;
   setIssues: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
@@ -21,11 +21,19 @@ export default function ClosedIssueTable({
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (page: number) => {
-    const res = await closedIssues({ page });
-    setIssues(res);
-    setCurrentPage(page);
+    setIsLoading(true);
+    try {
+      const res = await closedIssues({ page });
+      setIssues(res);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Failed to Fetch Issues");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSelectionChange = (selected: string[]) => {
@@ -35,7 +43,7 @@ export default function ClosedIssueTable({
   return (
     <div className="flex flex-col gap-2">
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {data?.issues?.length === 0 ? (
+        {!isLoading && data?.issues?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
             <issueIcons.no_issues_icon />
           </div>
@@ -46,6 +54,7 @@ export default function ClosedIssueTable({
               data={data?.issues ?? []}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
+              isLoading={isLoading}
               checkboxSelection={{
                 uniqueField: "_id",
                 //logic yet to be done

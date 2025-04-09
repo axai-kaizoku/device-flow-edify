@@ -9,14 +9,26 @@ import { TeamsResponse } from "@/server/teamActions";
 import CreateTeam from "./create-team";
 import { Trash2 } from "lucide-react";
 import EditPencilIcon from "@/icons/EditPencilIcon";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
-  setTeams: React.Dispatch<React.SetStateAction<TeamsResponse | null>>;
-  onRefresh: () => Promise<void>;
+  setTeams?: React.Dispatch<React.SetStateAction<TeamsResponse | null>>;
+  onRefresh?: () => Promise<void>;
 }
 
-export default function TeamsMain({ teams, setTeams, onRefresh }: TeamsMainProps) {
+export default function TeamsMain({
+  teams,
+  setTeams,
+  onRefresh,
+}: TeamsMainProps) {
+  if (teams === undefined) {
+    return (
+      <div className="flex w-full h-[60vh] justify-center items-center">
+        <DeviceFlowLoader />
+      </div>
+    );
+  }
   return (
     <>
       {teams?.teams?.length === 0 ? (
@@ -37,13 +49,13 @@ export default function TeamsMain({ teams, setTeams, onRefresh }: TeamsMainProps
           renderButtons={(team) => (
             <>
               <DeleteTeam id={team._id!} onRefresh={onRefresh}>
-                <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Trash2 className="size-5 cursor-pointer" />
+                <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                  <Trash2 className="size-4 cursor-pointer" />
                 </div>
               </DeleteTeam>
               <EditTeam {...team} onRefresh={onRefresh}>
-                <div className="group duration-300 hover:border-black transition-all ease-in-out size-11 border-gray-300 rounded-full justify-center items-center flex border">
-                  <EditPencilIcon className="w-5 h-5 text-gray-600 group-hover:text-black cursor-pointer" />
+                <div className="group duration-300 hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                  <EditPencilIcon className="size-4 text-gray-600 group-hover:text-black cursor-pointer" />
                 </div>
               </EditTeam>
             </>

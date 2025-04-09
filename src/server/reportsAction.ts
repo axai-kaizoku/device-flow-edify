@@ -12,7 +12,7 @@ import { User } from "./userActions";
 export async function getDeviceReport(status: string): Promise<DeviceReport> {
   try {
     const res = await callAPIWithToken<DeviceReport>(
-      `https://gcp-api.edify.club/edifybackend/v1/devices/userStatus?status=${status}`,
+      `https://staging.deviceflow.ai/edifybackend/v1/devices/userStatus?status=${status}`,
       "GET"
     );
 
@@ -27,7 +27,7 @@ export async function getDeviceReport(status: string): Promise<DeviceReport> {
 export async function getSoldInventoryReport(): Promise<any> {
   try {
     const res = await callAPIWithToken<any>(
-      `https://gcp-api.edify.club/edifybackend/v1/soldInventory/org`,
+      `https://staging.deviceflow.ai/edifybackend/v1/soldInventory/org`,
       "GET"
     );
 
@@ -101,7 +101,7 @@ export async function getUserReports({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/user/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/user/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -137,7 +137,7 @@ export async function getAssignedDevicesReport({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -172,7 +172,7 @@ export async function getDeletedDevicesReport({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://gcp-api.edify.club/edifybackend/v1/devices/filter${
+    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 

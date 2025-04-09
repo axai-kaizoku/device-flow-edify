@@ -13,7 +13,7 @@ const ReportSection = ({ reportData }: { reportData: report[] }) => {
 
   return (
     <div className="flex flex-col font-gilroyRegular gap-4">
-      <h1 className="text-[#7F7F7F] font-gilroyMedium text-base">Reports</h1>
+      {/* <h1 className="text-[#7F7F7F] font-gilroyMedium text-base">Reports</h1> */}
       <div>
         {Object.entries(groupedReports).map(([tag, reports]) => (
           <div key={tag} className="mb-4">

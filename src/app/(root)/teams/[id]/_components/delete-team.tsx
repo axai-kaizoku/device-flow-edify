@@ -20,11 +20,11 @@ import WarningDelete from "@/icons/WarningDelete";
 export const DeleteTeam = ({
   id,
   children,
-  onRefresh
+  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -36,7 +36,7 @@ export const DeleteTeam = ({
       try {
         await deleteTeam(id);
         setOpen(false);
-        openToast('success', "Team Deleted Successfully!");
+        openToast("success", "Team Deleted Successfully!");
         // router.push("/teams");
         onRefresh();
       } catch (e: any) {

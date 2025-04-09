@@ -7,6 +7,7 @@ import { IssueForm } from "./issue-form";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
 import NoAssetAssignedIcon from "@/icons/NoAssetAssignedIcon";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 export type LoggedInUser = UserData;
 
@@ -15,6 +16,13 @@ type DevicesProps = {
 };
 
 const Devices = ({ devices }: DevicesProps) => {
+  if (devices === undefined) {
+    return (
+      <div className="flex w-full h-[60vh] justify-center items-center">
+        <DeviceFlowLoader />
+      </div>
+    );
+  }
   const router = useRouter();
   const user: UserData = useSelector((state: any) => state.auth.userData);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
@@ -51,7 +59,7 @@ const Devices = ({ devices }: DevicesProps) => {
           return (
             <div
               key={device?._id}
-              className="flex rounded-[25px] border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.8)] backdrop-blur-[22.8px]  px-6 py-4 max-xl:w-[calc(50%-20px)] max-2xl:w-[calc(33.33%-20px)]"
+              className="flex rounded-lg border border-[rgba(195,195,195,0.31)] bg-[rgba(255,255,255,0.8)] backdrop-blur-[22.8px]  px-6 py-4 max-xl:w-[calc(50%-20px)] max-2xl:w-[calc(33.33%-20px)]"
             >
               {/* Device Information */}
               <div
@@ -170,7 +178,6 @@ const Devices = ({ devices }: DevicesProps) => {
         </div>
       )}
 
-      {/* Single Sheet for the Selected Device */}
       <Sheet
         open={selectedDevice !== null}
         onOpenChange={(open) => !open && closeSheet()}

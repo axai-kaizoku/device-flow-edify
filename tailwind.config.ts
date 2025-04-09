@@ -22,6 +22,14 @@ const config: Config = {
         gilroyBold: ["var(--font-gilroy-bold)", "sans-serif"],
       },
       keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        marquee2: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0%)" },
+        },
         "caret-blink": {
           "0%,70%,100%": {
             opacity: "1",
@@ -61,6 +69,8 @@ const config: Config = {
         "pop-center": "pop-center 1s ease-in",
         "scale-up-center": "scale-up-center 2s ease-in-out",
         "fall-fade-out": "fall-fade-out 2s ease-in-out forwards",
+        marquee: "marquee 25s linear infinite",
+        marquee2: "marquee2 25s linear infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

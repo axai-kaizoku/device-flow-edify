@@ -96,7 +96,7 @@ export const getPreviousOrders = cache(async function (): Promise<
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: PreviousOrder[] }>(
-      "https://gcp-api.edify.club/edifybackend/v1/soldInventory/org",
+      "https://staging.deviceflow.ai/edifybackend/v1/soldInventory/org",
       "GET"
     );
 
@@ -122,7 +122,7 @@ export const getSingleOrder = cache(async function ({
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: any[] }>(
-      `https://gcp-api.edify.club/edifybackend/v1/soldInventory/org?orderId=${orderId}`,
+      `https://staging.deviceflow.ai/edifybackend/v1/soldInventory/org?orderId=${orderId}`,
       "GET"
     );
 

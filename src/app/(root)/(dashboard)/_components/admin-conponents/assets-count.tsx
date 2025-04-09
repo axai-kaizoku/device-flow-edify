@@ -9,8 +9,10 @@ export function AssetsCount({
   dashboardData: DashboardDetails | null;
 }) {
   return (
-    <div className={`flex w-full items-start rounded-3xl `}>
-      <div className="font-gilroy flex h-full w-full flex-shrink-0 flex-col gap-y-4 overflow-clip rounded-3xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-5 pl-[22px] pr-5 pt-[13px] tracking-[0px] backdrop-blur-[24]">
+    <div className={`flex w-full items-start rounded-2xl `}>
+      <div className="font-gilroy flex h-full w-full flex-shrink-0 flex-col gap-y-4 overflow-clip rounded-2xl bg-white pb-5 pl-[22px] pr-5 pt-[13px] tracking-[0px] backdrop-blur-[24]" style={{
+        border: '1px solid rgba(0, 0, 0, 0.10)'
+      }}>
         <div className="flex items-center">
           <div className="flex items-center justify-center gap-x-[18px] pt-[0.08px]">
             <div className="text-sm font-gilroySemiBold leading-[23px]">
