@@ -14,6 +14,7 @@ import { Button } from "@/components/buttons/Button";
 import { updateUser } from "@/server/userActions";
 import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PermanentUserDelete = ({
   id,
@@ -27,7 +28,7 @@ export const PermanentUserDelete = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { openToast } = useToast();
-
+  const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -65,10 +66,11 @@ export const PermanentUserDelete = ({
                   await updateUser(id!, { orgId: null });
                   openToast("success", "User Deleted Successfully!");
                   setOpen(false);
-                  // onRefresh();
-                  // router.push("/people?tab=inactive_people");
-
-                  router.refresh();
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-people"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                 } catch (e: any) {
                   openToast(
                     "error",

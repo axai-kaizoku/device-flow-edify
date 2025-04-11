@@ -77,24 +77,24 @@ export default function UserPage({ params }: UserPageProps) {
   return (
     <div className="px-4 overflow-y-scroll h-full mt-4">
       <div className="flex gap-4 sticky top-0 z-50  justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex justify-center items-center gap-2">
           <AssignDevice userData={user}>
-            <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
-              <div className=" group-hover:text-white px-4 text-nowrap text-sm font-gilroyMedium">
+            <div className="flex  cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)] hover:border-black p-[7px]   group">
+              <div className="  px-4 text-nowrap text-sm font-gilroyMedium ">
                 Assign
               </div>
             </div>
           </AssignDevice>
           <EditUser userData={userData}>
-            <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
-              <div className="px-4 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+            <div className="flex  cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:border-black group">
+              <div className="px-4  text-nowrap text-sm font-gilroyMedium">
                 Edit
               </div>
             </div>
           </EditUser>
           <DeleteUser id={params.id}>
-            <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
-              <div className="px-4 group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+            <div className="flex  cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)] hover:border-black  p-[7px]   group">
+              <div className="px-4  text-nowrap text-sm font-gilroyMedium">
                 Delete
               </div>
             </div>

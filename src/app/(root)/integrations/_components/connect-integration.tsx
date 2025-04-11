@@ -9,6 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { IntegrationType } from "@/server/integrationActions";
 import {
   ArrowDataTransferHorizontalIcon,
@@ -22,12 +29,20 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
 import { BlueTickCircle, BothSideArrows } from "./icons";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export const ConnectIntegration = ({
   children,
   integrationData,
   mutation,
+  // open,
+  // setOpen,
+  onClick,
 }: {
+  // open?: boolean;
+  // setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick?: () => void;
   children?: React.ReactNode;
   integrationData?: IntegrationType;
   mutation?: UseMutationResult<
@@ -38,7 +53,7 @@ export const ConnectIntegration = ({
         platform?: string;
         credentials?: {};
         store?: {}[];
-        newprice?: number;
+        newprice?: {};
       };
     },
     unknown
@@ -47,8 +62,7 @@ export const ConnectIntegration = ({
   const [open, setOpen] = useState(false);
   const code = useSearchParams().get("code");
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
-  const [newPrice, setNewPrice] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const redirectUri = `http://localhost:3000/integrations/${integrationData?._id}`;
 
@@ -112,20 +126,35 @@ export const ConnectIntegration = ({
         sessionStorage.setItem("store", JSON.stringify(mappedUsers));
 
         try {
-          const res = mutation.mutate({
-            payload: {
-              platform: integrationData?.platform,
-              credentials: { ...formData },
-              store: mappedUsers,
-              newprice: newPrice ? parseInt(newPrice) : integrationData.price,
+          mutation.mutate(
+            {
+              payload: {
+                platform: integrationData?.platform,
+                credentials: { ...formData },
+                store: mappedUsers,
+                newprice: customPrice
+                  ? {
+                      plan: selectedPlan,
+                      price: parseInt(customPrice),
+                    }
+                  : {
+                      plan: selectedPlan,
+                      price: parseInt(customPrice),
+                    },
+              },
             },
-          });
-          setOpen(false);
+            {
+              onSuccess: () => {
+                setOpen(false);
+                setFormData({});
+              },
+            }
+          );
+          // setOpen(false);
 
           // console.log(res);
-          setFormData({});
 
-          // if (res) setOpen(false);
+          // if (res) ;
         } catch (error) {
           console.error(error);
         }
@@ -147,6 +176,8 @@ export const ConnectIntegration = ({
         ? ""
         : `${credential} is required`;
     });
+
+    newErrors["pricing"] = customPrice ? "" : "Price is required";
 
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => !error);
@@ -182,64 +213,91 @@ export const ConnectIntegration = ({
       // console.log("Form Data:", formData);
 
       try {
-        const res = mutation.mutate({
-          payload: {
-            platform: integrationData?.platform,
-            credentials: formData,
-            newprice: newPrice ? parseInt(newPrice) : integrationData.price,
+        mutation.mutate(
+          {
+            payload: {
+              platform: integrationData?.platform,
+              credentials: formData,
+              newprice: customPrice
+                ? {
+                    plan: selectedPlan,
+                    price: parseInt(customPrice),
+                  }
+                : {
+                    plan: selectedPlan,
+                    price: parseInt(customPrice),
+                  },
+            },
           },
-        });
+          {
+            onSuccess: () => {
+              setOpen(false);
+              setFormData({});
+            },
+          }
+        );
 
-        console.log(res);
-        setFormData({});
+        // console.log(res);
+        // setOpen(false);
+        // setFormData({});
 
-        if (res) setOpen(false);
+        // if (res) setOpen(false);
       } catch (error) {
         console.error(error);
       }
     }
   };
 
-  const descriptionDetails = [
-    "Access basic company information and details.",
-    "Access and edit bug reports and create new issues.",
-    "Change issue status and assignee and issues.",
-    "Open and resolve Slack conversations.",
-    "Add or remove users and user roles.",
-  ];
+  const [selectedPlan, setSelectedPlan] = useState(
+    integrationData?.price?.[0]?.plan ?? ""
+  );
+  const [customPrice, setCustomPrice] = useState(
+    integrationData?.price?.[0]?.price ?? ""
+  );
+  const [isCustom, setIsCustom] = useState(false);
+
+  const handlePlanChange = (plan: string) => {
+    setSelectedPlan(plan);
+
+    if (plan === "Custom Plan") {
+      setIsCustom(true);
+      setCustomPrice(""); // or keep previous customPrice if you want
+    } else {
+      setIsCustom(false);
+      const selected = integrationData.price.find((p) => p.plan === plan);
+      setCustomPrice(selected?.price || "");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="rounded-2xl bg-white shadow-lg max-w-lg p-6 text-center">
-        {/* Header with logos and arrows */}
+      <DialogTrigger onClick={onClick}>{children}</DialogTrigger>
+      <DialogContent className="rounded-2xl bg-white shadow-lg max-w-md p-6 text-center">
         <div className="flex justify-center">
           <div className="flex gap-6 justify-center items-center">
             <img
               src="/media/integrations/edify-logo.png"
-              className="size-10"
+              className="size-10 object-cover"
               alt="Edify logo"
             />
             <BothSideArrows />
             <img
               src={integrationData?.companyLogo ?? ""}
               alt="Integration logo"
-              className="size-10"
+              className="size-10 object-cover"
             />
           </div>
         </div>
+        {/* {JSON.stringify(integrationData)} */}
 
-        {/* Title and description */}
         <DialogTitle className="text-lg font-gilroySemiBold">
           Connect Deviceflow to {integrationData?.platform}
         </DialogTitle>
-        <DialogDescription className="p-1 text-sm text-gray-600">
-          Manage your integration with {integrationData?.platform}.
-        </DialogDescription>
-        <div className="h-[1px] bg-gray-200 mb-3"></div>
+
+        <div className="h-[1px] bg-gray-200 mb-3 -mx-6"></div>
 
         {/* Dynamic Form fields */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           {integrationData?.credentials.map((credential) => (
             <FormField
               key={credential}
@@ -257,7 +315,7 @@ export const ConnectIntegration = ({
               value={formData[credential] || ""}
               type="text"
               onChange={handleChange}
-              className="placeholder:text-neutral-400 h-10 text-sm placeholder:text-xs"
+              className="placeholder:text-neutral-400 h-10 text-sm placeholder:text-xs rounded-md"
               placeholder={`Enter ${credential.replace(/_/g, " ")}`}
             />
           ))}
@@ -267,105 +325,70 @@ export const ConnectIntegration = ({
           Billing
         </h2>
 
-        <div className="flex w-full gap-4 justify-between items-center -mt-2">
-          {isEditing ? (
-            <FormField
-              key={"price"}
-              label={"Price"}
-              id={"price"}
-              name={"price"}
-              value={integrationData.price.toString()}
-              type="text"
-              readOnly
-              defaultValue={integrationData.price.toString()}
-              onChange={handleChange}
-              className="placeholder:text-gray-300 h-10"
-              placeholder={`Enter price`}
-            />
-          ) : (
-            <>
-              <div
-                id={"price-field"}
-                className="h-10 w-full rounded-[10px] border border-[#5F5F5F] bg-background px-3 py-2 text-base  focus-visible:outline-none  focus-visible:border-primary flex items-center gap-0.5 md:text-base font-gilroyRegular"
+        <div className="flex w-full gap-4 justify-between items-start -mt-0.5">
+          <Select onValueChange={handlePlanChange} defaultValue={selectedPlan}>
+            <SelectTrigger className="font-gilroyMedium flex justify-between p-2 pl-2  bg-white border border-[#DEDEDE] rounded-md min-w-[12rem] w-1/2">
+              <SelectValue
+                placeholder={selectedPlan}
+                className="flex justify-between p-0"
+              />
+            </SelectTrigger>
+            <SelectContent className="font-gilroyMedium">
+              {integrationData?.price?.map((p) => (
+                <SelectItem
+                  key={p?._id}
+                  value={p?.plan}
+                  className="w-full py-2.5 rounded-lg"
+                >
+                  {p?.plan}
+                </SelectItem>
+              ))}
+              <SelectItem
+                value="Custom Plan"
+                className="w-full py-2.5 rounded-lg"
               >
-                <span className="font-gilroySemiBold text-base text-[#2E8016]">
-                  {`₹${integrationData?.price ?? ""}`}
-                </span>
-                <span className="font-gilroyRegular text-xs mt-1">
-                  /month/user
-                </span>
-              </div>
-            </>
-          )}
-          <HugeiconsIcon
-            icon={ArrowDataTransferHorizontalIcon}
-            className="text-gray-900 size-14"
-          />
-          {isEditing ? (
-            <FormField
-              key={"new_price"}
-              label={"New Price"}
-              id={"new_price"}
-              // error={errors[credential]}
-              name={"new_price"}
-              value={newPrice}
-              type="text"
+                Custom Plan
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <div>
+            <Input
+              value={customPrice}
+              readOnly={!isCustom}
               onChange={(e) => {
                 const inputValue = e.target.value;
-                const zipRegex = /^[0-9]{0,9}$/;
+                const zipRegex = /^[0-9]{0,12}$/;
+
                 if (!inputValue || zipRegex.test(inputValue)) {
-                  setNewPrice(inputValue);
+                  setCustomPrice(inputValue);
                 }
               }}
-              className="placeholder:text-gray-300 h-10"
-              placeholder={`Enter price`}
+              placeholder="Enter Price"
+              className={cn(
+                "font-gilroyMedium",
+                !isCustom ? "bg-gray-50" : "bg-white",
+                errors.pricing ? "border-destructive/80" : "border"
+              )}
             />
-          ) : (
-            <>
-              <div
-                id={"price-field"}
-                className="h-10 w-full rounded-[10px] border border-[#5F5F5F] bg-background px-3 py-2 text-base  focus-visible:outline-none  focus-visible:border-primary flex items-center gap-0.5 md:text-base font-gilroyRegular"
-              >
-                <span className="font-gilroySemiBold text-base text-[#2E8016]">
-                  {`₹${newPrice ? newPrice : integrationData?.price}`}
-                </span>
-                <span className="font-gilroyRegular text-xs mt-1">
-                  /month/user
-                </span>
-              </div>
-            </>
-          )}
-          {isEditing ? (
-            <div
-              onClick={() => setIsEditing((prev) => !prev)}
-              className="text-green-500 font-gilroyMedium text-sm cursor-pointer select-none flex items-center gap-2"
+            <p
+              className={cn(
+                "mt-0.5 text-xs text-start font-gilroyMedium text-destructive transition-all duration-300",
+                {
+                  "opacity-100": errors.pricing,
+                  "opacity-0": !errors.pricing,
+                }
+              )}
             >
-              Save
-              <HugeiconsIcon
-                icon={CheckmarkCircle04Icon}
-                className="text-green-500 size-4"
-              />
-            </div>
-          ) : (
-            <div
-              onClick={() => setIsEditing((prev) => !prev)}
-              className="text-[#007AFF] font-gilroyMedium text-sm cursor-pointer select-none flex items-center gap-2"
-            >
-              Edit
-              <HugeiconsIcon
-                icon={Edit02Icon}
-                className="text-[#007AFF] size-4"
-              />
-            </div>
-          )}
+              {errors.pricing ?? " "}
+            </p>
+          </div>
         </div>
 
-        {/* Permissions list */}
         <h1 className="text-base font-gilroySemiBold text-start ">
           {integrationData?.platform} would like to
         </h1>
-        <div className="flex flex-col gap-1 text-start overflow-y-auto ">
-          {descriptionDetails.map((item, index) => (
+        <div className="flex flex-col gap-1 text-start h-[9vh] overflow-y-auto ">
+          {integrationData?.permissions.map((item, index) => (
             <div key={index} className="flex items-center gap-1 py-0.5">
               <BlueTickCircle />
               <p className="text-sm font-gilroyMedium">{item}</p>
@@ -376,22 +399,21 @@ export const ConnectIntegration = ({
           We care about your privacy in our Privacy Policy. By clicking Connect,
           you authorize {integrationData?.platform} to access your information.
         </h1>
-        <div className="h-[1px] bg-gray-200 my-3"></div>
+        <div className="h-[1px] bg-gray-200 my-3 -mx-6"></div>
 
-        {/* Footer Buttons */}
-        <DialogFooter className="flex w-full items-center justify-between">
-          <Button className="rounded-lg border border-[#D0D5DD] px-6 bg-[#FFF]">
+        <DialogFooter className="flex w-full h-10 -mt-3 -mb-2 items-center justify-between">
+          <Button className="rounded-lg text-sm bg-white text-black w-fit font-gilroyMedium tracking-wide border hover:border-black">
             How to use?
           </Button>
           <div className="flex gap-3">
             <Button
-              className="rounded-lg font-gilroyMedium border px-6 border-[#D0D5DD] bg-[#FFF]"
+              className="rounded-lg text-sm bg-white text-black w-fit font-gilroyMedium tracking-wide border hover:border-black"
               onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="rounded-lg bg-black border font-gilroySemiBold px-10 border-[#B4B4B4] text-white"
+              className="rounded-lg text-sm bg-black text-white w-full font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               disabled={mutation.isPending}
               onClick={() => {
                 integrationData?.platform.toLowerCase().includes("suite")

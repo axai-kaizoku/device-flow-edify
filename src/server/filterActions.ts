@@ -4,8 +4,8 @@ import { Issues } from "./issueActions";
 import { User, UserResponse } from "./userActions";
 import { cache } from "react";
 
-const baseUrl = "https://staging.deviceflow.ai";
-// const baseUrl = "https://8a54-34-47-179-100.ngrok-free.app";
+// const baseUrl = "https://staging.deviceflow.ai";
+const baseUrl = "https://1c55-34-47-179-100.ngrok-free.app";
 
 export interface FilterApiParams {
   filters?: any[][];

@@ -16,15 +16,15 @@ function AllOrdersTable({ data }: { data: any[] }) {
     setSelectedIds(selected);
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  // const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  const currentOrder = data?.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  // const currentOrder = data?.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  const totalPages = data && data.length > 0 ? Math.ceil(data.length / 5) : 0;
+  // const totalPages = data && data.length > 0 ? Math.ceil(data.length / 5) : 0;
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
+  // const handlePageChange = (page: number) => setCurrentPage(page);
   return (
     <>
       {!isLoading && data?.length === 0 ? (
@@ -40,14 +40,15 @@ function AllOrdersTable({ data }: { data: any[] }) {
       ) : (
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px]  flex flex-col ">
           <div className="flex 2xl:gap-2 gap-1.5 w-fit px-6 pt-5">
-            <h1 className="font-gilroySemiBold">Total Orders</h1>
-            <h1 className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+            <h1 className="text-base font-gilroyMedium ">Total Orders</h1>
+            <span className="2xl:text-[12.435px] ml-1 text-xs font-gilroySemiBold flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
               {data?.length} Orders
-            </h1>
+            </span>
           </div>
+
           <div className="flex flex-col mt-5">
             <Table
-              data={currentOrder}
+              data={data ?? []}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
               isLoading={isLoading}

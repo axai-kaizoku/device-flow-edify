@@ -17,15 +17,21 @@ import CreateDevice from "./addDevices/_components/create-device";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import { useToast } from "@/hooks/useToast";
 import { DeleteModal } from "../../people/_components/deleteUserModal";
+import { AssignAsset } from "./assign-asset";
+import { RestoreDevice } from "./restore-assets";
+import { PermanentAssetsDelete } from "./permanent-assets-delete";
+import { buttonVariants } from "@/components/buttons/Button";
 
 function AssignedAssets({
   data,
   setAssets,
   onRefresh,
   assetsText = "All Assets",
+  status,
 }: {
   data: DeviceResponse | null;
   setAssets?: any;
+  status?: string;
   onRefresh?: () => Promise<void>;
   assetsText?: string;
 }) {
@@ -93,11 +99,11 @@ function AssignedAssets({
             </CreateDevice>
           </div>
         ) : (
-          <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+          <div className="rounded-lg border border-gray-200  bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
             {" "}
             <div className="flex justify-between items-center">
               <div className=" flex gap-3 w-fit">
-                <h1 className="text-xl pl-6 font-gilroySemiBold">
+                <h1 className="text-base pl-6 font-gilroyMedium">
                   {assetsText}
                 </h1>
                 <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
@@ -126,12 +132,12 @@ function AssignedAssets({
                 <Table
                   data={data?.devices}
                   selectedIds={selectedIds}
-                  isLoading={isLoading}
+                  isLoading={status === "pending"}
                   setSelectedIds={setSelectedIds}
-                  checkboxSelection={{
-                    uniqueField: "_id",
-                    onSelectionChange: handleSelectionChange,
-                  }}
+                  // checkboxSelection={{
+                  //   uniqueField: "_id",
+                  //   onSelectionChange: handleSelectionChange,
+                  // }}
                   columns={[
                     {
                       title: "Device",
@@ -165,51 +171,97 @@ function AssignedAssets({
                       ),
                     },
                     {
-                      title: "Assigned to",
+                      title:
+                        assetsText === "Assigned Assets" ? "Assigned to" : "",
                       render: (record) => {
-                        return <span>{record?.userName ?? "-"}</span>;
+                        if (assetsText === "Assigned Assets") {
+                          return <span>{record?.userName ?? "-"}</span>;
+                        }
                       },
                     },
 
                     {
-                      title: "Assigned On",
+                      title:
+                        assetsText === "Assigned Assets" ? "Assigned On" : "",
                       render: (record: StoreDevice) => {
-                        const onboardingDate = record?.assigned_at!;
+                        if (assetsText === "Assigned Assets") {
+                          const onboardingDate = record?.assigned_at!;
 
-                        // Check if onboardingDate is null, undefined, or empty
-                        if (!onboardingDate) {
-                          return <div>-</div>; // Return "-" for null, undefined, or empty value
+                          // Check if onboardingDate is null, undefined, or empty
+                          if (!onboardingDate) {
+                            return <div>-</div>; // Return "-" for null, undefined, or empty value
+                          }
+
+                          const date = new Date(onboardingDate);
+
+                          // Check if the date is valid
+                          if (isNaN(date.getTime())) {
+                            return <div>-</div>; // Return "-" for invalid date
+                          }
+
+                          const formattedDate = date.toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          );
+
+                          return <div>{formattedDate}</div>;
                         }
-
-                        const date = new Date(onboardingDate);
-
-                        // Check if the date is valid
-                        if (isNaN(date.getTime())) {
-                          return <div>-</div>; // Return "-" for invalid date
-                        }
-
-                        const formattedDate = date.toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        });
-
-                        return <div>{formattedDate}</div>;
                       },
                     },
-
                     {
-                      title: "Team",
+                      title: assetsText === "Assigned Assets" ? "Team" : "",
                       render: (record: StoreDevice) => {
-                        return <span>{record?.teams ?? "-"}</span>;
+                        if (assetsText === "Assigned Assets") {
+                          return <span>{record?.teams ?? "-"}</span>;
+                        }
                       },
                     },
+
                     {
                       title: "Serial Number",
                       render: (record) => {
                         return <span>{record?.serial_no ?? "-"}</span>;
                       },
                     },
+                    {
+                      title:
+                        assetsText !== "Assigned Assets" ? "Purchased on" : "",
+                      render: (record) => {
+                        if (assetsText !== "Assigned Assets") {
+                          const onboardingDate = record?.device_purchase_date;
+
+                          // Check if onboardingDate is null, undefined, or empty
+                          if (!onboardingDate) {
+                            return <div>-</div>;
+                          }
+
+                          const date = new Date(onboardingDate);
+
+                          // Check if the date is valid
+                          if (isNaN(date.getTime())) {
+                            return <div>-</div>;
+                          }
+
+                          const formattedDate = date.toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          );
+
+                          return <div>{formattedDate}</div>;
+                        }
+
+                        return null;
+                      },
+                    },
+
                     {
                       title: "Asset Health",
                       render: (record: Device) => {
@@ -218,13 +270,13 @@ function AssignedAssets({
                           case "Good":
                           case "Best":
                           case "New":
-                            color = "text-[#027A48] bg-[#ECFDF3]";
+                            color = "text-[#027A48] text-xs  bg-[#ECFDF3]";
                             break;
                           case "Old":
-                            color = "text-[#F00] bg-[#FFE0E0]";
+                            color = "text-[#F00] text-xs  bg-[#FFE0E0]";
                             break;
                           default:
-                            color = "text-[#FF8000] bg-[#FFFACB]";
+                            color = "text-[#FF8000] text-xs  bg-[#FFFACB]";
                         }
                         return record?.device_condition ? (
                           <span
@@ -250,8 +302,8 @@ function AssignedAssets({
                           <span
                             className={`${
                               isWarrantyActive
-                                ? "text-[#027A48] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
-                                : "text-[#F00] px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
+                                ? "text-[#027A48] text-xs  px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#ECFDF3]"
+                                : "text-[#F00] text-xs px-3 py-0.5 w-fit flex justify-center items-center rounded-full bg-[#FFE0E0]"
                             }`}
                           >
                             {isWarrantyActive ? "Active" : "Inactive"}
@@ -262,26 +314,76 @@ function AssignedAssets({
 
                     {
                       title: "",
-                      render: (record) => (
-                        <div className="flex gap-5 -ml-2 items-center">
-                          <SoftDeleteAsset
-                            id={record?._id}
-                            onRefresh={onRefresh}
-                          >
-                            <DeleteTableIcon className="size-6" />
-                          </SoftDeleteAsset>
-                          <Link
-                            href={`/assets/${record?._id}`}
-                            onMouseEnter={() =>
-                              router.prefetch(`/assets/${record?._id}`)
-                            }
-                          >
-                            <div className="rounded-md text-white bg-black font-gilroySemiBold text-[13px] py-2 px-4">
-                              Manage
-                            </div>
-                          </Link>
-                        </div>
-                      ),
+                      render: (record: Device) =>
+                        assetsText === "Unassigned Assets" ? (
+                          <div className="flex gap-5 -ml-2 ">
+                            <SoftDeleteAsset
+                              id={record?._id ?? "error"}
+                              onRefresh={onRefresh}
+                            >
+                              <DeleteTableIcon className="size-6" />
+                            </SoftDeleteAsset>
+                            <AssignAsset device={record} onRefresh={onRefresh}>
+                              <div
+                                className={buttonVariants({
+                                  variant: "primary",
+                                  className: "w-full",
+                                })}
+                              >
+                                Assign
+                              </div>
+                            </AssignAsset>
+                          </div>
+                        ) : assetsText === "Assigned Assets" ? (
+                          <div className="flex gap-5 -ml-2 items-center">
+                            {/* <SoftDeleteAsset
+                              id={record?._id}
+                              onRefresh={onRefresh}
+                            >
+                              <DeleteTableIcon className="size-6" />
+                            </SoftDeleteAsset> */}
+                            <Link
+                              href={`/assets/${record?._id}`}
+                              onMouseEnter={() =>
+                                router.prefetch(`/assets/${record?._id}`)
+                              }
+                            >
+                              <div
+                                className={buttonVariants({
+                                  variant: "primary",
+                                  className: "w-full",
+                                })}
+                              >
+                                Manage
+                              </div>
+                            </Link>
+                          </div>
+                        ) : assetsText === "Inactive Assets" ? (
+                          <div className="flex gap-5 -ml-2">
+                            <PermanentAssetsDelete
+                              id={record?._id!}
+                              onRefresh={onRefresh}
+                            >
+                              <DeleteTableIcon className="size-6" />
+                            </PermanentAssetsDelete>
+
+                            <RestoreDevice
+                              id={record?._id!}
+                              onRefresh={onRefresh}
+                            >
+                              <div
+                                className={buttonVariants({
+                                  variant: "primary",
+                                  className: "w-full",
+                                })}
+                              >
+                                Restore
+                              </div>
+                            </RestoreDevice>
+                          </div>
+                        ) : (
+                          ""
+                        ),
                     },
                   ]}
                 />

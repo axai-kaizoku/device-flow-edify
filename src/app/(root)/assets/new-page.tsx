@@ -16,6 +16,10 @@ import { Plus, Search, X } from "lucide-react";
 import { useQueryState } from "nuqs";
 import CreateDevice from "./_components/addDevices/_components/create-device";
 import AssignedAssets from "./_components/assigned-assets";
+import { buttonVariants } from "@/components/buttons/Button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import { useRouter } from "next/navigation";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -35,8 +39,8 @@ function NewPage() {
   ]); // Store dynamic filter fields
   const [availableOperators, setAvailableOperators] =
     useState(generalOperators);
-
-  const { data, isLoading, error, refetch } = useQuery({
+  const router = useRouter();
+  const { data, isLoading, error, refetch, status } = useQuery({
     queryKey: ["fetch-assets", activeTab, actualSearchTerm],
     queryFn: async () => {
       const query = {
@@ -241,12 +245,24 @@ function NewPage() {
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
-          <div className="flex gap-2">
+        <div className="flex gap-4 sticky top-0 z-50   items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+          <div className="flex gap-2 justify-center items-center">
+            {/* <div
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "size-5 px-[10px]  cursor-pointer",
+              })}
+              onClick={() => router.back()}
+            >
+              <HugeiconsIcon icon={ArrowLeft01Icon} />
+              <span className="sr-only">Back Button</span>
+            </div> */}
+
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
+              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-md">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
+
               <SelectContent className="font-gilroyMedium">
                 <SelectItem
                   value="assigned-assets"
@@ -268,6 +284,7 @@ function NewPage() {
                 </SelectItem>
               </SelectContent>
             </Select>
+
             <div className="relative h-full">
               {/* <button
               onClick={() => setOpenFilter(!openFilter)}
@@ -477,8 +494,8 @@ function NewPage() {
               )}
             </div>
           </div>
-          <div className="flex gap-2">
-            <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-2 h-full">
+          <div className="flex gap-2 ">
+            <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-md px-2 py-2 h-full">
               <div className="flex gap-2 justify-center items-center h-full">
                 <Search className=" size-[1.16rem]" />
                 <input
@@ -491,11 +508,13 @@ function NewPage() {
               </div>
             </div>
             <CreateDevice>
-              <div className="flex items-center relative py-2 border-black gap-1 px-4  text-white  rounded-lg bg-black transition-all duration-300">
-                {/* <AssetsTabIcon className=" size-5" color="#fff" /> */}
-                <span className="text-sm whitespace-nowrap  font-gilroyMedium rounded-lg ">
-                  Add Device
-                </span>
+              <div
+                className={buttonVariants({
+                  variant: "primary",
+                  className: "w-full",
+                })}
+              >
+                Add Device
               </div>
             </CreateDevice>
           </div>
@@ -510,6 +529,7 @@ function NewPage() {
           <AssignedAssets
             assetsText="Assigned Assets"
             data={data}
+            status={status}
             // setAssets={setAssets}
             // onRefresh={refreshAssetsData}
           />
@@ -527,6 +547,7 @@ function NewPage() {
           <AssignedAssets
             assetsText="Inactive Assets"
             data={data}
+
             // setAssets={setAssets}
             // onRefresh={refreshAssetsData}
           />{" "}

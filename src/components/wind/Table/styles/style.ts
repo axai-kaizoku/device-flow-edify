@@ -4,8 +4,8 @@ import { Colors } from "./colors";
 
 export const TableCell = styled.td`
   width: ${(props) => (props?.width ? `${props?.width}px` : "")};
-  padding: 12px;
-  padding-left: 23px;
+  padding-right: 10px;
+  padding-left: 18px;
   font-family: var(--font-gilroy-medium), sans-serif;
   text-align: left;
 `;

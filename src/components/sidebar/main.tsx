@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Props } from "@/app/(root)/layout";
+import { cn } from "@/lib/utils";
 import {
   ArrowDown01Icon,
   ChartRelationshipIcon,
+  DashboardSquare01Icon,
   File02Icon,
   Home12Icon,
   SearchVisualIcon,
@@ -15,10 +15,10 @@ import {
   UserGroupIcon,
   UserMultipleIcon,
 } from "@hugeicons/core-free-icons";
-import { cn } from "@/lib/utils";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Props } from "@/app/(root)/layout";
-import { ChartPieSlice } from "./chart-pie.icon";
+import { useEffect, useState } from "react";
 
 export default function SidebarNavigation({ session }: Props) {
   const [storeExpanded, setStoreExpanded] = useState(false);
@@ -26,11 +26,19 @@ export default function SidebarNavigation({ session }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
+  useEffect(() => {
+    if (pathname.includes("integrations")) {
+      setIntegrationsExpanded(true);
+    }
+  }, []);
+
   const links = [
     {
       href: "/",
       label: "Dashboard",
-      icon: <ChartPieSlice className="mr-3 h-5 w-5" />,
+      icon: (
+        <HugeiconsIcon icon={DashboardSquare01Icon} className="mr-3 h-5 w-5 " />
+      ),
     },
     {
       href: "/store",

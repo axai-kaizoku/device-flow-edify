@@ -11,11 +11,12 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteTeam } from "@/server/teamActions";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
 
 export const DeleteTeam = ({
   id,
@@ -71,13 +72,13 @@ export const DeleteTeam = ({
           </DialogTitle>
 
           {/* Description */}
-          <DialogDescription className="p-1 text-sm text-gray-600">
+          <DialogDescription className="p-1 -mt-4 text-sm text-gray-600">
             Are you sure you want to delete this?
           </DialogDescription>
 
           {/* Footer Buttons */}
           <DialogFooter className="flex w-full items-center justify-between ">
-            <Button
+            {/* <Button
               className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
               onClick={() => setOpen(false)}
             >
@@ -85,6 +86,24 @@ export const DeleteTeam = ({
             </Button>
             <Button
               className="w-1/2 rounded-md bg-[#D92D20] text-white"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button> */}
+            <Button
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "w-1/2",
+              })}
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "bg-[#D92D20] w-1/2 text-white border-none",
+              })}
               onClick={handleDelete}
             >
               Delete

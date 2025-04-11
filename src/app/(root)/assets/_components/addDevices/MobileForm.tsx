@@ -62,13 +62,11 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="2xl:text-2xl text-xl font-gilroySemiBold mb-4">
-        Select OS
-      </h1>
+      <h1 className=" text-base font-gilroyMedium mb-3">Select OS</h1>
 
       <div
         className={`flex justify-between items-center flex-wrap gap-4 w-full ${
-          !errors?.os && "mb-8"
+          !errors?.os && "mb-5"
         }`}
       >
         {deviceType === "mobile" &&
@@ -77,7 +75,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               key={os?.id}
               className={`flex-grow ${
                 index < 2 ? "w-[calc(50%-8px)]" : "w-[calc(50%-8px)]"
-              } px-4 py-3 flex items-start border-[2px] rounded-[14px] cursor-pointer ${
+              } px-4 py-2 flex items-start border rounded-md cursor-pointer ${
                 selectedOS === os.id ? "border-black" : "border-[#D5D5D5]"
               }`}
               onClick={() => handleSelectOS(os?.id)}
@@ -90,11 +88,11 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
                 className="mr-3 h-4 w-4 mt-1 accent-black sr-only"
               />
               <label htmlFor={os?.id} className="flex flex-col">
-                <p className="flex items-center font-gilroyMedium gap-2 text-xl">
+                <p className="flex items-center font-gilroyMedium gap-2 text-sm">
                   {os?.icon}
                   {os?.name}
                 </p>
-                <span className="text-xs text-[#C8C8C8] font-gilroyMedium">
+                <span className="text-[10px] text-[#C8C8C8] font-gilroyMedium">
                   {os?.description}
                 </span>
               </label>
@@ -108,7 +106,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
         </p>
       )}
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-5">
         <div className="">
           <SelectDropdown
             options={[
@@ -131,7 +129,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
             error={errors?.brand}
             value={`${formData?.brand ?? ""}`}
             placeholder="eg: Realme, etc"
-            className=" rounded-xl   text-black border border-[#5F5F5F]"
+            className=" rounded-md   text-black border border-[#5F5F5F]"
           />
         </div>
 
@@ -190,7 +188,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               error={errors?.processor}
               value={`${formData?.processor ?? ""}`}
               placeholder="eg: MediaTek, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
           <div className="flex-1">
@@ -213,7 +211,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               label="RAM"
               error={errors?.ram}
               value={formData?.ram ?? ""}
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
               placeholder="eg: 8GB, etc"
             />
           </div>
@@ -241,7 +239,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               error={errors?.storage}
               value={`${formData?.storage ?? ""}`}
               placeholder="eg: 256GB, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
           <div className="flex-1">
@@ -263,7 +261,7 @@ const MobileForm: React.FC<BasicDetailsProps> = ({
               error={errors?.device_condition}
               value={`${formData?.device_condition ?? ""}`}
               placeholder="eg: Best, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
         </div>

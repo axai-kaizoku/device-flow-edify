@@ -70,7 +70,7 @@ export const Table = ({
             <TableHeadRow>
               {checkboxSelection && (
                 <TableCell style={{ textAlign: "left", marginLeft: "12px" }}>
-                  <Skeleton width="20px" height="20px" />
+                  <Skeleton width="32px" height="20px" />
                 </TableCell>
               )}
               {columns.map((_, index) => (

@@ -11,7 +11,8 @@ import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { getImageUrl } from "@/server/orgActions";
 import { useToast } from "@/hooks/useToast";
 import { useAlert } from "@/hooks/useAlert";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, Trash2, X } from "lucide-react";
+import UploadImageIcon from "@/icons/UploadImageIcon";
 
 export const TeamForm = ({
   closeBtn,
@@ -195,12 +196,9 @@ export const TeamForm = ({
     <>
       <div className="flex justify-center items-center gap-6 w-full h-full overflow-y-auto">
         <div className="flex flex-col h-full w-full justify-start items-start gap-6">
-          <div className="flex items-center  justify-center gap-4 ">
-            <Icons.teamMemberIcon className="size-10 border  bg-black rounded-full" />
-            <h3 className="text-xl font-gilroySemiBold">
-              {isEditForm ? "Edit Team" : "Create new team"}
-            </h3>
-          </div>
+          <h3 className="text-lg font-gilroyMedium w-full text-center">
+            {isEditForm ? "Edit Team" : "Create new team"}
+          </h3>
           <div className="h-[1px] bg-[#E7E7E7] w-full mb-2"></div>
 
           <form
@@ -213,7 +211,7 @@ export const TeamForm = ({
             <div className="group relative">
               <label
                 htmlFor="team-name"
-                className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+                className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium text-foreground"
               >
                 Team Name
               </label>
@@ -221,8 +219,8 @@ export const TeamForm = ({
                 id="team-name"
                 className={cn(
                   errors.title
-                    ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-                    : "h-12"
+                    ? "border-destructive/80 font-gilroyMedium  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-10"
+                    : "h-10"
                 )}
                 value={formData.title}
                 onChange={(e) =>
@@ -241,7 +239,7 @@ export const TeamForm = ({
             <div className="group relative mt-2">
               <label
                 htmlFor="team-department"
-                className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+                className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium text-foreground"
               >
                 Department
               </label>
@@ -249,8 +247,8 @@ export const TeamForm = ({
                 id="team-department"
                 className={cn(
                   errors.description
-                    ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-                    : "h-12"
+                    ? "border-destructive/80  focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-10"
+                    : "h-10"
                 )}
                 value={formData.description}
                 onChange={(e) =>
@@ -282,32 +280,42 @@ export const TeamForm = ({
                       }}
                     ></div>
                   </div>
-                  <span className="text-sm text-black">{progress}%</span>
+                  <span className="text-sm text-blue-500 font-gilroySemiBold">
+                    {progress}%
+                  </span>
                 </div>
               ) : formData.image ? (
-                <div className="relative w-20 h-20 rounded-xl overflow-hidden group">
-                  <img
-                    src={formData.image}
-                    alt={formData.image}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={handleRemoveImage}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+                <div className="bg-[#E9F3FF] rounded-md border-dashed  border p-3 border-[#52ABFF]">
+                  <div className="relative rounded-md size-12 overflow-hidden group">
+                    <img
+                      src={formData.image}
+                      alt={formData.image}
+                      className="w-full h-full  object-cover"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-[25%] left-[28%]  bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={handleRemoveImage}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div
-                  className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+                  className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-md border-dashed h-20 w-full border p-3 border-[#52ABFF]"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <div className="flex flex-col justify-center items-center">
-                    <Icons.uploadImage className="size-5" />
-                    <span className="text-[#0EA5E9]">Click to upload</span>
-                    <p className="text-xs text-neutral-400">
+                    <UploadImageIcon className="size-5" />
+                    <div className="flex gap-1 font-gilroySemiBold">
+                      {" "}
+                      <span className="text-[#0EA5E9] text-[10px]">
+                        Click to upload
+                      </span>
+                      <span className="text-[10px]">or drag and drop</span>
+                    </div>
+                    <p className="text-xs font-gilroyMedium text-neutral-400 text-[9px]">
                       JPG, JPEG, PNG less than 1MB
                     </p>
                   </div>
@@ -329,15 +337,18 @@ export const TeamForm = ({
             <div className="flex w-[93%] gap-3 absolute bottom-6 pt-2 justify-between items-center">
               <Button
                 type="button"
-                variant="outline"
-                className="rounded-full text-base flex-1 font-gilroySemiBold border border-black"
+                className="  w-full "
+                variant="outlineTwo"
                 onClick={() => closeBtn(false)}
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
-                className="rounded-full flex-1 text-base font-gilroySemiBold bg-black text-white "
+                type="button"
+                variant="primary"
+                className="  w-full "
+                onClick={handleSubmit}
+                // className="rounded-lg text-sm  w-full font-gilroySemiBold border bg-black text-white border-black"
                 disabled={loading}
               >
                 {loading ? (
@@ -359,12 +370,3 @@ export const TeamForm = ({
     </>
   );
 };
-
-
-
-
-
-
-
-
-

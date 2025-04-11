@@ -12,6 +12,7 @@ import {
 import WarningDelete from "@/icons/WarningDelete";
 import { deleteIntegrationById } from "@/server/integrationActions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -32,17 +33,17 @@ export const RemoveIntegration = ({
       await queryClient.invalidateQueries({
         queryKey: ["user-by-integrations", "all-data"],
         exact: true,
-        refetchType: "active",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["all-integrations", "discover"],
-        exact: true,
-        refetchType: "active",
+        refetchType: "all",
       });
       await queryClient.invalidateQueries({
         queryKey: ["all-integrations"],
-        exact: true,
-        refetchType: "active",
+        exact: false,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["get-integration-by-id"],
+        exact: false,
+        refetchType: "all",
       });
       router.push("/integrations/installed");
     },
@@ -67,7 +68,7 @@ export const RemoveIntegration = ({
           </DialogTitle>
 
           {/* Description */}
-          <DialogDescription className="p-1 text-sm text-gray-600">
+          <DialogDescription className="p-1 -mt-4 text-sm text-gray-600">
             Are you sure you want to delete this?
           </DialogDescription>
 
@@ -83,8 +84,15 @@ export const RemoveIntegration = ({
               className="w-1/2 rounded-md bg-[#D92D20] text-white"
               onClick={() => mutation.mutate({ id: id })}
               disabled={mutation.isPending}
+              onMouseEnter={() => router.prefetch("/integrations/installed")}
             >
-              Delete
+              {mutation.isPending ? (
+                <>
+                  Delete <Loader2 className="animate-spin size-4" />
+                </>
+              ) : (
+                "Delete"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

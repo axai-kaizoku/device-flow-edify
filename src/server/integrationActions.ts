@@ -2,8 +2,8 @@ import { AxiosError } from "axios";
 import { callAPIWithToken } from "./helper";
 import { User } from "./userActions";
 
-const apiUrl = "https://staging.deviceflow.ai";
-// const apiUrl = "https://8a54-34-47-179-100.ngrok-free.app";
+// const apiUrl = "https://staging.deviceflow.ai";
+const apiUrl = "https://1c55-34-47-179-100.ngrok-free.app";
 
 export type Seat = {
   _id: string;
@@ -30,21 +30,22 @@ export type IntegrationType = {
   companyLogo: string;
   credentials: string[];
   description: string;
-  documentationLink: string;
   isCloud: boolean;
   isCrm: boolean;
   isDesign: boolean;
   isSales: boolean;
   isTechnology: boolean;
   isTrending: boolean;
+  isPopular: boolean;
+  isNewlyAdded: boolean;
+  isConnected: boolean;
   newVersionDate: string; // You might want to use Date type if you parse it
   size: string;
   version: string;
   website: string;
-  isNewlyAdded: boolean;
-  price?: number;
-  isPopular: boolean;
-  isConnected: boolean;
+  price?: { plan: string; price: string; _id: string }[];
+  permissions?: string[];
+  wiki?: string;
 };
 
 export type SeatsResponse = {
@@ -157,7 +158,7 @@ export type AddIntegrationRes = {
 export const connectIntegration = async ({
   payload,
 }: {
-  payload: Record<string, any>;
+  payload: Record<string | number, any>;
 }) => {
   try {
     const body = { ...payload };
@@ -179,6 +180,7 @@ export type IntegrationUsers = {
   missingIntegrationUsers: User[];
   totalSeats?: number;
   unmappedSeats: number;
+  platformTotalCost: number;
   totalTeamSubscriptionCost?: number;
   unmappedUsersCost?: number;
 };
@@ -218,6 +220,39 @@ export const mapIntegrationUsers = async ({
       `${apiUrl}/edifybackend/v1/integration/map-users`,
       "PATCH",
       payload
+    );
+
+    console.log(res.data);
+
+    return res?.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error((error as AxiosError)?.message);
+  }
+};
+
+export type ConnectedIntegrationsRes = {
+  data: {
+    _id: string;
+    platform: string;
+    integratedAt: string;
+    price: {
+      plan: string;
+      price: number;
+    };
+    description?: string;
+    status: string;
+    userCount: number;
+    companyLogo: string;
+    totalPrice: number;
+  }[];
+};
+
+export const getConnectedIntegrations = async () => {
+  try {
+    const res = await callAPIWithToken<ConnectedIntegrationsRes>(
+      `${apiUrl}/edifybackend/v1/integration/connectedIntegration`,
+      "GET"
     );
 
     console.log(res.data);

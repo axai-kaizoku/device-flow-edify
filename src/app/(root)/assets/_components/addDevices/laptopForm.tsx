@@ -54,33 +54,25 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
       id: "macos",
       name: "MacOS",
       description: "High Sierra, Monterey, Ventura",
-      icon: (
-        <AppleIcon/>
-      ),
+      icon: <AppleIcon />,
     },
     {
       id: "windows",
       name: "Windows",
       description: "Windows 8, Windows 10, Windows 11",
-      icon: (
-        <WindowsIcon/>
-      ),
+      icon: <WindowsIcon />,
     },
     {
       id: "others",
       name: "Others",
       description: "Linux, DOS, Chrome OS",
-      icon: (
-        <UbuntuIcon/>
-      ),
+      icon: <UbuntuIcon />,
     },
   ];
 
   return (
-    <div className="flex flex-col">
-      <h1 className="2xl:text-2xl text-xl font-gilroySemiBold mb-5">
-        Select OS
-      </h1>
+    <div className="flex flex-col h-[70vh]  overflow-y-auto hide-scrollbar ">
+      <h1 className=" text-base font-gilroyMedium mb-2">Select OS</h1>
 
       <div
         className={`flex text-xs font-gilroyMedium justify-between items-center flex-wrap gap-4 w-full ${
@@ -93,7 +85,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               key={os?.id}
               className={`flex-grow-0 flex-shrink-0 ${
                 index < 2 ? "w-[calc(50%-8px)]" : "w-[calc(50%-8px)]"
-              } px-4 py-3 flex items-start border-[2px] rounded-xl cursor-pointer ${
+              } px-4 py-3 flex items-start border rounded-md cursor-pointer ${
                 selectedOS === os?.id ? "border-black " : "border-[#D5D5D5]"
               }`}
               onClick={() => handleSelectOS(os?.id)}
@@ -106,12 +98,12 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
                 className="mr-3 h-4 w-4 mt-1 accent-black sr-only"
               />
               <label htmlFor={os?.id} className="flex flex-col">
-                <p className="flex items-center font-gilroyMedium gap-2 text-lg">
+                <p className="flex items-center font-gilroyMedium gap-2 text-sm">
                   <span className="-mt-1">{os?.icon}</span>
                   {os?.name}
                 </p>
                 <span
-                  className={`text-xs font-gilroyMedium ${
+                  className={`text-[10px] font-gilroyMedium ${
                     selectedOS === os?.id ? "text-black" : "text-gray-400"
                   }`}
                 >
@@ -123,12 +115,12 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
       </div>
 
       {errors?.os && (
-        <p className="text-red-500 text-xs font-gilroyMedium mb-7">
+        <p className="text-red-500 text-xs mt-0.5 font-gilroyMedium mb-4">
           {errors?.os}
         </p>
       )}
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <div className="">
           <SelectDropdown
             options={[
@@ -150,7 +142,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
             error={errors?.brand}
             value={`${formData?.brand ?? ""}`}
             placeholder="eg: Lenovo, etc"
-            className=" rounded-xl   text-black border border-[#5F5F5F]"
+            className=" rounded-md   text-black border border-[#5F5F5F]"
           />
         </div>
 
@@ -189,7 +181,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               error={errors?.processor}
               value={`${formData?.processor ?? ""}`}
               placeholder="eg: Intel Core i3, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
 
@@ -213,7 +205,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               label="RAM"
               error={errors?.ram}
               value={formData?.ram ?? ""}
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
               placeholder="eg: 8GB, etc"
             />
           </div>
@@ -241,7 +233,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               error={errors?.storage}
               value={formData?.storage?.[0] ?? ""}
               placeholder="eg: 256GB, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
 
@@ -264,7 +256,7 @@ const LaptopForm: React.FC<BasicDetailsProps> = ({
               error={errors?.device_condition}
               value={`${formData?.device_condition ?? ""}`}
               placeholder="eg: Best, etc"
-              className="rounded-xl  text-black border border-[#5F5F5F]"
+              className="rounded-md  text-black border border-[#5F5F5F]"
             />
           </div>
         </div>

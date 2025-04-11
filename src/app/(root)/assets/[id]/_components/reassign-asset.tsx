@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Device, updateDevice } from "@/server/deviceActions";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ReassignAsset({
   children,
@@ -26,7 +27,7 @@ export default function ReassignAsset({
   const { openToast } = useToast();
   const [user, setUser] = useState<User>();
   const [error, setError] = useState("");
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     setError("");
     setUser({});
@@ -45,9 +46,13 @@ export default function ReassignAsset({
       // @ts-ignore
       await updateDevice(deviceData?._id ?? "", { userId: user?._id });
       setOpen(false);
-      openToast("success", "Assigned asset to user !");
+      openToast("success", ` ${deviceData?.custom_model} assigned to user !`);
       setLoading(false);
-      router.refresh();
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-assets"],
+        exact: false,
+        refetchType: "all",
+      });
     } catch (error) {
       openToast("error", "Failed to assign to user !");
     } finally {
@@ -60,42 +65,32 @@ export default function ReassignAsset({
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
         <div className="flex justify-center w-full h-full items-start">
-          <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
-            <div className="flex flex-col  w-full">
-              <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <UserFormProfileIcon className="size-9 2xl:size-11 bg-black rounded-full p-1" />
+          <div className="flex flex-col w-[97%] gap-4 h-full justify-start items-center">
+            <h1 className="font-gilroySemiBold w-full text-center text-xl ">
+              Assign Asset
+            </h1>
 
-                <h1 className="font-gilroySemiBold text-xl 2xl:text-3xl">
-                  Assign Asset
-                </h1>
-              </div>
-              <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                  {"Step 1 of 1"}
-                </div>
-                <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
-              </div>
-            </div>
+            <div className="h-[1px] bg-gray-200 w-full mb-1"></div>
 
-            <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+            <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 ">
               <img
                 src={
                   deviceData?.image?.[0]?.url ??
                   "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                 }
                 alt="device-image"
-                className="w-20 h-20 p-1 object-contain border rounded-full "
+                className="w-20 h-16 p-1 object-contain border rounded-full "
               />
               <div className=" w-full flex flex-col justify-center ">
-                <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                <h1 className="text-black font-gilroySemiBold text-lg ">
                   {deviceData?.custom_model ?? "-"}
                 </h1>
 
-                <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                   {deviceData?.ram ?? "RAM"}
-                  <span className="flex text-2xl mx-1 -mt-3">.</span>
+                  <span className="flex mx-1 -mt-3">.</span>
                   {deviceData?.storage ?? "Storage"}
-                  <span className="flex text-2xl mx-1 -mt-3">.</span>
+                  <span className="flex  mx-1 -mt-3">.</span>
                   {deviceData?.serial_no ?? "Serial number"}
                 </h1>
                 <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
@@ -139,7 +134,7 @@ export default function ReassignAsset({
               </div>
 
               {user?.first_name ? (
-                <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+                <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 ">
                   <img
                     src={
                       user?.image && user.image.length > 0
@@ -147,33 +142,39 @@ export default function ReassignAsset({
                         : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                     }
                     alt="user-image"
-                    className="w-20 h-20 p-1  object-cover rounded-full "
+                    className="w-20 h-16 p-1  object-cover rounded-full "
                   />
                   <div className=" w-full flex flex-col justify-center ">
-                    <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                    <h1 className="text-black font-gilroySemiBold text-base">
                       {user?.first_name ?? ""}
                     </h1>
-                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-base 2xl:text-2xl">
+                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm">
                       {user?.email ?? ""}
                     </h1>
 
-                    <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                    <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                       {user?.employment_type ?? ""}
-                      <span className="flex text-2xl mx-1 -mt-3">.</span>
+                      <span className="flex mx-1 -mt-3">.</span>
                       {user?.designation ?? ""}
                     </h1>
                   </div>
                 </div>
               ) : null}
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
-                <Button
-                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
+                <button
+                  className={buttonVariants({
+                    variant: "outlineTwo",
+                    className: "w-full",
+                  })}
                   onClick={() => setOpen(false)}
                 >
                   Close
-                </Button>
-                <Button
-                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
+                </button>
+                <button
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full",
+                  })}
                   type="submit"
                   disabled={loading}
                 >
@@ -182,10 +183,9 @@ export default function ReassignAsset({
                   ) : (
                     <>
                       <span>Assign</span>
-                      <ChevronRight color="white" />
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </form>
           </div>

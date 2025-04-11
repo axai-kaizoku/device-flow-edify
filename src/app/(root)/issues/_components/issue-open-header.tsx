@@ -22,7 +22,7 @@ function OpenHeader({
 
   return (
     <div className="flex gap-3">
-      <h1 className="text-xl pl-6 font-gilroySemiBold">Open Issues</h1>
+      <h1 className="text-base pl-6 font-gilroyMedium">Open Issues</h1>
       <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-alert-foreground text-failure">
         {criticalCount} Critical
       </h1>

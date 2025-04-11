@@ -1,7 +1,7 @@
-import { CombinedContainer } from "@/components/container/container";
-import React from "react";
-import ReportSection from "./_components/reportSection";
+"use client";
 import NotFound from "@/app/not-found";
+import { CombinedContainer } from "@/components/container/container";
+import ReportSection from "./_components/reportSection";
 
 export interface report {
   title: string;
@@ -15,7 +15,7 @@ const Reports = () => {
       {
         title: "Total Members",
         description:
-          "Download the full report with up-to-date details on all the members in your organisation.",
+          "Download the full report with up-to-date details of all the members in your company.",
         tag: "people",
       },
       {

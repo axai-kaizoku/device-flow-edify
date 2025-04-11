@@ -10,6 +10,9 @@ import {
 import React from "react";
 import { BlueTickCircle } from "../icons";
 import { AddIntegrationRes } from "@/server/integrationActions";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MappingDialogOne({
   children,
@@ -17,13 +20,18 @@ export default function MappingDialogOne({
   setOpen,
   response,
   setNextSteps,
+  platform,
 }: {
+  platform?: string;
   children?: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
   response?: AddIntegrationRes;
 }) {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const descriptionDetails = [
     "Deactivating unused licenses will revoke access for the associated users.",
 
@@ -33,26 +41,58 @@ export default function MappingDialogOne({
   const active = response?.data?.filter((u) => u.userId !== null)?.length;
   const inActive = response?.data?.filter((u) => u.userId === null)?.length;
 
+  const handleSkipClick = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["get-integration-by-id"],
+      exact: false,
+      refetchType: "all",
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ["user-by-integrations", "all-data"],
+      exact: true,
+      refetchType: "all",
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ["all-integrations", "discover"],
+      exact: true,
+      refetchType: "all",
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ["all-integrations"],
+      exact: false,
+      refetchType: "all",
+    });
+    setNextSteps(0);
+    router.push(`/integrations/installed?platform=${platform}`);
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps(0)}>
         <DialogTrigger>{children}</DialogTrigger>
         <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full text-center">
-          <DialogTitle className="text-lg font-gilroySemiBold">
+          <DialogTitle className="text-lg font-gilroySemiBold -my-2">
             Found
           </DialogTitle>
-          <div className="flex gap-1 text-[#2E8016] items-center justify-center">
-            <span className="text-4xl font-gilroyBold">{active} Users</span>
+          <div className="flex gap-1 text-[#2E8016] items-center justify-center -my-1">
+            <span className="text-4xl font-gilroyBold">
+              {active === undefined ? (
+                <Skeleton className="w-20 h-16" />
+              ) : (
+                <>{active === 1 ? `${active} User` : `${active} Users`}</>
+              )}
+            </span>
           </div>
-          <p className="text-[#7f7f7f] text-sm font-gilroyMedium">
+          <p className="text-[#7f7f7f] text-sm font-gilroyMedium -my-2">
             All the members are successfully imported from Slack.
           </p>
+          {/* {JSON.stringify(response)} */}
 
-          <div className="h-[1px] bg-gray-200 my-2"></div>
-          <h1 className="text-center text-base font-gilroySemiBold">
+          <div className="h-[1px] bg-gray-200 my-2 -mx-6"></div>
+          <h1 className="text-center text-base font-gilroySemiBold -mt-2">
             Deviceflow has found{" "}
           </h1>
-          <div className="bg-[#FCF3F6] rounded-xl flex justify-start gap-2 items-center p-2">
+          <div className="bg-neutral-100 rounded-xl flex justify-start gap-2 items-center p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="23"
@@ -81,12 +121,22 @@ export default function MappingDialogOne({
               />
             </svg>
             <h1 className="text-[#DC060D] text-base font-gilroyMedium">
-              {inActive} Unmapped users
+              {active === undefined ? (
+                <Skeleton className="w-40 h-7" />
+              ) : (
+                <>
+                  {" "}
+                  {inActive === 1
+                    ? `${inActive} Unmapped user`
+                    : `${inActive} Unmapped users`}
+                </>
+              )}
             </h1>
           </div>
-          <h1 className="text-xs font-gilroyMedium">
-            {inActive} users are currently unmapped. They will be saved as guest
-            users by default, or you can map them to existing members.
+          <h1 className="text-sm font-gilroyMedium text-left">
+            {inActive === 1 ? `${inActive} user is ` : `${inActive} users are `}
+            currently unmapped. They will be saved as guest users by default, or
+            you can map them to existing members.
           </h1>
           <h1 className="text-base font-gilroySemiBold text-start ">
             By proceeding, I acknowledge that:{" "}
@@ -103,17 +153,25 @@ export default function MappingDialogOne({
             By clicking <strong>Agree & Proceed</strong>, you authotize
             deviceflow to deactivate the licences on your behalf.
           </p>
+          <div className="h-[1px] bg-gray-200  -mx-6"></div>
 
-          <DialogFooter className="flex w-full items-center justify-between mt-4">
+          <DialogFooter className="flex w-full items-center justify-between -mb-1.5">
             <Button
-              className="w-[48%] rounded-sm font-gilroyMedium  bg-white text-black  ring-1 ring-[#B4B4B4] flex items-center justify-center"
-              onClick={() => setNextSteps(0)}
+              className="w-[48%] rounded-lg text-sm bg-white text-black  font-gilroyMedium tracking-wide border hover:border-black"
+              onClick={handleSkipClick}
+              onMouseEnter={() =>
+                router.prefetch(`/integrations/installed?platform=${platform}`)
+              }
             >
               Skip
             </Button>
             <Button
-              className="w-[48%] rounded-sm font-gilroyMedium  bg-black text-white  ring-1 ring-black   flex items-center justify-center"
+              onMouseEnter={() =>
+                router.prefetch(`/integrations/installed?platform=${platform}`)
+              }
+              className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               onClick={() => setNextSteps(2)}
+              disabled={inActive === 0}
             >
               Map Users
             </Button>

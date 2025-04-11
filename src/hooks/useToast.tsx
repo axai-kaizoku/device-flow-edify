@@ -26,17 +26,17 @@ export const useToast = () => {
     }
 
     toast(
-      <span
+      <div
         className={cn(
           "flex pl-4 rounded-xl p-3 w-full h-full font-gilroyMedium flex-col gap-1 items-start justify-start",
           containerStyles
         )}
       >
-        <div className="flex gap-2 items-center font-gilroySemiBold ">
+        <div className="flex gap-2 items-center font-gilroySemiBold w-full ">
           {Icon} {type === "success" ? "Success" : "Error"}
         </div>
-        <div className={cn("pl-6 text-sm", textStyles)}>• {message}</div>
-      </span>,
+        <div className={cn("pl-6 text-sm w-full", textStyles)}>• {message}</div>
+      </div>,
       {
         position: "bottom-right",
         autoClose: 3000,

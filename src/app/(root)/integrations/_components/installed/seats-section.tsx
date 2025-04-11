@@ -84,11 +84,11 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
         </div>
       )} */}
       <div
-        className="flex gap-2 items-center mb-2 cursor-pointer"
+        className="flex gap-2 items-center mb-2 cursor-pointer hover:underline"
         onClick={() => router.back()}
       >
         <IntBack />
-        <span className="text-gray-500 font-gilroyMedium text-lg">
+        <span className="text-gray-500 font-gilroyMedium text-base">
           Installed
         </span>
       </div>
@@ -96,7 +96,7 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
       <div>
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl px-3 font-gilroySemiBold capitalize">
+            <h1 className="text-base pl-6 font-gilroyMedium capitalize">
               {selectedPlatform}
             </h1>
           </div>
@@ -113,10 +113,10 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                 data={data ?? []}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
-                checkboxSelection={{
-                  uniqueField: "_id",
-                  onSelectionChange: setSelectedIds,
-                }}
+                // checkboxSelection={{
+                //   uniqueField: "_id",
+                //   onSelectionChange: setSelectedIds,
+                // }}
                 columns={[
                   {
                     title: "Name",

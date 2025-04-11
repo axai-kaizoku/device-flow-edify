@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
 import WarningDelete from "@/icons/WarningDelete";
@@ -50,14 +50,20 @@ export const PermanentAssetsDelete = ({
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
-          <Button
-            className="w-1/2 rounded-md border text-base border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+          <button
+            className={buttonVariants({
+              variant: "outlineTwo",
+              className: "w-full",
+            })}
             onClick={() => setOpen(false)}
           >
             Cancel
-          </Button>
+          </button>
           <Button
-            className="w-1/2 text-base rounded-md shadow-sm bg-[#D92D20] text-white"
+            className={buttonVariants({
+              variant: "outlineTwo",
+              className: "w-full bg-[#D92D20] border-none text-white",
+            })}
             onClick={async () => {
               if (id) {
                 try {

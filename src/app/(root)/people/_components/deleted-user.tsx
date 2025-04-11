@@ -203,8 +203,8 @@ function DeletedUser({
                           <DeleteTableIcon className="size-6" />
                         </PermanentUserDelete>
 
-                        <RestoreUser id={record?._id!}>
-                          <div className="rounded-full text-white bg-black font-gilroySemiBold text-sm py-1.5 px-5">
+                        <RestoreUser id={record?._id!} onRefresh={onRefresh}>
+                          <div className="rounded-md text-white bg-black font-gilroySemiBold text-sm py-2 px-4">
                             Restore
                           </div>
                         </RestoreUser>
@@ -213,14 +213,6 @@ function DeletedUser({
                   },
                 ]}
               />
-              {/* Pagination Control */}
-              {/* <div className="mt-2">
-                <Pagination
-                  current_page={currentPage}
-                  total_pages={data?.total_pages!}
-                  onPageChange={handlePageChange}
-                />
-              </div> */}
             </div>
           </div>
         )}

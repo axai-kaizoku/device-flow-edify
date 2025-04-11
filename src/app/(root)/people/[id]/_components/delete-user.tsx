@@ -17,6 +17,7 @@ import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import WarningDelete from "@/icons/WarningDelete";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const DeleteUser = ({
   id,
@@ -32,7 +33,7 @@ export const DeleteUser = ({
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
   const { showAlert } = useAlert();
-
+  const queryClient = useQueryClient();
   const handleDelete = async () => {
     if (id) {
       setLoading(true);
@@ -42,9 +43,11 @@ export const DeleteUser = ({
         openToast("success", "Successfully deleted user !");
         setOpen(false);
         router.push("/people");
-        // onRefresh();
-        // router.push("/people?tab=active_people");
-        // router.refresh();
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-people"],
+          exact: false,
+          refetchType: "all",
+        });
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the user.",

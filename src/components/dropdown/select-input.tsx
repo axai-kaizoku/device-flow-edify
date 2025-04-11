@@ -156,7 +156,7 @@ export const SelectInput = ({
       <div className="group relative z-40" ref={dropdownRef}>
         <label
           htmlFor={label}
-          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium text-foreground"
+          className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium text-foreground"
         >
           {label}
         </label>
@@ -174,8 +174,8 @@ export const SelectInput = ({
             placeholder={placeholder ?? "Search or select"}
             type="text"
           />
-          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-            <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
+          <div className="absolute inset-y-0 right-0 flex items-center pointer-events-none">
+            <div className="h-7 w-[1.5px] bg-[#DCDCDC]" />
             <DropdownArrowUp
               className={cn(
                 "size-3 ml-4 mr-3.5 text-gray-500",
@@ -186,7 +186,7 @@ export const SelectInput = ({
         </div>
         {isDropdownOpen ? (
           options.length ? (
-            <div className="absolute dropdown-list rounded-xl z-30 w-full mt-2 bg-white border border-primary shadow-lg max-h-52 overflow-y-auto">
+            <div className="absolute dropdown-list rounded-md hide-scrollbar z-30 w-full mt-2 bg-white border border-primary  max-h-52 overflow-y-auto">
               {options?.map((option, index) => (
                 <div
                   key={option?._id}

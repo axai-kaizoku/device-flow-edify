@@ -4,28 +4,36 @@ import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import { Table } from "@/components/wind/Table";
 import {
   deleteIntegrationById,
+  IntegrationUsers,
   UserByIntegration,
 } from "@/server/integrationActions";
 import React, { Suspense, useState } from "react";
 import AllIntegrationsDisplay from "./all-integration-display";
 import { useRouter } from "next/navigation";
 import { RemoveIntegration } from "./remove-integration.dialog";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  User02Icon,
+  UserIcon,
+  Wallet01FreeIcons,
+} from "@hugeicons/core-free-icons";
+import { buttonVariants } from "@/components/buttons/Button";
+import { Icons } from "@/app/(root)/people/icons";
 
 interface UserByIntegrationsProps {
-  data?: UserByIntegration[];
+  data?: IntegrationUsers;
   selectedPlatform?: string;
-  onRemove?: (platform: string) => void;
   status?: "error" | "success" | "pending";
 }
 
 const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
-  data,
+  data: totalIntegrationData,
   selectedPlatform,
-  onRemove,
   status,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const router = useRouter();
+  // const router = useRouter();
+  const users = totalIntegrationData?.allUsers;
 
   // Show loader if data is not yet available
   // if (!data?.length) {
@@ -41,7 +49,7 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
   // }
 
   // Find the integration matching the selected platform.
-  const integration = data?.find((item) =>
+  const integration = users?.find((item) =>
     item?.integrations?.some((i) => i?.platform === selectedPlatform)
   );
 
@@ -52,70 +60,82 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
 
   return (
     <div className="flex flex-col ">
-      {integrationData?.platform && (
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex gap-6 items-center">
+      {status === "pending" ? (
+        <IntegrationHeaderSkeleton />
+      ) : (
+        <div className="flex justify-between items-center mb-6 ">
+          <div className="flex gap-6 items-center w-full">
             <img
               src={integrationData?.image ?? ""}
               alt={integrationData?.platform}
               className="w-28 h-28 object-cover"
             />
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 w-full">
               <h1 className="text-3xl font-gilroyBold">
                 {integrationData?.platform}
               </h1>
-              <div className="flex gap-5">
-                <div className="flex gap-2 items-center">
-                  <img
-                    src="/media/integrations/purse.png"
-                    className="w-5 h-5"
-                    alt="Amount-logo"
-                  />
-                  <span className="text-sm font-gilroyMedium">{`$${
-                    integrationData?.price * data.length
-                  }/Month`}</span>
+              <div className="flex gap-5 justify-between w-full">
+                <div className="flex gap-5">
+                  <div className="flex gap-2 items-center">
+                    <HugeiconsIcon
+                      icon={Wallet01FreeIcons}
+                      className="text-neutral-400 size-4"
+                    />
+                    {/* {JSON.stringify(totalIntegrationData)} */}
+                    <span className="text-sm font-gilroyMedium">{`₹${(totalIntegrationData?.platformTotalCost).toFixed(
+                      2
+                    )}/Month`}</span>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <HugeiconsIcon
+                      icon={UserIcon}
+                      className="text-neutral-400 size-4"
+                    />
+
+                    <span className="text-sm font-gilroyMedium">
+                      {users?.length} Seats
+                    </span>
+                  </div>
                 </div>
-                <div className="flex gap-2 items-center">
-                  <img
-                    src="/media/integrations/user.png"
-                    className="w-5 h-5"
-                    alt="User-logo"
-                  />
-                  <span className="text-sm font-gilroyMedium">
-                    {data?.length} Seats
+                <RemoveIntegration id={integrationData?.id ?? ""}>
+                  <span
+                    className={buttonVariants({
+                      className:
+                        "rounded-md text-sm bg-white h-9 text-black  w-fit font-gilroyMedium border hover:border-black",
+                    })}
+                  >
+                    Remove
                   </span>
-                </div>
+                </RemoveIntegration>
               </div>
             </div>
           </div>
-          <RemoveIntegration id={integrationData?.id ?? ""}>
-            <span className="rounded-lg bg-red-600 text-white py-2 text-sm font-gilroySemiBold px-8">
-              REMOVE
-            </span>
-          </RemoveIntegration>
         </div>
       )}
-
+      {/* {JSON.stringify(data)} */}
       <div>
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-          <div className="flex justify-between items-center"></div>
+          <div className="flex justify-between items-center">
+            <h1 className="text-base font-gilroyMedium pl-6">Members</h1>
+          </div>
 
-          {status === "pending" ? (
+          {/* {status === "pending" ? (
             <div>
               <DeviceFlowLoader />
             </div>
-          ) : null}
+          ) : null} */}
           {/* {JSON.stringify(data)} */}
-          {data?.length ? (
+          {users?.length !== 0 ? (
             <div className="flex flex-col gap-2">
               <Table
-                data={data ?? []}
+                isLoading={status === "pending"}
+                data={users}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
-                checkboxSelection={{
-                  uniqueField: "_id",
-                  onSelectionChange: setSelectedIds,
-                }}
+                // checkboxSelection={{
+                //   uniqueField: "_id",
+                //   onSelectionChange: setSelectedIds,
+                // }}
                 columns={[
                   {
                     title: "Name",
@@ -212,12 +232,8 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
               />
             </div>
           ) : (
-            <div className="p-4 flex items-center justify-center w-full h-[60vh]">
-              <img
-                src="/media/logo/no_reports_display.svg"
-                alt="No Data"
-                className="object-contain"
-              />
+            <div className="flex flex-col gap-6 justify-center items-center py-8">
+              <Icons.no_people_display />
             </div>
           )}
 
@@ -229,3 +245,31 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
 };
 
 export default UserByIntegrations;
+
+import { Skeleton } from "@/components/ui/skeleton";
+
+function IntegrationHeaderSkeleton() {
+  return (
+    <div className="flex justify-between items-center mb-6">
+      <div className="flex gap-6 items-center w-full">
+        <Skeleton className="w-28 h-28 rounded-md" />
+        <div className="flex flex-col gap-5 w-full">
+          <Skeleton className="h-8 w-1/3" /> {/* Title */}
+          <div className="flex gap-5 justify-between w-full">
+            <div className="flex gap-5">
+              <div className="flex gap-2 items-center">
+                <Skeleton className="size-4 rounded-full" /> {/* Icon */}
+                <Skeleton className="h-4 w-20" /> {/* Price */}
+              </div>
+              <div className="flex gap-2 items-center">
+                <Skeleton className="size-4 rounded-full" /> {/* Icon */}
+                <Skeleton className="h-4 w-16" /> {/* Seats */}
+              </div>
+            </div>
+            <Skeleton className="h-9 w-24 rounded-md" /> {/* Remove Button */}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

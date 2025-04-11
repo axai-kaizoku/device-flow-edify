@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import Spinner from "@/components/Spinner";
 import WarningIcon from "@/icons/WarningIcon";
@@ -50,15 +50,21 @@ export const RestoreDevice = ({
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between">
-          <Button
-            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-base text-[#344054]"
+          <button
+            className={buttonVariants({
+              variant: "outlineTwo",
+              className: "w-full",
+            })}
             onClick={() => setOpen(false)}
             disabled={loading} // Disable button while loading
           >
             {loading ? <Spinner /> : "Discard"}
-          </Button>
-          <Button
-            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-base text-white"
+          </button>
+          <button
+            className={buttonVariants({
+              variant: "primary",
+              className: "w-full",
+            })}
             onClick={async () => {
               if (id) {
                 setLoading(true); // Start loading
@@ -81,7 +87,7 @@ export const RestoreDevice = ({
             disabled={loading} // Disable button while loading
           >
             {loading ? <Spinner /> : "Restore"}
-          </Button>
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
 import { useAlert } from "@/hooks/useAlert";
 import WarningDelete from "@/icons/WarningDelete";
@@ -37,7 +37,7 @@ export const SoftDeleteAsset = ({
         setOpen(false);
         // router.push("/assets?tab=un_assigned_assets");
         // router.refresh();
-        openToast('success', "Asset deleted Successfully!");
+        openToast("success", "Asset deleted Successfully!");
         onRefresh();
       } catch (e: any) {
         showAlert({
@@ -77,14 +77,20 @@ export const SoftDeleteAsset = ({
 
           {/* Footer Buttons */}
           <DialogFooter className="flex w-full items-center justify-between ">
-            <Button
-              className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+            <button
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "w-full",
+              })}
               onClick={() => setOpen(false)}
             >
               Cancel
-            </Button>
+            </button>
             <Button
-              className="w-1/2 rounded-md bg-[#D92D20] text-white"
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "w-full bg-[#D92D20] text-white border-none",
+              })}
               onClick={handleDelete}
             >
               Delete

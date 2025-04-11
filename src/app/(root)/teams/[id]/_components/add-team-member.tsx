@@ -1,24 +1,21 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
-import { useEffect, useState } from "react";
+import { Button } from "@/components/buttons/Button";
+import { SelectInput } from "@/components/dropdown/select-input";
+import Spinner from "@/components/Spinner";
+import { useToast } from "@/hooks/useToast";
+import { cn } from "@/lib/utils";
+import { Team } from "@/server/teamActions";
 import {
   fetchUsers,
-  getUsersByTeamId,
   searchUsers,
   updateUser,
   User,
 } from "@/server/userActions";
-import { Icons } from "@/components/icons";
-import { SelectInput } from "@/components/dropdown/select-input";
-import { Team } from "@/server/teamActions";
-import { useToast } from "@/hooks/useToast";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
+import { useEffect, useState } from "react";
 
 export default function AddTeamMember({
   children,
@@ -33,7 +30,7 @@ export default function AddTeamMember({
   const { openToast } = useToast();
   const [user, setUser] = useState<User>();
   const [error, setError] = useState("");
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     setError("");
     setUser({});
@@ -54,7 +51,16 @@ export default function AddTeamMember({
       openToast("success", "Added member to team !");
 
       setLoading(false);
-      router.refresh();
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-team-by-id"],
+        exact: false,
+        refetchType: "all",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-users-by-team-id"],
+        exact: false,
+        refetchType: "all",
+      });
     } catch (error) {
       openToast("error", "Failed to add member to team !");
     } finally {
@@ -68,24 +74,13 @@ export default function AddTeamMember({
       <SheetContent>
         <div className="flex justify-center w-full h-full items-start">
           <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
-            <div className="flex flex-col  w-full">
-              <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                  <UserFormProfileIcon className="size-6 2xl:size-8" />
-                </div>
-                <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
-                  {"Add Employee"}
-                </span>
-              </div>
-              <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                  {"Step 1 of 1"}
-                </div>
-                <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
-              </div>
-            </div>
+            <h1 className="font-gilroySemiBold text-xl text-center w-full">
+              {"Add Member"}
+            </h1>
 
-            <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
+            <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
+
+            <div className="w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4">
               <img
                 src={
                   teamData?.image && teamData.image.length > 0
@@ -93,23 +88,23 @@ export default function AddTeamMember({
                     : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
                 }
                 alt="team-image"
-                className="w-20 h-20 p-1  object-cover rounded-full "
+                className="w-20 h-16 p-1  object-cover rounded-full "
               />
               <div className="w-full flex flex-col justify-center">
                 <div className="flex gap-3 items-center">
-                  <div className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                  <div className="text-black font-gilroySemiBold text-base">
                     {teamData?.title ?? "-"}
                   </div>
-                  <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                  <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm  font-gilroyMedium flex justify-center items-center px-2 py-0.5">
                     Active
                   </div>
                 </div>
-                <div className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                <div className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                   {teamData?.description ?? ""}
                 </div>
 
                 <div className="flex gap-2 items-center">
-                  <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
+                  <div className="text-[#ADADAC] text-sm  font-gilroySemiBold">
                     Reporting Manger:
                   </div>
                   <div className="text-black font-gilroySemiBold">
@@ -155,7 +150,7 @@ export default function AddTeamMember({
               </div>
 
               {user?.first_name ? (
-                <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
+                <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 ">
                   <img
                     src={
                       user?.image && user.image.length > 0
@@ -163,17 +158,17 @@ export default function AddTeamMember({
                         : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                     }
                     alt="user-image"
-                    className="w-20 h-20 p-1  object-cover rounded-full "
+                    className="w-20 h-16 p-1  object-cover rounded-full "
                   />
                   <div className=" w-full flex flex-col justify-center ">
-                    <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                    <h1 className="text-black font-gilroySemiBold text-base ">
                       {user?.first_name ?? ""}
                     </h1>
-                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-base 2xl:text-2xl">
+                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
                       {user?.email ?? ""}
                     </h1>
 
-                    <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                    <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                       {user?.employment_type ?? ""}
                       <span className="flex text-2xl mx-1 -mt-3">.</span>
                       {user?.designation ?? ""}
@@ -184,22 +179,19 @@ export default function AddTeamMember({
 
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                 <Button
-                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
+                  type="button"
+                  variant="outlineTwo"
+                  className="w-full"
                   onClick={() => setOpen(false)}
                 >
                   Close
                 </Button>
-                <Button
-                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
-                  type="submit"
-                  disabled={loading}
-                >
+                <Button variant="primary" type="submit" disabled={loading}>
                   {loading ? (
                     <Spinner />
                   ) : (
                     <>
                       <span>Add</span>
-                      <ChevronRight color="white" />
                     </>
                   )}
                 </Button>

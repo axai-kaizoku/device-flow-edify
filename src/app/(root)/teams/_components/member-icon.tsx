@@ -1,4 +1,6 @@
 import { cn } from "@/lib/utils";
+import { User02Icon, User03Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { UserIcon } from "lucide-react";
 
 export const MemberIcon = ({
@@ -27,7 +29,8 @@ export const MemberIcon = ({
         className="rounded-full w-full h-full object-cover"
       />
     ) : (
-      <UserIcon />
+      <HugeiconsIcon icon={User02Icon} />
+      // <UserIcon />
     )}
   </div>
 );

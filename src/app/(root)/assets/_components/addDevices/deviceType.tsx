@@ -55,31 +55,31 @@ const DeviceType = ({
     {
       id: "laptop",
       label: "Laptop",
-      logo: <Laptop2 className="size-6 " />,
+      logo: <Laptop2 className="size-5 " />,
       steps: 2,
     },
     {
       id: "keyboard",
       label: "Keyboard",
-      logo: <Keyboard className="size-6 " />,
+      logo: <Keyboard className="size-5 " />,
       steps: 1,
     },
     {
       id: "mobile",
       label: "Mobile",
-      logo: <Smartphone className="size-6 " />,
+      logo: <Smartphone className="size-5 " />,
       steps: 2,
     },
     {
       id: "mouse",
       label: "Mouse",
-      logo: <Mouse className="size-6 " />,
+      logo: <Mouse className="size-5 " />,
       steps: 1,
     },
     {
       id: "monitor",
       label: "Monitor",
-      logo: <Monitor className="size-6 " />,
+      logo: <Monitor className="size-5 " />,
       steps: 1,
     },
   ];
@@ -124,9 +124,9 @@ const DeviceType = ({
               bulkApi={bulkUploadDevices}
             />
           </div>
-          <div className="flex items-center justify-center mt-8 mb-4">
+          <div className="flex items-center justify-center mt-3">
             <div className="border-t border-gray-400 w-7"></div>
-            <span className="mx-4 font-gilroySemiBold 2xl:text-lg text-base text-gray-400">
+            <span className="mx-2 font-gilroySemiBold  text-sm text-gray-400">
               OR
             </span>
             <div className="border-t border-[#B1B1B1] w-7"></div>
@@ -134,10 +134,8 @@ const DeviceType = ({
         </>
       ) : null}
 
-      <div className="flex flex-col gap-6 mb-19">
-        <div className="font-gilroySemiBold 2xl:text-2xl text-xl">
-          Device Type
-        </div>
+      <div className="flex flex-col gap-4 ">
+        <div className="font-gilroyMedium  text-base">Device Type</div>
         <div className="grid grid-cols-2 gap-5 mb-4">
           {deviceList?.map((device, index) => (
             <div
@@ -146,7 +144,7 @@ const DeviceType = ({
                 index === deviceList?.length - 1 && deviceList?.length % 2 !== 0
                   ? "col-span-2"
                   : ""
-              } flex items-center border-[2px] rounded-xl p-2 text-lg cursor-pointer ${
+              } flex items-center border rounded-md p-2 text-lg cursor-pointer ${
                 selectedDevice === device.id
                   ? "border-black"
                   : "border-[#D5D5D5]"
@@ -174,7 +172,7 @@ const DeviceType = ({
                 } flex justify-center items-center gap-3 py-1.5 px-2`}
               >
                 <span className="text-black">{device?.logo}</span>
-                <span className="text-black font-gilroyMedium text-lg">
+                <span className="text-black font-gilroyMedium text-sm">
                   {device?.label}
                 </span>
               </label>
@@ -188,12 +186,10 @@ const DeviceType = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mt-2 mb-19">
-        <div className="font-gilroySemiBold 2xl:text-2xl text-xl">
-          Device Assign to
-        </div>
+      <div className="flex flex-col gap-2 ">
+        <div className="font-gilroyMedium  text-base">Device Assign to</div>
 
-        <div className="pt-3 w-full">
+        <div className="pt-2 w-full">
           <SelectInput
             fetchOptions={searchUsers}
             initialOptions={fetchUsers}

@@ -107,7 +107,9 @@ export function AsyncSelect<T>({
         setLoading(true);
         setError(null);
         const data = await fetcher(debouncedSearchTerm);
+        // if (!originalOptions.length) {
         setOriginalOptions(data);
+        // }
         setOptions(data);
       } catch (err) {
         setError(
@@ -132,6 +134,8 @@ export function AsyncSelect<T>({
       } else {
         setOptions(originalOptions);
       }
+    } else {
+      fetchOptions();
     }
   }, [fetcher, debouncedSearchTerm, mounted, preload, filterFn]);
 
@@ -150,7 +154,7 @@ export function AsyncSelect<T>({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild className="w-full">
         <Button
           variant="outline"
@@ -160,7 +164,7 @@ export function AsyncSelect<T>({
             "justify-between font-gilroyMedium",
             disabled && "opacity-50 cursor-not-allowed",
             !selectedOption &&
-              "text-[#818EA1] hover:text-[#818EA1] font-gilroyRegular text-base",
+              "text-[#818EA1] hover:text-[#818EA1] font-gilroyRegular text-sm",
             triggerClassName
           )}
           style={{ width: width }}

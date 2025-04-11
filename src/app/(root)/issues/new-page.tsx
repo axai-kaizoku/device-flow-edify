@@ -31,7 +31,7 @@ function NewPage() {
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const actualSearchTerm = useDeferredValue(searchTerm);
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["fetch-issues", activeTab, actualSearchTerm],
     queryFn: async () => {
       const query = {
@@ -199,10 +199,10 @@ function NewPage() {
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+        <div className="flex  mb-3 gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
           <div className="flex gap-2">
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
+              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] ">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
               <SelectContent className="font-gilroyMedium">
@@ -231,11 +231,17 @@ function NewPage() {
           </div>
         </div>
         <TabsContent value="open">
-          <IssueTableDisplay data={data} issuesText="open" countIssues={data} />
+          <IssueTableDisplay
+            data={data}
+            status={status}
+            issuesText="open"
+            countIssues={data}
+          />
         </TabsContent>
         <TabsContent value="closed">
           <IssueTableDisplay
             data={data}
+            status={status}
             issuesText="closed"
             countIssues={data}
           />

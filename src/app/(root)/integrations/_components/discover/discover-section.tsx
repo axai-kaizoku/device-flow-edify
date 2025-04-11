@@ -39,13 +39,13 @@ export const DiscoverSection = ({ data, status }: DiscoverSectionProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-5 w-full">
+    <div className="flex flex-col gap-5 w-full h-[60vh]">
       {/* <TotalSpends /> */}
       {/* <MappingDialogueOne>hi</MappingDialogueOne> */}
-      <section className="flex justify-between">
+      <section className="flex justify-between h-full">
         <CategoriesFilter data={data} onSelect={setSelectedCategory} />
 
-        <div className="flex flex-col gap-6 py-4 pl-8 ml-5">
+        <div className="flex flex-col gap-6 py-4 pl-8 ml-5 h-full overflow-y-auto hide-scrollbar">
           <IntegrationCompaniesSecx
             categoryName={selectedCategory?.title}
             categoryCompanies={selectedCategory?.companies}

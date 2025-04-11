@@ -1,5 +1,7 @@
-import DiscoverPage from "./discover/page";
+// import DiscoverPage from "./discover/page";
+
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <DiscoverPage />;
+  return redirect("/integrations/discover");
 }

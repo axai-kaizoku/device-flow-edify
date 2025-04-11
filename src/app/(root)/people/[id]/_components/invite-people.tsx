@@ -1,24 +1,21 @@
 "use client";
 import { Button } from "@/components/buttons/Button";
 import { SelectInput } from "@/components/dropdown/select-input";
-import { Icons } from "@/components/icons";
-import Spinner from "@/components/Spinner";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
-import { useToast } from "@/hooks/useToast";
-import { cn } from "@/lib/utils";
-import { fetchTeams, Team } from "@/server/teamActions";
-import { ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/inputs/Input";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
+import { useToast } from "@/hooks/useToast";
+import { cn } from "@/lib/utils";
 import { createSignupLink } from "@/server/signupActions";
-import { Input } from "@/components/inputs/Input";
-import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
+import { fetchTeams, Team } from "@/server/teamActions";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function InvitePeople({
   children,
@@ -79,30 +76,30 @@ export default function InvitePeople({
             Share this link to onboard your employees easily.
           </p>
 
-          <div className="group relative w-full mt-2">
+          <div className="w-full mt-2 flex items-center  justify-between gap-x-2">
             <Input
               id="copy-link"
               type="text"
               className={
-                "text-[#025CE5] select-none w-full rounded-md border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm"
+                "text-[#025CE5] select-none w-[17rem]  rounded-lg border-[#BEBEBE] focus-visible:border-[#BEBEBE] focus:border-[#BEBEBE] font-gilroyMedium text-sm h-10"
               }
+              defaultValue={link}
               value={link}
+              readOnly
               placeholder=""
             />
-            <button
-              type="button"
+            <Button
+              variant="outlineTwo"
               onClick={handleCopy}
-              className="absolute right-0 top-0 bg-red pl-2 pr-[3px]  m-1 flex items-center justify-end h-10 w-24 bg-white"
+              className="w-fit border-[#BEBEBE]"
             >
-              <span className="top-2.5 bg-[#EDEDED] px-2.5 py-[0.6rem] text-[#808080] text-xs font-gilroySemiBold whitespace-nowrap rounded-md">
-                Copy Link
-              </span>
-            </button>
+              Copy
+            </Button>
           </div>
 
           <DialogFooter className="flex w-full items-center justify-center mt-4">
             <Button
-              className="w-full rounded-sm font-gilroyMedium  bg-black text-white  ring-1 ring-black   flex items-center justify-center"
+              variant="primary"
               onClick={() => {
                 setDialogOpen(false);
               }}
@@ -120,22 +117,11 @@ export default function InvitePeople({
             <SheetContent>
               <div className="flex justify-center w-full h-full items-start">
                 <div className="flex flex-col w-[97%] h-full justify-start items-center">
-                  <div className="flex flex-col gap-1 pb-5 w-full">
-                    <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                      <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-                        <UserFormProfileIcon className="size-6" />
-                      </div>
-                      <span className="font-gilroySemiBold 2xl:text-2xl text-xl">
-                        Invite people
-                      </span>
-                    </div>
-                    <div className="w-full flex flex-col gap-1">
-                      <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                        {"Step 1 of 1"}
-                      </div>
-                      <div className="h-[1px] bg-[#E7E7E7] w-full mb-3"></div>
-                    </div>
-                  </div>
+                  <h1 className="font-gilroyMedium w-full text-center text-lg mb-2">
+                    Invite people
+                  </h1>
+
+                  <div className="h-[1px] bg-[#E7E7E7] w-full my-4 mb-6"></div>
 
                   <form
                     onSubmit={handleSubmit}
@@ -179,7 +165,7 @@ export default function InvitePeople({
                     </div>
 
                     {team?.title ? (
-                      <div className="w-full bg-[#f5f5f5] rounded-3xl p-3 flex items-center gap-4">
+                      <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
                         <img
                           src={
                             team?.image && team.image.length > 0
@@ -216,23 +202,27 @@ export default function InvitePeople({
 
                     <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                       <Button
-                        className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
-                        onClick={() => setOpen(false)}
                         type="button"
+                        className=" w-full"
+                        variant="outlineTwo"
+                        onClick={() => setOpen(false)}
                       >
                         Close
                       </Button>
                       <Button
-                        className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                        className=" w-full"
                         type="submit"
+                        variant="primary"
                         disabled={loading}
                       >
                         {loading ? (
-                          <Spinner />
+                          <Spinner
+                            className={spinnerVariants({ size: "sm" })}
+                          />
                         ) : (
                           <>
                             <span>Create Link</span>
-                            <ChevronRight color="white" />
+                            {/* <ChevronRight color="white" /> */}
                           </>
                         )}
                       </Button>

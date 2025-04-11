@@ -17,41 +17,32 @@ import AddTeamMember from "./add-team-member";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
 import AllIntegrationsDisplay from "@/app/(root)/integrations/_components/installed/all-integration-display";
+import { buttonVariants } from "@/components/buttons/Button";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const TeamMembers = ({ teamData }: { teamData: Team }) => {
+const TeamMembers = ({
+  teamData,
+  status,
+}: {
+  teamData: Team;
+  status: string;
+}) => {
   const router = useRouter();
 
-  const [data, setData] = useState<UsersTeamResponse>();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const handleSelectionChange = (selected: string[]) => {
-    setSelectedIds(selected);
-  };
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true); // Set loading to true when starting fetch
-      try {
-        const res: UsersTeamResponse = await getUsersByTeamId(
-          teamData?._id!,
-          1
-        );
-        setData(res);
-      } catch (error) {
-        console.error("Error fetching team members:", error);
-      } finally {
-        setIsLoading(false); // Set loading to false when done
-      }
-    };
-    fetchData();
-  }, []);
+  const { data, status: userStatus } = useQuery({
+    queryKey: ["get-users-by-team-id", teamData?._id],
+    queryFn: () => getUsersByTeamId(teamData?._id, 1),
+  });
 
   return (
     <div
       className="rounded-[5px] flex flex-col "
       style={{ border: "1px solid #F6F6F6" }}
     >
-      {!isLoading && data?.users?.length === 0 ? (
+      {status !== "pending" && data?.users?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-8">
           <teamIcons.no_team_display />
           <AddTeamMember teamData={teamData}>
@@ -62,32 +53,37 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
         </div>
       ) : (
         <>
-          <div className="flex gap-3 p-3 items-center">
-            <h2 className="text-lg pl-3 font-gilroySemiBold text-gray-800">
-              Team Members
-            </h2>
+          {userStatus === "pending" ? (
+            <div className="flex gap-3 p-3 items-center">
+              {/* "Team Members" title */}
+              <Skeleton className="h-4 w-32 ml-3" />
 
-            <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
-              {data?.total
-                ? `${data?.total} ${data?.total > 1 ? "Members" : "Member"}`
-                : "N/A"}
-            </span>
-          </div>
+              {/* Badge for members count */}
+              <Skeleton className="h-6 w-20 rounded-full" />
+            </div>
+          ) : (
+            <div className="flex gap-3 p-3 items-center">
+              <h2 className="text-base pl-3 font-gilroyMedium text-gray-800">
+                Team Members
+              </h2>
+
+              <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
+                {data?.total
+                  ? `${data?.total} ${data?.total > 1 ? "Members" : "Member"}`
+                  : "N/A"}
+              </span>
+            </div>
+          )}
+
           {/* <TeamTable data={users} />
            */}
-          {/* {JSON.stringify(data)} */}
           <>
             <div className="flex flex-col">
               <Table
                 data={data?.users ?? []}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
-                isLoading={isLoading}
-                // checkboxSelection={{
-                //   uniqueField: "_id",
-                //   //logic yet to be done
-                //   onSelectionChange: handleSelectionChange,
-                // }}
+                isLoading={userStatus === "pending"}
                 columns={[
                   {
                     title: "Name",
@@ -147,12 +143,6 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                     },
                   },
                   {
-                    title: "Reporting Manager",
-                    render: (data) => (
-                      <div>{data?.reporting_manager?.first_name || "-"}</div>
-                    ),
-                  },
-                  {
                     title: "Assets assigned",
                     render: (user: User) =>
                       user?.devices && user?.devices?.length > 0 ? (
@@ -169,7 +159,7 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                       // const filteredIntegrations = (
                       //   record?.subscriptions ?? []
                       // ).filter((i) => i.platform !== selectedPlatform);
-                      const integrations = record?.integrations.filter(
+                      const integrations = record?.integrations?.filter(
                         (int) => int.image
                       );
 
@@ -206,14 +196,19 @@ const TeamMembers = ({ teamData }: { teamData: Team }) => {
                     },
                   },
                   {
-                    title: "Actions",
+                    title: "",
                     render: (data) => (
                       <div className="flex justify-start items-center gap-5 2xl:gap-10 -ml-2">
                         <RemoveTeamMember userData={data}>
                           <DeleteTableIcon className="size-6" />
                         </RemoveTeamMember>
                         <MoveTeamMember userData={data}>
-                          <EditTableIcon className="size-5" />
+                          {/* <EditTableIcon className="size-5" /> */}
+                          <span
+                            className={buttonVariants({ variant: "primary" })}
+                          >
+                            Move
+                          </span>
                         </MoveTeamMember>
                       </div>
                     ),

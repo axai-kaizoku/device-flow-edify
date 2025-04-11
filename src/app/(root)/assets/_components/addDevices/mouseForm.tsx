@@ -3,9 +3,10 @@ import { FormField } from "@/app/(root)/settings/_components/form-field";
 import React, { useRef, useState } from "react";
 import { FormErrors, KeyboardDetailsInterface } from "./_components/types";
 import { Icons } from "@/components/icons";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { getImageUrl } from "@/server/orgActions";
+import UploadImageIcon from "@/icons/UploadImageIcon";
 
 interface KeyboardDetailsProps {
   data: KeyboardDetailsInterface;
@@ -94,11 +95,9 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
   // const [errors, setErrors] = useState<Record<string, string>>({});
   return (
     <div className="w-full">
-      <div className="font-gilroySemiBold 2xl:text-2xl text-[22px]">
-        Mouse Details
-      </div>
+      <div className="font-gilroyMedium  text-base">Mouse Details</div>
 
-      <div className="flex flex-col gap-8 mt-5">
+      <div className="flex flex-col gap-5 mt-4">
         <FormField
           label="Model Name"
           id="model"
@@ -150,48 +149,58 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
                 }}
               ></div>
             </div>
-            <span className="text-sm text-black">{progress}%</span>
+            <span className="text-sm text-blue-500 font-gilroySemiBold">
+              {progress}%
+            </span>
           </div>
-        ):invoiceFile ? (
-          <div className="relative w-20 h-20 bg-[#F5F5F5] rounded-xl p-4">
-            <iframe
-              src={displayFile}
-              width="100%"
-              height="100%"
-              title="Invoice Preview"
-              className="object-cover"
-              onLoad={(e) => {
-                const iframe = e.currentTarget;
-                // Ensure it's viewable content
-                if (
-                  !iframe.contentDocument ||
-                  iframe.contentDocument.title === ""
-                ) {
-                  // openToast(
-                  //   "error",
-                  //   "File preview failed. It may not be viewable."
-                  // );
-                }
-              }}
-            />
-            <button
-              type="button"
-              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
-              onClick={handleRemoveFile}
-            >
-              <X className="w-4 h-4" />
-            </button>
+        ) : invoiceFile ? (
+          <div className="bg-[#E9F3FF] rounded-md border-dashed  border p-3 border-[#52ABFF]">
+            <div className="relative size-12  rounded-md ">
+              <iframe
+                src={displayFile}
+                width="100%"
+                height="100%"
+                title="Invoice Preview"
+                className="object-cover rounded-md"
+                onLoad={(e) => {
+                  const iframe = e.currentTarget;
+                  // Ensure it's viewable content
+                  if (
+                    !iframe.contentDocument ||
+                    iframe.contentDocument.title === ""
+                  ) {
+                    // openToast(
+                    //   "error",
+                    //   "File preview failed. It may not be viewable."
+                    // );
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-1"
+                onClick={handleRemoveFile}
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         ) : (
           <div
-            className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 p-6 border-[#52ABFF]"
+            className="flex cursor-pointer flex-col items-center justify-center bg-[#E9F3FF] rounded-md border-dashed h-20 w-full border p-3 border-[#52ABFF]"
             onClick={() => fileRef?.current?.click()}
           >
             <div className="flex flex-col justify-center items-center">
-              <Icons.uploadImage className="size-5" />
-              <span className="text-[#0EA5E9]">Click to upload</span>
-              <p className="text-xs text-neutral-400">
-                PDF/JPEG/PNG/JPG under 5MB
+              <UploadImageIcon className="size-5" />
+              <div className="flex gap-1 font-gilroySemiBold">
+                {" "}
+                <span className="text-[#0EA5E9] text-[10px]">
+                  Click to upload
+                </span>
+                <span className="text-[10px]">or drag and drop</span>
+              </div>
+              <p className="text-xs font-gilroyMedium text-neutral-400 text-[9px]">
+                JPG, JPEG, PNG less than 1MB
               </p>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 
 import {
@@ -26,6 +26,7 @@ export const NewPage = () => {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active-users",
   });
+  const queryClient = useQueryClient();
   const { showAlert } = useAlert();
 
   //  ---------------
@@ -481,7 +482,6 @@ export const NewPage = () => {
               ))
             )}
           </section> */}
-          {/* {JSON.stringify(data)} */}
           <UserMain
             peopleText="Active People"
             data={data}
@@ -490,17 +490,25 @@ export const NewPage = () => {
           />
         </TabsContent>
         <TabsContent value="inactive-users">
-          {/* <UserMain
-            peopleText="Inactive People"
+          {/* <DeletedUser
             data={data}
-            // setUsers={setAssets}
-            // onRefresh={refreshUserData}
+            
+            onRefresh={async () => {
+              if(activeTab === "active_people"){
+                queryClient.refetchQueries({
+                  queryKey: ["fetch-people", "active-users"],
+                  exact: false,
+                }).then();
+              }else{
+                queryClient.refetchQueries({
+                  queryKey: ["fetch-people", "inactive-users"],
+                  exact: false,
+                }).then();
+              }
+              
+            }}
           /> */}
-          <DeletedUser
-            data={data}
-            // setUsers={setAssets}
-            // onRefresh={refreshUserData}
-          />
+          <UserMain peopleText="Inactive People" data={data} />
         </TabsContent>
       </Tabs>
     </section>

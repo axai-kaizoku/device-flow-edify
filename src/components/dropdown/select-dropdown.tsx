@@ -105,15 +105,15 @@ export const SelectDropdown = ({
       <div className="relative" ref={dropdownRef}>
         <label
           htmlFor={label}
-          className="absolute start-1 top-0 block -translate-y-1/2 bg-background px-2 text-base  font-gilroyMedium text-foreground"
+          className="absolute start-4 top-0 block  -translate-y-1/2 bg-background font-gilroyMedium px-1 text-sm  text-foreground"
         >
-          {label}
+          {label}*
         </label>
         <div
           id={label}
           className={cn(
-            "pr-10 px-4 py-2 text-black  h-14 flex border-input  items-center border rounded-xl cursor-pointer",
-            "bg-white  h-12",
+            "pr-10 px-4 py-2 text-black text-sm font-gilroyMedium h-10 flex border-input  items-center border rounded-md cursor-pointer",
+            "bg-white  h-10",
             className
           )}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -123,20 +123,22 @@ export const SelectDropdown = ({
           ) : selectedOption ? (
             selectedOption
           ) : (
-            <span className="text-gray-400">{placeholder}</span>
+            <span className="text-gray-400 text-sm font-gilroyMedium">
+              {placeholder}
+            </span>
           )}
-          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-            <div className="h-9 w-[1.5px] bg-[#DCDCDC]" />
+          <div className="absolute inset-y-0 right-0 flex items-center pointer-events-none">
+            <div className="h-7 w-[1.5px] bg-[#DCDCDC]" />
             <DropdownArrowUp
               className={cn(
-                "size-3 ml-4 mr-3.5 ",
+                "size-[10px] ml-4 mr-3.5 ",
                 isDropdownOpen ? "" : "transform -scale-y-100"
               )}
             />
           </div>
         </div>
         {isDropdownOpen && (
-          <div className="absolute z-50 rounded-xl w-full mt-2 bg-white border border-[#D5D5D5] shadow-lg max-h-52 overflow-y-auto">
+          <div className="absolute z-50 rounded-md w-full mt-2 bg-white border border-[#D5D5D5]  max-h-52 overflow-y-auto">
             {options?.length ? (
               options?.map((option, index) => (
                 <div
@@ -145,9 +147,9 @@ export const SelectDropdown = ({
                     optionRefs.current[index] = el;
                   }}
                   className={cn(
-                    "px-4 py-3 text-gray-700 hover:rounded-lg m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
+                    "pl-2 py-1 text-gray-700 text-sm hover:rounded-md font-gilroyMedium m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
                     highlightedIndex === index
-                      ? "bg-[#EEEEEE] text-gray-800 rounded-lg m-0.5 border-spacing-y-1.5"
+                      ? "bg-[#EEEEEE] text-gray-800 rounded-md m-0.5 border-spacing-y-1.5"
                       : ""
                   )}
                   onClick={() => handleSelect(option)}

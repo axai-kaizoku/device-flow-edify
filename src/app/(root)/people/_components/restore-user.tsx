@@ -15,6 +15,7 @@ import Spinner from "@/components/Spinner";
 import { updateUser } from "@/server/userActions";
 import { useToast } from "@/hooks/useToast";
 import WarningIcon from "@/icons/WarningIcon";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const RestoreUser = ({
   id,
@@ -29,7 +30,7 @@ export const RestoreUser = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
-
+  const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -52,13 +53,15 @@ export const RestoreUser = ({
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between">
           <Button
-            className="w-1/2 rounded-md border text-base border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+            type="button"
+            className="rounded-lg text-sm  w-full font-gilroySemiBold border border-black"
             onClick={() => setOpen(false)}
           >
             {"Discard"}
           </Button>
           <Button
-            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] text-base shadow-sm text-white"
+            type="submit"
+            className="rounded-lg bg-black text-white text-sm  w-full font-gilroySemiBold border border-black"
             onClick={async () => {
               if (id) {
                 setLoading(true); // Start loading
@@ -66,7 +69,11 @@ export const RestoreUser = ({
                   await updateUser(id!, { deleted_at: null });
                   setOpen(false);
                   openToast("success", "User restored Successfully! ");
-                  // onRefresh();
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-people"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                 } catch (e: any) {
                   openToast(
                     "error",

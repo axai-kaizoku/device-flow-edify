@@ -125,7 +125,9 @@ export const LogoCompanyModal = ({
                       }}
                     ></div>
                   </div>
-                  <span className="text-sm text-black">{progress}%</span>
+                  <span className="text-sm text-blue-500 font-gilroySemiBold">
+                    {progress}%
+                  </span>
                 </div>
               ) : image ? (
                 <div className="relative w-20 h-20 rounded-xl overflow-hidden group">

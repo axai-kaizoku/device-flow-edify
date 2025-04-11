@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
@@ -26,15 +26,15 @@ export const DeleteAsset = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { showAlert } = useAlert();
-  const {openToast} = useToast();
+  const { openToast } = useToast();
 
   const handleDelete = async () => {
     if (id) {
       try {
         await deleteDevice(id);
         setOpen(false);
-        openToast('success', "Asset deleted Successfully!");
-        router.push('/assets');
+        openToast("success", "Asset deleted Successfully!");
+        router.push("/assets");
         // router.refresh();
       } catch (e: any) {
         showAlert({
@@ -67,14 +67,17 @@ export const DeleteAsset = ({
           </DialogDescription>
 
           <DialogFooter className="flex w-full items-center justify-between">
-            <Button
-              className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+            <button
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "w-full",
+              })}
               onClick={() => setOpen(false)}
             >
               Cancel
-            </Button>
+            </button>
             <Button
-              className="w-1/2 rounded-md bg-[#D92D20] text-white"
+              className="w-full rounded-md bg-[#D92D20] text-white"
               onClick={handleDelete}
             >
               Delete

@@ -6,6 +6,7 @@ import { IssueStatusChange } from "../../_components/issue-status-change";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { buttonVariants } from "@/components/buttons/Button";
 
 const IssueSection = ({ data }: { data: Issues }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,13 +48,13 @@ const IssueSection = ({ data }: { data: Issues }) => {
   }, [isModalOpen]);
   const router = useRouter();
   return (
-    <div className="flex h-fit  w-full gap-6">
+    <div className="flex h-fit pt-4 w-full gap-4">
       {/* <!-- First Column --> */}
-      <div className="flex flex-col gap-6 w-[45%]">
+      <div className="flex flex-col gap-4 w-[45%]">
         {/* <!-- First Row of First Column --> */}
         <div
           onClick={() => router.push(`/assets/${data?.deviceDetails?._id}`)}
-          className="px-6 cursor-pointer py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]"
+          className="px-6 cursor-pointer py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]"
         >
           <div className="flex justify-start items-center  gap-4">
             <img
@@ -62,14 +63,14 @@ const IssueSection = ({ data }: { data: Issues }) => {
                 "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
               }
               alt="Asset Image"
-              className="   object-cover size-20 border  flex justify-center items-center rounded-full"
+              className="   object-cover size-16 border  flex justify-center items-center rounded-full"
             />
 
             <div>
-              <div className="text-2xl font-gilroySemiBold text-black">
+              <div className="text-base font-gilroySemiBold text-black">
                 {data?.deviceDetails?.custom_model ?? "-"}
               </div>
-              <div className="font-gilroyMedium text-lg text-[#7C7C7C]">
+              <div className="font-gilroyMedium text-sm text-[#7C7C7C]">
                 {data?.deviceDetails?.serial_no ?? "-"}
               </div>
             </div>
@@ -77,18 +78,18 @@ const IssueSection = ({ data }: { data: Issues }) => {
         </div>
 
         {/* <!-- Second Row of First Column --> */}
-        <div className="flex gap-6 flex-1">
+        <div className="flex gap-4 flex-1">
           {/* <!-- First Column of Second Row --> */}
-          <div className="flex-1  px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
+          <div className="flex-1  px-6 py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
             <div className="flex flex-col gap-4  h-fit">
-              <div className="text-lg  font-gilroySemiBold">Device Info.</div>
+              <div className="text-base  font-gilroySemiBold">Device Info.</div>
 
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex flex-col">
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Device Type
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium capitalize text-black text-sm">
                     {data?.deviceDetails?.device_type ?? "-"}
                   </div>
                 </div>
@@ -96,7 +97,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Brand
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.deviceDetails?.brand ?? "-"}
                   </div>
                 </div>
@@ -105,7 +106,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     RAM
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.deviceDetails?.ram ?? "-"}
                   </div>
                 </div>
@@ -113,7 +114,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Storage
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.deviceDetails?.storage ?? "-"}
                   </div>
                 </div>
@@ -121,7 +122,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Serial Number
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.deviceDetails?.serial_no ?? "-"}
                   </div>
                 </div>
@@ -129,7 +130,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Condition
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.deviceDetails?.device_condition ?? "-"}
                   </div>
                 </div>
@@ -137,7 +138,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Warranty Status
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data.deviceDetails?.warranty_status
                       ? "Active"
                       : "Inactive"}
@@ -148,16 +149,16 @@ const IssueSection = ({ data }: { data: Issues }) => {
           </div>
 
           {/* <!-- Second Column of Second Row --> */}
-          <div className="flex-1  px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
+          <div className="flex-1  px-6 py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
             <div className="flex flex-col gap-4 ">
-              <h1 className="text-lg font-gilroySemiBold">Assignee Info.</h1>
+              <h1 className="text-base font-gilroySemiBold">Assignee Info.</h1>
 
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex flex-col">
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Assigned to
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.userDetails?.name ?? "-"}
                   </div>
                 </div>
@@ -165,7 +166,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Purchased on
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {(() => {
                       const purchaseDate = data?.deviceDetails?.createdAt;
 
@@ -195,7 +196,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Assigned on
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {(() => {
                       const assignedDate = data?.deviceDetails?.assigned_at;
 
@@ -225,7 +226,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Department
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data.teamDetails?.description ?? "-"}
                   </div>
                 </div>
@@ -233,7 +234,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Role
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data.userDetails?.designation ?? "-"}
                   </div>
                 </div>
@@ -241,7 +242,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Team
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data.teamDetails?.title ?? "-"}
                   </div>
                 </div>
@@ -249,7 +250,7 @@ const IssueSection = ({ data }: { data: Issues }) => {
                   <div className="text-[#737373] font-gilroySemiBold text-sm">
                     Reporting Manager
                   </div>
-                  <div className="font-gilroySemiBold text-black text-base">
+                  <div className="font-gilroyMedium text-black text-sm">
                     {data?.manager?.name ?? "-"}
                   </div>
                 </div>
@@ -262,34 +263,34 @@ const IssueSection = ({ data }: { data: Issues }) => {
       {/* <!-- Second Column --> */}
       <div className="flex flex-col w-[55%]">
         {/* <!-- First Row of Second Column --> */}
-        <div className="px-6 py-4 rounded-[25px] bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
+        <div className="px-6 py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]">
           <div className="flex flex-col  gap-2">
-            <div className=" font-gilroySemiBold text-lg">Issue Info</div>
+            <div className=" font-gilroySemiBold text-base">Issue Info</div>
             <div className="flex justify-between items-center pb-4 border-b-[1px] border-[rgba(195, 195, 195, 0.31);]">
-              <div className="font-gilroySemiBold text-2xl text-black">
+              <div className="font-gilroySemiBold text-lg text-[#7f7f7f]">
                 {data?.title}
               </div>
               <div className="flex gap-3">
                 {data?.status!.toLowerCase() === "open" ? (
-                  <div className="font-gilroyMedium  text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-full">
+                  <div className="font-gilroyMedium text-xs w-full text-center text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 ) : (
-                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-full">
+                  <div className="font-gilroyMedium text-xs w-full text-center text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 )}
 
                 {data?.priority?.toLowerCase() === "low" ? (
-                  <div className="font-gilroyMedium  text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : data?.priority?.toLowerCase() === "medium" ? (
-                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : (
-                  <div className="font-gilroyMedium  text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 )}
@@ -373,29 +374,34 @@ const IssueSection = ({ data }: { data: Issues }) => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h1 className="font-gilroySemiBold text-sm text-[#737373]">
-                View attached photos
-              </h1>
-              <div className="flex items-center gap-3 pb-2">
-                {data?.images?.length! > 0 ? (
-                  data?.images?.map((image, index) => (
-                    <img
-                      key={index}
-                      src={
-                        image ||
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxfQLhFFAUUzm5fbyfNWKfv2jfDJcbrCBxQ&s"
-                      }
-                      className="p-1 rounded-lg border h-28 w-24 cursor-pointer object-contain hover:border-black transition-transform"
-                      alt={`issue-image-${index}`}
-                      onClick={() => openModal(index)}
-                    />
-                  ))
-                ) : (
-                  <p className="text-xs font-gilroyMedium text-gray-500">
-                    No issue images available
-                  </p>
-                )}
-              </div>
+              {data?.images?.length! > 0 ? (
+                <>
+                  <h1 className="font-gilroySemiBold text-sm text-[#737373]">
+                    View attached photos
+                  </h1>
+                  <div className="flex items-center gap-3 pb-2">
+                    {data?.images?.map((image, index) => (
+                      <img
+                        key={index}
+                        src={
+                          image ||
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxfQLhFFAUUzm5fbyfNWKfv2jfDJcbrCBxQ&s"
+                        }
+                        className="p-1 rounded-lg border h-28 w-24 cursor-pointer object-contain hover:border-black transition-transform"
+                        alt={`issue-image-${index}`}
+                        onClick={() => openModal(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs font-gilroyMedium text-gray-500">
+                  No images available
+                </p>
+              )}
+              {/* <p className="text-xs font-gilroyMedium text-gray-500">
+                No issue images available
+              </p> */}
 
               {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
@@ -463,16 +469,23 @@ const IssueSection = ({ data }: { data: Issues }) => {
               id={data?._id ?? ""}
               issueData={data}
               reOpen={data.status!.toLowerCase() === "open" ? false : true}
-              className={cn(
-                data.status!.toLowerCase() === "open"
-                  ? "bg-[#027A47] "
-                  : "bg-black",
-                "flex-1 rounded-md py-2 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-[13px] text-white"
-              )}
+              // className={cn(
+              //   data.status!.toLowerCase() === "open"
+              //     ? "bg-black "
+              //     : "bg-black",
+              //   "flex-1 rounded-md py-2 px-20 whitespace-nowrap justify-center items-center border border-[#5F5F5F] font-gilroySemiBold text-sm text-white"
+              // )}
             >
-              {data?.status!.toLowerCase() === "open"
-                ? "Mark as Resolved"
-                : "Reopen"}
+              <div
+                className={buttonVariants({
+                  variant: "primary",
+                  className: "",
+                })}
+              >
+                {data?.status!.toLowerCase() === "open"
+                  ? "Mark as Resolved"
+                  : "Reopen"}
+              </div>
             </IssueStatusChange>
 
             <button onClick={() => {}}></button>

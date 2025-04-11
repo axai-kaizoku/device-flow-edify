@@ -16,6 +16,8 @@ import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import InvitePeople from "./[id]/_components/invite-people";
 import FilterTabIcon from "@/icons/FilterTabIcon";
+import { useSearchParams } from "next/navigation";
+import { callAPIWithToken } from "@/server/helper";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -27,7 +29,6 @@ function TabDisplay() {
   });
 
   const { showAlert } = useAlert();
-
   const [assets, setAssets] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
@@ -178,38 +179,39 @@ function TabDisplay() {
   };
 
   useEffect(() => {
-    const fetchTabData = async () => {
-      try {
-        setLoading(true);
-        let response;
-        switch (activeTab) {
-          case "active_people":
-            response = await activeUsers();
-            break;
-          case "inactive_people":
-            response = await inActiveUsers();
-            break;
-
-          default:
-            response = [];
-        }
-        setAssets(response); // Update state with the fetched data
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching tab data:", error);
-        showAlert({
-          title: "Something went wrong",
-          description: "Failed to fetch data",
-          isFailure: true,
-          key: "fetch-error-users-2",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTabData();
   }, [activeTab]);
+
+  const fetchTabData = async () => {
+    try {
+      setLoading(true);
+      let response;
+      switch (activeTab) {
+        case "active_people":
+          response = await activeUsers();
+          break;
+        case "inactive_people":
+          response = await inActiveUsers();
+          break;
+
+        default:
+          response = [];
+      }
+      setAssets(response); // Update state with the fetched data
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching tab data:", error);
+      showAlert({
+        title: "Something went wrong",
+        description: "Failed to fetch data",
+        isFailure: true,
+        key: "fetch-error-users-2",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "active_people":

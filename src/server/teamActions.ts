@@ -190,7 +190,7 @@ export async function createTeam(
         orgId: sess?.user?.user?.orgId?._id,
       }
     );
-
+    console.log(res.data);
     return res?.data;
   } catch (e) {
     throw new Error("Failed to create team");

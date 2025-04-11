@@ -1,18 +1,16 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
-import { useEffect, useState } from "react";
-import { updateUser, User } from "@/server/userActions";
-import { Icons } from "@/components/icons";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { SelectInput } from "@/components/dropdown/select-input";
-import { useToast } from "@/hooks/useToast";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
-import { ChevronRight } from "lucide-react";
-import { fetchTeams, Team } from "@/server/teamActions";
+import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
-import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
+import { fetchTeams, Team } from "@/server/teamActions";
+import { updateUser, User } from "@/server/userActions";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MoveTeamMember({
   children,
@@ -22,6 +20,7 @@ export default function MoveTeamMember({
   userData: User;
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
@@ -47,6 +46,16 @@ export default function MoveTeamMember({
       setOpen(false);
       openToast("success", "Moved member to team !");
       setLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-team-by-id"],
+        exact: false,
+        refetchType: "all",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-users-by-team-id"],
+        exact: false,
+        refetchType: "all",
+      });
       router.refresh();
     } catch (error) {
       openToast("error", "Failed to move member to team !");
@@ -60,25 +69,12 @@ export default function MoveTeamMember({
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent>
         <div className="flex justify-center w-full h-full items-start">
-          <div className="flex flex-col w-[97%] h-full justify-start items-center">
-            <div className="flex flex-col gap-1 pb-5 w-full">
-              <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <div className="bg-black rounded-full p-1.5 flex justify-center items-center">
-                  <UserFormProfileIcon className="size-6" />
-                </div>
-                <span className="font-gilroySemiBold text-xl 2xl:text-2xl">
-                  Move member
-                </span>
-              </div>
-              <div className="w-full flex flex-col gap-1">
-                <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                  {"Step 1 of 1"}
-                </div>
-                <div className="h-[1px] bg-[#E7E7E7] w-full mb-3"></div>
-              </div>
-            </div>
+          <div className="flex flex-col w-[99%] h-full justify-start items-center">
+            <span className="font-gilroySemiBold text-lg ">Move member</span>
 
-            <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 mb-8">
+            <div className="h-[1px] bg-[#E7E7E7] w-full my-3 -mx-4"></div>
+
+            <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 mb-8">
               <img
                 src={
                   userData?.image && userData.image.length > 0
@@ -141,7 +137,7 @@ export default function MoveTeamMember({
               </div>
 
               {team?.title ? (
-                <div className="w-full bg-[#f5f5f5] rounded-3xl p-3 flex items-center gap-4">
+                <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
                   <img
                     src={
                       team?.image && team.image.length > 0
@@ -178,13 +174,19 @@ export default function MoveTeamMember({
 
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
                 <Button
-                  className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
+                  className={buttonVariants({
+                    variant: "outlineTwo",
+                    className: "w-1/2",
+                  })}
                   onClick={() => setOpen(false)}
                 >
                   Close
                 </Button>
                 <Button
-                  className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-1/2",
+                  })}
                   type="submit"
                   disabled={loading}
                 >
@@ -193,7 +195,6 @@ export default function MoveTeamMember({
                   ) : (
                     <>
                       <span>Move</span>
-                      <ChevronRight color="white" />
                     </>
                   )}
                 </Button>

@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/useToast";
 import { DeleteModal } from "./deleteUserModal";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
+import { PermanentUserDelete } from "./permanent-user-delete";
+import { RestoreUser } from "./restore-user";
 
 export default function UserMain({
   data,
@@ -93,10 +95,10 @@ export default function UserMain({
           </div>
         ) : (
           <>
-            <div className="rounded-lg border border-[#F6F6F6] bg-white backdrop-blur-[22.8px] pt-5 pb-2 mt-4 flex flex-col gap-5">
+            <div className="rounded-lg border border-gray-200  bg-white backdrop-blur-[22.8px] pt-5 pb-2 mt-4 flex flex-col gap-5">
               <div className="flex justify-between items-center">
                 <div className=" flex gap-3 w-fit">
-                  <h1 className="text-xl font-gilroySemiBold pl-6">
+                  <h1 className="text-base font-gilroyMedium pl-6">
                     {peopleText}
                   </h1>
                   <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
@@ -112,7 +114,7 @@ export default function UserMain({
                   >
                     <button
                       // onClick={handleBulkDelete}
-                      className="bg-black text-sm flex items-center gap-2 text-white px-3 py-0.5 font-gilroySemiBold w-fit mr-8 rounded-md"
+                      className="bg-black text-sm flex items-center gap-2 text-white px-4 py-2 font-gilroySemiBold w-fit mr-8 rounded-md"
                     >
                       Delete
                     </button>
@@ -133,10 +135,10 @@ export default function UserMain({
                     selectedIds={selectedIds}
                     isLoading={isLoading}
                     setSelectedIds={setSelectedIds}
-                    checkboxSelection={{
-                      uniqueField: "_id",
-                      onSelectionChange: handleSelectionChange,
-                    }}
+                    // checkboxSelection={{
+                    //   uniqueField: "_id",
+                    //   onSelectionChange: handleSelectionChange,
+                    // }}
                     columns={[
                       {
                         title: "Name",
@@ -278,22 +280,41 @@ export default function UserMain({
 
                       {
                         title: "",
-                        render: (data) => (
-                          <div className="flex  items-center gap-5 -ml-2">
-                            {/* <button
+                        render: (data) =>
+                          peopleText === "Active People" ? (
+                            <div className="flex  items-center gap-5 -ml-2">
+                              {/* <button
                         className="flex flex-col"
                         onClick={() => handleRemoveUser(data)}
                       >
                         <DeleteTableIcon className="size-6" />
                       </button> */}
-                            <DeleteUser id={data?._id}>
-                              <DeleteTableIcon className="size-6" />
-                            </DeleteUser>
-                            <EditUser userData={data}>
-                              <EditTableIcon className="size-5" />
-                            </EditUser>
-                          </div>
-                        ),
+                              <DeleteUser id={data?._id}>
+                                <DeleteTableIcon className="size-6" />
+                              </DeleteUser>
+                              <EditUser userData={data}>
+                                <EditTableIcon className="size-5" />
+                              </EditUser>
+                            </div>
+                          ) : (
+                            <div className="flex gap-5 -ml-2 justify-center items-center">
+                              <PermanentUserDelete
+                                id={data?._id!}
+                                onRefresh={onRefresh}
+                              >
+                                <DeleteTableIcon className="size-6" />
+                              </PermanentUserDelete>
+
+                              <RestoreUser
+                                id={data?._id!}
+                                onRefresh={onRefresh}
+                              >
+                                <div className="rounded-md text-white bg-black font-gilroySemiBold text-sm py-2 px-4">
+                                  Restore
+                                </div>
+                              </RestoreUser>
+                            </div>
+                          ),
                       },
                     ]}
                   />

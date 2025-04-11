@@ -63,14 +63,10 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
         <div className="flex justify-center w-full h-full items-start">
           <div className="flex flex-col w-[97%] gap-6 h-full justify-start items-center">
             <div className="flex flex-col  w-full">
-              <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-                <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                  <AssetsIconWhite/>
-                </div>
-                <h1 className="font-gilroySemiBold text-xl 2xl:text-3xl">
-                  Assign Asset
-                </h1>
-              </div>
+              <h1 className="font-gilroySemiBold w-full text-center text-xl">
+                Assign Asset
+              </h1>
+
               <div className="w-full flex flex-col gap-1">
                 <div className="h-[1px] bg-[#E7E7E7] w-full my-3"></div>
               </div>
@@ -195,14 +191,15 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
 
               <div className="flex gap-2 absolute bottom-0 w-full ">
                 <Button
-                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
+                  type="button"
+                  className="rounded-lg text-sm  w-full font-gilroySemiBold border border-black"
                   onClick={() => setOpen(false)}
                 >
                   Close
                 </Button>
                 <Button
-                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
                   type="submit"
+                  className="rounded-lg text-sm bg-black text-white w-full font-gilroySemiBold border border-black"
                   disabled={loading}
                 >
                   {loading ? (

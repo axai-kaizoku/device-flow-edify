@@ -3,7 +3,6 @@ import { buttonVariants } from "@/components/buttons/Button";
 import { getUsersOfIntegration } from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { RedArrowUp } from "./icons";
 import SavingsDialog from "./savings-dialog";
 import SeatsCard from "./seats-card";
 
@@ -18,61 +17,71 @@ export const TotalSpends = () => {
   });
 
   return (
-    <div className="rounded-2xl border p-6 flex justify-between w-full mb-3.5">
-      <div className="flex flex-col justify-between pt-2">
-        <h3 className="font-gilroySemiBold text-xl">Total Spends</h3>
-        {(() => {
-          const date = new Date();
-          const currentMonthIndex = date.getMonth();
-          const currentYear = date.getFullYear();
+    <div className="rounded-md border p-3 flex justify-between w-full mb-3.5">
+      <div className="flex flex-col justify-start gap-y-5 pt-2">
+        <div className="flex flex-col justify-start">
+          {/* {JSON.stringify(data)} */}
+          <h3 className="font-gilroySemiBold text-xl">Total Spends</h3>
+          {(() => {
+            const date = new Date();
+            const currentMonthIndex = date.getMonth();
+            const currentYear = date.getFullYear();
 
-          const monthNames = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ];
+            const monthNames = [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ];
 
-          const currentMonth = monthNames[currentMonthIndex];
-          const nextMonth = monthNames[(currentMonthIndex + 1) % 12];
+            const currentMonth = monthNames[currentMonthIndex];
+            const nextMonth = monthNames[(currentMonthIndex + 1) % 12];
 
-          return (
-            <p className="font-gilroyMedium text-lg text-[#7F7F7F]">{`${currentMonth} - ${nextMonth} ${currentYear}`}</p>
-          );
-        })()}
+            return (
+              <p className="font-gilroyMedium text-base text-[#7F7F7F]">{`${currentMonth} - ${nextMonth} ${currentYear}`}</p>
+            );
+          })()}
+        </div>
 
-        <div className="flex items-end gap-1.5">
-          <p className="flex items-end gap-1 font-gilroyBold text-4xl">
-            {`$${data?.totalTeamSubscriptionCost ?? 0}.`}
-            <span className="text-3xl">00</span>
-          </p>
-          {/* <p className="flex mb-0.5 items-end">
+        <p className="flex items-end gap-1 font-gilroyBold text-4xl ">
+          {`₹${Math.floor(
+            data?.totalTeamSubscriptionCost ?? 0
+          ).toLocaleString()}`}
+          {/* <span className="text-3xl">
+              {`.${
+                ((data?.totalTeamSubscriptionCost ?? 0) % 1)
+                  .toFixed(2)
+                  .split(".")[1]
+              }`}
+            </span> */}
+        </p>
+        {/* <p className="flex mb-0.5 items-end">
             <RedArrowUp />
             <span className="font-gilroyMedium text-[#FF0000]">25%</span>
           </p> */}
-        </div>
       </div>
       {/* {JSON.stringify(data)} */}
 
-      <div className="flex justify-end gap-6 flex-none w-[76%]">
-        <div className="max-w-52 w-full h-36 rounded-xl flex flex-col justify-between bg-black text-white p-3.5">
-          <span className="font-gilroyMedium">Can Save</span>
-          <div className="font-gilroyBold text-3xl">
-            {`$${data?.unmappedUsersCost ?? 0}`}
-            <span className="font-gilroySemiBold text-xl">/Month</span>
+      <div className="flex justify-end gap-3 flex-none w-[76%]">
+        <div className="max-w-52 w-full h-32 rounded-lg flex flex-col justify-between bg-black text-white p-3.5">
+          <span className="font-gilroyMedium text-sm">Can Save</span>
+          <div className="font-gilroyBold text-2xl w-fit">
+            {`₹${(data?.unmappedUsersCost?.toFixed(0) ?? 0).toLocaleString()}`}
+            {/* <span className="font-gilroySemiBold text-xl">/Month</span> */}
           </div>
           <SavingsDialog>
             <span
               className={buttonVariants({
-                className: "text-center w-full bg-white text-black h-9",
+                className:
+                  "text-center  h-8 rounded-lg text-sm bg-white text-black w-full font-gilroySemiBold border border-black",
               })}
             >
               Optimize
@@ -95,7 +104,12 @@ export const TotalSpends = () => {
           }}
           totalSeats={data?.unmappedSeats ?? 0}
         />
-        <SeatsCard type="unused" totalSeats={0} onClick={() => {}} />
+        <SeatsCard
+          type="unused"
+          className="cursor-default"
+          totalSeats={0}
+          onClick={() => {}}
+        />
       </div>
     </div>
   );

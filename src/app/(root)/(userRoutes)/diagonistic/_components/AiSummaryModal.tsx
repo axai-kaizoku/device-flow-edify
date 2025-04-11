@@ -1,6 +1,4 @@
 "use client";
-import { Button } from "@/components/buttons/Button";
-import html2pdf from "html2pdf.js";
 
 import {
   Dialog,
@@ -8,32 +6,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ReportFormat } from "./report";
-import { ReportData } from "@/server/checkMateActions";
-import { useState } from "react";
 
 export default function AISummaryModal({
   children,
   data,
+  isModalOpen,
+  setIsModalOpen,
 }: {
   children: React.ReactNode;
   data: any;
+  setIsModalOpen;
+  isModalOpen;
 }) {
-
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger>{children}</DialogTrigger>
         <DialogContent className="rounded-2xl w-full bg-white p-4 shadow-lg max-w-screen-lg max-h-[70%] overflow-y-auto h-full  text-center flex flex-col ">
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
-            AI Summary {data?.tag}
+            AI Summary {data?.tag ? `(${data?.tag})` : null}
           </DialogTitle>
           <div>
-        {data?.summary}
-        </div>
+            <div className="flex justify-center items-center h-full w-full">
+              {data?.summary ? (
+                data?.summary
+              ) : (
+                <img
+                  src="/media/loader.gif"
+                  alt="Generating Ai summary..."
+                  style={{ height: 400, width: 400 }}
+                />
+              )}
+            </div>
+          </div>
         </DialogContent>
-       
       </Dialog>
     </>
   );

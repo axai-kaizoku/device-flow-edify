@@ -1,6 +1,7 @@
 "use client";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import {
+  ConnectedIntegrationsRes,
   getUsersOfIntegration,
   IntegrationType,
 } from "@/server/integrationActions";
@@ -14,7 +15,7 @@ export const InstalledSection = ({
   data,
   status: dataStatus,
 }: {
-  data: IntegrationType[];
+  data: ConnectedIntegrationsRes;
   status?: "error" | "success" | "pending";
 }) => {
   // Manage the selected platform via query state so it persists in the URL if needed.
@@ -37,29 +38,29 @@ export const InstalledSection = ({
   });
 
   // If selectedPlatform is "total", show all data; otherwise, filter by the chosen platform.
-  const filteredUserData = userData?.allUsers?.filter((user: any) =>
-    user?.integrations?.some(
-      (integration: any) => integration?.platform === selectedPlatform
-    )
-  );
+  // const filteredUserData = userData?.allUsers?.filter((user: any) =>
+  //   user?.integrations?.some(
+  //     (integration: any) => integration?.platform === selectedPlatform
+  //   )
+  // );
 
   return (
     <>
       {selectedPlatform ? (
         <div className="flex flex-col gap-7">
           <div
-            className="flex gap-2 items-center cursor-pointer w-fit"
+            className="flex gap-2 items-center cursor-pointer hover:underline w-fit"
             onClick={() => setSelectedPlatform("")}
           >
             <IntBack />
-            <span className="text-gray-500 font-gilroyMedium text-lg">
+            <span className="text-gray-500 font-gilroyMedium text-base">
               Installed
             </span>
           </div>
 
           <UserByIntegrations
             status={status}
-            data={filteredUserData}
+            data={userData}
             selectedPlatform={selectedPlatform}
           />
         </div>
@@ -70,18 +71,19 @@ export const InstalledSection = ({
               <DeviceFlowLoader />
             </div>
           ) : null}
-          {data && data.length > 0 && (
+          {/* {JSON.stringify(data)} */}
+          {data && data?.data?.length > 0 && (
             <>
-              <p className="text-lg font-gilroyMedium">Connected</p>
+              <p className="text-lg font-gilroySemiBold pt-3">Connected</p>
               <div className="grid justify-items-center gap-7 grid-cols-3">
-                {data?.map((company) => {
-                  const seatsCount =
-                    userData?.allUsers?.filter((user: any) =>
-                      user?.integrations?.some(
-                        (integration: any) =>
-                          integration?.platform === company.platform
-                      )
-                    ).length || 0;
+                {data?.data?.map((company) => {
+                  // const seatsCount =
+                  //   userData?.allUsers?.filter((user: any) =>
+                  //     user?.integrations?.some(
+                  //       (integration: any) =>
+                  //         integration?.platform === company.platform
+                  //     )
+                  //   ).length || 0;
 
                   return (
                     <div
@@ -90,14 +92,14 @@ export const InstalledSection = ({
                       className="cursor-pointer"
                     >
                       <ConnectionCard
-                        amount={company.price}
+                        amount={(company?.totalPrice).toFixed(1)}
                         src={company?.companyLogo}
-                        description={`${company?.description.slice(
+                        description={`${company?.description?.slice(
                           0,
-                          150
+                          70
                         )}....`}
                         name={company?.platform}
-                        seats={seatsCount}
+                        seats={company?.userCount}
                       />
                     </div>
                   );

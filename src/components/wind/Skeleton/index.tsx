@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 const pulse = keyframes`
   0%, 100% {
     opacity: 1;
-    background-color: #e1e1e1;
+    background-color: #eeeeee;
   }
   50% {
     opacity: 0.6;
@@ -12,12 +12,12 @@ const pulse = keyframes`
   }
 `;
 
-const SkeletonWrapper = styled.div<{ 
-  width?: string; 
+const SkeletonWrapper = styled.div<{
+  width?: string;
   height?: string;
   delay?: number;
 }>`
-  background-color: #e1e1e1;
+  background-color: #eeeeee;
   border-radius: 4px;
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "20px"};
@@ -26,12 +26,12 @@ const SkeletonWrapper = styled.div<{
   animation-fill-mode: both;
 `;
 
-export const Skeleton = ({ 
-  width, 
-  height, 
-  delay = 0 
-}: { 
-  width?: string; 
+export const Skeleton = ({
+  width,
+  height,
+  delay = 0,
+}: {
+  width?: string;
   height?: string;
   delay?: number;
 }) => {

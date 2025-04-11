@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 
 import { type Device } from "@/server/deviceActions";
-import { ChevronRight, Plus, X } from "lucide-react";
+import { ChevronRight, Plus, Trash2, X } from "lucide-react";
 import { createIssue } from "@/server/issueActions";
 import { notFound, useRouter } from "next/navigation";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
@@ -11,7 +11,7 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
 import { useSelector } from "react-redux";
@@ -176,25 +176,14 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
   return (
     <>
       <div className="flex justify-center w-full h-full items-start">
-        <div className="flex flex-col w-[97%] gap-7 h-full justify-start items-center">
-          <div className="flex flex-col  w-full">
-            <div className="flex justify-start items-center pb-2 gap-4 text-2xl font-gilroySemiBold">
-              <div className="size-9 2xl:size-11 flex justify-center items-center bg-black rounded-full p-1.5">
-                <NavBarIcons.issue_icon_white className="size-5 2xl:size-11 mb-0.5" />
-              </div>
-              <span className="font-gilroySemiBold text-xl 2xl:text-3xl">
-                Report an issue
-              </span>
-            </div>
-            <div className="w-full flex flex-col gap-1">
-              <div className="font-gilroySemiBold text-base mt-2 2xl:text-xl text-gray-400">
-                {next === 0 ? "Step 0 of 1" : "Step 1 of 1"}
-              </div>
-              <div className="h-[1px] bg-[#E7E7E7] w-full "></div>
-            </div>
-          </div>
+        <div className="flex flex-col w-[97%] gap-4 h-full justify-start items-center">
+          <h1 className="font-gilroySemiBold text-xl w-full text-center">
+            Report an issue
+          </h1>
 
-          <div className="w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4">
+          <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
+
+          <div className="w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4">
             <div className="">
               <img
                 src={
@@ -202,14 +191,14 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                   "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                 }
                 alt="Asset-1"
-                className="w-20 h-20 p-1  object-contain border rounded-full "
+                className="w-20 h-16 p-1  object-contain border rounded-full "
               />
             </div>
             <div>
-              <div className="font-gilroySemiBold text-xl">
+              <div className="font-gilroySemiBold text-base">
                 {device?.custom_model ?? ""}
               </div>
-              <div className="text-[#7C7C7C] font-gilroyRegular text-sm">
+              <div className="text-[#7C7C7C] font-gilroyMedium text-sm">
                 {device?.ram ?? "N/A"}. {device?.storage ?? "N/A"} .{" "}
                 {device?.serial_no ?? "N/A"}
               </div>
@@ -278,11 +267,11 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                           errors.title
                             ? "border-destructive/80 "
                             : "border-[#5F5F5F]",
-                          "rounded-xl border"
+                          "rounded-md border"
                         )}
                       />
                       {errors.title && (
-                        <p className="mt-2 text-sm text-destructive">
+                        <p className="mt-0.5 text-xs font-gilroySemiBold text-destructive">
                           {errors.title}
                         </p>
                       )}
@@ -292,7 +281,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                     <div className="group relative">
                       <Label
                         htmlFor="issue-description"
-                        className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-base font-gilroyMedium  text-black group-has-[:disabled]:opacity-50"
+                        className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium  text-black group-has-[:disabled]:opacity-50"
                       >
                         Issue description*
                       </Label>
@@ -309,11 +298,11 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                           errors.description
                             ? "border-destructive/80 "
                             : "border-[#5F5F5F]",
-                          "rounded-xl border h-24"
+                          "rounded-md border h-24"
                         )}
                       />
                       {errors.description && (
-                        <p className="mt-2 text-sm text-destructive">
+                        <p className="mt-0.5 text-xs font-gilroySemiBold text-destructive">
                           {errors.description}
                         </p>
                       )}
@@ -322,16 +311,20 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                 </div>
 
                 <div className="flex absolute bottom-0 gap-2 w-full">
-                  <Button
-                    type="button"
-                    className="rounded-full w-1/2 text-base font-gilroySemiBold border border-black"
+                  <button
+                    className={buttonVariants({
+                      variant: "outlineTwo",
+                      className: "w-full",
+                    })}
                     onClick={() => closeBtn(false)}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
+                  </button>
+                  <button
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
                     onClick={() => {
                       if (validateStepOne()) {
                         setNext(1);
@@ -339,34 +332,33 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                     }}
                   >
                     Next
-                    <ChevronRight color="white" />
-                  </Button>
+                  </button>
                 </div>
               </>
             ) : next === 1 ? (
               <div className="w-full flex flex-col justify-between -mt-2 mb-4">
-                <div className="w-full flex flex-col gap-6">
+                <div className="w-full flex flex-col gap-4">
                   <div className="flex flex-col gap-1.5 ">
                     <label className="font-gilroyMedium mb-1.5 text-black text-base">
                       How sever is the issue?
                     </label>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-4">
                       {severityArray.map((v) => (
                         <div
                           key={v.title}
                           className={cn(
-                            "flex w-full h-[5rem] justify-start items-center rounded-xl pb-1 border pl-5 gap-2 cursor-pointer group",
+                            "flex w-full h-[4rem] justify-start items-center rounded-md p-3 border  gap-2 cursor-pointer group",
                             formData.priority === v.title
                               ? "border-black  border-2"
                               : "border-[#6C6C6C]"
                           )}
                           onClick={() => handlePriority(v.title)}
                         >
-                          <div className="w-[10%] justify-start items-center flex">
+                          <div className="w-[8%] justify-start items-center flex">
                             {v.icon ?? ""}
                           </div>
-                          <div className="w-[75%] flex flex-col justify-center gap-1">
-                            <div className="font-gilroySemiBold text-lg text-black">
+                          <div className=" flex flex-col justify-center gap-1">
+                            <div className="font-gilroySemiBold text-sm text-black">
                               {v.title ?? ""}
                             </div>
                             <div className="font-gilroyMedium text-[#7C7C7C] text-xs">
@@ -377,13 +369,13 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                       ))}
                     </div>
                     {errors.priority && (
-                      <p className="text-destructive text-sm">
+                      <p className="text-destructive font-gilroySemiBold text-xs">
                         {errors.priority}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 mb-5">
                     <label className="font-gilroyMedium text-black text-base">
                       Upload Images
                     </label>
@@ -392,13 +384,13 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
 
                       {/* Add new upload button */}
                       <div
-                        className="flex gap-2 items-center justify-start bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 px-2 py-6 border-[#52ABFF] cursor-pointer"
+                        className="flex gap-2 items-center justify-center bg-[#E9F3FF] rounded-md border-dashed h-20 w-full border p-3 border-[#52ABFF] cursor-pointer"
                         onClick={() => fileIssueImages?.current?.click()}
                       >
                         {formData.images.map((image, index) => (
                           <div
                             key={index}
-                            className="relative w-20 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
+                            className="relative size-16 border border-dashed rounded-md overflow-hidden flex items-center justify-center bg-gray-100 group"
                           >
                             <img
                               src={image.url}
@@ -407,25 +399,31 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                             />
                             <button
                               onClick={() => handleRemoveImage(index)}
-                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute top-3.5  bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
-                              <X className="text-white size-4" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         ))}
                         {formData.images.length === 0 ? (
-                          <div className="flex flex-col justify-center items-center w-full mx-auto">
-                            <UploadImageIcon className="text-blue-500 w-6 h-6" />
-                            <span className="text-[#0EA5E9]">
-                              Click to upload
-                            </span>
-                            <p className="text-xs text-neutral-400">
+                          <div className="flex flex-col justify-center items-center">
+                            <UploadImageIcon className="size-5" />
+                            <div className="flex gap-1 font-gilroySemiBold">
+                              {" "}
+                              <span className="text-[#0EA5E9] text-[10px]">
+                                Click to upload
+                              </span>
+                              <span className="text-[10px]">
+                                or drag and drop
+                              </span>
+                            </div>
+                            <p className="text-xs font-gilroyMedium text-neutral-400 text-[9px]">
                               JPG, JPEG, PNG less than 1MB
                             </p>
                           </div>
                         ) : (
-                          <div className="w-24 h-[75px] bg-gray-100 flex justify-center items-center rounded-xl border border-dashed border-gray-600">
-                            <div className="bg-gray-400 text-white text-3xl rounded-full flex items-center justify-center w-8 h-8">
+                          <div className="size-16 bg-gray-100 flex justify-center items-center rounded-xl border border-dashed border-gray-600">
+                            <div className="bg-gray-400 text-white text-3xl rounded-full flex items-center justify-center size-4">
                               <Plus className="text-white" />
                             </div>
                           </div>
@@ -448,27 +446,26 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                   </div>
                 </div>
 
-                <div className="flex gap-2 w-full mt-4">
-                  <Button
-                    className="rounded-full w-1/2  text-xl font-gilroySemiBold border border-black"
+                <div className="flex gap-2 w-full absolute bottom-0">
+                  <button
+                    className={buttonVariants({
+                      variant: "outlineTwo",
+                      className: "w-full",
+                    })}
                     onClick={() => setNext(0)}
                   >
                     Previous
-                  </Button>
-                  <Button
-                    className="rounded-full w-1/2 text-xl font-gilroySemiBold bg-black text-white "
+                  </button>
+                  <button
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
                     type="submit"
                     disabled={loading}
                   >
-                    {loading ? (
-                      <Spinner />
-                    ) : (
-                      <>
-                        Submit
-                        <ChevronRight color="white" />
-                      </>
-                    )}
-                  </Button>
+                    {loading ? <Spinner /> : <>Submit</>}
+                  </button>
                 </div>
               </div>
             ) : (

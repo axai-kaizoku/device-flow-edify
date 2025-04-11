@@ -1,5 +1,5 @@
 import { getSession } from "@/server/helper";
-import AdminDashboard from "./_components/admin-page";
+import AdminDashboard from "./_components/old-admin-page";
 import UserDashboard from "./_components/user-page";
 import Error from "@/app/error/page";
 
@@ -19,7 +19,7 @@ export default async function Dashboard() {
         <AdminDashboard />
       ) : null}
 
-      {sess?.user.user.role === 1 ? <UserDashboard  /> : null}
+      {sess?.user.user.role === 1 ? <UserDashboard /> : null}
       {/* <AdminDashboard /> */}
     </>
   );

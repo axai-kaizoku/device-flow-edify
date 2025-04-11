@@ -8,8 +8,8 @@ import { cache } from "react";
 import { usersFields } from "./filterActions";
 import { IntegrationType } from "./integrationActions";
 
-const baseUrl = "https://staging.deviceflow.ai";
-// const baseUrl = "https://8a54-34-47-179-100.ngrok-free.app";
+// const baseUrl = "https://staging.deviceflow.ai";
+const baseUrl = "https://1c55-34-47-179-100.ngrok-free.app";
 
 type Address = {
   address: string;
@@ -417,7 +417,7 @@ export type UsersTeamResponse = {
 export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
   teamId: string,
   page: number
-) {
+): Promise<UsersTeamResponse> {
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<UsersTeamResponse>(

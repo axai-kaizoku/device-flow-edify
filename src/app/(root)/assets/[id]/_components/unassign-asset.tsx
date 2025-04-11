@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import {
 import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
 import { updateDevice } from "@/server/deviceActions";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -27,7 +28,7 @@ export const UnassignAsset = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { openToast } = useToast();
-
+  const queryClient = useQueryClient();
   const handleDelete = async () => {
     if (id) {
       setLoading(true);
@@ -37,7 +38,11 @@ export const UnassignAsset = ({
         setLoading(false);
         openToast("success", "Unassigned asset from user !");
         setOpen(false);
-        router.refresh();
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-assets"],
+          exact: false,
+          refetchType: "all",
+        });
       } catch (e: any) {
         openToast("error", "Failed to assign to user !");
         setOpen(false);
@@ -66,14 +71,17 @@ export const UnassignAsset = ({
           </DialogDescription>
 
           <DialogFooter className="flex w-full items-center justify-between">
-            <Button
-              className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
+            <button
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "w-full",
+              })}
               onClick={() => setOpen(false)}
             >
               Cancel
-            </Button>
+            </button>
             <Button
-              className="w-1/2 rounded-md bg-[#D92D20] text-white"
+              className="w-full rounded-md bg-black text-white"
               onClick={handleDelete}
             >
               {loading ? (
@@ -81,7 +89,7 @@ export const UnassignAsset = ({
                   <Spinner className={spinnerVariants({ size: "sm" })} />
                 </>
               ) : (
-                "Delete"
+                "Unassign"
               )}
             </Button>
           </DialogFooter>

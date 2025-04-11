@@ -4,11 +4,13 @@ import { checkForDuplicates, parseCSV } from "./CSVHelper";
 import { useRouter } from "next/navigation";
 import { useAlert } from "@/hooks/useAlert";
 import { useToast } from "@/hooks/useToast";
+import { Icons } from "@/app/(root)/people/icons";
+
 type dataProps = {
   closeBtn: () => void;
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
-  sampleData: Record<string, string|number>;
+  sampleData: Record<string, string | number>;
 };
 function BulkUpload({
   closeBtn,
@@ -159,27 +161,36 @@ function BulkUpload({
             />
           </div>
         ) : (
-          <div className="w-full flex flex-col gap-6">
-            <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+          <div className="w-full flex flex-col gap-2">
+            <div className="font-gilroyMedium text-base text-black">
               Bulk Import
             </div>
-            <div className="w-full flex justify-between gap-4">
+
+            <div className="rounded-lg p-3  flex justify-between items-center border border-gray-200">
+              <div className="flex gap-2">
+                <Icons.file_csv />
+                <div className="flex flex-col ">
+                  <h1 className="text-base font-gilroySemiBold">Upload CSV</h1>
+                  <p
+                    className="text-[#007aff] text-xs cursor-pointer font-gilroyMedium hover:underline"
+                    onClick={downloadSampleCSV}
+                  >
+                    Download sample CSV
+                  </p>
+                </div>
+              </div>
+
               <button
                 disabled={loading}
-                className={`flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1 ${
+                className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-5 hover:bg-gray-800 ${
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={handleFileUploadClick}
               >
-                Upload CSV
-              </button>
-              <button
-                className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
-                onClick={downloadSampleCSV}
-              >
-                Download Sample CSV
+                Upload
               </button>
             </div>
+
             <input
               type="file"
               accept=".csv"

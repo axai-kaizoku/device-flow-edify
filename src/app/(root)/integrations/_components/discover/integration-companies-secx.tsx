@@ -11,7 +11,7 @@ export const IntegrationCompaniesSecx = (props: {
       <h1 className="relative font-gilroySemiBold p-1.5">
         {props?.categoryName}
       </h1>
-      <div className=" flex flex-wrap gap-4 xl:grid xl:justify-items-center xl:gap-7 xl:grid-cols-3">
+      <div className=" flex flex-wrap gap-3 xl:grid xl:justify-items-center xl:gap-5 xl:grid-cols-3">
         {props?.categoryCompanies?.map((company) => (
           <IntegrationCompanyCard key={company?._id} company={company} />
         ))}

@@ -21,16 +21,16 @@ export const FormField = ({
   <div className="group relative w-full">
     <label
       htmlFor={id}
-      className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-sm font-gilroyMedium text-foreground"
+      className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium text-foreground"
     >
-      {label}
+      {label}*
     </label>
     <Input
       id={id}
       className={cn(
         error
-          ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-12"
-          : "h-12 placeholder:text-gray-400 pl-4 border border-[#5F5F5F]",
+          ? "border-destructive/80 focus-visible:border-destructive/80 focus-visible:ring-destructive/0 h-10"
+          : "h-10 placeholder:text-gray-400 placeholder:text-sm pl-4 rounded-md border border-[#5F5F5F]",
         className
       )}
       value={value}
@@ -38,10 +38,16 @@ export const FormField = ({
       placeholder={placeholder}
       {...props}
     />
-    {error && (
-      <p className="mt-0.5 text-xs text-start font-gilroyMedium text-destructive">
-        {error}
-      </p>
-    )}
+    <p
+      className={cn(
+        "mt-0.5 text-xs text-start font-gilroyMedium text-destructive transition-all duration-300",
+        {
+          "opacity-100": error,
+          "opacity-0": !error,
+        }
+      )}
+    >
+      {error || " "}
+    </p>
   </div>
 );

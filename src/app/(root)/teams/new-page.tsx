@@ -15,6 +15,7 @@ import { useQueryState } from "nuqs";
 import InvitePeople from "../people/[id]/_components/invite-people";
 import CreateTeam from "./_components/create-team";
 import TeamsMain from "./_components/teams-main";
+import { buttonVariants } from "@/components/buttons/Button";
 
 export const NewPageTeams = () => {
   const [activeTab, setActiveTab] = useState("active-teams");
@@ -22,7 +23,7 @@ export const NewPageTeams = () => {
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const actualSearchTerm = useDeferredValue(searchTerm);
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["teams", activeTab],
     queryFn: async () => {
       const query = {
@@ -43,7 +44,7 @@ export const NewPageTeams = () => {
         <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
           <div className="flex gap-2">
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
+              <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-md">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
               <SelectContent className="font-gilroyMedium">
@@ -78,14 +79,14 @@ export const NewPageTeams = () => {
             </div> */}
 
             <InvitePeople>
-              <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
+              <div className={buttonVariants({ variant: "outlineTwo" })}>
                 <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                   Invite People
                 </div>
               </div>
             </InvitePeople>
             <CreateTeam>
-              <div className="flex cursor-pointer items-center rounded-lg  border-[rgba(0,0,0,0.2)] px-4 py-2 gap-1 bg-black text-white group">
+              <div className={buttonVariants({ variant: "primary" })}>
                 <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
                   Create Team
                 </span>
@@ -94,10 +95,10 @@ export const NewPageTeams = () => {
           </div>
         </div>
         <TabsContent value="active-teams">
-          <TeamsMain teams={data} />
+          <TeamsMain teams={data} status={status} />
         </TabsContent>
         <TabsContent value="inactive-teams">
-          <TeamsMain teams={data} />
+          <TeamsMain teams={data} status={status} />
         </TabsContent>
       </Tabs>
     </section>

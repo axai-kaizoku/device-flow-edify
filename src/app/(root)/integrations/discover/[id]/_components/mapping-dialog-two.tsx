@@ -1,269 +1,7 @@
-// "use client";
-// import { Button } from "@/components/buttons/Button";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogFooter,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
-// import { SelectSeparator } from "@/components/ui/select";
-// import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
-// import { HugeiconsIcon } from "@hugeicons/react";
-// import { useState } from "react";
-// import { SearchUsers, UsersType } from "./search-users";
-// import { IntBack } from "../../../_components/icons";
-// import {
-//   AddIntegrationRes,
-//   mapIntegrationUsers,
-// } from "@/server/integrationActions";
-// import { AsyncSelect } from "@/components/ui/async-select";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-// type UsersType = {
-//   _id: string;
-//   first_name: string;
-//   email: string;
-//   employment_type: string;
-//   designation: string;
-//   image: string;
-//   team: {
-//     _id: string;
-//     title: string;
-//     team_code: string;
-//   }[];
-//   devices: number;
-// }
-
-// type AddIntegrationRes = {
-//   message: string;
-//   integrationId: string;
-//   status: string;
-//   data: {
-//     _id: string;
-//     orgId: string;
-//     __v: number;
-//     createdAt: string;
-//     email: string;
-//     image: null;
-//     name: string;
-//     subscriptions: {
-//       integrationId: string;
-//       refId: string;
-//       _id: string;
-//     }[];
-//     updatedAt: string;
-//     userId: null;
-//   }[];
-//   totalCount: number;
-//   unMapped: UsersType[];
-//   unMappedCount: number;
-// };
-
-// export default function MappingDialogTwo({
-//   children,
-//   open,
-//   setOpen,
-//   response,
-//   setNextSteps,
-// }: {
-//   children?: React.ReactNode;
-//   open?: boolean;
-//   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-//   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
-//   response?: AddIntegrationRes;
-// }) {
-//   const [selectedUser, setSelectedUser] = useState<UsersType>();
-//   const queryClient = useQueryClient();
-
-//   const mutation = useMutation({
-//     mutationFn: mapIntegrationUsers,
-//     mutationKey: ["map-integration-users"],
-//     onSuccess: async () => {
-//       await queryClient.invalidateQueries({
-//         queryKey: ["get-integration-by-id"],
-//         exact: true,
-//         refetchType: "active",
-//       });
-//       await queryClient.invalidateQueries({
-//         queryKey: ["user-by-integrations", "all-data"],
-//         exact: true,
-//         refetchType: "active",
-//       });
-//       await queryClient.invalidateQueries({
-//         queryKey: ["all-integrations", "discover"],
-//         exact: true,
-//         refetchType: "active",
-//       });
-//       await queryClient.invalidateQueries({
-//         queryKey: ["all-integrations"],
-//         exact: true,
-//         refetchType: "active",
-//       });
-//       setNextSteps(0);
-//     },
-//   });
-
-//   // const [mappings, setMappings] = useState(
-//   //   Array(7).fill({ source: "lalityasahu05", target: "" })
-//   // );
-
-//   // const handleSourceChange = (index: number, value: string) => {
-//   //   const newMappings = [...mappings];
-//   //   newMappings[index] = { ...newMappings[index], source: value };
-//   //   setMappings(newMappings);
-//   // };
-
-//   // const handleTargetChange = (index: number, value: string) => {
-//   //   const newMappings = [...mappings];
-//   //   newMappings[index] = { ...newMappings[index], target: value };
-//   //   setMappings(newMappings);
-//   // };
-
-//   // const clearAll = () => {
-//   //   setMappings(Array(7).fill({ source: "", target: "" }));
-//   // };
-
-//   const filteredData = response?.data
-//     ? response?.data?.filter((u) => u.userId === null)
-//     : [];
-
-//   const getUsers = (email: string = ""): UsersType[] => {
-//     try {
-//       // Assuming response is defined and has the unMapped property
-//       const data = response?.unMapped;
-//       console.log(data);
-
-//       const res = data.filter((v) => {
-//         return (
-//           v.first_name.includes(email) ||
-//           v.email.includes(email) ||
-//           v.last_name.includes(email)
-//         );
-//       });
-//       console.log(res);
-
-//       return res;
-//     } catch (error) {
-//       console.error(error);
-//       throw new Error("Failed to fetch user");
-//     }
-//   };
-
-//   const handleMapping = async () => {
-//     mutation.mutate({
-//       payload: [
-//         {
-//           integrationId: "",
-//           userId: "",
-//           userIntegrationId: "",
-//         },
-//       ],
-//     });
-//   };
-
-//   return (
-//     <>
-//       <Dialog open={open} onOpenChange={() => setNextSteps(0)}>
-//         <DialogTrigger>{children}</DialogTrigger>
-//         <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full">
-//           <DialogTitle className="text-lg flex gap-3 font-gilroySemiBold">
-//             <IntBack onClick={() => setNextSteps(1)} />
-//             Map Users
-//           </DialogTitle>
-
-//           {/* {JSON.stringify(response?.unMapped)} */}
-
-//           <div className="w-full space-y-4 px-4">
-//             {filteredData?.map((mapping, index) => (
-//               <div
-//                 key={index}
-//                 className="flex items-center justify-between gap-x-5"
-//               >
-//                 <Input
-//                   value={mapping?.name ?? mapping?.email ?? ""}
-//                   defaultValue={mapping?.name ?? mapping?.email ?? ""}
-//                   className="rounded-md border border-gray-200 w-[9.5rem]"
-//                   placeholder="Enter value"
-//                   readOnly
-//                 />
-//                 <HugeiconsIcon
-//                   icon={ArrowRight02Icon}
-//                   className="text-gray-900 size-5"
-//                 />
-
-//                 {/* <SearchUsers /> */}
-//                 <div className="flex flex-col gap-2">
-//                   <AsyncSelect<UsersType>
-//                     fetcher={getUsers}
-//                     renderOption={(user) => (
-//                       <div className="flex items-center gap-2 ">
-//                         <div className="flex flex-col">
-//                           <div className="font-gilroyMedium">
-//                             {user?.first_name}
-//                           </div>
-//                           <div className="text-xs font-gilroyRegular text-muted-foreground">
-//                             {user?.email}
-//                           </div>
-//                         </div>
-//                       </div>
-//                     )}
-//                     getOptionValue={(user) => user?.email}
-//                     getDisplayValue={(user) => (
-//                       <div className="flex items-center gap-2 text-left w-fit">
-//                         <div className="flex flex-col leading-tight">
-//                           <div className="font-gilroyMedium truncate min-w-0 w-[6rem]">
-//                             {user?.email}
-//                           </div>
-//                           {/* <div className="text-xxs font-gilroyRegular text-muted-foreground">
-//                                 {user.Name}
-//                               </div> */}
-//                         </div>
-//                       </div>
-//                     )}
-//                     notFound={
-//                       <div className="py-6 text-center font-gilroyMedium text-sm">
-//                         No users found
-//                       </div>
-//                     }
-//                     label="User"
-//                     placeholder="Enter Email"
-//                     value={selectedUser?.first_name}
-//                     onChange={(e) => setSelectedUser(selectedUser)}
-//                     width="10rem"
-//                   />
-//                   {/* <p className="text-sm text-muted-foreground">
-//                         Selected user ID: {selectedUser || "none"}
-//                       </p> */}
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-
-//           <SelectSeparator className="w-full bg-neutral-300" />
-//           <DialogFooter className="flex w-full items-center justify-between mt-1">
-//             <Button
-//               className="w-[48%] rounded-sm font-gilroyMedium  bg-white text-black  ring-1 ring-[#B4B4B4] flex items-center justify-center"
-//               // onClick={() => setOpen(false)}
-//             >
-//               Clear All
-//             </Button>
-//             <Button
-//               className="w-[48%] rounded-sm font-gilroyMedium  bg-black text-white  ring-1 ring-black   flex items-center justify-center"
-//               onClick={handleMapping}
-//             >
-//               Confirm
-//             </Button>
-//           </DialogFooter>
-//         </DialogContent>
-//       </Dialog>
-//     </>
-//   );
-// }
-
 "use client";
+
 import { Button } from "@/components/buttons/Button";
+import { AsyncSelect } from "@/components/ui/async-select";
 import {
   Dialog,
   DialogContent,
@@ -272,17 +10,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { SelectSeparator } from "@/components/ui/select";
+import { mapIntegrationUsers } from "@/server/integrationActions";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
-import { AsyncSelect } from "@/components/ui/async-select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { IntBack } from "../../../_components/icons";
-import {
-  AddIntegrationRes,
-  mapIntegrationUsers,
-} from "@/server/integrationActions";
+import { Loader2 } from "lucide-react";
 
 type UsersType = {
   _id: string;
@@ -332,6 +67,7 @@ interface MappingDialogTwoProps {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
   response?: AddIntegrationResType;
+  platform?: string;
 }
 
 export default function MappingDialogTwo({
@@ -340,8 +76,10 @@ export default function MappingDialogTwo({
   setOpen,
   setNextSteps,
   response,
+  platform,
 }: MappingDialogTwoProps) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   // Object to keep track of user selections for each mapping row.
   // Key: index, Value: selected user (or null if none selected)
@@ -356,19 +94,49 @@ export default function MappingDialogTwo({
     : [];
 
   // Fetcher function to search for users from unmapped list based on email
+  // const getUsers = (query: string = ""): UsersType[] => {
+  //   try {
+  //     const data = response?.unMapped || [];
+
+  //     // Check first name, email and last_name if available
+  //     const res = data?.filter((user) => {
+  //       const searchStr = query?.toLowerCase();
+  //       return (
+  //         user?.first_name?.toLowerCase().includes(searchStr) ||
+  //         user?.email?.toLowerCase().includes(searchStr) ||
+  //         (user?.last_name &&
+  //           user?.last_name?.toLowerCase().includes(searchStr))
+  //       );
+  //     });
+  //     return res;
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw new Error("Failed to fetch user");
+  //   }
+  // };
   const getUsers = (query: string = ""): UsersType[] => {
     try {
       const data = response?.unMapped || [];
-      // Check first name, email and last_name if available
+
+      // Collect all selected user _ids from the mappingSelections
+      const selectedUserIds = Object.values(mappingSelections)
+        .filter((user): user is UsersType => !!user)
+        .map((user) => user._id);
+
       const res = data?.filter((user) => {
-        const searchStr = query?.toLowerCase();
-        return (
+        const searchStr = query.toLowerCase();
+
+        const matchesSearch =
           user?.first_name?.toLowerCase().includes(searchStr) ||
           user?.email?.toLowerCase().includes(searchStr) ||
           (user?.last_name &&
-            user?.last_name?.toLowerCase().includes(searchStr))
-        );
+            user?.last_name.toLowerCase().includes(searchStr));
+
+        const isNotSelected = !selectedUserIds.includes(user._id);
+
+        return matchesSearch && isNotSelected;
       });
+
       return res;
     } catch (error) {
       console.error(error);
@@ -399,23 +167,23 @@ export default function MappingDialogTwo({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["get-integration-by-id"],
-        exact: true,
-        refetchType: "active",
+        exact: false,
+        refetchType: "all",
       });
       await queryClient.invalidateQueries({
         queryKey: ["user-by-integrations", "all-data"],
         exact: true,
-        refetchType: "active",
+        refetchType: "all",
       });
       await queryClient.invalidateQueries({
         queryKey: ["all-integrations", "discover"],
         exact: true,
-        refetchType: "active",
+        refetchType: "all",
       });
       await queryClient.invalidateQueries({
         queryKey: ["all-integrations"],
-        exact: true,
-        refetchType: "active",
+        exact: false,
+        refetchType: "all",
       });
       setNextSteps && setNextSteps(0);
     },
@@ -424,13 +192,13 @@ export default function MappingDialogTwo({
   // Handle the Confirm button click
   const handleMapping = async () => {
     // Validate that every mapping row has a selected user
-    const incompleteMapping = filteredData?.some(
-      (_, index) => !mappingSelections?.[index]
-    );
-    if (incompleteMapping) {
-      setError("Please select a user for every mapping.");
-      return;
-    }
+    // const incompleteMapping = filteredData?.some(
+    //   (_, index) => !mappingSelections?.[index]
+    // );
+    // if (incompleteMapping) {
+    //   setError("Please select a user for every mapping.");
+    //   return;
+    // }
     // Build payload: each mapping object includes keys as required.
     const payload = filteredData?.map((mapping, index) => {
       const selectedUser = mappingSelections?.[index] as UsersType;
@@ -441,20 +209,30 @@ export default function MappingDialogTwo({
       };
     });
     // Call the API with the payload
-    mutation.mutate({ payload });
+    mutation.mutate(
+      { payload },
+      {
+        onSuccess: () => {
+          router.push(`/integrations/installed?platform=${platform}`);
+        },
+      }
+    );
   };
 
   return (
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps && setNextSteps(0)}>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full">
-          <DialogTitle className="text-lg flex gap-3 font-gilroySemiBold">
-            <IntBack onClick={() => setNextSteps && setNextSteps(1)} />
+        <DialogContent className="rounded-2xl bg-white p-4 shadow-lg max-w-md w-full">
+          <DialogTitle className="text-base flex gap-3 items-center font-gilroyMedium pl-2">
+            <IntBack
+              onClick={() => setNextSteps && setNextSteps(1)}
+              className="cursor-pointer"
+            />
             Map Users
           </DialogTitle>
 
-          <div className="w-full space-y-4 px-4">
+          <div className="w-full space-y-4 px-2 h-full max-h-[40vh] overflow-y-auto">
             {filteredData.map((mapping, index) => (
               <div
                 key={mapping?._id || index}
@@ -488,11 +266,11 @@ export default function MappingDialogTwo({
                       </div>
                     )}
                     getOptionValue={(user) => user?.email}
-                    getDisplayValue={(user) => (
+                    getDisplayValue={() => (
                       <div className="flex items-center gap-2 text-left w-fit">
                         <div className="flex flex-col leading-tight">
-                          <div className="font-gilroyMedium truncate min-w-0 w-[6rem]">
-                            {user?.email}
+                          <div className="font-gilroyMedium truncate min-w-0 w-[6.2rem]">
+                            {mappingSelections?.[index]?.email ?? ""}
                           </div>
                         </div>
                       </div>
@@ -503,10 +281,8 @@ export default function MappingDialogTwo({
                       </div>
                     }
                     label="User"
-                    placeholder="Enter Email"
-                    // Provide the value from mappingSelections for this row
+                    placeholder="Map to"
                     value={mappingSelections?.[index]?.email || "null"}
-                    // Update the mapping selection on change
                     onChange={(selected: UsersType | null) =>
                       updateMappingSelection(index, selected)
                     }
@@ -521,20 +297,29 @@ export default function MappingDialogTwo({
             <p className="text-red-500 text-sm text-center mt-2">{error}</p>
           )}
 
-          <SelectSeparator className="w-full bg-neutral-300" />
-          <DialogFooter className="flex w-full items-center justify-between mt-1">
+          <div className="h-[1px] bg-gray-200  -mx-4"></div>
+          <DialogFooter className="flex w-full items-center justify-between mt-1 mb-1 px-2">
             <Button
-              className="w-[48%] rounded-sm font-gilroyMedium bg-white text-black ring-1 ring-[#B4B4B4] flex items-center justify-center"
+              className="w-[48%] rounded-lg text-sm bg-white text-black  font-gilroyMedium tracking-wide border hover:border-black"
               onClick={clearAll}
             >
               Clear All
             </Button>
             <Button
               disabled={mutation.isPending}
-              className="w-[48%] rounded-sm font-gilroyMedium bg-black text-white ring-1 ring-black flex items-center justify-center"
+              className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               onClick={handleMapping}
+              onMouseEnter={() =>
+                router.prefetch(`/integrations/installed?platform=${platform}`)
+              }
             >
-              Confirm
+              {mutation.isPending ? (
+                <>
+                  Confirm <Loader2 className="animate-spin size-4" />
+                </>
+              ) : (
+                "Confirm"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

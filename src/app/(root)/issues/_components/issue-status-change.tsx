@@ -15,6 +15,7 @@ import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import WarningIcon from "@/icons/WarningIcon";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const IssueStatusChange = ({
   id,
@@ -29,12 +30,12 @@ export const IssueStatusChange = ({
   children: React.ReactNode;
   reOpen: boolean;
   className?: string;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [initText, setInitText] = useState("Are you sure?");
-
+  const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className={cn(className)}>{children}</DialogTrigger>
@@ -61,13 +62,17 @@ export const IssueStatusChange = ({
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between ">
           <Button
-            className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-base text-[#344054]"
+            // className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-base text-[#344054]"
+            variant="outlineTwo"
+            className="w-1/2"
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-base text-white"
+            className="w-1/2 bg-green-700 hover:bg-green-700 hover:border-none border-none text-white"
+            variant="outlineTwo"
+            // className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-base text-white"
             onClick={async () => {
               if (id) {
                 try {
@@ -76,7 +81,16 @@ export const IssueStatusChange = ({
                     status: reOpen ? "Open" : "Closed",
                   });
                   setOpen(false);
-                  router.refresh();
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-issues"],
+                    exact: false,
+                    refetchType: "all",
+                  });
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-issues-by-id"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||
@@ -87,7 +101,7 @@ export const IssueStatusChange = ({
               }
             }}
           >
-            OK
+            Confirm
           </Button>
         </DialogFooter>
       </DialogContent>

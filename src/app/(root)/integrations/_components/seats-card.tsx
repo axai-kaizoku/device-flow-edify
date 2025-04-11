@@ -23,7 +23,7 @@ const SeatsCard = ({
           <MemberIcon
             key={index}
             isPlaceholder={false}
-            className="bg-neutral-600 text-neutral-50"
+            className="bg-neutral-300 text-neutral-50 size-6"
           />
         ));
     }
@@ -39,18 +39,20 @@ const SeatsCard = ({
     <div
       onClick={onClick}
       className={cn(
-        "max-w-52 w-full h-36 rounded-xl flex flex-col justify-between border p-3.5 cursor-pointer",
+        "max-w-52 w-full h-32 rounded-lg flex flex-col justify-between border p-3 cursor-pointer text-sm hover:border-black",
         className
       )}
     >
-      <span className="font-gilroyMedium capitalize">{type} Seats</span>
-      <div className="font-gilroyBold text-3xl">{totalSeats}</div>
-      <div>
-        <div className="flex justify-between w-full">
-          <div className="flex -space-x-4">{renderMembers()}</div>
-          <div className="rounded-full bg-[#F6F6F6] size-9 flex justify-center items-center">
-            <ChevronRight className="size-5 ml-0.5" />
-          </div>
+      <div className="space-y-3">
+        <span className="font-gilroyMedium capitalize">{type} Seats</span>
+        <div className="font-gilroyBold text-3xl">{totalSeats}</div>
+      </div>
+      <div className="flex justify-between w-full">
+        <div className="flex -space-x-2 justify-end -mb-8">
+          {renderMembers()}
+        </div>
+        <div className="rounded-full bg-[#F6F6F6] size-5 flex justify-center items-center">
+          <ChevronRight className="size-3.5 ml-0.5" />
         </div>
       </div>
     </div>

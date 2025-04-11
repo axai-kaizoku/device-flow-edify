@@ -338,7 +338,7 @@ const UserGrid = ({ user }: { user: User }) => {
             {/* Second Row */}
             <StoreBannerCard />
 
-            <pre>{JSON.stringify(user?.subscriptions)}</pre>
+            {/* <pre>{JSON.stringify(user?.totalCostPerUser)}</pre> */}
           </div>
         </div>
       ) : (

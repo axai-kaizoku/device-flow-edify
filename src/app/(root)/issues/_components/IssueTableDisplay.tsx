@@ -9,6 +9,8 @@ import Pagination from "../../teams/_components/pagination";
 import { IssueStatusChange } from "./issue-status-change";
 import { openIssues } from "@/server/filterActions";
 import IssueClosedHeader from "./issue-closed-header";
+import { buttonVariants } from "@/components/buttons/Button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface IssueTableDisplayProps {
   data: IssueResponse | null;
@@ -16,49 +18,64 @@ interface IssueTableDisplayProps {
   setIssues?: React.Dispatch<React.SetStateAction<IssueResponse | null>>;
   onRefresh?: () => Promise<void>;
   issuesText?: string;
+  status?: string;
 }
 
 function IssueTableDisplay({
   data,
-  setIssues,
   countIssues,
   onRefresh,
   issuesText,
+  status,
 }: IssueTableDisplayProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const handlePageChange = async (page: number) => {
-    setIsLoading(true);
-    try {
-      const res = await openIssues({ page });
-      setIssues(res);
-      setCurrentPage(page);
-    } catch (error) {
-      console.error("Failed to Fetch Issues");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handlePageChange = async (page: number) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await openIssues({ page });
+  //     setIssues(res);
+  //     setCurrentPage(page);
+  //   } catch (error) {
+  //     console.error("Failed to Fetch Issues");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const handleSelectionChange = (selected: string[]) => {
-    setSelectedIds(selected);
-  };
+  // const handleSelectionChange = (selected: string[]) => {
+  //   setSelectedIds(selected);
+  // };
 
   return (
     <>
-      {!isLoading && data?.issues.length === 0 ? (
+      {status !== "pending" && data?.issues.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <issueIcons.no_issues_icon />
         </div>
       ) : (
-        <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-          {issuesText?.toLowerCase().includes("open") ? (
-            <OpenHeader countIssues={countIssues} />
+        <div className="rounded-lg border  bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+          {/* <div className="flex justify-center items-center">
+            <h1 className="text-base pl-6 font-gilroyMedium">Issues</h1>
+          </div> */}
+          {status === "pending" ? (
+            <div className="flex gap-3 ml-4">
+              <Skeleton className="text-base pl-6 h-6 w-32" />
+              <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full   h-6 w-16" />
+              <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full  h-6 w-20" />
+              <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full   h-6 w-24" />
+            </div>
           ) : (
-            <IssueClosedHeader data={data} />
+            <>
+              {issuesText?.toLowerCase().includes("open") ? (
+                <OpenHeader countIssues={countIssues} />
+              ) : (
+                <IssueClosedHeader data={data} />
+              )}
+            </>
           )}
 
           <div className="flex flex-col">
@@ -66,12 +83,12 @@ function IssueTableDisplay({
               data={data?.issues!}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
-              isLoading={isLoading}
-              checkboxSelection={{
-                uniqueField: "_id",
-                //logic yet to be done
-                onSelectionChange: handleSelectionChange,
-              }}
+              isLoading={status === "pending"}
+              // checkboxSelection={{
+              //   uniqueField: "_id",
+
+              //   onSelectionChange: handleSelectionChange,
+              // }}
               columns={[
                 {
                   title: "Device",
@@ -98,15 +115,15 @@ function IssueTableDisplay({
                     <div className="w-full flex justify-start">
                       <div>
                         {data?.priority === "Critical" ? (
-                          <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-alert-foreground text-failure">
+                          <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-alert-foreground text-failure">
                             Critical
                           </h1>
                         ) : data?.priority === "Medium" ? (
-                          <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-[#FFFACB] text-[#FF8000]">
+                          <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-[#FFFACB] text-[#FF8000]">
                             Medium
                           </h1>
                         ) : data?.priority === "Low" ? (
-                          <h1 className="px-2 justify-center items-center font-gilroyMedium flex text-sm rounded-full bg-success-foreground text-success-second">
+                          <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-success-foreground text-success-second">
                             Low
                           </h1>
                         ) : (
@@ -129,29 +146,55 @@ function IssueTableDisplay({
                 },
 
                 {
-                  title: "Raised on",
+                  title: issuesText?.toLowerCase().includes("open")
+                    ? "Raised on"
+                    : "Closed on",
                   render: (record) => {
-                    const onboardingDate = record?.createdAt!;
+                    if (issuesText?.toLowerCase().includes("open")) {
+                      const onboardingDate = record?.createdAt;
 
-                    // Check if onboardingDate is null, undefined, or empty
-                    if (!onboardingDate) {
-                      return <div>-</div>; // Return "-" for null, undefined, or empty value
+                      // Check if onboardingDate is null, undefined, or empty
+                      if (!onboardingDate) {
+                        return <div>-</div>;
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>;
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return <div>{formattedDate}</div>;
+                    } else {
+                      const updateIssue = record?.updatedAt;
+
+                      // Check if updateIssue is null, undefined, or empty
+                      if (!updateIssue) {
+                        return <div>-</div>;
+                      }
+
+                      const date = new Date(updateIssue);
+
+                      // Check if the date is valid
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>;
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return <div>{formattedDate}</div>;
                     }
-
-                    const date = new Date(onboardingDate);
-
-                    // Check if the date is valid
-                    if (isNaN(date.getTime())) {
-                      return <div>-</div>; // Return "-" for invalid date
-                    }
-
-                    const formattedDate = date.toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    });
-
-                    return <div>{formattedDate}</div>;
                   },
                 },
                 {
@@ -167,15 +210,29 @@ function IssueTableDisplay({
                   title:
                     issuesText?.toLowerCase().includes("open") && "Actions",
                   render: (record: Issues) =>
-                    issuesText?.toLowerCase().includes("open") && (
+                    issuesText?.toLowerCase().includes("open") ? (
                       <IssueStatusChange
                         reOpen={false}
                         id={record?._id!}
                         issueData={record}
                         onRefresh={onRefresh}
                       >
-                        <div className="rounded-md bg-[#027A14] text-[13px]  whitespace-nowrap px-4 py-2 text-white font-gilroyMedium">
-                          Mark as resolved
+                        <div
+                          // className="rounded-md bg-black text-[13px]  whitespace-nowrap px-4 py-2 text-white font-gilroyMedium"
+                          className={buttonVariants({ variant: "primary" })}
+                        >
+                          Resolve
+                        </div>
+                      </IssueStatusChange>
+                    ) : (
+                      <IssueStatusChange
+                        id={record?._id!}
+                        issueData={record}
+                        reOpen={true}
+                        onRefresh={onRefresh}
+                      >
+                        <div className={buttonVariants({ variant: "primary" })}>
+                          Reopen
                         </div>
                       </IssueStatusChange>
                     ),

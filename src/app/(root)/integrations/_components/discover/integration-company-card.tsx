@@ -11,7 +11,7 @@ export const IntegrationCompanyCard = ({
     <Link
       href={`/integrations/discover/${company._id}`}
       key={company?._id}
-      className="max-w-[18rem] w-full rounded-2xl p-4 flex flex-col gap-4 border border-[#B4B4B4]"
+      className="max-w-[18rem] w-full rounded-md hover:border-black p-4 flex flex-col gap-4 border border-[#B4B4B4]"
     >
       <div className="flex gap-2.5 items-start justify-between relative">
         <div className="flex gap-1.5">
@@ -29,7 +29,7 @@ export const IntegrationCompanyCard = ({
             </h1>
             <span className="text-[#7F7F7F] text-sm font-gilroyMedium flex items-center">
               <Link
-                href={`/integrations/${company._id}`}
+                href={`/integrations/discover/${company._id}`}
                 onClick={(e) => e.stopPropagation()}
                 className="hover:underline truncate w-fit"
               >

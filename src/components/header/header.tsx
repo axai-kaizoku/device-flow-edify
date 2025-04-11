@@ -1,25 +1,22 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  AlertTriangle,
-  LogOut,
-  Plus,
-  RefreshCw,
-  Search,
-  Settings,
-  UserRound,
-} from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { Props } from "@/app/(root)/layout";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "@/app/store/authSlice";
-import CreateUser from "@/app/(root)/people/_components/create-user";
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
-import { signOut } from "next-auth/react";
-import { Icons } from "../icons";
 import ReAssign from "@/app/(root)/assets/_components/re-assign";
-import KBarIcon from "@/icons/KBarIcons";
+import { Props } from "@/app/(root)/layout";
+import CreateUser from "@/app/(root)/people/_components/create-user";
+import { login } from "@/app/store/authSlice";
 import ViewProfileIcon from "@/icons/ViewProfileIcon";
+import {
+  PlusSignIcon,
+  RefreshIcon,
+  Settings02Icon,
+  UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { LogOut, Search } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
@@ -134,7 +131,7 @@ export default function Header({ session }: Props) {
             />
           </div> */}
 
-          <h1 className="font-gilroySemiBold  w-40 capitalize text-lg text-[#7f7f7f]">
+          <h1 className="font-gilroyMedium  w-40 capitalize text-base text-[#c8c8c8]">
             {pageName}
           </h1>
 
@@ -142,7 +139,7 @@ export default function Header({ session }: Props) {
           <div className="flex justify-center items-center ">
             <div className="flex items-center gap-x-2 bg-transparent  bg-opacity-90  px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-1.5">
+              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-[rgba(0,0,0,0.2)] rounded-md px-2 py-1.5">
                 <div className="flex gap-2 items-center">
                   <Search className=" size-[1.16rem]" />
                   <input
@@ -159,7 +156,7 @@ export default function Header({ session }: Props) {
                   />
                 </div>
 
-                <KBarIcon.kbar_icon />
+                {/* <KBarIcon.kbar_icon /> */}
               </div>
 
               {/* Action Buttons */}
@@ -167,31 +164,37 @@ export default function Header({ session }: Props) {
                 <>
                   {" "}
                   <CreateDevice>
-                    <div className="flex  cursor-pointer items-center rounded-lg border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
-                      <div className=" p-1 border-gray-400  group-hover:border-white">
-                        <Plus className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white" />
-                      </div>
+                    <div className="flex gap-x-1.5 cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)]  p-2 px-3  hover:bg-black hover:text-white hover:border-white group">
+                      <HugeiconsIcon
+                        icon={PlusSignIcon}
+                        className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white"
+                        strokeWidth={2.5}
+                      />
                       <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                         Add Device
                       </div>
                     </div>
                   </CreateDevice>
                   <ReAssign>
-                    <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)]  p-[7px]  hover:bg-black hover:text-white hover:border-white group">
-                      <div className=" p-1  group-hover:border-white">
-                        <RefreshCw className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white" />
-                      </div>
+                    <div className="flex gap-x-1.5 cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)]  p-2 px-3  hover:bg-black hover:text-white hover:border-white group">
+                      <HugeiconsIcon
+                        icon={RefreshIcon}
+                        className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white"
+                        strokeWidth={2.5}
+                      />
 
                       <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                        Re/Assign
+                        Reassign
                       </div>
                     </div>
                   </ReAssign>
                   <CreateUser>
-                    <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
-                      <div className=" group-hover:border-white group">
-                        <UserRound className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white  " />
-                      </div>
+                    <div className="flex gap-x-1.5 cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)] p-2 px-3 gap-1 hover:bg-black hover:text-white hover:border-white group">
+                      <HugeiconsIcon
+                        icon={UserIcon}
+                        className="size-4 lg:size-3.5 2xl:size-4  group-hover:text-white"
+                        strokeWidth={2.25}
+                      />
                       <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
                         Add Employee
                       </div>
@@ -199,21 +202,6 @@ export default function Header({ session }: Props) {
                   </CreateUser>{" "}
                 </>
               ) : (
-                // <div
-                //   className="cursor-pointer"
-                //   onClick={() => {
-                //     router.push("/devices");
-                //   }}
-                // >
-                //   <div className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-[7px] gap-1 hover:bg-black hover:text-white hover:border-white group">
-                //     <div className=" group-hover:border-white group">
-                //       <AlertTriangle className="size-4 lg:size-3.5 2xl:size-4 group-hover:text-white  " />
-                //     </div>
-                //     <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                //       Report an Issue
-                //     </div>
-                //   </div>
-                // </div>
                 ""
               )}
             </div>
@@ -225,13 +213,14 @@ export default function Header({ session }: Props) {
             {session?.user?.user?.role === 2 && (
               <button
                 onClick={() => router.push("/settings")}
-                className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2"
+                className=" bg-white hover:bg-black rounded-full hover:text-white flex items-center justify-center p-2"
                 onMouseEnter={() => {
                   handleMouseEnter("/settings");
                 }}
                 onMouseLeave={() => setIsHovered(false)}
               >
-                <Settings className="size-5" />
+                {/* <Settings className="size-5" /> */}
+                <HugeiconsIcon icon={Settings02Icon} className="size-6" />
               </button>
             )}
             {/* Query Icon */}
@@ -246,7 +235,7 @@ export default function Header({ session }: Props) {
                   onClick={toggleDropdown}
                   className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full"
                 >
-                  <UserRound className="size-5" />
+                  <HugeiconsIcon icon={UserIcon} className="size-6" />
                 </button>
                 {dropdownVisible && (
                   <div
