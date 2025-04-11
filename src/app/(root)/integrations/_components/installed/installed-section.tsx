@@ -10,6 +10,8 @@ import { useQueryState } from "nuqs";
 import { IntBack } from "../icons";
 import ConnectionCard from "./installed-section-connect-card";
 import UserByIntegrations from "./user-by-integrations";
+import { buttonVariants } from "@/components/buttons/Button";
+import Link from "next/link";
 
 export const InstalledSection = ({
   data,
@@ -108,9 +110,22 @@ export const InstalledSection = ({
             </>
           )}
           {data && data.length === 0 && (
-            <p className="text-lg font-gilroyMedium text-center">
-              No Integrations connected yet :(
-            </p>
+            <div className="flex  font-gilroySemiBold flex-col gap-6 my-5  justify-center items-center ">
+              <img
+                src="/media/no_data/Integrations.svg"
+                alt="No-Integration Logo"
+              />
+              <Link href={"/integration/discover"}>
+                <button
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full",
+                  })}
+                >
+                  Discover
+                </button>
+              </Link>
+            </div>
           )}
         </div>
       )}

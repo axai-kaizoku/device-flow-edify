@@ -49,7 +49,7 @@ function NewPage() {
       };
       if (activeTab === "inactive-assets") {
         query["filters"] = [];
-        query["isDeleted"] = true;
+        query["deleted_at"] = true;
       }
 
       if (activeTab === "assigned-assets")
@@ -245,7 +245,7 @@ function NewPage() {
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50   items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+        <div className="flex gap-4 sticky top-0 z-50 mb-4  items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
           <div className="flex gap-2 justify-center items-center">
             {/* <div
               className={buttonVariants({
@@ -537,6 +537,7 @@ function NewPage() {
         <TabsContent value="unassigned-assets">
           <AssignedAssets
             data={data}
+            status={status}
             assetsText="Unassigned Assets"
 
             // setAssets={setAssets}
@@ -545,6 +546,7 @@ function NewPage() {
         </TabsContent>
         <TabsContent value="inactive-assets">
           <AssignedAssets
+            status={status}
             assetsText="Inactive Assets"
             data={data}
 

@@ -9,6 +9,7 @@ import EditTeam from "../[id]/_components/edit-team";
 import { teamIcons } from "../icons";
 import CreateTeam from "./create-team";
 import PaginatedList from "./paginated-list";
+import { buttonVariants } from "@/components/buttons/Button";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
@@ -41,11 +42,18 @@ export default function TeamsMain({
     <>
       {teams?.teams?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
-          <teamIcons.no_team_display />
+          <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
+            <img src="/media/no_data/team.svg" alt="No-Teams Logo" />
+          </div>
           <CreateTeam onRefresh={onRefresh}>
-            <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+            <button
+              className={buttonVariants({
+                variant: "primary",
+                className: "w-full",
+              })}
+            >
               Add Team
-            </div>
+            </button>
           </CreateTeam>
         </div>
       ) : (

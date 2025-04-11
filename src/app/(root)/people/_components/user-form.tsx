@@ -1,7 +1,7 @@
 "use client";
 
 import BulkUpload from "@/components/bulk-upload";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { SelectInput } from "@/components/dropdown/select-input";
 import Spinner from "@/components/Spinner";
@@ -459,12 +459,12 @@ export const UserForm = ({
                 </div>
                 <button
                   disabled={loading}
+                  className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   onClick={() => {
                     setOpenGsuiteModal(true);
                   }}
-                  className={` bg-black rounded-md text-white font-gilroyMedium  text-[14px] py-2 px-[18px] ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
                 >
                   Import
                 </button>
@@ -541,27 +541,35 @@ export const UserForm = ({
 
               {/* Footer Buttons */}
               <DialogFooter className="flex w-full items-center justify-between">
-                <Button
-                  onClick={() => {}}
-                  className="rounded-lg border border-[#D0D5DD] px-6 bg-[#FFF]"
+                <button
+                  className={buttonVariants({
+                    variant: "outlineTwo",
+                    className: "w-full",
+                  })}
                 >
                   How to use?
-                </Button>
-                <div className="flex gap-3">
-                  <Button
-                    className="rounded-lg font-gilroyMedium border px-6 border-[#D0D5DD] bg-[#FFF]"
+                </button>
+                <div className="flex gap-2">
+                  <button
+                    className={buttonVariants({
+                      variant: "outlineTwo",
+                      className: "w-full",
+                    })}
                     onClick={() => setOpenGsuiteModal(false)}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    className="rounded-lg bg-black border font-gilroySemiBold px-10 border-[#B4B4B4] text-white"
+                  </button>
+                  <button
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
                     onClick={() => {
                       onGSuitSubmit();
                     }}
                   >
                     Connect
-                  </Button>
+                  </button>
                 </div>
               </DialogFooter>
             </DialogContent>
@@ -810,17 +818,21 @@ export const UserForm = ({
                   </div>
                 </div>
                 {/* {error && <span className="w-full text-red-400">{error}</span>} */}
-                <div className="flex gap-4 ">
-                  <Button
-                    type="button"
-                    className="rounded-lg text-sm  w-full font-gilroySemiBold border border-black"
+                <div className="flex gap-2 ">
+                  <button
+                    className={buttonVariants({
+                      variant: "outlineTwo",
+                      className: "w-full",
+                    })}
                     onClick={() => closeBtn(false)}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    className="rounded-lg text-sm w-full font-gilroySemiBold bg-black text-white "
+                  </button>
+                  <button
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
                     onClick={() => {
                       if (validateStepOne()) {
                         setNext(1);
@@ -828,8 +840,7 @@ export const UserForm = ({
                     }}
                   >
                     Next
-                    <ChevronRight color="white" />
-                  </Button>
+                  </button>
                 </div>
               </>
             ) : next === 1 ? (
@@ -1134,15 +1145,22 @@ export const UserForm = ({
                     <div className="pointer-events-none h-16 w-full" />
                   </div>
                 </div>
-                <div className="flex gap-4 absolute -bottom-2 w-full ">
-                  <Button
-                    className="rounded-lg text-sm  w-full font-gilroySemiBold border border-black"
+                <div className="flex gap-2 absolute -bottom-2 w-full ">
+                  <button
+                    className={buttonVariants({
+                      variant: "outlineTwo",
+                      className: "w-full",
+                    })}
+                    type="button"
                     onClick={() => setNext(0)}
                   >
                     Previous
-                  </Button>
-                  <Button
-                    className="rounded-lg text-sm bg-black text-white w-full font-gilroySemiBold border border-black "
+                  </button>
+                  <button
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
                     type="submit"
                     disabled={loading}
                   >
@@ -1152,7 +1170,6 @@ export const UserForm = ({
                       ) : (
                         <>
                           <span>Save Changes</span>
-                          <ChevronRight color="white" className="size-4" />
                         </>
                       )
                     ) : loading ? (
@@ -1163,7 +1180,7 @@ export const UserForm = ({
                         <ChevronRight color="white" className="size-4" />
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
             ) : (

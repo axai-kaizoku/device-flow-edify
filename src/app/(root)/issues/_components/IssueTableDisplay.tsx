@@ -53,8 +53,8 @@ function IssueTableDisplay({
   return (
     <>
       {status !== "pending" && data?.issues.length === 0 ? (
-        <div className="flex flex-col gap-6 justify-center items-center py-10">
-          <issueIcons.no_issues_icon />
+        <div className="flex  font-gilroySemiBold flex-col  gap-6 justify-center items-center py-10">
+          <img src="/media/no_data/issue.svg" alt="No-Issue Logo" />
         </div>
       ) : (
         <div className="rounded-lg border  bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">

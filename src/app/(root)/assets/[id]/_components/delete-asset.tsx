@@ -77,7 +77,7 @@ export const DeleteAsset = ({
               Cancel
             </button>
             <Button
-              className="w-full rounded-md bg-[#D92D20] text-white"
+              className="w-full rounded-md h-9 bg-[#D92D20] text-white"
               onClick={handleDelete}
             >
               Delete

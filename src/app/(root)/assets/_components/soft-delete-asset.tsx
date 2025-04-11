@@ -15,6 +15,7 @@ import { deleteDevice } from "@/server/deviceActions";
 import { useAlert } from "@/hooks/useAlert";
 import WarningDelete from "@/icons/WarningDelete";
 import { useToast } from "@/hooks/useToast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const SoftDeleteAsset = ({
   id,
@@ -29,7 +30,7 @@ export const SoftDeleteAsset = ({
   const { showAlert } = useAlert();
   const [open, setOpen] = useState(false);
   const { openToast } = useToast();
-
+  const queryClient = useQueryClient();
   const handleDelete = async () => {
     if (id) {
       try {
@@ -38,7 +39,11 @@ export const SoftDeleteAsset = ({
         // router.push("/assets?tab=un_assigned_assets");
         // router.refresh();
         openToast("success", "Asset deleted Successfully!");
-        onRefresh();
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-assets"],
+          exact: false,
+          refetchType: "all",
+        });
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the asset.",
@@ -71,12 +76,12 @@ export const SoftDeleteAsset = ({
           </DialogTitle>
 
           {/* Description */}
-          <DialogDescription className="p-1 text-sm text-gray-600">
+          <DialogDescription className="p-1 -mt-4 text-sm text-gray-600">
             Are you sure you want to delete this?
           </DialogDescription>
 
           {/* Footer Buttons */}
-          <DialogFooter className="flex w-full items-center justify-between ">
+          <DialogFooter className="flex w-full mt-1 items-center justify-between ">
             <button
               className={buttonVariants({
                 variant: "outlineTwo",
@@ -87,10 +92,8 @@ export const SoftDeleteAsset = ({
               Cancel
             </button>
             <Button
-              className={buttonVariants({
-                variant: "outlineTwo",
-                className: "w-full bg-[#D92D20] text-white border-none",
-              })}
+              variant="outlineTwo"
+              className={"w-full bg-[#D92D20] h-9 text-white border-none"}
               onClick={handleDelete}
             >
               Delete

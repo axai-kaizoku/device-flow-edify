@@ -6,7 +6,7 @@ import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import { Device, updateDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import { useQueryClient } from "@tanstack/react-query";
 
 const AssignAssetsForm = ({
@@ -82,20 +82,25 @@ const AssignAssetsForm = ({
         </div>
       </div>
 
-      <div className="flex gap-3 w-full  ">
-        <Button
-          type="button"
-          className="rounded-lg text-sm  w-full font-gilroySemiBold border border-black"
+      <div className="flex gap-2 w-full  ">
+        <button
+          className={buttonVariants({
+            variant: "outlineTwo",
+            className: "w-full",
+          })}
           onClick={() => {
             closeBtn(false);
           }}
         >
           Cancel
-        </Button>
+        </button>
 
-        <Button
+        <button
+          className={buttonVariants({
+            variant: "primary",
+            className: "w-full",
+          })}
           type="submit"
-          className="rounded-lg bg-black text-white text-sm  w-full font-gilroySemiBold border border-black"
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -105,11 +110,10 @@ const AssignAssetsForm = ({
             ) : (
               <>
                 <span>Assign</span>
-                <ChevronRight color="white" />
               </>
             )}
           </div>
-        </Button>
+        </button>
       </div>
     </div>
   );

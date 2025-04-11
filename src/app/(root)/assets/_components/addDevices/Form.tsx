@@ -448,7 +448,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
 
         {/* Navigation buttons */}
       </div>
-      <div className="flex gap-4 w-full">
+      <div className="flex gap-2 w-full">
         {step >= 1 ? (
           <div
             className={buttonVariants({

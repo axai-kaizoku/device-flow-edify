@@ -14,6 +14,7 @@ import { Button, buttonVariants } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import Spinner from "@/components/Spinner";
 import WarningIcon from "@/icons/WarningIcon";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const RestoreDevice = ({
   id,
@@ -28,7 +29,7 @@ export const RestoreDevice = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Loading state for restore action
   const [initText, setInitText] = useState("Restore Device");
-
+  const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -71,8 +72,11 @@ export const RestoreDevice = ({
                 try {
                   await updateDevice(id!, { deleted_at: null });
                   setOpen(false);
-                  // router.refresh();
-                  onRefresh();
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-assets"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

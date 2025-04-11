@@ -14,6 +14,7 @@ import { Button, buttonVariants } from "@/components/buttons/Button";
 import { updateDevice } from "@/server/deviceActions";
 import { Icons } from "@/components/icons";
 import WarningDelete from "@/icons/WarningDelete";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PermanentAssetsDelete = ({
   id,
@@ -26,7 +27,7 @@ export const PermanentAssetsDelete = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
+  const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -62,14 +63,19 @@ export const PermanentAssetsDelete = ({
           <Button
             className={buttonVariants({
               variant: "outlineTwo",
-              className: "w-full bg-[#D92D20] border-none text-white",
+              className:
+                "w-full h-9 bg-[#D92D20] border-none rounded-md text-white",
             })}
             onClick={async () => {
               if (id) {
                 try {
                   await updateDevice(id!, { orgId: null });
                   setOpen(false);
-                  onRefresh();
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-assets"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                   // router.push("/assets?tab=inactive_assets");
                   // router.refresh();
                 } catch (e: any) {}

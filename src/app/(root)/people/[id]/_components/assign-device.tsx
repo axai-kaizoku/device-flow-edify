@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -165,14 +165,20 @@ export default function AssignDevice({
                 </div>
               </div>
               <div className="flex gap-2 absolute bottom-0 w-full ">
-                <Button
-                  className="rounded-full w-1/2  text-base font-gilroySemiBold border border-black"
+                <button
+                  className={buttonVariants({
+                    variant: "outlineTwo",
+                    className: "w-full",
+                  })}
                   onClick={() => setOpen(false)}
                 >
                   Close
-                </Button>
-                <Button
-                  className="rounded-full w-1/2 text-base font-gilroySemiBold bg-black text-white "
+                </button>
+                <button
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full",
+                  })}
                   type="submit"
                   disabled={loading}
                 >
@@ -181,10 +187,9 @@ export default function AssignDevice({
                   ) : (
                     <>
                       <span>Assign</span>
-                      <ChevronRight color="white" />
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </form>
           </div>

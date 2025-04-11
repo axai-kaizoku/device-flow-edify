@@ -29,10 +29,12 @@ function AllOrdersTable({ data }: { data: any[] }) {
     <>
       {!isLoading && data?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
-          <orderIcons.no_order_display />
+          <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
+            <img src="/media/no_data/Orders.svg" alt="No-Orders Logo" />
+          </div>
 
           <Link href={"/store"}>
-            <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
+            <div className="py-2 px-5 text-sm rounded-md hover:bg-gray-800 text-white font-gilroySemiBold bg-black">
               Shop Now
             </div>
           </Link>

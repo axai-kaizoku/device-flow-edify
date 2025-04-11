@@ -19,7 +19,7 @@ function TabDisplay() {
         return (
           <Suspense
             fallback={
-              <div className="flex justify-center items-center w-full h-[500px]">
+              <div className="flex justify-center items-center w-full h-[80vh]">
                 <DeviceFlowLoader />
               </div>
             }

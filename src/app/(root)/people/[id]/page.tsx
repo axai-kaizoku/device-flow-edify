@@ -76,6 +76,7 @@ export default function UserPage({ params }: UserPageProps) {
   }
   return (
     <div className="px-4 overflow-y-scroll h-full mt-4">
+      {/* {JSON.stringify(user)} */}
       <div className="flex gap-4 sticky top-0 z-50  justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
         <div className="flex justify-center items-center gap-2">
           <AssignDevice userData={user}>

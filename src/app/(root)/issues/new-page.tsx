@@ -199,7 +199,7 @@ function NewPage() {
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex  mb-3 gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+        <div className="flex  mb-4 gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
           <div className="flex gap-2">
             <Select value={activeTab} onValueChange={setActiveTab}>
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] ">

@@ -18,6 +18,7 @@ import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
 import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
+import { buttonVariants } from "@/components/buttons/Button";
 
 export default function UserMain({
   data,
@@ -86,11 +87,18 @@ export default function UserMain({
       <div>
         {!isLoading && data?.users?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-8">
-            <Icons.no_people_display />
+            <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
+              <img src="/media/no_data/people.svg" alt="No-People Logo" />
+            </div>
             <CreateUser>
-              <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
-                Add User
-              </div>
+              <button
+                className={buttonVariants({
+                  variant: "primary",
+                  className: "w-full",
+                })}
+              >
+                Add Member
+              </button>
             </CreateUser>
           </div>
         ) : (

@@ -53,7 +53,8 @@ export const TableFooter = styled.footer`
 `;
 export const TableBody = styled.tbody``;
 export const TableContainer = styled.div`
-  height: 450px;
+  height: 66vh;
+
   overflow: overlay;
   text-align: center;
   background-color: ${Colors.white_1};

@@ -21,6 +21,7 @@ import { AssignAsset } from "./assign-asset";
 import { RestoreDevice } from "./restore-assets";
 import { PermanentAssetsDelete } from "./permanent-assets-delete";
 import { buttonVariants } from "@/components/buttons/Button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function AssignedAssets({
   data,
@@ -88,28 +89,40 @@ function AssignedAssets({
       <>
         {!isLoading && data?.devices?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
-            <assetsIcons.no_assets_display />
+            {/* <assetsIcons.no_assets_display /> */}
+            <img src="/media/no_data/assets.svg" alt="No-Assets Logo" />
             <CreateDevice>
-              <div className="flex items-center relative py-2 border-2 border-black gap-1  pl-3 pr-3  text-white  rounded-lg bg-black transition-all duration-300">
-                {/* <AssetsTabIcon className=" size-5" color="#fff" /> */}
-                <span className="text-sm whitespace-nowrap  font-gilroyMedium rounded-lg ">
-                  Add Device
-                </span>
-              </div>
+              <button
+                className={buttonVariants({
+                  variant: "primary",
+                  className: "w-full",
+                })}
+              >
+                Add Device
+              </button>
             </CreateDevice>
           </div>
         ) : (
           <div className="rounded-lg border border-gray-200  bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
             {" "}
             <div className="flex justify-between items-center">
-              <div className=" flex gap-3 w-fit">
-                <h1 className="text-base pl-6 font-gilroyMedium">
-                  {assetsText}
-                </h1>
-                <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-                  {data?.total} Assets
-                </h1>
-              </div>
+              {status === "pending" ? (
+                <div className="flex gap-3 ml-4">
+                  <Skeleton className="text-base pl-6 h-6 w-32" />
+                  <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full   h-6 w-16" />
+                  <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full  h-6 w-20" />
+                  <Skeleton className="px-2 justify-center items-center font-gilroyMedium flex text-xs rounded-full   h-6 w-24" />
+                </div>
+              ) : (
+                <div className=" flex gap-3 w-fit">
+                  <h1 className="text-base pl-6 font-gilroyMedium">
+                    {assetsText}
+                  </h1>
+                  <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                    {data?.total} Assets
+                  </h1>
+                </div>
+              )}
 
               {selectedIds.length > 0 && (
                 <DeleteModal
@@ -382,7 +395,7 @@ function AssignedAssets({
                             </RestoreDevice>
                           </div>
                         ) : (
-                          ""
+                          <></>
                         ),
                     },
                   ]}

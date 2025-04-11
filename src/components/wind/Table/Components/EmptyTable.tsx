@@ -18,7 +18,7 @@ export const EmptyTable = ({ title }: EmptyTableProps) => {
     //     justifyContent: "center",
     //   }}
     // >
-    <div className="h-[60vh] flex justify-center items-center w-full">
+    <div className="h-[70vh] flex justify-center items-center w-full">
       <DeviceFlowLoader />
       {/* <EmptyTableContainer> */}
       {/* <EmptyState>

@@ -81,7 +81,7 @@ export const UnassignAsset = ({
               Cancel
             </button>
             <Button
-              className="w-full rounded-md bg-black text-white"
+              className="w-full rounded-md h-9 bg-black text-white"
               onClick={handleDelete}
             >
               {loading ? (

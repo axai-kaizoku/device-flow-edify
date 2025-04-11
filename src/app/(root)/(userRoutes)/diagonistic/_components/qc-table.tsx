@@ -8,6 +8,8 @@ import {
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import ReportPreview from "./report-preview";
 import AISummaryModal from "./AiSummaryModal";
+import axios from "axios";
+import { DiagonisticIcons } from "./icons";
 import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
 import { getTokenFromSession } from "@/server/helper";
@@ -51,30 +53,34 @@ function QcTable({
   };
 
   useEffect(() => {
-    if(!isModalOpen){
-      setAiSummaryData(null)
+    if (!isModalOpen) {
+      setAiSummaryData(null);
     }
-  }, [isModalOpen])
+  }, [isModalOpen]);
 
   useEffect(() => {
-    if(!isModalOpenAll){
-      setAiAllSummaryData(null)
+    if (!isModalOpenAll) {
+      setAiAllSummaryData(null);
     }
-  }, [isModalOpenAll])
+  }, [isModalOpenAll]);
 
   const getAdminSummary = async () => {
     const token = await getTokenFromSession();
-    fetch(`https://gcp-api.edify.club/edifybackend/v1/quality-check/org-report/ai-summary/${UserObject.orgId._id}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        "Content-Type": "application/json",
+    fetch(
+      `https://gcp-api.edify.club/edifybackend/v1/quality-check/org-report/ai-summary/${UserObject.orgId._id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
-    }).then(res => res.json())
-      .then(data => {
+    )
+      .then((res) => res.json())
+      .then((data) => {
         setAiAllSummaryData(data);
       });
-  }
+  };
 
   const handleDownloadReport = async (recordData: any) => {
     const res = await downloadReport({ userId: recordData._id });
@@ -97,31 +103,41 @@ function QcTable({
   };
 
   return (
-    <div className="overflow-y-auto">
-      <div className="flex gap-4 mb-4 sticky top-0 z-50 items-center justify-end p-3 rounded-[10px] border border-[#0000001A] bg-white">
-        <div className="flex gap-2">
-          <AdminAISummaryModal isModalOpenAll={isModalOpenAll} setIsModalOpenAll={setIsModalOpenAll} data={aiAllSummaryData}>
-          <div
-            className="bg-black text-white font-gilroySemiBold rounded-md px-4 py-2"
-            onClick={() => {
-              setIsModalOpenAll(true)
-              getAdminSummary()
-            }}
-          >
-            Generate AI Summary
+    <div className="overflow-y-auto ">
+      <div className="rounded-lg border border-gray-200 bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
+        {data?.totalRecords !== 0 ? (
+          <div className="flex justify-between items-center">
+            <div className="flex gap-3 w-fit">
+              <h1 className="text-base pl-6 font-gilroyMedium">
+                Total Reports
+              </h1>
+              <h1 className="text-xs font-gilroyMedium flex justify-center items-center rounded-full px-2.5 bg-[#F9F5FF] text-[#6941C6]">
+                {data?.totalRecords} Reports
+              </h1>
+            </div>
+            <div className="flex gap-4 mb-4 sticky top-0 z-50 items-center justify-end p-3 rounded-[10px] border border-[#0000001A] bg-white">
+              <div className="flex gap-2">
+                <AdminAISummaryModal
+                  isModalOpenAll={isModalOpenAll}
+                  setIsModalOpenAll={setIsModalOpenAll}
+                  data={aiAllSummaryData}
+                >
+                  <div
+                    className="bg-black text-white font-gilroySemiBold rounded-md px-4 py-2"
+                    onClick={() => {
+                      setIsModalOpenAll(true);
+                      getAdminSummary();
+                    }}
+                  >
+                    Generate AI Summary
+                  </div>
+                </AdminAISummaryModal>
+              </div>
+            </div>
           </div>
-          </AdminAISummaryModal>
-        </div>
-      </div>
-      <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-3 w-fit">
-            <h1 className="text-base pl-6 font-gilroyMedium">Total Reports</h1>
-            <h1 className="text-xs font-gilroyMedium flex justify-center items-center rounded-full px-2.5 bg-[#F9F5FF] text-[#6941C6]">
-              {data?.totalRecords} Reports
-            </h1>
-          </div>
-        </div>
+        ) : (
+          <></>
+        )}
 
         {/* Hidden container to render the report for PDF generation */}
         {/* <div
@@ -136,12 +152,8 @@ function QcTable({
           <div className="flex flex-col gap-2">
             <div>
               {data?.totalRecords === 0 ? (
-                <div className="flex justify-center items-center h-[60vh]">
-                  <img
-                    src="/media/logo/no_reports_display.svg"
-                    className=""
-                    alt=""
-                  />
+                <div className="flex justify-center items-center h-[80vh]">
+                  <DiagonisticIcons.no_scan_display />
                 </div>
               ) : sessionRole === 2 ? (
                 <Table
