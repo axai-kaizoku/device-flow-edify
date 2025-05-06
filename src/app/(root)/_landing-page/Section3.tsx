@@ -10,7 +10,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <div
-      className={`flex w-full flex-col gap-y-16 max-lg:gap-y-10 bg-zinc-800 max-sm:px-1 max-lg:px-16 px-32 py-20 max-lg:py-14 `}
+      className={`flex w-full flex-col gap-y-16 max-lg:gap-y-10 bg-zinc-800 max-sm:px-1 max-lg:px-16 px-32 py-20 max-lg:py-14`}
       ref={ref}
     >
       <div className="flex items-center px-0.5 max-lg:mx-auto">
@@ -47,7 +47,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img
@@ -107,7 +107,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img
@@ -168,7 +168,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img
@@ -226,7 +226,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img
@@ -285,7 +285,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img
@@ -342,7 +342,7 @@ export const Section3 = forwardRef<HTMLDivElement>((_, ref) => {
               className={
                 "flex w-96 flex-col items-start justify-end gap-y-1.5 rounded-3xl border border-solid border-zinc-600 p-10"
               }
-              style={{ height: "100%", width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <div className="flex flex-col items-center pl-[0.06px]">
                 <img

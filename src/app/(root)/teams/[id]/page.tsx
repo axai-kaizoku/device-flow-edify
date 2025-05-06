@@ -1,13 +1,13 @@
 "use client";
 import { CombinedContainer } from "@/components/container/container";
 
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getTeamById, Team } from "@/server/teamActions";
 import { useQuery } from "@tanstack/react-query";
 import TeamActions from "./_components/team-action";
 import TeamHeader from "./_components/team-header";
 import TeamMembers from "./_components/team-members";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 interface TeamPageProps {
   params: { id: string };
@@ -21,11 +21,21 @@ export default function TeamPage({ params }: TeamPageProps) {
     refetchOnWindowFocus: false,
   });
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
+
   return (
     <CombinedContainer title="Teams">
       <div className="flex flex-col hide-scrollbar gap-4 sticky top-0 z-50 p-3 rounded-lg border border-[#0000001A] bg-white">
         <div className="text-[#7F7F7F] flex w-full text-nowrap text-sm font-gilroySemiBold">
-          <TeamActions team={data} />
+          <TeamActions
+            team={data}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+          />
         </div>
       </div>
 
@@ -38,11 +48,17 @@ export default function TeamPage({ params }: TeamPageProps) {
               image={data?.image}
               title={data?.title ?? "-"}
               description={data?.description ?? "-"}
-              manager={data.manager}
+              active_manager={data?.manager[0]?.first_name ?? "-"}
             />
           )}
         </div>
-        <TeamMembers teamData={data} status={status} />
+        <TeamMembers
+          teamData={data}
+          status={status}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          handleSelectionChange={handleSelectionChange}
+        />
       </div>
     </CombinedContainer>
   );

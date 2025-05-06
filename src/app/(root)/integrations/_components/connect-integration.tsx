@@ -4,11 +4,10 @@ import { Button } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,35 +15,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { IntegrationType } from "@/server/integrationActions";
-import {
-  ArrowDataTransferHorizontalIcon,
-  CheckmarkCircle04Icon,
-  Edit02Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { getGSuiteAuthUrl } from "@/server/orgActions";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
 import { BlueTickCircle, BothSideArrows } from "./icons";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 export const ConnectIntegration = ({
-  children,
+  loading,
   integrationData,
   mutation,
-  // open,
-  // setOpen,
-  onClick,
-}: {
-  // open?: boolean;
-  // setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  onClick?: () => void;
-  children?: React.ReactNode;
+  gSuiteMutation,
+  open,
+  setOpen,
+}: // onClick,
+{
+  open?: boolean;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  // onClick?: () => void;
+  loading?: boolean;
   integrationData?: IntegrationType;
+  gSuiteMutation?: UseMutationResult<
+    any,
+    Error,
+    {
+      id: string;
+    },
+    unknown
+  >;
   mutation?: UseMutationResult<
     any,
     Error,
@@ -59,14 +61,11 @@ export const ConnectIntegration = ({
     unknown
   >;
 }) => {
-  const [open, setOpen] = useState(false);
-  const code = useSearchParams().get("code");
+  const intId = useSearchParams().get("integrationId");
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const redirectUri = `http://localhost:3000/integrations/${integrationData?._id}`;
 
-  // Generic change handler for input fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -75,100 +74,15 @@ export const ConnectIntegration = ({
     }));
   };
 
+  const [hasTriggered, setHasTriggered] = useState(false);
+
   useEffect(() => {
-    const postGSuiteData = async () => {
-      const clientId = sessionStorage.getItem("client_id");
-      const clientSecret = sessionStorage.getItem("client_secret");
-
-      const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          code: code as string,
-          client_id: clientId,
-          client_secret: clientSecret,
-          redirect_uri: redirectUri,
-          access_type: "offline",
-          prompt: "consent",
-          grant_type: "authorization_code",
-        }),
-      });
-
-      const tokenData = await tokenRes.json();
-      const accessToken = tokenData.access_token;
-
-      console.log(accessToken);
-      if (accessToken) {
-        const profileRes = await fetch(
-          "https://admin.googleapis.com/admin/directory/v1/users?customer=my_customer&maxResults=10&orderBy=email",
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        const profile = await profileRes.json();
-        // console.log(profile);
-        // profileData = profile;
-
-        const mappedUsers = profile?.users?.map((user) => {
-          const primaryEmail =
-            user.emails.find((email) => email?.primary)?.address || "";
-          return {
-            id: user?.id, // Accepts string
-            name: user?.name?.fullName, // Accepts string
-            email: primaryEmail, // Accepts string
-            lastActivity: user?.lastLoginTime, // Accepts string
-            presence: user?.suspended ? "false" : "true", // Accepts string
-            online: "", // Leave as empty string for now
-          };
-        });
-
-        console.log({ mappedUsers });
-        sessionStorage.setItem("store", JSON.stringify(mappedUsers));
-
-        try {
-          mutation.mutate(
-            {
-              payload: {
-                platform: integrationData?.platform,
-                credentials: { ...formData },
-                store: mappedUsers,
-                newprice: customPrice
-                  ? {
-                      plan: selectedPlan,
-                      price: parseInt(customPrice),
-                    }
-                  : {
-                      plan: selectedPlan,
-                      price: parseInt(customPrice),
-                    },
-              },
-            },
-            {
-              onSuccess: () => {
-                setOpen(false);
-                setFormData({});
-              },
-            }
-          );
-          // setOpen(false);
-
-          // console.log(res);
-
-          // if (res) ;
-        } catch (error) {
-          console.error(error);
-        }
-
-        return;
-      }
-    };
-
-    if (code) {
-      postGSuiteData();
+    if (intId && !hasTriggered) {
+      gSuiteMutation.mutate({ id: intId });
+      setHasTriggered(true);
     }
-  }, [code]);
+  }, [intId, hasTriggered]);
 
-  // Validate form fields
   const validateFields = (): boolean => {
     const newErrors: { [key: string]: string } = {};
     integrationData?.credentials.forEach((credential) => {
@@ -185,63 +99,43 @@ export const ConnectIntegration = ({
 
   const onGSuitSubmit = async () => {
     if (validateFields()) {
-      console.log("Form Data:", formData);
+      // Get the current URL
+      const currentUrl = window.location.href;
 
-      const clientId = formData.client_id;
-      const clientSecret = formData.client_secret;
-
-      if (!code) {
-        const scope =
-          "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/admin.directory.user.readonly";
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${encodeURIComponent(
-          scope
-        )}&access_type=offline&prompt=consent`;
-
-        // Store credentials in sessionStorage (or secure state handling)
-        sessionStorage.setItem("client_id", clientId);
-        sessionStorage.setItem("client_secret", clientSecret);
-
-        window.location.href = authUrl;
-        return;
-      }
+      window.location.href = await getGSuiteAuthUrl({
+        bulkUpload: false,
+        price: {
+          plan: selectedPlan,
+          price: parseInt(customPrice),
+        },
+        redirectUri: currentUrl,
+      });
+      return;
+     
     }
   };
 
   // Handle form submission
   const onSubmit = async () => {
     if (validateFields()) {
-      // console.log("Form Data:", formData);
 
       try {
-        mutation.mutate(
-          {
-            payload: {
-              platform: integrationData?.platform,
-              credentials: formData,
-              newprice: customPrice
-                ? {
-                    plan: selectedPlan,
-                    price: parseInt(customPrice),
+        mutation.mutate({
+          payload: {
+            platform: integrationData?.platform,
+            credentials: formData,
+            newprice: customPrice
+              ? {
+                  plan: selectedPlan,
+                  price: parseInt(customPrice),
+                }
+              : integrationData?.price?.filter((plan) => {
+                  if (plan.plan === selectedPlan) {
+                    return plan._id;
                   }
-                : {
-                    plan: selectedPlan,
-                    price: parseInt(customPrice),
-                  },
-            },
+                })[0],
           },
-          {
-            onSuccess: () => {
-              setOpen(false);
-              setFormData({});
-            },
-          }
-        );
-
-        // console.log(res);
-        // setOpen(false);
-        // setFormData({});
-
-        // if (res) setOpen(false);
+        });
       } catch (error) {
         console.error(error);
       }
@@ -271,7 +165,6 @@ export const ConnectIntegration = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger onClick={onClick}>{children}</DialogTrigger>
       <DialogContent className="rounded-2xl bg-white shadow-lg max-w-md p-6 text-center">
         <div className="flex justify-center">
           <div className="flex gap-6 justify-center items-center">
@@ -288,38 +181,39 @@ export const ConnectIntegration = ({
             />
           </div>
         </div>
-        {/* {JSON.stringify(integrationData)} */}
 
         <DialogTitle className="text-lg font-gilroySemiBold">
           Connect Deviceflow to {integrationData?.platform}
         </DialogTitle>
 
         <div className="h-[1px] bg-gray-200 mb-3 -mx-6"></div>
-
-        {/* Dynamic Form fields */}
-        <div className="flex flex-col gap-5">
-          {integrationData?.credentials.map((credential) => (
-            <FormField
-              key={credential}
-              label={credential
-                .replace(/_/g, " ")
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")}
-              id={credential}
-              error={errors[credential]}
-              name={credential}
-              value={formData[credential] || ""}
-              type="text"
-              onChange={handleChange}
-              className="placeholder:text-neutral-400 h-10 text-sm placeholder:text-xs rounded-md"
-              placeholder={`Enter ${credential.replace(/_/g, " ")}`}
-            />
-          ))}
-        </div>
+        {integrationData?.credentials.length > 0 ? (
+          <div className="flex flex-col gap-5">
+            {integrationData?.credentials.map((credential) => (
+              <FormField
+                key={credential}
+                label={credential
+                  .replace(/_/g, " ")
+                  .split(" ")
+                  .map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}
+                id={credential}
+                error={errors[credential]}
+                name={credential}
+                value={formData[credential] || ""}
+                type="text"
+                onChange={handleChange}
+                className="placeholder:text-neutral-400 h-10 text-sm placeholder:text-xs rounded-md"
+                placeholder={`Enter ${credential.replace(/_/g, " ")}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
 
         <h2 className="text-base/4 text-left font-gilroySemiBold my-1.5">
           Billing
@@ -408,20 +302,22 @@ export const ConnectIntegration = ({
           <div className="flex gap-3">
             <Button
               className="rounded-lg text-sm bg-white text-black w-fit font-gilroyMedium tracking-wide border hover:border-black"
+              disabled={mutation.isPending || loading}
               onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
             <Button
               className="rounded-lg text-sm bg-black text-white w-full font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
-              disabled={mutation.isPending}
+              disabled={mutation.isPending || loading}
+              type="button"
               onClick={() => {
                 integrationData?.platform.toLowerCase().includes("suite")
                   ? onGSuitSubmit()
                   : onSubmit();
               }}
             >
-              {mutation.isPending ? (
+              {mutation.isPending || loading ? (
                 <>
                   Connect <Loader2 className="animate-spin size-4" />
                 </>

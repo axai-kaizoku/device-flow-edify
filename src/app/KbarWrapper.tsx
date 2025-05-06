@@ -2,12 +2,12 @@
 import { Icons } from "@/components/icons";
 import KBarIcons from "@/icons/KBarIcons";
 import {
-  KBarProvider,
+  KBarAnimator,
   KBarPortal,
   KBarPositioner,
-  KBarAnimator,
-  KBarSearch,
+  KBarProvider,
   KBarResults,
+  KBarSearch,
   useMatches,
 } from "kbar";
 import {
@@ -142,9 +142,7 @@ function RenderResults() {
           <div className="text-gray-500 px-4 py-2">{item}</div>
         ) : (
           <div
-            className={`px-3 flex justify-between items-center py-2 rounded-md cursor-pointer hover:bg-[#f5f5f5] ${
-              "bg-white text-black"
-            }`}
+            className={`px-3 flex justify-between items-center py-2 rounded-md cursor-pointer hover:bg-[#f5f5f5] ${"bg-white text-black"}`}
           >
             <div className="flex gap-[10px] items-center">
               <div>{item?.logo}</div>

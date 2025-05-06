@@ -1,8 +1,9 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import {
   Select,
   SelectContent,
@@ -10,16 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import AssetsTabIcon from "@/icons/AssetsTabIcon";
+import { bulkAssetsUnassign, bulkDeleteAssets } from "@/server/deviceActions";
 import { assignedAssets, userFilterFields } from "@/server/filterActions";
 import { Plus, Search, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
+import { toast } from "sonner";
+import { DeleteModal } from "../people/_components/deleteUserModal";
 import CreateDevice from "./_components/addDevices/_components/create-device";
 import AssignedAssets from "./_components/assigned-assets";
-import { buttonVariants } from "@/components/buttons/Button";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
-import { useRouter } from "next/navigation";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -29,6 +29,9 @@ function NewPage() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "assigned-assets",
   });
+  const queryClient = useQueryClient();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [unassignOpen, setUnassignOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const actualSearchTerm = useDeferredValue(searchTerm);
@@ -39,6 +42,9 @@ function NewPage() {
   ]); // Store dynamic filter fields
   const [availableOperators, setAvailableOperators] =
     useState(generalOperators);
+  // --------------
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
   const router = useRouter();
   const { data, isLoading, error, refetch, status } = useQuery({
     queryKey: ["fetch-assets", activeTab, actualSearchTerm],
@@ -49,7 +55,7 @@ function NewPage() {
       };
       if (activeTab === "inactive-assets") {
         query["filters"] = [];
-        query["deleted_at"] = true;
+        query["isDeleted"] = true;
       }
 
       if (activeTab === "assigned-assets")
@@ -241,6 +247,79 @@ function NewPage() {
 
   //   fetchTabData();
   // }, [activeTab]); // Dependency on activeTab to trigger the effect
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      toast.error(`No Asset selected for deletion`);
+      return;
+    }
+
+    try {
+      // Determine delete type based on active tab
+      const deleteType = activeTab === "inactive-assets" ? "hard" : "soft";
+      const res = await bulkDeleteAssets(selectedIds, deleteType);
+
+      if (res.status !== 200) throw new Error("Failed to delete Assets");
+
+      setDeleteOpen(false);
+      toast.success(
+        `Assets ${
+          deleteType === "soft" ? "deactivated" : "permanently deleted"
+        } successfully!`
+      );
+      setSelectedIds([]);
+
+      // Invalidate and refetch the query
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-assets", activeTab, actualSearchTerm],
+        exact: true,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-assets", "inactive-assets", actualSearchTerm],
+        exact: true,
+      });
+
+      await refetch();
+    } catch (error) {
+      toast.error(`Failed to delete Assets: ${error}`);
+    }
+  };
+
+  const handleBulkUnassign = async () => {
+    if (selectedIds.length === 0) {
+      toast.error(`No Asset selected for deletion`);
+      return;
+    }
+
+    try {
+      const res = await bulkAssetsUnassign(selectedIds);
+
+      if (res.status !== 200) throw new Error("Failed to delete Assets");
+
+      setUnassignOpen(false);
+      toast.success(`Assets Unassigned successfully!`);
+      setSelectedIds([]);
+
+      // Invalidate and refetch the query
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-assets", activeTab, actualSearchTerm],
+        exact: true,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-assets", "unassigned-assets", actualSearchTerm],
+        exact: true,
+      });
+      await refetch();
+    } catch (error) {
+      toast.error(`Failed to Unassign Assets: ${error}`);
+    }
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
 
   return (
     <section className="w-full h-fit relative  overflow-hidden">
@@ -517,6 +596,41 @@ function NewPage() {
                 Add Device
               </div>
             </CreateDevice>
+
+            {selectedIds.length > 0 && (
+              <>
+                <DeleteModal
+                  handleBulkAction={handleBulkDelete}
+                  open={deleteOpen}
+                  setOpen={setDeleteOpen}
+                  type="Delete"
+                >
+                  <button
+                    // onClick={handleBulkDelete}
+                    className="flex cursor-pointer items-center rounded-lg  border-[rgba(0,0,0,0.2)] px-4 py-2 gap-1 bg-black text-white group"
+                  >
+                    <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
+                      Delete
+                    </span>
+                  </button>
+                </DeleteModal>
+
+                {activeTab === "assigned-assets" && (
+                  <DeleteModal
+                    handleBulkAction={handleBulkUnassign}
+                    open={unassignOpen}
+                    setOpen={setUnassignOpen}
+                    type="Unassign"
+                  >
+                    <div className={buttonVariants({ variant: "outlineTwo" })}>
+                      <div className="  text-nowrap text-sm font-gilroyMedium">
+                        Bulk Unassign
+                      </div>
+                    </div>
+                  </DeleteModal>
+                )}
+              </>
+            )}
           </div>
         </div>
         <TabsContent value="assigned-assets">
@@ -530,6 +644,10 @@ function NewPage() {
             assetsText="Assigned Assets"
             data={data}
             status={status}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            handleBulkDelete={handleBulkDelete}
+            handleSelectionChange={handleSelectionChange}
             // setAssets={setAssets}
             // onRefresh={refreshAssetsData}
           />
@@ -539,6 +657,10 @@ function NewPage() {
             data={data}
             status={status}
             assetsText="Unassigned Assets"
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            handleBulkDelete={handleBulkDelete}
+            handleSelectionChange={handleSelectionChange}
 
             // setAssets={setAssets}
             // onRefresh={refreshAssetsData}
@@ -549,6 +671,10 @@ function NewPage() {
             status={status}
             assetsText="Inactive Assets"
             data={data}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            handleBulkDelete={handleBulkDelete}
+            handleSelectionChange={handleSelectionChange}
 
             // setAssets={setAssets}
             // onRefresh={refreshAssetsData}

@@ -28,7 +28,7 @@ function ConnectionCard({
         </div>
       </div>
       <h1 className="text-xl/5 -mb-1 font-gilroySemiBold">{name ?? "Slack"}</h1>
-      <p className="text-[#7F7F7F] text-sm font-gilroyMedium">
+      <p className="text-[#7F7F7F] text-sm font-gilroyMedium line-clamp-2">
         {description ?? "-"}
       </p>
       <div className="h-[1px] bg-[#f3f3f3]"></div>

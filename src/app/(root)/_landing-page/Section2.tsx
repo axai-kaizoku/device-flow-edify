@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { Slide } from "react-awesome-reveal";
+import { MeetAIAgents } from "./meet-ai-agents";
 
 export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
   return (
@@ -35,6 +36,14 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
             style={{ height: 600 }}
           />
         </div>
+      </div>
+
+      <div className="max-lg:hidden">
+        <MeetAIAgents />
+        {/* desktop */}
+      </div>
+
+      <div className="pl-36 pr-36 max-lg:hidden">
         <Slide direction="down" fraction={1} triggerOnce>
           <div id="how-to-deviceflow">
             <div className=" flex flex-col w-full items-start justify-center gap-4 relative mt-16 pl-36 pr-36 ">
@@ -121,7 +130,14 @@ export const Section2 = forwardRef<HTMLDivElement>((_, ref) => {
               />
             </div>
           </div>
+        </div>
 
+        <div className="hidden max-lg:block">
+          <MeetAIAgents />
+          {/* mobile */}
+        </div>
+
+        <div className="w-[90%] mx-auto my-12 flex flex-col gap-20 ">
           <div className="gap-3">
             <div className="text-[#6B7280] text-center font-gilroyBold">
               Features

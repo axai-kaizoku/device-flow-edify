@@ -4,9 +4,10 @@ import React, { useRef, useState } from "react";
 import { FormErrors, KeyboardDetailsInterface } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { Trash2, X } from "lucide-react";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { getImageUrl } from "@/server/orgActions";
 import UploadImageIcon from "@/icons/UploadImageIcon";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 
 interface KeyboardDetailsProps {
   data: KeyboardDetailsInterface;
@@ -23,7 +24,7 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [displayFile, setDisplayFile] = useState("");
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
-  const { openToast } = useToast();
+
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -73,7 +74,7 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
           setDisplayFile(URL.createObjectURL(file));
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error", "Some Error while uploading the File");
+          toast.error("Some Error while uploading the File");
         } finally {
           setIsUploading(false); // Stop showing the progress bar
           setProgress(0);
@@ -132,6 +133,29 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
             placeholder="eg: EDIFYXXXX, etc"
           />
         </div>
+
+        <div className="flex-1">
+          <SelectDropdown
+            options={[
+              { label: "Good", value: "Good" },
+              { label: "Excellent", value: "Excellent" },
+              { label: "Fair", value: "Fair" },
+            ]}
+            onSelect={(data) => {
+              const updatedFormData = {
+                ...formData,
+                device_condition: data?.value,
+              };
+              setFormData(updatedFormData);
+              setData(updatedFormData);
+            }}
+            label="Condition"
+            error={errors?.device_condition}
+            value={`${formData?.device_condition ?? ""}`}
+            placeholder="eg: Best, etc"
+            className="rounded-md  text-black border border-[#5F5F5F]"
+          />
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5 mt-5">
@@ -169,10 +193,6 @@ const MouseForm: React.FC<KeyboardDetailsProps> = ({
                     !iframe.contentDocument ||
                     iframe.contentDocument.title === ""
                   ) {
-                    // openToast(
-                    //   "error",
-                    //   "File preview failed. It may not be viewable."
-                    // );
                   }
                 }}
               />

@@ -6,25 +6,29 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { User } from "@/server/userActions";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { IntBack, IntRight } from "../icons";
+import { IntRight } from "../icons";
+import { formatNumber } from "@/lib/utils";
 
 export default function AllIntegrationsDisplay({
   children,
   data,
   allIntegrations,
+  isIntegrationFilter = false,
   showArrow = true,
 }: {
   children: React.ReactNode;
   data?: User;
+  isIntegrationFilter?: boolean;
   allIntegrations?: User["integrations"];
   showArrow?: boolean;
 }) {
@@ -39,94 +43,176 @@ export default function AllIntegrationsDisplay({
           <div className="flex justify-between items-center pb-5">
             <DialogTitle className="text-lg font-gilroySemiBold">
               <div className="flex gap-2 items-center">
-                <IntBack onClick={() => setOpen(false)} />
+                <div className="bg-neutral-100 size-7 mr-2 rounded-full cursor-pointer flex items-center justify-center">
+                  <HugeiconsIcon
+                    icon={Cancel01Icon}
+                    onClick={() => setOpen(false)}
+                    className="size-4"
+                    strokeWidth={1.8}
+                  />
+                </div>
                 <span className="text-base font-gilroySemiBold">
                   Integrations
                 </span>
               </div>
             </DialogTitle>
-            <div className="p-2">
-              <Select open={dropdownOpen} onOpenChange={setDropdownOpen}>
-                <SelectTrigger
+            <div className="">
+              <Popover open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                <PopoverTrigger
+                  asChild
                   onMouseEnter={() => setDropdownOpen((prev) => !prev)}
-                  className="w-full ring-1 px-2 py-1.5 ring-green-800 font-gilroyMedium text-green-900"
+                  className="w-full ring-1 p-1.5 text-sm ring-green-800 rounded-md font-gilroyMedium text-green-900"
                 >
-                  <span>{`₹${data?.totalCostPerUser}/month`}</span>
-                </SelectTrigger>
-                <SelectContent
+                  <span>{`₹${formatNumber(
+                    data?.totalCostPerUser ?? 0
+                  )}/month`}</span>
+                </PopoverTrigger>
+                <PopoverContent
                   onMouseLeave={() => setDropdownOpen((prev) => !prev)}
                   align="end"
+                  className="min-w-0 w-fit p-1"
                   side="bottom"
-                  className="min-w-0 w-fit"
                 >
-                  {data?.integrations?.map((p) => (
-                    <React.Fragment key={p?.platform}>
-                      <SelectItem
-                        value={p?.platform}
-                        className=" focus:text-neutral-400 cursor-default select-auto focus:bg-transparent bg-transparent p-2 mr-0 pr-0 font-gilroyMedium text-neutral-400 w-full flex justify-between items-center"
-                      >
-                        <div className=" flex justify-between items-center w-full gap-x-12">
-                          <span>{p?.platform}</span>{" "}
-                          <span>{`₹${p?.price}/month`}</span>
-                        </div>
-                      </SelectItem>
-                      <div className="w-full flex justify-center items-center">
-                        <div
-                          className="w-[90%] h-px my-1"
-                          style={{
-                            backgroundImage:
-                              "repeating-linear-gradient(to right, #ccc 0 4px, transparent 2px 10px)",
-                          }}
-                        />
-                      </div>
-                    </React.Fragment>
-                  ))}
-                  <SelectItem
-                    value="total"
-                    className=" focus:bg-transparent cursor-default select-auto w-full p-2 font-gilroyMedium pl-3"
+                  {isIntegrationFilter ? (
+                    <>
+                      {data?.integrations?.map((p) => (
+                        <React.Fragment key={p?.platform}>
+                          <div
+                            // value={p?.platform}
+                            className=" focus:text-neutral-400 cursor-default select-auto focus:bg-transparent bg-transparent p-1.5 text-sm  font-gilroyMedium text-neutral-400 w-full flex justify-between items-center"
+                          >
+                            <div className=" flex justify-between items-center w-full gap-x-12">
+                              <span>{p?.platform}</span>{" "}
+                              <span>{`₹${formatNumber(
+                                parseInt(p?.price ?? 0)
+                              )}/month`}</span>
+                            </div>
+                          </div>
+                          <div className="w-full flex justify-center items-center">
+                            <div
+                              className="w-[90%] h-px my-1"
+                              style={{
+                                backgroundImage:
+                                  "repeating-linear-gradient(to right, #ccc 0 4px, transparent 2px 10px)",
+                              }}
+                            />
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {allIntegrations?.map((p) => (
+                        <React.Fragment key={p?.platform}>
+                          <div
+                            // value={p?.platform}
+                            className=" focus:text-neutral-400 cursor-default select-auto focus:bg-transparent bg-transparent p-1.5 text-sm  font-gilroyMedium text-neutral-400 w-full flex justify-between items-center"
+                          >
+                            <div className=" flex justify-between items-center w-full gap-x-12">
+                              <span>{p?.platform}</span>{" "}
+                              {/* <span>{`₹${p?.price}/month`}</span> */}
+                              <span>{`₹${formatNumber(
+                                parseInt(p?.price ?? 0)
+                              )}/month`}</span>
+                            </div>
+                          </div>
+                          <div className="w-full flex justify-center items-center">
+                            <div
+                              className="w-[90%] h-px my-1"
+                              style={{
+                                backgroundImage:
+                                  "repeating-linear-gradient(to right, #ccc 0 4px, transparent 2px 10px)",
+                              }}
+                            />
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </>
+                  )}
+
+                  <div
+                    // value="total"
+                    className=" focus:bg-transparent cursor-default select-auto w-full p-1.5 text-sm font-gilroyMedium"
                   >
-                    <div className="w-full flex justify-between items-center gap-x-12 ">
+                    <div className="w-full flex justify-between items-center  ">
                       <span>Total</span>{" "}
-                      <span>{`₹${data?.totalCostPerUser}/month`}</span>
+                      <span>{`₹${formatNumber(
+                        data?.totalCostPerUser ?? 0
+                      )}/month`}</span>
                     </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
-          {/* {JSON.stringify(data)} */}
-          {/* Render integration details */}
-          <div className="space-y-4">
-            {data?.integrations?.map((integration, index) => (
+          <div className="space-y-4 -mt-5">
+            {isIntegrationFilter ? (
               <>
-                <div
-                  key={index}
-                  className="flex items-center  justify-center rounded-lg border gap-4 border-b p-4 "
-                >
-                  <img
-                    src={integration?.image}
-                    alt={integration?.platform}
-                    className="size-12 rounded-full object-cover"
-                  />
-                  <div className="text-left">
-                    <h4 className="font-gilroySemiBold">
-                      {integration?.platform}
-                    </h4>
-                    <p className="text-sm text-gray-500 font-gilroyMedium">
-                      {integration?.description?.slice(0, 60)}...
-                    </p>
-                  </div>
-                  {showArrow ? (
-                    <Link
-                      href={`/integrations/installed?platform=${integration?.platform}`}
-                      onClick={() => setOpen(false)}
+                {data?.integrations?.map((integration, index) => (
+                  <>
+                    <div
+                      key={index}
+                      className="flex items-center  justify-center rounded-lg border gap-4 border-b p-4 "
                     >
-                      <IntRight className="size-16" />
-                    </Link>
-                  ) : null}
-                </div>
+                      <img
+                        src={integration?.image}
+                        alt={integration?.platform}
+                        className="size-12  object-contain "
+                      />
+                      <div className="text-left">
+                        <h4 className="font-gilroySemiBold">
+                          {integration?.platform}
+                        </h4>
+                        <p className="text-sm text-gray-500 font-gilroyMedium">
+                          {integration?.description?.slice(0, 60)}...
+                        </p>
+                      </div>
+                      {showArrow ? (
+                        <Link
+                          href={`/integrations/installed?platform=${integration?.platform}`}
+                          onClick={() => setOpen(false)}
+                        >
+                          <IntRight className="size-16" />
+                        </Link>
+                      ) : null}
+                    </div>
+                  </>
+                ))}
               </>
-            ))}
+            ) : (
+              <>
+                {allIntegrations?.map((integration, index) => (
+                  <>
+                    <div
+                      key={index}
+                      className="flex items-center  justify-center rounded-lg border gap-4 border-b p-4 "
+                    >
+                      <img
+                        src={integration?.image}
+                        alt={integration?.platform}
+                        className="size-12  object-contain "
+                      />
+                      <div className="text-left">
+                        <h4 className="font-gilroySemiBold">
+                          {integration?.platform}
+                        </h4>
+                        <p className="text-sm text-gray-500 font-gilroyMedium">
+                          {integration?.description?.slice(0, 60)}...
+                        </p>
+                      </div>
+                      {showArrow ? (
+                        <Link
+                          href={`/integrations/installed?platform=${integration?.platform}`}
+                          onClick={() => setOpen(false)}
+                        >
+                          <IntRight className="size-16" />
+                        </Link>
+                      ) : null}
+                    </div>
+                  </>
+                ))}
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>

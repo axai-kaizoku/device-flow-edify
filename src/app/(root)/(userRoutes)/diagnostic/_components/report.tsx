@@ -21,7 +21,7 @@ export const ReportFormat = forwardRef(
       "Backup In Minute": batteryBackup,
       "Reported On": reportedOn,
       ...checks
-    } = data.data;
+    } = data?.data;
 
     return (
       <section
@@ -94,7 +94,11 @@ export const ReportFormat = forwardRef(
               className="w-full flex justify-between items-center font-gilroyMedium text-sm"
             >
               <span>{key}</span>
-              <span>{value}</span>
+              <span>
+                {typeof value === "object"
+                  ? JSON.stringify(value)
+                  : String(value)}
+              </span>
             </div>
           ))}
         </div>

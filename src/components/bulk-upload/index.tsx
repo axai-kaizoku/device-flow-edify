@@ -1,10 +1,10 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { checkForDuplicates, parseCSV } from "./CSVHelper";
-import { useRouter } from "next/navigation";
-import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
 import { Icons } from "@/app/(root)/people/icons";
+import { useAlert } from "@/hooks/useAlert";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { checkForDuplicates, parseCSV } from "./CSVHelper";
 
 type dataProps = {
   closeBtn: () => void;
@@ -23,7 +23,6 @@ function BulkUpload({
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { showAlert } = useAlert();
-  const { openToast } = useToast();
 
   const validateCSV = (file: File) => {
     setLoading(true);
@@ -82,17 +81,45 @@ function BulkUpload({
       const formData = new FormData();
       formData.append("file", file);
 
-      await bulkApi(formData); // Call the API
+      const response = await bulkApi(formData); // Call the API
+      if (response?.skippedSerialNumbers) {
+        if (response?.skippedSerialNumbers?.length === 0) {
+          showAlert({
+            title: "WOHOOO!! 🎉",
+            description: "Bulk Upload successfully!",
+            isFailure: false,
+            key: "create-team-success",
+          });
+        } else if (response?.device?.length === 0) {
+          showAlert({
+            title: "All Serial Numbers Exist!",
+            description: "",
+            isFailure: true,
+            key: "create-team-faliure",
+          });
+        } else {
+          showAlert({
+            title: "Few Devices Uploaded!",
+            description: `Skipped Serial Numbers : ${response?.skippedSerialNumbers?.join(
+              ", "
+            )}`,
+            isFailure: false,
+            key: "create-team-asdf",
+          });
+        }
+      }
+
       showAlert({
         title: "WOHOOO!! 🎉",
         description: "Bulk Upload successfully!",
         isFailure: false,
-        key: "create-team-success",
+        key: "create-buulk-success",
       });
 
       router.refresh();
       closeBtn();
     } catch (error: any) {
+      console.error(error, "bulk uplaod errro");
       if (error.message.includes("E11000 duplicate key error")) {
         const match = error.message.match(
           /index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/
@@ -102,14 +129,12 @@ function BulkUpload({
             `Duplicate entry detected: ${match[2]} with value "${match[3]}" already exists.`
           );
         } else {
-          openToast(
-            "error",
+          toast.error(
             "A duplicate entry error occurred. Please check your data."
           );
         }
-      } else {
-        openToast("error", "An error occurred during bulk upload.");
       }
+      toast.error("Error occurred during bulk upload !");
     } finally {
       setLoading(false);
     }

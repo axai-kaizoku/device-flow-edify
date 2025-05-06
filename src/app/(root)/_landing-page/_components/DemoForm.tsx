@@ -3,18 +3,21 @@ import { FormField } from "../../settings/_components/form-field";
 import { DemoPage1 } from "./DemoPage1";
 import { DemoPage2 } from "./DemoPage2";
 import { requestForDemo } from "@/server/loginActions";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
+import { useParams, useSearchParams } from "next/navigation";
 
-const DemoForm = ({setIsOpen}:{setIsOpen: ()=> void;}) => {
+const DemoForm = ({ setIsOpen }: { setIsOpen: () => void }) => {
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1); 
-  const { openToast } = useToast();
+  const [step, setStep] = useState(1);
+  const params = useParams();
+  const investorSlug = params.investor || "";
   const [formData, setFormData] = useState({
     name: "",
     cmpname: "",
     email: "",
     phone: "",
-    teamSize: ""
+    utm_source: params?.slug ?? "",
+    teamSize: "",
   });
 
   const [errors, setErrors] = useState({
@@ -22,7 +25,8 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> void;}) => {
     phone: "",
     cmpname: "",
     email: "",
-    teamSize: ""
+    utm_source: "",
+    teamSize: "",
   });
 
   const validateStep = () => {
@@ -51,29 +55,24 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> void;}) => {
   };
 
   // Handle input changes
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
-  const handleSubmit = async ()=>{
-    setLoading(true);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = async () => {
+    // setLoading(true);
     try {
       const response = await requestForDemo(formData);
-      if(response){
+      if (response) {
         setStep(2);
       }
     } catch (error) {
-      openToast("error", "Some Error Occured. Try again Later!");
-    }
-    finally{
+      toast.error("Some Error Occured. Try again Later!");
+    } finally {
       setLoading(false);
     }
-  }
-
+  };
 
   return (
     <div>
@@ -84,12 +83,12 @@ const DemoForm = ({setIsOpen}:{setIsOpen: ()=> void;}) => {
           setErrors={setErrors}
           handleChange={handleChange}
           setStep={setStep}
-          validateStep = {validateStep}
+          validateStep={validateStep}
           handleSubmit={handleSubmit}
-          loading = {loading}
+          loading={loading}
         />
       ) : (
-        <DemoPage2 setStep={setStep} setIsOpen={setIsOpen}/>
+        <DemoPage2 setStep={setStep} setIsOpen={setIsOpen} />
       )}
     </div>
   );

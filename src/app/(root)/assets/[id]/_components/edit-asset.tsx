@@ -2,7 +2,7 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 import { Device, updateDevice } from "@/server/deviceActions";
@@ -18,7 +18,7 @@ export default function EditAsset({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+
   const [device, setDevice] = useState<Device>(deviceData);
   const [error, setError] = useState("");
 
@@ -33,11 +33,11 @@ export default function EditAsset({
     try {
       await updateDevice(deviceData?._id ?? "", device);
       setOpen(false);
-      openToast("success", "Assigned asset to user !");
+      toast.success("Assigned asset to user !");
       setLoading(false);
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to assign to user !");
+      toast.error("Failed to assign to user !");
     } finally {
       setLoading(false);
     }

@@ -2,7 +2,7 @@ import React from "react";
 
 const ProfileSkeleton = () => {
   return (
-    <div className="flex flex-wrap gap-6 mt-2 font-gilroyRegular">
+    <div className="flex flex-nowrap gap-6 mt-2 font-gilroyRegular">
       {/* Column 1 */}
       <div className="flex flex-col gap-6">
         {/* Card 1 */}

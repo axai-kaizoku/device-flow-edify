@@ -1,13 +1,7 @@
 "use client";
-import React, {
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
 import { CombinedContainer } from "@/components/container/container";
-import { DiagonisticIcons } from "./_components/icons";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { useClickOutside } from "@/hooks/use-outside-click";
 import {
   QcReportResponse,
   qcReportTable,
@@ -15,15 +9,14 @@ import {
   qualityCheck,
   uniqueIdGeneration,
 } from "@/server/checkMateActions";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
-import LoginKey from "./_components/login-key";
-import QcTable from "./_components/qc-table";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getAllDevicesProp, getDevicesByUserId } from "@/server/deviceActions";
 import { getSession } from "@/server/helper";
 import { Download } from "lucide-react";
-import { getAllDevicesProp, getDevicesByUserId } from "@/server/deviceActions";
-import NoAssetAssignedIcon from "@/icons/NoAssetAssignedIcon";
-import { useClickOutside } from "@/hooks/use-outside-click";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { DiagonisticIcons } from "./_components/icons";
+import LoginKey from "./_components/login-key";
+import QcTable from "./_components/qc-table";
 
 export default function Diagonistic() {
   const router = useRouter();
@@ -41,7 +34,7 @@ export default function Diagonistic() {
   const [pagination, setPagination] = useState<{ page: number; limit: number }>(
     {
       page: 1,
-      limit: 5,
+      limit: 10000000,
     }
   );
 
@@ -79,26 +72,20 @@ export default function Diagonistic() {
     checkDevices();
   }, []);
 
-  // Get session and role (assume admin role is indicated by a specific value, e.g. 2)
   useEffect(() => {
     async function handleSession() {
       setSessLoader(true);
       const sess = await getSession();
-      console.log("Session loaded:", sess);
       setSession(sess?.user?.user?.role);
       setSessLoader(false);
     }
     handleSession();
   }, []);
 
-  // Helper: choose fetch function based on role.
   const fetchQcReports = async (page: number, limit: number) => {
-    console.log("Fetching QC reports for role:", session);
     if (session === 2) {
-      console.log("Using qcReportTableAdmin");
       return await qcReportTableAdmin(page, limit);
     } else {
-      console.log("Using qcReportTable");
       return await qcReportTable(page, limit);
     }
   };
@@ -107,13 +94,10 @@ export default function Diagonistic() {
     // For admin, fetch data regardless; for others, only if "showTable" is set
     if (session !== null && (session === 2 || searchParams.get("showTable"))) {
       (async () => {
-        console.log("Fetching QC Report for page:", pagination.page);
         try {
           const res = await fetchQcReports(pagination.page, pagination.limit);
-          console.log("Fetched reports:", res);
           setQcReports(res);
         } catch (error) {
-          console.error("Error fetching QC reports:", error);
         }
       })();
     }
@@ -123,11 +107,9 @@ export default function Diagonistic() {
     setLoading(true);
     try {
       const data = await qualityCheck();
-      console.log("Quality Check Response:", data);
       setQualityData(data);
       setDownloadClicked(true);
     } catch (error) {
-      console.error("Error during quality check:", error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +119,6 @@ export default function Diagonistic() {
     setLoading(true);
     try {
       const uniqueIdData = await uniqueIdGeneration();
-      console.log("Unique ID Response:", uniqueIdData);
       setUniqueId(uniqueIdData?.uniqueId);
     } catch (error) {
       console.error("Error during unique ID generation:", error);
@@ -152,19 +133,16 @@ export default function Diagonistic() {
     setQualityData(null);
   };
 
-  // Initial fetch on clicking "View Reports"
   const handleViewReports = async () => {
     router.push(pathname + "?" + createQueryString("showTable", "true"));
     try {
       const res = await fetchQcReports(pagination.page, pagination.limit);
-      console.log("View Reports fetched:", res);
       setQcReports(res);
       setPagination({ limit: res.limit, page: res.page });
     } catch (error) {
       console.error("Error in handleViewReports:", error);
     }
   };
-  // Show loader until session is loaded
 
   return (
     <Suspense>
@@ -212,7 +190,7 @@ export default function Diagonistic() {
                         Windows
                       </a>
                       <a
-                        href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.1-Apple-Silicone/CheckMate-5.0.0-arm64.dmg"
+                        href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.1-Apple-Silicone/CheckMate-5.0.1-arm64.dmg"
                         className="py-2 cursor-pointer px-11 w-full text-center hover:bg-gray-50 rounded-xl text-nowrap text-sm text-[#344054] font-gilroyMedium"
                         onClick={() => {
                           handleLinkClick();
@@ -300,7 +278,7 @@ export default function Diagonistic() {
                                     Windows
                                   </a>
                                   <a
-                                    href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.1-Apple-Silicone/CheckMate-5.0.0-arm64.dmg"
+                                    href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.1-Apple-Silicone/CheckMate-5.0.1-arm64.dmg"
                                     className="py-2 cursor-pointer px-11 w-full text-center hover:bg-gray-50 rounded-xl text-nowrap text-sm text-[#344054] font-gilroyMedium"
                                     onClick={() => {
                                       handleLinkClick();

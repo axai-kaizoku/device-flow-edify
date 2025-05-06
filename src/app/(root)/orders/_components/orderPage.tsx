@@ -10,7 +10,6 @@ export interface OrdersProps {
 
 const Orders: React.FC<OrdersProps> = ({ data }) => {
   const router = useRouter();
-  // console.log(data);
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4">
       <h1 className="text-3xl font-gilroyBold text-gray-800 mb-10">

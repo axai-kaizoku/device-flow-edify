@@ -7,9 +7,10 @@ import { Device } from "./deviceActions";
 import { cache } from "react";
 import { usersFields } from "./filterActions";
 import { IntegrationType } from "./integrationActions";
+import { BASEURL } from "./main";
 
-// const baseUrl = "https://staging.deviceflow.ai";
-const baseUrl = "https://1c55-34-47-179-100.ngrok-free.app";
+const baseUrl = BASEURL;
+// const baseUrl = "https://1c55-34-47-179-100.ngrok-free.app";
 
 type Address = {
   address: string;
@@ -40,6 +41,7 @@ type Manager = {
   email: string;
   phone: string;
   orgId: string;
+  gender?: string;
   employment_type: string;
   created_at: string;
   __v: number;
@@ -214,7 +216,7 @@ export async function searchManager(
   }
 }
 
-export const fetchUsers = cache(async function (): Promise<any> {
+export const fetchUsers = cache(async function (): Promise<User[]> {
   try {
     const requestBody = {
       fields: [
@@ -226,7 +228,8 @@ export const fetchUsers = cache(async function (): Promise<any> {
       ], // Specify fields to be fetched
       filters: [], // You can add filters here as per requirement
       page: 1,
-      pageLimit: 1000,
+      pageLimit: 100000,
+      isDeleted: false,
     };
 
     const res = await callAPIWithToken<UserResponse>(
@@ -234,7 +237,6 @@ export const fetchUsers = cache(async function (): Promise<any> {
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
-
     return res.data.users;
   } catch (e) {
     throw new Error("Failed to fetch users");
@@ -279,7 +281,7 @@ export async function searchUsers(searchQuery: string): Promise<
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
-
+    // @ts-ignore
     return res?.data?.users;
   } catch (e) {
     throw new Error("Failed to fetch users");
@@ -295,15 +297,15 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
       orgId: sess?.user?.user?.orgId?._id,
     };
 
-    if (!user.image) {
-      if (user.gender === "Male") {
-        user.image =
-          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png";
-      } else {
-        user.image =
-          "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png";
-      }
-    }
+    // if (!user.image) {
+    //   if (user.gender === "Male") {
+    //     user.image =
+    //       "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png";
+    //   } else {
+    //     user.image =
+    //       "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png";
+    //   }
+    // }
 
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user`, // API endpoint
@@ -354,10 +356,50 @@ export async function updateUser(
   }
 }
 
+interface BulkMoveUsersPayload {
+  newTeamId: string;
+  userIds: string[];
+}
+
+export async function bulkMoveUsers(
+  payload: BulkMoveUsersPayload
+): Promise<any> {
+  try {
+    const res = await callAPIWithToken<any>(
+      `${baseUrl}/edifybackend/v1/teams/bulkTeamUpdate`, // API endpoint
+      "PATCH", // HTTP method
+      payload
+    );
+    return res?.data;
+  } catch (e: any) {
+    if (e?.message?.includes("E11000 duplicate key error")) {
+      // Customize the error response for duplicate email
+      throw new Error("A user with this Email or Phone already exists.");
+    }
+    // Default error message
+    throw new Error("Failed to Update User. Please try again.");
+  }
+}
+
 export async function deleteUser<User>(userId: string) {
   try {
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user/${userId}`, // API endpoint
+      "DELETE",
+      null
+    );
+    return res?.data;
+  } catch (e: any) {
+    throw e;
+  }
+}
+
+// Permanent delete user
+
+export async function permanentDeleteUser<User>(userId: string) {
+  try {
+    const res = await callAPIWithToken<User>(
+      `${baseUrl}/edifybackend/v1/user/${userId}?permanent=true`,
       "DELETE",
       null
     );
@@ -380,6 +422,7 @@ export const bulkUploadUsers = async (formData: FormData): Promise<User> => {
     );
     return response?.data;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -389,7 +432,6 @@ export const bulkDeleteUsers = async (
   type: string
 ): Promise<any> => {
   try {
-    console.log(userIds);
     const response = await callAPIWithToken(
       type !== "soft"
         ? `${baseUrl}/edifybackend/v1/user/bulk-delete?permanent=true`
@@ -400,7 +442,6 @@ export const bulkDeleteUsers = async (
         "Content-Type": "application/json",
       }
     );
-    console.log(response);
     return response;
   } catch (error) {
     throw error;

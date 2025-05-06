@@ -9,22 +9,19 @@ import React, { useState } from "react";
 import { IntBack } from "../icons";
 import { useRouter } from "next/navigation";
 import AllIntegrationsDisplay from "./all-integration-display";
+import { GetAvatar } from "@/components/get-avatar";
 
 interface UserByIntegrationsProps {
   data?:
     | IntegrationUsers["allUsers"]
     | IntegrationUsers["missingIntegrationUsers"];
   selectedPlatform?: string;
-  onRemove?: (platform: string) => void;
-  cost?: number;
   status?: "error" | "success" | "pending";
 }
 
 const SeatsSection: React.FC<UserByIntegrationsProps> = ({
   data,
   selectedPlatform,
-  onRemove,
-  cost,
   status,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -97,131 +94,152 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           <div className="flex justify-between items-center">
             <h1 className="text-base pl-6 font-gilroyMedium capitalize">
-              {selectedPlatform}
+              {(() => {
+                if (selectedPlatform === "totalseats") return <>Total Seats</>;
+                if (selectedPlatform === "unmapped") return <>Unmapped Seats</>;
+              })()}
             </h1>
           </div>
 
-          {status === "pending" ? (
+          {/* {status === "pending" ? (
             <div>
               <DeviceFlowLoader />
             </div>
-          ) : null}
+          ) : null} */}
 
-          {data?.length ? (
-            <div className="flex flex-col gap-2">
-              <Table
-                data={data ?? []}
-                selectedIds={selectedIds}
-                setSelectedIds={setSelectedIds}
-                // checkboxSelection={{
-                //   uniqueField: "_id",
-                //   onSelectionChange: setSelectedIds,
-                // }}
-                columns={[
-                  {
-                    title: "Name",
-                    render: (record: UserByIntegration) => (
-                      <div className="w-28 flex items-center gap-2">
+          {/* {data?.length ? ( */}
+          <div className="flex flex-col gap-2">
+            <Table
+              data={data}
+              selectedIds={selectedIds}
+              isLoading={status === "pending"}
+              setSelectedIds={setSelectedIds}
+              // checkboxSelection={{
+              //   uniqueField: "_id",
+              //   onSelectionChange: setSelectedIds,
+              // }}
+              columns={[
+                {
+                  title: "Name",
+                  render: (record: UserByIntegration) => (
+                    <div className="w-28 flex items-center gap-2">
+                      {record?.image && record?.image?.length > 0 ? (
                         <img
-                          src={
-                            record?.image ??
-                            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                          }
-                          alt="Device"
-                          className="w-10 h-10 object-cover rounded-full"
+                          src={record?.image}
+                          alt={record?.name}
+                          className="size-10 object-cover rounded-full flex-shrink-0"
                         />
-                        <div className="font-gilroySemiBold text-sm text-black text-nowrap">
-                          {record?.name ?? "Guest User"}
+                      ) : (
+                        <GetAvatar
+                          name={record?.first_name ?? record?.name ?? "Guest"}
+                        />
+                      )}
+
+                      <div className="relative group">
+                        <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                          {(() => {
+                            const name =
+                              record?.first_name ?? record?.name ?? "Guest";
+                            const displayName =
+                              name.length > 12
+                                ? `${name.slice(0, 12)}...`
+                                : name;
+                            return displayName;
+                          })()}
+                        </div>
+                        <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                          {record?.first_name ?? record?.name ?? "Guest"}
                         </div>
                       </div>
-                    ),
+                    </div>
+                  ),
+                },
+
+                {
+                  title: "Role",
+                  render: (record) => <div>{record?.designation ?? "-"}</div>,
+                },
+                {
+                  title: "Reporting Manager",
+                  render: (record) => (
+                    <div>{record?.reporting_manager ?? "-"}</div>
+                  ),
+                },
+                {
+                  title: "Team",
+                  render: (record) => <div>{record?.teamName ?? "-"}</div>,
+                },
+                {
+                  title: "Joining Date",
+                  render: (record) => {
+                    const rawDate = record?.onboarding_date;
+                    const diagDate = rawDate ? new Date(rawDate) : null;
+                    const isValidDate = diagDate && !isNaN(diagDate.getTime());
+
+                    const formattedDiag = isValidDate
+                      ? diagDate.toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "-";
+
+                    return <div>{formattedDiag}</div>;
                   },
+                },
+                {
+                  title: "Other Integrations",
+                  render: (record: UserByIntegration) => {
+                    const filteredIntegrations = (
+                      record?.integrations ?? []
+                    ).filter((i) => i.platform !== selectedPlatform);
 
-                  {
-                    title: "Role",
-                    render: (record) => <div>{record?.designation ?? "-"}</div>,
-                  },
-                  {
-                    title: "Reporting Manager",
-                    render: (record) => (
-                      <div>{record?.reporting_manager ?? "-"}</div>
-                    ),
-                  },
-                  {
-                    title: "Team",
-                    render: (record) => <div>{record?.teamName ?? "-"}</div>,
-                  },
-                  {
-                    title: "Joining Date",
-                    render: (record) => {
-                      const rawDate = record?.onboarding_date;
-                      const diagDate = rawDate ? new Date(rawDate) : null;
-                      const isValidDate =
-                        diagDate && !isNaN(diagDate.getTime());
+                    if (filteredIntegrations.length === 0) {
+                      return <span className="text-gray-400">-</span>;
+                    }
 
-                      const formattedDiag = isValidDate
-                        ? diagDate.toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })
-                        : "-";
+                    const firstThree = filteredIntegrations.slice(0, 3);
+                    const extraCount = filteredIntegrations.length - 3;
 
-                      return <div>{formattedDiag}</div>;
-                    },
-                  },
-                  {
-                    title: "Other Integrations",
-                    render: (record: UserByIntegration) => {
-                      const filteredIntegrations = (
-                        record?.integrations ?? []
-                      ).filter((i) => i.platform !== selectedPlatform);
-
-                      if (filteredIntegrations.length === 0) {
-                        return <span className="text-gray-400">-</span>;
-                      }
-
-                      const firstThree = filteredIntegrations.slice(0, 3);
-                      const extraCount = filteredIntegrations.length - 3;
-
-                      return (
-                        <AllIntegrationsDisplay
-                          data={record}
-                          allIntegrations={filteredIntegrations}
-                          showArrow={false}
-                        >
-                          <div className="flex items-center gap-2">
-                            {firstThree.map((i, index) => (
+                    return (
+                      <AllIntegrationsDisplay
+                        data={record}
+                        allIntegrations={filteredIntegrations}
+                        showArrow={false}
+                      >
+                        {/* {JSON.stringify(filteredIntegrations)} */}
+                        <div className="flex items-center gap-2 -space-x-5">
+                          {firstThree.map((i, index) => (
+                            <div
+                              key={index}
+                              className="flex justify-center items-center p-1.5 bg-white rounded-full border"
+                            >
                               <img
-                                key={index}
                                 src={i.image ?? ""}
-                                className="size-8 object-cover rounded-full"
+                                width={16}
+                                height={16}
+                                className=" object-contain "
                                 alt="Integration"
                               />
-                            ))}
+                            </div>
+                          ))}
 
-                            {extraCount > 0 && (
-                              <span className="text-sm text-gray-500 font-gilroySemiBold">
-                                +{extraCount}
-                              </span>
-                            )}
-                          </div>
-                        </AllIntegrationsDisplay>
-                      );
-                    },
+                          {extraCount > 0 && (
+                            <span className="text-sm text-gray-500 font-gilroySemiBold">
+                              +{extraCount}
+                            </span>
+                          )}
+                        </div>
+                      </AllIntegrationsDisplay>
+                    );
                   },
-                ]}
-              />
-            </div>
-          ) : (
-            <div className="p-4 flex items-center justify-center w-full h-[60vh]">
-              <img
-                src="/media/logo/no_reports_display.svg"
-                alt="No Data"
-                className="object-contain"
-              />
-            </div>
-          )}
+                },
+              ]}
+            />
+          </div>
+          {/* ) : (
+            <div className="p-4 flex items-center justify-center w-full h-[60vh]"></div>
+          )} */}
           {/* </Suspense> */}
         </div>
       </div>

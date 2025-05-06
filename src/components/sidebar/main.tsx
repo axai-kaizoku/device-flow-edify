@@ -44,6 +44,7 @@ export default function SidebarNavigation({ session }: Props) {
       href: "/store",
       label: "Store",
       icon: <HugeiconsIcon icon={Store02Icon} className="mr-3 h-5 w-5" />,
+      externalUrl: "https://edify.club",
     },
   ];
 
@@ -59,7 +60,7 @@ export default function SidebarNavigation({ session }: Props) {
       icon: <HugeiconsIcon icon={TvIssueIcon} className="mr-3 size-5" />,
     },
     {
-      href: "/diagonistic",
+      href: "/diagnostic",
       label: "Diagnostics",
       icon: <HugeiconsIcon icon={SearchVisualIcon} className="mr-3 size-5" />,
     },
@@ -108,7 +109,7 @@ export default function SidebarNavigation({ session }: Props) {
       icon: <HugeiconsIcon icon={SmartPhone01Icon} className="mr-3 size-5" />,
     },
     {
-      href: "/diagonistic",
+      href: "/diagnostic",
       label: "Diagnostics",
       icon: <HugeiconsIcon icon={SearchVisualIcon} className="mr-3 size-5" />,
     },
@@ -126,47 +127,59 @@ export default function SidebarNavigation({ session }: Props) {
             />
           </div>
 
-          {session.user.user.role === 2 ? (
+          {[2, 3, 4].includes(session?.user?.user?.role) ? (
             <nav className="space-y-1.5">
               {links.map((link, index) => {
                 const isActive =
                   pathname === link.href ||
-                  (link.href === "/store" && pathname.includes("store")) ||
-                  (link.href === "/integrations" &&
-                    pathname.includes("integrations"));
+                  (link.href === "/store" && pathname.includes("store"));
 
                 return (
                   <div key={index}>
-                    <Link
-                      href={link.href}
-                      onMouseEnter={() => router.prefetch(link.href)}
-                      onClick={
-                        link.href === "/store"
-                          ? () => setStoreExpanded(!storeExpanded)
-                          : link.href === "/integrations"
-                          ? () => setIntegrationsExpanded(!integrationsExpanded) // Add state for integrations
-                          : undefined
-                      }
-                      className={cn(
-                        "flex items-center px-3 py-2 text-sm font-gilroyMedium rounded-md",
-                        isActive
-                          ? "bg-gray-100 hover:bg-gray-100"
-                          : "hover:bg-gray-50"
-                      )}
-                    >
-                      {link.icon}
-                      {link.label}
-                      {link.href === "/store" && (
-                        <HugeiconsIcon
-                          icon={ArrowDown01Icon}
-                          className={cn(
-                            "ml-auto transition-transform duration-150 size-4",
-                            storeExpanded ? "rotate-0" : "-rotate-90"
-                          )}
-                        />
-                      )}
-                    </Link>
-                    {link.href === "/store" && storeExpanded && (
+                    {link.externalUrl ? (
+                      <Link
+                        href={link.externalUrl}
+                        target="_blank"
+                        className={cn(
+                          "flex items-center px-3 py-2 text-sm font-gilroyMedium rounded-md cursor-pointer",
+                          "hover:bg-gray-50"
+                        )}
+                      >
+                        {link.icon}
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onMouseEnter={() => router.prefetch(link.href)}
+                        onClick={
+                          link.href === "/store"
+                            ? () => setStoreExpanded(!storeExpanded)
+                            : undefined
+                        }
+                        className={cn(
+                          "flex items-center px-3 py-2 text-sm font-gilroyMedium rounded-md",
+                          isActive
+                            ? "bg-gray-100 hover:bg-gray-100"
+                            : "hover:bg-gray-50"
+                        )}
+                      >
+                        {link.icon}
+                        {link.label}
+                        {link.href === "/store" && (
+                          <HugeiconsIcon
+                            icon={ArrowDown01Icon}
+                            className={cn(
+                              "ml-auto transition-transform duration-150 size-4",
+                              "-rotate-90"
+                              // storeExpanded ? "rotate-0" : "-rotate-90"
+                            )}
+                          />
+                        )}
+                      </Link>
+                    )}
+
+                    {/* {link.href === "/store" && storeExpanded && (
                       <Link
                         href="/orders"
                         onMouseEnter={() => router.prefetch("/orders")}
@@ -179,7 +192,7 @@ export default function SidebarNavigation({ session }: Props) {
                       >
                         Orders
                       </Link>
-                    )}
+                    )} */}
                   </div>
                 );
               })}
@@ -227,6 +240,9 @@ export default function SidebarNavigation({ session }: Props) {
                           integrationsExpanded && (
                             <>
                               <Link
+                                onMouseEnter={() =>
+                                  router.prefetch("/integrations/discover")
+                                }
                                 href="/integrations/discover"
                                 className={cn(
                                   "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
@@ -238,6 +254,9 @@ export default function SidebarNavigation({ session }: Props) {
                                 Discover
                               </Link>
                               <Link
+                                onMouseEnter={() =>
+                                  router.prefetch("/integrations/installed")
+                                }
                                 href="/integrations/installed"
                                 className={cn(
                                   "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
@@ -253,6 +272,41 @@ export default function SidebarNavigation({ session }: Props) {
                       </div>
                     );
                   })}
+
+                  <Link
+                    href={"/ai-agents"}
+                    onMouseEnter={() => router.prefetch("/ai-agents")}
+                    className="flex flex-col"
+                  >
+                    <div
+                      className={cn(
+                        "flex items-center px-3 py-2 text-sm font-gilroyMedium rounded-md text-gray-900 cursor-pointer",
+                        pathname === "/ai-agents"
+                          ? "bg-gray-100 hover:bg-gray-100"
+                          : "hover:bg-gray-50"
+                      )}
+                    >
+                      <img
+                        src="/media/sidebar/ai-agents.svg"
+                        alt="icon"
+                        className="mr-3 size-5"
+                      />
+                      <span>AI Agents</span>
+                    </div>
+
+                    <div className="relative w-full  -ml-2">
+                      <img
+                        src="/media/sidebar/coming-soon.svg"
+                        alt="coming-soon"
+                        className="w-full h-8"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center pt-1.5">
+                        <span className="text-[10px] text-[#2E8016] font-gilroyMedium">
+                          New Feature
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
               </div>
 

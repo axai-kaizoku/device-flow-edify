@@ -1,17 +1,17 @@
 "use client";
+import { buttonVariants } from "@/components/buttons/Button";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import {
   ConnectedIntegrationsRes,
   getUsersOfIntegration,
-  IntegrationType,
 } from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useQueryState } from "nuqs";
 import { IntBack } from "../icons";
 import ConnectionCard from "./installed-section-connect-card";
 import UserByIntegrations from "./user-by-integrations";
-import { buttonVariants } from "@/components/buttons/Button";
-import Link from "next/link";
+import { formatNumber } from "@/lib/utils";
 
 export const InstalledSection = ({
   data,
@@ -21,6 +21,7 @@ export const InstalledSection = ({
   status?: "error" | "success" | "pending";
 }) => {
   // Manage the selected platform via query state so it persists in the URL if needed.
+  // @ts-ignore
   const [selectedPlatform, setSelectedPlatform] = useQueryState<string>(
     "platform",
     {
@@ -35,8 +36,7 @@ export const InstalledSection = ({
   } = useQuery({
     queryKey: ["user-by-integrations", selectedPlatform],
     queryFn: () => getUsersOfIntegration({ platform: selectedPlatform }),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // staleTime: 1000,
   });
 
   // If selectedPlatform is "total", show all data; otherwise, filter by the chosen platform.
@@ -94,12 +94,9 @@ export const InstalledSection = ({
                       className="cursor-pointer"
                     >
                       <ConnectionCard
-                        amount={(company?.totalPrice).toFixed(1)}
+                        amount={formatNumber(company?.totalPrice ?? 0)}
                         src={company?.companyLogo}
-                        description={`${company?.description?.slice(
-                          0,
-                          70
-                        )}....`}
+                        description={`${company?.description}`}
                         name={company?.platform}
                         seats={company?.userCount}
                       />
@@ -109,13 +106,13 @@ export const InstalledSection = ({
               </div>
             </>
           )}
-          {data && data.length === 0 && (
+          {data && data?.data?.length === 0 && (
             <div className="flex  font-gilroySemiBold flex-col gap-6 my-5  justify-center items-center ">
               <img
                 src="/media/no_data/Integrations.svg"
                 alt="No-Integration Logo"
               />
-              <Link href={"/integration/discover"}>
+              <Link href={"/integrations/discover"}>
                 <button
                   className={buttonVariants({
                     variant: "primary",

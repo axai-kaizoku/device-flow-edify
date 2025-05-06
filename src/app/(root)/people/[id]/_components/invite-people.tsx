@@ -1,8 +1,8 @@
 "use client";
-import { Button } from "@/components/buttons/Button";
-import { SelectInput } from "@/components/dropdown/select-input";
+import { Button, LoadingButton } from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
 import { Input } from "@/components/inputs/Input";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
+import { AsyncSelect } from "@/components/ui/async-select";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +10,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
-import { useToast } from "@/hooks/useToast";
-import { cn } from "@/lib/utils";
 import { createSignupLink } from "@/server/signupActions";
 import { fetchTeams, Team } from "@/server/teamActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function InvitePeople({
   children,
@@ -26,7 +25,6 @@ export default function InvitePeople({
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
 
   const [link, setLink] = useState("");
 
@@ -36,9 +34,9 @@ export default function InvitePeople({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(link);
-      openToast("success", "Link copied to clipboard");
+      toast.success("Link copied to clipboard");
     } catch (err) {
-      openToast("error", "Failed to copy to clipboard");
+      toast.error("Failed to copy to clipboard");
     }
   };
 
@@ -55,12 +53,12 @@ export default function InvitePeople({
       const res = await createSignupLink(team._id);
       setLink(res.link);
       setOpen(false);
-      openToast("success", "Invite people link created !");
+      toast.success("Invite people link created !");
       setDialogOpen(true);
       setLoading(false);
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to create link !");
+      toast.error("Failed to create link !");
     } finally {
       setLoading(false);
     }
@@ -102,6 +100,7 @@ export default function InvitePeople({
               variant="primary"
               onClick={() => {
                 setDialogOpen(false);
+                setTeam({});
               }}
             >
               Done
@@ -127,73 +126,96 @@ export default function InvitePeople({
                     onSubmit={handleSubmit}
                     className="w-full flex flex-col gap-7 justify-start relative h-full"
                   >
-                    <div className="z-0">
-                      <SelectInput
-                        optionValue={{
-                          firstV: "title",
-                          secondV: "description",
-                        }}
-                        key={"invite-team-field"}
-                        value={team?.title ?? ""}
-                        placeholder="Search by team name, etc"
-                        fetchOptions={async (query) => {
-                          const data = await fetchTeams();
-                          const filtered = data.filter((obj: any) =>
-                            obj.title
-                              .toLowerCase()
-                              .includes(query.toLowerCase())
-                          );
-                          return filtered;
-                        }}
-                        initialOptions={fetchTeams}
-                        onSelect={(data: any) => {
-                          setTeam({
-                            _id: data._id,
-                            title: data.title,
-                            description: data.description,
-                            image: data.image,
-                          });
-                        }}
-                        label="Select Team*"
-                        className={cn(
-                          error.length > 0 ? "border-destructive/80 border" : ""
+                    <div className="flex flex-col gap-2 pt-3">
+                      <AsyncSelect<Team>
+                        fetcher={fetchTeams}
+                        preload
+                        // fixInputClear={false}
+                        renderOption={(team) => (
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <div className="font-gilroyMedium">
+                                {team?.title}
+                              </div>
+                              <div className="text-xs font-gilroyRegular text-muted-foreground">
+                                {team?.description}
+                              </div>
+                            </div>
+                          </div>
                         )}
+                        filterFn={(team, query) =>
+                          team?.title
+                            ?.toLowerCase()
+                            ?.includes(query?.toLowerCase()) ||
+                          team?.description
+                            ?.toLowerCase()
+                            ?.includes(query?.toLowerCase())
+                        }
+                        getOptionValue={(team) => team?._id}
+                        getDisplayValue={() => (
+                          <div className="flex items-center gap-2 text-left w-full">
+                            <div className="flex flex-col leading-tight">
+                              <div className="font-gilroyMedium">
+                                {team?.title ?? ""}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        notFound={
+                          <div className="py-6 text-center font-gilroyMedium text-sm">
+                            No teams found
+                          </div>
+                        }
+                        label="Team"
+                        placeholder="Search Teams"
+                        value={team?.title || "null"}
+                        onChange={(selected) =>
+                          setTeam({
+                            _id: selected?._id,
+                            title: selected?.title,
+                            description: selected?.description,
+                            image: selected?.image,
+                          })
+                        }
+                        width="100%"
                       />
                       {error.length > 0 && (
-                        <p className="text-destructive text-sm">{error}</p>
+                        <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+                          {error}
+                        </p>
                       )}
                     </div>
 
                     {team?.title ? (
-                      <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
-                        <img
-                          src={
-                            team?.image && team.image.length > 0
-                              ? team.image
-                              : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
-                          }
-                          alt="team-image"
-                          className="w-20 h-20 p-1  object-cover rounded-full "
-                        />
+                      <div className="w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4">
+                        {team?.image && team?.image?.length > 0 ? (
+                          <img
+                            src={team?.image}
+                            alt={team?.title}
+                            className="size-14 object-cover rounded-full flex-shrink-0"
+                          />
+                        ) : (
+                          <GetAvatar name={team?.title ?? ""} size={56} />
+                        )}
                         <div className="w-full flex flex-col justify-center">
                           <div className="flex gap-3 items-center">
-                            <div className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                            <div className="text-black font-gilroySemiBold text-base">
                               {team?.title ?? "-"}
                             </div>
-                            <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                            <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm  font-gilroyMedium flex justify-center items-center px-2 py-0.5">
                               Active
                             </div>
                           </div>
-                          <div className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                          <div className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                             {team?.description ?? ""}
                           </div>
 
                           <div className="flex gap-2 items-center">
-                            <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
+                            <div className="text-[#ADADAC] text-sm  font-gilroySemiBold">
                               Reporting Manger:
                             </div>
                             <div className="text-black font-gilroySemiBold">
-                              {`${team?.manager?.[0]?.first_name ?? "-"}`}
+                              {`${team?.manager?.[0]?.first_name ?? "-"} `}
                             </div>
                           </div>
                         </div>
@@ -209,23 +231,14 @@ export default function InvitePeople({
                       >
                         Close
                       </Button>
-                      <Button
-                        className=" w-full"
-                        type="submit"
+                      <LoadingButton
+                        loading={loading}
                         variant="primary"
-                        disabled={loading}
+                        className="w-full"
+                        type="submit"
                       >
-                        {loading ? (
-                          <Spinner
-                            className={spinnerVariants({ size: "sm" })}
-                          />
-                        ) : (
-                          <>
-                            <span>Create Link</span>
-                            {/* <ChevronRight color="white" /> */}
-                          </>
-                        )}
-                      </Button>
+                        Create Link
+                      </LoadingButton>
                     </div>
                   </form>
                 </div>

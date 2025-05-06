@@ -37,7 +37,7 @@ export default function ReportPreview({
               if (element) {
                 html2pdf(element, {
                   margin: 0,
-                  filename: `${data.data.serial_no}_Report.pdf`,
+                  filename: `${data?.data?.serial_no}_Report.pdf`,
                   image: { type: "png" },
                   html2canvas: { scale: 2 },
                   jsPDF: { unit: "in", format: "letter", orientation: "p" },

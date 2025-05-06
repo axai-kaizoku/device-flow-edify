@@ -18,6 +18,7 @@ import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
 import { StoreBannerCard } from "@/components/store-banner";
 import ProfileSkeleton from "@/app/(root)/(userRoutes)/_components/profile-main-skeleton";
+import { GetAvatar } from "@/components/get-avatar";
 
 const UserGrid = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -46,17 +47,26 @@ const UserGrid = ({ user }: { user: User }) => {
             <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-lg px-6 py-4">
               <div className="flex justify-start gap-4 items-start w-full ">
                 <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
-                  <img
+                  {/* <img
                     src={
-                      user?.image && user.image.length > 0
+                      user?.image && user?.image?.length > 0
                         ? user?.image
-                        : user?.gender === "Male"
-                        ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
+                        : user?.gender?.toLowerCase()?.includes("female")
+                        ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
+                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                     }
                     alt="Profile"
                     className="w-full h-full object-cover"
-                  />
+                  /> */}
+                  {user?.image && user?.image?.length > 0 ? (
+                    <img
+                      src={user?.image}
+                      alt={user?.first_name}
+                      className="size-full object-cover rounded-full flex-shrink-0"
+                    />
+                  ) : (
+                    <GetAvatar name={user?.first_name ?? ""} size={90} />
+                  )}
                 </div>
 
                 <div className="flex flex-col">
@@ -64,20 +74,32 @@ const UserGrid = ({ user }: { user: User }) => {
                     {`${user?.first_name ?? ""} ${user?.last_name ?? ""}`}
                   </h1>
                   <p className="text-[#7C7C7C] text-sm font-gilroyMedium whitespace-nowrap">
-                    {user?.designation ?? ""} . {user?.teamId?.title ?? ""}
+                    {user?.designation ?? ""} {user?.teamId?.title ?? ""}
                   </p>
                   <div className="flex gap-2 mt-2">
-                    <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#ECFDF3]">
-                      <span className="text-center text-[#027A48] text-[12.435px] font-gilroyMedium leading-[18.652px]">
-                        Active
-                      </span>
-                    </div>
+                    {user?.deleted_at !== null ? (
+                      <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#FFE0E0]">
+                        <span className="text-center text-[#F00] text-[12.435px] font-gilroyMedium leading-[18.652px]">
+                          Inactive
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#ECFDF3]">
+                        <span className="text-center text-[#027A48] text-[12.435px] font-gilroyMedium leading-[18.652px]">
+                          Active
+                        </span>
+                      </div>
+                    )}
 
-                    <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#FFE8D6]">
-                      <span className="text-center text-[#E89F02] text-[12.435px] font-gilroyMedium leading-[18.652px]">
-                        {user?.employment_type ?? ""}
-                      </span>
-                    </div>
+                    {user?.employment_type ? (
+                      <div className="flex justify-center items-center gap-[6.217px] px-[8.29px] py-[2.072px] rounded-[16.58px] bg-[#FFE8D6]">
+                        <span className="text-center text-[#E89F02] text-[12.435px] font-gilroyMedium leading-[18.652px]">
+                          {user?.employment_type ?? ""}
+                        </span>
+                      </div>
+                    ) : (
+                      <span></span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -206,8 +228,12 @@ const UserGrid = ({ user }: { user: User }) => {
                       <img
                         src={
                           user?.reporting_manager?.image &&
-                          user.reporting_manager.image.length > 0
+                          user?.reporting_manager?.image?.length > 0
                             ? user?.reporting_manager?.image
+                            : user?.reporting_manager?.gender
+                                ?.toLowerCase()
+                                ?.includes("female")
+                            ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
                             : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
                         }
                         alt="Profile"

@@ -53,9 +53,6 @@ function OrganisationDetails({ setSteps, token, user }: any) {
 
   const onSubmit = async () => {
     if (validateFields()) {
-      // console.log("Form Data:", formData);
-      // console.log("token", token);
-      // console.log("user", user);
       const userData = {
         token: token,
         ...formData,

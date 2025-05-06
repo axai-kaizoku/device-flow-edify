@@ -34,7 +34,7 @@ const UserNavArrows: React.FC<UserNavArrowsProps> = ({
   return (
     <>
       <div
-        className={`rounded-full border border-[#6C6C6C] size-8 flex justify-center items-center cursor-pointer ${
+        className={`rounded-md border border-[rgba(0,0,0,0.2)] hover:border-black size-8 flex justify-center items-center cursor-pointer ${
           isPending ? "opacity-50 pointer-events-none" : ""
         }`}
         onClick={handlePrev}
@@ -43,7 +43,7 @@ const UserNavArrows: React.FC<UserNavArrowsProps> = ({
         <ChevronLeft className="text-[#6C6C6C] size-5" />
       </div>
       <div
-        className={`rounded-full border border-[#6C6C6C] size-8 flex justify-center items-center cursor-pointer ${
+        className={`rounded-md border border-[rgba(0,0,0,0.2)] hover:border-black size-8 flex justify-center items-center cursor-pointer ${
           isPending ? "opacity-50 pointer-events-none" : ""
         }`}
         onClick={handleNext}

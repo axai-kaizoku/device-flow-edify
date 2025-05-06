@@ -1,9 +1,12 @@
+"use server";
+
 import { AxiosError } from "axios";
 import { callAPIWithToken } from "./helper";
 import { User } from "./userActions";
+import { BASEURL } from "./main";
 
-// const apiUrl = "https://staging.deviceflow.ai";
-const apiUrl = "https://1c55-34-47-179-100.ngrok-free.app";
+const apiUrl = BASEURL;
+// const apiUrl = "https://1c55-34-47-179-100.ngrok-free.app";
 
 export type Seat = {
   _id: string;
@@ -168,13 +171,32 @@ export const connectIntegration = async ({
       "POST",
       body
     );
-    console.log(res.data, "integration add response");
     return res.data;
   } catch (error) {
-    console.error(error);
     throw new Error((error as AxiosError)?.message);
   }
 };
+
+export const connectGsuiteIntegration = async ({ id }: { id: string }) => {
+  try {
+    const res = await callAPIWithToken<AddIntegrationRes>(
+      `${apiUrl}/edifybackend/v1/integration/getGsuiteResponse/${id}`,
+      "GET",
+      null
+    );
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: (error as AxiosError)?.message || "Something went wrong",
+    };
+  }
+};
+
+
 export type IntegrationUsers = {
   allUsers: User[];
   missingIntegrationUsers: User[];
@@ -196,7 +218,7 @@ export const getUsersOfIntegration = async ({
       "POST",
       body
     );
-    console.log(res.data);
+    // console.log(res.data);
     return res?.data;
   } catch (error) {
     console.error(error);
@@ -222,7 +244,7 @@ export const mapIntegrationUsers = async ({
       payload
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     return res?.data;
   } catch (error) {
@@ -255,7 +277,7 @@ export const getConnectedIntegrations = async () => {
       "GET"
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     return res?.data;
   } catch (error) {

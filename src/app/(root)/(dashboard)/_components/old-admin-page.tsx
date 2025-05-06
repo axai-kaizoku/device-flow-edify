@@ -15,7 +15,7 @@ import { Members } from "./admin-conponents/members";
 import { TrendingDevices } from "./admin-conponents/trending-devices";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import FeedBackIcon from "@/icons/FeedBackIcon";
 import DashboardSkeleton from "./dashboard-skeleton";
 
@@ -30,7 +30,7 @@ export default function AdminDashboard() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const userData = useSelector((state: RootState) => state.auth.userData);
-  const { openToast } = useToast();
+
   const [formData, setFormData] = useState({
     rating: 0,
     comment: "",
@@ -42,8 +42,7 @@ export default function AdminDashboard() {
 
   const handleSubmitFeedback = async () => {
     if (!formData.rating || !formData.comment) {
-      openToast(
-        "error",
+      toast.error(
         "Please select a rating and add a comment before submitting."
       );
       return;
@@ -51,12 +50,12 @@ export default function AdminDashboard() {
 
     try {
       const response = await sendFeedback(formData);
-      openToast("success", "Thank you for your feedback!");
+      toast.success("Thank you for your feedback!");
       toggleModal();
       setClickedIndex(null);
       setFormData((prev) => ({ ...prev, rating: 0, comment: "" }));
     } catch (error) {
-      openToast("error", "Failed to submit feedback. Please try again.");
+      toast.error("Failed to submit feedback. Please try again.");
     }
   };
 

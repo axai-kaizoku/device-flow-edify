@@ -65,8 +65,8 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-y-0.5 my-1">
-              <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
+            <div className="flex flex-col gap-b-0.5 my-1">
+              <DialogTitle className="text-base font-gilroySemiBold text-gray-900">
                 {currentAlert.title}
               </DialogTitle>
 

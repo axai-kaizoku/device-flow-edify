@@ -1,6 +1,7 @@
-import NextAuth, { NextAuthOptions, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { BASEURL } from "@/server/main";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -14,78 +15,95 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch(
-          "https://staging.deviceflow.ai/edifybackend/v1/auth/login",
-          {
-            method: "POST",
-            body: JSON.stringify(credentials),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const body = await res.json();
-        // console.log(body);
-
-        if (res.status === 200) {
-          return body;
-        } else {
-          throw new Error(body.message || "Login failed");
-        }
-      },
-    }),
-
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      async profile(profile, tokens) {
-        const res = await fetch(
-          "https://staging.deviceflow.ai/edifybackend/v1/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: profile.email,
-            }),
-          }
-        );
+        const res = await fetch(`${BASEURL}/edifybackend/v1/auth/login`, {
+          method: "POST",
+          body: JSON.stringify(credentials),
+          headers: { "Content-Type": "application/json" },
+        });
 
         const data = await res.json();
 
-        const returnData = {
-          id: profile.sub,
-          user: data.user,
-        };
-
-        if (res.status === 200) {
-          return returnData as User;
+        if (res.ok && data?.user?.length) {
+          return data;
         } else {
           throw new Error(data.message || "Login failed");
         }
       },
     }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
+
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.token = user.token;
-        token.userId = user.user[0]._id;
-        token.email = user.user[0].email;
-        token.firstName = user.user[0].first_name;
-        token.lastName = user.user[0].last_name;
-        token.role = user.user[0].role;
-        token.employeeCount = user.user[0].employeeCount;
-        token.designation = user.user[0].designation;
-        token.orgId = user.user[0].orgId;
-        token.teamId = user.user[0].teamId;
-        // @ts-ignore
-        token.addressDetails = user.user[0].addressDetails[0];
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        try {
+          const res = await fetch(
+            `${BASEURL}/edifybackend/v1/auth/loginGoogle`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ access_token: account.access_token }),
+            }
+          );
+
+          const data = await res.json();
+
+          if (res.ok && data?.user?.length) {
+            account.userData = data.user[0]; // Save user data for jwt
+            account.access_token = data.token;
+            return true;
+          } else {
+            switch (account?.provider) {
+              case "google":
+              default:
+                return `/login?error=${profile.email}`; // This is where you set your error
+            }
+          }
+        } catch (err) {
+          return Promise.reject(new Error("AccessDenied"));
+        }
       }
 
-      // console.log("JWT token:", token);
+      return true;
+    },
+
+    async jwt({ token, user, account }) {
+      // From CredentialsProvider
+      if (user && user.user?.length) {
+        const u = user.user[0];
+        token.token = user.token;
+        token.userId = u._id;
+        token.email = u.email;
+        token.firstName = u.first_name;
+        token.lastName = u.last_name;
+        token.role = u.role;
+        token.employeeCount = u.employeeCount;
+        token.designation = u.designation;
+        token.orgId = u.orgId;
+        token.teamId = u.teamId;
+        token.addressDetails = u.addressDetails?.[0];
+      }
+
+      // From GoogleProvider
+      if (account?.provider === "google" && account.userData) {
+        const u: any = account.userData;
+        token.token = account.access_token;
+        token.userId = u._id;
+        token.email = u.email;
+        token.firstName = u.first_name;
+        token.lastName = u.last_name;
+        token.role = u.role;
+        token.employeeCount = u.employeeCount;
+        token.designation = u.designation;
+        token.orgId = u.orgId;
+        token.teamId = u.teamId;
+        token.addressDetails = u.addressDetails?.[0];
+      }
+
       return token;
     },
 
@@ -104,12 +122,10 @@ export const authOptions: NextAuthOptions = {
         addressDetails: token.addressDetails,
       };
 
-      // console.log("Session object:", session);
       return session;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

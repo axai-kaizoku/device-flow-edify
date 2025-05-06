@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
+import { BASEURL } from "./main";
 
 // export async function qualityCheck(userId:string) {
 //   const sess = await getSession();
@@ -10,7 +11,7 @@ import { callAPIWithToken, getSession } from "./helper";
 //   return result;
 // }
 
-const qcUrl = "https://staging.deviceflow.ai";
+const qcUrl = BASEURL;
 
 export async function qualityCheck() {
   try {
@@ -22,7 +23,6 @@ export async function qualityCheck() {
     const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/check-quality-checks`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
-    // console.log(response, "ITEM ADDED TO CART");
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get quality check");
@@ -38,8 +38,6 @@ export async function uniqueIdGeneration() {
     const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/unique-id`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
-    // console.log(response, "ITEM ADDED TO CART");
-    console.log(response.data);
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get unique id");
@@ -81,8 +79,6 @@ export async function qcReportTable(page: number, limit: number) {
       "POST",
       payload
     );
-    // console.log(response, "ITEM ADDED TO CART");
-    console.log(response.data);
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get qc reports");
@@ -103,8 +99,6 @@ export async function qcReportTableAdmin(page: number, limit: number) {
       "POST",
       payload
     );
-    // console.log(response, "ITEM ADDED TO CART");
-    console.log(response.data);
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get qc reports");
@@ -141,8 +135,6 @@ export async function downloadReport({ userId }: { userId: string }) {
     }
 
     const response = await callAPIWithToken<ReportData>(apiUrl, "GET");
-    // console.log(response, "ITEM ADDED TO CART");
-    // console.log(response.data);
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get qc reports");

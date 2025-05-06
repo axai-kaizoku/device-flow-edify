@@ -177,6 +177,7 @@ import { bulkUploadDevices } from "@/server/deviceActions";
 import { SelectInput } from "@/components/dropdown/select-input";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import BulkUpload from "./BulkUpload";
+import { AsyncSelect } from "@/components/ui/async-select";
 
 type DeviceTypeProps = {
   data: string;
@@ -345,8 +346,63 @@ const DeviceTypeOnboarding = ({
       </div>
 
       <div className="flex flex-col mt-2 mb-1">
-        <div className="font-gilroySemiBold text-lg">Device Assign to</div>
-        <div className="pt-3.5 w-full">
+        <div className="font-gilroySemiBold text-lg">
+          Device Assign to{" "}
+          <span className="text-sm font-gilroyRegular text-neutral-400">
+            (optional)
+          </span>
+        </div>
+
+        <div className="w-full pt-2">
+          <AsyncSelect<User>
+            fetcher={fetchUsers}
+            preload
+            renderOption={(user) => (
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <div className="font-gilroyMedium">{user?.first_name}</div>
+                  <div className="text-xs font-gilroyRegular text-muted-foreground">
+                    {user?.email}
+                  </div>
+                </div>
+              </div>
+            )}
+            filterFn={(user, query) =>
+              user?.first_name?.toLowerCase()?.includes(query?.toLowerCase()) ||
+              user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+            }
+            getOptionValue={(user) => user?.email}
+            getDisplayValue={(displayUser) => (
+              <div className="flex items-center gap-2 text-left w-full">
+                <div className="flex flex-col leading-tight">
+                  <div className="font-gilroyMedium">
+                    {user?.first_name === displayUser?.first_name
+                      ? displayUser?.email
+                      : user?.email ?? ""}
+                  </div>
+                </div>
+              </div>
+            )}
+            notFound={
+              <div className="py-6 text-center font-gilroyMedium text-sm">
+                No users found
+              </div>
+            }
+            label="User"
+            placeholder="Assigning to"
+            value={user?.email || "null"}
+            onChange={(selected: User | null) => {
+              setUser({
+                email: selected?.email,
+                _id: selected?._id,
+                first_name: selected?.first_name,
+              });
+            }}
+            width="100%"
+            triggerClassName="border border-[#5F5F5F]"
+          />
+        </div>
+        {/* <div className="pt-3.5 w-full">
           <SelectInput
             fetchOptions={searchUsers}
             initialOptions={fetchUsers}
@@ -364,7 +420,7 @@ const DeviceTypeOnboarding = ({
             label="Assigning To"
             value={user?.first_name!}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,56 +1,71 @@
+// app/providers.tsx   (or wherever your Providers live)
 "use client";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "next-themes";
-import { Provider } from "react-redux";
-import store from "./app/store/store";
-import "react-toastify/dist/ReactToastify.css";
-import StyledJsxRegistry from "./app/registry";
-import { Slide, ToastContainer } from "react-toastify";
+
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "./app/globals.css";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+} from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
+import { Provider as ReduxProvider } from "react-redux";
+import store from "./app/store/store";
+import StyledJsxRegistry from "./app/registry";
 import { AlertProvider } from "./hooks/useAlert";
 import { Toaster } from "./components/ui/sonner";
+import "./app/globals.css";
+import GlobalError from "./app/global-error";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [maintenance, setMaintenance] = useState(false);
+
+  const [queryClient] = useState(() => {
+    return new QueryClient({
+      // 1) Global onError for *all* queries
+      queryCache: new QueryCache({
+        onError: (error) => {
+          const status = (error as any)?.response?.status;
+          // show maintenance on any 5xx
+          if (status && `${status}`.startsWith("5")) {
+            setMaintenance(true);
+          }
+        },
+      }),
+      // 2) Your existing defaults
+      defaultOptions: {
+        queries: {
+          staleTime: 60 * 1000,
+          refetchOnWindowFocus: false,
+        },
+      },
+    });
+  });
+
+  // 3) If a 5xx is tripped anywhere, short‑circuit to Maintenance
+  if (maintenance) {
+    return <GlobalError />;
+  }
+
+  // 4) Otherwise render your app
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
+      <ReduxProvider store={store}>
         <SessionProvider
           refetchOnWindowFocus={false}
           refetchWhenOffline={false}
           refetchInterval={1500}
         >
           <StyledJsxRegistry>
-            {/* <ThemeProvider attribute="class" defaultTheme="light"> */}
             <AlertProvider>
+            <GoogleOAuthProvider clientId="412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com">
               {children}
-
               <Toaster position="top-center" duration={3000} />
+              </GoogleOAuthProvider>
             </AlertProvider>
-            <ToastContainer
-              position="bottom-right"
-              autoClose={3000}
-              hideProgressBar
-              toastClassName={(ctx) =>
-                "relative flex min-h-20 h-20 items-center w-full text-black min-w-16 rounded-xl backdrop-blur-3xl  justify-between overflow-hidden border border-gray-800 cursor-pointer"
-              }
-              newestOnTop={false}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              role="alert"
-              pauseOnHover
-              theme="light"
-              transition={Slide}
-              stacked
-            />
-            {/* </ThemeProvider> */}
           </StyledJsxRegistry>
         </SessionProvider>
-      </Provider>
+      </ReduxProvider>
     </QueryClientProvider>
   );
 }

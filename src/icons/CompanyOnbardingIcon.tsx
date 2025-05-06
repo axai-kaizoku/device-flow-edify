@@ -2,6 +2,7 @@ import { LucideProps } from "lucide-react";
 
 const CompanyOnbardingIcon = (props: LucideProps) => (
   <svg
+    {...props}
     width="137"
     height="136"
     viewBox="0 0 137 136"

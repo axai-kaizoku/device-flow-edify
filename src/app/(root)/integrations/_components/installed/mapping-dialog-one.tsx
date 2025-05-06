@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/buttons/Button";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
@@ -7,12 +7,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React from "react";
-import { BlueTickCircle } from "../icons";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AddIntegrationRes } from "@/server/integrationActions";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
+import React from "react";
+import { toast } from "sonner";
+import { BlueTickCircle } from "../icons";
 
 export default function MappingDialogOne({
   children,
@@ -48,6 +49,11 @@ export default function MappingDialogOne({
       refetchType: "all",
     });
     await queryClient.invalidateQueries({
+      queryKey: ["fetch-people"],
+      exact: false,
+      refetchType: "all",
+    });
+    await queryClient.invalidateQueries({
       queryKey: ["user-by-integrations", "all-data"],
       exact: true,
       refetchType: "all",
@@ -62,18 +68,28 @@ export default function MappingDialogOne({
       exact: false,
       refetchType: "all",
     });
+    queryClient.removeQueries({ queryKey: ["add-integration-response"] });
+    queryClient.removeQueries({ queryKey: ["gsuite-integration-response"] });
     setNextSteps(0);
-    router.push(`/integrations/installed?platform=${platform}`);
+    router.replace(`/integrations/installed?platform=${platform}`, {
+      scroll: false,
+    });
+
+    toast.success("Integration successfull !");
   };
 
   return (
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps(0)}>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full text-center">
+        <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
+          className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full text-center"
+        >
           <DialogTitle className="text-lg font-gilroySemiBold -my-2">
             Found
           </DialogTitle>
+          {/* {JSON.stringify(response)} */}
           <div className="flex gap-1 text-[#2E8016] items-center justify-center -my-1">
             <span className="text-4xl font-gilroyBold">
               {active === undefined ? (
@@ -156,19 +172,22 @@ export default function MappingDialogOne({
           <div className="h-[1px] bg-gray-200  -mx-6"></div>
 
           <DialogFooter className="flex w-full items-center justify-between -mb-1.5">
-            <Button
-              className="w-[48%] rounded-lg text-sm bg-white text-black  font-gilroyMedium tracking-wide border hover:border-black"
+            <span
+              // href={`/integrations/installed?platform=${platform}`}
+              className={buttonVariants({
+                variant: "outline",
+                className:
+                  "w-[48%] bg-white hover:bg-white hover:border-black cursor-pointer",
+              })}
               onClick={handleSkipClick}
               onMouseEnter={() =>
                 router.prefetch(`/integrations/installed?platform=${platform}`)
               }
             >
               Skip
-            </Button>
+            </span>
+
             <Button
-              onMouseEnter={() =>
-                router.prefetch(`/integrations/installed?platform=${platform}`)
-              }
               className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               onClick={() => setNextSteps(2)}
               disabled={inActive === 0}

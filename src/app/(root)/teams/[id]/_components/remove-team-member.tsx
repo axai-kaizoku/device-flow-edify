@@ -13,9 +13,10 @@ import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { updateUser, User } from "@/server/userActions";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import WarningDelete from "@/icons/WarningDelete";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const RemoveTeamMember = ({
   userData,
@@ -25,9 +26,11 @@ export const RemoveTeamMember = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
-  const { openToast } = useToast();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const handleRemove = async () => {
     if (userData._id) {
@@ -35,10 +38,21 @@ export const RemoveTeamMember = ({
       try {
         await updateUser(userData._id, { teamId: null });
         setOpen(false);
-        openToast("success", "Removed member from team !");
+
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-team-by-id"],
+          exact: false,
+          refetchType: "all",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["get-users-by-team-id"],
+          exact: false,
+          refetchType: "all",
+        });
+        toast.success("Removed member from team !");
         router.refresh();
       } catch (e: any) {
-        openToast("error", "Can't remove member from this team!");
+        toast.error("Can't remove member from this team!");
         setOpen(false);
       } finally {
         setLoading(false);

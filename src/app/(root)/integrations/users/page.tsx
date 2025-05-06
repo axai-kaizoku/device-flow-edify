@@ -11,8 +11,10 @@ const Page = () => {
   const { data, status } = useQuery({
     queryKey: ["user-by-integrations", "all-data"],
     queryFn: () => getUsersOfIntegration({}),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // staleTime: 1000 * 60 * 5,
+
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
   });
 
   const currentTab = searchParams.get("tab");

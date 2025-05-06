@@ -1,21 +1,19 @@
 "use client";
 
+import { Button } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { updateTeam } from "@/server/teamActions";
-import { AlertCircle } from "lucide-react"; // Importing the icon from lucide-react
-import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
-import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
+import { updateTeam } from "@/server/teamActions";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const PermanentTeamDelete = ({
   id,
@@ -26,10 +24,10 @@ export const PermanentTeamDelete = ({
   children: React.ReactNode;
   onRefresh: () => Promise<void>;
 }) => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [initText, setInitText] = useState("Are you sure?");
-  const { openToast } = useToast();
+
+  const queryClient = useQueryClient();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -48,7 +46,7 @@ export const PermanentTeamDelete = ({
         </DialogTitle>
 
         {/* Description */}
-        <DialogDescription className="p-1 text-sm text-gray-600">
+        <DialogDescription className="p-1 text-sm text-gray-600 -mt-2">
           Are you sure you want to delete this? This can't be undone.
         </DialogDescription>
 
@@ -65,11 +63,16 @@ export const PermanentTeamDelete = ({
             onClick={async () => {
               if (id) {
                 try {
-                  updateTeam(id!, { orgId: null });
+                  const res = updateTeam(id!, { orgId: null });
+                  queryClient.invalidateQueries({
+                    queryKey: ["teams"],
+                    exact: false,
+                    refetchType: "all",
+                  });
+
                   setOpen(false);
-                  openToast('success', "Team Deleted Successfully!");
-                  // router.refresh();
-                  onRefresh();
+
+                  toast.success("Team Deleted Successfully!");
                 } catch (e: any) {
                   const errorMessage =
                     e.response?.data?.message ||

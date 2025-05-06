@@ -14,10 +14,11 @@ import { mapIntegrationUsers } from "@/server/integrationActions";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { IntBack } from "../../../_components/icons";
-import { Loader2 } from "lucide-react";
 
 type UsersType = {
   _id: string;
@@ -171,6 +172,11 @@ export default function MappingDialogTwo({
         refetchType: "all",
       });
       await queryClient.invalidateQueries({
+        queryKey: ["fetch-people"],
+        exact: false,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
         queryKey: ["user-by-integrations", "all-data"],
         exact: true,
         refetchType: "all",
@@ -213,7 +219,10 @@ export default function MappingDialogTwo({
       { payload },
       {
         onSuccess: () => {
-          router.push(`/integrations/installed?platform=${platform}`);
+          router.replace(`/integrations/installed?platform=${platform}`, {
+            scroll: false,
+          });
+          toast.success("Integration successfull !");
         },
       }
     );
@@ -223,7 +232,10 @@ export default function MappingDialogTwo({
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps && setNextSteps(0)}>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="rounded-2xl bg-white p-4 shadow-lg max-w-md w-full">
+        <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
+          className="rounded-2xl bg-white p-4 shadow-lg max-w-md w-full"
+        >
           <DialogTitle className="text-base flex gap-3 items-center font-gilroyMedium pl-2">
             <IntBack
               onClick={() => setNextSteps && setNextSteps(1)}
@@ -253,6 +265,7 @@ export default function MappingDialogTwo({
                 <div className="flex flex-col gap-2">
                   <AsyncSelect<UsersType>
                     fetcher={getUsers}
+                    fixInputClear={false}
                     renderOption={(user) => (
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">

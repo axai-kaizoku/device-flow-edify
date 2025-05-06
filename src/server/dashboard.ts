@@ -1,11 +1,33 @@
 import { cache } from "react";
 import { callAPI, callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
+import { BASEURL } from "./main";
+
+const baseUrl = BASEURL;
+
+export const getTotalIntegrationData = cache(async function <Org>() {
+  try {
+    const session = await getSession();
+    const orgID = session?.user?.user?.orgId?._id;
+
+    const res = await callAPIWithToken<Org>(
+      `${baseUrl}/edifybackend/v1/integration/dashboard/${orgID}`,
+      "GET", // HTTP method
+      null
+    );
+
+    // console.log(res.data);
+
+    return res?.data;
+  } catch (e) {
+    throw new Error("Failed to fetch org");
+  }
+});
 
 export const getDashboard = cache(async function <Org>() {
   try {
     const res = await callAPIWithToken<Org>(
-      `https://staging.deviceflow.ai/edifybackend/v1/organisation/dashboard`, // API endpoint
+      `${baseUrl}/edifybackend/v1/organisation/dashboard`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -35,7 +57,7 @@ export async function sendFeedback({
 
   try {
     const { data } = await callAPI(
-      "https://staging.deviceflow.ai/edifybackend/v1/auth/user/onboard?feedback=true",
+      `${baseUrl}/edifybackend/v1/auth/user/onboard?feedback=true`,
       "POST",
       payload,
       {

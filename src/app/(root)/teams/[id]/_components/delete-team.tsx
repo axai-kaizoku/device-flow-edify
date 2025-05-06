@@ -1,22 +1,21 @@
 "use client";
 
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteTeam } from "@/server/teamActions";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
 import WarningDelete from "@/icons/WarningDelete";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
+import { deleteTeam } from "@/server/teamActions";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const DeleteTeam = ({
   id,
@@ -29,17 +28,25 @@ export const DeleteTeam = ({
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
-  const { openToast } = useToast();
+
   const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const handleDelete = async () => {
     if (id) {
       try {
         await deleteTeam(id);
         setOpen(false);
-        openToast("success", "Team Deleted Successfully!");
-        // router.push("/teams");
-        onRefresh();
+
+        queryClient.invalidateQueries({
+          queryKey: ["teams"],
+          exact: false,
+          refetchType: "all",
+        });
+        router.refresh();
+        router.push("/teams?tab=active-teams");
+        toast.success("Team Deleted Successfully!");
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the team.",

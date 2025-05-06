@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@/components/icons";
+import { GetAvatar } from "@/components/get-avatar";
 import TeamsNoMemberIcon from "@/icons/TeamsNoMemberIcon";
 import Link from "next/link";
 
@@ -80,7 +80,7 @@ export const TeamCard = ({
   return (
     <div
       className="border border-[rgba(171,171,171,0.19)] hover:border-[#B3B3B3] bg-[#FCFCFC] backdrop-blur-[14.1px]
- relative rounded-lg max-lg:w-[calc(50%-16px)] max-2xl:w-[calc(33.33%-16px)]  p-4 flex flex-col transition-all "
+ relative rounded-lg w-[calc(33%-16px)] 2xl:w-[calc(25%-16px)]  p-4 flex flex-col transition-all "
     >
       <Link
         href={`/teams/${_id}`}
@@ -89,16 +89,18 @@ export const TeamCard = ({
         {/* Header Section */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img
-              src={
-                image ||
-                "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
-              }
-              alt="manager-icon"
-              className="w-12 h-12 object-cover rounded-full"
-            />
+            {image && image?.length > 0 ? (
+              <img
+                src={image}
+                alt={title}
+                className="size-12 object-cover rounded-full flex-shrink-0"
+              />
+            ) : (
+              <GetAvatar name={title ?? ""} />
+            )}
+
             <div className="-mt-1 flex-col flex">
-              <h1 className="text-base 2xl:text-lg font-gilroySemiBold">
+              <h1 className="text-base  font-gilroySemiBold">
                 {active_manager?.[0]?.first_name || "No Manager"}
               </h1>
               <p className="text-sm font-gilroyMedium text-[#7C7C7C] -mt-1">
@@ -111,12 +113,12 @@ export const TeamCard = ({
         {/* Description Section */}
         <div>
           <div className="flex items-center gap-2">
-            <p className="font-gilroySemiBold text-xl line-clamp-2">
+            <p className="font-gilroySemiBold text-base line-clamp-2">
               {title ?? "-"}
             </p>
-            {/* <p className="font-gilroySemiBold text-sm text-[#7C7C7C] line-clamp-2">
+            <p className="font-gilroySemiBold text-xs text-[#7C7C7C] line-clamp-2">
               ({team_code ?? "-"})
-            </p> */}
+            </p>
           </div>
           <p className="text-[#7C7C7C] text-sm font-gilroyMedium line-clamp-2">
             {description ?? "-"}
@@ -125,7 +127,7 @@ export const TeamCard = ({
 
         {/* Members Section */}
         <div className="flex -mt-3 items-center justify-between">
-          <h1 className="text-sm 2xl:text-lg font-gilroyMedium ">
+          <h1 className="text-sm font-gilroyMedium ">
             {employees_count === 0
               ? "No Members Yet"
               : `${employees_count} Active Members`}

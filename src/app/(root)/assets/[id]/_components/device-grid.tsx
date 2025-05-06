@@ -1,7 +1,6 @@
+import { GetAvatar } from "@/components/get-avatar";
 import { StoreBannerCard } from "@/components/store-banner";
 import { getUserById, User } from "@/server/userActions";
-import React, { Suspense } from "react";
-import { DeviceGridSkeleton } from "./device-grid-skelton";
 
 // Helper to format a date string into the required "en-GB" format.
 const formatDate = (dateStr?: string): string => {
@@ -138,17 +137,15 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
             <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
               <h1 className="text-base font-gilroyMedium">Assigned Info</h1>
               <div className="flex gap-2 items-center">
-                <img
-                  src={
-                    assignedTo?.image && assignedTo.image.length > 0
-                      ? assignedTo.image
-                      : assignedTo.gender === "Male"
-                      ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                      : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                  }
-                  alt={assignedTo.first_name ?? "assignee"}
-                  className="size-16 rounded-full object-cover"
-                />
+                {assignedTo?.image && assignedTo?.image?.length > 0 ? (
+                  <img
+                    src={assignedTo?.image}
+                    alt={assignedTo?.first_name}
+                    className="size-16 object-cover rounded-full flex-shrink-0"
+                  />
+                ) : (
+                  <GetAvatar name={assignedTo?.first_name ?? ""} size={64} />
+                )}
                 <div className="flex flex-col justify-center">
                   <div className="text-black font-gilroySemiBold text-sm">
                     {`${assignedTo?.first_name ?? "-"} ${

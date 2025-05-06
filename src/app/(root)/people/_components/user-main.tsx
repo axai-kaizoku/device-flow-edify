@@ -1,89 +1,46 @@
-import { bulkDeleteUsers, User, UserResponse } from "@/server/userActions";
+import { Table } from "@/components/wind/Table";
+import { User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
-import { Table } from "@/components/wind/Table";
-import Pagination from "../../teams/_components/pagination";
 import { DeleteUser } from "../[id]/_components/delete-user";
 import EditUser from "../[id]/_components/edit-user";
-import { activeUsers } from "@/server/filterActions";
-import Spinner from "@/components/Spinner";
-import { Icons } from "../icons";
 
-import CreateUser from "./create-user";
+import { buttonVariants } from "@/components/buttons/Button";
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { GetAvatar } from "@/components/get-avatar";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
-import { useToast } from "@/hooks/useToast";
-import { DeleteModal } from "./deleteUserModal";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
+import CreateUser from "./create-user";
 import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
-import { buttonVariants } from "@/components/buttons/Button";
 
 export default function UserMain({
   data,
   peopleText = "Total People",
   setUsers,
   onRefresh,
+  selectedIds,
+  setSelectedIds,
+  handleBulkDelete,
+  handleSelectionChange,
+  status,
 }: {
   data: UserResponse | null;
+  status: string;
   peopleText?: string;
   setUsers?: React.Dispatch<React.SetStateAction<UserResponse | null>>;
   onRefresh?: () => Promise<void>;
+  selectedIds?: string[];
+  setSelectedIds: (state: any) => void;
+  handleBulkDelete?: () => Promise<void>;
+  handleSelectionChange?: (selected: string[]) => void;
 }) {
   const router = useRouter();
-  // const [currentPage, setCurrentPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { openToast } = useToast();
-  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [users, setUsers] = useState(data);
-
-  // const handlePageChange = async (page: number) => {
-  //   setIsLoading(true); // Set loading to true when changing pages
-  //   try {
-  //     const res = await activeUsers({ page });
-  //     setUsers(res);
-  //     setCurrentPage(page);
-  //   } catch (error) {
-  //     console.error("Error fetching Members:", error);
-  //   } finally {
-  //     setIsLoading(false); // Set loading to false when done
-  //   }
-  // };
-
-  const handleBulkDelete = async () => {
-    if (selectedIds.length === 0) {
-      openToast("error", `No user selected for deletion`);
-      return;
-    }
-
-    // const confirmDelete = window.confirm(
-    //   `Are you sure you want to delete ${selectedIds.length} users?`
-    // );
-    // if (!confirmDelete) return;
-
-    try {
-      const res = await bulkDeleteUsers(selectedIds, "soft");
-      if (res.status !== 200) throw new Error("Failed to delete users");
-      setOpen(false);
-      openToast("success", "Users deleted successfully!");
-      setSelectedIds([]); // Clear selection after deletion
-      // await onRefresh(); // Refresh data after deletion
-    } catch (error) {
-      openToast("error", `Failed to delete Users : ${error}`);
-    }
-  };
-
-  const handleSelectionChange = (selected: string[]) => {
-    setSelectedIds(selected);
-  };
-
-  // console.log(selectedIds);
 
   return (
     <>
-      {/* {JSON.stringify(data?.users[0])} */}
       <div>
         {!isLoading && data?.users?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-8">
@@ -114,7 +71,7 @@ export default function UserMain({
                   </h1>
                 </div>
 
-                {selectedIds.length > 0 && (
+                {/* {selectedIds.length > 0 && (
                   <DeleteModal
                     handleBulkDelete={handleBulkDelete}
                     open={open}
@@ -122,31 +79,25 @@ export default function UserMain({
                   >
                     <button
                       // onClick={handleBulkDelete}
-                      className="bg-black text-sm flex items-center gap-2 text-white px-4 py-2 font-gilroySemiBold w-fit mr-8 rounded-md"
+                      className="bg-black text-base flex items-center gap-2 text-white px-3 py-1 font-gilroyMedium w-fit mr-8 rounded-lg"
                     >
                       Delete
                     </button>
                   </DeleteModal>
                   // {selectedIds.length} Users
-                )}
+                )} */}
               </div>
-              <Suspense
-                fallback={
-                  <div>
-                    <DeviceFlowLoader />
-                  </div>
-                }
-              >
+              <Suspense>
                 <div className="flex flex-col h-full w-full">
                   <Table
                     data={data?.users ?? []}
                     selectedIds={selectedIds}
-                    isLoading={isLoading}
+                    isLoading={status === "pending"}
                     setSelectedIds={setSelectedIds}
-                    // checkboxSelection={{
-                    //   uniqueField: "_id",
-                    //   onSelectionChange: handleSelectionChange,
-                    // }}
+                    checkboxSelection={{
+                      uniqueField: "_id",
+                      onSelectionChange: handleSelectionChange,
+                    }}
                     columns={[
                       {
                         title: "Name",
@@ -155,21 +106,25 @@ export default function UserMain({
                             className="w-28 justify-start flex items-center gap-2 cursor-pointer"
                             onClick={() => router.push(`/people/${user?._id}`)}
                           >
-                            <img
-                              src={
-                                user?.image && user.image.length > 0
-                                  ? user?.image
-                                  : user?.gender === "Male"
-                                  ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                                  : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                              }
-                              alt="Profile Image"
-                              className="size-10 object-cover rounded-full"
-                            />
+                            {user?.image && user?.image?.length > 0 ? (
+                              <img
+                                src={user?.image}
+                                alt={user?.first_name}
+                                className="size-10 object-cover rounded-full flex-shrink-0"
+                              />
+                            ) : (
+                              <GetAvatar name={user?.first_name ?? ""} />
+                            )}
 
-                            {/* Truncated Text */}
-                            <div className="font-gilroySemiBold text-sm gap-1 flex whitespace-nowrap  text-black ">
-                              {user?.first_name ?? ""} {user?.last_name ?? ""}
+                            <div className="relative group">
+                              <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                                {user?.first_name?.length! > 12
+                                  ? `${user?.first_name!.slice(0, 12)}...`
+                                  : user?.first_name}
+                              </div>
+                              <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                                {user?.first_name ?? "-"}
+                              </div>
                             </div>
                           </div>
                         ),
@@ -233,52 +188,60 @@ export default function UserMain({
                       //   ),
                       // },
                       {
-                        title: "Subscriptions",
+                        title:
+                          peopleText === "Active People" ? "Subscriptions" : "",
                         render: (record: User) => {
-                          // const filteredIntegrations = (
-                          //   record?.subscriptions ?? []
-                          // ).filter((i) => i.platform !== selectedPlatform);
-                          const integrations = record?.integrations.filter(
-                            (int) => int.image
-                          );
+                          if (peopleText === "Active People") {
+                            const integrations = record?.integrations?.filter(
+                              (int) => int.image
+                            );
 
-                          if (integrations?.length === 0) {
-                            return <span className="text-gray-400">-</span>;
+                            if (integrations?.length === 0) {
+                              return <span className="text-gray-400">-</span>;
+                            }
+
+                            const firstThree = integrations?.slice(0, 3);
+                            const extraCount = integrations?.length - 3;
+
+                            return (
+                              <AllIntegrationsDisplay
+                                data={record}
+                                allIntegrations={integrations}
+                              >
+                                <div className="flex items-center gap-2 -space-x-5">
+                                  {firstThree?.map((i, index) => (
+                                    <div
+                                      key={index}
+                                      className="flex justify-center items-center p-1.5 bg-white rounded-full border"
+                                    >
+                                      <img
+                                        src={i.image ?? ""}
+                                        width={16}
+                                        height={16}
+                                        className=" object-contain "
+                                        alt="Integration"
+                                      />
+                                    </div>
+                                  ))}
+
+                                  {extraCount > 0 && (
+                                    <span className="text-sm text-gray-500 font-gilroySemiBold">
+                                      +{extraCount}
+                                    </span>
+                                  )}
+                                </div>
+                              </AllIntegrationsDisplay>
+                            );
+                          } else {
+                            return <></>;
                           }
-
-                          const firstThree = integrations?.slice(0, 3);
-                          const extraCount = integrations?.length - 3;
-
-                          return (
-                            <AllIntegrationsDisplay
-                              data={record}
-                              allIntegrations={integrations}
-                            >
-                              <div className="flex items-center gap-2">
-                                {firstThree?.map((i, index) => (
-                                  <img
-                                    key={index}
-                                    src={i?.image ?? ""}
-                                    className="size-8 object-cover rounded-full"
-                                    alt="Integration"
-                                  />
-                                ))}
-
-                                {extraCount > 0 && (
-                                  <span className="text-sm text-gray-500 font-gilroySemiBold">
-                                    +{extraCount}
-                                  </span>
-                                )}
-                              </div>
-                            </AllIntegrationsDisplay>
-                          );
                         },
                       },
                       {
                         title: "Devices assigned",
                         render: (data: User) =>
                           data?.devices && data?.devices > 0 ? (
-                            <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                            <div className="flex justify-center items-center w-fit px-3 rounded-full bg-[#ECFDF3] text-[#027A48] py-0.5">
                               {`${data?.devices} Assigned`}
                             </div>
                           ) : (
@@ -297,9 +260,13 @@ export default function UserMain({
                       >
                         <DeleteTableIcon className="size-6" />
                       </button> */}
-                              <DeleteUser id={data?._id}>
-                                <DeleteTableIcon className="size-6" />
-                              </DeleteUser>
+                              {data?.role !== 1 ? (
+                                <div className="block size-6"></div>
+                              ) : (
+                                <DeleteUser id={data?._id}>
+                                  <DeleteTableIcon className="size-6" />
+                                </DeleteUser>
+                              )}
                               <EditUser userData={data}>
                                 <EditTableIcon className="size-5" />
                               </EditUser>
@@ -317,7 +284,11 @@ export default function UserMain({
                                 id={data?._id!}
                                 onRefresh={onRefresh}
                               >
-                                <div className="rounded-md text-white bg-black font-gilroySemiBold text-sm py-2 px-4">
+                                <div
+                                  className={buttonVariants({
+                                    variant: "outlineTwo",
+                                  })}
+                                >
                                   Restore
                                 </div>
                               </RestoreUser>

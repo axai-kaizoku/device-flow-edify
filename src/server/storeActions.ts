@@ -4,6 +4,7 @@ import { Device, StoreDevicesRes } from "./deviceActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
 import { devicesFields, FilterApiParams } from "./filterActions";
+import { BASEURL } from "./main";
 
 export const searchStoreDevices = cache(async function ({
   filters = [],
@@ -21,7 +22,7 @@ export const searchStoreDevices = cache(async function ({
     };
 
     // Construct the URL with an optional search query
-    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/devices/assets${
+    const apiUrl = `${BASEURL}/edifybackend/v1/devices/assets${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 
@@ -50,7 +51,7 @@ export const getStoreDevices = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://staging.deviceflow.ai/edifybackend/v1/devices/assets",
+        `${BASEURL}/edifybackend/v1/devices/assets`,
         "POST",
         payload
       );
@@ -71,7 +72,7 @@ export const getTrendingDevice = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://staging.deviceflow.ai/edifybackend/v1/devices/assets?query=trending",
+        `${BASEURL}/edifybackend/v1/devices/assets?query=trending`,
         "POST",
         payload
       );
@@ -92,7 +93,7 @@ export const getLatestReleases = cache(
     };
     try {
       const res = await callAPIWithToken<StoreDevicesRes>(
-        "https://staging.deviceflow.ai/edifybackend/v1/devices/assets?query=latest",
+        `${BASEURL}/edifybackend/v1/devices/assets?query=latest`,
         "POST",
         payload
       );
@@ -117,7 +118,7 @@ export const createDeviceReview = async function ({
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<StoreDevicesRes>(
-      "https://staging.deviceflow.ai/edifybackend/v1/reviews",
+      `${BASEURL}/edifybackend/v1/reviews`,
       "POST",
       {
         userId: sess?.user.user.userId,
@@ -160,7 +161,7 @@ export const requestLaptop = async function ({
 
     // API call
     const res = await callAPIWithToken<any>(
-      "https://staging.deviceflow.ai/edifybackend/v1/devices/requestlaptop",
+      `${BASEURL}/edifybackend/v1/devices/requestlaptop`,
       "POST",
       payload
     );

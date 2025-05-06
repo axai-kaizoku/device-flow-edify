@@ -14,7 +14,7 @@ import { Button, buttonVariants } from "@/components/buttons/Button";
 import { deleteDevice } from "@/server/deviceActions";
 import { useAlert } from "@/hooks/useAlert";
 import WarningDelete from "@/icons/WarningDelete";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const SoftDeleteAsset = ({
@@ -29,7 +29,7 @@ export const SoftDeleteAsset = ({
   const router = useRouter();
   const { showAlert } = useAlert();
   const [open, setOpen] = useState(false);
-  const { openToast } = useToast();
+
   const queryClient = useQueryClient();
   const handleDelete = async () => {
     if (id) {
@@ -38,7 +38,7 @@ export const SoftDeleteAsset = ({
         setOpen(false);
         // router.push("/assets?tab=un_assigned_assets");
         // router.refresh();
-        openToast("success", "Asset deleted Successfully!");
+        toast.success("Asset deleted Successfully!");
         queryClient.invalidateQueries({
           queryKey: ["fetch-assets"],
           exact: false,

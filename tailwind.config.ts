@@ -22,6 +22,18 @@ const config: Config = {
         gilroyBold: ["var(--font-gilroy-bold)", "sans-serif"],
       },
       keyframes: {
+        "background-position-spin": {
+          "0%": { backgroundPosition: "top center" },
+          "100%": { backgroundPosition: "bottom center" },
+        },
+        slowspin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        shine: {
+          "0%": { "background-position": "100%" },
+          "100%": { "background-position": "-100%" },
+        },
         marquee: {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },
@@ -61,8 +73,17 @@ const config: Config = {
           "0%": { transform: "scale(2) translateY(0)", opacity: "1" },
           "100%": { transform: "scale(2) translateY(200px)", opacity: "0" },
         },
+        rainbow: {
+          "0%": { "background-position": "0%" },
+          "100%": { "background-position": "200%" },
+        },
       },
       animation: {
+        rainbow: "rainbow var(--speed, 2s) infinite linear",
+        "background-position-spin":
+          "background-position-spin 3000ms infinite alternate",
+        slowspin: "slowspin 60s linear infinite",
+        shine: "shine 5s linear infinite",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "fade-in": "fade-in 1s ease-in-out",
         "tick-fall": "tick-fall 0.1s ease-out",
@@ -83,6 +104,11 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        "color-1": "hsl(var(--color-1))",
+        "color-2": "hsl(var(--color-2))",
+        "color-3": "hsl(var(--color-3))",
+        "color-4": "hsl(var(--color-4))",
+        "color-5": "hsl(var(--color-5))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

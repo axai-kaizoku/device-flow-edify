@@ -2,7 +2,7 @@
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,6 @@ export default function InvitePeopleTeam({
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
 
   const [link, setLink] = useState("");
 
@@ -52,9 +51,9 @@ export default function InvitePeopleTeam({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(link);
-      openToast("success", "Link copied to clipboard");
+      toast.success("Link copied to clipboard");
     } catch (err) {
-      openToast("error", "Failed to copy to clipboard");
+      toast.error("Failed to copy to clipboard");
     }
   };
 

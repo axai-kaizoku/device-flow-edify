@@ -20,7 +20,7 @@ export const IntegrationCompanyCard = ({
             alt={company?.platform}
             width={48}
             height={48}
-            className="object-cover"
+            className="object-contain size-12"
           />
           <div className="flex flex-col justify-between">
             <h1 className="text-lg font-gilroySemiBold">
@@ -61,8 +61,8 @@ export const IntegrationCompanyCard = ({
         )}
       </div>
 
-      <p className="text-[#7f7f7f] font-gilroyMedium text-sm">
-        {company?.description?.slice(0, 60)}...
+      <p className="text-[#7f7f7f] font-gilroyMedium text-sm line-clamp-2">
+        {company?.description}
       </p>
     </Link>
   );

@@ -63,6 +63,7 @@ export interface AsyncSelectProps<T> {
   noResultsMessage?: string;
   /** Allow clearing the selection */
   clearable?: boolean;
+  fixInputClear?: boolean;
 }
 
 export function AsyncSelect<T>({
@@ -84,6 +85,7 @@ export function AsyncSelect<T>({
   triggerClassName,
   noResultsMessage,
   clearable = true,
+  fixInputClear = true,
 }: AsyncSelectProps<T>) {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -102,15 +104,36 @@ export function AsyncSelect<T>({
   }, [value]);
 
   useEffect(() => {
+    if (value && options.length > 0) {
+      const matched = options.find((opt) => getOptionValue(opt) === value);
+      if (matched) {
+        setSelectedOption(matched);
+      }
+    }
+  }, [value, options]);
+
+  useEffect(() => {
     const fetchOptions = async () => {
       try {
         setLoading(true);
         setError(null);
         const data = await fetcher(debouncedSearchTerm);
-        // if (!originalOptions.length) {
-        setOriginalOptions(data);
-        // }
+        if (fixInputClear) {
+          if (!originalOptions.length) {
+            setOriginalOptions(data);
+          }
+        } else {
+          setOriginalOptions(data);
+        }
+
         setOptions(data);
+
+        if (value && !selectedOption) {
+          const matched = data.find((opt) => getOptionValue(opt) === value);
+          if (matched) {
+            setSelectedOption(matched);
+          }
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch options"
@@ -158,6 +181,7 @@ export function AsyncSelect<T>({
       <PopoverTrigger asChild className="w-full">
         <Button
           variant="outline"
+          type="button"
           role="combobox"
           aria-expanded={open}
           className={cn(
@@ -174,7 +198,7 @@ export function AsyncSelect<T>({
           <ChevronsUpDown className="opacity-50" size={10} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("p-0 w-full", className)}>
+      <PopoverContent className={cn("p-0 ", className)}>
         <Command>
           <div className="relative border-b w-full">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -193,7 +217,9 @@ export function AsyncSelect<T>({
           </div>
           <CommandList>
             {error && (
-              <div className="p-4 text-destructive text-center">{error}</div>
+              <div className="p-4 text-destructive text-center font-gilroyMedium">
+                {error}
+              </div>
             )}
             {loading &&
               options?.length === 0 &&

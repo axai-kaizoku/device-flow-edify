@@ -16,7 +16,7 @@ import Spinner from "@/components/Spinner";
 import { useAlert } from "@/hooks/useAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import IssueFormIcons from "@/icons/IssueFormIcons";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import NavBarIcons from "@/icons/NavBarIcons";
@@ -30,7 +30,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
   const userData = useSelector((state: RootState) => state.auth.userData);
 
   const router = useRouter();
-  const { openToast } = useToast();
+
   const { showAlert } = useAlert();
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -155,12 +155,12 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
     try {
       await createIssue(issue);
       setLoading(false);
-      openToast("success", "Issue created successfully !");
+      toast.success("Issue created successfully !");
       router.refresh();
       closeBtn(false);
     } catch (error) {
       setLoading(false);
-      openToast("error", "Failed to Raise an Issue!");
+      toast.error("Failed to Raise an Issue!");
     } finally {
       setLoading(false);
     }

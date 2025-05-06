@@ -12,19 +12,12 @@ export default function CreateTeam({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    // <Sheet open={open} onOpenChange={setOpen}>
-    //   <SheetTrigger>{children}</SheetTrigger>
-    //   <SheetContent>
-    //     <TeamForm closeBtn={setOpen} />
-    //   </SheetContent>
-    // </Sheet>
-
-    <div className="flex justify-center items-center gap-8">
+    <div className="flex justify-center items-center gap-8 ">
       <div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger>{children}</SheetTrigger>
           <SheetContent>
-            <TeamForm closeBtn={setOpen} onRefresh={onRefresh} />
+            <TeamForm closeBtn={setOpen} />
           </SheetContent>
         </Sheet>
       </div>

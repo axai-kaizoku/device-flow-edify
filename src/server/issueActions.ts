@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
 import { Device } from "./deviceActions";
+import { BASEURL } from "./main";
 
 export type Issues = {
   _id?: string;
@@ -78,7 +79,7 @@ export interface IssueData {
 export async function getAllIssues(): Promise<IssueResponse> {
   try {
     const res = await callAPIWithToken<IssueResponse>(
-      "https://staging.deviceflow.ai/edifybackend/v1/issue",
+      `${BASEURL}/edifybackend/v1/issue`,
       "GET"
     );
     return res?.data;
@@ -91,7 +92,7 @@ export async function getAllIssues(): Promise<IssueResponse> {
 export const getIssueById = cache(async function <Issues>(issueId: string) {
   try {
     const res = await callAPIWithToken<Issues>(
-      `https://staging.deviceflow.ai/edifybackend/v1/issue/${issueId}`,
+      `${BASEURL}/edifybackend/v1/issue/${issueId}`,
       "GET",
       null
     );
@@ -108,7 +109,7 @@ export const updateIssue = async (
 ): Promise<Issues | undefined> => {
   try {
     const res = await callAPIWithToken<Issues>(
-      `https://staging.deviceflow.ai/edifybackend/v1/issue/${issueId}`,
+      `${BASEURL}/edifybackend/v1/issue/${issueId}`,
       "PUT",
       issueData
     );
@@ -124,7 +125,7 @@ export async function deleteIssue(
 ): Promise<Issues | undefined> {
   try {
     const deleletedIssues = await callAPIWithToken<Issues>(
-      `https://staging.deviceflow.ai/edifybackend/v1/issue/${issueId}`,
+      `${BASEURL}/edifybackend/v1/issue/${issueId}`,
       "DELETE"
     );
 
@@ -148,7 +149,7 @@ export const createIssue = async (
         createdAt: new Date().toISOString(),
       };
       const res = await callAPIWithToken<Issues>(
-        "https://staging.deviceflow.ai/edifybackend/v1/issue/",
+        `${BASEURL}/edifybackend/v1/issue/`,
         "POST",
         issue
       );
@@ -170,7 +171,7 @@ export const getIssueByUserId = cache(async (): Promise<getAllResponse> => {
 
       // Make the GET request to fetch issues by user ID
       const res = await callAPIWithToken<getAllResponse>(
-        `https://staging.deviceflow.ai/edifybackend/v1/issue/userDetails`,
+        `${BASEURL}/edifybackend/v1/issue/userDetails`,
         "GET"
       );
 
@@ -188,7 +189,7 @@ export const getIssueByUserId = cache(async (): Promise<getAllResponse> => {
 export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
   try {
     const res = await callAPIWithToken<IssueResponse>(
-      `https://staging.deviceflow.ai/edifybackend/v1/issue/paginated?page=${page}`,
+      `${BASEURL}/edifybackend/v1/issue/paginated?page=${page}`,
       "GET"
     );
     return res?.data;
@@ -200,7 +201,7 @@ export const paginatedIssue = async (page: string): Promise<IssueResponse> => {
 //search-api
 export async function issueSearchAPI(query: string): Promise<IssueResponse> {
   try {
-    const url = `https://staging.deviceflow.ai/edifybackend/v1/issue/search?query=${query}`;
+    const url = `${BASEURL}/edifybackend/v1/issue/search?query=${query}`;
     const res = await callAPIWithToken<IssueResponse>(url, "GET");
 
     return res?.data;

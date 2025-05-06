@@ -6,11 +6,12 @@ import { Teams } from "./Teams";
 import { Employee } from "./Employee";
 import { DeviceComponent } from "./Device";
 import { useRouter } from "next/navigation";
+import { parseAsFloat, useQueryState } from "nuqs";
 
 export default function Page() {
   const router = useRouter();
   const [welcomeScreen, setWelcomeScreenState] = useState(false);
-  const [steps, setSteps] = useState(1);
+  const [steps, setSteps] = useQueryState("step", parseAsFloat);
   const orgCard: any = useRef(null);
   const addressCard: any = useRef(null);
   const teams: any = useRef(null);
@@ -19,8 +20,14 @@ export default function Page() {
   const welcome: any = useRef(null);
 
   useEffect(() => {
-    if (sessionStorage.getItem("employee-count")) {
-      const count = parseInt(sessionStorage.getItem("employee-count")!);
+    if (!steps) {
+      setSteps(1);
+    }
+  }, [steps]);
+
+  useEffect(() => {
+    if (localStorage.getItem("employee-count")) {
+      const count = parseInt(localStorage.getItem("employee-count")!);
       if (count >= 2) {
         router.push("/");
       }
@@ -35,7 +42,9 @@ export default function Page() {
     if (welcomeScreen) {
       devices.current.style.borderRadius = "17.014px";
       devices.current.style.transform = "";
-      devices.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+      devices.current.style.border = welcomeScreen
+        ? "0px"
+        : "1px solid #465ff1";
       devices.current.style.background = "#f8fbff";
       devices.current.innerHTML =
         '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Devices</div>';
@@ -44,7 +53,9 @@ export default function Page() {
       if (orgCard.current && steps === 1) {
         orgCard.current.style.transform = "translate(110px, -200px)";
         orgCard.current.style.borderRadius = "17.014px";
-        orgCard.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        orgCard.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         orgCard.current.style.background = "#f8fbff";
         orgCard.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Organisation</div>';
@@ -52,7 +63,9 @@ export default function Page() {
       if (steps > 1) {
         orgCard.current.style.borderRadius = "17.014px";
         orgCard.current.style.transform = "";
-        orgCard.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        orgCard.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         orgCard.current.style.background = "#f8fbff";
         orgCard.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Organisation</div>';
@@ -60,7 +73,9 @@ export default function Page() {
       if (addressCard.current && steps === 2) {
         addressCard.current.style.transform = "translate(-100px, -200px)";
         addressCard.current.style.borderRadius = "17.014px";
-        addressCard.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        addressCard.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         addressCard.current.style.background = "#f8fbff";
         addressCard.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Address</div>';
@@ -68,7 +83,9 @@ export default function Page() {
       if (steps > 2) {
         addressCard.current.style.borderRadius = "17.014px";
         addressCard.current.style.transform = "";
-        addressCard.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        addressCard.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         addressCard.current.style.background = "#f8fbff";
         addressCard.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Address</div>';
@@ -76,7 +93,9 @@ export default function Page() {
       if (teams.current && steps === 3) {
         teams.current.style.transform = "translate(80px, -290px)";
         teams.current.style.borderRadius = "17.014px";
-        teams.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        teams.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         teams.current.style.background = "#f8fbff";
         teams.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Teams</div>';
@@ -84,7 +103,9 @@ export default function Page() {
       if (steps > 3) {
         teams.current.style.borderRadius = "17.014px";
         teams.current.style.transform = "";
-        teams.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        teams.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         teams.current.style.background = "#f8fbff";
         teams.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Teams</div>';
@@ -92,7 +113,9 @@ export default function Page() {
       if (employee.current && steps === 4) {
         employee.current.style.transform = "translate(-180px, -290px)";
         employee.current.style.borderRadius = "17.014px";
-        employee.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        employee.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         employee.current.style.background = "#f8fbff";
         employee.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Employee</div>';
@@ -100,7 +123,9 @@ export default function Page() {
       if (steps > 4) {
         employee.current.style.borderRadius = "17.014px";
         employee.current.style.transform = "";
-        employee.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        employee.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         employee.current.style.background = "#f8fbff";
         employee.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Employee</div>';
@@ -108,15 +133,19 @@ export default function Page() {
       if (devices.current && steps === 5 && !welcomeScreen) {
         devices.current.style.transform = "translate(100px, -370px)";
         devices.current.style.borderRadius = "17.014px";
-        devices.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        devices.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         devices.current.style.background = "#f8fbff";
         devices.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Devices</div>';
       }
-    
+
       if (welcome.current && welcomeScreen) {
         welcome.current.style.borderRadius = "17.014px";
-        welcome.current.style.border = welcomeScreen ? "0px":"1px solid #465ff1";
+        welcome.current.style.border = welcomeScreen
+          ? "0px"
+          : "1px solid #465ff1";
         welcome.current.style.background = "#f8fbff";
         welcome.current.innerHTML =
           '<div class="font-gilroySemiBold" style="color:#465FF1;font-size:12px;font-style:normal;font-weight:600;line-height:32.246px;margin-left: 18px">Welcome</div>';
@@ -125,8 +154,14 @@ export default function Page() {
   }, [steps, welcomeScreen]);
 
   return (
-    <div className={welcomeScreen ? 'flex flex-col items-center justify-center h-[100vh] mt-[50px] ' : `flex flex-row w-[100%] items-center `}>
-      <div className={welcomeScreen ?"w-[50%] mb-[50px]"  :"w-full"}>
+    <div
+      className={
+        welcomeScreen
+          ? "flex flex-col items-center justify-center h-[100vh] mt-[50px] "
+          : `flex flex-row w-[100%] items-center `
+      }
+    >
+      <div className={welcomeScreen ? "w-[50%] mb-[50px]" : "w-full"}>
         {steps === 1 && (
           <CompanyDetails
             setSteps={(steps: number) => {
@@ -164,9 +199,15 @@ export default function Page() {
         )}
       </div>
       <div
-        className={`flex w-full ${welcomeScreen ? 'flex-col': 'flex-row'} items-center justify-center gap-[49px] bg-white leading-[normal] `}
+        className={`flex w-full ${
+          welcomeScreen ? "flex-col" : "flex-row"
+        } items-center justify-center gap-[49px] bg-white leading-[normal] `}
       >
-        <div className={`flex ${welcomeScreen ? "w-[60%] scale-[1.2] mt-[50px]": "w-[577px]"} flex-col justify-center gap-[1.7px] rounded-[11px] border-x-[0.37px] border-t-[0.37px] border-solid border-neutral-400 bg-white px-[18px] pb-6 pt-4 [border-bottom-width:0.37px]`}>
+        <div
+          className={`flex ${
+            welcomeScreen ? "w-[60%] scale-[1.2] mt-[50px]" : "w-[577px]"
+          } flex-col justify-center gap-[1.7px] rounded-[11px] border-x-[0.37px] border-t-[0.37px] border-solid border-neutral-400 bg-white px-[18px] pb-6 pt-4 [border-bottom-width:0.37px]`}
+        >
           <div className="flex flex-wrap items-center justify-between gap-[3.1px] min-[725.0165405273438px]:flex-nowrap">
             <div className="h-[19px] w-16 rounded-[3.7px] bg-zinc-100" />
             <div className="h-[19px] w-48 rounded-[3.7px] bg-zinc-100" />

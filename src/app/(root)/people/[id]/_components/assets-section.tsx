@@ -1,12 +1,10 @@
+import { Button } from "@/components/buttons/Button";
 import { Device } from "@/server/deviceActions";
 import { User } from "@/server/userActions";
-import { useRouter } from "next/navigation";
-import React from "react";
 import ManageAssets from "./manage-assets";
 
 const AssetsSection = ({ user }: { user: User }) => {
   const totalAssets = user?.devices?.length;
-  const router = useRouter();
   return (
     <>
       <div className=" w-full">
@@ -21,9 +19,7 @@ const AssetsSection = ({ user }: { user: User }) => {
           </div>
         </div>
 
-        {/* Assets */}
-
-        <div className="flex flex-col  gap-1">
+        <div className="flex flex-col gap-1">
           {user?.devices?.slice(0, 2).map((device: Device) => (
             <div className="flex justify-start items-center gap-4 py-4 border-b">
               <div className="">
@@ -59,9 +55,9 @@ const AssetsSection = ({ user }: { user: User }) => {
           )}
           {totalAssets !== 0 && (
             <ManageAssets userData={user}>
-              <div className="text-white bg-black font-gilroySemiBold text-lg w-full mt-2 py-2 rounded-full">
-                Manage Assets
-              </div>
+              <Button variant="primary" className="w-full mt-2 -mb-2">
+                View Assets
+              </Button>
             </ManageAssets>
           )}
         </div>

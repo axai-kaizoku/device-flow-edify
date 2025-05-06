@@ -1,16 +1,19 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import { SelectInput } from "@/components/dropdown/select-input";
-import Spinner from "@/components/Spinner";
-import { useToast } from "@/hooks/useToast";
-import { cn } from "@/lib/utils";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
+import { AsyncSelect } from "@/components/ui/async-select";
 import { fetchTeams, Team } from "@/server/teamActions";
 import { updateUser, User } from "@/server/userActions";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function MoveTeamMember({
   children,
@@ -23,7 +26,7 @@ export default function MoveTeamMember({
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+
   const [team, setTeam] = useState<Team>();
   const [error, setError] = useState("");
 
@@ -42,10 +45,8 @@ export default function MoveTeamMember({
 
     setLoading(true);
     try {
-      await updateUser(userData?._id ?? "", { teamId: team._id });
-      setOpen(false);
-      openToast("success", "Moved member to team !");
-      setLoading(false);
+      await updateUser(userData?._id ?? "", { teamId: team?._id });
+
       queryClient.invalidateQueries({
         queryKey: ["fetch-team-by-id"],
         exact: false,
@@ -56,9 +57,12 @@ export default function MoveTeamMember({
         exact: false,
         refetchType: "all",
       });
+      setOpen(false);
+      setLoading(false);
+      toast.success("Moved member to team !");
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to move member to team !");
+      toast.error("Failed to move member to team !");
     } finally {
       setLoading(false);
     }
@@ -74,27 +78,27 @@ export default function MoveTeamMember({
 
             <div className="h-[1px] bg-[#E7E7E7] w-full my-3 -mx-4"></div>
 
-            <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 mb-8">
-              <img
-                src={
-                  userData?.image && userData.image.length > 0
-                    ? userData?.image
-                    : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                }
-                alt="userData-image"
-                className="w-20 h-20 p-1  object-cover rounded-full "
-              />
+            <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
+              {userData?.image && userData?.image?.length > 0 ? (
+                <img
+                  src={userData?.image}
+                  alt={userData?.first_name}
+                  className="size-14 object-cover rounded-full flex-shrink-0"
+                />
+              ) : (
+                <GetAvatar name={userData?.first_name ?? ""} size={56} />
+              )}
               <div className=" w-full flex flex-col justify-center ">
-                <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                <h1 className="text-black font-gilroySemiBold text-base ">
                   {userData?.first_name ?? ""}
                 </h1>
-                <h1 className="text-[#7C7C7C] font-gilroyMedium text-base 2xl:text-2xl">
+                <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
                   {userData?.email ?? ""}
                 </h1>
 
-                <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                   {userData?.employment_type ?? ""}
-                  <span className="flex text-2xl mx-1 -mt-3">.</span>
+                  <span className="flex text-2xl mx-1 -mt-3"> </span>
                   {userData?.designation ?? ""}
                 </h1>
               </div>
@@ -104,68 +108,94 @@ export default function MoveTeamMember({
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-7 justify-start relative h-full"
             >
-              <div className="z-0 ">
-                <SelectInput
-                  optionValue={{ firstV: "title", secondV: "description" }}
-                  key={"move-team-member-team-field"}
-                  value={team?.title ?? ""}
-                  placeholder="Search by team name, etc"
-                  fetchOptions={async (query) => {
-                    const data = await fetchTeams();
-                    const filtered = data.filter((obj: any) =>
-                      obj.title.toLowerCase().includes(query.toLowerCase())
-                    );
-                    return filtered;
-                  }}
-                  initialOptions={fetchTeams}
-                  onSelect={(data: any) => {
-                    setTeam({
-                      _id: data._id,
-                      title: data.title,
-                      description: data.description,
-                      image: data.image,
-                    });
-                  }}
-                  label="Team"
-                  className={cn(
-                    error.length > 0 ? "border-destructive/80 border" : ""
+              <div className="flex flex-col gap-2 pt-3">
+                <AsyncSelect<Team>
+                  fetcher={fetchTeams}
+                  preload
+                  // fixInputClear={false}
+                  renderOption={(team) => (
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col">
+                        <div className="font-gilroyMedium">{team?.title}</div>
+                        <div className="text-xs font-gilroyRegular text-muted-foreground">
+                          {team?.description}
+                        </div>
+                      </div>
+                    </div>
                   )}
+                  filterFn={(team, query) =>
+                    team?.title
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase()) ||
+                    team?.description
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase())
+                  }
+                  getOptionValue={(team) => team?._id}
+                  getDisplayValue={() => (
+                    <div className="flex items-center gap-2 text-left w-full">
+                      <div className="flex flex-col leading-tight">
+                        <div className="font-gilroyMedium">
+                          {team?.title ?? ""}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  notFound={
+                    <div className="py-6 text-center font-gilroyMedium text-sm">
+                      No teams found
+                    </div>
+                  }
+                  label="Team"
+                  placeholder="Search Teams"
+                  value={team?.title || "null"}
+                  onChange={(selected) =>
+                    setTeam({
+                      _id: selected?._id,
+                      title: selected?.title,
+                      description: selected?.description,
+                      image: selected?.image,
+                    })
+                  }
+                  width="100%"
                 />
                 {error.length > 0 && (
-                  <p className="text-destructive text-sm">{error}</p>
+                  <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+                    {error}
+                  </p>
                 )}
               </div>
 
               {team?.title ? (
-                <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
-                  <img
-                    src={
-                      team?.image && team.image.length > 0
-                        ? team.image
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
-                    }
-                    alt="team-image"
-                    className="w-20 h-20 p-1  object-cover rounded-full "
-                  />
+                <div className="w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4">
+                  {team?.image && team?.image?.length > 0 ? (
+                    <img
+                      src={team?.image}
+                      alt={team?.title}
+                      className="size-14 object-cover rounded-full flex-shrink-0"
+                    />
+                  ) : (
+                    <GetAvatar name={team?.title ?? ""} size={56} />
+                  )}
                   <div className="w-full flex flex-col justify-center">
                     <div className="flex gap-3 items-center">
-                      <div className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
+                      <div className="text-black font-gilroySemiBold text-base">
                         {team?.title ?? "-"}
                       </div>
-                      <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                      <div className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm  font-gilroyMedium flex justify-center items-center px-2 py-0.5">
                         Active
                       </div>
                     </div>
-                    <div className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
+                    <div className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                       {team?.description ?? ""}
                     </div>
 
                     <div className="flex gap-2 items-center">
-                      <div className="text-[#ADADAC] text-sm 2xl:text-base font-gilroySemiBold">
+                      <div className="text-[#ADADAC] text-sm  font-gilroySemiBold">
                         Reporting Manger:
                       </div>
                       <div className="text-black font-gilroySemiBold">
-                        {`${team?.manager?.[0]?.first_name ?? "-"}`}
+                        {`${team?.manager?.[0]?.first_name ?? "-"} `}
                       </div>
                     </div>
                   </div>
@@ -182,22 +212,14 @@ export default function MoveTeamMember({
                 >
                   Close
                 </Button>
-                <Button
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-1/2",
-                  })}
+                <LoadingButton
+                  loading={loading}
+                  variant="primary"
+                  className="w-1/2"
                   type="submit"
-                  disabled={loading}
                 >
-                  {loading ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <span>Move</span>
-                    </>
-                  )}
-                </Button>
+                  Move
+                </LoadingButton>
               </div>
             </form>
           </div>

@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { type LoggedInUser } from "./devicesPage";
 import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import IssueFormIcons from "@/icons/IssueFormIcons";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import NavBarIcons from "@/icons/NavBarIcons";
@@ -30,7 +30,6 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const fileIssueImages = useRef<HTMLInputElement | null>(null);
-  const { openToast } = useToast();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -151,13 +150,13 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     try {
       await createIssue(issue);
       setLoading(false);
-      openToast("success", "Issue created!");
+      toast.success("Issue created!");
 
       router.refresh();
       closeBtn(false);
     } catch (error) {
       setLoading(false);
-      openToast("error", "Failed to Raise an Issue!");
+      toast.error("Failed to Raise an Issue!");
     }
     setLoading(false);
 

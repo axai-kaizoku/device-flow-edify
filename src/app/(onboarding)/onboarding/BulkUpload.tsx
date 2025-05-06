@@ -1,9 +1,11 @@
 "use client";
+import { Icons } from "@/app/(root)/people/icons";
 import {
   checkForDuplicates,
   parseCSV,
 } from "@/components/bulk-upload/CSVHelper";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
+
 import { useRef, useState } from "react";
 type dataProps = {
   requiredKeys: string[];
@@ -20,8 +22,6 @@ function BulkUpload({
   const [loading, setLoading] = useState(false);
   const [csvError, setCsvError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const { openToast } = useToast();
 
   const validateCSV = (file: File) => {
     setLoading(true);
@@ -107,11 +107,11 @@ function BulkUpload({
     try {
       await bulkApi(formData); // Call the API
 
-      const employeeCount = sessionStorage.getItem("employee-count");
+      const employeeCount = localStorage.getItem("employee-count");
       if (employeeCount) {
         const empCountInt = parseInt(employeeCount);
         if (empCountInt >= 0) {
-          sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+          localStorage.setItem("employee-count", `${empCountInt + 1}`);
         }
       }
 
@@ -123,8 +123,7 @@ function BulkUpload({
           /index: (\w+)_1 dup key: \{ (\w+): "(.*?)"/
         );
         if (duplicateField && duplicateField[3]) {
-          openToast(
-            "error",
+          toast.error(
             `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
           );
 
@@ -132,14 +131,13 @@ function BulkUpload({
             `Duplicate entry detected: ${duplicateField[1]} with value "${duplicateField[3]}" already exists.`
           );
         } else {
-          openToast(
-            "error",
+          toast.error(
             "A duplicate entry error occurred. Please check your data."
           );
         }
       } else {
         // Generic error handling
-        openToast("error", `${"An error occurred during bulk upload."}`);
+        toast.error(`${"An error occurred during bulk upload."}`);
       }
     } finally {
       setLoading(false);
@@ -181,25 +179,68 @@ function BulkUpload({
             />
           </div>
         ) : (
-          <div className="w-full flex flex-col gap-4">
-            <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+          // <div className="w-full flex flex-col gap-4">
+          //   <div className="font-gilroySemiBold 2xl:text-2xl text-xl text-black">
+          //     Bulk Import
+          //   </div>
+          //   <div className="w-full flex justify-between gap-4">
+          //     <button
+          //       disabled={loading}
+          //       className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+          //       onClick={handleFileUploadClick}
+          //     >
+          //       Upload CSV
+          //     </button>
+          //     <button
+          //       className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+          //       onClick={downloadSampleCSV}
+          //     >
+          //       Download Sample CSV
+          //     </button>
+          //   </div>
+          //   <input
+          //     type="file"
+          //     accept=".csv"
+          //     ref={fileInputRef}
+          //     onChange={(e) => {
+          //       if (e.target.files && e.target.files.length > 0) {
+          //         validateCSV(e.target.files[0]);
+          //       }
+          //     }}
+          //     className="hidden"
+          //   />
+          // </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <div className="font-gilroyMedium text-base text-black">
               Bulk Import
             </div>
-            <div className="w-full flex justify-between gap-4">
+
+            <div className="rounded-lg p-3  flex justify-between items-center border border-gray-200">
+              <div className="flex gap-2">
+                <Icons.file_csv />
+                <div className="flex flex-col ">
+                  <h1 className="text-base font-gilroySemiBold">Upload CSV</h1>
+                  <p
+                    className="text-[#007aff] text-xs cursor-pointer font-gilroyMedium hover:underline"
+                    onClick={downloadSampleCSV}
+                  >
+                    Download sample CSV
+                  </p>
+                </div>
+              </div>
+
               <button
                 disabled={loading}
-                className="flex-1 bg-black rounded-full text-white font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
+                className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-5 hover:bg-gray-800 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={handleFileUploadClick}
               >
-                Upload CSV
-              </button>
-              <button
-                className="flex-1 border border-[#5F5F5F] rounded-full text-[#5F5F5F] font-gilroySemiBold 2xl:text-lg text-base py-2 px-1"
-                onClick={downloadSampleCSV}
-              >
-                Download Sample CSV
+                Upload
               </button>
             </div>
+
             <input
               type="file"
               accept=".csv"

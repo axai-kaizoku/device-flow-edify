@@ -12,7 +12,7 @@ import { createDeviceReview } from "@/server/storeActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { cn } from "@/lib/utils";
 import ProductReviewStars from "@/icons/ProductReviewStars";
@@ -26,7 +26,7 @@ export const CreateReview = ({
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
-  const { openToast } = useToast();
+
   const [formData, setFormData] = useState<{
     comment: string;
     deviceId: string;
@@ -77,7 +77,7 @@ export const CreateReview = ({
       setFormData({ comment: "", deviceId: deviceId, rating: "" });
       router.refresh();
     } catch (e: any) {
-      openToast("error", "Failed to add a review!");
+      toast.error("Failed to add a review!");
     } finally {
       setLoading(false);
     }
@@ -166,9 +166,13 @@ const RatingStarComp = ({
           className="cursor-pointer"
         >
           {index < rating ? (
-            <ProductReviewStars.star_filled className={`${className} text-yellow-500`} />
+            <ProductReviewStars.star_filled
+              className={`${className} text-yellow-500`}
+            />
           ) : (
-            <ProductReviewStars.star_unfilled className={`${className} text-gray-300`} />
+            <ProductReviewStars.star_unfilled
+              className={`${className} text-gray-300`}
+            />
           )}
         </div>
       ))}

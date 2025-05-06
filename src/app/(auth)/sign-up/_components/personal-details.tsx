@@ -50,7 +50,6 @@ function PersonalDetails({ setSteps, setUser, user }: any) {
 
   const onSubmit = async () => {
     if (validateFields()) {
-      // console.log("Form Data:", formData);
       setUser({ ...formData });
       setSteps(3);
     } else {

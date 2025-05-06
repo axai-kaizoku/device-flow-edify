@@ -48,7 +48,6 @@ export const CartItem = ({ data }: { data: DeviceWithQty }) => {
     const newQuantity: number = quantity > 1 ? quantity - 1 : 0;
     setQuantity(newQuantity); // Update local quantity first
     await updateCartItemQuantity(device?._id!, newQuantity); // Call API to update quantity
-    // console.log(newQuantity);
     router.refresh();
   };
 

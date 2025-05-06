@@ -84,15 +84,8 @@ export const DeviceSecx = ({
     const newQuantity: number = quantity > 1 ? quantity - 1 : 0;
     setQuantity(newQuantity); // Update local quantity first
     await updateCartItemQuantity(device?._id ?? "", newQuantity); // Call API to update quantity
-    // console.log(newQuantity);
     router.refresh();
   };
-
-  // const [images, setImages] = useState(data.image ?? []);
-
-  // const rating = 4.5;
-  // const reviews = 556;
-
   const icons = [
     {
       key: "screen",

@@ -15,8 +15,9 @@ import { Button } from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { updateTeam } from "@/server/teamActions";
 import { Icons } from "@/components/icons";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import WarningIcon from "@/icons/WarningIcon";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const RestoreTeam = ({
   id,
@@ -26,10 +27,11 @@ export const RestoreTeam = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Loading state for restore action
   const [initText, setInitText] = useState("Restore Team");
-  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -37,7 +39,7 @@ export const RestoreTeam = ({
       <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
         {/* Warning Icon */}
         <div className="flex justify-center">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50 ring-8 ring-yellow-100 text-yellow-400">
+          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-50  text-yellow-400">
             <WarningIcon />
             {/* Lucide-react icon */}
           </div>
@@ -49,7 +51,7 @@ export const RestoreTeam = ({
         </DialogTitle>
 
         {/* Description */}
-        <DialogDescription className="p-1 text-sm text-gray-600">
+        <DialogDescription className="p-1 text-sm text-gray-600 -mt-2">
           Do you want to restore the deleted item?
         </DialogDescription>
 
@@ -70,8 +72,13 @@ export const RestoreTeam = ({
                 setLoading(true); // Start loading
                 try {
                   await updateTeam(id!, { deleted_at: null });
+                  queryClient.invalidateQueries({
+                    queryKey: ["teams"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                   setOpen(false);
-                  openToast("success", "Team Restored Successfully!");
+                  toast.success("Team Restored Successfully!");
                   router.push("/teams");
                   router.refresh();
                 } catch (e: any) {
@@ -80,7 +87,7 @@ export const RestoreTeam = ({
                     e.message ||
                     "Failed to restore the device.";
                   setInitText(errorMessage);
-                  openToast("error", errorMessage);
+                  toast.error(errorMessage);
                 } finally {
                   setLoading(false); // End loading
                 }

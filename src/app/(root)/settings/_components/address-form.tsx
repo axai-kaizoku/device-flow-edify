@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { PrimarySelector } from "./primary-selector";
 import { FormField } from "./form-field";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { ChevronRight } from "lucide-react";
 
 export const AddressForm = ({
@@ -39,7 +39,7 @@ export const AddressForm = ({
   totalAddresses: Address[] | undefined;
 }) => {
   const router = useRouter();
-  const { openToast } = useToast();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
@@ -88,12 +88,12 @@ export const AddressForm = ({
     if (isEditForm) {
       try {
         await updateAddress(_id!, formData);
-        openToast("success", "Address updated successfully !");
+        toast.success("Address updated successfully !");
         router.refresh();
         closeBtn(false);
       } catch (error) {
         setLoading(false);
-        openToast("error", "Failed to update address  !");
+        toast.error("Failed to update address  !");
       }
     } else {
       try {
@@ -102,12 +102,12 @@ export const AddressForm = ({
         } else {
           await createAddress(formData);
         }
-        openToast("success", "Added new address !!");
+        toast.success("Added new address !!");
         router.refresh();
         closeBtn(false);
       } catch (error) {
         setLoading(false);
-        openToast("error", "Failed to create address  !");
+        toast.error("Failed to create address  !");
       }
     }
   };

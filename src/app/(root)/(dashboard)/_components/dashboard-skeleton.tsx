@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import FeedBackIcon from "@/icons/FeedBackIcon";
 
 export default function DashboardSkeleton() {
@@ -14,7 +14,6 @@ export default function DashboardSkeleton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const userData = useSelector((state: RootState) => state.auth.userData);
-  const { openToast } = useToast();
 
   return (
     <CombinedContainer

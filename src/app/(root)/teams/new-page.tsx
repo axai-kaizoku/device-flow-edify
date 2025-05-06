@@ -1,8 +1,9 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue } from "react";
 
+import { buttonVariants } from "@/components/buttons/Button";
 import {
   Select,
   SelectContent,
@@ -15,10 +16,11 @@ import { useQueryState } from "nuqs";
 import InvitePeople from "../people/[id]/_components/invite-people";
 import CreateTeam from "./_components/create-team";
 import TeamsMain from "./_components/teams-main";
-import { buttonVariants } from "@/components/buttons/Button";
 
 export const NewPageTeams = () => {
-  const [activeTab, setActiveTab] = useState("active-teams");
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: "active-teams",
+  });
 
   const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
   const actualSearchTerm = useDeferredValue(searchTerm);
@@ -78,13 +80,15 @@ export const NewPageTeams = () => {
               </div>
             </div> */}
 
-            <InvitePeople>
-              <div className={buttonVariants({ variant: "outlineTwo" })}>
-                <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                  Invite People
+            {activeTab === "active-teams" && (
+              <InvitePeople>
+                <div className={buttonVariants({ variant: "outlineTwo" })}>
+                  <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                    Invite People
+                  </div>
                 </div>
-              </div>
-            </InvitePeople>
+              </InvitePeople>
+            )}
             <CreateTeam>
               <div className={buttonVariants({ variant: "primary" })}>
                 <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
@@ -95,10 +99,10 @@ export const NewPageTeams = () => {
           </div>
         </div>
         <TabsContent value="active-teams">
-          <TeamsMain teams={data} status={status} />
+          <TeamsMain teams={data} status={status} value="active-teams" />
         </TabsContent>
         <TabsContent value="inactive-teams">
-          <TeamsMain teams={data} status={status} />
+          <TeamsMain teams={data} status={status} value="inactive-teams" />
         </TabsContent>
       </Tabs>
     </section>

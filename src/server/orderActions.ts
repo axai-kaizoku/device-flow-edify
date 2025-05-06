@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken } from "./helper";
 import { cache } from "react";
+import { BASEURL } from "./main";
 
 // Define the structure of a Previous Order
 export type OrderResponse = {
@@ -96,7 +97,7 @@ export const getPreviousOrders = cache(async function (): Promise<
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: PreviousOrder[] }>(
-      "https://staging.deviceflow.ai/edifybackend/v1/soldInventory/org",
+      `${BASEURL}/edifybackend/v1/soldInventory/org`,
       "GET"
     );
 
@@ -122,7 +123,7 @@ export const getSingleOrder = cache(async function ({
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: any[] }>(
-      `https://staging.deviceflow.ai/edifybackend/v1/soldInventory/org?orderId=${orderId}`,
+      `${BASEURL}/edifybackend/v1/soldInventory/org?orderId=${orderId}`,
       "GET"
     );
 

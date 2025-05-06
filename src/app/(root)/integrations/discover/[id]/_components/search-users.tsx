@@ -24,8 +24,6 @@ const getUsers = async (email: string = ""): Promise<UsersType[]> => {
   try {
     const res = await searchUsers(email);
 
-    // console.log({ res });
-
     return res;
   } catch (error) {
     console.error(error);

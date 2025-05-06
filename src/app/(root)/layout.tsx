@@ -14,6 +14,9 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
+  // const session = {
+  //   name: "akshay",
+  // };
 
   if (!session) {
     return (

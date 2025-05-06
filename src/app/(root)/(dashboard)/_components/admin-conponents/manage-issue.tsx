@@ -1,140 +1,87 @@
 import React from "react";
 import { DashboardDetails } from "./interface";
 import { useRouter } from "next/navigation";
+import { Button, buttonVariants } from "@/components/buttons/Button";
 export function ManageIssue({
   dashboardData,
 }: {
   dashboardData: DashboardDetails | null;
 }) {
   const router = useRouter();
-  return (
-    <div
-      className={`font-gilroy flex relative w-full h-full flex-col items-start gap-y-[11px] rounded-2xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white pb-[13px] pl-[13px] pr-[13px] pt-[13px] tracking-[0px] backdrop-blur-[24] `}
-    >
-      <div className="flex items-center self-stretch px-[1.3px]">
-        <div className="text-sm font-gilroySemiBold leading-[23px]">Issues</div>
+
+  if(!dashboardData) {
+    return(
+      <div className="w-full  bg-white  rounded-md border border-black/10 flex flex-col justify-center items-center px-3 py-5 gap-6 lg:p-7">
+        <img src="/media/dashboard/subscription-empty.jpg" width={200} height={150}/>
+        <div className="w-full">
+          <p className="text-black text-lg font-gilroySemiBold text-center">You're running perfectly</p>
+          <p className="text-gray-400 text-sm font-gilroyMedium text-center">No issues have been reported yet</p>
+        </div>
       </div>
-      <div className="self-stretch pr-[0.8px] pt-[3px] flex flex-col gap-2">
-        {(dashboardData?.issueData?.length || 0) > 0 ? (
-          dashboardData?.issueData?.map((response, index) => {
-            const date = new Date(response.createdAt);
-            const formattedDate = date.toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            });
-            return (
-              <div className="" key={`issue-${index}`}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: 43,
-                    borderRadius: "6.561px",
-                    background: "#F4F4F4",
-                    paddingTop: 6,
-                    paddingLeft: 7,
-                    paddingRight: 6,
-                  }}
-                >
-                  <div className="flex justify-between items-center gap-2 w-full">
-                    <div className="flex flex-col max-[1350px]:w-[80%]">
-                      <div
-                        style={{
-                          color: "#000",
-                          fontSize: "11.859px",
-                          fontStyle: "normal",
-                          fontWeight: 600,
-                        }}
-                        className="font-gilroySemiBold"
-                      >
-                        {response.title}
-                      </div>
-
-                      <div className="flex gap-2 ">
-                        <div
-                          style={{
-                            color: "#737791",
-                            fontSize: 9,
-                            fontStyle: "normal",
-                            fontWeight: 400,
-                            lineHeight: "17.789px",
-                          }}
-                        >
-                          {formattedDate}
-                        </div>
-                        <div
-                          style={{
-                            color: "#737791",
-                            fontSize: 9,
-                            fontStyle: "normal",
-                            fontWeight: 400,
-                            lineHeight: "17.789px",
-                          }}
-                        >
-                          {response.issueId}
-                        </div>
-                      </div>
+    );
+  }
+  return (
+    <>
+      <div className="flex-1 min-w-[250px] max-w-full font-gilroy flex relative border-gray-200 flex-col items-start gap-y-[11px] rounded-[10px] border border-solid bg-white pb-[13px] px-5 pt-[13px] tracking-[0px] backdrop-blur-[24]">
+        <div className="flex items-center self-stretch px-[1.3px]">
+          <div className="text-sm font-gilroySemiBold w-full flex justify-between leading-[23px]">
+            <span>Issues</span>
+            <button className="text-[#0051FF] text-sm font-gilroyMedium" onClick={() => router.push("/issues")}>
+              View All
+            </button>
+          </div>
+        </div>
+        <div className="self-stretch pr-[0.8px] mt-3 flex flex-col gap-5">
+          {(dashboardData?.issueData?.length || 0) > 0 ? (
+            dashboardData?.issueData?.slice(0, 3).map((response, index) => {
+              const date = new Date(response.createdAt);
+              const formattedDate = date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
+              return (
+                <div className="w-full flex flex-col" key={`issue-${index}`}>
+                  <div className="flex justify-between">
+                    <div className="font-gilroySemiBold text-base text-[#092C4C]">
+                      {response.title}
                     </div>
 
-                    <div
-                      style={{
-                        borderRadius: 5.672,
-                        border: " 0.709px solid #E5E5E5",
-                        width: 70,
-                        height: 28,
-                        background: "#FFF",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        marginRight: 2,
-                        marginBottom: 5
-                      }}
-                      className=""
-                      onClick={() => {
-                        router.push(`issues/${response._id}`);
-                      }}
-                    >
-                      <span
-                        style={{
-                          color: "#0F3659",
-                          fontSize: 9,
-                          fontStyle: "normal",
-                          fontWeight: "500",
-                          lineHeight: "14.179px",
-                        }}
-                        className=""
-                      >
-                        {" "}
-                        View More
-                      </span>
-                    </div>
+                    <span className="text-xs font-gilroyMedium cursor-pointer px-3 py-2 border border-[#E5E5E5] rounded-[6px]" onClick={() => router.push(`/issues/${response._id}`)}>
+                      {" "}
+                      View More
+                    </span>
+                  </div>
+
+                  <div className="text-[#7E92A2] text-sm font-gilroyRegular -mt-1">
+                    {formattedDate}, {response.issueId}
                   </div>
                 </div>
+              );
+            })
+          ) : (
+            <div className="flex flex-col h-full justify-center items-center gap-1">
+              <img
+                src={"/media/dashboard/no-issue.png"}
+                style={{ width: "100%", height: 183 }}
+              />
+              <div
+                className={`font-gilroy h-12 w-full text-center font-semibold leading-[19px] tracking-[0px]`}
+              >
+                <span>
+                  <p className="text-center text-[15px] leading-[19px]">
+                    No issues to fix
+                  </p>
+                  <p className="text-center text-xs leading-[19px] text-[dimgray]">
+                    Devices are issue-free! High-five to that!
+                  </p>
+                </span>
               </div>
-            );
-          })
-        ) : (
-          <div className="flex flex-col h-full justify-center items-center gap-1">
-            <img
-              src={"/media/dashboard/no-issue.png"}
-              style={{ width: "100%", height: 183 }}
-            />
-            <div
-              className={`font-gilroy h-12 w-full text-center font-semibold leading-[19px] tracking-[0px]`}
-            >
-              <span>
-                <p className="text-center text-[15px] leading-[19px]">
-                  No issues to fix
-                </p>
-                <p className="text-center text-xs leading-[19px] text-[dimgray]">
-                  Devices are issue-free! High-five to that!
-                </p>
-              </span>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+      {/* <img src="/media/dashboard/Today_sales.svg" alt="" className="mt-1" /> */}
+    </>
   );
 }

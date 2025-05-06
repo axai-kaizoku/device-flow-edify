@@ -1,11 +1,11 @@
 "use client";
 
+import BulkUpload from "@/components/bulk-upload";
+import { AsyncSelect } from "@/components/ui/async-select";
+import { bulkUploadDevices } from "@/server/deviceActions";
+import { fetchUsers, User } from "@/server/userActions";
 import { Keyboard, Laptop2, Monitor, Mouse, Smartphone } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { bulkUploadDevices } from "@/server/deviceActions";
-import BulkUpload from "@/components/bulk-upload";
-import { SelectInput } from "@/components/dropdown/select-input";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import { FormData } from "./_components/types";
 
 type DeviceTypeProps = {
@@ -34,7 +34,7 @@ const DeviceType = ({
   const [selectedDevice, setSelectedDevice] = useState<string | null>(
     data ?? ""
   );
-  const [user, setUser] = useState<User>({ _id: userId });
+  const [user, setUser] = useState<User>({ _id: userId, email: userName });
 
   useEffect(() => {
     setSelectedDevice(data ?? "");
@@ -175,8 +175,10 @@ const DeviceType = ({
               />
               <label
                 htmlFor={device.id}
-                className={`cursor-pointer ${
+                className={` ${
                   selectedDevice === device.id ? "text-black" : "text-gray-600"
+                } ${
+                  isEditForm ? "cursor-not-allowed" : "cursor-pointer"
                 } flex justify-center items-center gap-3 py-1.5 px-2`}
               >
                 <span className="text-black">{device.logo}</span>
@@ -197,22 +199,53 @@ const DeviceType = ({
       <div className="flex flex-col gap-2">
         <div className="font-gilroyMedium text-base">Device Assign to</div>
 
-        <div className="pt-2 w-full">
-          <SelectInput
-            fetchOptions={searchUsers}
-            initialOptions={fetchUsers}
-            optionValue={{ firstV: "first_name", secondV: "email" }}
-            key={"assign-assets-form"}
-            placeholder="Search by name, email, etc."
-            onSelect={(data: User) => {
+        <div className="w-full pt-2">
+          <AsyncSelect<User>
+            fetcher={fetchUsers}
+            preload
+            renderOption={(user) => (
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <div className="font-gilroyMedium">{user?.first_name}</div>
+                  <div className="text-xs font-gilroyRegular text-muted-foreground">
+                    {user?.email}
+                  </div>
+                </div>
+              </div>
+            )}
+            filterFn={(user, query) =>
+              user?.first_name?.toLowerCase()?.includes(query?.toLowerCase()) ||
+              user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+            }
+            getOptionValue={(user) => user?.email}
+            getDisplayValue={(displayUser) => (
+              <div className="flex items-center gap-2 text-left w-full">
+                <div className="flex flex-col leading-tight">
+                  <div className="font-gilroyMedium">
+                    {userName === displayUser?.email
+                      ? displayUser?.email
+                      : user?.email ?? ""}
+                  </div>
+                </div>
+              </div>
+            )}
+            notFound={
+              <div className="py-6 text-center font-gilroyMedium text-sm">
+                No users found
+              </div>
+            }
+            label="User"
+            placeholder="Assigning to"
+            value={user?.email || "null"}
+            onChange={(selected: User | null) => {
               setUser({
-                email: data.email!,
-                _id: data._id!,
-                first_name: data.first_name!,
+                email: selected?.email,
+                _id: selected?._id,
+                first_name: selected?.first_name,
               });
             }}
-            label="Assigning To"
-            value={userName ? userName : user?.first_name!}
+            width="100%"
+            triggerClassName="border border-[#5F5F5F]"
           />
         </div>
       </div>

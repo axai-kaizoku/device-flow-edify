@@ -11,8 +11,8 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
-import { updateUser } from "@/server/userActions";
-import { useToast } from "@/hooks/useToast";
+import { permanentDeleteUser, updateUser } from "@/server/userActions";
+import { toast } from "sonner";
 import WarningDelete from "@/icons/WarningDelete";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -27,7 +27,7 @@ export const PermanentUserDelete = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { openToast } = useToast();
+
   const queryClient = useQueryClient();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -63,19 +63,24 @@ export const PermanentUserDelete = ({
             onClick={async () => {
               if (id) {
                 try {
-                  await updateUser(id!, { orgId: null });
-                  openToast("success", "User Deleted Successfully!");
+                  await permanentDeleteUser(id!);
+                  toast.success("User Deleted Successfully!");
                   setOpen(false);
                   queryClient.invalidateQueries({
                     queryKey: ["fetch-people"],
                     exact: false,
                     refetchType: "all",
                   });
+
+                  router.push("/people?tab=inactive-users");
+
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetch-user-by-id"],
+                    exact: false,
+                    refetchType: "all",
+                  });
                 } catch (e: any) {
-                  openToast(
-                    "error",
-                    "Some Error Occured! Please try again later"
-                  );
+                  toast.error("Some Error Occured! Please try again later");
                 }
               }
             }}

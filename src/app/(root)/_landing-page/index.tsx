@@ -1,17 +1,18 @@
 "use client";
-import { Integration } from "./Integration";
-import { Testimonials } from "./Testimonials";
-import { CTA } from "./CTA";
-import { Footer } from "./Footer";
-import { useEffect, useRef, useState } from "react";
-import { Section3 } from "./Section3";
-import { Section2 } from "./Section2";
-import { FAQ } from "./FAQ";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import DemoForm from "./_components/DemoForm";
+import { CTA } from "./CTA";
+import { FAQ } from "./FAQ";
+import { Footer } from "./Footer";
+import { Integration } from "./Integration";
+import { Section2 } from "./Section2";
+import { Section3 } from "./Section3";
+import { Testimonials } from "./Testimonials";
+import { ConnectAppsIntegrations } from "./connect-apps-integrations";
 
 export const LandingPage = () => {
   const cardsRef: any = useRef([]); // Reference to all the 3 cards
@@ -168,11 +169,10 @@ export const LandingPage = () => {
           }
         >
           <div className=" flex flex-grow flex-wrap items-center justify-center gap-x-2.5 gap-y-[9px] min-[1355px]:flex-nowrap">
-            <div className="flex h-[18px] w-[1285px] flex-shrink-0 items-center justify-center text-center text-lg font-gilroySemiBold leading-[18px] tracking-[0px] text-white">
+            <div className="flex h-[18px] w-full flex-shrink-0 items-center justify-center text-center text-lg font-gilroySemiBold leading-[18px] tracking-[0px] text-white">
               <p>
-                {
-                  "Welcome to the club!! Join the BETA program to get all the new updates  "
-                }
+                Welcome to the club!! Join the BETA program to get all the new
+                updates. &nbsp;
                 <span
                   className="text-center text-[15px] leading-[18px] underline cursor-pointer"
                   onClick={scrollToCTA}
@@ -184,7 +184,6 @@ export const LandingPage = () => {
           </div>
         </div>
       </div>
-
       <div
         className={
           " font-gilroyMedium flex w-full flex-col items-center gap-y-8 bg-white tracking-[0px] px-8 max-lg:hidden"
@@ -331,7 +330,6 @@ export const LandingPage = () => {
           />
         </div>
       </div>
-
       <div className="w-full hidden max-lg:block">
         <div className="relative flex items-center py-4 ">
           <Icons.burger_icon
@@ -447,14 +445,18 @@ export const LandingPage = () => {
           />
         </div>
       </div>
+
       <div ref={featRef}>
         <Section2 ref={newRef} />
       </div>
+
+      {/* <ConnectAppsIntegrations /> */}
+
+      <Integration />
+
       <div ref={aboutRef}>
         <Section3 ref={aboutRef} />
       </div>
-
-      <Integration />
       <Testimonials />
       <div ref={ctaRef}>
         <CTA ref={signupref} />
@@ -466,7 +468,6 @@ export const LandingPage = () => {
         scrollToFeatures={scrollToFeatures}
         scrollToSignUp={scrollToSignUp}
       />
-
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="rounded-2xl bg-white p-5 shadow-lg text-center">
           <DemoForm

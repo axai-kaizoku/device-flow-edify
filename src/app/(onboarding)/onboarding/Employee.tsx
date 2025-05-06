@@ -2,31 +2,29 @@
 
 import {
   bulkUploadKeys,
-  designations,
   employments,
   genders,
 } from "@/app/(root)/people/_components/helper/utils";
+import { Icons } from "@/app/(root)/people/icons";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import { Button } from "@/components/buttons/Button";
+import { GsuiteDialog } from "@/components/bulk-upload/gsuite-bulk-upload.dialog";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-import { SelectInput } from "@/components/dropdown/select-input";
-import Spinner from "@/components/Spinner";
+import { AsyncSelect } from "@/components/ui/async-select";
 import { useAlert } from "@/hooks/useAlert";
+import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
 import { cn } from "@/lib/utils";
-import { fetchTeams } from "@/server/teamActions";
+import { fetchTeams, Team } from "@/server/teamActions";
 import {
   bulkUploadUsers,
   createUser,
   CreateUserArgs,
   fetchUsers,
-  searchUsers,
   User,
 } from "@/server/userActions";
-import { ChevronRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import BulkUpload from "./BulkUpload";
-import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -39,6 +37,7 @@ export const Employee = ({ setSteps }: any) => {
   const [success, setSuccess] = useState(false);
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [openGsuiteModal, setOpenGsuiteModal] = useState(false);
   const [formData, setFormData] = useState({
     firstN: "",
     phone: "",
@@ -151,11 +150,11 @@ export const Employee = ({ setSteps }: any) => {
       try {
         await createUser(user);
 
-        const employeeCount = sessionStorage.getItem("employee-count");
+        const employeeCount = localStorage.getItem("employee-count");
         if (employeeCount) {
           const empCountInt = parseInt(employeeCount);
           if (empCountInt >= 0) {
-            sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+            localStorage.setItem("employee-count", `${empCountInt + 1}`);
           }
         }
 
@@ -183,7 +182,7 @@ export const Employee = ({ setSteps }: any) => {
           isFailure: true,
           key: "create-user-failure",
         });
-        setNext(0)
+        setNext(0);
       }
 
       setLoading(false);
@@ -194,6 +193,8 @@ export const Employee = ({ setSteps }: any) => {
 
   return (
     <>
+      <GsuiteDialog open={openGsuiteModal} setOpen={setOpenGsuiteModal} />
+
       <div className="w-full h-screen items-center justify-evenly flex flex-col lg:flex-row p-8">
         {success ? (
           <div className="w-full relative h-full justify-center items-center flex flex-col gap-6">
@@ -201,22 +202,24 @@ export const Employee = ({ setSteps }: any) => {
               <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
                 Employee Added!!
               </div>
-              <div className="text-center text-md mt-2 font-gilroySemiBold leading-[normal] text-zinc-400">
+              <div className="text-center text-md mt-2 font-gilroyMedium leading-[normal] text-zinc-400">
                 Employee is added successful
               </div>
             </div>
             <Button
-              className="rounded-[9px] font-gilroySemiBold text-[16px]   w-[75%] h-[56px] bg-primary text-primary-foreground"
+              className="w-[75%]"
               type="button"
+              variant="primary"
               onClick={() => {
                 setSteps(5);
               }}
             >
               Add Device
             </Button>
+
             <Button
               type="submit"
-              className="rounded-[9px] font-gilroySemiBold text-[16px]  w-[75%] h-[56px]  "
+              className="  w-[75%]   "
               style={{
                 backgroundColor: "#EDEDED",
               }}
@@ -239,7 +242,7 @@ export const Employee = ({ setSteps }: any) => {
               </div>
             </div>
             {next === 0 && (
-              <div className="flex w-[75%] gap-4">
+              <div className="w-[75%] flex flex-col gap-2 justify-between items-center ">
                 <BulkUpload
                   bulkApi={bulkUploadUsers}
                   requiredKeys={bulkUploadKeys}
@@ -258,192 +261,191 @@ export const Employee = ({ setSteps }: any) => {
                     onboarding_date: "28/01/2020",
                   }}
                 />
-              </div>
-            )}
-            {/* {next === 0 && (
-              <div className="flex justify-center text-[#5F5F5F] font-gilroySemiBold">
-                -OR-
-              </div>
-            )} */}
-            {next === 0 && (
-              <CompanyOnbardingIcon/>
-            )}
-            {/* {next === 0 && (
-              <div className="flex flex-col justify-end self-stretch pt-[17px]">
-                <div className="flex flex-grow flex-wrap items-center justify-center gap-x-[22px] gap-y-[22px] text-[15px] font-medium leading-[normal] text-indigo-950 [max-height:59px] min-[423.75189208984375px]:flex-nowrap">
-                  <div className="flex items-center justify-center gap-x-[15px] rounded-[7.4px] border-x-[0.93px] border-t-[0.93px] border-solid border-x-[dimgray] border-y-[dimgray] bg-white px-8 py-2.5 [border-bottom-width:0.93px]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="24"
-                      viewBox="0 0 23 24"
-                      fill="none"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M7.01214 9.08856C7.39749 9.08856 7.71024 9.40131 7.71024 9.78666C7.71024 10.172 7.39749 10.4848 7.01214 10.4848H6.14371C4.63675 10.4848 3.41182 11.7097 3.41182 13.2157V17.7533C3.41182 19.2603 4.63675 20.4852 6.14371 20.4852H16.5035C18.0095 20.4852 19.2354 19.2603 19.2354 17.7533V13.2073C19.2354 11.706 18.0142 10.4848 16.5137 10.4848H15.636C15.2506 10.4848 14.9379 10.172 14.9379 9.78666C14.9379 9.40131 15.2506 9.08856 15.636 9.08856H16.5137C18.7839 9.08856 20.6315 10.9362 20.6315 13.2073V17.7533C20.6315 20.0301 18.7793 21.8814 16.5035 21.8814H6.14371C3.86791 21.8814 2.01562 20.0301 2.01562 17.7533V13.2157C2.01562 10.9399 3.86791 9.08856 6.14371 9.08856H7.01214ZM11.8175 2.971L14.5317 5.69637C14.8035 5.97002 14.8025 6.41122 14.5298 6.68301C14.2562 6.95481 13.815 6.95481 13.5432 6.68115L12.0208 5.15348L12.0213 15.3686H10.6251L10.6246 5.15348L9.1042 6.68115C8.9683 6.81891 8.78866 6.88686 8.60994 6.88686C8.43216 6.88686 8.25345 6.81891 8.11755 6.68301C7.84483 6.41122 7.84297 5.97002 8.11569 5.69637L10.829 2.971C11.0905 2.70758 11.5559 2.70758 11.8175 2.971Z"
-                        fill="#26203B"
-                      />
-                    </svg>
-                    <div className="flex flex-col items-center">
-                      <div>Upload Logo</div>
+                <div className="rounded-lg p-3  w-full flex justify-between items-center border border-gray-200">
+                  <div className="flex gap-2">
+                    <Icons.g_suit_display />
+
+                    <div className="flex flex-col ">
+                      <h1 className="text-base font-gilroySemiBold">GSuite</h1>
+                      <p className="text-[#7f7f7f] text-xs  font-gilroyMedium ">
+                        Import all the members automatically
+                      </p>
                     </div>
                   </div>
+                  <button
+                    disabled={loading}
+                    className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${
+                      loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={() => {
+                      setOpenGsuiteModal(true);
+                    }}
+                  >
+                    Import
+                  </button>
                 </div>
               </div>
-            )} */}
+            )}
+
+            {next === 0 && <CompanyOnbardingIcon className="size-8" />}
+
             <form
               onSubmit={handleSubmit}
               className="w-[85%] flex flex-col justify-center gap-4"
             >
               {next === 0 ? (
                 <>
-                  <FormField
-                    label="Name"
-                    error={errors.firstN}
-                    id="name"
-                    value={formData?.firstN ?? ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        firstN: e.target.value,
-                      }))
-                    }
-                    maxLength={35}
-                    minLength={2}
-                    type="text"
-                    placeholder="John Doe"
-                  />
-
-                  <div className="flex w-full flex-wrap items-center gap-4 pt-3">
-                    <div className="flex-1">
+                  <div className="overflow-y-auto h-[30vh] hide-scrollbar space-y-4 ">
+                    <div className="flex-1 mt-1">
                       <FormField
-                        label="DOB"
-                        error={errors.dob}
-                        id="dob"
-                        name="dob"
-                        value={
-                          formData?.dob
-                            ? new Date(formData.dob).toISOString().split("T")[0]
-                            : ""
-                        }
-                        type="date"
+                        label="Name"
+                        error={errors.firstN}
+                        id="name"
+                        value={formData?.firstN ?? ""}
                         onChange={(e) =>
                           setFormData((prev) => ({
                             ...prev,
-                            dob: e.target.value,
+                            firstN: e.target.value,
                           }))
                         }
-                        placeholder="DD/MM/YYYY"
+                        maxLength={35}
+                        minLength={2}
+                        type="text"
+                        placeholder="John Doe"
                       />
                     </div>
-                    <div className="flex-1">
-                      <div className="z-20 flex-1">
-                        <SelectDropdown
-                          options={genders}
-                          onSelect={(data) =>
+
+                    <div className="flex w-full flex-wrap items-center gap-4 pt-3">
+                      <div className="flex-1">
+                        <FormField
+                          label="DOB"
+                          error={errors.dob}
+                          id="dob"
+                          name="dob"
+                          value={
+                            formData?.dob
+                              ? new Date(formData.dob)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          type="date"
+                          onChange={(e) =>
                             setFormData((prev) => ({
                               ...prev,
-                              gender: data?.value,
+                              dob: e.target.value,
                             }))
                           }
-                          label="Gender"
-                          value={`${formData?.gender ?? ""}`}
-                          placeholder="eg: Male"
-                          className={cn(
-                            errors.gender
-                              ? "border-destructive/80 "
-                              : "border-[#5F5F5F]",
-                            "rounded-xl border"
-                          )}
+                          placeholder="DD/MM/YYYY"
                         />
-                        {errors.gender && (
-                          <p className="mt-1 text-xs font-gilroyMedium text-destructive">
-                            {errors.gender}
-                          </p>
-                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="z-20 flex-1">
+                          <SelectDropdown
+                            options={genders}
+                            onSelect={(data) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                gender: data?.value,
+                              }))
+                            }
+                            label="Gender"
+                            value={`${formData?.gender ?? ""}`}
+                            placeholder="eg: Male"
+                            className={cn(
+                              errors.gender
+                                ? "border-destructive/80 "
+                                : "border-[#5F5F5F]",
+                              "rounded-md border"
+                            )}
+                          />
+                          {errors.gender && (
+                            <p className="mt-1 text-xs font-gilroyMedium text-destructive">
+                              {errors.gender}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex w-full flex-wrap items-center gap-4 py-3">
+                      <div className="flex-1">
+                        <FormField
+                          label="Email"
+                          id="email"
+                          error={errors.email}
+                          name="email"
+                          value={formData?.email ?? ""}
+                          type="text"
+                          onChange={(e) => {
+                            const inputValue = e.target.value;
+                            const emailRegex =
+                              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                            if (
+                              !inputValue ||
+                              /^[a-zA-Z0-9@._-]*$/.test(inputValue)
+                            ) {
+                              setFormData((prev) => ({
+                                ...prev,
+                                email: inputValue,
+                              }));
+
+                              // Validate email format on the fly
+                              setErrors((prevErrors) => ({
+                                ...prevErrors,
+                                email: inputValue
+                                  ? emailRegex.test(inputValue)
+                                    ? ""
+                                    : "Invalid email format"
+                                  : "Email is required",
+                              }));
+                            }
+                          }}
+                          maxLength={50}
+                          placeholder="jhondoe@winuall.com"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <FormField
+                          label="Phone"
+                          id="phone"
+                          name="phone"
+                          error={errors.phone}
+                          value={formData?.phone ?? ""}
+                          type="tel"
+                          onChange={(e) => {
+                            const inputValue = e.target.value;
+                            const phoneRegex = /^[0-9]{0,10}$/;
+
+                            // Allow only numbers (or empty string) and prevent invalid input
+                            if (!inputValue || phoneRegex.test(inputValue)) {
+                              setFormData((prev) => ({
+                                ...prev,
+                                phone: inputValue,
+                              }));
+
+                              // Validate phone number format on the fly
+                              setErrors((prevErrors) => ({
+                                ...prevErrors,
+                                phone: inputValue
+                                  ? /^[0-9]{10}$/.test(inputValue)
+                                    ? ""
+                                    : "Phone number must be 10 digits"
+                                  : "Phone number is required",
+                              }));
+                            }
+                          }}
+                          maxLength={10}
+                          placeholder="eg: 9876543210"
+                        />
                       </div>
                     </div>
                   </div>
-                  <div className="flex w-full flex-wrap items-center gap-4 py-3">
-                    <div className="flex-1">
-                      <FormField
-                        label="Email"
-                        id="email"
-                        error={errors.email}
-                        name="email"
-                        value={formData?.email ?? ""}
-                        type="text"
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                          const emailRegex =
-                            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-                          if (
-                            !inputValue ||
-                            /^[a-zA-Z0-9@._-]*$/.test(inputValue)
-                          ) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              email: inputValue,
-                            }));
-
-                            // Validate email format on the fly
-                            setErrors((prevErrors) => ({
-                              ...prevErrors,
-                              email: inputValue
-                                ? emailRegex.test(inputValue)
-                                  ? ""
-                                  : "Invalid email format"
-                                : "Email is required",
-                            }));
-                          }
-                        }}
-                        maxLength={50}
-                        placeholder="jhondoe@winuall.com"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <FormField
-                        label="Phone"
-                        id="phone"
-                        name="phone"
-                        error={errors.phone}
-                        value={formData?.phone ?? ""}
-                        type="tel"
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                          const phoneRegex = /^[0-9]{0,10}$/;
-
-                          // Allow only numbers (or empty string) and prevent invalid input
-                          if (!inputValue || phoneRegex.test(inputValue)) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              phone: inputValue,
-                            }));
-
-                            // Validate phone number format on the fly
-                            setErrors((prevErrors) => ({
-                              ...prevErrors,
-                              phone: inputValue
-                                ? /^[0-9]{10}$/.test(inputValue)
-                                  ? ""
-                                  : "Phone number must be 10 digits"
-                                : "Phone number is required",
-                            }));
-                          }
-                        }}
-                        maxLength={10}
-                        placeholder="eg: 9876543210"
-                      />
-                    </div>
-                  </div>
-                  {/* {error && <span className="w-full text-red-400">{error}</span>} */}
                   <div className="flex gap-2 mb-3">
                     <Button
                       type="button"
-                      className="rounded-[9px] text-base w-[100%] h-[56px] font-gilroySemiBold bg-black text-white "
+                      variant="primary"
                       onClick={() => {
                         if (validateStepOne()) {
                           setNext(1);
@@ -451,39 +453,72 @@ export const Employee = ({ setSteps }: any) => {
                       }}
                     >
                       Next
-                      <ChevronRight color="white" />
                     </Button>
                   </div>
                 </>
               ) : next === 1 ? (
                 <div className="flex flex-col gap-6 relative ">
                   <div className="w-full flex flex-col gap-6">
-                    <div className="z-50">
-                      <SelectInput
-                        value={formData.reportM.name || ""}
-                        optionValue={{ firstV: "first_name", secondV: "email" }}
-                        key={"user-form-reporting-manager"}
-                        placeholder="Search by name, etc"
-                        // @ts-ignore
-                        fetchOptions={searchUsers}
-                        // @ts-ignore
-                        initialOptions={fetchUsers}
-                        onSelect={(data: any) => {
+                    <div className="flex flex-col gap-1">
+                      <label className="text-sm font-gilroyMedium text-black">
+                        Reporting Manager{" "}
+                        <span className="text-xs font-gilroyRegular text-neutral-400">
+                          (optional)
+                        </span>
+                      </label>
+                      <AsyncSelect<User>
+                        fetcher={fetchUsers}
+                        preload
+                        renderOption={(user) => (
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <div className="font-gilroyMedium">
+                                {user?.first_name}
+                              </div>
+                              <div className="text-xs font-gilroyRegular text-muted-foreground">
+                                {user?.email}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        filterFn={(user, query) =>
+                          user?.first_name
+                            ?.toLowerCase()
+                            ?.includes(query?.toLowerCase()) ||
+                          user?.email
+                            ?.toLowerCase()
+                            ?.includes(query?.toLowerCase())
+                        }
+                        getOptionValue={(user) => user?.email}
+                        getDisplayValue={(user) => (
+                          <div className="flex items-center gap-2 text-left w-full">
+                            <div className="flex flex-col leading-tight">
+                              <div className="font-gilroyMedium">
+                                {formData?.reportM?.name ?? ""}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        notFound={
+                          <div className="py-6 text-center font-gilroyMedium text-sm">
+                            No users found
+                          </div>
+                        }
+                        label="User"
+                        placeholder="Add Reporting Manager"
+                        value={formData?.reportM?.name || "null"}
+                        onChange={(selected: User | null) => {
                           setFormData((prev) => ({
                             ...prev,
-                            reportM: { name: data.first_name, value: data._id },
+                            reportM: {
+                              name: selected?.email,
+                              value: selected?._id,
+                            },
                           }));
                         }}
-                        label="Reporting Manager"
-                        className={cn(
-                          errors.reportM ? "border-destructive/80 border" : ""
-                        )}
+                        width="100%"
+                        triggerClassName="border border-[#5F5F5F]"
                       />
-                      {errors.reportM && (
-                        <p className="text-destructive font-gilroyMedium text-xs">
-                          {errors.reportM}
-                        </p>
-                      )}
                     </div>
 
                     <div className="flex w-full flex-wrap items-center gap-4 py-2">
@@ -521,7 +556,7 @@ export const Employee = ({ setSteps }: any) => {
                               errors.employment
                                 ? "border-destructive/80 "
                                 : "border-[#5F5F5F]",
-                              "rounded-xl border"
+                              "rounded-md border"
                             )}
                           />
                           {errors.employment && (
@@ -535,47 +570,73 @@ export const Employee = ({ setSteps }: any) => {
 
                     <div className="flex w-full flex-wrap items-center gap-4 ">
                       <div className="flex-1">
-                        <div className="z-20 flex-1">
-                          <SelectInput
-                            value={formData?.team?.name}
-                            optionValue={{
-                              firstV: "title",
-                              secondV: "description",
-                            }}
-                            key={"user-form-team-field"}
-                            placeholder="Search by name, etc"
-                            fetchOptions={async (query) => {
-                              const data = await fetchTeams();
-                              const filtered = data.filter((obj: any) =>
-                                obj.title
-                                  .toLowerCase()
-                                  .includes(query.toLowerCase())
-                              );
-                              return filtered;
-                            }}
-                            initialOptions={fetchTeams}
-                            onSelect={(data: any) => {
+                        <div
+                          className={cn(
+                            `flex flex-col gap-1 `,
+                            errors?.onboarding ? "-mt-10" : "-mt-6"
+                          )}
+                        >
+                          <label className="text-sm font-gilroyMedium text-black">
+                            Team{" "}
+                            <span className="text-xs font-gilroyRegular text-neutral-400">
+                              (optional)
+                            </span>
+                          </label>
+                          <AsyncSelect<Team>
+                            fetcher={fetchTeams}
+                            preload
+                            renderOption={(team) => (
+                              <div className="flex items-center gap-2">
+                                <div className="flex flex-col">
+                                  <div className="font-gilroyMedium">
+                                    {team?.title}
+                                  </div>
+                                  <div className="text-xs font-gilroyRegular text-muted-foreground">
+                                    {team?.description}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            filterFn={(team, query) =>
+                              team?.title
+                                ?.toLowerCase()
+                                ?.includes(query?.toLowerCase()) ||
+                              team?.description
+                                ?.toLowerCase()
+                                ?.includes(query?.toLowerCase())
+                            }
+                            getOptionValue={(team) => team?.title}
+                            getDisplayValue={(team) => (
+                              <div className="flex items-center gap-2 text-left w-full">
+                                <div className="flex flex-col leading-tight">
+                                  <div className="font-gilroyMedium">
+                                    {team?._id === formData?.team?.value
+                                      ? formData?.team?.name
+                                      : ""}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            notFound={
+                              <div className="py-6 text-center font-gilroyMedium text-sm">
+                                No teams found
+                              </div>
+                            }
+                            label="Team"
+                            placeholder="Search Teams"
+                            value={formData?.team?.name || "null"}
+                            onChange={(selected) => {
                               setFormData((prev) => ({
                                 ...prev,
-                                team: { name: data.title, value: data._id },
+                                team: {
+                                  name: selected?.title,
+                                  value: selected?._id,
+                                },
                               }));
                             }}
-                            label="Team"
-                            className={cn(
-                              errors.team
-                                ? "border-destructive/80 border"
-                                : "border-[#5F5F5F]"
-                            )}
+                            width="100%"
+                            triggerClassName="border border-[#5F5F5F]"
                           />
-                          {errors.team && (
-                            <p
-                              className={cn(
-                                "mt-0.5 text-sm text-destructive opacity-0"
-                              )}
-                            >
-                              {"team"}
-                            </p>
-                          )}
                         </div>
                       </div>
 
@@ -611,20 +672,13 @@ export const Employee = ({ setSteps }: any) => {
                     </div>
                   </div>
                   <div className="flex gap-2  w-full  mt-4">
-                    <Button
-                      className="rounded-[9px] w-full h-[56px] text-base font-gilroySemiBold bg-black text-white "
+                    <LoadingButton
+                      variant="primary"
+                      loading={loading}
                       type="submit"
-                      disabled={loading}
                     >
-                      {loading ? (
-                        <Spinner />
-                      ) : (
-                        <>
-                          <span>Submit</span>
-                          <ChevronRight color="white" className="size-4" />
-                        </>
-                      )}
-                    </Button>
+                      Submit
+                    </LoadingButton>
                   </div>
                 </div>
               ) : (

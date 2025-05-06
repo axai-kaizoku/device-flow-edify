@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { convertToCSV, downloadCSV } from "./util";
 import { getDeviceReport } from "@/server/reportsAction";
 import {
+  activeUsers,
   deletedDevices,
   deletedUsers,
   filterDevice,
@@ -19,11 +20,11 @@ import { closeAlert, openAlert } from "@/app/store/alertSlice";
 import { GlobalAlert } from "@/components/global-alert";
 import { DeviceResponse } from "@/server/deviceActions";
 import { UserResponse } from "@/server/userActions";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 
 const ReportCard = ({ report, index }: { report: report; index: number }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { openToast } = useToast();
+
   const dispatch = useDispatch();
 
   // () => setIsOpen(true)
@@ -48,7 +49,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
   const handleDownloadTotalUsersReport = async () => {
     try {
-      const data = await filterUsers({ pageLength: 1000 });
+      const data = await activeUsers({ page: 1, pageLimit: 100000000 });
 
       if (data?.users && data?.users?.length > 0) {
         const csv = convertToCSV(data.users);
@@ -56,10 +57,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `People_Report.csv`);
       } else {
         // alert("No data available for the selected status.");
-        openToast("error", "No data Available");
+        toast.error("No data Available");
       }
     } catch (error) {
-      openToast("error", "Error downloading the report");
+      toast.error("Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }
@@ -67,7 +68,7 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
   const handleDownloadDeletedUserReport = async () => {
     try {
-      const deletedUserResponse: UserResponse = await inActiveUsers();
+      const deletedUserResponse: UserResponse = await inActiveUsers({page: 1, pageLimit: 100000000});
       if (
         deletedUserResponse &&
         deletedUserResponse?.users &&
@@ -77,17 +78,17 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
 
         downloadCSV(csv, `deleted_users_report.csv`);
       } else {
-        openToast("error", "No data Available");
+        toast.error("No data Available");
       }
     } catch (error) {
-      openToast("error", "Error downloading the report");
+      toast.error("Error downloading the report");
       // alert("Failed to download the report. Please try again.");
     }
   };
 
   const handleDownloadDeletedAssetsReport = async () => {
     try {
-      const deletedDeviceResponse: DeviceResponse = await inActiveAssets();
+      const deletedDeviceResponse: DeviceResponse = await inActiveAssets({page: 1, pageLimit: 100000000});
       if (
         deletedDeviceResponse &&
         deletedDeviceResponse?.devices &&
@@ -98,10 +99,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `deleted_assets_report.csv`);
       } else {
         // alert("No data available");
-        openToast("error", "No data Available");
+        toast.error("No data Available");
       }
     } catch (error) {
-      openToast("error", "Error downloading the report");
+      toast.error("Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }
@@ -117,10 +118,10 @@ const ReportCard = ({ report, index }: { report: report; index: number }) => {
         downloadCSV(csv, `Device_Report_unassigned.csv`);
       } else {
         // alert("No data available for the selected status.");
-        openToast("error", "No data Available");
+        toast.error("No data Available");
       }
     } catch (error) {
-      openToast("error", "Error downloading the report");
+      toast.error("Error downloading the report");
 
       // alert("Failed to download the report. Please try again.");
     }

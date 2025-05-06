@@ -11,16 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { IssueResponse, Issues } from "@/server/issueActions";
+import { openIssues } from "@/server/filterActions";
+import { Search } from "lucide-react";
 import { useQueryState } from "nuqs";
-import { ArrowUpDown, Check, Download, Plus, Search } from "lucide-react";
-import { Tab } from "../teams/_components/Tab";
+import { useDeferredValue } from "react";
 import IssueTableDisplay from "./_components/IssueTableDisplay";
-import ClosedIssueTable from "./_components/ClosedIssues";
-import { useDeferredValue, useEffect, useState } from "react";
-import { useAlert } from "@/hooks/useAlert";
-import { closedIssues, filterIssues, openIssues } from "@/server/filterActions";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
 function NewPage() {
   // const [issues, setIssues] = useState<IssueResponse | null>(null);
@@ -48,9 +43,9 @@ function NewPage() {
 
       return openIssues(query);
     },
-    staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // staleTime: 1000 * 60 * 5,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
   });
   // const [loading, setLoading] = useState(false);
   // const { showAlert } = useAlert();

@@ -3,20 +3,27 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import { useEffect, useState } from "react";
 import { Icons } from "@/components/icons";
 import { SelectInput } from "@/components/dropdown/select-input";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "@/components/buttons/Button";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
 import Spinner from "@/components/Spinner";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Device,
   fetchDevices,
+  fetchUnassignedDevices,
   searchDevices,
   updateDevice,
 } from "@/server/deviceActions";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import AssetsIconWhite from "@/icons/AssetsIconWhite";
+import { AsyncSelect } from "@/components/ui/async-select";
+import { GetAvatar } from "@/components/get-avatar";
 
 type FormData = {
   device: Device | null;
@@ -30,7 +37,7 @@ type FormErrors = {
 
 export default function ReAssign({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { openToast } = useToast();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -73,10 +80,10 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
         userId: formData?.user!._id,
       });
       setOpen(false);
-      openToast("success", "Assigned asset to user!");
+      toast.success("Assigned asset to user!");
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to assign to user!");
+      toast.error("Failed to assign to user!");
     } finally {
       setLoading(false);
     }
@@ -101,7 +108,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
               className="w-full flex flex-col gap-7 relative h-full"
             >
               {/* Device select input */}
-              <div className="z-10 pt-3">
+              {/* <div className="z-10 pt-3">
                 <SelectInput
                   key={"assign-device"}
                   value={formData?.device?.custom_model ?? ""}
@@ -135,23 +142,89 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                     {formErrors.device}
                   </p>
                 )}
+              </div> */}
+              <div className="flex flex-col gap-2 pt-3">
+                <AsyncSelect<Device>
+                  fetcher={fetchDevices}
+                  preload
+                  // fixInputClear={false}
+                  renderOption={(device) => (
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col">
+                        <div className="font-gilroyMedium">
+                          {device?.custom_model}
+                        </div>
+                        <div className="text-xs font-gilroyRegular text-muted-foreground">
+                          {device?.device_name}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  filterFn={(device, query) =>
+                    device?.custom_model
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase()) ||
+                    device?.device_name
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase())
+                  }
+                  getOptionValue={(device) => device?.custom_model}
+                  getDisplayValue={() => (
+                    <div className="flex items-center gap-2 text-left w-full">
+                      <div className="flex flex-col leading-tight">
+                        <div className="font-gilroyMedium">
+                          {formData?.device?.custom_model ?? ""}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  notFound={
+                    <div className="py-6 text-center font-gilroyMedium text-sm">
+                      No devices found
+                    </div>
+                  }
+                  label="Device"
+                  placeholder="Assign Device"
+                  value={formData?.device?.custom_model || "null"}
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      device: {
+                        _id: selected?._id,
+                        device_name: selected?.device_name,
+                        custom_model: selected?.custom_model,
+                        ram: selected?.ram,
+                        storage: selected?.storage,
+                        image: selected?.image,
+                        serial_no: selected?.serial_no,
+                      },
+                    }))
+                  }
+                  width="100%"
+                />
+                {formErrors?.device?.length > 0 && (
+                  <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+                    {formErrors?.device}
+                  </p>
+                )}
               </div>
 
-              {formData?.device && (
-                <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
+              {formData?.device?.custom_model && (
+                <div className=" w-full bg-[#f5f5f5]  rounded-lg p-3 flex items-center gap-4 ">
                   <img
                     src={
                       formData?.device?.image?.[0]?.url ??
                       "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                     }
-                    alt="device-image"
-                    className="size-16 p-1 object-cover rounded-full"
+                    alt="team-image"
+                    className="w-16 h-16 p-1 border object-contain rounded-full "
                   />
-                  <div className="w-full flex flex-col justify-center">
-                    <h1 className="text-black font-gilroySemiBold text-base">
-                      {formData?.device?.custom_model ?? "-"}
+                  <div className="w-full flex flex-col justify-center ">
+                    <h1 className="text-black font-gilroySemiBold text-xl">
+                      {formData?.device?.custom_model ?? "Device"}
                     </h1>
-                    <h1 className="text-[#7C7C7C] flex items-center text-sm font-gilroyMedium">
+
+                    <h1 className="text-[#7C7C7C] flex  items-center text-base  font-gilroyMedium">
                       {formData?.device?.ram ?? "RAM"}
                       <span className="flex text-2xl mx-1 -mt-3">.</span>
                       {formData?.device?.storage ?? "Storage"}
@@ -163,7 +236,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
               )}
 
               {/* User select input */}
-              <div className="pt-3 w-full z-0">
+              {/* <div className="pt-3 w-full z-0">
                 <SelectInput
                   key={"assign-assets-form"}
                   value={formData?.user?.email ?? ""}
@@ -196,58 +269,128 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                     {formErrors.user}
                   </p>
                 )}
+              </div> */}
+
+              <div className="flex flex-col gap-2 pt-3">
+                <AsyncSelect<User>
+                  fetcher={fetchUsers}
+                  preload
+                  fixInputClear={false}
+                  renderOption={(user) => (
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col">
+                        <div className="font-gilroyMedium">
+                          {user?.first_name}
+                        </div>
+                        <div className="text-xs font-gilroyRegular text-muted-foreground">
+                          {user?.email}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  filterFn={(user, query) =>
+                    user?.first_name
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase()) ||
+                    user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+                  }
+                  getOptionValue={(user) => user?.email}
+                  getDisplayValue={() => (
+                    <div className="flex items-center gap-2 text-left w-full">
+                      <div className="flex flex-col leading-tight">
+                        <div className="font-gilroyMedium">
+                          {formData?.user?.email ?? ""}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  notFound={
+                    <div className="py-6 text-center font-gilroyMedium text-sm">
+                      No users found
+                    </div>
+                  }
+                  label="User"
+                  placeholder="Assigning To"
+                  value={formData?.user?.email || "null"}
+                  onChange={(selected: User | null) =>
+                    // setUser({
+                    //   _id: selected?._id,
+                    //   first_name: selected?.first_name,
+                    //   email: selected?.email,
+                    //   employment_type: selected?.employment_type,
+                    //   designation: selected?.designation,
+                    // })
+                    setFormData((prev) => ({
+                      ...prev,
+                      user: {
+                        email: selected?.email,
+                        _id: selected?._id,
+                        designation: selected?.designation,
+                        first_name: selected?.first_name,
+                        employment_type: selected?.employment_type,
+                        image: selected?.image,
+                      },
+                    }))
+                  }
+                  width="100%"
+                />
+                {formErrors?.user?.length > 0 && (
+                  <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+                    {formErrors?.user}
+                  </p>
+                )}
               </div>
 
               {formData?.user && (
-                <div className="w-full bg-[#f5f5f5] rounded-md p-3 flex items-center gap-4">
-                  <img
-                    src={
-                      formData?.user?.image && formData?.user.image.length > 0
-                        ? formData?.user?.image
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                    }
-                    alt="user-image"
-                    className="size-16 p-1 object-cover rounded-full"
-                  />
-                  <div className="w-full flex flex-col justify-center">
-                    <h1 className="text-black font-gilroySemiBold text-base">
-                      {formData?.user?.first_name ?? "-"}
+                <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
+                  {formData?.user?.image &&
+                  formData?.user?.image?.length > 0 ? (
+                    <img
+                      src={formData?.user?.image}
+                      alt={formData?.user?.first_name}
+                      className="size-14 object-cover rounded-full flex-shrink-0"
+                    />
+                  ) : (
+                    <GetAvatar
+                      name={formData?.user?.first_name ?? ""}
+                      size={56}
+                    />
+                  )}
+                  <div className=" w-full flex flex-col justify-center ">
+                    <h1 className="text-black font-gilroySemiBold text-base ">
+                      {formData?.user?.first_name ?? ""}
                     </h1>
-                    <h1 className="text-[#7C7C7C] flex items-center text-sm font-gilroyMedium">
-                      {formData?.user?.designation ?? "designation"}
+                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
+                      {formData?.user?.email ?? ""}
                     </h1>
-                    <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-xs font-gilroyMedium flex justify-center items-center px-2 py-0.5">
-                      Active
-                    </p>
+
+                    <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
+                      {formData?.user?.employment_type ?? ""}
+                      <span className="flex text-2xl mx-1 -mt-3"> </span>
+                      {formData?.user?.designation ?? ""}
+                    </h1>
                   </div>
                 </div>
               )}
 
               <div className="flex gap-2 absolute bottom-0 w-full">
-                <button
-                  className={buttonVariants({
-                    variant: "outlineTwo",
-                    className: "w-full",
-                  })}
+                <Button
+                  variant="outlineTwo"
+                  className="w-full"
                   type="button"
                   onClick={() => setOpen(false)}
                 >
                   Close
-                </button>
-                <button
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-full",
-                  })}
+                </Button>
+                <LoadingButton
+                  variant="primary"
+                  className="w-full"
                   type="submit"
                   disabled={loading}
+                  loading={loading}
                 >
-                  {loading ? (
-                    <Spinner className="size-4" />
-                  ) : (
-                    <span> Reassign</span>
-                  )}
-                </button>
+                  Reassign
+                </LoadingButton>
               </div>
             </form>
           </div>

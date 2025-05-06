@@ -1,18 +1,15 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
-import { useEffect, useState } from "react";
-import { SelectInput } from "@/components/dropdown/select-input";
-import { useToast } from "@/hooks/useToast";
-import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button, LoadingButton } from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
+import { AsyncSelect } from "@/components/ui/async-select";
 import { Device, updateDevice } from "@/server/deviceActions";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
-import UserFormProfileIcon from "@/icons/UserFormProfileIcon";
+import { fetchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function ReassignAsset({
   children,
@@ -24,7 +21,7 @@ export default function ReassignAsset({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+
   const [user, setUser] = useState<User>();
   const [error, setError] = useState("");
   const queryClient = useQueryClient();
@@ -46,15 +43,20 @@ export default function ReassignAsset({
       // @ts-ignore
       await updateDevice(deviceData?._id ?? "", { userId: user?._id });
       setOpen(false);
-      openToast("success", ` ${deviceData?.custom_model} assigned to user !`);
+      toast.success(` ${deviceData?.custom_model} assigned to user !`);
       setLoading(false);
       queryClient.invalidateQueries({
         queryKey: ["fetch-assets"],
         exact: false,
         refetchType: "all",
       });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-single-device"],
+        exact: false,
+        refetchType: "all",
+      });
     } catch (error) {
-      openToast("error", "Failed to assign to user !");
+      toast.error("Failed to assign to user !");
     } finally {
       setLoading(false);
     }
@@ -79,7 +81,7 @@ export default function ReassignAsset({
                   "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
                 }
                 alt="device-image"
-                className="w-20 h-16 p-1 object-contain border rounded-full "
+                className="w-16 h-16 p-1 object-contain border rounded-full "
               />
               <div className=" w-full flex flex-col justify-center ">
                 <h1 className="text-black font-gilroySemiBold text-lg ">
@@ -87,13 +89,10 @@ export default function ReassignAsset({
                 </h1>
 
                 <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
-                  {deviceData?.ram ?? "RAM"}
-                  <span className="flex mx-1 -mt-3">.</span>
-                  {deviceData?.storage ?? "Storage"}
-                  <span className="flex  mx-1 -mt-3">.</span>
+                  {deviceData?.ram ?? "RAM"} {deviceData?.storage ?? "Storage"}{" "}
                   {deviceData?.serial_no ?? "Serial number"}
                 </h1>
-                <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
+                <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-xs  font-gilroyMedium flex justify-center items-center px-2 py-0.5">
                   Active
                 </p>
               </div>
@@ -103,89 +102,109 @@ export default function ReassignAsset({
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-7 relative h-full"
             >
-              <div className="z-0 pt-3">
-                <SelectInput
-                  key={"reassign-assign"}
-                  value={user?.first_name ?? ""}
-                  placeholder="Search by name, email, etc"
-                  // @ts-ignore
-                  fetchOptions={searchUsers}
-                  // @ts-ignore
-                  initialOptions={fetchUsers}
-                  onSelect={(data: User) => {
-                    setUser({
-                      _id: data._id,
-                      first_name: data.first_name,
-                      email: data.email,
-                      designation: data.designation,
-                      image: data.image,
-                      employment_type: data?.employment_type,
-                    });
-                  }}
-                  optionValue={{ firstV: "first_name", secondV: "email" }}
-                  label="Assigning to*"
-                  className={cn(
-                    error.length > 0 ? "border-destructive/80 border" : ""
+              <div className="flex flex-col gap-2 pt-3">
+                <AsyncSelect<User>
+                  fetcher={fetchUsers}
+                  preload
+                  fixInputClear={false}
+                  renderOption={(user) => (
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col">
+                        <div className="font-gilroyMedium">
+                          {user?.first_name}
+                        </div>
+                        <div className="text-xs font-gilroyRegular text-muted-foreground">
+                          {user?.email}
+                        </div>
+                      </div>
+                    </div>
                   )}
+                  filterFn={(user, query) =>
+                    user?.first_name
+                      ?.toLowerCase()
+                      ?.includes(query?.toLowerCase()) ||
+                    user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+                  }
+                  getOptionValue={(user) => user?.email}
+                  getDisplayValue={() => (
+                    <div className="flex items-center gap-2 text-left w-full">
+                      <div className="flex flex-col leading-tight">
+                        <div className="font-gilroyMedium">
+                          {user?.email ?? ""}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  notFound={
+                    <div className="py-6 text-center font-gilroyMedium text-sm">
+                      No users found
+                    </div>
+                  }
+                  label="User"
+                  placeholder="Add Member"
+                  value={user?.email || "null"}
+                  onChange={(selected: User | null) =>
+                    setUser({
+                      _id: selected?._id,
+                      first_name: selected?.first_name,
+                      email: selected?.email,
+                      employment_type: selected?.employment_type,
+                      designation: selected?.designation,
+                    })
+                  }
+                  width="100%"
                 />
                 {error.length > 0 && (
-                  <p className="text-destructive text-sm">{error}</p>
+                  <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+                    {error}
+                  </p>
                 )}
               </div>
 
               {user?.first_name ? (
-                <div className=" w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4 ">
-                  <img
-                    src={
-                      user?.image && user.image.length > 0
-                        ? user?.image
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                    }
-                    alt="user-image"
-                    className="w-20 h-16 p-1  object-cover rounded-full "
-                  />
+                <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
+                  {user?.image && user?.image?.length > 0 ? (
+                    <img
+                      src={user?.image}
+                      alt={user?.first_name}
+                      className="size-14 object-cover rounded-full flex-shrink-0"
+                    />
+                  ) : (
+                    <GetAvatar name={user?.first_name ?? ""} size={56} />
+                  )}
                   <div className=" w-full flex flex-col justify-center ">
-                    <h1 className="text-black font-gilroySemiBold text-base">
+                    <h1 className="text-black font-gilroySemiBold text-base ">
                       {user?.first_name ?? ""}
                     </h1>
-                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm">
+                    <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
                       {user?.email ?? ""}
                     </h1>
 
                     <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
                       {user?.employment_type ?? ""}
-                      <span className="flex mx-1 -mt-3">.</span>
+                      <span className="flex text-2xl mx-1 -mt-3"> </span>
                       {user?.designation ?? ""}
                     </h1>
                   </div>
                 </div>
               ) : null}
               <div className="flex gap-2 absolute bottom-0 w-full mt-4">
-                <button
-                  className={buttonVariants({
-                    variant: "outlineTwo",
-                    className: "w-full",
-                  })}
+                <Button
+                  variant="outlineTwo"
+                  className="w-full"
                   onClick={() => setOpen(false)}
                 >
                   Close
-                </button>
-                <button
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-full",
-                  })}
+                </Button>
+                <LoadingButton
+                  variant="primary"
+                  className="w-full"
                   type="submit"
                   disabled={loading}
+                  loading={loading}
                 >
-                  {loading ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <span>Assign</span>
-                    </>
-                  )}
-                </button>
+                  Assign
+                </LoadingButton>
               </div>
             </form>
           </div>

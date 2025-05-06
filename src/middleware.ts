@@ -59,23 +59,43 @@ export async function middleware(req: NextRequest) {
   ) {
     // If token is missing, redirect to login
     // 1:- Employee, 2:- admin, 3:- upper management, 4:- founder
+    // if (token) {
+    //   // Check for admin route protection
+    //   if (
+    //     adminRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))
+    //   ) {
+    //     if (![2, 3, 4].includes(token.role!)) {
+    //       const home = new URL("/error", req.url);
+    //       return NextResponse.redirect(home);
+    //     }
+    //   }
+
+    //   // Check for user route protection
+    //   if (userRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
+    //     if ([2, 3, 4].includes(token.role!)) {
+    //       const home = new URL("/error", req.url);
+    //       return NextResponse.redirect(home);
+    //     }
+    //   }
+    // }
     if (token) {
-      // Check for admin route protection
-      if (
-        adminRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))
-      ) {
-        if (![2, 3, 4].includes(token.role!)) {
-          const home = new URL("/error", req.url);
-          return NextResponse.redirect(home);
-        }
+      const isAdmin = [2, 3, 4].includes(token?.role);
+      const isEmployee = token?.role === 1;
+
+      const isAdminRoute = adminRoutes.some((route) =>
+        new RegExp(`^${route}$`).test(pathname)
+      );
+
+      const isUserRoute = userRoutes.some((route) =>
+        new RegExp(`^${route}$`).test(pathname)
+      );
+
+      if (isAdminRoute && !isAdmin) {
+        return NextResponse.redirect(new URL("/error", req.url));
       }
 
-      // Check for user route protection
-      if (userRoutes.some((route) => new RegExp(`^${route}$`).test(pathname))) {
-        if ([2, 3, 4].includes(token.role!)) {
-          const home = new URL("/error", req.url);
-          return NextResponse.redirect(home);
-        }
+      if (isUserRoute && !isEmployee) {
+        return NextResponse.redirect(new URL("/error", req.url));
       }
     }
   }

@@ -5,7 +5,7 @@ import { DevicePage2, FormErrors } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { Trash2, X } from "lucide-react";
 import { getImageUrl } from "@/server/orgActions";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 
 interface KeyboardDetailsProps {
@@ -23,7 +23,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [displayFile, setDisplayFile] = useState("");
-  const { openToast } = useToast();
+
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -73,7 +73,7 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
           setDisplayFile(URL.createObjectURL(file));
           setInvoiceFile(res?.fileUrl);
         } catch (error) {
-          openToast("error", "Some Error while uploading the File");
+          toast.error("Some Error while uploading the File");
         } finally {
           setIsUploading(false); // Stop showing the progress bar
           setProgress(0);
@@ -154,10 +154,6 @@ const LaptopForm2: React.FC<KeyboardDetailsProps> = ({
                     !iframe.contentDocument ||
                     iframe.contentDocument.title === ""
                   ) {
-                    // openToast(
-                    //   "error",
-                    //   "File preview failed. It may not be viewable."
-                    // );
                   }
                 }}
               />

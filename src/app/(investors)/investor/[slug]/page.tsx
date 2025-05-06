@@ -27,8 +27,10 @@ const Page = () => {
   const signupref = useRef<HTMLDivElement>(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { slug }: {slug: string} = useParams();
-  const investorDetails = Object.values(INVESTOR_DETAILS).find((item) => item.slug === slug);
+  const { slug }: { slug: string } = useParams();
+  const investorDetails = Object.values(INVESTOR_DETAILS).find(
+    (item) => item.slug === slug
+  );
 
   const scrollToCTA = () => {
     if (ctaRef.current) {
@@ -116,7 +118,14 @@ const Page = () => {
 
           <span className="text-[#797979] font-gilroyBold text-xl">x</span>
 
-          <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "225px", height: "30px"} : {width: "139px", height: "auto"}} />
+          <img
+            src={investorDetails?.logo}
+            style={
+              slug === "beenext"
+                ? { width: "225px", height: "30px" }
+                : { width: "139px", height: "auto" }
+            }
+          />
         </div>
 
         {/* <div className="fade-in  flex items-end justify-center self-stretch pt-6">
@@ -258,11 +267,29 @@ const Page = () => {
         <div className="w-[80%] mx-auto text-center mt-11">
           <div className="w-full flex justify-center mb-12">
             <div className="border border-[#B0B0B0] bg-[linear-gradient(145deg,#000,#656565)] overflow-hidden shadow-[inset_0px_-1px_1px_1px_rgba(204,199,199,0.20),inset_0px_1px_1px_1px_rgba(204,199,199,0.20),0px_13px_20px_-1px_rgba(0,0,0,0.20)] px-4 py-3 rounded-[22px] flex gap-3 items-center w-fit">
-              <img src="/media/logo/deviceflow-white.svg" width={100} height={150}/>
+              <img
+                src="/media/logo/deviceflow-white.svg"
+                width={100}
+                height={150}
+              />
 
               <span className="text-[#797979] font-gilroyBold text-xl">x</span>
 
-              <img src={investorDetails?.logo} style={slug === "beenext" ?  {width: "108px", height: "17px"} : {width: ['peak-xv','ipv'].includes(slug) ? "100px": slug === "prime-vp" ? "80px" : "60px", height: "25px"}} />
+              <img
+                src={investorDetails?.logo}
+                style={
+                  slug === "beenext"
+                    ? { width: "108px", height: "17px" }
+                    : {
+                        width: ["peak-xv", "ipv"].includes(slug)
+                          ? "100px"
+                          : slug === "prime-vp"
+                          ? "80px"
+                          : "60px",
+                        height: "25px",
+                      }
+                }
+              />
             </div>
           </div>
 
@@ -302,9 +329,9 @@ const Page = () => {
         <FeaturesSection />
       </div>
 
-      <div className="bg-[url('/media/brands-bg.svg')] bg-cover bg-center flex justify-center items-center mt-24 pt-24 pb-20">
+      {/* <div className="bg-[url('/media/brands-bg.svg')] bg-cover bg-center flex justify-center items-center mt-24 pt-24 pb-20">
         <Brands />
-      </div>
+      </div> */}
 
       <div ref={featRef}>
         <Section2 ref={newRef} />

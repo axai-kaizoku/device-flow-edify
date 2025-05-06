@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import WarningDelete from "@/icons/WarningDelete";
 import { updateDevice } from "@/server/deviceActions";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,7 +27,7 @@ export const UnassignAsset = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+
   const queryClient = useQueryClient();
   const handleDelete = async () => {
     if (id) {
@@ -36,15 +36,22 @@ export const UnassignAsset = ({
         // @ts-ignore
         await updateDevice(id, { userId: null });
         setLoading(false);
-        openToast("success", "Unassigned asset from user !");
+        toast.success("Unassigned asset from user !");
         setOpen(false);
         queryClient.invalidateQueries({
           queryKey: ["fetch-assets"],
           exact: false,
           refetchType: "all",
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-single-device"],
+          exact: false,
+          refetchType: "all",
+        });
+
       } catch (e: any) {
-        openToast("error", "Failed to assign to user !");
+        toast.error("Failed to assign to user !");
         setOpen(false);
       } finally {
         setLoading(false);

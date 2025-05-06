@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import { Org, getCurrentOrg, updateOrg } from "@/server/orgActions";
-import Spinner from "@/components/Spinner";
-import { Icons } from "@/components/icons";
 import { LogoCompanyModal } from "@/app/(root)/settings/_components/logo-company";
+import { LoadingButton } from "@/components/buttons/Button";
 import CompanyLogo from "@/icons/CompanyLogo";
-import UploadIcon from "@/icons/UploadIcon";
 import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
+import UploadIcon from "@/icons/UploadIcon";
+import { Org, getCurrentOrg, updateOrg } from "@/server/orgActions";
+import React, { useEffect, useRef, useState } from "react";
 
 export function CompanyDetails({ setSteps }: any) {
   const [company, setCompany] = useState<Org | null>(null);
@@ -61,11 +60,10 @@ export function CompanyDetails({ setSteps }: any) {
               Setup your organization
             </div>
           </div>
-          {company?.logo ? (
             <div className="relative flex-1 flex-col rounded-[25px] px-5 py-5 bg-white gap-2 h-[136px]  items-center">
               <div className="w-full flex justify-center">
                 {/* Display the logo */}
-                {company.logo ? (
+                {company?.logo ? (
                   <img
                     src={company.logo}
                     alt="Company Logo"
@@ -92,7 +90,7 @@ export function CompanyDetails({ setSteps }: any) {
                       onClick={() => fileInputRef.current?.click()}
                       className="flex items-center justify-center gap-x-[15px] rounded-[7.4px] border-x-[0.93px] border-t-[0.93px] border-solid border-x-[dimgray] border-y-[dimgray] bg-white px-8 py-2.5 [border-bottom-width:0.93px]"
                     >
-                      <UploadIcon/>
+                      <UploadIcon />
                       <div className="flex flex-col items-center">
                         {company?.logo ? (
                           <div>Edit Logo</div>
@@ -105,9 +103,7 @@ export function CompanyDetails({ setSteps }: any) {
                 </div>
               </LogoCompanyModal>
             </div>
-          ) : (
-            <CompanyOnbardingIcon/>
-          )}
+        
 
           <div className="flex flex-col w-[75%] gap-6">
             <FormField
@@ -122,21 +118,16 @@ export function CompanyDetails({ setSteps }: any) {
               placeholder="Company Name"
             />
           </div>
-          <button
-            onClick={() => {
-              onSubmit();
-            }}
-            className="flex items-center mt-5 justify-center h-[56px] w-[75%] rounded-[9.3px] bg-black px-44 py-[13px]"
+          <LoadingButton
+            variant="primary"
+            className="w-[75%]"
+            loading={loading}
+            onClick={onSubmit}
           >
-            {loading ? (
-              <Spinner />
-            ) : (
-              <div className="text-center text-white">Submit</div>
-            )}
-          </button>
+            Submit
+          </LoadingButton>
         </div>
       </div>
-      
     </div>
   );
 }

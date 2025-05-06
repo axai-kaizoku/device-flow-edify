@@ -1,11 +1,11 @@
 import { Device, StoreDevice } from "./deviceActions";
 import { callAPIWithToken } from "./helper";
 import { Issues } from "./issueActions";
+import { BASEURL } from "./main";
 import { User, UserResponse } from "./userActions";
 import { cache } from "react";
 
-// const baseUrl = "https://staging.deviceflow.ai";
-const baseUrl = "https://1c55-34-47-179-100.ngrok-free.app";
+const baseUrl = BASEURL;
 
 export interface FilterApiParams {
   filters?: any[][];
@@ -357,7 +357,7 @@ export const unAssignedAssets = cache(async function ({
   fields = devicesFields,
   searchQuery = "",
   page = 1,
-  pageLimit = 5,
+  pageLimit = 50000000,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
@@ -397,7 +397,7 @@ export const inActiveAssets = cache(async function ({
   fields = devicesFields,
   searchQuery = "",
   page = 1,
-  pageLimit = 5,
+  pageLimit = 5000000,
   isDeleted = true,
 }: inactiveFilterApiParams = {}): Promise<any> {
   try {
@@ -485,7 +485,7 @@ export const openIssues = cache(async function ({
   fields = issueFields,
   searchQuery = "",
   page = 1,
-  pageLimit = 5,
+  pageLimit = 100000000,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
@@ -522,7 +522,7 @@ export const closedIssues = cache(async function ({
   fields = issueFields,
   searchQuery = "",
   page = 1,
-  pageLimit = 5,
+  pageLimit = 100000000,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {

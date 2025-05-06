@@ -1,36 +1,38 @@
 "use client";
-import { Table } from "@/components/wind/Table";
-import {
-  getUsersByTeamId,
-  User,
-  UsersTeamResponse,
-} from "@/server/userActions";
-import { useRouter } from "next/navigation";
-import Pagination from "../../_components/pagination";
-import { useEffect, useState } from "react";
-import { RemoveTeamMember } from "./remove-team-member";
-import MoveTeamMember from "./move-team-member";
-import { teamIcons } from "../../icons";
-import { Icons } from "@/components/icons";
-import { Team } from "@/server/teamActions";
-import AddTeamMember from "./add-team-member";
-import DeleteTableIcon from "@/icons/DeleteTableIcon";
-import EditTableIcon from "@/icons/EditTableIcon";
 import AllIntegrationsDisplay from "@/app/(root)/integrations/_components/installed/all-integration-display";
 import { buttonVariants } from "@/components/buttons/Button";
-import { useQuery } from "@tanstack/react-query";
+import { GetAvatar } from "@/components/get-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table } from "@/components/wind/Table";
+import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import { Team } from "@/server/teamActions";
+import { getUsersByTeamId, User } from "@/server/userActions";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import AddTeamMember from "./add-team-member";
+import MoveTeamMember from "./move-team-member";
+import { RemoveTeamMember } from "./remove-team-member";
 
 const TeamMembers = ({
   teamData,
   status,
+  selectedIds,
+  setSelectedIds,
+  handleSelectionChange,
 }: {
   teamData: Team;
   status: string;
+  selectedIds: string[];
+  setSelectedIds: (ids: string[]) => void;
+  handleSelectionChange: (selected: string[]) => void;
 }) => {
   const router = useRouter();
 
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  // const handleSelectionChange = (selected: string[]) => {
+  //   setSelectedIds(selected);
+  // };
 
   const { data, status: userStatus } = useQuery({
     queryKey: ["get-users-by-team-id", teamData?._id],
@@ -43,22 +45,26 @@ const TeamMembers = ({
       style={{ border: "1px solid #F6F6F6" }}
     >
       {status !== "pending" && data?.users?.length === 0 ? (
-        <div className="flex flex-col gap-6 justify-center items-center py-8">
-          <teamIcons.no_team_display />
-          <AddTeamMember teamData={teamData}>
-            <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
-              Add members
+        <div className="flex flex-col  justify-center items-center py-4">
+          <img
+            src="/media/no_data/people.svg"
+            alt="No-People Logo"
+            className="h-[53vh]"
+          />
+          {teamData?. deleted_at === null && (<AddTeamMember teamData={teamData}>
+            <div className={buttonVariants({ variant: "primary" })}>
+              <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
+                Add Members
+              </div>
             </div>
-          </AddTeamMember>
+          </AddTeamMember>)}
         </div>
       ) : (
         <>
           {userStatus === "pending" ? (
             <div className="flex gap-3 p-3 items-center">
-              {/* "Team Members" title */}
               <Skeleton className="h-4 w-32 ml-3" />
 
-              {/* Badge for members count */}
               <Skeleton className="h-6 w-20 rounded-full" />
             </div>
           ) : (
@@ -74,6 +80,7 @@ const TeamMembers = ({
               </span>
             </div>
           )}
+          {/* {JSON.stringify(data)} */}
 
           {/* <TeamTable data={users} />
            */}
@@ -84,6 +91,10 @@ const TeamMembers = ({
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
                 isLoading={userStatus === "pending"}
+                checkboxSelection={{
+                  uniqueField: "_id",
+                  onSelectionChange: handleSelectionChange,
+                }}
                 columns={[
                   {
                     title: "Name",
@@ -92,18 +103,26 @@ const TeamMembers = ({
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={() => router.push(`/people/${data?._id}`)}
                       >
-                        <img
-                          src={
-                            data?.image && data.image.length > 0
-                              ? data?.image
-                              : data?.gender === "Male"
-                              ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                              : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                          }
-                          alt={`${data?.first_name ?? "User"}'s Profile`}
-                          className="w-10 h-10 rounded-full border object-cover"
-                        />
-                        <span>{data?.first_name || "-"}</span>
+                        {data?.image && data?.image?.length > 0 ? (
+                          <img
+                            src={data?.image}
+                            alt={data?.first_name}
+                            className="size-10 object-cover rounded-full flex-shrink-0"
+                          />
+                        ) : (
+                          <GetAvatar name={data?.first_name ?? ""} />
+                        )}
+
+                        <div className="relative group">
+                          <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                            {data?.first_name?.length! > 12
+                              ? `${data?.first_name!.slice(0, 12)}...`
+                              : data?.first_name}
+                          </div>
+                          <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                            {data?.first_name ?? "-"}
+                          </div>
+                        </div>
                       </div>
                     ),
                   },
@@ -159,7 +178,7 @@ const TeamMembers = ({
                       // const filteredIntegrations = (
                       //   record?.subscriptions ?? []
                       // ).filter((i) => i.platform !== selectedPlatform);
-                      const integrations = record?.integrations?.filter(
+                      const integrations = record?.subscriptions?.filter(
                         (int) => int.image
                       );
 
@@ -175,14 +194,20 @@ const TeamMembers = ({
                           data={record}
                           allIntegrations={integrations}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 -space-x-5">
                             {firstThree?.map((i, index) => (
-                              <img
+                              <div
                                 key={index}
-                                src={i?.image ?? ""}
-                                className="size-8 object-cover rounded-full"
-                                alt="Integration"
-                              />
+                                className="flex justify-center items-center p-1.5 bg-white rounded-full border"
+                              >
+                                <img
+                                  src={i.image ?? ""}
+                                  width={16}
+                                  height={16}
+                                  className=" object-contain "
+                                  alt="Integration"
+                                />
+                              </div>
                             ))}
 
                             {extraCount > 0 && (
@@ -205,7 +230,9 @@ const TeamMembers = ({
                         <MoveTeamMember userData={data}>
                           {/* <EditTableIcon className="size-5" /> */}
                           <span
-                            className={buttonVariants({ variant: "primary" })}
+                            className={buttonVariants({
+                              variant: "outlineTwo",
+                            })}
                           >
                             Move
                           </span>

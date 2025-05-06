@@ -202,11 +202,6 @@ function IssueTableDisplay({
                   render: (record) => <div>{record?.title ?? "-"}</div>,
                 },
                 {
-                  title: "Status",
-                  render: (record) => <div>{record?.status ?? "-"}</div>,
-                },
-
-                {
                   title:
                     issuesText?.toLowerCase().includes("open") && "Actions",
                   render: (record: Issues) =>
@@ -218,8 +213,7 @@ function IssueTableDisplay({
                         onRefresh={onRefresh}
                       >
                         <div
-                          // className="rounded-md bg-black text-[13px]  whitespace-nowrap px-4 py-2 text-white font-gilroyMedium"
-                          className={buttonVariants({ variant: "primary" })}
+                          className={buttonVariants({ variant: "outlineTwo" })}
                         >
                           Resolve
                         </div>
@@ -231,7 +225,9 @@ function IssueTableDisplay({
                         reOpen={true}
                         onRefresh={onRefresh}
                       >
-                        <div className={buttonVariants({ variant: "primary" })}>
+                        <div
+                          className={buttonVariants({ variant: "outlineTwo" })}
+                        >
                           Reopen
                         </div>
                       </IssueStatusChange>

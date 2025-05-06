@@ -1,43 +1,54 @@
 "use client";
 
-import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
+import { Button, LoadingButton } from "@/components/buttons/Button";
+import { SelectInput } from "@/components/dropdown/select-input";
+import { GetAvatar } from "@/components/get-avatar";
 import { Input } from "@/components/inputs/Input";
-import { cn } from "@/lib/utils";
-import { createTeam, updateTeam } from "@/server/teamActions";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
-import { getImageUrl } from "@/server/orgActions";
-import { useToast } from "@/hooks/useToast";
+import { AsyncSelect } from "@/components/ui/async-select";
 import { useAlert } from "@/hooks/useAlert";
-import { ChevronRight, Trash2, X } from "lucide-react";
 import UploadImageIcon from "@/icons/UploadImageIcon";
+import { cn } from "@/lib/utils";
+import { getImageUrl } from "@/server/orgActions";
+import { createTeam, updateTeam } from "@/server/teamActions";
+import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import { useQueryClient } from "@tanstack/react-query";
+import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 export const TeamForm = ({
   closeBtn,
+  isBack=false,
   isEditForm,
   id,
+  setBack,
   title,
   description,
   image,
-  onRefresh,
+  manager,
 }: {
   closeBtn: (value: boolean) => void;
+  manager?: string;
+  isBack?: boolean;
+  setBack?: () => void;
   isEditForm?: boolean;
   id?: string;
   title?: string;
   description?: string;
   image?: string;
-  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+  const [user, setUser] = useState<User>({ email: manager?.email });
+
   const { showAlert } = useAlert();
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const queryClient = useQueryClient();
 
   const simulateProgress = () => {
     setProgress(0);
@@ -57,12 +68,14 @@ export const TeamForm = ({
     title: title || "",
     description: description || "",
     image: image || "",
+    user: manager?._id || "",
   });
 
   const [errors, setErrors] = useState({
     title: "",
     description: "",
     image: "",
+    user: "",
   });
 
   // Function to handle form submission
@@ -73,6 +86,7 @@ export const TeamForm = ({
       description: formData.description ? "" : "Department is required",
       // image: formData.image ? "" : "Team image is required",
       image: "",
+      user: user?._id || manager?._id ? "" : "Reporting manager is required",
     };
 
     setErrors(newErrors);
@@ -87,11 +101,16 @@ export const TeamForm = ({
           title: formData.title!,
           description: formData.description!,
           image: formData.image!,
+          userId: user?._id,
         });
 
         setLoading(false);
-        openToast("success", "Team updated successfully !");
-        onRefresh();
+        queryClient.invalidateQueries({
+          queryKey: ["teams"],
+          exact: false,
+          refetchType: "all",
+        });
+        toast.success("Team updated successfully !");
         // router.refresh();
         closeBtn(false);
       } catch (error: any) {
@@ -111,7 +130,8 @@ export const TeamForm = ({
         await createTeam(
           formData?.title,
           formData?.description,
-          formData?.image
+          formData?.image,
+          user?._id
         );
         showAlert({
           title: "WOHOOO!! 🎉",
@@ -120,8 +140,13 @@ export const TeamForm = ({
           key: "create-team-success",
         });
         setLoading(false);
-        onRefresh();
+        setBack && setBack();
         closeBtn(false);
+        queryClient.invalidateQueries({
+          queryKey: ["teams"],
+          exact: false,
+          refetchType: "all",
+        });
       } catch (error: any) {
         closeBtn(false);
         showAlert({
@@ -160,7 +185,7 @@ export const TeamForm = ({
             image: "",
           }));
         } catch (error) {
-          openToast("error", "Image upload failed");
+          toast.error("Image upload failed");
           setErrors((prev) => ({
             ...prev,
             image: "Failed to upload the image. Please try again.",
@@ -194,7 +219,7 @@ export const TeamForm = ({
 
   return (
     <>
-      <div className="flex justify-center items-center gap-6 w-full h-full overflow-y-auto">
+      <div className="flex justify-center items-center gap-6 w-full h-full overflow-y-auto ">
         <div className="flex flex-col h-full w-full justify-start items-start gap-6">
           <h3 className="text-lg font-gilroyMedium w-full text-center">
             {isEditForm ? "Edit Team" : "Create new team"}
@@ -267,6 +292,120 @@ export const TeamForm = ({
               )}
             </div>
 
+            {/* <div className="z-0 pt-3">
+              <SelectInput
+                optionValue={{ firstV: "first_name", secondV: "email" }}
+                key={"add-team-member-user-field"}
+                value={user?.first_name ?? manager?.first_name ?? ""}
+                placeholder="Search by name, email, etc"
+                // @ts-ignore
+                fetchOptions={searchUsers}
+                // @ts-ignore
+                initialOptions={fetchUsers}
+                onSelect={(data: any) => {
+                  setUser({
+                    _id: data._id,
+                    first_name: data.first_name,
+                    email: data.email,
+                    employment_type: data.employment_type,
+                    designation: data.designation,
+                  });
+                }}
+                label="Add Manager*"
+                className={cn(
+                  !user?._id || !manager?._id
+                    ? ""
+                    : "border-destructive/80 border"
+                )}
+              />
+              {errors.user && (
+                <p className="mt-0.5 text-xs font-gilroyMedium text-destructive">
+                  {errors.user}
+                </p>
+              )}
+            </div> */}
+            <div className="w-full pt-3">
+              <AsyncSelect<User>
+                fetcher={fetchUsers}
+                preload
+                renderOption={(user) => (
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col">
+                      <div className="font-gilroyMedium">
+                        {user?.first_name}
+                      </div>
+                      <div className="text-xs font-gilroyRegular text-muted-foreground">
+                        {user?.email}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                filterFn={(user, query) =>
+                  user?.first_name
+                    ?.toLowerCase()
+                    ?.includes(query?.toLowerCase()) ||
+                  user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+                }
+                getOptionValue={(user) => user?.email}
+                getDisplayValue={() => (
+                  <div className="flex items-center gap-2 text-left w-full">
+                    <div className="flex flex-col leading-tight">
+                      <div className="font-gilroyMedium">
+                        {user?.email ?? manager?.email ?? ""}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                notFound={
+                  <div className="py-6 text-center font-gilroyMedium text-sm">
+                    No users found
+                  </div>
+                }
+                label="User"
+                placeholder="Choose a Manager.."
+                value={user?.email || "null"}
+                onChange={(selected: User | null) => {
+                  setUser({
+                    _id: selected?._id,
+                    first_name: selected?.first_name,
+                    email: selected?.email,
+                    employment_type: selected?.employment_type,
+                    designation: selected?.designation,
+                  });
+                }}
+                width="100%"
+                triggerClassName="border border-black "
+              />
+            </div>
+
+            {user?.first_name ? (
+              <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
+                {user?.image && user?.image?.length > 0 ? (
+                  <img
+                    src={user?.image}
+                    alt={user?.first_name}
+                    className="size-14 object-cover rounded-full flex-shrink-0"
+                  />
+                ) : (
+                  <GetAvatar name={user?.first_name ?? ""} size={56} />
+                )}
+                <div className=" w-full flex flex-col justify-center ">
+                  <h1 className="text-black font-gilroySemiBold text-base ">
+                    {user?.first_name ?? ""}
+                  </h1>
+                  <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
+                    {user?.email ?? ""}
+                  </h1>
+
+                  <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
+                    {user?.employment_type ?? ""}
+                    <span className="flex text-2xl mx-1 -mt-3"> </span>
+                    {user?.designation ?? ""}
+                  </h1>
+                </div>
+              </div>
+            ) : null}
+
             <div className="flex flex-col gap-1.5">
               <label className="font-gilroyMedium">Upload team image</label>
               {isUploading ? (
@@ -337,32 +476,21 @@ export const TeamForm = ({
             <div className="flex w-[93%] gap-3 absolute bottom-6 pt-2 justify-between items-center">
               <Button
                 type="button"
-                className="  w-full "
+                className="w-1/2"
                 variant="outlineTwo"
-                onClick={() => closeBtn(false)}
+                onClick={() => {setBack ? setBack() : closeBtn(false)}}
               >
                 Cancel
               </Button>
-              <Button
-                type="button"
+
+              <LoadingButton
+                loading={loading}
                 variant="primary"
-                className="  w-full "
-                onClick={handleSubmit}
-                // className="rounded-lg text-sm  w-full font-gilroySemiBold border bg-black text-white border-black"
-                disabled={loading}
+                className="w-1/2"
+                type="submit"
               >
-                {loading ? (
-                  <Spinner className={spinnerVariants({ size: "sm" })} />
-                ) : isEditForm ? (
-                  <>
-                    Edit Team <ChevronRight className="size-6" />
-                  </>
-                ) : (
-                  <>
-                    Submit <ChevronRight className="size-4" />
-                  </>
-                )}
-              </Button>
+                {isEditForm ? "Save" : "Submit"}
+              </LoadingButton>
             </div>
           </form>
         </div>

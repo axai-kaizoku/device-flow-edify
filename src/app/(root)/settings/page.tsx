@@ -1,13 +1,13 @@
+import NotFound from "@/app/not-found";
 import { CombinedContainer } from "@/components/container/container";
 import { getCurrentOrg, Org } from "@/server/orgActions";
-import { MapPinned } from "lucide-react";
-import CreateAddress from "./_components/create-address";
-import EditAddress from "./_components/edit-address";
-import { DeleteAddress } from "./_components/delete-address";
-import { getSession } from "@/server/helper";
-import SettingsHeader from "./_components/settings-header";
 import SettingAddress from "./_components/setting-address";
-import NotFound from "@/app/not-found";
+import SettingsHeader from "./_components/settings-header";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Settings",
+};
 
 export default async function Settings() {
   try {

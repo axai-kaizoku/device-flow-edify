@@ -14,22 +14,22 @@ import { deleteTeam } from "@/server/teamActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteModal = ({
-  handleBulkDelete,
+  handleBulkAction,
   children,
   open,
-  setOpen
+  setOpen,
+  type
 }: {
-  handleBulkDelete: ()=> void;
+  handleBulkAction: () => void;
   children: React.ReactNode;
   open: boolean;
-  setOpen: (text: boolean)=> void
+  setOpen: (text: boolean) => void;
+  type: string;
 }) => {
-
-
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -50,7 +50,7 @@ export const DeleteModal = ({
 
           {/* Description */}
           <DialogDescription className="p-1 text-sm text-gray-600">
-            Are you sure you want to delete this?
+            Are you sure you want to {type.toLowerCase()} this?
           </DialogDescription>
 
           {/* Footer Buttons */}
@@ -63,9 +63,9 @@ export const DeleteModal = ({
             </Button>
             <Button
               className="w-1/2 rounded-md bg-[#D92D20] text-white"
-              onClick={handleBulkDelete}
+              onClick={handleBulkAction}
             >
-              Delete
+              {type}
             </Button>
           </DialogFooter>
         </DialogContent>

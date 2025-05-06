@@ -3,8 +3,8 @@ import React from "react";
 const FeaturesSection = () => {
   return (
     <div className="w-[80%] mx-auto grid gap-6">
-      {/* First Row */}
-      <div className="grid grid-cols-3 gap-6">
+      {/* First Row - changes from 3 columns to 1 column on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <img
           src="/media/investorsPage/bottom-1.png"
           alt="first feature"
@@ -22,19 +22,19 @@ const FeaturesSection = () => {
         />
       </div>
 
-      {/* Second Row  */}
-      <div className="grid grid-cols-3 gap-6">
+      {/* Second Row - uncomment if needed */}
+      {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <img
           src="/media/investorsPage/bottom-4.png"
           alt="fourth feature"
-          className="w-full col-span-1"
+          className="w-full sm:col-span-1"
         />
         <img
           src="/media/investorsPage/bottom-5.png"
           alt="fifth feature"
-          className="w-full col-span-2 "
+          className="w-full sm:col-span-2"
         />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -64,17 +64,17 @@ const Brands = () => {
           />
           <img
             src="/media/company/urban-white.webp"
-            style={{ width: 120, height: 60 }}
+            style={{ width: 110, height: 60 }}
             className="max-md:w-4 max-md:h-4"
           />
           <img
             src="/media/company/finaag.webp"
-            style={{ width: 110, height: 60, marginTop: 9 }}
+            style={{ width: 70, height: 55, marginTop: 9 }}
             className="max-md:w-4 max-md:h-4 "
           />
           <img
             src="/media/company/mygate.webp"
-            style={{ width: 140, height: 38, marginTop: 9 }}
+            style={{ width: 120, height: 38, marginTop: 9 }}
             className="max-md:w-4 max-md:h-4 "
           />
         </div>
@@ -92,12 +92,12 @@ const Brands = () => {
           />
           <img
             src="/media/company/42-new.webp"
-            style={{ width: 120, height: 80, marginTop: 9 }}
+            style={{ width: 110, height: 80, marginTop: 9 }}
             className="max-md:w-4 max-md:h-4 "
           />
           <img
             src="/media/company/apna.webp"
-            style={{ width: 100, height: 80, marginTop: 9 }}
+            style={{ width: 80, height: 70, marginTop: 9 }}
             className="max-md:w-4 max-md:h-4 "
           />
         </div>

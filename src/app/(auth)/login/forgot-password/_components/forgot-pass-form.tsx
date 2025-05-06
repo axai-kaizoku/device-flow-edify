@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { requestOtp, resetPassword } from "@/server/loginActions";
 import Link from "next/link";
-import { RequestOTP, ResetPass } from "@/server/loginActions";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ForgotPassForm() {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function ForgotPassForm() {
         setError("Invalid Email");
         return;
       }
-      const res = await RequestOTP(email);
+      const res = await requestOtp(email);
       if (res.userId) {
         setUID(res.userId);
         setNext(1);
@@ -101,7 +101,7 @@ export default function ForgotPassForm() {
         setError("Passwords do not match");
         return;
       }
-      const res = await ResetPass(uId, otp.join("").toString(), password);
+      const res = await resetPassword(uId, otp.join("").toString(), password);
       if (res.message === "Invalid or Expired otp") {
         setError("Invalid or Expired OTP");
       } else {
@@ -175,7 +175,7 @@ export default function ForgotPassForm() {
           style={{ color: "#4E4D4D" }}
         >
           {next === 1
-            ? `Enter the OTP sent to ${obscuredEmail}`
+            ? `Enter the OTP sent to admin`
             : " Enter the email ID associated with your account"}
         </div>
         <div className="flex flex-col gap-3 lg:gap-4 p-4 w-full">
@@ -317,7 +317,7 @@ export default function ForgotPassForm() {
 
       {next === 0 && (
         <Link href="/login" className="text-center text-neutral-950">
-          <button className="flex h-[56px] max-lg:w-full w-[433px] items-center justify-center rounded-[9.3px] bg-zinc-100 ">
+          <button className="flex h-[56px] max-lg:w-full w-[433px] items-center font-gilroyMedium justify-center rounded-[9.3px] bg-zinc-100 ">
             Back to Login
           </button>
         </Link>

@@ -3,6 +3,9 @@ import { AxiosError } from "axios";
 import { StoreDevice } from "./deviceActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
+import { BASEURL } from "./main";
+
+const baseUrl = BASEURL;
 
 export type DeviceWithQty = StoreDevice & { quantity: number };
 
@@ -30,7 +33,7 @@ export const removeItemFromCart = async (itemId: string): Promise<void> => {
   try {
     // Make the DELETE request to remove the item from the cart
     await callAPIWithToken(
-      `https://staging.deviceflow.ai/edifybackend/v1/cart/item/quantity`,
+      `${baseUrl}/edifybackend/v1/cart/item/quantity`,
       "PATCH",
       { itemId, quantity: 0 }
     );
@@ -46,7 +49,7 @@ export const getCart = cache(async function () {
     if (sess?.user && sess?.user?.user.userId) {
       // Fetch Cart data
       const response = await callAPIWithToken<Cart>(
-        `https://staging.deviceflow.ai/edifybackend/v1/cart`,
+        `${baseUrl}/edifybackend/v1/cart`,
         "GET"
       );
 
@@ -66,7 +69,7 @@ export const updateCartItemQuantity = async (
 ): Promise<void> => {
   try {
     const response = await callAPIWithToken<any>(
-      `https://staging.deviceflow.ai/edifybackend/v1/cart/item/quantity`,
+      `${baseUrl}/edifybackend/v1/cart/item/quantity`,
       "PATCH",
       { itemId: itemId, quantity: quantity }
     );
@@ -83,7 +86,7 @@ export async function addItemToCart(itemId: string, quantity: number) {
         quantity,
       },
     };
-    const apiUrl = "https://staging.deviceflow.ai/edifybackend/v1/cart/addItem";
+    const apiUrl = `${baseUrl}/edifybackend/v1/cart/addItem`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     // console.log(response, "ITEM ADDED TO CART");
@@ -100,7 +103,7 @@ export const getPaymentMethods = async (price: number) => {
     if (sess?.user && sess?.user?.user.userId) {
       // Fetch Cart data
       const response = await callAPIWithToken<any>(
-        `https://staging.deviceflow.ai/edifybackend/v1/payments/methods?amount=${price}`,
+        `${baseUrl}/edifybackend/v1/payments/methods?amount=${price}`,
         "GET"
       );
 
@@ -119,8 +122,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
       amount,
       paymentOption,
     };
-    const apiUrl =
-      "https://staging.deviceflow.ai/edifybackend/v1/payments/initiate";
+    const apiUrl = `${baseUrl}/edifybackend/v1/payments/initiate`;
 
     const response = await callAPIWithToken(apiUrl, "POST", payload);
     //@ts-ignore
@@ -132,8 +134,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
       payment_mode: paymentMethod,
       orderId,
     };
-    const checkoutUrl =
-      "https://staging.deviceflow.ai/edifybackend/v1/cart/checkout";
+    const checkoutUrl = `${baseUrl}/edifybackend/v1/cart/checkout`;
 
     const checkoutRes = await callAPIWithToken(
       checkoutUrl,
@@ -151,7 +152,7 @@ export async function createOrderId(amount: number, paymentOption: string) {
 export const updateCartAddress = async (addressId: string): Promise<void> => {
   try {
     const response = await callAPIWithToken<any>(
-      `https://staging.deviceflow.ai/edifybackend/v1/cart/address`,
+      `${baseUrl}/edifybackend/v1/cart/address`,
       "PATCH",
       { addressId }
     );

@@ -1,11 +1,9 @@
 "use client";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
-import { Button } from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { Input } from "@/components/inputs/Input";
 import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
 import { cn } from "@/lib/utils";
 import { createTeam } from "@/server/teamActions";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const DEPARTMENT_OPTIONS = [
@@ -20,7 +18,6 @@ const DEPARTMENT_OPTIONS = [
 ];
 
 export const Teams = ({ setSteps }: any) => {
-  const router = useRouter();
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -76,7 +73,7 @@ export const Teams = ({ setSteps }: any) => {
                 Add all the teams in organizations
               </div>
             </div>
-            <CompanyOnbardingIcon/>
+            <CompanyOnbardingIcon />
           </div>
           <form
             onSubmit={(e) => {
@@ -116,13 +113,13 @@ export const Teams = ({ setSteps }: any) => {
 
             <div className="flex flex-col ">
               <label className="font-gilroyMedium ">Choose Department</label>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 font-gilroyRegular">
                 {DEPARTMENT_OPTIONS.map((preLabel) => (
                   <button
                     key={preLabel}
                     type="button"
                     className={cn(
-                      "flex  items-center py-1.5 gap-1  px-5 text-[#7F7F7F] border border-gray-400 rounded-full  hover:border-black transition-all duration-300 text-lg",
+                      "flex  items-center py-1 gap-1 text-sm px-3 text-[#7F7F7F] border border-gray-400 rounded-full  hover:border-black transition-all duration-300 ",
                       formData.description === preLabel
                         ? "border-white bg-primary text-white"
                         : "hover:border-black hover:text-black"
@@ -139,19 +136,14 @@ export const Teams = ({ setSteps }: any) => {
                 </p>
               )}
             </div>
-
-            <Button
+            <LoadingButton
+              variant="primary"
+              className="w-full"
+              loading={loading}
               type="submit"
-              className="rounded-[9px] font-gilroyMedium  w-full h-[56px] bg-primary text-primary-foreground"
-              style={{ fontSize: 16 }}
-              disabled={loading}
             >
-              {loading ? (
-                <Spinner className={spinnerVariants({ size: "sm" })} />
-              ) : (
-                "Create Team"
-              )}
-            </Button>
+              Create Team
+            </LoadingButton>
           </form>
         </div>
       ) : (
@@ -160,31 +152,30 @@ export const Teams = ({ setSteps }: any) => {
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Team Created!!
             </div>
-            <div className="text-center text-md mt-2 font-gilroySemiBold leading-[normal] text-zinc-400">
+            <div className="text-center text-md mt-2 font-gilroyMedium leading-[normal] text-zinc-400">
               Team has been created and is ready to assign employees
             </div>
           </div>
+
           <Button
-            className="rounded-[9px] font-gilroySemiBold text-[16px]   w-[75%] h-[56px] bg-primary text-primary-foreground"
-            type="button"
+            className="w-[75%]"
+            variant="primary"
             onClick={() => {
               setSteps(4);
             }}
           >
             Add Employee
           </Button>
-          <Button
-            type="submit"
-            className="rounded-[9px] font-gilroySemiBold text-[16px]  w-[75%] h-[56px]  "
-            style={{
-              backgroundColor: "#EDEDED",
-            }}
+          <LoadingButton
             onClick={() => {
               setSuccess(false);
             }}
+            variant="primary"
+            className="w-[75%]"
+            type="submit"
           >
             Create New Team
-          </Button>
+          </LoadingButton>
         </div>
       )}
     </div>

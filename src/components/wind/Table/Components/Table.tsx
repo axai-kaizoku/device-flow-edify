@@ -156,35 +156,40 @@ export const Table = ({
 
   const handleHeaderCheckBox = (checked: boolean) => {
     setSelectedRowIds((prevSelected) => {
-      const newSelected = new Set(prevSelected);
-      activePageData.forEach((row) => {
-        if (checked) {
+      const newSelected = new Set<string>(prevSelected);
+  
+      if (checked) {
+        // Add all rows from the current data
+        initialData.forEach((row) => {
           newSelected.add(row[`${checkboxSelection?.uniqueField}`]);
-        } else {
+        });
+      } else {
+        // Remove all rows from the current data
+        initialData.forEach((row) => {
           newSelected.delete(row[`${checkboxSelection?.uniqueField}`]);
-        }
-      });
-
+        });
+      }
+  
       // Callback to notify parent about selection changes
       const selectedItems = initialData.filter((data) =>
         newSelected.has(data?.[`${checkboxSelection?.uniqueField}`])
       );
       checkboxSelection?.onSelectionChange?.(selectedItems);
-
+  
       return newSelected;
     });
   };
 
   const handleHeaderCheckBoxState = () => {
-    const filterSelectedItem = initialData.filter(
-      (data) => data?.isChecked === false
+    // If no rows are selected, return false
+    if (selectedRowIds.size === 0) return false;
+    
+    // If all rows in the current data are selected, return true
+    return initialData.every((row) => 
+      selectedRowIds.has(row[`${checkboxSelection?.uniqueField}`])
     );
-    if (filterSelectedItem?.length > 0) {
-      return false;
-    } else {
-      return true;
-    }
   };
+  
 
   const handleASCSorting = (fieldName: string, sortBy?: string) => {
     setActiveColumn(fieldName);
@@ -405,12 +410,12 @@ export const Table = ({
                     <TableCell
                       style={{ textAlign: "left", marginLeft: "12px" }}
                     >
-                      {/* <Checkbox
+                      <Checkbox
                         value="master"
                         size="lg"
                         checked={handleHeaderCheckBoxState()}
                         onChange={(e) => handleHeaderCheckBox(e.target.checked)}
-                      ></Checkbox> */}
+                      ></Checkbox>
                       <div></div>
                     </TableCell>
                   )}

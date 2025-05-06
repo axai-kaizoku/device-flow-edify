@@ -1,18 +1,25 @@
-import { Search, Plus, Trash2, Send } from "lucide-react";
-import { DeleteTeam } from "./delete-team";
-import AddTeamMember from "./add-team-member";
-import { Team } from "@/server/teamActions";
-import InvitePeopleTeam from "./invite-people-team";
 import { buttonVariants } from "@/components/buttons/Button";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Team } from "@/server/teamActions";
 import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";
+import AddTeamMember from "./add-team-member";
+import { DeleteTeam } from "./delete-team";
+import InvitePeopleTeam from "./invite-people-team";
+import BulkMove from "./new-bulk-move";
+
 
 interface TeamActionsProps {
   team: Team;
+  selectedIds: string[];
+  setSelectedIds: (state: any) => void;
 }
 
-const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
+const TeamActions: React.FC<TeamActionsProps> = ({
+  team,
+  selectedIds,
+  setSelectedIds,
+}) => {
   const router = useRouter();
   return (
     <div className="flex gap-2 w-full justify-between font-gilroyMedium ">
@@ -23,32 +30,47 @@ const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
           placeholder="Search teams"
         />
       </div> */}
-      <div
-        className={buttonVariants({
-          variant: "outlineTwo",
-          className: "size-4 px-[10px] cursor-pointer",
-        })}
-        onClick={() => router.back()}
-      >
-        <HugeiconsIcon icon={ArrowLeft01Icon} />
-        <span className="sr-only">Back Button</span>
+      <div className="flex items-center gap-3">
+        <div
+          className={buttonVariants({
+            variant: "outlineTwo",
+            className: "size-4 px-[10px] cursor-pointer",
+          })}
+          onClick={() => router.back()}
+        >
+          <HugeiconsIcon icon={ArrowLeft01Icon} />
+          <span className="sr-only">Back Button</span>
+        </div>
+        <div className="flex items-center rounded-md border  py-[7px] px-4 gap-1 ">
+          <div className=" text-[#7F7F7F] text-nowrap text-sm font-gilroySemiBold">
+            Team Code:{" "}
+            <span className="text-black">{team?.team_code ?? ""}</span>
+          </div>
+        </div>
       </div>
+      {/* {JSON.stringify(team)} */}
 
       <div className="flex gap-2">
-        <AddTeamMember teamData={team}>
-          <div className={buttonVariants({ variant: "outlineTwo" })}>
-            <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
-              Add Members
-            </div>
-          </div>
-        </AddTeamMember>
-        <InvitePeopleTeam id={team?._id ?? ""}>
-          <div className={buttonVariants({ variant: "outlineTwo" })}>
-            <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
-              Invite People
-            </div>
-          </div>
-        </InvitePeopleTeam>
+        {team?.deleted_at ? (
+          <></>
+        ) : (
+          <>
+            <AddTeamMember teamData={team}>
+              <div className={buttonVariants({ variant: "outlineTwo" })}>
+                <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
+                  Add Members
+                </div>
+              </div>
+            </AddTeamMember>
+            <InvitePeopleTeam id={team?._id ?? ""}>
+              <div className={buttonVariants({ variant: "outlineTwo" })}>
+                <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
+                  Invite People
+                </div>
+              </div>
+            </InvitePeopleTeam>
+          </>
+        )}
         <DeleteTeam id={team?._id ?? ""}>
           <div className={buttonVariants({ variant: "primary" })}>
             <div className="  text-nowrap text-sm font-gilroyMedium">
@@ -56,6 +78,19 @@ const TeamActions: React.FC<TeamActionsProps> = ({ team }) => {
             </div>
           </div>
         </DeleteTeam>
+        {selectedIds.length > 0 && (
+          <BulkMove
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            teamId={team?._id ?? ""}
+          >
+            <div className={buttonVariants({ variant: "outlineTwo" })}>
+              <div className="  text-nowrap text-sm font-gilroyMedium">
+                Bulk Move
+              </div>
+            </div>
+          </BulkMove>
+        )}
       </div>
     </div>
   );

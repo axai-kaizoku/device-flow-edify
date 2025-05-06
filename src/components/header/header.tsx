@@ -12,6 +12,7 @@ import {
   UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Search } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -20,16 +21,19 @@ import { useDispatch } from "react-redux";
 
 export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (sessionStorage.getItem("employee-count") === "2") {
+    // console.log(session);
+    if (parseInt(localStorage?.getItem("employee-count")) >= 2) {
       return;
-    } else if (session?.user.user.employeeCount === 0) {
-      sessionStorage.setItem("employee-count", "0");
+    } else if (session?.user?.user?.employeeCount === 0) {
+      localStorage.setItem("employee-count", "0");
       router.push("/onboarding");
     }
-  }, [session?.user.user.employeeCount]);
+  }, [session?.user?.user?.employeeCount]);
 
   const handleMouseEnter = (href: string) => {
     setIsHovered(true);
@@ -37,14 +41,14 @@ export default function Header({ session }: Props) {
   };
   const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const dropdownRef = useRef(null);
-  const [inputValue, setInputValue] = useState(""); // Tracks user input
+  const dropdownRef = useRef(null); // Tracks user input
   const [isFocused, setIsFocused] = useState(false); // Tracks focus state
 
   const placeholders = ["Assets", "People", "Teams", "Issues"];
   const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
   const [animationState, setAnimationState] = useState(false);
   const pathname = usePathname();
+
   useEffect(() => {
     let index = 0;
 
@@ -64,6 +68,7 @@ export default function Header({ session }: Props) {
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
+
   const pathParts = pathname.split("/").filter(Boolean);
   const pageName =
     pathname === "/" ? "Dashboard" : pathParts[0].replace(/-/g, " ");
@@ -108,8 +113,12 @@ export default function Header({ session }: Props) {
     }
   }, [session, dispatch]);
 
-  // const userData = useSelector((state: RootState) => state.auth.userData);
-  // console.log(userData);
+  const handleLogout = () => {
+    signOut();
+    queryClient.clear();
+    localStorage.clear();
+    sessionStorage.clear();
+  };
 
   return (
     <>
@@ -158,7 +167,11 @@ export default function Header({ session }: Props) {
 
                 {/* <KBarIcon.kbar_icon /> */}
               </div>
-
+              {/* {isLoading && <div>Searching…</div>}
+              {isError && <div>Error: {error.message}</div>}
+              {!isLoading && !isError && searchData && (
+                <pre>{JSON.stringify(searchData, null, 2)}</pre>
+              )} */}
               {/* Action Buttons */}
               {session?.user?.user?.role === 2 ? (
                 <>
@@ -278,12 +291,8 @@ export default function Header({ session }: Props) {
               </div>
             ) : (
               <div
-                className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer"
-                style={{ marginLeft: "auto", marginRight: "auto" }}
-                onClick={() =>
-                  // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
-                  signOut()
-                } // Center align the button
+                className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer mx-auto"
+                onClick={handleLogout}
               >
                 <LogOut className="w-5 h-5" />
               </div>

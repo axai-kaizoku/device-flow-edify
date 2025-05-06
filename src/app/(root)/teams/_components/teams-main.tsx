@@ -1,21 +1,24 @@
 "use client";
 
+import { buttonVariants } from "@/components/buttons/Button";
 import { Skeleton } from "@/components/ui/skeleton";
 import EditPencilIcon from "@/icons/EditPencilIcon";
+import RestoreIcon from "@/icons/RestoreIcon";
 import { TeamsResponse } from "@/server/teamActions";
 import { Trash2 } from "lucide-react";
 import { DeleteTeam } from "../[id]/_components/delete-team";
 import EditTeam from "../[id]/_components/edit-team";
-import { teamIcons } from "../icons";
 import CreateTeam from "./create-team";
 import PaginatedList from "./paginated-list";
-import { buttonVariants } from "@/components/buttons/Button";
+import { PermanentTeamDelete } from "./permanent-team";
+import { RestoreTeam } from "./restore-team";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
   setTeams?: React.Dispatch<React.SetStateAction<TeamsResponse | null>>;
   onRefresh?: () => Promise<void>;
   status?: string;
+  value?: string;
 }
 
 export default function TeamsMain({
@@ -23,14 +26,8 @@ export default function TeamsMain({
   setTeams,
   status,
   onRefresh,
+  value,
 }: TeamsMainProps) {
-  // if (teams === undefined) {
-  //   return (
-  //     <div className="flex w-full h-[60vh] justify-center items-center">
-  //       <DeviceFlowLoader />
-  //     </div>
-  //   );
-  // }
   if (status === "pending") {
     return (
       <>
@@ -64,16 +61,36 @@ export default function TeamsMain({
           teams={teams!}
           renderButtons={(team) => (
             <>
-              <DeleteTeam id={team._id!} onRefresh={onRefresh}>
-                <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                  <Trash2 className="size-4 cursor-pointer" />
-                </div>
-              </DeleteTeam>
-              <EditTeam {...team} onRefresh={onRefresh}>
-                <div className="group duration-300 hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                  <EditPencilIcon className="size-4 text-gray-600 group-hover:text-black cursor-pointer" />
-                </div>
-              </EditTeam>
+              {/* if (value === "inactive-teams") ? ( */}
+              {value === "inactive-teams" ? (
+                <>
+                  <PermanentTeamDelete id={team?._id!} onRefresh={onRefresh}>
+                    <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                      <Trash2 className="size-4 cursor-pointer" />
+                    </div>
+                  </PermanentTeamDelete>
+
+                  <RestoreTeam id={team?._id!}>
+                    <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                      {/* <Trash2 className="size-4 cursor-pointer" /> */}
+                      <RestoreIcon className="size-4 cursor-pointer" />
+                    </div>
+                  </RestoreTeam>
+                </>
+              ) : (
+                <>
+                  <DeleteTeam id={team._id!} onRefresh={onRefresh}>
+                    <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                      <Trash2 className="size-4 cursor-pointer" />
+                    </div>
+                  </DeleteTeam>
+                  <EditTeam {...team} onRefresh={onRefresh}>
+                    <div className="group duration-300 hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
+                      <EditPencilIcon className="size-4 text-gray-600 group-hover:text-black cursor-pointer" />
+                    </div>
+                  </EditTeam>
+                </>
+              )}
             </>
           )}
         />

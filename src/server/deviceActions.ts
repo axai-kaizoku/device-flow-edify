@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
 import { cache } from "react";
+import { BASEURL } from "./main";
 
 export type StoreDevice = {
   _id?: string;
@@ -128,7 +129,7 @@ export const createDevices = async (
     };
 
     const res = await callAPIWithToken<Device>(
-      "https://staging.deviceflow.ai/edifybackend/v1/devices",
+      `${BASEURL}/edifybackend/v1/devices`,
       "POST",
       payload
     );
@@ -157,7 +158,7 @@ export const getAllDevices = cache(
   async function (): Promise<getAllDevicesProp> {
     try {
       const res = await callAPIWithToken<getAllDevicesProp>(
-        "https://staging.deviceflow.ai/edifybackend/v1/devices",
+        `${BASEURL}/edifybackend/v1/devices`,
         "GET"
       );
 
@@ -182,7 +183,7 @@ export const updateDevice = async (
   try {
     // API call
     const res = await callAPIWithToken<Device>(
-      `https://staging.deviceflow.ai/edifybackend/v1/devices/${deviceId}`,
+      `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
       "PUT",
       deviceData
     );
@@ -199,7 +200,7 @@ export async function deleteDevice(
 ): Promise<Device | undefined> {
   try {
     const deleletedDevice = await callAPIWithToken<Device>(
-      `https://staging.deviceflow.ai/edifybackend/v1/devices/${deviceId}`,
+      `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
       "DELETE"
     );
 
@@ -209,6 +210,25 @@ export async function deleteDevice(
   }
 }
 
+// Permanent Delete Device
+
+export async function permanentDeleteDevice(
+  deviceId: string
+): Promise<Device | undefined> {
+  try {
+    const deleletedDevice = await callAPIWithToken<Device>(
+      `${BASEURL}/edifybackend/v1/devices/bulk-delete?permanent=true`,
+      "DELETE"
+    );
+
+    return deleletedDevice?.data;
+  } catch (e: any) {
+    throw e;
+  }
+}
+
+
+
 //Upload bulk device
 
 export const bulkUploadDevices = async (
@@ -217,7 +237,7 @@ export const bulkUploadDevices = async (
   try {
     // Call the API with multipart/form-data
     const response = await callAPIWithToken<Device>(
-      "https://staging.deviceflow.ai/edifybackend/v1/devices/upload",
+      `${BASEURL}/edifybackend/v1/devices/upload`,
       "POST",
       formData,
       {
@@ -235,18 +255,34 @@ export const bulkDeleteAssets = async (
   type: string
 ): Promise<any> => {
   try {
-    console.log(deviceIds);
     const response = await callAPIWithToken(
       type !== "soft"
-        ? "https://staging.deviceflow.ai/edifybackend/v1/devices/bulk-delete?permanent=true"
-        : "https://staging.deviceflow.ai/edifybackend/v1/devices/bulk-delete",
+        ? `${BASEURL}/edifybackend/v1/devices/bulk-delete?permanent=true`
+        : `${BASEURL}/edifybackend/v1/devices/bulk-delete`,
       "POST",
       { deviceIds },
       {
         "Content-Type": "application/json",
       }
     );
-    console.log(response);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const bulkAssetsUnassign = async (
+  deviceIds: string[],
+): Promise<any> => {
+  try {
+    const response = await callAPIWithToken(
+      `${BASEURL}/edifybackend/v1/devices/Bulk-unassign`,
+      "PATCH",
+      { deviceIds },
+      {
+        "Content-Type": "application/json",
+      }
+    );
     return response;
   } catch (error) {
     throw error;
@@ -256,7 +292,7 @@ export const bulkDeleteAssets = async (
 //Search api
 export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
   try {
-    const url = `https://staging.deviceflow.ai/edifybackend/v1/devices/search?query=${query}`;
+    const url = `${BASEURL}/edifybackend/v1/devices/search?query=${query}`;
     const res = await callAPIWithToken<DeviceResponse>(url, "GET");
 
     return res?.data;
@@ -270,7 +306,7 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 //   try {
 //     // Make the GET request to fetch a single device by ID
 //     const res = await callAPIWithToken<Device>(
-//       `https://staging.deviceflow.ai/edifybackend/v1/devices/${deviceId}`,
+//       `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
 //       "GET"
 //     );
 
@@ -286,7 +322,7 @@ export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
   try {
     // Make the GET request to fetch a single device by ID
     const res = await callAPIWithToken<Device>(
-      `https://staging.deviceflow.ai/edifybackend/v1/devices/${deviceId}`,
+      `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
       "GET"
     );
 
@@ -307,7 +343,7 @@ export const getDevicesByUserId = cache(
       if (sess?.user && sess?.user?.user.userId) {
         // Make the GET request to fetch Devices of user ID
         const res = await callAPIWithToken<getAllDevicesProp>(
-          `https://staging.deviceflow.ai/edifybackend/v1/devices/userDetails`,
+          `${BASEURL}/edifybackend/v1/devices/userDetails`,
           "GET"
         );
 
@@ -326,7 +362,7 @@ export const getDevicesByUserId = cache(
 export const paginatedDevices = async (page: string): Promise<any> => {
   try {
     const res = await callAPIWithToken<DeviceResponse>(
-      `https://staging.deviceflow.ai/edifybackend/v1/devices/paginated?page=${page}`,
+      `${BASEURL}/edifybackend/v1/devices/paginated?page=${page}`,
       "GET"
     );
     return res?.data;
@@ -349,11 +385,40 @@ export const fetchDevices = cache(async function (): Promise<any> {
       ],
       filters: [],
       page: 1,
-      pageLimit: 5,
+      pageLimit: 100000,
     };
 
     const res = await callAPIWithToken<DeviceResponse>(
-      "https://staging.deviceflow.ai/edifybackend/v1/devices/filter",
+      `${BASEURL}/edifybackend/v1/devices/filter`,
+      "POST", // Changed to POST as the new API requires it
+      requestBody // Pass the request body
+    );
+
+    return res?.data?.devices;
+  } catch (e) {
+    throw new Error("Failed to fetch devices");
+  }
+});
+
+export const fetchUnassignedDevices = cache(async function (): Promise<any> {
+  try {
+    const requestBody = {
+      fields: [
+        "device_name",
+        "custom_model",
+        "serial_no",
+        "ram",
+        "storage",
+        "image",
+      ],
+      filters: [],
+      // ["userId", "null"]
+      page: 1,
+      pageLimit: 1000000,
+    };
+
+    const res = await callAPIWithToken<DeviceResponse>(
+      `${BASEURL}/edifybackend/v1/devices/filter`,
       "POST", // Changed to POST as the new API requires it
       requestBody // Pass the request body
     );
@@ -382,7 +447,7 @@ export async function searchDevices(searchQuery: string): Promise<any> {
       pageLimit: 10, // Number of users to fetch per page
     };
 
-    const apiUrl = `https://staging.deviceflow.ai/edifybackend/v1/devices/filter${
+    const apiUrl = `${BASEURL}/edifybackend/v1/devices/filter${
       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
     }`;
 

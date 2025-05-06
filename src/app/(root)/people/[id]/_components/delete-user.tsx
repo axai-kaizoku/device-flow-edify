@@ -14,7 +14,7 @@ import { deleteUser } from "@/server/userActions";
 import { Button } from "@/components/buttons/Button";
 import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import Spinner, { spinnerVariants } from "@/components/Spinner";
 import WarningDelete from "@/icons/WarningDelete";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,7 +31,7 @@ export const DeleteUser = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
+
   const { showAlert } = useAlert();
   const queryClient = useQueryClient();
   const handleDelete = async () => {
@@ -40,7 +40,7 @@ export const DeleteUser = ({
       try {
         await deleteUser(id);
         setLoading(false);
-        openToast("success", "Successfully deleted user !");
+        toast.success("Successfully deleted user !");
         setOpen(false);
         router.push("/people");
         queryClient.invalidateQueries({

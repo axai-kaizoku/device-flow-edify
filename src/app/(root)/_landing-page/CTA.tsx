@@ -1,13 +1,13 @@
 import Spinner from "@/components/Spinner";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { requestForDemo } from "@/server/loginActions";
 import React, { forwardRef, useState } from "react";
+import { useParams } from "next/navigation";
 export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const [onRegisterClicked, setOnRegisterClicked] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const { openToast } = useToast();
-
+  const params = useParams();
   const handleNext = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
@@ -194,12 +194,16 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await requestForDemo({ ...formData, type: "register" });
+      const response = await requestForDemo({
+        ...formData,
+        type: "register",
+        utm_source: params?.slug,
+      });
       if (response) {
         handleNext();
       }
     } catch (error) {
-      openToast("error", "Some Error Occured. Try again Later!");
+      toast.error("Some Error Occured. Try again Later!");
     } finally {
       setLoading(false);
     }
@@ -465,7 +469,7 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                 <div className="text-xl font-gilroyMedium leading-[43px] max-sm:leading-[35px]">
                   <span>
                     <p className="text-[gray]">For further info:</p>
-                    <p className="text-white">{"(+91) 7470873515  "}</p>
+                    <p className="text-white">{"(+91) 9513245671 "}</p>
                     <p className="text-white">
                       <a
                         href="mailto:support@deviceflow.ai"

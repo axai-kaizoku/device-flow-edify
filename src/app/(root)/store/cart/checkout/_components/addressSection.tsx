@@ -1,7 +1,7 @@
 "use client";
 import CreateAddress from "@/app/(root)/settings/_components/create-address";
 import EditAddress from "@/app/(root)/settings/_components/edit-address";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { Address } from "@/server/addressActions";
 import { updateCartAddress } from "@/server/cartActions";
 import { Plus } from "lucide-react";
@@ -17,14 +17,13 @@ const AddressSection = ({ allAddresses }: AddressSectionProps) => {
     allAddresses?.length > 0 ? allAddresses?.[0]._id : ""
   );
   const router = useRouter();
-  const { openToast } = useToast();
 
   const handleAddressChange = async (addressId: string) => {
     try {
       const updateResponse = await updateCartAddress(addressId);
       router.refresh();
     } catch (error) {
-      openToast("error", "Failed to change address");
+      toast.error("Failed to change address");
     }
   };
 

@@ -14,7 +14,7 @@ import { inActiveAssets } from "@/server/filterActions";
 import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { DeleteModal } from "../../people/_components/deleteUserModal";
 
@@ -30,13 +30,13 @@ function InActiveAssets({
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { openToast } = useToast();
+
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
-      openToast("error", `No Asset selected for deletion`);
+      toast.error(`No Asset selected for deletion`);
       return;
     }
 
@@ -50,19 +50,17 @@ function InActiveAssets({
 
       if (res.status !== 200) throw new Error("Failed to delete Assets");
 
-      openToast("success", "Assets deleted successfully!");
+      toast.success("Assets deleted successfully!");
       setSelectedIds([]); // Clear selection after deletion
       await onRefresh(); // Refresh data after deletion
     } catch (error) {
-      openToast("error", `Failed to delete Assets : ${error}`);
+      toast.error(`Failed to delete Assets : ${error}`);
     }
   };
 
   const handleSelectionChange = (selected: string[]) => {
     setSelectedIds(selected);
   };
-
-
 
   const handlePageChange = async (page: number) => {
     setIsLoading(true); // Set loading to true when changing pages
@@ -103,9 +101,10 @@ function InActiveAssets({
 
               {selectedIds.length > 0 && (
                 <DeleteModal
-                  handleBulkDelete={handleBulkDelete}
+                  handleBulkAction={handleBulkDelete}
                   open={open}
                   setOpen={setOpen}
+                  type="Delete"
                 >
                   <button
                     // onClick={handleBulkDelete}

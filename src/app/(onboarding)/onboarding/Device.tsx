@@ -1,37 +1,37 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { createDevices } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createPayload } from "../../(root)/assets/_components/addDevices/_components/createPayload";
 import {
+  DevicePage1,
+  DevicePage2,
   FormData,
   FormErrors,
-  DevicePage1 as DevicePage1,
-  AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
-  ExtraDetails as ExtraDetailsInterface,
   KeyboardDetailsInterface,
-  DevicePage2,
 } from "../../(root)/assets/_components/addDevices/_components/types";
-import Spinner from "@/components/Spinner";
-import { ChevronLeft, ChevronRight, Laptop, Monitor } from "lucide-react";
 import KeyboardForm from "../../(root)/assets/_components/addDevices/keyBoardForm";
-import MouseForm from "../../(root)/assets/_components/addDevices/mouseForm";
 import LaptopForm from "../../(root)/assets/_components/addDevices/laptopForm";
 import LaptopForm2 from "../../(root)/assets/_components/addDevices/laptopForm2";
 import MobileForm from "../../(root)/assets/_components/addDevices/MobileForm";
 import MobileForm2 from "../../(root)/assets/_components/addDevices/MobileForm2";
 import MonitorForm from "../../(root)/assets/_components/addDevices/MonitorForm";
-import { createPayload } from "../../(root)/assets/_components/addDevices/_components/createPayload";
+import MouseForm from "../../(root)/assets/_components/addDevices/mouseForm";
 // import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
-import { Button } from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
+import { toast } from "sonner";
 import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
 // import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
-export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: boolean) => void}) => {
+export const DeviceComponent = ({
+  setWelcomeScreen,
+}: {
+  setWelcomeScreen: (value: boolean) => void;
+}) => {
   // const { showAlert } = useAlert();
-  const { openToast } = useToast();
+
   const [step, setStep] = useState<number>(0);
   const [success, setSuccess] = useState(false);
   const [totalStep, setTotalStep] = useState<number>(1);
@@ -234,11 +234,11 @@ export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: b
   };
 
   useEffect(() => {
-   if(success){
-    setSuccess(true);
-    setWelcomeScreen(true)
-   }
-  }, [success])
+    if (success) {
+      setSuccess(true);
+      setWelcomeScreen(true);
+    }
+  }, [success]);
 
   const handleSubmit = async () => {
     if (validate()) {
@@ -247,29 +247,37 @@ export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: b
         const payload: any = createPayload(formData);
         await createDevices(payload);
 
-        const employeeCount = sessionStorage.getItem("employee-count");
+        const employeeCount = localStorage.getItem("employee-count");
         if (employeeCount) {
           const empCountInt = parseInt(employeeCount);
           if (empCountInt > 0) {
-            sessionStorage.setItem("employee-count", `${empCountInt + 1}`);
+            localStorage.setItem("employee-count", `${empCountInt + 1}`);
           }
         }
 
         setSuccess(true);
-        setWelcomeScreen(true)
+        setWelcomeScreen(true);
       } catch (error) {
         setIsLoading(false);
-        setSuccess(false)
-        setWelcomeScreen(false)
-        setStep(0)
-        openToast("error", "Failed to created Device !");
+        setSuccess(false);
+        setWelcomeScreen(false);
+        setStep(0);
+        toast.error("Failed to created Device !");
       }
     }
   };
   return (
-    <div className={`w-full ${success ? 'h-[auto]': 'h-screen'} justify-evenly  items-center flex flex-col lg:flex-row p-8`}>
+    <div
+      className={`w-full ${
+        success ? "h-[auto]" : "h-screen"
+      } justify-evenly  items-center flex flex-col lg:flex-row p-8`}
+    >
       {success ? (
-        <div className={`w-full relative ${success ? 'h-[auto]': 'h-full'} justify-center items-center flex flex-col gap-6`}>
+        <div
+          className={`w-full relative ${
+            success ? "h-[auto]" : "h-full"
+          } justify-center items-center flex flex-col gap-6`}
+        >
           <div className="w-full">
             <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
               Great!! Setup complete
@@ -278,8 +286,10 @@ export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: b
               Your are ready to manage assets with DeviceFlow
             </div>
           </div>
+
           <Button
-            className="rounded-[9px] font-gilroySemiBold text-[16px]   w-[75%] h-[56px] bg-primary text-primary-foreground"
+            className="w-[75%]"
+            variant="primary"
             type="button"
             onClick={() => {
               router.push("/");
@@ -390,41 +400,26 @@ export const DeviceComponent = ({setWelcomeScreen}: {setWelcomeScreen: (value: b
             ) : (
               <></>
             )}
-            <div className="flex-grow"></div>
             {/* Navigation buttons */}
             <div className="flex gap-3 w-full mt-auto pb-2">
               {step < totalStep ? (
-                <Button
+                <LoadingButton
                   type="button"
-                  className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[9px] h-[56px] font-gilroySemiBold text-base w-full transition duration-300"
+                  variant="primary"
                   onClick={handleNextStep}
                   disabled={isLoading}
                 >
-                  <div className="flex items-center gap-2">
-                    <span>Next</span>
-                    {isLoading ? (
-                      <Spinner />
-                    ) : (
-                      <ChevronRight className="size-5" color="white" />
-                    )}
-                  </div>
-                </Button>
+                  Next
+                </LoadingButton>
               ) : (
-                <Button
+                <LoadingButton
                   type="button"
-                  className="flex items-center justify-center gap-2 bg-black text-white py-2 px-5 rounded-[9px] h-[56px] font-gilroySemiBold text-base w-full transition duration-300"
+                  variant="primary"
                   onClick={handleSubmit}
-                  disabled={isLoading}
+                  loading={isLoading}
                 >
-                  <div className="flex items-center gap-2">
-                    <span>Submit</span>
-                    {isLoading ? (
-                      <Spinner />
-                    ) : (
-                      <ChevronRight color="white" className="size-4" />
-                    )}
-                  </div>
-                </Button>
+                  Submit
+                </LoadingButton>
               )}
             </div>
           </div>

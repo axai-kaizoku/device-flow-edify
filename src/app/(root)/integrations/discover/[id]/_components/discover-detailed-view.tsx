@@ -3,37 +3,42 @@ import { buttonVariants } from "@/components/buttons/Button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   allIntegrationsAvailable,
+  connectGsuiteIntegration,
   connectIntegration,
   getIntegrationById,
 } from "@/server/integrationActions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import MappingDialogTwo from "./mapping-dialog-two";
-import MappingDialogOne from "../../../_components/installed/mapping-dialog-one";
-import { BlueLink, IntBack } from "../../../_components/icons";
 import { ConnectIntegration } from "../../../_components/connect-integration";
 import { IntegrationCompanyCard } from "../../../_components/discover/integration-company-card";
-import Link from "next/link";
+import { BlueLink, IntBack } from "../../../_components/icons";
+import MappingDialogOne from "../../../_components/installed/mapping-dialog-one";
+import MappingDialogTwo from "./mapping-dialog-two";
 
 function DiscoverDetailedView({ id }: { id: string }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [nextSteps, setNextSteps] = useState(0);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const { data, status } = useQuery({
     queryKey: ["get-integration-by-id", id],
     queryFn: () => getIntegrationById({ id }),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // staleTime: 1000 * 60 * 5,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
   });
 
   const { data: companies } = useQuery({
     queryKey: ["all-integrations"],
     queryFn: allIntegrationsAvailable,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // staleTime: 1000 * 60 * 5,
+
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
   });
 
   const shuffledCompanies = useMemo(() => {
@@ -64,41 +69,108 @@ function DiscoverDetailedView({ id }: { id: string }) {
       return await connectIntegration({ payload });
     },
     mutationKey: ["add-integration-response"],
+    onMutate: () => {
+      setShowConnectModal(true);
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["get-integration-by-id"],
-        exact: false,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["user-by-integrations", "all-data"],
-        exact: true,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["all-integrations", "discover"],
-        exact: true,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["all-integrations"],
-        exact: false,
-        refetchType: "all",
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["get-integration-by-id"],
+          exact: false,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-people"],
+          exact: false,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["user-by-integrations", "all-data"],
+          exact: true,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["all-integrations", "discover"],
+          exact: true,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["all-integrations"],
+          exact: false,
+          refetchType: "all",
+        }),
+      ]);
+
       setNextSteps(1);
+      setShowConnectModal(false);
+    },
+  });
+
+  const gSuiteMutation = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      return await connectGsuiteIntegration({ id });
+    },
+    mutationKey: ["gsuite-integration-response"],
+    onMutate: () => {
+      setShowConnectModal(true);
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["get-integration-by-id"],
+          exact: false,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-people"],
+          exact: false,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["user-by-integrations", "all-data"],
+          exact: true,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["all-integrations", "discover"],
+          exact: true,
+          refetchType: "all",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["all-integrations"],
+          exact: false,
+          refetchType: "all",
+        }),
+      ]);
+
+      setNextSteps(1);
+      setShowConnectModal(false);
+    },
+    onError: () => {
+      setShowConnectModal(false);
     },
   });
 
   return (
     <>
-      {status === "pending" || mutation.isPending ? (
+      {status === "pending" ? (
         <DiscoverDetailedViewSkeleton />
       ) : (
         <>
+          {/* <GsuiteDialog open={gsuite} setOpen={setGsuite} /> */}
+          <ConnectIntegration
+            integrationData={data}
+            mutation={mutation}
+            open={showConnectModal}
+            setOpen={setShowConnectModal}
+            gSuiteMutation={gSuiteMutation}
+            loading={gSuiteMutation.status === "pending"}
+            // open={nextSteps === 1}
+          />
           <MappingDialogOne
             open={nextSteps === 1}
             // setOpen={setOpenOne}
-            response={mutation.data}
+            response={gSuiteMutation?.data ?? mutation.data}
             platform={data?.platform}
             setNextSteps={setNextSteps}
           />
@@ -106,7 +178,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
           <MappingDialogTwo
             open={nextSteps === 2}
             // setOpen={setOpenTwo}
-            response={mutation.data}
+            response={gSuiteMutation?.data ?? mutation.data}
             platform={data?.platform}
             setNextSteps={setNextSteps}
           />
@@ -118,14 +190,15 @@ function DiscoverDetailedView({ id }: { id: string }) {
               <IntBack />
               Discover
             </h1>
-            {/* {JSON.stringify(data)} */}
             <div className="flex gap-4 p-6 w-full">
               <div className="w-[20%] flex flex-col gap-4 ">
                 <div className="flex justify-start items-center">
                   <div className="flex justify-start items-center w-full pl-3.5">
                     <img
                       src={data?.companyLogo}
-                      className="size-32 object-cover"
+                      width={128}
+                      height={128}
+                      className="size-32 object-contain"
                       alt={data?.platform ?? ""}
                     />
                   </div>
@@ -156,25 +229,19 @@ function DiscoverDetailedView({ id }: { id: string }) {
                       </span>
                     </Link>
                   ) : (
-                    <ConnectIntegration
-                      integrationData={data}
-                      mutation={mutation}
-                      // open={nextSteps === 1}
+                    <span
+                      className={buttonVariants({
+                        className:
+                          "rounded-lg text-sm bg-black text-white min-w-fit w-[10rem] font-gilroySemiBold border border-black h-9 cursor-pointer hover:bg-neutral-800/95",
+                      })}
+                      onClick={() => setShowConnectModal(true)}
                     >
-                      <span
-                        className={buttonVariants({
-                          className:
-                            "rounded-lg text-sm bg-black text-white min-w-fit w-[10rem] font-gilroySemiBold border border-black h-9",
-                        })}
-                      >
-                        Install Now
-                      </span>
-                    </ConnectIntegration>
+                      Install Now
+                    </span>
                   )}
                 </div>
-                {/* {mutation.data} */}
 
-                {/* <div onClick={() => setNextSteps(1)}>Open</div> */}
+                {/* <Button onClick={() => setGsuite(true)}>openj</Button> */}
 
                 <div className="flex flex-col gap-1">
                   <h1 className="text-base font-gilroySemiBold">Built by</h1>
@@ -253,7 +320,27 @@ function DiscoverDetailedView({ id }: { id: string }) {
                   </div>
                   <div className="flex  font-gilroyMedium flex-col gap-2">
                     <h1>Updated </h1>
-                    <p className="text-[#7f7f7f]">{data?.newVersionDate}</p>
+                    {(() => {
+                      const onboardingDate = data?.newVersionDate;
+
+                      if (!onboardingDate) {
+                        return <div>-</div>;
+                      }
+
+                      const date = new Date(onboardingDate);
+
+                      if (isNaN(date.getTime())) {
+                        return <div>-</div>;
+                      }
+
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return <p className="text-[#7f7f7f]">{formattedDate}</p>;
+                    })()}
                   </div>
                   <div className="flex  font-gilroyMedium flex-col gap-2">
                     <h1>Size</h1>
@@ -271,14 +358,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                 <p className="text-base font-gilroyMedium whitespace-pre-line break-all">
                   {data?.description}
                 </p>
-                {/* <div className="flex flex-col text-lg font-gilroyMedium">
-     <p>Installation</p>
-     <p>1. Click on Install Now button.</p>
-     <p>2. Give your site a name.</p>
-     <p>3. Select ERPNext app and click on Next.</p>
-     <p>4. (Optional) Restore from backup.</p>
-     <p>5. Select a plan and click on Create Site.</p>
-   </div> */}
+
                 <h1 className="text-xl font-gilroySemiBold ">Explore</h1>
 
                 <div className=" flex flex-wrap gap-4 xl:grid xl:justify-items-center xl:gap-7 xl:grid-cols-3">

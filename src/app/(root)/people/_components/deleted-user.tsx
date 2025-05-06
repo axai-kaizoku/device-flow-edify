@@ -9,7 +9,7 @@ import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
 import { Table } from "@/components/wind/Table";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { DeleteModal } from "./deleteUserModal";
 
 function DeletedUser({
@@ -23,7 +23,7 @@ function DeletedUser({
 }) {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { openToast } = useToast();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ function DeletedUser({
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
-      openToast("error", `No user selected for deletion`);
+      toast.error(`No user selected for deletion`);
       return;
     }
 
@@ -57,11 +57,11 @@ function DeletedUser({
 
       if (res.status !== 200) throw new Error("Failed to delete users");
 
-      openToast("success", "Users deleted successfully!");
+      toast.success("Users deleted successfully!");
       setSelectedIds([]); // Clear selection after deletion
       // await onRefresh(); // Refresh data after deletion
     } catch (error) {
-      openToast("error", `Failed to delete Users : ${error}`);
+      toast.error(`Failed to delete Users : ${error}`);
     }
   };
 
@@ -93,9 +93,10 @@ function DeletedUser({
 
               {selectedIds.length > 0 && (
                 <DeleteModal
-                  handleBulkDelete={handleBulkDelete}
+                  handleBulkAction={handleBulkDelete}
                   open={open}
                   setOpen={setOpen}
+                  type="Delete"
                 >
                   <button
                     // onClick={handleBulkDelete}

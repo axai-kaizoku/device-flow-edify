@@ -10,13 +10,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState, useRef } from "react";
-import { getImageUrl, updateOrg } from "@/server/orgActions";
+import {updateOrg } from "@/server/orgActions";
 import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Trash2, X } from "lucide-react";
 import { Button } from "@/components/buttons/Button";
+import { getImageUrl } from "@/components/utils/upload";
 
 // Add open and setOpen props
 export const LogoCompanyModal = ({
@@ -33,7 +34,7 @@ export const LogoCompanyModal = ({
   const [image, setImage] = useState<string | null>(logo); // Track image file
   const [open, setOpen] = useState(false); // Modal open state
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { openToast } = useToast();
+
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -67,13 +68,13 @@ export const LogoCompanyModal = ({
           const res = await getImageUrl({ file });
           setImage(res.fileUrl);
         } catch (error) {
-          openToast("error", "Image upload failed");
+          toast.error("Image upload failed");
         } finally {
           setIsUploading(false); // Stop showing the progress bar
           setProgress(0);
         }
       } else {
-        openToast("error", "Image Size too large");
+        toast.error("Image Size too large");
       }
     }
   };
@@ -86,7 +87,7 @@ export const LogoCompanyModal = ({
       uploadSuccess?.();
       router.refresh();
     } catch (error) {
-      openToast("error", "Image upload failed");
+      toast.error("Image upload failed");
     }
   };
 

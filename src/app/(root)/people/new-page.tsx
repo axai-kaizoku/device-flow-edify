@@ -10,13 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAlert } from "@/hooks/useAlert";
 import { activeUsers, userFilterFields } from "@/server/filterActions";
+import { bulkDeleteUsers } from "@/server/userActions";
 import { Plus, Search, X } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { toast } from "sonner";
 import InvitePeople from "./[id]/_components/invite-people";
+import { DeleteModal } from "./_components/deleteUserModal";
 import UserMain from "./_components/user-main";
-import DeletedUser from "./_components/deleted-user";
+import BulkMove from "../teams/[id]/_components/new-bulk-move";
+import { buttonVariants } from "@/components/buttons/Button";
 
 const numericFields = ["updatedAt", "createdAt"];
 const numericOperators = [">=", "<=", ">", "<", "Equals"];
@@ -27,7 +30,6 @@ export const NewPage = () => {
     defaultValue: "active-users",
   });
   const queryClient = useQueryClient();
-  const { showAlert } = useAlert();
 
   //  ---------------
   // const [assets, setAssets] = useState(null);
@@ -42,6 +44,10 @@ export const NewPage = () => {
   const [availableOperators, setAvailableOperators] =
     useState(generalOperators);
   const filterModalRef = useRef<HTMLDivElement>(null);
+  // ----------
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const [open, setOpen] = useState(false);
 
   // Close filter modal when clicking outside of it
   useEffect(() => {
@@ -60,7 +66,7 @@ export const NewPage = () => {
     };
   }, []);
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch, status } = useQuery({
     queryKey: ["fetch-people", activeTab, actualSearchTerm],
     queryFn: async () => {
       const query = {
@@ -195,6 +201,48 @@ export const NewPage = () => {
   //   // setSearchTerm("");
   //   setFilterInputs([{ field: "", operator: "", value: "" }]); // Reset filters
   // };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      toast.error(`No user selected for deletion`);
+      return;
+    }
+
+    try {
+      // Determine delete type based on active tab
+      const deleteType = activeTab === "active-users" ? "soft" : "hard";
+      const res = await bulkDeleteUsers(selectedIds, deleteType);
+
+      if (res.status !== 200) throw new Error("Failed to delete users");
+
+      setOpen(false);
+      toast.success(
+        `Users ${
+          deleteType === "soft" ? "deactivated" : "permanently deleted"
+        } successfully!`
+      );
+      setSelectedIds([]);
+
+      // Invalidate and refetch the query
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-people", activeTab, actualSearchTerm],
+        exact: true,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-people", "inactive-users", actualSearchTerm],
+        exact: true,
+      });
+
+      await refetch();
+    } catch (error) {
+      toast.error(`Failed to delete Users: ${error}`);
+    }
+  };
+
+  const handleSelectionChange = (selected: string[]) => {
+    setSelectedIds(selected);
+  };
 
   return (
     <section className="w-full h-fit relative  overflow-hidden">
@@ -450,6 +498,39 @@ export const NewPage = () => {
                 </span>
               </div>
             </InvitePeople>
+
+            {selectedIds.length > 0 && (
+              <>
+                <DeleteModal
+                  handleBulkAction={handleBulkDelete}
+                  open={open}
+                  setOpen={setOpen}
+                  type="Delete"
+                >
+                  <button
+                    // onClick={handleBulkDelete}
+                    className="flex cursor-pointer items-center rounded-lg  border-[rgba(0,0,0,0.2)] px-4 py-2 gap-1 bg-black text-white group"
+                  >
+                    <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
+                      Delete
+                    </span>
+                  </button>
+                </DeleteModal>
+
+                {activeTab !== "inactive-users" && (
+                  <BulkMove
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                  >
+                    <div className={buttonVariants({ variant: "outlineTwo" })}>
+                      <div className="  text-nowrap text-sm font-gilroyMedium">
+                        Bulk Move
+                      </div>
+                    </div>
+                  </BulkMove>
+                )}
+              </>
+            )}
           </div>
         </div>
         <TabsContent value="active-users">
@@ -485,6 +566,11 @@ export const NewPage = () => {
           <UserMain
             peopleText="Active People"
             data={data}
+            status={status}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            handleBulkDelete={handleBulkDelete}
+            handleSelectionChange={handleSelectionChange}
             // setUsers={setAssets}
             // onRefresh={refreshUserData}
           />
@@ -508,7 +594,15 @@ export const NewPage = () => {
               
             }}
           /> */}
-          <UserMain peopleText="Inactive People" data={data} />
+          <UserMain
+            status={status}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            handleBulkDelete={handleBulkDelete}
+            handleSelectionChange={handleSelectionChange}
+            peopleText="Inactive People"
+            data={data}
+          />
         </TabsContent>
       </Tabs>
     </section>

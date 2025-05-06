@@ -1,42 +1,50 @@
 "use client";
+
 import { CombinedContainer } from "@/components/container/container";
+import { toast } from "sonner";
+import FeedBackIcon from "@/icons/FeedBackIcon";
 import { cn } from "@/lib/utils";
-import { getDashboard, sendFeedback } from "@/server/dashboard";
+import {
+  getDashboard,
+  getTotalIntegrationData,
+  sendFeedback,
+} from "@/server/dashboard";
+import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ManageOrders } from "./admin-conponents/Manage-orders";
-import { Teams } from "./admin-conponents/Teams";
+import { useState } from "react";
+import CreateDevice from "../../assets/_components/addDevices/_components/create-device";
 import { AssetsCount } from "./admin-conponents/assets-count";
 import { AssetsHealth } from "./admin-conponents/assets-health";
 import { DashboardDetails } from "./admin-conponents/interface";
 import { ManageIssue } from "./admin-conponents/manage-issue";
-import { Members } from "./admin-conponents/members";
 import { TrendingDevices } from "./admin-conponents/trending-devices";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
-import { useToast } from "@/hooks/useToast";
-import FeedBackIcon from "@/icons/FeedBackIcon";
 import DashboardSkeleton from "./dashboard-skeleton";
+import { Subscriptions } from "./subscriptions/interface";
 import TotalSpendingCard from "./subscriptions/totalSpendingCard";
 import TotalSubscriptionsCard from "./subscriptions/totalSubscriptionsCard";
 
 export default function AdminDashboard() {
-  const [dashboardData, setDasboardData] = useState<DashboardDetails | null>(
-    null
-  );
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
-  const userData = useSelector((state: RootState) => state.auth.userData);
-  const { openToast } = useToast();
+
   const [formData, setFormData] = useState({
     rating: 0,
     comment: "",
   });
+
+  const { data: integrationData, status: integrationStatus } =
+    useQuery<Subscriptions>({
+      queryKey: ["get-total-integration-data"],
+      queryFn: getTotalIntegrationData,
+    });
+
+  const { data: dashboardData, status: dashboardStatus } =
+    useQuery<DashboardDetails>({
+      queryKey: ["get-dashboard-data"],
+      queryFn: getDashboard,
+    });
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, comment: e.target.value }));
@@ -44,8 +52,7 @@ export default function AdminDashboard() {
 
   const handleSubmitFeedback = async () => {
     if (!formData.rating || !formData.comment) {
-      openToast(
-        "error",
+      toast.error(
         "Please select a rating and add a comment before submitting."
       );
       return;
@@ -53,16 +60,15 @@ export default function AdminDashboard() {
 
     try {
       const response = await sendFeedback(formData);
-      openToast("success", "Thank you for your feedback!");
+      toast.success("Thank you for your feedback!");
       toggleModal();
       setClickedIndex(null);
       setFormData((prev) => ({ ...prev, rating: 0, comment: "" }));
     } catch (error) {
-      openToast("error", "Failed to submit feedback. Please try again.");
+      toast.error("Failed to submit feedback. Please try again.");
     }
   };
 
-  // List of emojis with their PNG and GIF versions
   const emojis = [
     {
       png: "/media/emojis/worst.png",
@@ -95,75 +101,73 @@ export default function AdminDashboard() {
       id: 5,
     },
   ];
-  useEffect(() => {
-    // setLoading(true);
-    getDashboardDetils();
-    setLoading(false);
-  }, []);
-
-  const getDashboardDetils = async () => {
-    setLoading(true);
-    try {
-      const dashboard: DashboardDetails = await getDashboard();
-      setDasboardData(dashboard);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>
-      {loading || !dashboardData ? (
+      {integrationStatus === "pending" || dashboardStatus === "pending" ? (
         <DashboardSkeleton />
       ) : (
-        <CombinedContainer
-          title="Admin Dashboard"
-          className="max-[1410px]:pt-8 pt-0"
-        >
-          <span className="text-black/30 font-gilroy text-[18px] font-medium leading-none mt-6 mb-6">
+        <CombinedContainer title="Admin Dashboard" className="pt-0 w-full">
+          <span className="text-black/30 font-gilroyMedium text-[18px] w-full leading-none mt-6 mb-6">
             Your subscriptions
           </span>
-          <div className="flex w-full gap-5">
-            <TotalSpendingCard />
-            <TotalSubscriptionsCard />
+          <div className="flex w-full gap-3">
+            <TotalSpendingCard integrationData={integrationData} />
+            <TotalSubscriptionsCard integrationData={integrationData} />
           </div>
-          <span className="text-black/30 font-gilroy text-[18px] font-medium leading-none mt-6 mb-6">
+          <span className="text-black/30 font-gilroyMedium text-[18px] w-full leading-none mt-6 mb-6">
             Your Assets
           </span>
           <div
-            className="flex justify-center items-center mb-7 gap-3 h-full"
-            onClick={() => {
-              setIsModalOpen(false);
-            }}
+            className="flex flex-row justify-between items-stretch mb-7 gap-3 w-full "
+            onClick={() => setIsModalOpen(false)}
           >
-            <div
-              style={{ width: "35%" }}
-              className="flex flex-col justify-between gap-3 h-full "
-            >
-              <div style={{ width: "100%" }}>
-              <AssetsCount dashboardData={dashboardData} />
-                
-              </div>
-              <div style={{ width: "100%" }}>
-              <AssetsHealth dashboardData={dashboardData} />
-              </div>
-             
+            {/* Left Column - ManageIssue */}
+            <div className="w-[calc(35%-12px)] flex flex-col gap-3">
+              <ManageIssue dashboardData={dashboardData} />
+              <img
+                src="/media/dashboard/Today_sales.svg"
+                alt=""
+                className="mt-1"
+              />
             </div>
-           <div style={{width: '35%', height: '100%'}}>
-           <ManageIssue dashboardData={dashboardData} />
-           </div>
-            <div
-              style={{
-                width: "30%",
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-                justifyContent: "space-between",
-                height: '100%'
-              }}
-            >
+
+            {/* Middle Column - AssetsHealth & AssetsCount */}
+            {dashboardData ? (
+              <div className="w-[calc(35%-12px)] flex flex-col gap-4">
+                <div className="w-full">
+                  <AssetsHealth dashboardData={dashboardData} />
+                </div>
+                <div className="w-full">
+                  <AssetsCount dashboardData={dashboardData} />
+                </div>
+              </div>
+            ) : (
+              <div className="w-[35%]  bg-white  rounded-md border border-black/10 flex flex-col justify-center items-center px-3 py-5 gap-6 lg:p-7">
+                <img
+                  src="/media/dashboard/assets-empty.png"
+                  width={200}
+                  height={150}
+                />
+                <div className="w-full">
+                  <p className="text-black text-lg font-gilroySemiBold text-center">
+                    Add your first device
+                  </p>
+                  <p className="text-gray-400 text-sm font-gilroyMedium text-center">
+                    Start adding your devices to get data
+                  </p>
+                </div>
+
+                <CreateDevice>
+                  <div className="bg-black cursor-pointer px-3 py-2 mt-8 text-sm rounded-[6px] text-white font-gilroyMedium">
+                    Add Device
+                  </div>
+                </CreateDevice>
+              </div>
+            )}
+
+            {/* Right Column - TrendingDevices */}
+            <div className="w-[calc(30%-12px)] flex flex-col gap-1.5 lg:gap-6 rounded-[2px]">
               <TrendingDevices dashboardData={dashboardData} />
             </div>
           </div>

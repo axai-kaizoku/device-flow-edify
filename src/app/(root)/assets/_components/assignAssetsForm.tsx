@@ -1,13 +1,18 @@
 "use client";
-import { ChevronRight, Monitor } from "lucide-react";
-import React, { useState } from "react";
-import { SelectInput } from "@/components/dropdown/select-input";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
-import { Device, updateDevice } from "@/server/deviceActions";
-import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
-import { Button, buttonVariants } from "@/components/buttons/Button";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
+import { SelectInput } from "@/components/dropdown/select-input";
+import { GetAvatar } from "@/components/get-avatar";
+import { AsyncSelect } from "@/components/ui/async-select";
+import { Device, updateDevice } from "@/server/deviceActions";
+import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const AssignAssetsForm = ({
   closeBtn,
@@ -18,11 +23,16 @@ const AssignAssetsForm = ({
   device: Device;
   onRefresh?: () => Promise<void>;
 }) => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<{ email: string; _id: string }>();
+  const [error, setError] = useState("");
+
+  const [user, setUser] = useState<User>();
   const querClient = useQueryClient();
   const handleSubmit = async () => {
+    if (!user?._id) {
+      setError("User required");
+    }
+
     if (user?._id) {
       setLoading(true);
       // @ts-ignore
@@ -65,7 +75,7 @@ const AssignAssetsForm = ({
           </div>
         </div>
 
-        <div className="pt-3 w-full">
+        {/* <div className="pt-3 w-full">
           <SelectInput
             fetchOptions={searchUsers}
             initialOptions={fetchUsers}
@@ -79,23 +89,100 @@ const AssignAssetsForm = ({
             label="Assigning To"
             value={user?.email ?? ""}
           />
+        </div> */}
+        <div className="flex flex-col gap-2 pt-3">
+          <AsyncSelect<User>
+            fetcher={fetchUsers}
+            preload
+            fixInputClear={false}
+            renderOption={(user) => (
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <div className="font-gilroyMedium">{user?.first_name}</div>
+                  <div className="text-xs font-gilroyRegular text-muted-foreground">
+                    {user?.email}
+                  </div>
+                </div>
+              </div>
+            )}
+            filterFn={(user, query) =>
+              user?.first_name?.toLowerCase()?.includes(query?.toLowerCase()) ||
+              user?.email?.toLowerCase()?.includes(query?.toLowerCase())
+            }
+            getOptionValue={(user) => user?.email}
+            getDisplayValue={() => (
+              <div className="flex items-center gap-2 text-left w-full">
+                <div className="flex flex-col leading-tight">
+                  <div className="font-gilroyMedium">{user?.email ?? ""}</div>
+                </div>
+              </div>
+            )}
+            notFound={
+              <div className="py-6 text-center font-gilroyMedium text-sm">
+                No users found
+              </div>
+            }
+            label="User"
+            placeholder="Assign device to"
+            value={user?.email || "null"}
+            onChange={(selected: User | null) =>
+              setUser({
+                _id: selected?._id,
+                first_name: selected?.first_name,
+                email: selected?.email,
+                employment_type: selected?.employment_type,
+                designation: selected?.designation,
+              })
+            }
+            width="100%"
+          />
+          {error?.length > 0 && (
+            <p className="text-destructive/80 text-xs ml-1 font-gilroyMedium">
+              {error}
+            </p>
+          )}
         </div>
+        {user?.first_name ? (
+          <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
+            {user?.image && user?.image?.length > 0 ? (
+              <img
+                src={user?.image}
+                alt={user?.first_name}
+                className="size-14 object-cover rounded-full flex-shrink-0"
+              />
+            ) : (
+              <GetAvatar name={user?.first_name ?? ""} size={56} />
+            )}
+            <div className=" w-full flex flex-col justify-center ">
+              <h1 className="text-black font-gilroySemiBold text-base ">
+                {user?.first_name ?? ""}
+              </h1>
+              <h1 className="text-[#7C7C7C] font-gilroyMedium text-sm ">
+                {user?.email ?? ""}
+              </h1>
+
+              <h1 className="text-[#7C7C7C] flex  items-center text-sm  font-gilroyMedium">
+                {user?.employment_type ?? ""}
+                <span className="flex text-2xl mx-1 -mt-3"> </span>
+                {user?.designation ?? ""}
+              </h1>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="flex gap-2 w-full  ">
-        <button
-          className={buttonVariants({
-            variant: "outlineTwo",
-            className: "w-full",
-          })}
+        <Button
+          variant="outlineTwo"
+          className="w-full"
           onClick={() => {
             closeBtn(false);
           }}
         >
           Cancel
-        </button>
+        </Button>
 
-        <button
+        {/* <button
           className={buttonVariants({
             variant: "primary",
             className: "w-full",
@@ -113,7 +200,17 @@ const AssignAssetsForm = ({
               </>
             )}
           </div>
-        </button>
+        </button> */}
+        <LoadingButton
+          variant="primary"
+          className="w-full"
+          type="submit"
+          disabled={loading}
+          onClick={handleSubmit}
+          loading={loading}
+        >
+          Assign
+        </LoadingButton>
       </div>
     </div>
   );

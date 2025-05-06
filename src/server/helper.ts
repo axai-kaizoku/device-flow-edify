@@ -28,7 +28,6 @@ export async function callAPIWithToken<T>(
 ): Promise<APIResponse<T>> {
   // Retrieve the token
   const token = await getTokenFromSession();
-
   if (!token) {
     throw new Error("Unauthorized: No token available.");
   }

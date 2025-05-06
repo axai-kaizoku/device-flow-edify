@@ -1,31 +1,34 @@
 // Form.tsx
 "use client";
-import React, { useEffect, useState } from "react";
-import DeviceType from "./deviceType";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
+import Spinner from "@/components/Spinner";
+import { useAlert } from "@/hooks/useAlert";
 import { createDevices, Device, updateDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { createPayload } from "./_components/createPayload";
 import {
+  DevicePage1,
+  DevicePage2,
   FormData,
   FormErrors,
-  DevicePage1 as DevicePage1,
-  AdvanceDeviceDetails as AdvanceDeviceDetailsInterface,
-  ExtraDetails as ExtraDetailsInterface,
   KeyboardDetailsInterface,
-  DevicePage2,
 } from "./_components/types";
-import Spinner from "@/components/Spinner";
-import { ChevronRight, Monitor } from "lucide-react";
+import DeviceType from "./deviceType";
 import KeyboardForm from "./keyBoardForm";
-import MouseForm from "./mouseForm";
 import LaptopForm from "./laptopForm";
 import LaptopForm2 from "./laptopForm2";
 import MobileForm from "./MobileForm";
 import MobileForm2 from "./MobileForm2";
 import MonitorForm from "./MonitorForm";
-import { createPayload } from "./_components/createPayload";
-import { useAlert } from "@/hooks/useAlert";
-import { useToast } from "@/hooks/useToast";
-import { Button, buttonVariants } from "@/components/buttons/Button";
+import MouseForm from "./mouseForm";
+
+import { useQueryClient } from "@tanstack/react-query";
 // import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
@@ -34,7 +37,7 @@ type FormProps = {
 };
 function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
   const { showAlert } = useAlert();
-  const { openToast } = useToast();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<number>(0);
   const [totalStep, setTotalStep] = useState<number>(1);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -50,6 +53,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
       purchaseDate: "",
       warrantyExpiryDate: "",
       brand: "",
+      device_condition: "",
     },
     monitorDetails: {
       model: "",
@@ -58,6 +62,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
       purchaseDate: "",
       warrantyExpiryDate: "",
       brand: "",
+      device_condition: "",
     },
     mouseDetails: {
       model: "",
@@ -66,6 +71,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
       purchaseDate: "",
       warrantyExpiryDate: "",
       brand: "",
+      device_condition: "",
     },
     laptopPage1: {
       os: "",
@@ -117,6 +123,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             purchaseDate: deviceData?.device_purchase_date ?? "",
             serialNumber: deviceData?.serial_no ?? "",
             warrantyExpiryDate: deviceData?.warranty_expiary_date ?? "",
+            device_condition: deviceData?.device_condition ?? "",
           };
           break;
         case "mouse":
@@ -126,6 +133,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             purchaseDate: deviceData?.device_purchase_date ?? "",
             serialNumber: deviceData?.serial_no ?? "",
             warrantyExpiryDate: deviceData?.warranty_expiary_date ?? "",
+            device_condition: deviceData?.device_condition ?? "",
           };
           break;
         case "monitor":
@@ -135,6 +143,7 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             purchaseDate: deviceData?.device_purchase_date ?? "",
             serialNumber: deviceData?.serial_no ?? "",
             warrantyExpiryDate: deviceData?.warranty_expiary_date ?? "",
+            device_condition: deviceData?.device_condition ?? "",
           };
           break;
         case "laptop":
@@ -243,6 +252,8 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
           if (!monitor?.brand) currentErrors.brand = "Brand is required.";
           if (!monitor?.serialNumber)
             currentErrors.serialNumber = "Serial Number is required";
+          if (!monitor?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
           if (!monitor?.purchaseDate)
             currentErrors.purchaseDate = "Purchase Date is required";
           if (!monitor?.warrantyExpiryDate)
@@ -256,6 +267,8 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             currentErrors.serialNumber = "Serial Number is required";
           if (!mouse?.purchaseDate)
             currentErrors.purchaseDate = "Purchase Date is required";
+          if (!mouse?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
           if (!mouse?.warrantyExpiryDate)
             currentErrors.warrantyExpiryDate =
               "Warranty Expiry Date is required";
@@ -265,6 +278,8 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
           if (!keyboard?.brand) currentErrors.brand = "Brand is required.";
           if (!keyboard?.serialNumber)
             currentErrors.serialNumber = "Serial Number is required";
+          if (!keyboard?.device_condition)
+            currentErrors.device_condition = "Device Condition is required.";
           if (!keyboard?.purchaseDate)
             currentErrors.purchaseDate = "Purchase Date is required";
           if (!keyboard?.warrantyExpiryDate)
@@ -321,12 +336,23 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
         try {
           const payload: any = createPayload(formData);
           await updateDevice(deviceData?._id ?? "", payload);
-          openToast("success", "Device updated successfully !");
+          toast.success("Device updated successfully !");
           closeBtn();
+          queryClient.invalidateQueries({
+            queryKey: ["get-dashboard-data"],
+            exact: false,
+            refetchType: "all",
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: ["fetch-assets"],
+            exact: false,
+            refetchType: "all",
+          });
           router.refresh();
         } catch (error) {
           setIsLoading(false);
-          openToast("error", "Failed to update Device !");
+          toast.error("Failed to update Device !");
         } finally {
           setIsLoading(false);
         }
@@ -342,10 +368,15 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
             key: "device-creating",
           });
           closeBtn();
+          queryClient.invalidateQueries({
+            queryKey: ["get-dashboard-data"],
+            exact: false,
+            refetchType: "all",
+          });
           router.refresh();
         } catch (error) {
           setIsLoading(false);
-          openToast("error", "Failed to created Device !");
+          toast.error("Failed to created Device !");
         } finally {
           setIsLoading(false);
         }
@@ -365,21 +396,23 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
         {/* {JSON.stringify(formData)} */}
 
         {step === 0 && (
-          <DeviceType
-            isEditForm={isEditForm}
-            userName={deviceData?.userName ?? ""}
-            formData={formData}
-            setFormData={setFormData}
-            data={formData?.deviceType}
-            setData={(data: string) =>
-              setFormData((prev) => ({ ...prev, deviceType: data }))
-            }
-            error={errors?.deviceType}
-            closeBtn={closeBtn}
-            setTotalSteps={(steps: number) => {
-              setTotalStep(steps);
-            }}
-          />
+          <>
+            <DeviceType
+              isEditForm={isEditForm}
+              userName={deviceData?.email ?? ""}
+              formData={formData}
+              setFormData={setFormData}
+              data={formData?.deviceType}
+              setData={(data: string) =>
+                setFormData((prev) => ({ ...prev, deviceType: data }))
+              }
+              error={errors?.deviceType}
+              closeBtn={closeBtn}
+              setTotalSteps={(steps: number) => {
+                setTotalStep(steps);
+              }}
+            />
+          </>
         )}
         {step === 1 && formData?.deviceType === "keyboard" ? (
           <KeyboardForm
@@ -448,60 +481,48 @@ function Form({ closeBtn, deviceData, isEditForm }: FormProps) {
 
         {/* Navigation buttons */}
       </div>
-      <div className="flex gap-2 w-full">
+      <div className="flex gap-2 -mt-3 w-full">
         {step >= 1 ? (
-          <div
-            className={buttonVariants({
-              variant: "outlineTwo",
-              className: "w-full",
-            })}
+          <Button
+            variant="outlineTwo"
+            className="w-full"
             onClick={handlePrevStep}
             disabled={isLoading}
           >
             Back
-          </div>
+          </Button>
         ) : (
-          <div
-            className={buttonVariants({
-              variant: "outlineTwo",
-              className: "w-full",
-            })}
+          <Button
+            variant="outlineTwo"
+            className="w-full"
             onClick={() => {
               closeBtn();
             }}
             disabled={isLoading}
           >
             Cancel
-          </div>
+          </Button>
         )}
         {step < totalStep ? (
-          <div
-            className={buttonVariants({
-              variant: "primary",
-              className: "w-full",
-            })}
+          <LoadingButton
+            loading={isLoading}
+            variant="primary"
+            className="w-full"
             onClick={handleNextStep}
             disabled={isLoading}
           >
-            <div className="flex items-center gap-2">
-              <span>Next</span>
-              {isLoading ? <Spinner /> : <></>}
-            </div>
-          </div>
+            Next
+          </LoadingButton>
         ) : (
-          <div
-            className={buttonVariants({
-              variant: "primary",
-              className: "w-full",
-            })}
+          <LoadingButton
+            variant="primary"
+            className="w-full"
             onClick={handleSubmit}
             disabled={isLoading}
+            loading={isLoading}
           >
-            <div className="flex items-center gap-2">
-              <span>Submit</span>
-              {isLoading ? <Spinner /> : <></>}
-            </div>
-          </div>
+            Submit
+          </LoadingButton>
         )}
       </div>
     </div>

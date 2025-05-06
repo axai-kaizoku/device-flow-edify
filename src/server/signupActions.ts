@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { callAPI, callAPIWithToken, getSession } from "./helper";
 import { cache } from "react";
 import { User } from "./userActions";
+import { BASEURL } from "./main";
 
 type RequestOTPProps = {
   message: string;
@@ -22,7 +23,7 @@ export const createSignupLink = cache(async function (teamId: string) {
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<{ message: string; link: string }>(
-      `https://staging.deviceflow.ai/edifybackend/v1/auth/generate-temp-link`, // API endpoint
+      `${BASEURL}/edifybackend/v1/auth/generate-temp-link`, // API endpoint
       "POST", // HTTP method
       {
         orgId: sess?.user.user.orgId?._id,
@@ -51,7 +52,7 @@ type ValidationResponse = {
 export const validateToken = cache(async (token: string) => {
   try {
     const res = await callAPI<ValidationResponse>(
-      `https://staging.deviceflow.ai/edifybackend/v1/auth/validate/temp-link`, // API endpoint
+      `${BASEURL}/edifybackend/v1/auth/validate/temp-link`, // API endpoint
       "POST", // HTTP method
       {
         token: token,
@@ -66,7 +67,7 @@ export const validateToken = cache(async (token: string) => {
 export const signupReqOTP = async (email: string) => {
   try {
     const res = await callAPI<{}>(
-      `https://staging.deviceflow.ai/edifybackend/v1/auth/send/email-otp`,
+      `${BASEURL}/edifybackend/v1/auth/send/email-otp`,
       "POST",
       {
         email: email,
@@ -82,7 +83,7 @@ export const signupReqOTP = async (email: string) => {
 export const verifySignupOTP = async (email: string, otp: string) => {
   try {
     const res = await callAPI<{}>(
-      `https://staging.deviceflow.ai/edifybackend/v1/auth/verify/email-otp`,
+      `${BASEURL}/edifybackend/v1/auth/verify/email-otp`,
       "POST",
       {
         email: email,
@@ -120,7 +121,7 @@ export const signupEmployee = async ({
 }) => {
   try {
     const res = await callAPI<User>(
-      `https://staging.deviceflow.ai/edifybackend/v1/auth/link-register`,
+      `${BASEURL}/edifybackend/v1/auth/link-register`,
       "POST",
       {
         token,

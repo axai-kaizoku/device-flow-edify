@@ -53,6 +53,7 @@ export interface KeyboardDetailsInterface {
   invoiceFile?: File | null;
   warrantyExpiryDate: string;
   brand: string;
+  device_condition: string;
 }
 
 // Combined FormData interface

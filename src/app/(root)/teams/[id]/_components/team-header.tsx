@@ -1,7 +1,7 @@
 import { Team } from "@/server/teamActions";
 import React from "react";
 
-const TeamHeader = ({ image, title, description, manager }: Team) => {
+const TeamHeader = ({ image, title, description, active_manager }: Team) => {
   return (
     <div className="flex gap-4 pl-3  items-center">
       <img
@@ -24,9 +24,7 @@ const TeamHeader = ({ image, title, description, manager }: Team) => {
         <p className="text-sm font-gilroyMedium text-[#ADADAC]">
           Reporting Manager:{" "}
           <span className="font-gilroySemiBold text-sm text-black">
-            {`${manager![0]?.first_name ?? "No Manager"} ${
-              manager![0]?.last_name ?? ""
-            }`}
+            {`${active_manager ?? "No Manager"} `}
           </span>
         </p>
       </div>

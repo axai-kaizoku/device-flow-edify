@@ -2,6 +2,7 @@
 
 import { AxiosError } from "axios";
 import { callAPI } from "./helper";
+import { BASEURL } from "./main";
 
 type RequestOTPProps = {
   message: string;
@@ -17,9 +18,9 @@ type RequestDemoProps = {
   type: string;
 };
 
-export async function RequestOTP(email: string): Promise<RequestOTPProps> {
+export async function requestOtp(email: string): Promise<RequestOTPProps> {
   const { data } = await callAPI<RequestOTPProps>(
-    "https://staging.deviceflow.ai/edifybackend/v1/auth/request-password-reset",
+    `${BASEURL}/edifybackend/v1/auth/request-password-reset`,
     "POST",
     { email },
     {
@@ -34,13 +35,13 @@ export async function RequestOTP(email: string): Promise<RequestOTPProps> {
 type ResetPassProps = {
   message: string;
 };
-export async function ResetPass(
+export async function resetPassword(
   userId: string,
   otp: string,
   password: string
 ): Promise<ResetPassProps> {
   const { data } = await callAPI<ResetPassProps>(
-    "https://staging.deviceflow.ai/edifybackend/v1/auth/verify-otp",
+    `${BASEURL}/edifybackend/v1/auth/verify-otp`,
     "POST",
     {
       userId,
@@ -63,17 +64,19 @@ export async function requestForDemo({
   cmpname,
   phone,
   type,
+  utm_source,
 }: {
   name: string;
   email: string;
   teamSize: string;
   cmpname: string;
   phone: string;
-  type: string;
+  type?: string;
+  utm_source: string;
 }) {
   let payload = {};
   if (type === "register") {
-    payload = { email, name, company_name: cmpname, phone };
+    payload = { email, name, company_name: cmpname, phone, utm_source };
   } else {
     payload = {
       email,
@@ -81,11 +84,12 @@ export async function requestForDemo({
       company_name: cmpname,
       team_size: teamSize,
       phone,
+      utm_source,
     };
   }
   try {
     const { data } = await callAPI<RequestDemoProps>(
-      "https://staging.deviceflow.ai/edifybackend/v1/auth/user/onboard",
+      `${BASEURL}/edifybackend/v1/auth/user/onboard`,
       "POST",
       { ...payload },
       {

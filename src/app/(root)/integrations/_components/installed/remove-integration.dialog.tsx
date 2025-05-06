@@ -19,8 +19,10 @@ import { useState } from "react";
 export const RemoveIntegration = ({
   id,
   children,
+  platform,
 }: {
   id: string;
+  platform: string;
   children: React.ReactNode;
 }) => {
   const router = useRouter();
@@ -36,6 +38,15 @@ export const RemoveIntegration = ({
         refetchType: "all",
       });
       await queryClient.invalidateQueries({
+        queryKey: ["fetch-people"],
+        exact: false,
+        refetchType: "all",
+      });
+      queryClient.removeQueries({
+        queryKey: ["user-by-integrations", platform],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
         queryKey: ["all-integrations"],
         exact: false,
         refetchType: "all",
@@ -45,7 +56,6 @@ export const RemoveIntegration = ({
         exact: false,
         refetchType: "all",
       });
-      router.push("/integrations/installed");
     },
   });
 
@@ -82,7 +92,10 @@ export const RemoveIntegration = ({
             </Button>
             <Button
               className="w-1/2 rounded-md bg-[#D92D20] text-white"
-              onClick={() => mutation.mutate({ id: id })}
+              onClick={() => {
+                mutation.mutate({ id: id });
+                router.push("/integrations/installed");
+              }}
               disabled={mutation.isPending}
               onMouseEnter={() => router.prefetch("/integrations/installed")}
             >

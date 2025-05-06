@@ -1,14 +1,17 @@
 "use client";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-
-import Link from "next/link";
-import Spinner from "@/components/Spinner";
+import { getSession, signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LoadingButton } from "@/components/buttons/Button";
 import { Input } from "@/components/inputs/Input";
-import { cn } from "@/lib/utils";
 import EyeCloseIcon from "@/icons/EyeCloseIcon";
 import EyeOpenIcon from "@/icons/EyeOpenIcon";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { getGSuiteAuthUrlLogin } from "@/server/orgActions";
+import { useGoogleLogin } from "@react-oauth/google";
+import { toast } from "sonner";
+import axios from "axios";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -17,6 +20,17 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const params = useSearchParams();
+  const error = params.get("error");
+
+  useEffect(() => {
+    if (error) {
+     setTimeout(() => {
+      toast.error("Invalid credentials. Please try again.");
+      router.push('/login')
+     }, 1000);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,11 +120,7 @@ export default function LoginForm() {
           onClick={togglePasswordVisibility}
           className="absolute right-2 top-3 text-sm"
         >
-          {showPassword ? (
-            <EyeCloseIcon/>
-          ) : (
-            <EyeOpenIcon/>
-          )}
+          {showPassword ? <EyeCloseIcon /> : <EyeOpenIcon />}
         </button>
       </div>
 
@@ -118,11 +128,26 @@ export default function LoginForm() {
         <p className="text-sm text-red-600 font-gilroyMedium">{errorMessage}</p>
       )}
 
+      <LoadingButton variant="primary" loading={loading} className="rounded-md">
+        Login
+      </LoadingButton>
       <button
-        type="submit"
-        className="border rounded-[10px] font-gilroyMedium h-[56px] bg-black text-white p-4"
+        type="button"
+        onClick={async () => {
+          const response = await signIn("google", {
+            redirect: false, // don't auto redirect to /api/auth/signin
+             callbackUrl: "https://deviceflow.ai"
+          });
+          router.push("/");
+          router.refresh();
+        }}
+        className="login-with-google-btn font-gilroySemiBold"
       >
-        {loading ? <Spinner size="sm" /> : "Login"}
+        <img
+          src="media/integrations-companies/gsuite-icon.png "
+          className="size-4"
+        />{" "}
+        Login with Google
       </button>
 
       <div className="flex text-[0.8rem] underline  font-gilroyMedium  justify-between items-center text-[#616161] dark:text-white">

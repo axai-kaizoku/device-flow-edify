@@ -1,9 +1,8 @@
 "use client";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
-import { Button } from "@/components/buttons/Button";
+import { LoadingButton } from "@/components/buttons/Button";
 import { createAddress } from "@/server/addressActions";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export const Address = ({ steps }: any) => {
   const [formData, setFormData] = useState<{
@@ -66,10 +65,10 @@ export const Address = ({ steps }: any) => {
     <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">
       <div className=" w-full relative h-full justify-center items-center flex flex-col gap-6">
         <div className="w-full">
-          <div className="text-center text-[25px] font-gilroyBold leading-[normal] text-indigo-950">
+          <div className="text-center text-2xl font-gilroyBold leading-[normal] text-indigo-950">
             Add Address
           </div>
-          <div className="text-center text-xl font-gilroyMedium leading-[normal] text-zinc-400">
+          <div className="text-center  font-gilroyMedium leading-[normal] text-zinc-400">
             Add your address
           </div>
         </div>
@@ -158,16 +157,14 @@ export const Address = ({ steps }: any) => {
 
           {/* Submit and Cancel Buttons */}
           <div className="flex flex-col gap-6  w-full pt-2 justify-between items-center">
-            <Button
-              className="rounded-[9px]  w-full h-[56px] bg-primary text-primary-foreground"
+            <LoadingButton
+              loading={loading}
               type="submit"
+              variant="primary"
+              className="w-full"
             >
-              {loading ? (
-                <Spinner className={spinnerVariants({ size: "sm" })} />
-              ) : (
-                "Submit"
-              )}
-            </Button>
+              Submit
+            </LoadingButton>
           </div>
         </form>
       </div>

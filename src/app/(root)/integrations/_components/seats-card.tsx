@@ -1,12 +1,15 @@
+import { GetAvatar } from "@/components/get-avatar"; // adjust path if needed
 import { cn } from "@/lib/utils";
+import { IntegrationUsers } from "@/server/integrationActions";
+import { User } from "@/server/userActions";
 import { ChevronRight } from "lucide-react";
-import { MemberIcon } from "../../teams/_components/member-icon";
 
 interface SeatsCardProps {
   type: "total" | "unmapped" | "unused";
   totalSeats?: number | string;
   onClick?: () => void;
   className?: string;
+  data?: IntegrationUsers;
 }
 
 const SeatsCard = ({
@@ -14,27 +17,44 @@ const SeatsCard = ({
   totalSeats,
   onClick,
   className,
+  data,
 }: SeatsCardProps) => {
   const renderMembers = () => {
-    if (1) {
-      return Array(3)
-        .fill(null)
-        .map((_, index) => (
-          <MemberIcon
-            key={index}
-            isPlaceholder={false}
-            className="bg-neutral-300 text-neutral-50 size-6"
-          />
-        ));
+    if (!data) return null;
+
+    let usersToRender: User[] = [];
+
+    switch (type) {
+      case "total":
+        usersToRender = data.allUsers;
+        break;
+      case "unmapped":
+        usersToRender = data.missingIntegrationUsers;
+        break;
+      case "unused":
+        // Adjust this depending on your backend data structure
+        usersToRender = []; // Or whatever logic for "unused"
+        break;
     }
-    return (
-      <>
-        <MemberIcon src="https://picsum.photos/300/300" isPlaceholder={false} />
-        <MemberIcon src="https://picsum.photos/301/300" isPlaceholder={false} />
-        <MemberIcon src="https://picsum.photos/302/300" isPlaceholder={false} />
-      </>
-    );
+
+    return usersToRender.slice(0, 3).map((user, index) => (
+      <div
+        key={index}
+        className="size-6 rounded-full overflow-hidden border border-white bg-neutral-200"
+      >
+        {user.image && user.image.length > 0 ? (
+          <img
+            src={user.image}
+            alt={user.first_name || "User"}
+            className="size-6 object-cover"
+          />
+        ) : (
+          <GetAvatar name={user.first_name ?? ""} size={24} />
+        )}
+      </div>
+    ));
   };
+
   return (
     <div
       onClick={onClick}

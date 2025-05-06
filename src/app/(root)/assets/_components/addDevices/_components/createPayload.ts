@@ -47,6 +47,7 @@ export const createPayload = (formData: FormData) => {
         serial_no: formData?.keyboardDetails?.serialNumber,
         device_purchase_date: formData?.keyboardDetails?.purchaseDate,
         warranty_expiary_date: formData?.keyboardDetails?.warrantyExpiryDate,
+        device_condition: formData?.keyboardDetails?.device_condition,
         // invoice: formData.laptopPage2.invoiceFile
       };
       break;
@@ -58,6 +59,7 @@ export const createPayload = (formData: FormData) => {
         serial_no: formData?.monitorDetails?.serialNumber,
         device_purchase_date: formData?.monitorDetails?.purchaseDate,
         warranty_expiary_date: formData?.monitorDetails?.warrantyExpiryDate,
+        device_condition: formData?.monitorDetails?.device_condition,
         // invoice: formData.monitorDetails.invoiceFile
       };
       break;
@@ -69,6 +71,7 @@ export const createPayload = (formData: FormData) => {
         serial_no: formData?.mouseDetails?.serialNumber,
         device_purchase_date: formData?.mouseDetails?.purchaseDate,
         warranty_expiary_date: formData?.mouseDetails?.warrantyExpiryDate,
+        device_condition: formData?.mouseDetails?.device_condition,
         // invoice: formData.mouseDetails.invoiceFile
       };
       break;

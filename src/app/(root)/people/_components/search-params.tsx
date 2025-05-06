@@ -52,26 +52,3 @@ export function SearchInput<T>({
 		/>
 	);
 }
-
-////////////////////// USAGE ////////////////////////
-
-// const [teams, setTeams] = useState(data);
-// 	console.log('triggering');
-
-// 	const handleFilteredTeams = (filtered: typeof data) => {
-// 		setTeams(filtered);
-// 	};
-
-// 	return (
-// 		<CombinedContainer title="Users">
-// 			<div className="flex justify-end w-full">
-// 				<div className="flex gap-5">
-// 					<Search
-// 						data={data}
-// 						onFiltered={handleFilteredTeams}
-// 						filterKey="name"
-// 						queryName="user"
-// 						className="p-2 rounded-md ring-2 ring-muted focus:ring-transparent"
-// 					/>
-// 				</div>
-// 			</div>

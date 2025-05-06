@@ -3,7 +3,7 @@ import React from "react";
 export function Integration({}) {
   return (
     <div
-      className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white max-[380px]:px-4 px-8 pt-24 sm:px-12 lg:px-36 text-center tracking-[0px] text-gray-500`}
+      className={`font-gilroy flex w-full flex-col items-center gap-y-2 bg-white max-[380px]:px-4 px-8 pt-24 sm:px-12 lg:px-36 mb-20 text-center tracking-[0px] text-gray-500`}
     >
       <div className="w-full font-gilroySemiBold leading-6 text-xl max-sm:text-sm max-lg:text-lg">
         Integrations
@@ -64,7 +64,6 @@ export function Integration({}) {
           alt="slack"
           src="/media/landingPage/Slack.webp"
           className=" max-sm:w-[55px] max-sm:h-[35px] max-sm:mt-[13px] md:w-[46px] md:h-[49px] md:mt-5"
-       
         />
         <img
           src="/media/landingPage/zoho.webp"

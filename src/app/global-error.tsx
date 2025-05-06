@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import Link from "next/link";
 
 export default function GlobalError({
@@ -27,6 +28,9 @@ export default function GlobalError({
       <h2 className="text-[0.9rem] md:text-xl lg:text-2xl  font-gilroyMedium font-manuale text-[#6C6C6C] mb-4 text-center">
         We are working on fixing the problem. Be Back Soon
       </h2>
+      <Link className={buttonVariants({ variant: "primary" })} href="/">
+        Go back to home
+      </Link>
     </div>
   );
 }

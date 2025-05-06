@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 import { useState } from "react";
 import { UserForm } from "../../_components/user-form";
 import { CreateUserArgs } from "@/server/userActions";
+import { EmployeeForm } from "../../_components/employee-form";
 
 export default function EditUser({
   children,
@@ -26,7 +27,28 @@ export default function EditUser({
           userData={userData}
           onRefresh={onRefresh}
         />
+        {/* <DatetimePickerDisplayFormat />
+        <EmployeeForm
+          onSubmit={(data) => console.log("Form submitted:", data)}
+          isEditing
+          defaultValues={userData}
+        /> */}
       </SheetContent>
     </Sheet>
   );
 }
+
+// import { DateTimePicker } from "@/components/ui/datetime-picker";
+
+// const DatetimePickerDisplayFormat = () => {
+//   const [date, setDate] = useState<Date | undefined>(undefined);
+//   return (
+//     <DateTimePicker
+//       displayFormat={{ hour24: "MMM dd yyyy" }}
+//       value={date}
+//       onChange={setDate}
+//       className="w-72"
+//       granularity="day"
+//     />
+//   );
+// };

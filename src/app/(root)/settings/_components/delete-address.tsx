@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteAddress } from "@/server/addressActions";
-import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 import { Button } from "@/components/buttons/Button";
 
 export const DeleteAddress = ({
@@ -24,7 +24,6 @@ export const DeleteAddress = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { openToast } = useToast();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -47,13 +46,13 @@ export const DeleteAddress = ({
           <Button
             className="w-1/2 rounded-md bg-[#D92D20] text-white"
             onClick={async () => {
-				if (id) {
-				  await deleteAddress(id);
-				  setOpen(false);
-				  openToast("success", "Address deleted Successfully!");
-				  router.refresh();
-				}
-			  }}
+              if (id) {
+                await deleteAddress(id);
+                setOpen(false);
+                toast.success("Address deleted Successfully!");
+                router.refresh();
+              }
+            }}
           >
             Delete
           </Button>

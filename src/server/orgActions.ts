@@ -1,8 +1,10 @@
-// "use server";
+"use server";
 
 import { cache } from "react";
 import { Address } from "./addressActions";
 import { callAPIWithToken, getSession } from "./helper";
+import { BASEURL } from "./main";
+import { ReportData } from "./checkMateActions";
 
 type OfficeAddress = Address;
 
@@ -44,12 +46,57 @@ export type Org = {
   total_purchased?: number;
 };
 
+export const getGSuiteAuthUrl = cache(
+  async ({
+    bulkUpload,
+    price,
+    redirectUri,
+    onboarding,
+  }: {
+    bulkUpload: boolean;
+    price: {};
+    redirectUri: string;
+    onboarding?: boolean;
+  }) => {
+    const sess = await getSession();
+    const body = {
+      token: sess?.user?.user?.token,
+      bulkUpload: bulkUpload,
+      price,
+      redirectUri: redirectUri,
+      onboarding: onboarding
+    };
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
+      body
+    )}`;
+    return url;
+  }
+);
+
+export const getGSuiteAuthUrlLogin = cache(
+  async ({
+    redirectUri,
+  }: {
+    redirectUri: string;
+  }) => {
+    const sess = await getSession();
+    const body = {
+      token: sess?.user?.user?.token,
+      redirectUri: redirectUri,
+    };
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
+      body
+    )}`;
+    return url;
+  }
+);
+
 export const getCurrentOrg = cache(async function <Org>() {
   try {
     const sess = await getSession();
     const orgId = sess?.user?.user?.orgId?._id;
     const res = await callAPIWithToken<Org>(
-      `https://staging.deviceflow.ai/edifybackend/v1/organisation/${orgId}`, // API endpoint
+      `${BASEURL}/edifybackend/v1/organisation/${orgId}`, // API endpoint
       "GET", // HTTP method
       null
     );
@@ -73,7 +120,7 @@ export async function updateOrg({
 }): Promise<Org> {
   try {
     const res = await callAPIWithToken<Org>(
-      `https://staging.deviceflow.ai/edifybackend/v1/organisation/${id}`, // API endpoint
+      `${BASEURL}/edifybackend/v1/organisation/${id}`, // API endpoint
       "PUT", // HTTP method
       {
         title,
@@ -93,7 +140,7 @@ export const getImageUrl = async (data: { file: File }) => {
 
   try {
     const response = await callAPIWithToken<any>(
-      "https://staging.deviceflow.ai/edifybackend/v1/file/upload",
+      `${BASEURL}/edifybackend/v1/file/upload`,
       "POST",
       formData,
       {
@@ -103,7 +150,41 @@ export const getImageUrl = async (data: { file: File }) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error uploading the image:", error);
     throw error;
+  }
+};
+
+export const getAdminSummaryServer = async () => {
+  try {
+    const sess = await getSession();
+
+    const res = await callAPIWithToken<ReportData>(
+      `${BASEURL}/edifybackend/v1/quality-check/org-report/ai-summary/${sess?.user?.user?.orgId?._id}`,
+      "GET"
+    );
+
+    return res?.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error generating summary");
+  }
+};
+
+// AI Agents actions
+
+export const notifyAIAgents = async () => {
+  try {
+    const sess = await getSession();
+
+    const res = await callAPIWithToken(
+      `${BASEURL}/edifybackend/v1/integration/Ai-notify`,
+      "POST",
+      {
+        email: sess?.user?.user?.email,
+      }
+    );
+    return res?.data;
+  } catch (error) {
+    throw new Error("Error notifying user");
   }
 };

@@ -82,8 +82,8 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                       className="text-neutral-400 size-4"
                     />
                     {/* {JSON.stringify(totalIntegrationData)} */}
-                    <span className="text-sm font-gilroyMedium">{`₹${(totalIntegrationData?.platformTotalCost).toFixed(
-                      2
+                    <span className="text-sm font-gilroyMedium">{`₹${formatNumber(
+                      totalIntegrationData?.platformTotalCost ?? 0
                     )}/Month`}</span>
                   </div>
                   <div className="flex gap-2 items-center">
@@ -97,7 +97,10 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                     </span>
                   </div>
                 </div>
-                <RemoveIntegration id={integrationData?.id ?? ""}>
+                <RemoveIntegration
+                  id={integrationData?.id ?? ""}
+                  platform={integrationData?.platform}
+                >
                   <span
                     className={buttonVariants({
                       className:
@@ -141,16 +144,33 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                     title: "Name",
                     render: (record: UserByIntegration) => (
                       <div className="w-28 flex items-center gap-2">
-                        <img
-                          src={
-                            record?.image ??
-                            "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                          }
-                          alt="Device"
-                          className="w-10 h-10 object-cover rounded-full"
-                        />
-                        <div className="font-gilroySemiBold text-sm text-black text-nowrap">
-                          {record?.name ?? "Guest User"}
+                        {record?.image && record?.image?.length > 0 ? (
+                          <img
+                            src={record?.image}
+                            alt={record?.name}
+                            className="size-10 object-cover rounded-full flex-shrink-0"
+                          />
+                        ) : (
+                          <GetAvatar
+                            name={record?.first_name ?? record?.name ?? "Guest"}
+                          />
+                        )}
+
+                        <div className="relative group">
+                          <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                            {(() => {
+                              const name =
+                                record?.first_name ?? record?.name ?? "Guest";
+                              const displayName =
+                                name.length > 12
+                                  ? `${name.slice(0, 12)}...`
+                                  : name;
+                              return displayName;
+                            })()}
+                          </div>
+                          <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                            {record?.first_name ?? record?.name ?? "Guest"}
+                          </div>
                         </div>
                       </div>
                     ),
@@ -206,16 +226,23 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                       return (
                         <AllIntegrationsDisplay
                           data={record}
+                          isIntegrationFilter
                           allIntegrations={filteredIntegrations}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 -space-x-5">
                             {firstThree.map((i, index) => (
-                              <img
+                              <div
                                 key={index}
-                                src={i.image ?? ""}
-                                className="size-8 object-cover rounded-full"
-                                alt="Integration"
-                              />
+                                className="flex justify-center items-center p-1.5 bg-white rounded-full border"
+                              >
+                                <img
+                                  src={i.image ?? ""}
+                                  width={16}
+                                  height={16}
+                                  className=" object-contain "
+                                  alt="Integration"
+                                />
+                              </div>
                             ))}
 
                             {extraCount > 0 && (
@@ -247,6 +274,8 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
 export default UserByIntegrations;
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { GetAvatar } from "@/components/get-avatar";
+import { formatNumber } from "@/lib/utils";
 
 function IntegrationHeaderSkeleton() {
   return (

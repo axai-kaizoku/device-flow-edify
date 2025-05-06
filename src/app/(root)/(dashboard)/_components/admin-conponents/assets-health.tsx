@@ -1,169 +1,179 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { DashboardDetails } from "./interface";
 import ExcellentDeviceIcon from "@/icons/ExcellentDeviceIcon";
 import UnassignedDeviceIcon from "@/icons/UnassignedDeviceIcon";
 import FairDeviceIcon from "@/icons/FairDeviceIcon";
+import { useRouter } from "next/navigation";
+import { Pie, Cell, PieChart } from "recharts";
 
 export function AssetsHealth({
   dashboardData,
 }: {
   dashboardData: DashboardDetails | null;
 }) {
+  // Define colors for each device condition
+  const CONDITION_COLORS: Record<string, string> = {
+    Excellent: "#63bc48",
+    Good: "#FFAE4C",
+    Fair: "#FF928A",
+  };
+
+  // Define the desired order
+  const CONDITION_ORDER: Record<string, number> = {
+    Excellent: 1,
+    Good: 2,
+    Fair: 3,
+  };
+
+  const totalCount = dashboardData?.deviceConditionData?.reduce(
+    (acc, item) => acc + item.count,
+    0
+  );
+
+  // Prepare and sort data for pie chart
+  const data = dashboardData?.deviceConditionData
+    ?.map((response) => {
+      const titles: { [key: string]: string } = {
+        Excellent: "Excellent",
+        Good: "Good",
+        Fair: "Fair",
+      };
+
+      if (!titles[response._id]) return null;
+
+      return {
+        name: titles[response._id],
+        value: response.count,
+        color: CONDITION_COLORS[response._id] || "#7086FD", // fallback color
+        order: CONDITION_ORDER[response._id] || 99, // default to high number if not found
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => (a?.order || 0) - (b?.order || 0)); // Sort by the defined order
+
+  // Sort the original deviceConditionData for the list display
+  const sortedDeviceConditionData = dashboardData?.deviceConditionData
+    ?.map(item => ({
+      ...item,
+      order: CONDITION_ORDER[item._id] || 99
+    }))
+    .sort((a, b) => a.order - b.order);
+
   return (
-    <div className={`flex w-full flex-col `}>
-      <div className="font-gilroy flex flex-grow flex-col gap-y-[18px] rounded-2xl border border-solid border-x-[#c0c0c099] border-y-[#c0c0c099] bg-white px-5 pb-[49px] pt-[13px] tracking-[0px] backdrop-blur-[24]">
-        <div className="flex items-center">
-          <div className="text-sm font-gilroySemiBold leading-[23px]">
-            Asset Health Status
-          </div>
-        </div>
-        <div className="flex flex-col flex-wrap items-start justify-center gap-x-5 gap-y-8 text-center text-[11px] font-gilroyMedium leading-[17px] text-slate-600 min-[461px]:flex-nowrap">
-          {(dashboardData?.deviceConditionData?.length || 0) > 0 ? (
-            dashboardData?.deviceConditionData?.map(
-              (response, index: number) => {
-                if (response._id === "Excellent") {
-                  return (
-                    <div className="flex gap-2 items-end w-full">
-                      <div className="flex flex-col w-[75%] items-start gap-2">
-                        <div className="text-sm font-gilroySemiBold leading-[23px]">
-                          Excellent Device
-                        </div>
-                        <div
-                          className="flex w-full h-1.5 bg-[#2FEA9B]/20 rounded-full overflow-hidden dark:bg-neutral-700"
-                          role="progressbar"
-                          aria-valuenow={65}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                        >
-                          <div
-                            className="flex flex-col justify-center rounded-full overflow-hidden text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
-                            style={{ width: "65%",  background:
-                              "linear-gradient(270deg, #2FEA9B 15.5%, #7FDD53 85.5%)", opacity: 1 }}
-                          ></div>
-                        </div>
-                      </div>
-                      <div style={{ width: "10%" }} className="flex gap-1">
-                        <span className="text-sm font-gilroySemiBold leading-[23px]">
-                          546
-                        </span>
-                        <span
-                          className="text-sm font-gilroySemiBold leading-[23px]"
-                          style={{ color: "rgba(0, 0, 0, 0.30)" }}
-                        >
-                          Devices
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }
-                if (response._id === "Good") {
-                  return (
-                    <div className="flex gap-2 items-end w-full">
-                      <div className="flex flex-col w-[75%] items-start gap-2">
-                        <div className="text-sm font-gilroySemiBold leading-[23px]">
-                          Good Device
-                        </div>
-                        <div
-                          className="flex w-full h-1.5 bg-[#2FEA9B]/20 rounded-full overflow-hidden dark:bg-neutral-700"
-                          role="progressbar"
-                          aria-valuenow={45}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                        >
-                          <div
-                            className="flex flex-col justify-center rounded-full overflow-hidden text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
-                            style={{ width: "45%", background:
-                              "linear-gradient(270deg, #2FEA9B 15.5%, #7FDD53 85.5%)", }}
-                          ></div>
-                        </div>
-                      </div>
-                      <div style={{ width: "10%" }} className="flex gap-1">
-                        <span className="text-sm font-gilroySemiBold leading-[23px]">
-                          206
-                        </span>
-                        <span
-                          className="text-sm font-gilroySemiBold leading-[23px]"
-                          style={{ color: "rgba(0, 0, 0, 0.30)" }}
-                        >
-                          Devices
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }
-                if (response._id === "Fair") {
-                  return (
-                    <div className="flex gap-2 items-end w-full">
-                      <div className="flex flex-col w-[75%] items-start gap-2">
-                        <div className="text-sm font-gilroySemiBold leading-[23px]">
-                          Fair Device
-                        </div>
-                        <div
-                          className="flex w-full h-1.5 bg-[#2FEA9B]/20 rounded-full overflow-hidden dark:bg-neutral-700"
-                          role="progressbar"
-                          aria-valuenow={25}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                        >
-                          <div
-                            className="flex flex-col justify-center rounded-full overflow-hidden text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500"
-                            style={{
-                              width: "25%",
-                              background:
-                                "linear-gradient(270deg, #2FEA9B 15.5%, #7FDD53 85.5%)",
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                      <div style={{ width: "10%" }} className="flex gap-1">
-                        <span className="text-sm font-gilroySemiBold leading-[23px]">
-                          106
-                        </span>
-                        <span
-                          className="text-sm font-gilroySemiBold leading-[23px]"
-                          style={{ color: "rgba(0, 0, 0, 0.30)" }}
-                        >
-                          Devices
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }
-              }
-            )
-          ) : (
-            <div className="flex flex-wrap items-start justify-center gap-x-5 gap-y-5 text-center text-[11px] font-gilroyMedium leading-[17px] text-slate-600 min-[461px]:flex-nowrap">
-              <div className="flex w-[127px]  flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
-                <div className="relative z-0 flex items-center  text-center">
-                  <ExcellentDeviceIcon />
-                </div>
-                <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-                  0
-                </div>
-                <div className="text-center  text-[11px]">Excellent Device</div>
-              </div>
-              <div className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
-                <div className="relative z-0 flex items-center  text-center">
-                  <UnassignedDeviceIcon />
-                </div>
-                <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-                  0
-                </div>
-                <div className="text-center">Good Device</div>
-              </div>
-              <div className=" w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
-                <div className="relative z-0 flex items-center  text-center">
-                  <FairDeviceIcon />
-                </div>
-                <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
-                  0
-                </div>
-                <div className="text-center">Fair Device</div>
-              </div>
+    <div className="font-gilroy flex flex-col gap-y-4 rounded-[10px] border border-solid border-gray-200 bg-white px-5 pb-9 pt-3.5 tracking-tight backdrop-blur-[24px]">
+      <div className="text-sm font-gilroySemiBold leading-[23px]">
+        Asset Health Status
+      </div>
+
+      <div className="flex flex-col gap-y-8 h-full">
+        {(dashboardData?.deviceConditionData?.length || 0) > 0 ? (
+          <div className="flex flex-col gap-4">
+            {/* Horizontal Bar */}
+            <div className="w-full h-[37px] rounded-lg overflow-hidden flex">
+              {data?.map((entry, index) => {
+                const widthPercent = totalCount
+                  ? (entry.value / totalCount) * 100
+                  : 0;
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      width: `${widthPercent}%`,
+                      backgroundColor: entry.color,
+                    }}
+                  />
+                );
+              })}
             </div>
-          )}
-        </div>
+
+            {/* Device Condition List */}
+            <div className="flex gap-5 justify-start items-center">
+              {sortedDeviceConditionData?.map((response, index) => {
+                const titles: { [key: string]: string } = {
+                  Excellent: "Excellent",
+                  Good: "Good",
+                  Fair: "Fair",
+                };
+
+                if (!titles[response._id]) return null;
+
+                return (
+                  <div
+                    key={index}
+                    className="flex gap-2 items-center justify-between mt-4"
+                  >
+                    <div className="flex gap-2 items-start justify-center">
+                      <div
+                        className="mt-1.5"
+                        style={{
+                          width: 30,
+                          height: 5,
+                          borderRadius: 100,
+                          background: CONDITION_COLORS[response._id],
+                        }}
+                      />
+
+                      <div className="flex gap-2 flex-col">
+                        <span className="text-black font-gilroySemiBold text-xs xl:text-sm">
+                          {titles[response._id]}
+                        </span>
+                        <span className="text-black font-gilroySemiBold text-xs xl:text-sm  ">
+                          {response.count} Devices
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-4 justify-start">
+            {[
+              {
+                icon: <ExcellentDeviceIcon />,
+                label: "Excellent Device",
+                color: "#6FD195",
+              },
+              {
+                icon: <UnassignedDeviceIcon />,
+                label: "Good Device",
+                color: "#FFAE4C",
+              },
+              {
+                icon: <FairDeviceIcon />,
+                label: "Fair Device",
+                color: "#FF928A",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="w-full sm:w-1/2 lg:w-1/3 flex flex-col items-start gap-2 rounded-[11px] border border-gainsboro bg-white p-4"
+              >
+                <div className="flex items-center">
+                  <div
+                    style={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: item.color,
+                      borderRadius: 4,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                </div>
+                <div className="pt-1 text-lg font-gilroySemiBold leading-[23px]">
+                  0
+                </div>
+                <div className="text-sm text-center">{item.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

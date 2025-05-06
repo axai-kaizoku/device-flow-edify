@@ -8,12 +8,7 @@ const NoProducts = ({filterData, searchQuery}:{filterData:{ram:string; storage: 
   const [loading, setLoading] = useState(false);
   const [requested, setRequested] = useState(false);
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const searchQuery = searchParams?.get("q") || "";
-  // const userData = useSelector((state: RootState) => state.auth.userData);
-
-  // console.log(userData);
-
+  
   const handleRequestLaptop = async () => {
     setLoading(true);
     try {

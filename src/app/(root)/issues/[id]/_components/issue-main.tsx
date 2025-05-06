@@ -53,8 +53,8 @@ const IssueSection = ({ data }: { data: Issues }) => {
       <div className="flex flex-col gap-4 w-[45%]">
         {/* <!-- First Row of First Column --> */}
         <div
-          onClick={() => router.push(`/assets/${data?.deviceDetails?._id}`)}
-          className="px-6 cursor-pointer py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]"
+          // onClick={() => router.push(`/assets/${data?.deviceDetails?._id}`)}
+          className="px-6  py-4 rounded-md bg-[rgba(255,255,255,0.8)] border border-[rgba(195,195,195,0.31)]"
         >
           <div className="flex justify-start items-center  gap-4">
             <img
@@ -272,25 +272,25 @@ const IssueSection = ({ data }: { data: Issues }) => {
               </div>
               <div className="flex gap-3">
                 {data?.status!.toLowerCase() === "open" ? (
-                  <div className="font-gilroyMedium text-xs w-full text-center text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-full">
+                  <div className="font-gilroyMedium text-xs w-full text-center text-[#027A48] bg-[#ECFDF3] py-1.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 ) : (
-                  <div className="font-gilroyMedium text-xs w-full text-center text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-full">
+                  <div className="font-gilroyMedium text-xs w-full text-center text-[#FF0000] bg-[#FED9D9] py-1.5 px-3 rounded-full">
                     {data?.status}
                   </div>
                 )}
 
                 {data?.priority?.toLowerCase() === "low" ? (
-                  <div className="font-gilroyMedium text-xs text-[#027A48] bg-[#ECFDF3] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs text-[#027A48] bg-[#ECFDF3] py-1.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : data?.priority?.toLowerCase() === "medium" ? (
-                  <div className="font-gilroyMedium text-xs text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs bg-[#FFFACB] text-[#FF8000] py-1.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 ) : (
-                  <div className="font-gilroyMedium text-xs text-[#FF0000] bg-[#FED9D9] py-0.5 px-3 rounded-3xl text-center">
+                  <div className="font-gilroyMedium text-xs text-[#FF0000] bg-[#FED9D9] py-1.5 px-3 rounded-3xl text-center">
                     {data?.priority}
                   </div>
                 )}
