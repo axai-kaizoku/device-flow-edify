@@ -1,14 +1,13 @@
 "use client";
 import { CombinedContainer } from "@/components/container/container";
 
-import { getUsersByTeamId, UsersTeamResponse } from "@/server/userActions";
-import TeamHeader from "./_components/team-header";
-import TeamMembers from "./_components/team-members";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import Spinner from "@/components/Spinner";
 import { UserData } from "@/app/store/authSlice";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { getUsersByTeamId, UsersTeamResponse } from "@/server/userActions";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import TeamHeader from "./_components/team-header";
+import TeamMembers from "./_components/team-members";
 
 export default function TeamPage() {
   const user: UserData = useSelector((state: any) => state.auth.userData);

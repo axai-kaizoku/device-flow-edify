@@ -2,20 +2,15 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { getConnectedIntegrations } from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 import { InstalledSection } from "../_components/installed/installed-section";
 import { TotalSpends } from "../_components/total-spends";
 
 export default function InstalledPage() {
-  const searchParams = useSearchParams();
   const { data, status } = useQuery({
     queryKey: ["all-integrations", "installed"],
     queryFn: async () => {
       return await getConnectedIntegrations();
     },
-    // staleTime: 1000 * 60 * 5,
-    // refetchOnMount: false,
-    // refetchOnWindowFocus: false,
   });
 
   return (
@@ -23,15 +18,12 @@ export default function InstalledPage() {
       {status === "pending" ? (
         <InstalledSkeleton />
       ) : (
-        <section className="w-full h-fit relative p-5   bg-white rounded-md border overflow-y-auto hide-scrollbar">
-          {searchParams.get("platform") ?? "" ? <></> : <TotalSpends />}
-          {/* {JSON.stringify(data)} */}
-          <InstalledSection
-            data={data}
-            // data={data?.filter((item) => item?.isConnected)}
-            status={status}
-          />
-        </section>
+        <>
+          <section className="w-full h-fit relative p-5 bg-white rounded-md border overflow-y-auto hide-scrollbar">
+            <TotalSpends />
+            <InstalledSection data={data} status={status} />
+          </section>
+        </>
       )}
     </>
   );

@@ -136,14 +136,23 @@ export const Teams = ({ setSteps }: any) => {
                 </p>
               )}
             </div>
-            <LoadingButton
-              variant="primary"
-              className="w-full"
-              loading={loading}
-              type="submit"
-            >
-              Create Team
-            </LoadingButton>
+            <div className="space-y-1.5">
+              <LoadingButton
+                variant="primary"
+                className="w-full"
+                loading={loading}
+                type="submit"
+              >
+                Create Team
+              </LoadingButton>
+              <Button
+                onClick={() => setSteps(3)}
+                className="w-full"
+                variant="outline"
+              >
+                Skip
+              </Button>
+            </div>
           </form>
         </div>
       ) : (

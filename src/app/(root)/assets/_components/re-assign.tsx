@@ -214,7 +214,7 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
                   <img
                     src={
                       formData?.device?.image?.[0]?.url ??
-                      "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                      "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                     }
                     alt="team-image"
                     className="w-16 h-16 p-1 border object-contain rounded-full "
@@ -343,19 +343,11 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
 
               {formData?.user && (
                 <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
-                  {formData?.user?.image &&
-                  formData?.user?.image?.length > 0 ? (
-                    <img
-                      src={formData?.user?.image}
-                      alt={formData?.user?.first_name}
-                      className="size-14 object-cover rounded-full flex-shrink-0"
-                    />
-                  ) : (
-                    <GetAvatar
-                      name={formData?.user?.first_name ?? ""}
-                      size={56}
-                    />
-                  )}
+                  <GetAvatar
+                    name={formData?.user?.first_name ?? ""}
+                    size={56}
+                  />
+
                   <div className=" w-full flex flex-col justify-center ">
                     <h1 className="text-black font-gilroySemiBold text-base ">
                       {formData?.user?.first_name ?? ""}

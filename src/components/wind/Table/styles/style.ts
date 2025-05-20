@@ -53,7 +53,7 @@ export const TableFooter = styled.footer`
 `;
 export const TableBody = styled.tbody``;
 export const TableContainer = styled.div`
-  height: 66vh;
+  height: 55vh;
 
   overflow: overlay;
   text-align: center;

@@ -107,7 +107,7 @@ export const SelectDropdown = ({
           htmlFor={label}
           className="absolute start-4 top-0 block  -translate-y-1/2 bg-background font-gilroyMedium px-1 text-sm  text-foreground"
         >
-          {label}*
+          {label.length !== 0 && `${label}*` }
         </label>
         <div
           id={label}

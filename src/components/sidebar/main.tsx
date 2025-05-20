@@ -11,6 +11,7 @@ import {
   SearchVisualIcon,
   SmartPhone01Icon,
   Store02Icon,
+  Ticket02Icon,
   TvIssueIcon,
   UserGroupIcon,
   UserMultipleIcon,
@@ -56,8 +57,8 @@ export default function SidebarNavigation({ session }: Props) {
     },
     {
       href: "/issues",
-      label: "Issues",
-      icon: <HugeiconsIcon icon={TvIssueIcon} className="mr-3 size-5" />,
+      label: "Tickets",
+      icon: <HugeiconsIcon icon={Ticket02Icon} className="mr-3 size-5" />,
     },
     {
       href: "/diagnostic",
@@ -71,11 +72,11 @@ export default function SidebarNavigation({ session }: Props) {
         <HugeiconsIcon icon={ChartRelationshipIcon} className="mr-3 size-5" />
       ),
     },
-    {
-      href: "/reports",
-      label: "Reports",
-      icon: <HugeiconsIcon icon={File02Icon} className="mr-3 size-5" />,
-    },
+    // {
+    //   href: "/reports",
+    //   label: "Reports",
+    //   icon: <HugeiconsIcon icon={File02Icon} className="mr-3 size-5" />,
+    // },
   ];
 
   const peopleLinks = [
@@ -113,6 +114,11 @@ export default function SidebarNavigation({ session }: Props) {
       label: "Diagnostics",
       icon: <HugeiconsIcon icon={SearchVisualIcon} className="mr-3 size-5" />,
     },
+    {
+      href: "/tickets",
+      label: "Tickets",
+      icon: <HugeiconsIcon icon={Ticket02Icon} className="mr-3 size-5" />,
+    },
   ];
 
   return (
@@ -130,9 +136,13 @@ export default function SidebarNavigation({ session }: Props) {
           {[2, 3, 4].includes(session?.user?.user?.role) ? (
             <nav className="space-y-1.5">
               {links.map((link, index) => {
+                // const isActive = pathname.startsWith(link.href);
                 const isActive =
-                  pathname === link.href ||
-                  (link.href === "/store" && pathname.includes("store"));
+                  link.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(link.href);
+                // (link.href === "/" && pathname === "/") ||
+                // (link.href !== "/" && pathname.startsWith(link.href));
 
                 return (
                   <div key={index}>
@@ -203,7 +213,15 @@ export default function SidebarNavigation({ session }: Props) {
                 </p>
                 <div className="mt-2 space-y-1.5">
                   {assetsLinks?.map((link, index) => {
-                    const isActive = pathname === link.href;
+                    // const isActive = pathname === link.href;
+                    // const isActive = pathname.startsWith(link.href);
+                    const isIntegrationsParent = link.href === "/integrations";
+                    const isChildOfIntegrations =
+                      pathname.startsWith("/integrations/") &&
+                      !pathname.endsWith("/integrations");
+
+                    const isActive =
+                      !isIntegrationsParent && pathname.startsWith(link.href);
                     return (
                       <div key={index}>
                         <Link
@@ -224,8 +242,18 @@ export default function SidebarNavigation({ session }: Props) {
                         >
                           {link.icon}
                           {link.label}
+                          {(link.label === "Tickets" ||
+                            link.label === "Assets") && (
+                            <div className="bg-[#ECFDF3] flex justify-center items-center ml-2 py-1 px-2 rounded-md">
+                              <div className="inset-0 flex items-center justify-center">
+                                <span className="text-xs text-[#2E8016] font-gilroyMedium">
+                                  New
+                                </span>
+                              </div>
+                            </div>
+                          )}
 
-                          {link.href === "/integrations" && (
+                          {isIntegrationsParent && (
                             <HugeiconsIcon
                               icon={ArrowDown01Icon}
                               className={cn(
@@ -236,39 +264,38 @@ export default function SidebarNavigation({ session }: Props) {
                           )}
                         </Link>
 
-                        {link.href === "/integrations" &&
-                          integrationsExpanded && (
-                            <>
-                              <Link
-                                onMouseEnter={() =>
-                                  router.prefetch("/integrations/discover")
-                                }
-                                href="/integrations/discover"
-                                className={cn(
-                                  "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
-                                  pathname.includes("discover")
-                                    ? "bg-gray-100 hover:bg-gray-100"
-                                    : "hover:bg-gray-50"
-                                )}
-                              >
-                                Discover
-                              </Link>
-                              <Link
-                                onMouseEnter={() =>
-                                  router.prefetch("/integrations/installed")
-                                }
-                                href="/integrations/installed"
-                                className={cn(
-                                  "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
-                                  pathname.includes("installed")
-                                    ? "bg-gray-100 hover:bg-gray-100"
-                                    : "hover:bg-gray-50"
-                                )}
-                              >
-                                Installed
-                              </Link>
-                            </>
-                          )}
+                        {isIntegrationsParent && integrationsExpanded && (
+                          <>
+                            <Link
+                              onMouseEnter={() =>
+                                router.prefetch("/integrations/discover")
+                              }
+                              href="/integrations/discover"
+                              className={cn(
+                                "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
+                                pathname.includes("discover")
+                                  ? "bg-gray-100 hover:bg-gray-100"
+                                  : "hover:bg-gray-50"
+                              )}
+                            >
+                              Discover
+                            </Link>
+                            <Link
+                              onMouseEnter={() =>
+                                router.prefetch("/integrations/installed")
+                              }
+                              href="/integrations/installed"
+                              className={cn(
+                                "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
+                                pathname.includes("installed")
+                                  ? "bg-gray-100 hover:bg-gray-100"
+                                  : "hover:bg-gray-50"
+                              )}
+                            >
+                              Installed
+                            </Link>
+                          </>
+                        )}
                       </div>
                     );
                   })}
@@ -294,7 +321,7 @@ export default function SidebarNavigation({ session }: Props) {
                       <span>AI Agents</span>
                     </div>
 
-                    <div className="relative w-full  -ml-2">
+                    {/* <div className="relative w-full  -ml-2">
                       <img
                         src="/media/sidebar/coming-soon.svg"
                         alt="coming-soon"
@@ -305,7 +332,7 @@ export default function SidebarNavigation({ session }: Props) {
                           New Feature
                         </span>
                       </div>
-                    </div>
+                    </div> */}
                   </Link>
                 </div>
               </div>
@@ -351,13 +378,25 @@ const SidebarNavItem = (props: {
       onMouseEnter={() => router.prefetch(props.href)}
       className={cn(
         "flex items-center px-3 py-2 text-sm font-gilroyMedium rounded-md text-gray-900",
-        pathname.includes(props.href)
+        // pathname===props.href
+        props.href === "/" && pathname === "/"
+          ? "bg-gray-100 hover:bg-gray-100"
+          : props.href !== "/" && pathname.startsWith(props.href)
           ? "bg-gray-100 hover:bg-gray-100"
           : "hover:bg-gray-50"
       )}
     >
       {props.icon}
       {props.label}
+      {props.label === "Tickets" && (
+        <div className="bg-[#ECFDF3] flex justify-center items-center ml-2 py-1 px-2 rounded-md">
+          <div className="inset-0 flex items-center justify-center">
+            <span className="text-xs text-[#2E8016] font-gilroyMedium">
+              New
+            </span>
+          </div>
+        </div>
+      )}
     </Link>
   );
 };

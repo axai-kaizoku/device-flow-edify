@@ -1,31 +1,26 @@
 "use client";
 
+import { Button, buttonVariants } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import { updateDevice } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 import WarningDelete from "@/icons/WarningDelete";
+import { updateDevice } from "@/server/deviceActions";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const PermanentAssetsDelete = ({
   id,
   children,
-  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
 }) => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   return (

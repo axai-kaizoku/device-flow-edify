@@ -21,7 +21,8 @@ export const StoreBannerCard = ({ className }: { className?: string }) => {
           </h1>
 
           <Link
-            href="/store"
+            href="https://edify.club/"
+            target="_blank"
             className="flex absolute top-6 right-4 cursor-pointer w-fit justify-center font-gilroyMedium items-center bg-black text-white rounded-full text-base gap-1 py-0.5 px-3"
           >
             Visit <ChevronRight className="size-4" />

@@ -157,7 +157,7 @@ export const Table = ({
   const handleHeaderCheckBox = (checked: boolean) => {
     setSelectedRowIds((prevSelected) => {
       const newSelected = new Set<string>(prevSelected);
-  
+
       if (checked) {
         // Add all rows from the current data
         initialData.forEach((row) => {
@@ -169,13 +169,13 @@ export const Table = ({
           newSelected.delete(row[`${checkboxSelection?.uniqueField}`]);
         });
       }
-  
+
       // Callback to notify parent about selection changes
       const selectedItems = initialData.filter((data) =>
         newSelected.has(data?.[`${checkboxSelection?.uniqueField}`])
       );
       checkboxSelection?.onSelectionChange?.(selectedItems);
-  
+
       return newSelected;
     });
   };
@@ -183,13 +183,12 @@ export const Table = ({
   const handleHeaderCheckBoxState = () => {
     // If no rows are selected, return false
     if (selectedRowIds.size === 0) return false;
-    
+
     // If all rows in the current data are selected, return true
-    return initialData.every((row) => 
+    return initialData.every((row) =>
       selectedRowIds.has(row[`${checkboxSelection?.uniqueField}`])
     );
   };
-  
 
   const handleASCSorting = (fieldName: string, sortBy?: string) => {
     setActiveColumn(fieldName);
@@ -402,7 +401,7 @@ export const Table = ({
         />
       ) : initialData?.length > 0 ? (
         <div>
-          <TableContainer className={`${className} hide-scrollbar`}>
+          <TableContainer className={`${className} `}>
             <TableTag>
               <TableHeader>
                 <TableHeadRow>

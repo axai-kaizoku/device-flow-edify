@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { BASEURL } from "./main";
+import { cache } from "react";
 
 // export async function qualityCheck(userId:string) {
 //   const sess = await getSession();
@@ -140,3 +141,17 @@ export async function downloadReport({ userId }: { userId: string }) {
     throw new Error(error?.response || "Failed to get qc reports");
   }
 }
+
+export const getQcDataById = cache(async function (qcId: string) {
+  try {
+    const res = await callAPIWithToken(
+      `${BASEURL}/edifybackend/v1/quality-check/admin-report/${qcId}`,
+      "GET"
+    );
+
+    return res?.data;
+  } catch (e) {
+    console.error("API error:", e); // 👈 Add this
+    throw new Error((e as AxiosError)?.message);
+  }
+});

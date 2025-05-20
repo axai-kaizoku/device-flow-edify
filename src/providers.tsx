@@ -1,21 +1,22 @@
 // app/providers.tsx   (or wherever your Providers live)
 "use client";
 
-import { useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import {
+  QueryCache,
   QueryClient,
   QueryClientProvider,
-  QueryCache,
 } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
+import { useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
-import store from "./app/store/store";
-import StyledJsxRegistry from "./app/registry";
-import { AlertProvider } from "./hooks/useAlert";
-import { Toaster } from "./components/ui/sonner";
-import "./app/globals.css";
 import GlobalError from "./app/global-error";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import "./app/globals.css";
+import StyledJsxRegistry from "./app/registry";
+import store from "./app/store/store";
+import { Toaster } from "./components/ui/sonner";
+import { AlertProvider } from "./hooks/useAlert";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [maintenance, setMaintenance] = useState(false);
@@ -58,9 +59,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         >
           <StyledJsxRegistry>
             <AlertProvider>
-            <GoogleOAuthProvider clientId="412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com">
-              {children}
-              <Toaster position="top-center" duration={3000} />
+              <GoogleOAuthProvider clientId="412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com">
+                {children}
+                <Toaster position="top-center" duration={3000} />
+                <ReactQueryDevtools initialIsOpen={false} />
               </GoogleOAuthProvider>
             </AlertProvider>
           </StyledJsxRegistry>

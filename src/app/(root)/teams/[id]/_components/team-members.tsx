@@ -51,13 +51,15 @@ const TeamMembers = ({
             alt="No-People Logo"
             className="h-[53vh]"
           />
-          {teamData?. deleted_at === null && (<AddTeamMember teamData={teamData}>
-            <div className={buttonVariants({ variant: "primary" })}>
-              <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
-                Add Members
+          {teamData?.deleted_at === null && (
+            <AddTeamMember teamData={teamData}>
+              <div className={buttonVariants({ variant: "primary" })}>
+                <div className=" group-hover:text-black text-nowrap text-sm font-gilroyMedium">
+                  Add Members
+                </div>
               </div>
-            </div>
-          </AddTeamMember>)}
+            </AddTeamMember>
+          )}
         </div>
       ) : (
         <>
@@ -103,15 +105,7 @@ const TeamMembers = ({
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={() => router.push(`/people/${data?._id}`)}
                       >
-                        {data?.image && data?.image?.length > 0 ? (
-                          <img
-                            src={data?.image}
-                            alt={data?.first_name}
-                            className="size-10 object-cover rounded-full flex-shrink-0"
-                          />
-                        ) : (
-                          <GetAvatar name={data?.first_name ?? ""} />
-                        )}
+                        <GetAvatar name={data?.first_name ?? ""} />
 
                         <div className="relative group">
                           <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">

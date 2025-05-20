@@ -1,7 +1,7 @@
 import Spinner from "@/components/Spinner";
 import { toast } from "sonner";
 import { requestForDemo } from "@/server/loginActions";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const [onRegisterClicked, setOnRegisterClicked] = useState<boolean>(false);
@@ -11,6 +11,22 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
   const handleNext = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
+
+  useEffect(() => {
+    if (currentStep === 3) {
+      if (
+        typeof window !== "undefined" &&
+        (window as any).Calendly &&
+        typeof (window as any).Calendly.initPopupWidget === "function"
+      ) {
+        (window as any).Calendly.initPopupWidget({
+          url: "https://calendly.com/abhinav-prakash-winuall/30min?preview_source=et_card&month=2025-05", // ← replace this
+        });
+      } else {
+        console.error("Calendly widget is not available.");
+      }
+    }
+  }, [currentStep]);
 
   const handleBack = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
@@ -444,9 +460,9 @@ export const CTA = forwardRef<HTMLDivElement>((_, ref) => {
                         handleSubmit();
                       }
                     }}
-                    className="font-inter w-[123px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
+                    className="font-inter w-[223px] rounded-xl bg-white px-4 py-3 text-center leading-6 tracking-[-0.2px] text-zinc-800 border border-zinc-800 hover:border-gray-200 cursor-pointer"
                   >
-                    {loading ? <Spinner /> : "Submit"}
+                    {loading ? <Spinner /> : "Schedule Demo"}
                   </div>
                 </div>
               </div>

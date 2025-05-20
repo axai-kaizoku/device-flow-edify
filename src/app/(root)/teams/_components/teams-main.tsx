@@ -15,7 +15,6 @@ import { RestoreTeam } from "./restore-team";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
-  setTeams?: React.Dispatch<React.SetStateAction<TeamsResponse | null>>;
   onRefresh?: () => Promise<void>;
   status?: string;
   value?: string;
@@ -23,7 +22,6 @@ interface TeamsMainProps {
 
 export default function TeamsMain({
   teams,
-  setTeams,
   status,
   onRefresh,
   value,
@@ -37,6 +35,7 @@ export default function TeamsMain({
   }
   return (
     <>
+      {/* {JSON.stringify(teams.teams)} */}
       {teams?.teams?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
@@ -55,9 +54,7 @@ export default function TeamsMain({
         </div>
       ) : (
         <PaginatedList
-          setTeams={setTeams}
           key="teams-main"
-          tab="active_teams"
           teams={teams!}
           renderButtons={(team) => (
             <>
@@ -72,7 +69,6 @@ export default function TeamsMain({
 
                   <RestoreTeam id={team?._id!}>
                     <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                      {/* <Trash2 className="size-4 cursor-pointer" /> */}
                       <RestoreIcon className="size-4 cursor-pointer" />
                     </div>
                   </RestoreTeam>

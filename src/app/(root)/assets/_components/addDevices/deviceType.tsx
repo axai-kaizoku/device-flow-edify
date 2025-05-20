@@ -107,21 +107,7 @@ const DeviceType = ({
                 device_condition: "Fair",
               }}
               closeBtn={closeBtn}
-              requiredKeys={[
-                "model",
-                "device_name",
-                "serial_no",
-                "device_purchase_date",
-                "ram",
-                "processor",
-                "storage",
-                "warranty_expiary_date",
-                "os",
-                "price",
-                "device_type",
-                "brand",
-                "device_condition",
-              ]}
+              requiredKeys={["device_name", "serial_no"]}
               bulkApi={bulkUploadDevices}
             />
           </div>

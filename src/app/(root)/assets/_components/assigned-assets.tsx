@@ -1,37 +1,30 @@
-import { Device, DeviceResponse, StoreDevice } from "@/server/deviceActions";
+import { Device, StoreDevice } from "@/server/deviceActions";
 
 import { buttonVariants } from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table } from "@/components/wind/Table";
-import DeleteTableIcon from "@/icons/DeleteTableIcon";
+import { FilterAssetsResponse } from "@/server/types/newFilterTypes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import CreateDevice from "./addDevices/_components/create-device";
 import { AssignAsset } from "./assign-asset";
-import { PermanentAssetsDelete } from "./permanent-assets-delete";
 import { RestoreDevice } from "./restore-assets";
-import { SoftDeleteAsset } from "./soft-delete-asset";
 
 function AssignedAssets({
   data,
-  setAssets,
-  onRefresh,
   assetsText = "All Assets",
   status,
   selectedIds,
   setSelectedIds,
-  handleBulkDelete,
   handleSelectionChange,
 }: {
-  data: DeviceResponse | null;
-  setAssets?: any;
+  data: FilterAssetsResponse;
   status?: string;
-  onRefresh?: () => Promise<void>;
   assetsText?: string;
   selectedIds?: string[];
   setSelectedIds?: (ids: string[]) => void;
-  handleBulkDelete?: () => Promise<void>;
   handleSelectionChange?: (selected: string[]) => void;
 }) {
   const router = useRouter();
@@ -41,18 +34,21 @@ function AssignedAssets({
       <>
         {data?.devices?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
-            {/* <assetsIcons.no_assets_display /> */}
             <img src="/media/no_data/assets.svg" alt="No-Assets Logo" />
-            <CreateDevice>
-              <button
-                className={buttonVariants({
-                  variant: "primary",
-                  className: "w-full",
-                })}
-              >
-                Add Device
-              </button>
-            </CreateDevice>
+            {assetsText === "Inactive Assets" ? (
+              <></>
+            ) : (
+              <CreateDevice>
+                <button
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full",
+                  })}
+                >
+                  Add Device
+                </button>
+              </CreateDevice>
+            )}
           </div>
         ) : (
           <div className="rounded-lg border border-gray-200  bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
@@ -115,14 +111,20 @@ function AssignedAssets({
                               router.prefetch(`/assets/${data?._id}`)
                             }
                           >
-                            <img
-                              src={
-                                data?.image?.[0]?.url ??
-                                "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
-                              }
-                              alt="Device"
-                              className="size-10 object-cover rounded-full"
+                            {/* <div className="bg-gray-100 rounded-full py-3 px-2 flex-shrink-0">
+                              <img
+                                src={
+                                  "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
+                                }
+                                alt="Device"
+                                className="w-7 h-5 flex-shrink-0"
+                              />
+                            </div> */}
+                            <GetAvatar
+                              name={data?.custom_model ?? ""}
+                              size={30}
                             />
+
                             <div className="relative group">
                               <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
                                 {data?.custom_model?.length! > 12
@@ -141,29 +143,42 @@ function AssignedAssets({
                           assetsText === "Assigned Assets" ? "Assigned to" : "",
                         render: (record) =>
                           assetsText === "Assigned Assets" ? (
-                            <span>{record?.userName ?? "-"}</span>
+                            <>
+                              <div className="relative group">
+                                <div className=" text-sm truncate max-w-[150px]">
+                                  {record?.userName?.length! > 12
+                                    ? `${record?.userName!.slice(0, 12)}...`
+                                    : record?.userName}
+                                </div>
+                                {record?.userName?.length > 12 && (
+                                  <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                                    {record?.userName ?? "-"}
+                                  </div>
+                                )}
+                              </div>
+                              {/* <span>{record?.userName ?? "-"}</span> */}
+                            </>
                           ) : null,
                       },
                       {
-                        title:
-                          assetsText === "Assigned Assets" ? "Assigned On" : "",
-                        render: (record: StoreDevice) => {
-                          if (assetsText === "Assigned Assets") {
-                            const onboardingDate = record?.assigned_at!;
-                            if (!onboardingDate) return <div>-</div>;
-                            const date = new Date(onboardingDate);
-                            if (isNaN(date.getTime())) return <div>-</div>;
-                            return (
-                              <div>
-                                {date.toLocaleDateString("en-GB", {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                })}
+                        title: "Serial Number",
+                        render: (record) => (
+                          <>
+                            <div className="relative group">
+                              <div className="text-sm truncate max-w-[150px]">
+                                {record?.serial_no?.length! > 12
+                                  ? `${record?.serial_no!.slice(0, 12)}...`
+                                  : record?.serial_no}
                               </div>
-                            );
-                          }
-                        },
+                              {record?.serial_no?.length > 12 && (
+                                <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
+                                  {record?.serial_no ?? "-"}
+                                </div>
+                              )}
+                            </div>
+                            {/* <span>{record?.serial_no ?? "-"}</span> */}
+                          </>
+                        ),
                       },
                       {
                         title: assetsText === "Assigned Assets" ? "Team" : "",
@@ -172,12 +187,7 @@ function AssignedAssets({
                             <span>{record?.teams ?? "-"}</span>
                           ) : null,
                       },
-                      {
-                        title: "Serial Number",
-                        render: (record) => (
-                          <span>{record?.serial_no ?? "-"}</span>
-                        ),
-                      },
+
                       {
                         title:
                           assetsText !== "Assigned Assets"
@@ -228,7 +238,10 @@ function AssignedAssets({
                         },
                       },
                       {
-                        title: "Warranty Status",
+                        title:
+                          assetsText !== "Assigned Assets"
+                            ? "Warranty Status"
+                            : "",
                         render: (record) => {
                           const isWarrantyActive = record?.warranty_expiary_date
                             ? new Date(record.warranty_expiary_date) >
@@ -247,6 +260,26 @@ function AssignedAssets({
                           );
                         },
                       },
+                      // {
+                      //    title: "Acknowledgement",
+                      //   render: (record) => {
+                      //     const isWarrantyActive = record?.warranty_expiary_date
+                      //       ? new Date(record.warranty_expiary_date) >
+                      //         new Date()
+                      //       : false;
+                      //     return (
+                      //       <span
+                      //         className={`${
+                      //           isWarrantyActive
+                      //             ? "text-[#027A48] text-xs bg-[#ECFDF3]"
+                      //             : "text-[#F00] text-xs bg-[#FFE0E0]"
+                      //         } px-3 py-1.5 w-fit flex justify-center items-center rounded-full`}
+                      //       >
+                      //         {isWarrantyActive ? "Active" : "Inactive"}
+                      //       </span>
+                      //     );
+                      //   },
+                      // }
                     ];
 
                     // Filter columns with empty titles and return them
@@ -258,15 +291,15 @@ function AssignedAssets({
                           if (assetsText === "Unassigned Assets") {
                             return (
                               <div className="flex gap-5 -ml-2">
-                                <SoftDeleteAsset
+                                {/* <SoftDeleteAsset
                                   id={record?._id ?? "error"}
                                   onRefresh={onRefresh}
                                 >
                                   <DeleteTableIcon className="size-6" />
-                                </SoftDeleteAsset>
+                                </SoftDeleteAsset> */}
                                 <AssignAsset
                                   device={record}
-                                  onRefresh={onRefresh}
+                                  // onRefresh={onRefresh}
                                 >
                                   <div
                                     className={buttonVariants({
@@ -302,15 +335,15 @@ function AssignedAssets({
                           } else if (assetsText === "Inactive Assets") {
                             return (
                               <div className="flex gap-5 -ml-2">
-                                <PermanentAssetsDelete
+                                {/* <PermanentAssetsDelete
                                   id={record?._id!}
                                   onRefresh={onRefresh}
                                 >
                                   <DeleteTableIcon className="size-6" />
-                                </PermanentAssetsDelete>
+                                </PermanentAssetsDelete> */}
                                 <RestoreDevice
                                   id={record?._id!}
-                                  onRefresh={onRefresh}
+                                  // onRefresh={onRefresh}
                                 >
                                   <div
                                     className={buttonVariants({

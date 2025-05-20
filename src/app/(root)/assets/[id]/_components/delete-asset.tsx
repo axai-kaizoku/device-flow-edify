@@ -1,6 +1,10 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/buttons/Button";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +19,7 @@ import WarningDelete from "@/icons/WarningDelete";
 import { deleteDevice } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const DeleteAsset = ({
   id,
@@ -26,26 +31,57 @@ export const DeleteAsset = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { showAlert } = useAlert();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: deleteDevice,
+    onSuccess: () => {
+      setOpen(false);
+      toast.success("Asset deleted Successfully!");
 
-  const handleDelete = async () => {
-    if (id) {
-      try {
-        await deleteDevice(id);
-        setOpen(false);
-        toast.success("Asset deleted Successfully!");
-        router.push("/assets");
-        // router.refresh();
-      } catch (e: any) {
-        showAlert({
-          title: "Failed to delete asset.",
-          description: "Device is assigned to a user. Can't delete asset",
-          isFailure: true,
-          key: "delete-asset-1",
-        });
-        setOpen(false);
-      }
-    }
-  };
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-single-device"],
+        exact: false,
+        refetchType: "all",
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["device-timeline"],
+        exact: false,
+        refetchType: "all",
+      });
+
+      router.push("/assets");
+    },
+    onError: () => {
+      showAlert({
+        title: "Failed to delete asset.",
+        description: "Device is assigned to a user. Can't delete asset",
+        isFailure: true,
+        key: "delete-asset-1",
+      });
+      setOpen(false);
+    },
+  });
+
+  // const handleDelete = async () => {
+  //   if (id) {
+  //     try {
+  //       await deleteDevice(id);
+  //       setOpen(false);
+  //       toast.success("Asset deleted Successfully!");
+  //       router.push("/assets");
+  //       // router.refresh();
+  //     } catch (e: any) {
+  //       showAlert({
+  //         title: "Failed to delete asset.",
+  //         description: "Device is assigned to a user. Can't delete asset",
+  //         isFailure: true,
+  //         key: "delete-asset-1",
+  //       });
+  //       setOpen(false);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -61,7 +97,7 @@ export const DeleteAsset = ({
             Are you sure?
           </DialogTitle>
 
-          <DialogDescription className="p-1 text-sm text-gray-600">
+          <DialogDescription className="p-1 -mt-4 text-sm text-gray-600">
             Are you sure you want to delete this device?
           </DialogDescription>
 
@@ -75,12 +111,13 @@ export const DeleteAsset = ({
             >
               Cancel
             </button>
-            <Button
+            <LoadingButton
               className="w-full rounded-md h-9 bg-[#D92D20] text-white"
-              onClick={handleDelete}
+              onClick={() => mutation.mutate(id)}
+              loading={mutation.isPending}
             >
               Delete
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

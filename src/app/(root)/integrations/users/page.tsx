@@ -32,11 +32,13 @@ const Page = () => {
       ? data?.unmappedUsersCost
       : 0;
 
+  // console.log(data);
   return (
     <div>
       <SeatsSection
         status={status}
         data={seats}
+        unmappedData={data?.usersUnmapped}
         selectedPlatform={currentTab}
         cost={cost}
       />

@@ -34,10 +34,10 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
           {" "}
           <div className=" flex gap-3 w-fit">
             <h1 className="2xl:text-xl text-lg pl-6 font-gilroySemiBold">
-              Issue Reported
+              Ticket Raised
             </h1>
             <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
-              {data?.length} Issues
+              {data?.length} Tickets
             </h1>
           </div>
           <div className="flex flex-col gap-2">
@@ -45,14 +45,14 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
               data={data}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
-              checkboxSelection={{
-                uniqueField: "_id",
-                // logic yet to be done
-                onSelectionChange: (e) => console.log(e),
-              }}
+              // checkboxSelection={{
+              //   uniqueField: "_id",
+              //   // logic yet to be done
+              //   onSelectionChange: (e) => console.log(e),
+              // }}
               columns={[
                 {
-                  title: "Issue ID",
+                  title: "Ticket ID",
                   render: (data: Issues) => (
                     <div
                       className="cursor-pointer w-fit h-fit"
@@ -60,7 +60,7 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
                         router.push(`/devices/issues/${data?._id}`)
                       }
                     >
-                      {data._id}
+                      {data?.code}
                     </div>
                   ),
                   // dataIndex: "_id",
@@ -73,44 +73,66 @@ function EmpIssueTable({ data }: { data: getAllResponse }) {
                       onClick={() => router.push(`/devices/${data?._id}`)}
                     >
                       <img
-                        src={data.deviceDetails?.image ?? "/media/mac.jpeg"}
+                        src={
+                          data?.deviceDetails?.image ??
+                          "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
+                        }
                         alt="Device Logo"
-                        className="border size-10 rounded-full"
+                        className="border size-10 rounded-full object-contain"
                       />
-                      <div>
-                        {data.deviceDetails?.device_name ?? "Device Name"}
-                      </div>
+                      <div>{data?.deviceDetails?.custom_model ?? "-"}</div>
                     </div>
                   ),
                 },
                 {
-                  title: "Serial number",
+                  title: "Serial Number",
                   render: (data: Issues) => (
                     <div className="w-full flex justify-start items-center gap-1">
-                      <div>
-                        {data?.deviceDetails?.serial_no ?? "Serial Number"}
-                      </div>
+                      <div>{data?.deviceDetails?.serial_no ?? "-"}</div>
                     </div>
                   ),
                 },
+                // {
+                //   title: "Raised by",
+                //   render: (data: Issues) => (
+                //     <div className="w-full flex justify-start items-center gap-1">
+                //       <div>
+                //         {data?.openedByDetails?.first_name ?? "-"}
+                //       </div>
+                //     </div>
+                //   ),
+                // },
                 {
-                  title: "Raised by",
-                  dataIndex: "userName",
+                  title: "Ticket Type",
+                  dataIndex: "category",
                 },
                 {
-                  title: "Issue Type",
-                  dataIndex: "title",
-                },
-                {
-                  title: "Issue Status",
+                  title: "Severity",
                   render: (data: Issues) =>
-                    data?.status === "Closed" ? (
-                      <div className="font-gilroySemiBold flex items-center justify-center py-0.5 px-3 w-fit  text-xs text-[#FF0000] bg-[#FED9D9] rounded-full">
-                        {data?.status}
+                    data?.severity === "Critical" ? (
+                      <div className="font-gilroySemiBold flex items-center justify-center py-1 px-2 w-fit  text-xs text-[#FF0000] bg-[#FED9D9] rounded-full">
+                        Critical
+                      </div>
+                    ) : data?.severity === "Low" ? (
+                      <div className="font-gilroySemiBold flex items-center justify-center py-1 px-2 w-fit  text-xs text-[#027A48] bg-[#ECFDF3] rounded-full">
+                        Low
                       </div>
                     ) : (
-                      <div className="font-gilroySemiBold flex items-center justify-center py-0.5 px-3 w-fit  text-xs text-[#027A48] bg-[#ECFDF3] rounded-full">
-                        {data?.status}
+                      <div className="font-gilroySemiBold flex items-center justify-center py-1 px-2 w-fit  text-xs bg-[#FFFACB] text-[#FF8000] rounded-full">
+                        Medium
+                      </div>
+                    ),
+                },
+                {
+                  title: "Ticket Status",
+                  render: (data: Issues) =>
+                    data?.closedAt ? (
+                      <div className="font-gilroySemiBold flex items-center justify-center py-1 px-2 w-fit  text-xs text-[#FF0000] bg-[#FED9D9] rounded-full">
+                        Closed
+                      </div>
+                    ) : (
+                      <div className="font-gilroySemiBold flex items-center justify-center py-1 px-2 w-fit  text-xs text-[#027A48] bg-[#ECFDF3] rounded-full">
+                        Open
                       </div>
                     ),
                 },

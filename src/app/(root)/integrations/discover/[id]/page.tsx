@@ -1,4 +1,9 @@
+import { Metadata } from "next";
 import DiscoverDetailedView from "./_components/discover-detailed-view";
+
+export const metadata: Metadata = {
+  title: "Discover Integrations",
+};
 
 export default async function Page(
   params: Promise<{ params: { id: string } }>

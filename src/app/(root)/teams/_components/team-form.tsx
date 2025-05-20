@@ -9,7 +9,7 @@ import { AsyncSelect } from "@/components/ui/async-select";
 import { useAlert } from "@/hooks/useAlert";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import { cn } from "@/lib/utils";
-import { getImageUrl } from "@/server/orgActions";
+import { getImageUrl } from "@/components/utils/upload";
 import { createTeam, updateTeam } from "@/server/teamActions";
 import { fetchUsers, searchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 export const TeamForm = ({
   closeBtn,
-  isBack=false,
+  isBack = false,
   isEditForm,
   id,
   setBack,
@@ -108,6 +108,7 @@ export const TeamForm = ({
         queryClient.invalidateQueries({
           queryKey: ["teams"],
           exact: false,
+          type: "all",
           refetchType: "all",
         });
         toast.success("Team updated successfully !");
@@ -145,6 +146,7 @@ export const TeamForm = ({
         queryClient.invalidateQueries({
           queryKey: ["teams"],
           exact: false,
+          type: "all",
           refetchType: "all",
         });
       } catch (error: any) {
@@ -478,7 +480,9 @@ export const TeamForm = ({
                 type="button"
                 className="w-1/2"
                 variant="outlineTwo"
-                onClick={() => {setBack ? setBack() : closeBtn(false)}}
+                onClick={() => {
+                  setBack ? setBack() : closeBtn(false);
+                }}
               >
                 Cancel
               </Button>

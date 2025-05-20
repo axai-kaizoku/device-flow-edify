@@ -102,13 +102,21 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
           <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
             <h1 className="font-gilroyMedium text-base">Device Info</h1>
             <div className="flex gap-2 items-center">
+              {/* <div className="bg-gray-100 rounded-full py-3 px-2"> */}
+              {/* <img
+                  src={
+                    "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
+                  }
+                  alt="Device"
+                  className="w-7 h-5 "
+                />
+              </div> */}
               <img
                 src={
-                  data?.image?.[0]?.url ??
-                  "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                 }
                 alt={data?.custom_model ?? "device"}
-                className="size-16 rounded-full object-cover"
+                className="h-10 w-16 "
               />
               <div className="flex flex-col justify-center">
                 <div className="text-[#737373] font-gilroyMedium text-sm">
@@ -137,15 +145,8 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
             <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
               <h1 className="text-base font-gilroyMedium">Assigned Info</h1>
               <div className="flex gap-2 items-center">
-                {assignedTo?.image && assignedTo?.image?.length > 0 ? (
-                  <img
-                    src={assignedTo?.image}
-                    alt={assignedTo?.first_name}
-                    className="size-16 object-cover rounded-full flex-shrink-0"
-                  />
-                ) : (
-                  <GetAvatar name={assignedTo?.first_name ?? ""} size={64} />
-                )}
+                <GetAvatar name={assignedTo?.first_name ?? ""} size={40} />
+
                 <div className="flex flex-col justify-center">
                   <div className="text-black font-gilroySemiBold text-sm">
                     {`${assignedTo?.first_name ?? "-"} ${

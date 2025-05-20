@@ -1,65 +1,34 @@
 "use client";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
+import { Icons } from "@/app/(root)/people/icons";
 import { Table } from "@/components/wind/Table";
 import {
-  deleteIntegrationById,
   IntegrationUsers,
   UserByIntegration,
 } from "@/server/integrationActions";
-import React, { Suspense, useState } from "react";
-import AllIntegrationsDisplay from "./all-integration-display";
-import { useRouter } from "next/navigation";
-import { RemoveIntegration } from "./remove-integration.dialog";
+import { UserIcon, Wallet01FreeIcons } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  User02Icon,
-  UserIcon,
-  Wallet01FreeIcons,
-} from "@hugeicons/core-free-icons";
-import { buttonVariants } from "@/components/buttons/Button";
-import { Icons } from "@/app/(root)/people/icons";
+import { useState } from "react";
+import AllIntegrationsDisplay from "./all-integration-display";
 
 interface UserByIntegrationsProps {
   data?: IntegrationUsers;
   selectedPlatform?: string;
   status?: "error" | "success" | "pending";
+  integrationData?: IntegrationUsers["allUsers"][0]["integrations"][0];
 }
 
-const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
+const UserByIntegrations = ({
   data: totalIntegrationData,
   selectedPlatform,
   status,
-}) => {
+  integrationData,
+}: UserByIntegrationsProps) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  // const router = useRouter();
   const users = totalIntegrationData?.allUsers;
 
-  // Show loader if data is not yet available
-  // if (!data?.length) {
-  //   return (
-  //     <div className="p-4 flex items-center justify-center w-full h-[60vh]">
-  //       <img
-  //         src="/media/logo/no_reports_display.svg"
-  //         alt="No Data"
-  //         className="object-contain"
-  //       />
-  //     </div>
-  //   );
-  // }
-
-  // Find the integration matching the selected platform.
-  const integration = users?.find((item) =>
-    item?.integrations?.some((i) => i?.platform === selectedPlatform)
-  );
-
-  // Assuming each user has one integration per platform, extract it.
-  const integrationData = integration?.integrations?.find(
-    (i) => i?.platform === selectedPlatform
-  );
-
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col p-5 bg-white rounded-lg border overflow-y-auto hide-scrollbar">
       {status === "pending" ? (
         <IntegrationHeaderSkeleton />
       ) : (
@@ -97,37 +66,18 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                     </span>
                   </div>
                 </div>
-                <RemoveIntegration
-                  id={integrationData?.id ?? ""}
-                  platform={integrationData?.platform}
-                >
-                  <span
-                    className={buttonVariants({
-                      className:
-                        "rounded-md text-sm bg-white h-9 text-black  w-fit font-gilroyMedium border hover:border-black",
-                    })}
-                  >
-                    Remove
-                  </span>
-                </RemoveIntegration>
               </div>
             </div>
           </div>
         </div>
       )}
-      {/* {JSON.stringify(data)} */}
+      {/* {JSON.stringify(users)} */}
       <div>
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           <div className="flex justify-between items-center">
             <h1 className="text-base font-gilroyMedium pl-6">Members</h1>
           </div>
 
-          {/* {status === "pending" ? (
-            <div>
-              <DeviceFlowLoader />
-            </div>
-          ) : null} */}
-          {/* {JSON.stringify(data)} */}
           {users?.length !== 0 ? (
             <div className="flex flex-col gap-2">
               <Table
@@ -135,26 +85,14 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                 data={users}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
-                // checkboxSelection={{
-                //   uniqueField: "_id",
-                //   onSelectionChange: setSelectedIds,
-                // }}
                 columns={[
                   {
                     title: "Name",
                     render: (record: UserByIntegration) => (
                       <div className="w-28 flex items-center gap-2">
-                        {record?.image && record?.image?.length > 0 ? (
-                          <img
-                            src={record?.image}
-                            alt={record?.name}
-                            className="size-10 object-cover rounded-full flex-shrink-0"
-                          />
-                        ) : (
-                          <GetAvatar
-                            name={record?.first_name ?? record?.name ?? "Guest"}
-                          />
-                        )}
+                        <GetAvatar
+                          name={record?.first_name ?? record?.name ?? "Guest"}
+                        />
 
                         <div className="relative group">
                           <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
@@ -210,11 +148,9 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                     },
                   },
                   {
-                    title: "Other Integrations",
+                    title: "All Integrations",
                     render: (record: UserByIntegration) => {
-                      const filteredIntegrations = (
-                        record?.integrations ?? []
-                      ).filter((i) => i.platform !== selectedPlatform);
+                      const filteredIntegrations = record?.integrations ?? [];
 
                       if (filteredIntegrations.length === 0) {
                         return <span className="text-gray-400">-</span>;
@@ -226,7 +162,6 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
                       return (
                         <AllIntegrationsDisplay
                           data={record}
-                          isIntegrationFilter
                           allIntegrations={filteredIntegrations}
                         >
                           <div className="flex items-center gap-2 -space-x-5">
@@ -263,8 +198,6 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
               <Icons.no_people_display />
             </div>
           )}
-
-          {/* </Suspense> */}
         </div>
       </div>
     </div>
@@ -273,8 +206,8 @@ const UserByIntegrations: React.FC<UserByIntegrationsProps> = ({
 
 export default UserByIntegrations;
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { GetAvatar } from "@/components/get-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
 
 function IntegrationHeaderSkeleton() {
@@ -295,7 +228,7 @@ function IntegrationHeaderSkeleton() {
                 <Skeleton className="h-4 w-16" /> {/* Seats */}
               </div>
             </div>
-            <Skeleton className="h-9 w-24 rounded-md" /> {/* Remove Button */}
+            {/* <Skeleton className="h-9 w-24 rounded-md" />  */}
           </div>
         </div>
       </div>

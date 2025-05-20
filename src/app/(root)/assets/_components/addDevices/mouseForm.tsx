@@ -5,7 +5,7 @@ import { FormErrors, KeyboardDetailsInterface } from "./_components/types";
 import { Icons } from "@/components/icons";
 import { Trash2, X } from "lucide-react";
 import { toast } from "sonner";
-import { getImageUrl } from "@/server/orgActions";
+import { getImageUrl } from "@/components/utils/upload";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 

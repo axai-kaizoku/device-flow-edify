@@ -7,7 +7,6 @@ import {
 } from "@/app/(root)/people/_components/helper/utils";
 import { Icons } from "@/app/(root)/people/icons";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import { GsuiteDialog } from "@/components/bulk-upload/gsuite-bulk-upload.dialog";
 import { Button, LoadingButton } from "@/components/buttons/Button";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { AsyncSelect } from "@/components/ui/async-select";
@@ -25,6 +24,7 @@ import {
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import BulkUpload from "./BulkUpload";
+import { GsuiteDialogOnboarding } from "@/components/bulk-upload/gsuite-bulk-upload-onboarding";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -193,7 +193,10 @@ export const Employee = ({ setSteps }: any) => {
 
   return (
     <>
-      <GsuiteDialog open={openGsuiteModal} setOpen={setOpenGsuiteModal} />
+      <GsuiteDialogOnboarding open={openGsuiteModal} setOpen={setOpenGsuiteModal} onSuccess={() => {
+        localStorage.setItem('employee-count', '3')
+        setSuccess(true)
+      }} />
 
       <div className="w-full h-screen items-center justify-evenly flex flex-col lg:flex-row p-8">
         {success ? (
@@ -442,7 +445,7 @@ export const Employee = ({ setSteps }: any) => {
                     </div>
                   </div>
 
-                  <div className="flex gap-2 mb-3">
+                  <div className="flex flex-col gap-2 mb-3">
                     <Button
                       type="button"
                       variant="primary"
@@ -453,6 +456,13 @@ export const Employee = ({ setSteps }: any) => {
                       }}
                     >
                       Next
+                    </Button>
+                    <Button
+                      onClick={() => setSteps(4)}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      Skip
                     </Button>
                   </div>
                 </>

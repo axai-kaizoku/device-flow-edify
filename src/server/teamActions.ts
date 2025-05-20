@@ -20,7 +20,7 @@ export type Team = {
   team_code?: string;
   orgId?: string | null;
   __v?: number;
-  active_manager?: string;
+  active_manager?: { _id: string; first_name: string; image?: string }[];
   manager?: {
     _id?: string;
     first_name?: string;

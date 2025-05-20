@@ -22,14 +22,13 @@ const AssetsSection = ({ user }: { user: User }) => {
         <div className="flex flex-col gap-1">
           {user?.devices?.slice(0, 2).map((device: Device) => (
             <div className="flex justify-start items-center gap-4 py-4 border-b">
-              <div className="">
+              <div className="rounded-full border object-contain py-5 px-2">
                 <img
                   src={
-                    device?.image![0]?.url ??
-                    "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                    "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                   }
                   alt="Asset-1"
-                  className="size-16 rounded-full border object-contain"
+                  className="w-16 h-10 "
                 />
               </div>
               <div className="flex flex-col ">

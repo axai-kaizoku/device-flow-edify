@@ -58,15 +58,15 @@ const UserGrid = ({ user }: { user: User }) => {
                     alt="Profile"
                     className="w-full h-full object-cover"
                   /> */}
-                  {user?.image && user?.image?.length > 0 ? (
+                  {/* {user?.image && user?.image?.length > 0 ? (
                     <img
                       src={user?.image}
                       alt={user?.first_name}
                       className="size-full object-cover rounded-full flex-shrink-0"
                     />
-                  ) : (
-                    <GetAvatar name={user?.first_name ?? ""} size={90} />
-                  )}
+                  ) : ( */}
+                  <GetAvatar name={user?.first_name ?? ""} size={90} />
+                  {/* )} */}
                 </div>
 
                 <div className="flex flex-col">
@@ -224,7 +224,7 @@ const UserGrid = ({ user }: { user: User }) => {
                     Reporting Manager
                   </div>
                   <div className="flex justify-start gap-4 items-start w-full">
-                    <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
+                    {/* <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={
                           user?.reporting_manager?.image &&
@@ -239,7 +239,11 @@ const UserGrid = ({ user }: { user: User }) => {
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />
-                    </div>
+                    </div> */}
+                    <GetAvatar
+                      name={user?.reporting_manager?.first_name ?? ""}
+                      size={90}
+                    />
 
                     <div className="flex flex-col relative w-full">
                       <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">

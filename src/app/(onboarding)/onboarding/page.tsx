@@ -7,6 +7,7 @@ import { Employee } from "./Employee";
 import { DeviceComponent } from "./Device";
 import { useRouter } from "next/navigation";
 import { parseAsFloat, useQueryState } from "nuqs";
+import Link from "next/link";
 
 export default function Page() {
   const router = useRouter();

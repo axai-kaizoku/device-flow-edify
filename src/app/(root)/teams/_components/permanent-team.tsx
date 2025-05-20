@@ -67,6 +67,7 @@ export const PermanentTeamDelete = ({
                   queryClient.invalidateQueries({
                     queryKey: ["teams"],
                     exact: false,
+                    type: "all",
                     refetchType: "all",
                   });
 

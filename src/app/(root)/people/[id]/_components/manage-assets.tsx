@@ -33,7 +33,7 @@ export default function ManageAssets({
                   <img
                     src={
                       deviceData?.image?.[0]?.url ??
-                      "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                      "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                     }
                     alt="device-image"
                     className="w-20 h-20 p-1  object-contain border rounded-full "
@@ -56,14 +56,15 @@ export default function ManageAssets({
                   </div>
                 </div> */}
                 <div className=" w-full bg-[#f5f5f5]  rounded-lg p-3 flex items-center gap-4 ">
-                  <img
-                    src={
-                      deviceData?.image?.[0]?.url ??
-                      "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
-                    }
-                    alt="team-image"
-                    className="w-16 h-16 p-1 border object-contain rounded-full "
-                  />
+                  <div className="rounded-full border object-contain py-4 px-2">
+                    <img
+                      src={
+                        "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
+                      }
+                      alt="Asset-1"
+                      className="w-16 h-10 "
+                    />
+                  </div>
                   <div className="w-full flex flex-col justify-center ">
                     <h1 className="text-black font-gilroySemiBold text-xl">
                       {deviceData?.custom_model ?? "Device"}

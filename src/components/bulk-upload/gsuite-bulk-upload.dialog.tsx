@@ -6,7 +6,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { connectGsuiteIntegration, getIntegrationById } from "@/server/integrationActions";
+import {
+  connectGsuiteIntegration,
+  getIntegrationById,
+} from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
@@ -40,9 +43,6 @@ export const GsuiteDialog = ({
     // refetchOnMount: false,
     // refetchOnWindowFocus: false,
   });
-  
-
-  
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -62,23 +62,21 @@ export const GsuiteDialog = ({
     integrationData?.price?.[0]?.price ?? ""
   );
 
+  useEffect(() => {
+    if (integrationId) {
+      getGsuiteResponse();
+    }
+  }, [integrationId]);
 
-useEffect(() => {
-  if(integrationId){
-    getGsuiteResponse()
-  }
-}, [integrationId])
+  const getGsuiteResponse = async () => {
+    const result = await connectGsuiteIntegration({ id: integrationId });
 
-const getGsuiteResponse = async () => {
-  const result = await connectGsuiteIntegration({ id: integrationId });
-
-  if (result.success) {
-   toast.success('Import Success')
-  } else {
-    toast.error(result.error)
-  }
-}
-
+    if (result.success) {
+      toast.success("Import Success");
+    } else {
+      toast.error("Error importing data!");
+    }
+  };
 
   useEffect(() => {
     // Only set the selected plan if it's not already set
@@ -117,7 +115,7 @@ const getGsuiteResponse = async () => {
 
       window.location.href = await getGSuiteAuthUrl({
         bulkUpload: true,
-        onboarding: true,
+        onboarding: false,
         price: newprice,
         redirectUri: currentUrl, // Use the current URL as the redirect URI
       });

@@ -1,9 +1,9 @@
 "use client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { allIntegrationsAvailable } from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
 import { DiscoverSection } from "../_components/discover/discover-section";
-import { allIntegrationsAvailable } from "@/server/integrationActions";
 import { TotalSpends } from "../_components/total-spends";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DiscoverPage() {
   const { data, status } = useQuery({
@@ -12,8 +12,6 @@ export default function DiscoverPage() {
       return allIntegrationsAvailable();
     },
     staleTime: 1000 * 60 * 5,
-    // refetchOnMount: false,
-    // refetchOnWindowFocus: false,
   });
   return (
     <>

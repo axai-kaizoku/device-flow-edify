@@ -25,5 +25,6 @@ export const bulkUploadKeys = [
   "date_of_birth",
   "gender",
   "onboarding_date",
-  "team_code"
+  "team_code",
+  "emp_id",
 ];

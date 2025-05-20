@@ -7,19 +7,16 @@ interface PaginatedListProps {
   teams: TeamsResponse;
   itemsPerPage?: number;
   renderButtons: (team: Team) => JSX.Element;
-  tab?: "active_teams" | "inactive_teams";
-  setTeams: any;
 }
 
 export default function PaginatedList({
   teams,
   renderButtons,
-  tab,
-  setTeams,
 }: PaginatedListProps) {
   return (
-    <div className=" py-2 w-full ">
-      <div className="flex gap-x-4 gap-y-4  flex-wrap w-full ">
+    <div className=" py-2 w-full min-h-0 max-h-[70vh] h-full ">
+      <div className="flex gap-4 flex-wrap w-full ">
+        {/* {JSON.stringify(teams?.)} */}
         {teams?.teams?.map(
           (team) =>
             team && (

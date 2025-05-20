@@ -9,27 +9,54 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ReportFormat } from "./report";
-import { ReportData } from "@/server/checkMateActions";
+import { getQcDataById, ReportData } from "@/server/checkMateActions";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 export default function ReportPreview({
   children,
   data,
+  id,
 }: {
   children: React.ReactNode;
-  data: ReportData;
+  data?: ReportData;
+  id?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const mutation = useMutation({
+    mutationFn: getQcDataById,
+  });
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger>{children}</DialogTrigger>
+        <DialogTrigger
+          onClick={() => {
+            if (id) {
+              // mutation.mutate()
+              mutation.mutate(id);
+            }
+          }}
+        >
+          {children}
+        </DialogTrigger>
         <DialogContent className="rounded-2xl w-full bg-white p-4 shadow-lg max-w-screen-lg max-h-[70%] overflow-y-auto h-full  text-center flex flex-col ">
+          {mutation?.isPending ? (
+            <>
+              <Loader2 className="animate-spin " />
+            </>
+          ) : (
+            <>
+              <ReportFormat data={mutation?.data ?? {}} />
+            </>
+          )}
+
           <DialogTitle className="text-lg sr-only font-gilroySemiBold text-gray-900">
             QC Report
           </DialogTitle>
+          {/* {JSON.stringify(data)}  */}
 
-          <ReportFormat data={data} />
+          <ReportFormat data={data ?? {}} />
           <Button
             className="border w-fit absolute bg-black text-white"
             onClick={() => {

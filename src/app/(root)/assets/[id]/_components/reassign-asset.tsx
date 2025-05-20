@@ -7,7 +7,6 @@ import { AsyncSelect } from "@/components/ui/async-select";
 import { Device, updateDevice } from "@/server/deviceActions";
 import { fetchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,7 +17,6 @@ export default function ReassignAsset({
   children: React.ReactNode;
   deviceData: Device;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -51,10 +49,21 @@ export default function ReassignAsset({
         refetchType: "all",
       });
       queryClient.invalidateQueries({
+        queryKey: ["device-timeline"],
+        refetchType: "all",
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-timeline"],
+        refetchType: "all",
+        exact: false,
+      });
+      queryClient.invalidateQueries({
         queryKey: ["fetch-single-device"],
         exact: false,
         refetchType: "all",
       });
+      // console.log(queryClient.getQueryCache().getAll());
     } catch (error) {
       toast.error("Failed to assign to user !");
     } finally {
@@ -78,7 +87,7 @@ export default function ReassignAsset({
               <img
                 src={
                   deviceData?.image?.[0]?.url ??
-                  "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                 }
                 alt="device-image"
                 className="w-16 h-16 p-1 object-contain border rounded-full "
@@ -163,15 +172,8 @@ export default function ReassignAsset({
 
               {user?.first_name ? (
                 <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
-                  {user?.image && user?.image?.length > 0 ? (
-                    <img
-                      src={user?.image}
-                      alt={user?.first_name}
-                      className="size-14 object-cover rounded-full flex-shrink-0"
-                    />
-                  ) : (
-                    <GetAvatar name={user?.first_name ?? ""} size={56} />
-                  )}
+                  <GetAvatar name={user?.first_name ?? ""} size={56} />
+
                   <div className=" w-full flex flex-col justify-center ">
                     <h1 className="text-black font-gilroySemiBold text-base ">
                       {user?.first_name ?? ""}

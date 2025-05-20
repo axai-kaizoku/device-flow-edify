@@ -1,23 +1,21 @@
 "use client";
 
+import { Button } from "@/components/buttons/Button";
+import Spinner from "@/components/Spinner";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { TriangleAlert } from "lucide-react"; // Importing the icon from lucide-react
-import { Button } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { updateTeam } from "@/server/teamActions";
-import { Icons } from "@/components/icons";
-import { toast } from "sonner";
 import WarningIcon from "@/icons/WarningIcon";
+import { updateTeam } from "@/server/teamActions";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const RestoreTeam = ({
   id,
@@ -63,7 +61,7 @@ export const RestoreTeam = ({
             onClick={() => setOpen(false)}
             disabled={loading} // Disable button while loading
           >
-            {loading ? <Spinner className="w-4 h-4" /> : "Discard"}
+            {loading ? <Spinner className="w-4 h-4" size="sm" /> : "Discard"}
           </Button>
           <Button
             className="w-1/2 rounded-md border border-[#039855] bg-[#039855] shadow-sm text-white"
@@ -75,11 +73,12 @@ export const RestoreTeam = ({
                   queryClient.invalidateQueries({
                     queryKey: ["teams"],
                     exact: false,
+                    type: "all",
                     refetchType: "all",
                   });
                   setOpen(false);
                   toast.success("Team Restored Successfully!");
-                  router.push("/teams");
+                  // router.push("/teams");
                   router.refresh();
                 } catch (e: any) {
                   const errorMessage =
@@ -95,7 +94,7 @@ export const RestoreTeam = ({
             }}
             disabled={loading} // Disable button while loading
           >
-            {loading ? <Spinner /> : "Restore"}
+            {loading ? <Spinner size="sm" /> : "Restore"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,20 +1,14 @@
 "use client";
 
+import { Button } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteTeam } from "@/server/teamActions";
-import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
-import { useAlert } from "@/hooks/useAlert";
-import { toast } from "sonner";
 import WarningDelete from "@/icons/WarningDelete";
 
 export const DeleteModal = ({
@@ -22,7 +16,7 @@ export const DeleteModal = ({
   children,
   open,
   setOpen,
-  type
+  type,
 }: {
   handleBulkAction: () => void;
   children: React.ReactNode;
@@ -36,20 +30,17 @@ export const DeleteModal = ({
         <DialogTrigger>{children}</DialogTrigger>
 
         <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-96 text-center">
-          {/* Warning Icon */}
           <div className="flex justify-center ">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
               <WarningDelete />
             </div>
           </div>
 
-          {/* Title */}
           <DialogTitle className="text-lg font-gilroySemiBold text-gray-900">
             Are you sure?
           </DialogTitle>
 
-          {/* Description */}
-          <DialogDescription className="p-1 text-sm text-gray-600">
+          <DialogDescription className="p-1 -mt-4 text-sm text-gray-600">
             Are you sure you want to {type.toLowerCase()} this?
           </DialogDescription>
 

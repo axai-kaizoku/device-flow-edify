@@ -23,7 +23,7 @@ export const FormField = ({
       htmlFor={id}
       className="absolute start-4 top-0 z-10 block -translate-y-1/2 bg-background px-1 text-sm font-gilroyMedium text-foreground"
     >
-      {label}*
+      {label}
     </label>
     <Input
       id={id}

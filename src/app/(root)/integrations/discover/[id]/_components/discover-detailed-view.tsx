@@ -216,9 +216,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                       </span>
                     </>
                   ) : data?.isConnected ? (
-                    <Link
-                      href={`/integrations/installed?platform=${data?.platform}`}
-                    >
+                    <Link href={`/integrations/installed/${data?.platform}`}>
                       <span
                         className={buttonVariants({
                           className:
@@ -256,7 +254,13 @@ function DiscoverDetailedView({ id }: { id: string }) {
                     target="_blank"
                     className="text-base hover:underline text-[#8A8F98] font-gilroyMedium w-fit"
                   >
-                    {data?.website.split("//")[1]}
+                    {(() => {
+                      const website = data?.website.split("//")[1];
+
+                      return website.includes("www.")
+                        ? website.split("www.")[1]
+                        : website;
+                    })()}
                   </Link>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -346,13 +350,21 @@ function DiscoverDetailedView({ id }: { id: string }) {
                     <h1>Size</h1>
                     <p className="text-[#7f7f7f]">{data?.size}</p>
                   </div>
-                  <div className="flex  font-gilroyMedium flex-col gap-2">
-                    <h1>Documentation</h1>
-                    <p className="text-[#007aff] flex items-center  gap-1">
-                      Click here
-                      <BlueLink />
-                    </p>
-                  </div>
+                  {data?.platform.toLowerCase().includes("suite") ? (
+                    <div className="pointer-events-none"></div>
+                  ) : (
+                    <div className="flex  font-gilroyMedium flex-col gap-2">
+                      <h1>Documentation</h1>
+                      <Link
+                        href={data?.wiki}
+                        target="_blank"
+                        className="text-[#007aff] hover:underline flex items-center  gap-1"
+                      >
+                        Click here
+                        <BlueLink />
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <h1 className="text-xl font-gilroySemiBold mt-2">About</h1>
                 <p className="text-base font-gilroyMedium whitespace-pre-line break-all">

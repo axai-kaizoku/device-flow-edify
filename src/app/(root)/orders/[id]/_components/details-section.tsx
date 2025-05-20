@@ -216,10 +216,8 @@ const DetailSection = ({ order }: { order: any }) => {
             </div>
           </div>
           <div className="w-3/4 2xl:text-lg text-base font-gilroyMedium text-[#667085] flex flex-col gap-2">
-            <div>
-              {order[0]?.cartDetails?.addressId?.city}
-            </div>
-            {/* <div>(+91) 7470873515</div> */}
+            <div>{order[0]?.cartDetails?.addressId?.city}</div>
+            <div>(+91) 9596710910</div>
           </div>
         </div>
         <div className="bg-white rounded-[25px] border border-[rgba(195, 195, 195, 0.31)] flex flex-col gap-[14px] 2xl:py-5 2xl:px-6 py-4 px-5">

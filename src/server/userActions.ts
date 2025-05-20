@@ -49,12 +49,145 @@ type Manager = {
   onboarding_date: string;
   reporting_manager: Manager | null;
 };
+export type Ticket = {
+  _id?: string;
+  category?: string;
+  code?: string;
+  severity?: string;
+  OpenedBy?: string;
+  status?: string;
+};
+export type NewUserResponse = {
+  _id?: string;
+  first_name?: string;
+  email?: string;
+  phone?: string;
+  orgId?: string;
+  tickets: Ticket;
+  role?: number;
+  onboarding_date?: string;
+  deleted_at?: string | null;
+  password?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+  teamId?: string;
+  date_of_birth?: string;
+  designation?: string;
+  employment_type?: string;
+  gender?: string;
+  image?: string;
+  reporting_manager?: {
+    _id?: string;
+    first_name?: string;
+    date_of_birth?: string;
+    gender?: string;
+    email?: string;
+    phone?: string;
+    orgId?: string;
+    role?: number;
+    reporting_manager?: string;
+    employment_type?: string;
+    onboarding_date?: string;
+    deleted_at?: string | null;
+    designation?: string;
+    image?: string;
+    password?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+    teamId?: string;
+  };
+  team?: {
+    _id?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    orgId?: string;
+    deleted_at?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+    team_code?: string;
+    userCount?: number;
+  };
+  devices?: {
+    _id?: string;
+    userId?: string;
+    orgId?: string | null;
+    addressId?: string | null;
+    device_name?: string;
+    asset_serial_no?: string | null;
+    serial_no?: string;
+    device_type?: string;
+    ram?: string;
+    processor?: string;
+    storage?: string[];
+    custom_model?: string;
+    brand?: string;
+    warranty_status?: boolean;
+    warranty_expiary_date?: string;
+    device_purchase_date?: string;
+    purchase_value?: number;
+    payable?: number;
+    os?: string;
+    is_trending?: boolean;
+    latest_release?: boolean;
+    deleted_at?: string | null;
+    assigned_at?: string;
+    image?: {
+      url?: string;
+      _id?: string;
+    }[];
+    device_condition?: string;
+    perfectFor?: string[];
+    deviceFeatures?: string[];
+    config?: string[];
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+    qty?: number;
+    isBestDeal?: boolean;
+    isBestSeller?: boolean;
+    ownership?: string;
+    purchase_order?: string;
+    issues?: {
+      _id?: string;
+      userId?: string;
+      orgId?: string;
+      deviceId?: string;
+      title?: string;
+      images?: string[];
+      status?: string;
+      description?: string;
+      priority?: string;
+      deleted_at?: string | null;
+      closed_on?: string | null;
+      createdAt?: string;
+      issueId?: string;
+      updatedAt?: string;
+      __v?: number;
+    }[];
+  }[];
+  subscriptions?: {
+    id?: string;
+    platform?: string;
+    status?: string;
+    integratedAt?: string;
+    image?: string;
+    description?: string;
+    url?: string;
+    price?: number;
+  }[];
+};
 
 export type User = {
   deleted_at?: null;
+  name?: string;
   _id?: string;
   integrations?: IntegrationType[];
   subscriptions?: IntegrationType[];
+  missingIntegration?: IntegrationType[];
   totalCostPerUser?: number;
   first_name?: string;
   offerLetter?: string;
@@ -78,7 +211,9 @@ export type User = {
   date_of_birth?: string;
   onboarding_date?: string;
   reporting_manager?: Manager;
-  devices?: number | Device;
+  devices?: number | Device[];
+
+  emp_id?: string;
 };
 
 export type CreateUserArgs = {
@@ -103,6 +238,7 @@ export type CreateUserArgs = {
   date_of_birth?: string;
   onboarding_date?: string;
   reporting_manager?: string;
+  emp_id?: string;
   orgId?: string | null;
 };
 
@@ -321,7 +457,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
   }
 }
 
-export const getUserById = cache(async function <User>(userId: string) {
+export const getUserById = async (userId: string) => {
   try {
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user/${userId}`, // API endpoint
@@ -333,7 +469,7 @@ export const getUserById = cache(async function <User>(userId: string) {
   } catch (e) {
     throw new Error("Failed to fetch user");
   }
-});
+};
 
 export async function updateUser(
   id: string,

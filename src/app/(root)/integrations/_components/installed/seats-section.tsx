@@ -1,15 +1,36 @@
 "use client";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
+import { AsyncSelect } from "@/components/ui/async-select";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Table } from "@/components/wind/Table";
 import {
   IntegrationUsers,
+  mapIntegrationUsers,
   UserByIntegration,
 } from "@/server/integrationActions";
-import React, { useState } from "react";
-import { IntBack } from "../icons";
+import { User } from "@/server/userActions";
+import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import { IntBack } from "../icons";
 import AllIntegrationsDisplay from "./all-integration-display";
-import { GetAvatar } from "@/components/get-avatar";
 
 interface UserByIntegrationsProps {
   data?:
@@ -17,69 +38,20 @@ interface UserByIntegrationsProps {
     | IntegrationUsers["missingIntegrationUsers"];
   selectedPlatform?: string;
   status?: "error" | "success" | "pending";
+  unmappedData?: IntegrationUsers["usersUnmapped"];
 }
 
 const SeatsSection: React.FC<UserByIntegrationsProps> = ({
   data,
   selectedPlatform,
   status,
+  unmappedData,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const router = useRouter();
-  // Show loader if data is not yet available
-  // if (!data?.length) {
-  //   return (
-
-  //   );
-  // }
-
-  // Find the integration matching the selected platform.
-  // const integration = data?.find((item) =>
-  //   item?.integrations?.some((i) => i?.platform === selectedPlatform)
-  // );
-
-  // // Assuming each user has one integration per platform, extract it.
-  // const integrationData = integration?.integrations?.find(
-  //   (i) => i?.platform === selectedPlatform
-  // );
 
   return (
     <div className="flex flex-col ">
-      {/* {integrationData?.platform && (
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex gap-6">
-            <img
-              src={integrationData?.image ?? ""}
-              alt={integrationData?.platform}
-              className="w-28 h-28 object-cover"
-            />
-            <div className="flex flex-col gap-5">
-              
-              <div className="flex gap-5">
-                <div className="flex gap-2 items-center">
-                  <img
-                    src="/media/integrations/purse.png"
-                    className="w-5 h-5"
-                    alt="Amount-logo"
-                  />
-                  <span className="text-sm font-gilroyMedium">$123/Month</span>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <img
-                    src="/media/integrations/user.png"
-                    className="w-5 h-5"
-                    alt="User-logo"
-                  />
-                  <span className="text-sm font-gilroyMedium">
-                    {data?.length} Seats
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-         
-        </div>
-      )} */}
       <div
         className="flex gap-2 items-center mb-2 cursor-pointer hover:underline"
         onClick={() => router.back()}
@@ -188,7 +160,7 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                   },
                 },
                 {
-                  title: "Other Integrations",
+                  title: "Integrations",
                   render: (record: UserByIntegration) => {
                     const filteredIntegrations = (
                       record?.integrations ?? []
@@ -207,7 +179,6 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                         allIntegrations={filteredIntegrations}
                         showArrow={false}
                       >
-                        {/* {JSON.stringify(filteredIntegrations)} */}
                         <div className="flex items-center gap-2 -space-x-5">
                           {firstThree.map((i, index) => (
                             <div
@@ -234,13 +205,24 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                     );
                   },
                 },
+                {
+                  title: "",
+                  render: (record) =>
+                    selectedPlatform === "unmapped" ? (
+                      <MapGuestUser
+                        data={record}
+                        allUsers={unmappedData}
+                        // integrations={record?.integrations}
+                      >
+                        <div className={buttonVariants({ variant: "outline" })}>
+                          Map User
+                        </div>
+                      </MapGuestUser>
+                    ) : null,
+                },
               ]}
             />
           </div>
-          {/* ) : (
-            <div className="p-4 flex items-center justify-center w-full h-[60vh]"></div>
-          )} */}
-          {/* </Suspense> */}
         </div>
       </div>
     </div>
@@ -248,3 +230,212 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
 };
 
 export { SeatsSection };
+
+const MapGuestUser = ({
+  children,
+  data,
+  allUsers,
+}: {
+  children: React.ReactNode;
+  data: User;
+  allUsers?: IntegrationUsers["usersUnmapped"];
+  // integrations?: UserByIntegration["integrations"];
+}) => {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: mapIntegrationUsers,
+    mutationKey: ["map-integration-single-user"],
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["get-integration-by-id"],
+        exact: false,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch-people"],
+        exact: false,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["user-by-integrations", "all-data"],
+        exact: true,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["all-integrations", "discover"],
+        exact: true,
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["all-integrations"],
+        exact: false,
+        refetchType: "all",
+      });
+      toast.success("User mapped successfully");
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error("Failed to map user");
+    },
+  });
+
+  const userIntegration = data?.integrations;
+
+  const getUsers = async (query: string = ""): Promise<User[]> => {
+    try {
+      const unfiltered = allUsers ?? [];
+
+      // Extract all integration IDs from the current user's integrations
+      const integrationIds = (userIntegration ?? []).map((i) => i.id);
+
+      // Filter users who do NOT already have the same integration
+      const filtered = unfiltered.filter((user) => {
+        // If the user is missing one of the integrationIds, they are valid
+        const missingIds = (user.missingIntegration ?? []).map((m) => m.id);
+        return integrationIds.some((id) => missingIds.includes(id));
+      });
+
+      const searchStr = query.toLowerCase();
+
+      const res = filtered?.filter((user) => {
+        const matchesSearch =
+          user?.first_name?.toLowerCase().includes(searchStr) ||
+          user?.email?.toLowerCase().includes(searchStr) ||
+          (user?.name && user?.name.toLowerCase().includes(searchStr)) ||
+          (user?.last_name &&
+            user?.last_name.toLowerCase().includes(searchStr));
+
+        return matchesSearch;
+      });
+
+      return res;
+    } catch (error) {
+      throw new Error("Failed to fetch user");
+    }
+  };
+
+  const updateMappingSelection = (user: User | null) => {
+    setSelectedUser(user);
+  };
+
+  const clearAll = () => {
+    setSelectedUser(null);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>{children}</DialogTrigger>
+      <DialogContent className="rounded-2xl w-full max-w-md">
+        <DialogHeader>
+          <DialogTitle>Map User</DialogTitle>
+        </DialogHeader>
+
+        <div className="w-full space-y-4 px-2 my-3 h-full max-h-[40vh] overflow-y-auto">
+          {/* {JSON.stringify(data)} */}
+          <div className="flex items-center justify-between gap-x-5">
+            <Input
+              value={
+                data?.name ??
+                data?.first_name ??
+                data?.last_name ??
+                data?.email ??
+                ""
+              }
+              defaultValue={
+                data?.name ??
+                data?.first_name ??
+                data?.last_name ??
+                data?.email ??
+                ""
+              }
+              className="rounded-md border border-gray-200 w-[9.5rem]"
+              placeholder="Enter value"
+              readOnly
+            />
+            <HugeiconsIcon
+              icon={ArrowRight02Icon}
+              className="text-gray-900 size-5"
+            />
+
+            <div className="flex flex-col gap-2">
+              <AsyncSelect<User>
+                fetcher={getUsers}
+                fixInputClear={false}
+                renderOption={(user) => (
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col">
+                      <div className="font-gilroyMedium">
+                        {user?.first_name}
+                      </div>
+                      <div className="text-xs font-gilroyRegular text-muted-foreground">
+                        {user?.email}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                getOptionValue={(user) => user?.email}
+                getDisplayValue={() => (
+                  <div className="flex items-center gap-2 text-left w-fit">
+                    <div className="flex flex-col leading-tight">
+                      <div className="font-gilroyMedium truncate min-w-0 w-[6.2rem]">
+                        {selectedUser?.email ?? ""}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                notFound={
+                  <div className="py-6 text-center font-gilroyMedium text-sm">
+                    No users found
+                  </div>
+                }
+                label="User"
+                placeholder="Map to"
+                value={selectedUser?.email || "null"}
+                onChange={(selected: User | null) =>
+                  updateMappingSelection(selected)
+                }
+                width="10rem"
+              />
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="w-full flex gap-2 justify-center items-center">
+          <DialogClose asChild>
+            <Button
+              variant="outlineTwo"
+              type="button"
+              className="w-1/2"
+              onClick={clearAll}
+            >
+              Close
+            </Button>
+          </DialogClose>
+          <LoadingButton
+            variant="primary"
+            type="submit"
+            loading={mutation.isPending}
+            disabled={mutation.isPending}
+            className="w-1/2"
+            onClick={() =>
+              mutation.mutate({
+                payload: [
+                  {
+                    userId: selectedUser?._id,
+                    userIntegrationId: data?._id,
+                    integrationId: userIntegration?.[0]?.id,
+                  },
+                ],
+              })
+            }
+          >
+            Confirm
+          </LoadingButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};

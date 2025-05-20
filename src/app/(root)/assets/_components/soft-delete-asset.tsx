@@ -20,11 +20,9 @@ import { useQueryClient } from "@tanstack/react-query";
 export const SoftDeleteAsset = ({
   id,
   children,
-  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
 }) => {
   const router = useRouter();
   const { showAlert } = useAlert();

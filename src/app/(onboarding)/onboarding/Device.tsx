@@ -292,6 +292,7 @@ export const DeviceComponent = ({
             variant="primary"
             type="button"
             onClick={() => {
+              localStorage.setItem('employee-count', '3')
               router.push("/");
             }}
           >
@@ -412,14 +413,26 @@ export const DeviceComponent = ({
                   Next
                 </LoadingButton>
               ) : (
-                <LoadingButton
-                  type="button"
-                  variant="primary"
-                  onClick={handleSubmit}
-                  loading={isLoading}
-                >
-                  Submit
-                </LoadingButton>
+                <div className="space-y-1.5 w-full">
+                  <LoadingButton
+                    type="button"
+                    variant="primary"
+                    onClick={handleSubmit}
+                    loading={isLoading}
+                  >
+                    Submit
+                  </LoadingButton>
+                  <Button
+                    onClick={() => {
+                      setWelcomeScreen(true);
+                      setSuccess(true);
+                    }}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    Skip
+                  </Button>
+                </div>
               )}
             </div>
           </div>

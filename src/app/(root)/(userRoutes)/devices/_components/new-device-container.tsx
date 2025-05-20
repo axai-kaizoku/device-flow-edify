@@ -20,9 +20,9 @@ import { getIssueByUserId } from "@/server/issueActions";
 import { getDevicesByUserId } from "@/server/deviceActions";
 import Devices from "./devicesPage";
 import Issue from "./issuePage";
+import { ActionBar } from "@/components/action-bar/action-bar";
+import { getAllTicketsEmployee } from "@/server/ticketActions";
 
-const numericFields = ["updatedAt", "createdAt"];
-const numericOperators = [">=", "<=", ">", "<", "Equals"];
 const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
 
 export const DeviceIssueEmployee = () => {
@@ -38,7 +38,7 @@ export const DeviceIssueEmployee = () => {
       if (activeTab === "devices") {
         return getDevicesByUserId();
       } else {
-        return getIssueByUserId();
+        return getAllTicketsEmployee();
       }
     },
     staleTime: 1000 * 60 * 5,
@@ -48,10 +48,19 @@ export const DeviceIssueEmployee = () => {
 
   return (
     <section className="w-full h-fit relative  overflow-y-auto hide-scrollbar">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
-          <div className="flex gap-2">
-            <Select value={activeTab} onValueChange={setActiveTab}>
+      {/* <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        defaultValue="devices"
+        className="w-full"
+      > */}
+        {/* <ActionBar> */}
+          {/* <div className="flex gap-2">
+            <Select
+              value={activeTab}
+              onValueChange={setActiveTab}
+              defaultValue="devices"
+            >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
@@ -63,13 +72,13 @@ export const DeviceIssueEmployee = () => {
                   Assets assigned
                 </SelectItem>
                 <SelectItem value="issues" className="w-full py-2.5 rounded-lg">
-                  Issues Raised
+                  Tickets Raised
                 </SelectItem>
               </SelectContent>
             </Select>
             <div className="relative h-full"></div>
-          </div>
-          <div className="flex gap-2">
+          </div> */}
+          {/* <div className="flex gap-2"> */}
             {/* <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-2 h-full">
               <div className="flex gap-2 justify-center items-center h-full">
                 <Search className=" size-[1.16rem]" />
@@ -82,15 +91,16 @@ export const DeviceIssueEmployee = () => {
                 />
               </div>
             </div> */}
-          </div>
-        </div>
-        <TabsContent value="devices">
+          {/* </div> */}
+        {/* </ActionBar> */}
+        {/* <TabsContent value="devices">
           <Devices devices={data} />
-        </TabsContent>
-        <TabsContent value="issues">
+        </TabsContent> */}
+        {/* <TabsContent value="issues">
           <Issue issues={data} />
-        </TabsContent>
-      </Tabs>
+        </TabsContent> */}
+      {/* </Tabs> */}
+      <Devices devices={data} />
     </section>
   );
 };

@@ -1,8 +1,14 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
+import { buttonVariants } from "@/components/buttons/Button";
+import { MoreFilters } from "@/components/filters/more-filters";
+import { Pagination, PaginationSkeleton } from "@/components/pagination";
+
+import { ActionBar } from "@/components/action-bar/action-bar";
+import { ActionSearchBar } from "@/components/action-bar/action-search-bar";
 import {
   Select,
   SelectContent,
@@ -10,197 +16,104 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { activeUsers, userFilterFields } from "@/server/filterActions";
+import { filterPeople } from "@/server/newFilterActions";
+import type {
+  FilterPeopleArgs,
+  FilterSelection,
+} from "@/server/types/newFilterTypes";
 import { bulkDeleteUsers } from "@/server/userActions";
-import { Plus, Search, X } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { toast } from "sonner";
+import BulkMove from "../teams/[id]/_components/new-bulk-move";
 import InvitePeople from "./[id]/_components/invite-people";
 import { DeleteModal } from "./_components/deleteUserModal";
 import UserMain from "./_components/user-main";
-import BulkMove from "../teams/[id]/_components/new-bulk-move";
-import { buttonVariants } from "@/components/buttons/Button";
-
-const numericFields = ["updatedAt", "createdAt"];
-const numericOperators = [">=", "<=", ">", "<", "Equals"];
-const generalOperators = ["Equals", "Not Equals", "Like", "In", "Not In", "Is"];
 
 export const NewPage = () => {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active-users",
   });
-  const queryClient = useQueryClient();
+  const [rawSearch, setRawSearch] = useQueryState("searchQuery", {
+    defaultValue: "",
+  });
 
-  //  ---------------
-  // const [assets, setAssets] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
-  const actualSearchTerm = useDeferredValue(searchTerm);
-  const [openFilter, setOpenFilter] = useState(false);
-  const [filters, setFilters] = useState<any[]>([]); // Store applied filters
-  const [filterInputs, setFilterInputs] = useState([
-    { field: "", operator: "", value: "" },
-  ]); // Store dynamic filter fields
-  const [availableOperators, setAvailableOperators] =
-    useState(generalOperators);
-  const filterModalRef = useRef<HTMLDivElement>(null);
-  // ----------
+  const [page, setPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState(20);
+
+  const [filters, setFilters] = useState<FilterSelection>({});
+
+  const searchTerm = useDeferredValue(rawSearch);
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const tupleFilters = useMemo(
+    () =>
+      Object.entries(filters).flatMap(([k, vals]) =>
+        vals.map((v) => [k, "Equals", v])
+      ),
+    [filters]
+  );
 
-  // Close filter modal when clicking outside of it
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        filterModalRef.current &&
-        !filterModalRef.current.contains(event.target as Node)
-      ) {
-        setOpenFilter(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const { data, isLoading, error, refetch, status } = useQuery({
-    queryKey: ["fetch-people", activeTab, actualSearchTerm],
-    queryFn: async () => {
-      const query = {
-        searchQuery: actualSearchTerm ?? "",
-        // filters: filters ?? [],
-        isDeleted: activeTab === "active-users" ? false : true,
-      };
-
-      return activeUsers(query);
-    },
-    staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
+  const { data, status } = useQuery({
+    queryKey: [
+      "fetch-people",
+      {
+        tab: activeTab,
+        search: searchTerm,
+        page,
+        pageLimit,
+        filters: tupleFilters,
+      },
+    ],
+    queryFn: () =>
+      filterPeople({
+        type: activeTab.replace("-users", "") as FilterPeopleArgs["type"],
+        searchQuery: searchTerm,
+        filters: tupleFilters,
+        page,
+        pageLimit,
+      }),
+    // staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  const handleApplyFilters = () => {
-    // Validate and create filters
-    const newFilters = filterInputs
-      .filter((f) => f.field && f.operator && f.value)
-      .map((f) => {
-        let finalValue = f.value.trim();
-        if (f.operator === "Like") finalValue = `%${finalValue}%`;
-        return [f.field, f.operator, finalValue];
+  useEffect(() => {
+    setRawSearch("");
+    setPage(1);
+    setPageLimit(20);
+    setFilters({});
+  }, [activeTab]);
+
+  const handleFilterChange = (newFilter: FilterSelection) => {
+    setPage(1); // reset to first page
+    setFilters(newFilter);
+  };
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: ({ selectedIds }: { selectedIds: string[] }) => {
+      const deleteType = activeTab === "active-users" ? "soft" : "hard";
+      return bulkDeleteUsers(selectedIds, deleteType);
+    },
+    onSuccess: () => {
+      setDeleteOpen(false);
+      toast.success(
+        `Users ${
+          activeTab === "active-users" ? "deactivated" : "permanently deleted"
+        } successfully!`
+      );
+      setSelectedIds([]);
+
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-people"],
       });
-
-    setFilters(newFilters); // Set the new filters
-    setOpenFilter(false); // Close filter modal
-  };
-
-  const handleResetFilters = () => {
-    setFilters([]);
-    setSearchTerm("");
-    setFilterInputs([{ field: "", operator: "", value: "" }]);
-  };
-
-  // const handleSearchAndFilter = async () => {
-  //   // Combine search term and filters
-  //   const query = {
-  //     searchQuery: searchTerm || "",
-  //     filters: filters.length > 0 ? filters : [],
-  //   };
-
-  //   try {
-  //     // setLoading(true);
-  //     // let res: UserResponse | null = null;
-  //     // if (activeTab === "active_people") {
-  //     //   res = await activeUsers(query);
-  //     // } else if (activeTab === "inactive_people") {
-  //     //   res = await inActiveUsers(query);
-  //     // }
-  //     // setAssets(res);
-  //     // setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching issues:", error);
-  //     showAlert({
-  //       title: "Something went wrong",
-  //       description: "Failed to fetch data",
-  //       isFailure: true,
-  //       key: "fetch-error-users",
-  //     });
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
-  /**
-   * sd
-   */
-  // const refreshUserData = async () => {
-  //   try {
-  //     // setLoading(true);
-  //     // const query = { searchQuery: searchTerm || "", filters: filters || [] };
-  //     // let res = null;
-  //     // if (activeTab === "active_people") {
-  //     //   res = await activeUsers(query);
-  //     // } else if (activeTab === "inactive_people") {
-  //     //   res = await inActiveUsers(query);
-  //     // }
-  //     // setAssets(res); // Update the state with fresh data
-  //   } catch (error) {
-  //     console.error("Error refreshing data:", error);
-  //     showAlert({
-  //       title: "Something went wrong",
-  //       description: "Failed to refresh data",
-  //       isFailure: true,
-  //       key: "refresh-error",
-  //     });
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
-
-  // Trigger search and filter on searchTerm, filters, or pageLength change
-  // useEffect(() => {
-  //   handleSearchAndFilter();
-  // }, [searchTerm, filters]);
-
-  // Add a new filter input row
-  const addFilter = () => {
-    setFilterInputs([...filterInputs, { field: "", operator: "", value: "" }]);
-  };
-
-  // Remove a specific filter input row
-  const removeFilter = (index: number) => {
-    const updatedFilters = [...filterInputs];
-    updatedFilters.splice(index, 1);
-    setFilterInputs(updatedFilters);
-  };
-
-  // Update available operators based on the selected field
-  const handleFieldChange = (index: number, field: string) => {
-    const updatedFilters = [...filterInputs];
-    updatedFilters[index].field = field;
-    setFilterInputs(updatedFilters);
-
-    if (numericFields.includes(field)) {
-      setAvailableOperators(numericOperators);
-    } else {
-      setAvailableOperators(generalOperators);
-    }
-  };
-
-  const handleInputChange = (index: number, key: string, value: string) => {
-    const updatedFilters: any = [...filterInputs];
-    updatedFilters[index][key] = value;
-    setFilterInputs(updatedFilters);
-  };
-
-  const appliedFiltersCount = filters.length; // Count of applied filters
-
-  // const handleResetFilters = () => {
-  //   // setFilters([]); // Clear all filters
-  //   // setSearchTerm("");
-  //   setFilterInputs([{ field: "", operator: "", value: "" }]); // Reset filters
-  // };
+    },
+    onError: (error) => {
+      toast.error(`Failed to delete Users: ${error}`);
+    },
+  });
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
@@ -208,36 +121,7 @@ export const NewPage = () => {
       return;
     }
 
-    try {
-      // Determine delete type based on active tab
-      const deleteType = activeTab === "active-users" ? "soft" : "hard";
-      const res = await bulkDeleteUsers(selectedIds, deleteType);
-
-      if (res.status !== 200) throw new Error("Failed to delete users");
-
-      setOpen(false);
-      toast.success(
-        `Users ${
-          deleteType === "soft" ? "deactivated" : "permanently deleted"
-        } successfully!`
-      );
-      setSelectedIds([]);
-
-      // Invalidate and refetch the query
-      await queryClient.invalidateQueries({
-        queryKey: ["fetch-people", activeTab, actualSearchTerm],
-        exact: true,
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: ["fetch-people", "inactive-users", actualSearchTerm],
-        exact: true,
-      });
-
-      await refetch();
-    } catch (error) {
-      toast.error(`Failed to delete Users: ${error}`);
-    }
+    bulkDeleteMutation.mutate({ selectedIds });
   };
 
   const handleSelectionChange = (selected: string[]) => {
@@ -246,10 +130,23 @@ export const NewPage = () => {
 
   return (
     <section className="w-full h-fit relative  overflow-hidden">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+      <Tabs
+        value={activeTab}
+        onValueChange={(tab) => {
+          setActiveTab(tab);
+          setSelectedIds([]);
+        }}
+        defaultValue="active-users"
+        className="w-full"
+        key={`${activeTab}people tabs`}
+      >
+        <ActionBar key={`${activeTab}people-action-bar`}>
           <div className="flex gap-2">
-            <Select value={activeTab} onValueChange={setActiveTab}>
+            <Select
+              value={activeTab}
+              onValueChange={setActiveTab}
+              defaultValue="active-users"
+            >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
@@ -267,254 +164,39 @@ export const NewPage = () => {
                   Inactive People
                 </SelectItem>
               </SelectContent>
-            </Select>
-            <div className="relative h-full">
-              {/* <button
-                onClick={() => setOpenFilter(!openFilter)}
-                className="flex  cursor-pointer items-center rounded-[10px] border border-[rgba(0,0,0,0.2)] p-2 gap-1 hover:bg-black hover:text-white hover:border-white group"
-              >
-                <span className="text-[15px]  pr-1 whitespace-nowrap group-hover:text-white text-center font-gilroyMedium rounded-lg">
-                  More Filters
-                </span>
-                {appliedFiltersCount > 0 && (
-                  <span className="font-gilroySemiBold text-xs absolute -right-1 -top-2  bg-red-500 text-white rounded-full size-4 flex justify-center items-center">
-                    <h1 className="text-[8px] font-gilroySemiBold">
-                      {" "}
-                      {appliedFiltersCount}
-                    </h1>
-                  </span>
-                )}
-              </button> */}
-
-              {openFilter && (
-                <div
-                  ref={filterModalRef}
-                  className="absolute top-16 left-0 z-50"
-                >
-                  <>
-                    <div className="flex-col w-fit border border-gray-300 bg-white shadow-xl rounded-lg p-3 flex gap-4">
-                      <div className="flex flex-col gap-3">
-                        {filterInputs?.map((filter, index) => (
-                          <div key={index} className="flex gap-4 items-center">
-                            <div className="relative w-40">
-                              <select
-                                value={filter?.field}
-                                onChange={(e) => {
-                                  handleFieldChange(index, e.target.value);
-                                  const selectElement = e.target;
-                                  selectElement.classList.toggle(
-                                    "text-black",
-                                    selectElement.value !== "Select Field"
-                                  );
-                                  selectElement.classList.toggle(
-                                    "text-gray-400",
-                                    selectElement.value === "Select Field"
-                                  );
-
-                                  const svgIcon = selectElement.nextSibling;
-                                  if (svgIcon) {
-                                    // @ts-ignore
-                                    svgIcon.classList.toggle(
-                                      "text-black",
-                                      selectElement.value !== "Select Field"
-                                    );
-                                    // @ts-ignore
-                                    svgIcon.classList.toggle(
-                                      "text-gray-400",
-                                      selectElement.value === "Select Field"
-                                    );
-                                  }
-                                }}
-                                className="w-full font-gilroyMedium text-gray-400 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] appearance-none pr-10 relative"
-                              >
-                                <option>Select Field</option>
-                                {userFilterFields?.map((key) => (
-                                  <option
-                                    key={key?.value}
-                                    value={key?.value}
-                                    className="text-black"
-                                  >
-                                    {key?.label}
-                                  </option>
-                                ))}
-                              </select>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none text-gray-400"
-                              >
-                                <path d="m6 9 6 6 6-6" />
-                              </svg>
-                              <style jsx>{`
-                                select {
-                                  position: relative;
-                                }
-                                select option {
-                                  position: relative;
-                                  z-index: 10;
-                                }
-                              `}</style>
-                            </div>
-
-                            <div className="relative w-32">
-                              <select
-                                value={filter?.operator}
-                                onChange={(e) => {
-                                  handleInputChange(
-                                    index,
-                                    "operator",
-                                    e.target.value
-                                  );
-                                  const selectElement = e.target;
-                                  selectElement.classList.toggle(
-                                    "text-black",
-                                    selectElement.value !== "Select Field"
-                                  );
-                                  selectElement.classList.toggle(
-                                    "text-gray-400",
-                                    selectElement.value === "Select Field"
-                                  );
-
-                                  const svgIcon = selectElement.nextSibling;
-                                  if (svgIcon) {
-                                    // @ts-ignore
-                                    svgIcon.classList.toggle(
-                                      "text-black",
-                                      selectElement.value !== "Select Field"
-                                    );
-                                    // @ts-ignore
-
-                                    svgIcon.classList.toggle(
-                                      "text-gray-400",
-                                      selectElement.value === "Select Field"
-                                    );
-                                  }
-                                }}
-                                className="w-full font-gilroyMedium text-gray-400 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] appearance-none pr-10"
-                              >
-                                <option value="">Operators</option>
-                                {availableOperators?.map((operator) => (
-                                  <option key={operator} value={operator}>
-                                    {operator}
-                                  </option>
-                                ))}
-                              </select>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none text-gray-400"
-                              >
-                                <path d="m6 9 6 6 6-6" />
-                              </svg>
-                            </div>
-
-                            <input
-                              type="text"
-                              placeholder="Enter value"
-                              value={filter?.value}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  index,
-                                  "value",
-                                  e.target.value
-                                )
-                              }
-                              className="w-32 font-gilroyMedium placeholder:text-gray-400 focus:outline-none bg-[#F4F5F6] px-4 py-2 text-xs rounded-md transition-all duration-300 hover:bg-[#E3E5E8] "
-                            />
-                            {index > 0 && (
-                              <X
-                                className="size-3 cursor-pointer w-4 h-4 text-gray-500 hover:text-gray-700 transition-all duration-200"
-                                onClick={() => removeFilter(index)}
-                              />
-                            )}
-                          </div>
-                        ))}
-                        <div className="h-[1px] bg-gray-200"></div>
-                        <div className="flex justify-between items-center">
-                          <div
-                            onClick={addFilter}
-                            className="cursor-pointer flex items-center gap-2 py-2  text-[#4A4A4A] hover:text-black rounded-md transition-all duration-300"
-                          >
-                            <Plus className="size-4 -mt-0.5 text-gray-500" />
-
-                            <h1 className="text-[#7F7F7F] text-sm font-gilroyRegular">
-                              Add Filter
-                            </h1>
-                          </div>
-                          <div className="flex gap-3">
-                            <div
-                              className="py-2 px-6 bg-[#F4F5F6] hover:bg-[#D1D7DB] text-sm rounded-md cursor-pointer transition-all duration-300"
-                              onClick={handleResetFilters}
-                            >
-                              Clear
-                            </div>
-                            <div
-                              className="py-2 px-6 bg-black text-white text-sm rounded-md cursor-pointer transition-all duration-300 hover:bg-[#333333]"
-                              onClick={handleApplyFilters}
-                            >
-                              Apply
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                </div>
-              )}
-            </div>
+            </Select>{" "}
+            <MoreFilters
+              key={`${activeTab}people`}
+              filterOptions={data?.filterOptions}
+              loading={status === "pending"}
+              onFilterChange={handleFilterChange}
+            />
           </div>
           <div className="flex gap-2">
-            <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-2 h-full">
-              <div className="flex gap-2 justify-center items-center h-full">
-                <Search className=" size-[1.16rem]" />
-                <input
-                  type="text"
-                  value={searchTerm || ""}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search People..."
-                  className={`flex-grow h-full bg-transparent outline-none text-black placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 `}
-                />
-              </div>
-            </div>
-            <InvitePeople>
-              <div className="flex cursor-pointer items-center rounded-lg  border-[rgba(0,0,0,0.2)] px-4 py-2 gap-1 bg-black text-white group">
-                {/* <Send className="  size-4 -mt-0.5" /> */}
-                <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
+            <ActionSearchBar
+              value={rawSearch || ""}
+              onChange={(e) => setRawSearch(e.target.value)}
+              placeholder="Search People..."
+            />
+            {activeTab === "active-users" && (
+              <InvitePeople>
+                <div className={buttonVariants({ variant: "primary" })}>
                   Invite People
-                </span>
-              </div>
-            </InvitePeople>
-
+                </div>
+              </InvitePeople>
+            )}
             {selectedIds.length > 0 && (
               <>
                 <DeleteModal
                   handleBulkAction={handleBulkDelete}
-                  open={open}
-                  setOpen={setOpen}
+                  open={deleteOpen}
+                  setOpen={setDeleteOpen}
                   type="Delete"
+                  key={activeTab}
                 >
-                  <button
-                    // onClick={handleBulkDelete}
-                    className="flex cursor-pointer items-center rounded-lg  border-[rgba(0,0,0,0.2)] px-4 py-2 gap-1 bg-black text-white group"
-                  >
-                    <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
-                      Delete
-                    </span>
-                  </button>
+                  <div className={buttonVariants({ variant: "primary" })}>
+                    Delete
+                  </div>
                 </DeleteModal>
 
                 {activeTab !== "inactive-users" && (
@@ -522,89 +204,58 @@ export const NewPage = () => {
                     selectedIds={selectedIds}
                     setSelectedIds={setSelectedIds}
                   >
-                    <div className={buttonVariants({ variant: "outlineTwo" })}>
-                      <div className="  text-nowrap text-sm font-gilroyMedium">
-                        Bulk Move
-                      </div>
+                    <div className={buttonVariants({ variant: "primary" })}>
+                      Bulk Move
                     </div>
                   </BulkMove>
                 )}
               </>
             )}
           </div>
-        </div>
-        <TabsContent value="active-users">
-          {/* {error ? (
-            <p className="text-red-500 font-gilroyMedium">
-              Failed to fetch data
-            </p>
-          ) : null}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full p-1 overflow-x-hidden">
-            {isLoading ? (
-              Array(5)
-                .fill("a")
-                .map((_, i) => <OrderDetailsCardSkeleton key={i} />)
-            ) : data?.length === 0 ? (
-              <div className="flex flex-col justify-center items-center sm:w-screen w-full overflow-hidden">
-                <img src="empty-cart.svg" className="sm:size-60 size-56" />
-                <div
-                  className={`font-gilroy h-12 w-full text-center font-semibold leading-[19px] tracking-[0px]`}
-                >
-                  <span>
-                    <p className="text-center font-gilroySemiBold  sm:text-xl leading-[19px]">
-                      {"No orders yet. "}
-                    </p>
-                  </span>
-                </div>
-              </div>
-            ) : (
-              data?.map((order, i) => (
-                <OrderDetailsCard key={`${order.orderId}-${i}`} order={order} />
-              ))
-            )}
-          </section> */}
+        </ActionBar>
+        <TabsContent value="active-users" key={"active-users"}>
           <UserMain
             peopleText="Active People"
+            key={"Active People"}
             data={data}
             status={status}
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            handleBulkDelete={handleBulkDelete}
             handleSelectionChange={handleSelectionChange}
-            // setUsers={setAssets}
-            // onRefresh={refreshUserData}
           />
         </TabsContent>
         <TabsContent value="inactive-users">
-          {/* <DeletedUser
-            data={data}
-            
-            onRefresh={async () => {
-              if(activeTab === "active_people"){
-                queryClient.refetchQueries({
-                  queryKey: ["fetch-people", "active-users"],
-                  exact: false,
-                }).then();
-              }else{
-                queryClient.refetchQueries({
-                  queryKey: ["fetch-people", "inactive-users"],
-                  exact: false,
-                }).then();
-              }
-              
-            }}
-          /> */}
           <UserMain
+            key={"Inactive People"}
             status={status}
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            handleBulkDelete={handleBulkDelete}
             handleSelectionChange={handleSelectionChange}
             peopleText="Inactive People"
             data={data}
           />
         </TabsContent>
       </Tabs>
+      {status === "pending" ? (
+        <>
+          <PaginationSkeleton className="mt-3" />
+        </>
+      ) : (
+        <Pagination
+          page={page}
+          pageLimit={pageLimit}
+          key={`${activeTab}people-pagination`}
+          total={data?.total || 0}
+          items={data?.users || []}
+          totalPages={data?.total_pages || 1}
+          onPageChange={setPage}
+          onPageLimitChange={(l) => {
+            setPageLimit(l);
+            setPage(1);
+          }}
+          className="mt-4"
+        />
+      )}
     </section>
   );
 };

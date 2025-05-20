@@ -1,5 +1,5 @@
 "use client";
-import { Button, buttonVariants } from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
@@ -28,10 +28,11 @@ export default function MappingDialogOne({
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
-  response?: AddIntegrationRes;
+  response?: any;
 }) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
 
   const descriptionDetails = [
     "Deactivating unused licenses will revoke access for the associated users.",
@@ -39,10 +40,11 @@ export default function MappingDialogOne({
     "I have read and agree to the Terms & Conditions.",
   ];
 
-  const active = response?.data?.filter((u) => u.userId !== null)?.length;
-  const inActive = response?.data?.filter((u) => u.userId === null)?.length;
+  const active = response?.data?.data?.filter((u) => u.userId !== null)?.length;
+  const inActive = response?.data?.data?.filter((u) => u.userId === null)?.length;
 
   const handleSkipClick = async () => {
+    setLoading(true);
     await queryClient.invalidateQueries({
       queryKey: ["get-integration-by-id"],
       exact: false,
@@ -71,7 +73,9 @@ export default function MappingDialogOne({
     queryClient.removeQueries({ queryKey: ["add-integration-response"] });
     queryClient.removeQueries({ queryKey: ["gsuite-integration-response"] });
     setNextSteps(0);
-    router.replace(`/integrations/installed?platform=${platform}`, {
+    setLoading(false);
+
+    router.replace(`/integrations/installed/${platform}`, {
       scroll: false,
     });
 
@@ -172,28 +176,37 @@ export default function MappingDialogOne({
           <div className="h-[1px] bg-gray-200  -mx-6"></div>
 
           <DialogFooter className="flex w-full items-center justify-between -mb-1.5">
-            <span
-              // href={`/integrations/installed?platform=${platform}`}
-              className={buttonVariants({
-                variant: "outline",
-                className:
-                  "w-[48%] bg-white hover:bg-white hover:border-black cursor-pointer",
-              })}
-              onClick={handleSkipClick}
-              onMouseEnter={() =>
-                router.prefetch(`/integrations/installed?platform=${platform}`)
-              }
-            >
-              Skip
-            </span>
-
-            <Button
-              className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
-              onClick={() => setNextSteps(2)}
-              disabled={inActive === 0}
-            >
-              Map Users
-            </Button>
+            {inActive === 0 ? (
+              <LoadingButton
+                loading={loading}
+                disabled={loading}
+                className="w-full rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
+                onClick={handleSkipClick}
+              >
+                Confirm
+              </LoadingButton>
+            ) : (
+              <>
+                <LoadingButton
+                  loading={loading}
+                  disabled={loading}
+                  variant="outline"
+                  className="w-[48%] bg-white hover:bg-white hover:border-black cursor-pointer"
+                  onClick={handleSkipClick}
+                  onMouseEnter={() =>
+                    router.prefetch(`/integrations/installed/${platform}`)
+                  }
+                >
+                  Skip
+                </LoadingButton>
+                <Button
+                  className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
+                  onClick={() => setNextSteps(2)}
+                >
+                  Map Users
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

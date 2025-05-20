@@ -83,7 +83,7 @@ export default function Diagonistic() {
   }, []);
 
   const fetchQcReports = async (page: number, limit: number) => {
-    if (session === 2) {
+    if (session !== 1) {
       return await qcReportTableAdmin(page, limit);
     } else {
       return await qcReportTable(page, limit);
@@ -92,7 +92,7 @@ export default function Diagonistic() {
 
   useEffect(() => {
     // For admin, fetch data regardless; for others, only if "showTable" is set
-    if (session !== null && (session === 2 || searchParams.get("showTable"))) {
+    if (session !== null && (session !== 1 || searchParams.get("showTable"))) {
       (async () => {
         try {
           const res = await fetchQcReports(pagination.page, pagination.limit);
@@ -147,7 +147,7 @@ export default function Diagonistic() {
   return (
     <Suspense>
       <CombinedContainer title="Diagnostics">
-        {session === 2 ? (
+        {(session !== 1) ? (
           sessLoader || qcReports === null ? (
             <div className="flex items-center justify-center h-full">
               <DeviceFlowLoader />

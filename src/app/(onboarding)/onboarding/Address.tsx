@@ -1,6 +1,6 @@
 "use client";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
-import { LoadingButton } from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { createAddress } from "@/server/addressActions";
 import { useState } from "react";
 
@@ -156,7 +156,7 @@ export const Address = ({ steps }: any) => {
           />
 
           {/* Submit and Cancel Buttons */}
-          <div className="flex flex-col gap-6  w-full pt-2 justify-between items-center">
+          <div className="flex flex-col gap-1.5  w-full pt-2 justify-between items-center">
             <LoadingButton
               loading={loading}
               type="submit"
@@ -165,6 +165,13 @@ export const Address = ({ steps }: any) => {
             >
               Submit
             </LoadingButton>
+            <Button
+              onClick={() => steps(3)}
+              className="w-full"
+              variant="outline"
+            >
+              Skip
+            </Button>
           </div>
         </form>
       </div>

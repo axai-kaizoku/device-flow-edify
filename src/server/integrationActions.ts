@@ -196,7 +196,6 @@ export const connectGsuiteIntegration = async ({ id }: { id: string }) => {
   }
 };
 
-
 export type IntegrationUsers = {
   allUsers: User[];
   missingIntegrationUsers: User[];
@@ -205,6 +204,7 @@ export type IntegrationUsers = {
   platformTotalCost: number;
   totalTeamSubscriptionCost?: number;
   unmappedUsersCost?: number;
+  usersUnmapped?: User[];
 };
 export const getUsersOfIntegration = async ({
   platform,

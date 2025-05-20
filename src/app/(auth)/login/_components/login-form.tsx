@@ -25,10 +25,10 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (error) {
-     setTimeout(() => {
-      toast.error("Invalid credentials. Please try again.");
-      router.push('/login')
-     }, 1000);
+      setTimeout(() => {
+        toast.error("Invalid credentials. Please try again.");
+        router.push("/login");
+      }, 1000);
     }
   }, [error]);
 
@@ -136,7 +136,7 @@ export default function LoginForm() {
         onClick={async () => {
           const response = await signIn("google", {
             redirect: false, // don't auto redirect to /api/auth/signin
-             callbackUrl: "https://deviceflow.ai"
+            callbackUrl: "https://deviceflow.ai",
           });
           router.push("/");
           router.refresh();

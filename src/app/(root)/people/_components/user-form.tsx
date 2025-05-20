@@ -10,7 +10,6 @@ import { SelectDropdown } from "@/components/dropdown/select-dropdown";
 import { useAlert } from "@/hooks/useAlert";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import { cn } from "@/lib/utils";
-import { getImageUrl } from "@/server/orgActions";
 import { fetchTeams, Team } from "@/server/teamActions";
 import {
   bulkUploadUsers,
@@ -27,11 +26,11 @@ import { Trash2 } from "lucide-react";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
-
 import { GsuiteDialog } from "@/components/bulk-upload/gsuite-bulk-upload.dialog";
 import { AsyncSelect } from "@/components/ui/async-select";
 import { Icons } from "../icons";
 import { bulkUploadKeys, employments, genders } from "./helper/utils";
+import { getImageUrl } from "@/components/utils/upload";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -90,22 +89,23 @@ export const UserForm = ({
       ? userData?.role === 4
         ? "CEO"
         : userData.role === 3
-        ? "Upper Management"
-        : "Employee"
+          ? "Upper Management"
+          : "Employee"
       : "",
+    emp_id: userData ? userData?.emp_id : "",
     image: userData ? userData?.image : "",
     designation: userData ? userData?.designation : "",
     team: userData?.team[0]?._id
       ? // @ts-ignore
-        { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
+      { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
-          // @ts-ignore
-          name: userData?.reporting_manager?.email,
-          // @ts-ignore
-          value: userData?.reporting_manager?._id,
-        }
+        // @ts-ignore
+        name: userData?.reporting_manager?.email,
+        // @ts-ignore
+        value: userData?.reporting_manager?._id,
+      }
       : { name: "", value: "" },
     gender: userData ? userData?.gender : "",
     offerLetter: userData ? userData?.offerLetter : "",
@@ -128,6 +128,7 @@ export const UserForm = ({
     employment: "",
     dob: "",
     onboarding: "",
+    emp_id: "",
   });
 
   useEffect(() => {
@@ -142,12 +143,12 @@ export const UserForm = ({
     const newErrors = {
       firstN: formData.firstN ? "" : "Name is required",
       // image: formData.image ? "" : "Image is required",
-      dob: formData.dob
-        ? new Date(formData.dob) > today
-          ? "Invalid DOB"
-          : ""
-        : "Date of birth is required",
-      gender: formData.gender ? "" : "Gender is required",
+      // dob: formData.dob
+      //   ? new Date(formData.dob) > today
+      //     ? "Invalid DOB"
+      //     : ""
+      //   : "Date of birth is required",
+      // gender: formData.gender ? "" : "Gender is required",
       email: formData.email
         ? emailRegex.test(formData.email)
           ? ""
@@ -167,18 +168,18 @@ export const UserForm = ({
 
   const validateStepTwo = () => {
     const newErrors = {
-      designation: formData.designation ? "" : "Designation is required",
+      // designation: formData.designation ? "" : "Designation is required",
       managementType: formData.managementType
         ? ""
         : "Management type is required",
       // team: formData.team.value ? "" : "Team is required",
-      reportM:
-        formData.managementType === "Employee" && !formData.reportM.value
-          ? "Reporting Manager is required"
-          : "",
-      employment: formData.employment ? "" : "Employment type is required",
+      // reportM:
+      //   formData.managementType === "Employee" && !formData.reportM.value
+      //     ? "Reporting Manager is required"
+      //     : "",
+      // employment: formData.employment ? "" : "Employment type is required",
       // offerLetter: formData.offerLetter ? "" : "Offer Letter is required",
-      onboarding: formData.onboarding ? "" : "Onboarding date is required",
+      // onboarding: formData.onboarding ? "" : "Onboarding date is required",
     };
 
     setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
@@ -211,6 +212,7 @@ export const UserForm = ({
       // offerLetter: formData.offerLetter,
       date_of_birth: formData.dob,
       gender: formData.gender,
+      emp_id: formData.emp_id,
     };
 
     if (formData.team.value && formData.team.value.length !== 0) {
@@ -245,6 +247,18 @@ export const UserForm = ({
           toast.success("User update success !");
           queryClient.refetchQueries({
             queryKey: ["fetch-people", "active-users"],
+            exact: false,
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: ["fetch-user-by-id"],
+            exact: false,
+            refetchType: "all",
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: ["user-timeline"],
+            refetchType: "all",
             exact: false,
           });
           // onRefresh();
@@ -288,6 +302,7 @@ export const UserForm = ({
             offerLetter: "",
             dob: "",
             onboarding: "",
+            emp_id: "",
           });
           closeBtn(false);
         } catch (error: any) {
@@ -443,6 +458,7 @@ export const UserForm = ({
                   gender: "Male",
                   onboarding_date: "28/01/2020",
                   team_code: "ABCDEF",
+                  emp_id: "0123",
                 }}
               />
               <div className="rounded-lg p-3  w-full flex justify-between items-center border border-gray-200">
@@ -458,9 +474,8 @@ export const UserForm = ({
                 </div>
                 <button
                   disabled={loading}
-                  className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   onClick={() => {
                     setOpenGsuiteModal(true);
                   }}
@@ -492,9 +507,8 @@ export const UserForm = ({
                 </>
               )}
               <div
-                className={`overflow-y-auto flex flex-col gap-2 pt-2 ${
-                  isEditForm && "h-[65.5vh]"
-                } h-[40vh] hide-scrollbar`}
+                className={`overflow-y-auto flex flex-col gap-2 pt-2 ${isEditForm && "h-[65.5vh]"
+                  } h-[40vh] hide-scrollbar`}
               >
                 <FormField
                   label="Name"
@@ -594,7 +608,6 @@ export const UserForm = ({
                   <div className="flex-1">
                     <FormField
                       label="DOB"
-                      error={errors.dob}
                       id="dob"
                       name="dob"
                       value={
@@ -721,6 +734,7 @@ export const UserForm = ({
                     variant: "outlineTwo",
                     className: "w-full",
                   })}
+                  type="button"
                   onClick={() => closeBtn(false)}
                 >
                   Cancel
@@ -743,6 +757,29 @@ export const UserForm = ({
           ) : next === 1 ? (
             <div className="flex flex-col gap-6 relative h-full">
               <div className="w-full flex flex-col gap-4 pt-4">
+                <div className="flex flex-col gap-2">
+                  <FormField
+                    label="Employee ID"
+                    id="emp_id"
+                    error={errors.emp_id}
+                    name="emp_id"
+                    value={formData?.emp_id ?? ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        emp_id: e.target.value,
+                      }))
+                    }
+                    maxLength={50}
+                    placeholder="eg: 0123"
+                  />
+                  {errors.emp_id && (
+                    <p className="mt-0.5 font-gilroyMedium text-xs text-destructive">
+                      {errors.emp_id}
+                    </p>
+                  )}
+                </div>
+
                 <div className="z-50 flex-1">
                   <SelectDropdown
                     options={[
@@ -842,13 +879,13 @@ export const UserForm = ({
                     <FormField
                       label="Onboarding Date"
                       id="onboarding"
-                      error={errors.onboarding}
+                      // error={errors.onboarding}
                       name="Joining Date"
                       value={
                         formData?.onboarding
                           ? new Date(formData.onboarding)
-                              .toISOString()
-                              .split("T")[0]
+                            .toISOString()
+                            .split("T")[0]
                           : ""
                       }
                       type="date"
@@ -872,7 +909,11 @@ export const UserForm = ({
                           }))
                         }
                         label="Employment Type"
-                        value={`${formData?.employment ?? ""}`}
+                        value={`${
+                          formData?.employment ??
+                          userData?.employment_type ??
+                          ""
+                        }`}
                         placeholder="eg: Full time"
                         className={cn(
                           errors.employment
@@ -1026,7 +1067,7 @@ export const UserForm = ({
                       <FormField
                         label="Designation"
                         id="designation"
-                        error={errors.designation}
+                        // error={errors.designation}
                         name="designation"
                         value={formData?.designation ?? ""}
                         type="text"

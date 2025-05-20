@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { Device, updateDevice } from "@/server/deviceActions";
 import Form from "../../_components/addDevices/Form";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function EditAsset({
   children,
@@ -18,6 +19,7 @@ export default function EditAsset({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const [device, setDevice] = useState<Device>(deviceData);
   const [error, setError] = useState("");
@@ -34,6 +36,12 @@ export default function EditAsset({
       await updateDevice(deviceData?._id ?? "", device);
       setOpen(false);
       toast.success("Assigned asset to user !");
+
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-single-device"],
+        exact: false,
+        refetchType: "all",
+      });
       setLoading(false);
       router.refresh();
     } catch (error) {

@@ -119,6 +119,7 @@ export const usersFields = [
   "role",
   "designation",
   "employment_type",
+  "emp_id",
   "onboarding_date",
   "reporting_manager",
   "email",
@@ -204,16 +205,16 @@ export const activeUsers = cache(async function ({
   fields = usersFields,
   searchQuery = "",
   isDeleted,
-}: // page = 1,
-// pageLimit = 5,
-activeFilterApiParams = {}): Promise<any> {
+  page = 1,
+  pageLimit = 20,
+}: activeFilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
       filters: filters?.length > 0 ? filters : [],
-      page: 1,
-      pageLimit: 100000000,
-      isDeleted: isDeleted,
+      page,
+      pageLimit,
+      isDeleted,
     };
 
     // Construct the URL with an optional search query
@@ -318,16 +319,16 @@ export const assignedAssets = cache(async function ({
   fields = devicesFields,
   searchQuery = "",
   page = 1,
-  pageLimit = 100000000,
+  pageLimit = 20,
   isDeleted,
 }: FilterApiParams = {}): Promise<any> {
   try {
     const payload = {
       fields,
-      filters: filters,
+      filters: filters?.length > 0 ? filters : [],
       page,
       pageLimit,
-      isDeleted: isDeleted,
+      isDeleted,
     };
 
     // Construct the URL with an optional search query

@@ -1,8 +1,7 @@
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { LogoCompanyModal } from "@/app/(root)/settings/_components/logo-company";
-import { LoadingButton } from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import CompanyLogo from "@/icons/CompanyLogo";
-import CompanyOnbardingIcon from "@/icons/CompanyOnbardingIcon";
 import UploadIcon from "@/icons/UploadIcon";
 import { Org, getCurrentOrg, updateOrg } from "@/server/orgActions";
 import React, { useEffect, useRef, useState } from "react";
@@ -60,50 +59,49 @@ export function CompanyDetails({ setSteps }: any) {
               Setup your organization
             </div>
           </div>
-            <div className="relative flex-1 flex-col rounded-[25px] px-5 py-5 bg-white gap-2 h-[136px]  items-center">
-              <div className="w-full flex justify-center">
-                {/* Display the logo */}
-                {company?.logo ? (
-                  <img
-                    src={company.logo}
-                    alt="Company Logo"
-                    className="size-28 rounded-full border object-cover"
-                  />
-                ) : (
-                  <CompanyLogo className="w-28 h-28 text-gray-400" />
-                )}
-              </div>
-              {/* Modal trigger for editing the logo */}
-              <LogoCompanyModal
-                id={company?._id!}
-                logo={company?.logo}
-                uploadSuccess={() => {
-                  getCompany();
-                }}
+          <div className="relative flex-1 flex-col rounded-[25px] px-5 py-5 bg-white gap-2 h-[136px]  items-center">
+            <div className="w-full flex justify-center">
+              {/* Display the logo */}
+              {company?.logo ? (
+                <img
+                  src={company.logo}
+                  alt="Company Logo"
+                  className="size-28 rounded-full border object-cover"
+                />
+              ) : (
+                <CompanyLogo className="w-28 h-28 text-gray-400" />
+              )}
+            </div>
+            {/* Modal trigger for editing the logo */}
+            <LogoCompanyModal
+              id={company?._id!}
+              logo={company?.logo}
+              uploadSuccess={() => {
+                getCompany();
+              }}
+            >
+              <div
+                className="flex flex-col justify-end self-stretch pt-[17px]"
+                style={{ cursor: "pointer" }}
               >
-                <div
-                  className="flex flex-col justify-end self-stretch pt-[17px]"
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="flex flex-grow flex-wrap items-center justify-center gap-x-[22px] gap-y-[22px] text-[15px] font-medium leading-[normal] text-indigo-950 [max-height:59px] min-[423.75189208984375px]:flex-nowrap">
-                    <div
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex items-center justify-center gap-x-[15px] rounded-[7.4px] border-x-[0.93px] border-t-[0.93px] border-solid border-x-[dimgray] border-y-[dimgray] bg-white px-8 py-2.5 [border-bottom-width:0.93px]"
-                    >
-                      <UploadIcon />
-                      <div className="flex flex-col items-center">
-                        {company?.logo ? (
-                          <div>Edit Logo</div>
-                        ) : (
-                          <div>Upload Logo</div>
-                        )}
-                      </div>
+                <div className="flex flex-grow flex-wrap items-center justify-center gap-x-[22px] gap-y-[22px] text-[15px] font-medium leading-[normal] text-indigo-950 [max-height:59px] min-[423.75189208984375px]:flex-nowrap">
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center justify-center gap-x-[15px] rounded-[7.4px] border-x-[0.93px] border-t-[0.93px] border-solid border-x-[dimgray] border-y-[dimgray] bg-white px-8 py-2.5 [border-bottom-width:0.93px]"
+                  >
+                    <UploadIcon />
+                    <div className="flex flex-col items-center">
+                      {company?.logo ? (
+                        <div>Edit Logo</div>
+                      ) : (
+                        <div>Upload Logo</div>
+                      )}
                     </div>
                   </div>
                 </div>
-              </LogoCompanyModal>
-            </div>
-        
+              </div>
+            </LogoCompanyModal>
+          </div>
 
           <div className="flex flex-col w-[75%] gap-6">
             <FormField
@@ -118,14 +116,22 @@ export function CompanyDetails({ setSteps }: any) {
               placeholder="Company Name"
             />
           </div>
-          <LoadingButton
-            variant="primary"
-            className="w-[75%]"
-            loading={loading}
-            onClick={onSubmit}
-          >
-            Submit
-          </LoadingButton>
+          <div className="flex flex-col gap-1.5 w-[75%]">
+            <LoadingButton
+              variant="primary"
+              loading={loading}
+              onClick={onSubmit}
+            >
+              Submit
+            </LoadingButton>
+            <Button
+              onClick={() => setSteps(2)}
+              className="w-full"
+              variant="outline"
+            >
+              Skip
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import ReAssign from "@/app/(root)/assets/_components/re-assign";
 import { Props } from "@/app/(root)/layout";
 import CreateUser from "@/app/(root)/people/_components/create-user";
 import { login } from "@/app/store/authSlice";
+import { RootState } from "@/app/store/store";
 import ViewProfileIcon from "@/icons/ViewProfileIcon";
 import {
   PlusSignIcon,
@@ -12,16 +13,22 @@ import {
   UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { LogOut, Search } from "lucide-react";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { LogOut, Search, Loader2 } from "lucide-react";
+
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import GlobalSearch from "./global-search";
+import { useDebounce } from "@/hooks/use-debounce";
+import { globalSearch } from "@/server/globalSearch";
 
 export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const debouncedInput = useDebounce(inputValue, 300);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -71,7 +78,7 @@ export default function Header({ session }: Props) {
 
   const pathParts = pathname.split("/").filter(Boolean);
   const pageName =
-    pathname === "/" ? "Dashboard" : pathParts[0].replace(/-/g, " ");
+    pathname === "/" ? "Dashboard" : pathname.includes("issues") ? "Tickets" : pathParts[0].replace(/-/g, " ");
 
   // Closing dropdown on outside click
   useEffect(() => {
@@ -79,6 +86,7 @@ export default function Header({ session }: Props) {
       // @ts-ignore
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownVisible(false);
+        closeDropdown();
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
@@ -113,6 +121,19 @@ export default function Header({ session }: Props) {
     }
   }, [session, dispatch]);
 
+  const {
+    data: searchData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["global-search", debouncedInput],
+    queryFn: () => globalSearch(debouncedInput),
+    enabled: inputValue.trim().length > 0,
+  });
+  const closeDropdown = () => {
+    setInputValue("");
+  };
   const handleLogout = () => {
     signOut();
     queryClient.clear();
@@ -124,22 +145,6 @@ export default function Header({ session }: Props) {
     <>
       {session ? (
         <header className="bg-white border border-b border-t-0 border-l-0 border-r-0  top-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 pl-4">
-          {/* Logo Section */}
-          {/* <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => {
-              router.push("/");
-            }}
-            onMouseEnter={() => handleMouseEnter("/")}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <img
-              src="/media/Deviceflow.png"
-              alt="Logo"
-              className="2xl:w-[170px] w-[150px] 2xl:h-10 h-9"
-            />
-          </div> */}
-
           <h1 className="font-gilroyMedium  w-40 capitalize text-base text-[#c8c8c8]">
             {pageName}
           </h1>
@@ -148,32 +153,46 @@ export default function Header({ session }: Props) {
           <div className="flex justify-center items-center ">
             <div className="flex items-center gap-x-2 bg-transparent  bg-opacity-90  px-1 py-1">
               {/* Search Bar */}
-              <div className="bg-transparent overflow-hidden flex justify-between items-center border border-[rgba(0,0,0,0.2)] rounded-md px-2 py-1.5">
-                <div className="flex gap-2 items-center">
-                  <Search className=" size-[1.16rem]" />
-                  <input
-                    type="text"
-                    placeholder={`Search ${currentPlaceholder}...`}
-                    onChange={(e) => setInputValue(e.target.value)} // Update input value
-                    onFocus={() => setIsFocused(true)} // Mark as focused
-                    onBlur={() => setIsFocused(false)} // Remove focus
-                    className={`flex-grow bg-transparent outline-none text-black placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 ${
-                      !isFocused && inputValue === "" && animationState
-                        ? "animate-slide-up"
-                        : ""
-                    }`}
-                  />
+              {session?.user?.user?.role !== 1 ? (
+                <div className="bg-transparent overflow-hidden border flex justify-between items-center  border-[rgba(0,0,0,0.2)] rounded-md px-2 py-1.5">
+                  <div className="flex gap-2 items-center">
+                    <Search className=" size-[1.16rem]" />
+                    <input
+                      type="text"
+                      placeholder={`Search anything...`}
+                      onChange={(e) => setInputValue(e.target.value)} // Update input value
+                      onFocus={() => setIsFocused(true)} // Mark as focused
+                      onBlur={() => setIsFocused(false)} // Remove focus
+                      className={`flex-grow bg-transparent outline-none text-black 
+                        placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] 
+                        transition-all duration-1000
+                        
+                      `}
+                    />
+                  </div>
                 </div>
+              ) : (
+                <></>
+              )}
 
-                {/* <KBarIcon.kbar_icon /> */}
-              </div>
-              {/* {isLoading && <div>Searching…</div>}
-              {isError && <div>Error: {error.message}</div>}
-              {!isLoading && !isError && searchData && (
-                <pre>{JSON.stringify(searchData, null, 2)}</pre>
-              )} */}
+              {inputValue.trim() !== "" && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-full left-[18.4%] bg-white shadow-md rounded-lg border border-gray-200 -mt-4 z-10 w-[30vw] max-h-96 overflow-y-auto hide-scrollbar"
+                >
+                  {isLoading ? (
+                    <div className="flex justify-center p-4">
+                      {/* simple spinner */}
+                      <Loader2 className="size-4 animate-spin" />
+                    </div>
+                  ) : (
+                    <GlobalSearch data={searchData} onClose={closeDropdown} />
+                  )}
+                </div>
+              )}
+
               {/* Action Buttons */}
-              {session?.user?.user?.role === 2 ? (
+              {[2, 3, 4].includes(session?.user?.user?.role) ? (
                 <>
                   {" "}
                   <CreateDevice>
@@ -223,7 +242,7 @@ export default function Header({ session }: Props) {
           {/* Right Icons Section */}
           <div className="flex items-center space-x-4">
             {/* Settings Icon */}
-            {session?.user?.user?.role === 2 && (
+            {[2, 3, 4].includes(session?.user?.user?.role) && (
               <button
                 onClick={() => router.push("/settings")}
                 className=" bg-white hover:bg-black rounded-full hover:text-white flex items-center justify-center p-2"
@@ -242,7 +261,7 @@ export default function Header({ session }: Props) {
             </button> */}
 
             {/* Profile Icon */}
-            {session?.user?.user?.role !== 1 ? (
+            {[2, 3, 4].includes(session?.user?.user?.role) ? (
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
@@ -258,7 +277,7 @@ export default function Header({ session }: Props) {
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
                         onClick={() => {
-                          if (session.user.user.role === 2) {
+                          if ([2, 3, 4].includes(session?.user?.user?.role)) {
                             router.push(`/people/${session.user.user.userId}`);
                           } else {
                             router.push("/profile");
@@ -277,7 +296,7 @@ export default function Header({ session }: Props) {
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
                         onClick={() =>
-                          // signOut({redirect: true,callbackUrl: "https://deviceflow.ai"})
+                          // signOut({redirect: true,callbackUrl: "https://gcp-api.edify.club"})
                           signOut()
                         }
                         className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"

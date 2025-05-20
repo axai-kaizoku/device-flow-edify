@@ -1,6 +1,10 @@
 "use client";
 
-import { Button } from "@/components/buttons/Button";
+import {
+  Button,
+  buttonVariants,
+  LoadingButton,
+} from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +28,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
 import { BlueTickCircle, BothSideArrows } from "./icons";
+import Link from "next/link";
 
 export const ConnectIntegration = ({
   loading,
@@ -62,6 +67,9 @@ export const ConnectIntegration = ({
   >;
 }) => {
   const intId = useSearchParams().get("integrationId");
+  const isGsuiteIntegration = integrationData?.platform
+    .toLowerCase()
+    .includes("suite");
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -111,14 +119,12 @@ export const ConnectIntegration = ({
         redirectUri: currentUrl,
       });
       return;
-     
     }
   };
 
   // Handle form submission
   const onSubmit = async () => {
     if (validateFields()) {
-
       try {
         mutation.mutate({
           payload: {
@@ -232,26 +238,26 @@ export const ConnectIntegration = ({
                 <SelectItem
                   key={p?._id}
                   value={p?.plan}
-                  className="w-full py-2.5 rounded-lg"
+                  className="w-full py-2.5 rounded-lg hover:bg-accent"
                 >
                   {p?.plan}
                 </SelectItem>
               ))}
               <SelectItem
                 value="Custom Plan"
-                className="w-full py-2.5 rounded-lg"
+                className="w-full py-2.5 rounded-lg hover:bg-accent"
               >
                 Custom Plan
               </SelectItem>
             </SelectContent>
           </Select>
-          <div>
+          <div className="relative">
             <Input
               value={customPrice}
               readOnly={!isCustom}
               onChange={(e) => {
                 const inputValue = e.target.value;
-                const zipRegex = /^[0-9]{0,12}$/;
+                const zipRegex = /^[0-9]{0,8}$/;
 
                 if (!inputValue || zipRegex.test(inputValue)) {
                   setCustomPrice(inputValue);
@@ -264,6 +270,9 @@ export const ConnectIntegration = ({
                 errors.pricing ? "border-destructive/80" : "border"
               )}
             />
+            <div className="absolute right-3 top-[50%] text-xs font-gilroyMedium -translate-y-1/2 transform text-black">
+              /month
+            </div>
             <p
               className={cn(
                 "mt-0.5 text-xs text-start font-gilroyMedium text-destructive transition-all duration-300",
@@ -296,35 +305,40 @@ export const ConnectIntegration = ({
         <div className="h-[1px] bg-gray-200 my-3 -mx-6"></div>
 
         <DialogFooter className="flex w-full h-10 -mt-3 -mb-2 items-center justify-between">
-          <Button className="rounded-lg text-sm bg-white text-black w-fit font-gilroyMedium tracking-wide border hover:border-black">
-            How to use?
-          </Button>
+          {!isGsuiteIntegration ? (
+            <Link
+              href={integrationData?.wiki}
+              target="_blank"
+              className={buttonVariants({
+                variant: "outlineTwo",
+                className: "h-full",
+              })}
+            >
+              How to use?
+            </Link>
+          ) : (
+            <Button className="pointer-events-none" type="button"></Button>
+          )}
           <div className="flex gap-3">
             <Button
-              className="rounded-lg text-sm bg-white text-black w-fit font-gilroyMedium tracking-wide border hover:border-black"
+              variant="outlineTwo"
+              type="button"
               disabled={mutation.isPending || loading}
               onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
-            <Button
-              className="rounded-lg text-sm bg-black text-white w-full font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
+            <LoadingButton
+              variant="primary"
+              loading={mutation.isPending || loading}
               disabled={mutation.isPending || loading}
               type="button"
               onClick={() => {
-                integrationData?.platform.toLowerCase().includes("suite")
-                  ? onGSuitSubmit()
-                  : onSubmit();
+                isGsuiteIntegration ? onGSuitSubmit() : onSubmit();
               }}
             >
-              {mutation.isPending || loading ? (
-                <>
-                  Connect <Loader2 className="animate-spin size-4" />
-                </>
-              ) : (
-                "Connect"
-              )}
-            </Button>
+              Connect
+            </LoadingButton>
           </div>
         </DialogFooter>
       </DialogContent>

@@ -1,35 +1,45 @@
 "use client";
 
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import { updateDevice } from "@/server/deviceActions";
-import Spinner from "@/components/Spinner";
 import WarningIcon from "@/icons/WarningIcon";
-import { useQueryClient } from "@tanstack/react-query";
+import { updateDevice } from "@/server/deviceActions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const RestoreDevice = ({
   id,
   children,
-  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh: () => Promise<void>;
 }) => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for restore action
-  const [initText, setInitText] = useState("Restore Device");
   const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => updateDevice(id, { deleted_at: null }),
+    onSuccess: () => {
+      setOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-assets"],
+        exact: false,
+        refetchType: "all",
+      });
+    },
+    onError: () => {
+      toast.error("Failed to restore asset");
+    },
+  });
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -51,47 +61,23 @@ export const RestoreDevice = ({
 
         {/* Footer Buttons */}
         <DialogFooter className="flex w-full items-center justify-between">
-          <button
-            className={buttonVariants({
-              variant: "outlineTwo",
-              className: "w-full",
-            })}
+          <Button
+            variant="outlineTwo"
+            className="w-full"
             onClick={() => setOpen(false)}
-            disabled={loading} // Disable button while loading
+            disabled={deleteMutation?.isPending}
           >
-            {loading ? <Spinner /> : "Discard"}
-          </button>
-          <button
-            className={buttonVariants({
-              variant: "primary",
-              className: "w-full",
-            })}
-            onClick={async () => {
-              if (id) {
-                setLoading(true); // Start loading
-                try {
-                  await updateDevice(id!, { deleted_at: null });
-                  setOpen(false);
-                  queryClient.invalidateQueries({
-                    queryKey: ["fetch-assets"],
-                    exact: false,
-                    refetchType: "all",
-                  });
-                } catch (e: any) {
-                  const errorMessage =
-                    e.response?.data?.message ||
-                    e.message ||
-                    "Failed to restore the device.";
-                  setInitText(errorMessage);
-                } finally {
-                  setLoading(false); // End loading
-                }
-              }
-            }}
-            disabled={loading} // Disable button while loading
+            Discard
+          </Button>
+          <LoadingButton
+            variant="primary"
+            className="w-full"
+            loading={deleteMutation?.isPending}
+            onClick={() => deleteMutation.mutate(id)}
+            disabled={deleteMutation?.isPending}
           >
-            {loading ? <Spinner /> : "Restore"}
-          </button>
+            Restore
+          </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -67,7 +67,7 @@ interface MappingDialogTwoProps {
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
-  response?: AddIntegrationResType;
+  response?: any;
   platform?: string;
 }
 
@@ -82,8 +82,6 @@ export default function MappingDialogTwo({
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // Object to keep track of user selections for each mapping row.
-  // Key: index, Value: selected user (or null if none selected)
   const [mappingSelections, setMappingSelections] = useState<
     Record<number, UsersType | null>
   >({});
@@ -91,31 +89,10 @@ export default function MappingDialogTwo({
 
   // Filter out the integration records which have a null userId
   const filteredData = response?.data
-    ? response?.data?.filter((u) => u?.userId === null)
+    ? response?.data?.data?.filter((u) => u?.userId === null)
     : [];
 
-  // Fetcher function to search for users from unmapped list based on email
-  // const getUsers = (query: string = ""): UsersType[] => {
-  //   try {
-  //     const data = response?.unMapped || [];
-
-  //     // Check first name, email and last_name if available
-  //     const res = data?.filter((user) => {
-  //       const searchStr = query?.toLowerCase();
-  //       return (
-  //         user?.first_name?.toLowerCase().includes(searchStr) ||
-  //         user?.email?.toLowerCase().includes(searchStr) ||
-  //         (user?.last_name &&
-  //           user?.last_name?.toLowerCase().includes(searchStr))
-  //       );
-  //     });
-  //     return res;
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw new Error("Failed to fetch user");
-  //   }
-  // };
-  const getUsers = (query: string = ""): UsersType[] => {
+  const getUsers = async (query: string = ""): Promise<UsersType[]> => {
     try {
       const data = response?.unMapped || [];
 
@@ -130,8 +107,8 @@ export default function MappingDialogTwo({
         const matchesSearch =
           user?.first_name?.toLowerCase().includes(searchStr) ||
           user?.email?.toLowerCase().includes(searchStr) ||
-          (user?.last_name &&
-            user?.last_name.toLowerCase().includes(searchStr));
+          (user?.name && user?.name.toLowerCase().includes(searchStr));
+        user?.last_name && user?.last_name.toLowerCase().includes(searchStr);
 
         const isNotSelected = !selectedUserIds.includes(user._id);
 
@@ -219,7 +196,7 @@ export default function MappingDialogTwo({
       { payload },
       {
         onSuccess: () => {
-          router.replace(`/integrations/installed?platform=${platform}`, {
+          router.replace(`/integrations/installed/${platform}`, {
             scroll: false,
           });
           toast.success("Integration successfull !");
@@ -323,7 +300,7 @@ export default function MappingDialogTwo({
               className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               onClick={handleMapping}
               onMouseEnter={() =>
-                router.prefetch(`/integrations/installed?platform=${platform}`)
+                router.prefetch(`/integrations/installed/${platform}`)
               }
             >
               {mutation.isPending ? (

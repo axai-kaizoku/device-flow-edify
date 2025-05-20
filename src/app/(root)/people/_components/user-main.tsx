@@ -1,62 +1,55 @@
 import { Table } from "@/components/wind/Table";
 import { User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
-import { DeleteUser } from "../[id]/_components/delete-user";
+import { Suspense } from "react";
 import EditUser from "../[id]/_components/edit-user";
 
 import { buttonVariants } from "@/components/buttons/Button";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
 import { GetAvatar } from "@/components/get-avatar";
-import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import EditTableIcon from "@/icons/EditTableIcon";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
 import CreateUser from "./create-user";
-import { PermanentUserDelete } from "./permanent-user-delete";
 import { RestoreUser } from "./restore-user";
 
 export default function UserMain({
   data,
   peopleText = "Total People",
-  setUsers,
   onRefresh,
   selectedIds,
   setSelectedIds,
-  handleBulkDelete,
   handleSelectionChange,
   status,
 }: {
   data: UserResponse | null;
   status: string;
   peopleText?: string;
-  setUsers?: React.Dispatch<React.SetStateAction<UserResponse | null>>;
   onRefresh?: () => Promise<void>;
   selectedIds?: string[];
   setSelectedIds: (state: any) => void;
-  handleBulkDelete?: () => Promise<void>;
   handleSelectionChange?: (selected: string[]) => void;
 }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
       <div>
-        {!isLoading && data?.users?.length === 0 ? (
+        {status !== "pending" && data?.users?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-8">
             <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
               <img src="/media/no_data/people.svg" alt="No-People Logo" />
             </div>
-            <CreateUser>
-              <button
-                className={buttonVariants({
-                  variant: "primary",
-                  className: "w-full",
-                })}
-              >
-                Add Member
-              </button>
-            </CreateUser>
+            {peopleText === "Active People" && (
+              <CreateUser>
+                <button
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full",
+                  })}
+                >
+                  Add Member
+                </button>
+              </CreateUser>
+            )}
           </div>
         ) : (
           <>
@@ -88,8 +81,10 @@ export default function UserMain({
                 )} */}
               </div>
               <Suspense>
+                {/* {JSON.stringify(data?.users)} */}
                 <div className="flex flex-col h-full w-full">
                   <Table
+                    key={peopleText}
                     data={data?.users ?? []}
                     selectedIds={selectedIds}
                     isLoading={status === "pending"}
@@ -106,15 +101,7 @@ export default function UserMain({
                             className="w-28 justify-start flex items-center gap-2 cursor-pointer"
                             onClick={() => router.push(`/people/${user?._id}`)}
                           >
-                            {user?.image && user?.image?.length > 0 ? (
-                              <img
-                                src={user?.image}
-                                alt={user?.first_name}
-                                className="size-10 object-cover rounded-full flex-shrink-0"
-                              />
-                            ) : (
-                              <GetAvatar name={user?.first_name ?? ""} />
-                            )}
+                            <GetAvatar name={user?.first_name ?? ""} />
 
                             <div className="relative group">
                               <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
@@ -127,6 +114,12 @@ export default function UserMain({
                               </div>
                             </div>
                           </div>
+                        ),
+                      },
+                      {
+                        title: "Employee ID",
+                        render: (record: User) => (
+                          <div>{record?.emp_id ?? "-"}</div>
                         ),
                       },
                       {
@@ -205,6 +198,7 @@ export default function UserMain({
 
                             return (
                               <AllIntegrationsDisplay
+                                key={`${record._id}-people`}
                                 data={record}
                                 allIntegrations={integrations}
                               >
@@ -260,25 +254,25 @@ export default function UserMain({
                       >
                         <DeleteTableIcon className="size-6" />
                       </button> */}
-                              {data?.role !== 1 ? (
+                              {/* {data?.role !== 1 ? (
                                 <div className="block size-6"></div>
                               ) : (
                                 <DeleteUser id={data?._id}>
                                   <DeleteTableIcon className="size-6" />
                                 </DeleteUser>
-                              )}
+                              )} */}
                               <EditUser userData={data}>
                                 <EditTableIcon className="size-5" />
                               </EditUser>
                             </div>
                           ) : (
                             <div className="flex gap-5 -ml-2 justify-center items-center">
-                              <PermanentUserDelete
+                              {/* <PermanentUserDelete
                                 id={data?._id!}
                                 onRefresh={onRefresh}
                               >
                                 <DeleteTableIcon className="size-6" />
-                              </PermanentUserDelete>
+                              </PermanentUserDelete> */}
 
                               <RestoreUser
                                 id={data?._id!}

@@ -140,7 +140,7 @@ function UnAssignedAssets({
                           <img
                             src={
                               data?.image?.[0]?.url ??
-                              "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                              "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                             }
                             alt="Device Logo"
                             className="border size-10 rounded-full"

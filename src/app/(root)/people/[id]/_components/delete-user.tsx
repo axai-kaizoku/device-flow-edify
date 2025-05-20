@@ -48,6 +48,18 @@ export const DeleteUser = ({
           exact: false,
           refetchType: "all",
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ["fetch-user-by-id"],
+          exact: false,
+          refetchType: "all",
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ["user-timeline"],
+          exact: false,
+          refetchType: "all",
+        });
       } catch (e: any) {
         showAlert({
           title: "Failed to delete the user.",

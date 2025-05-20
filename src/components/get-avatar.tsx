@@ -17,7 +17,7 @@ export const GetAvatar: React.FC<AvatarProps> = ({
 
   return (
     <div
-      className={`flex items-center justify-center rounded-full font-medium flex-shrink-0 ${className}`}
+      className={`flex items-center justify-center rounded-full font-gilroyMedium flex-shrink-0 ${className}`}
       style={{
         width: size,
         height: size,

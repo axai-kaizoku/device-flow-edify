@@ -50,6 +50,12 @@ export default function AssignDevice({
         exact: false,
         refetchType: "all",
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["user-timeline"],
+        exact: false,
+        refetchType: "all",
+      });
       setOpen(false);
       toast.success("Assigned asset to user !");
       setLoading(false);
@@ -78,15 +84,8 @@ export default function AssignDevice({
             </div>
 
             <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
-              {userData?.image && userData?.image?.length > 0 ? (
-                <img
-                  src={userData?.image}
-                  alt={userData?.first_name}
-                  className="size-14 object-cover rounded-full flex-shrink-0"
-                />
-              ) : (
-                <GetAvatar name={userData?.first_name ?? ""} size={56} />
-              )}
+              <GetAvatar name={userData?.first_name ?? ""} size={56} />
+
               <div className=" w-full flex flex-col justify-center ">
                 <h1 className="text-black font-gilroySemiBold text-base ">
                   {userData?.first_name ?? ""}
@@ -174,7 +173,7 @@ export default function AssignDevice({
                   <img
                     src={
                       device?.image?.[0]?.url ??
-                      "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                      "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                     }
                     alt="team-image"
                     className="w-16 h-16 p-1 border object-contain rounded-full "

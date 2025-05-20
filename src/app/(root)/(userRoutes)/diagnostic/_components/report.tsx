@@ -4,7 +4,7 @@ import { ReportData } from "@/server/checkMateActions";
 import { forwardRef, Ref } from "react";
 
 export const ReportFormat = forwardRef(
-  ({ data, ref }: { data: ReportData; ref: Ref<HTMLElement> }) => {
+  ({ data, ref }: { data?: ReportData; ref: Ref<HTMLElement> }) => {
     if (!data?.success || !data?.data) return null;
 
     const {

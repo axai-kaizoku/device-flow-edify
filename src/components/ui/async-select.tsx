@@ -104,8 +104,8 @@ export function AsyncSelect<T>({
   }, [value]);
 
   useEffect(() => {
-    if (value && options.length > 0) {
-      const matched = options.find((opt) => getOptionValue(opt) === value);
+    if (value && options?.length > 0) {
+      const matched = options?.find((opt) => getOptionValue(opt) === value);
       if (matched) {
         setSelectedOption(matched);
       }

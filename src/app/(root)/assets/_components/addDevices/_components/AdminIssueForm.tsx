@@ -2,24 +2,21 @@
 
 import React, { useRef, useState } from "react";
 
-import { type Device } from "@/server/deviceActions";
-import { ChevronRight, Plus, Trash2, X } from "lucide-react";
-import { createIssue } from "@/server/issueActions";
-import { notFound, useRouter } from "next/navigation";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { RootState } from "@/app/store/store";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { useAlert } from "@/hooks/useAlert";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
-import { toast } from "sonner";
 import IssueFormIcons from "@/icons/IssueFormIcons";
 import UploadImageIcon from "@/icons/UploadImageIcon";
-import NavBarIcons from "@/icons/NavBarIcons";
+import { cn } from "@/lib/utils";
+import { type Device } from "@/server/deviceActions";
+import { createIssue } from "@/server/issueActions";
+import { Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 interface IssueFormProps {
   device: Device;
@@ -31,7 +28,6 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
 
   const router = useRouter();
 
-  const { showAlert } = useAlert();
   const [next, setNext] = useState(0);
   const [loading, setLoading] = useState(false);
   const fileIssueImages = useRef<HTMLInputElement | null>(null);
@@ -184,14 +180,14 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
           <div className="h-[1px] bg-[#E7E7E7] w-full mb-1"></div>
 
           <div className="w-full bg-[#f5f5f5]  rounded-md p-3 flex items-center gap-4">
-            <div className="">
+            <div className="py-4 px-2  object-contain border rounded-full ">
               <img
                 src={
-                  device?.image?.[0]?.url ??
-                  "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png"
+                  // device?.image?.[0]?.url ??
+                  "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                 }
                 alt="Asset-1"
-                className="w-20 h-16 p-1  object-contain border rounded-full "
+                className="w-16 h-10 "
               />
             </div>
             <div>
@@ -311,20 +307,16 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                 </div>
 
                 <div className="flex absolute bottom-0 gap-2 w-full">
-                  <button
-                    className={buttonVariants({
-                      variant: "outlineTwo",
-                      className: "w-full",
-                    })}
+                  <Button
+                    variant="outlineTwo"
+                    className="w-full"
                     onClick={() => closeBtn(false)}
                   >
                     Cancel
-                  </button>
-                  <button
-                    className={buttonVariants({
-                      variant: "primary",
-                      className: "w-full",
-                    })}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="w-full"
                     onClick={() => {
                       if (validateStepOne()) {
                         setNext(1);
@@ -332,7 +324,7 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                     }}
                   >
                     Next
-                  </button>
+                  </Button>
                 </div>
               </>
             ) : next === 1 ? (
@@ -447,25 +439,22 @@ export function AdminIssueForm({ device, closeBtn }: IssueFormProps) {
                 </div>
 
                 <div className="flex gap-2 w-full absolute bottom-0">
-                  <button
-                    className={buttonVariants({
-                      variant: "outlineTwo",
-                      className: "w-full",
-                    })}
+                  <Button
+                    variant="outlineTwo"
+                    className="w-full"
                     onClick={() => setNext(0)}
                   >
                     Previous
-                  </button>
-                  <button
-                    className={buttonVariants({
-                      variant: "primary",
-                      className: "w-full",
-                    })}
+                  </Button>
+                  <LoadingButton
+                    variant="primary"
+                    className="w-full"
                     type="submit"
                     disabled={loading}
+                    loading={loading}
                   >
-                    {loading ? <Spinner /> : <>Submit</>}
-                  </button>
+                    Submit
+                  </LoadingButton>
                 </div>
               </div>
             ) : (

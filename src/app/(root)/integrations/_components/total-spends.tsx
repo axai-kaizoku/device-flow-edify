@@ -15,7 +15,8 @@ export const TotalSpends = () => {
   });
 
   return (
-    <div className="rounded-md border p-3 flex justify-between w-full mb-3.5">
+    <div className="rounded-md border bg-white p-3 flex justify-between w-full mb-3.5">
+      {/* {JSON.stringify(data)} */}
       <div className="flex flex-col justify-start gap-y-5 pt-2">
         <div className="flex flex-col justify-start">
           <h3 className="font-gilroySemiBold text-xl">Total Spends</h3>

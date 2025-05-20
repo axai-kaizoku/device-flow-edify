@@ -4,6 +4,7 @@ import Providers from "@/providers";
 import { getSession } from "@/server/helper";
 import localFont from "next/font/local";
 import InternetCheck from "./InternetCheck";
+import CoachMarks from "@/components/coach-marks";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://deviceflow.ai"),
@@ -72,10 +73,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
-  const userRole: number | undefined = session?.user.user.role;
+  const userRole: number | undefined = session?.user?.user?.role;
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <head>
+        <link
+          href="https://assets.calendly.com/assets/external/widget.css"
+          rel="stylesheet"
+        />
+        <script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          type="text/javascript"
+          async
+        ></script>
+      </head>
       <body
         className={`
           ${gilroyRegular.variable} 
@@ -87,6 +99,7 @@ export default async function RootLayout({
         {/* {session?.user && <KbarWrapper userRole={userRole} />}{" "} */}
         <Providers>{children}</Providers>
         <InternetCheck />
+        {userRole && <CoachMarks />}
       </body>
     </html>
   );

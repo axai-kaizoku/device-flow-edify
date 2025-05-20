@@ -6,7 +6,6 @@ export const IntegrationCompanyCard = ({
 }: {
   company: AllIntegrationAvailable;
 }) => {
-  const displayWebsite = company?.website?.replace(/^https?:\/\//, "");
   return (
     <Link
       href={`/integrations/discover/${company._id}`}
@@ -33,7 +32,13 @@ export const IntegrationCompanyCard = ({
                 onClick={(e) => e.stopPropagation()}
                 className="hover:underline truncate w-fit"
               >
-                {displayWebsite}
+                {(() => {
+                  const website = company?.website.split("//")[1];
+
+                  return website.includes("www.")
+                    ? website.split("www.")[1]
+                    : website;
+                })()}
               </Link>
               <a
                 href={company?.website}

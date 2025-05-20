@@ -1,6 +1,6 @@
 import { CombinedContainer } from "@/components/container/container";
-import NewPage from "./new-page";
 import { Metadata } from "next";
+import NewPage from "./new-page";
 
 export const metadata: Metadata = {
   title: "Assets",

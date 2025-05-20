@@ -20,7 +20,7 @@ export default function CreateUser({
   const { showAlert } = useAlert();
   const queryClient = useQueryClient();
   const [openGsuiteModal, setOpenGsuiteModal] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const code = useSearchParams().get("code");
   const [formDataGsuite, setFormDataGsuite] = useState<{

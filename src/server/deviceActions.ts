@@ -4,23 +4,36 @@ import { callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
 import { cache } from "react";
 import { BASEURL } from "./main";
+import { IssueData } from "./issueActions";
+import { Ticket } from "./userActions";
+import { usersFields } from "./filterActions";
+export type QCDetail = {
+  serial_no: string;
+  scannedBy: string;
+  score: string;
+  condition: string;
+  date: string; // ISO date string
+};
 
 export type StoreDevice = {
   _id?: string;
+  is_temp_assigned?: boolean;
   team?: string;
+  qcDetails?: QCDetail[];
+  duration?: string;
   teams?: string;
   createdAt?: string;
   qty?: number | null;
   updatedAt?: string;
-  device_name: string;
-  device_type: string;
-  asset_serial_no: string | null;
-  serial_no: string | null;
-  ram: string | null;
-  processor: string | null;
-  storage: string[] | null;
-  custom_model: string | null;
-  brand: string | null;
+  device_name?: string;
+  device_type?: string;
+  asset_serial_no?: string | null;
+  serial_no?: string | null;
+  ram?: string | null;
+  processor?: string | null;
+  storage?: string[] | null;
+  custom_model?: string | null;
+  brand?: string | null;
   warranty_status?: boolean;
   warranty_expiary_date?: string | null; // Assuming this is a date string
   ownership?: string | null;
@@ -35,8 +48,15 @@ export type StoreDevice = {
   assigned_at?: string | null; // Assuming this is a date string
   userName?: string | null;
   email?: string | null;
+  phone?: string | null;
+  designation?: string | null;
   userId?: string | null;
+  shelfId?: string;
+  tickets?: Ticket[];
+  roomNumber?: string;
+  floor?: string;
   city?: string | null;
+  asset_tag?: string;
   addressId?: string | null;
   perfectFor?: { title?: string }[] | null; // Array of objects with `title` property
   deviceFeatures?:
@@ -66,6 +86,7 @@ export type StoreDevice = {
   }[];
   latest_release?: boolean;
   is_trending?: boolean;
+  issues: IssueData[];
   is_charger_provided?: boolean;
   description?: string;
   config?: { key: string; value: string }[];
@@ -109,7 +130,7 @@ export const createDevices = async (
       device_purchase_date: device?.device_purchase_date || null,
       image: [
         {
-          url: "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1736748407441.png",
+          url: "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png",
         },
       ],
     };
@@ -199,12 +220,12 @@ export async function deleteDevice(
   deviceId: string
 ): Promise<Device | undefined> {
   try {
-    const deleletedDevice = await callAPIWithToken<Device>(
+    const deletedDevice = await callAPIWithToken<Device>(
       `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
       "DELETE"
     );
 
-    return deleletedDevice?.data;
+    return deletedDevice?.data;
   } catch (e: any) {
     throw e;
   }
@@ -226,8 +247,6 @@ export async function permanentDeleteDevice(
     throw e;
   }
 }
-
-
 
 //Upload bulk device
 
@@ -271,9 +290,7 @@ export const bulkDeleteAssets = async (
   }
 };
 
-export const bulkAssetsUnassign = async (
-  deviceIds: string[],
-): Promise<any> => {
+export const bulkAssetsUnassign = async (deviceIds: string[]): Promise<any> => {
   try {
     const response = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/devices/Bulk-unassign`,
@@ -339,19 +356,43 @@ export const getDevicesByUserId = cache(
   async (): Promise<getAllDevicesProp> => {
     const sess = await getSession(); // Fetch session details
 
-    try {
-      if (sess?.user && sess?.user?.user.userId) {
+try{
+  if (sess?.user && sess?.user?.user.userId) {
+   if (sess?.user?.user?.role === 1 ) {
         // Make the GET request to fetch Devices of user ID
+
+
         const res = await callAPIWithToken<getAllDevicesProp>(
-          `${BASEURL}/edifybackend/v1/devices/userDetails`,
+           `${BASEURL}/edifybackend/v1/devices/userDetails`,
           "GET"
         );
 
         // Return the list of Devices
         return res.data;
-      } else {
-        throw new Error("No user session found");
-      }
+    } else {
+   const requestBody = {
+      fields: [
+        "device_name",
+        "custom_model",
+        "serial_no",
+        "ram",
+        "storage",
+        "image",
+      ],
+      filters: [],
+      page: 1,
+      pageLimit: 100000,
+    };
+
+    const res = await callAPIWithToken<DeviceResponse>(
+      `${BASEURL}/edifybackend/v1/devices/filter`,
+      "POST", // Changed to POST as the new API requires it
+      requestBody // Pass the request body
+    );
+
+    return res?.data?.devices;
+    }}
+ 
     } catch (error) {
       throw new Error((error as AxiosError)?.message);
     }

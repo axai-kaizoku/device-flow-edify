@@ -11,13 +11,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { formatNumber } from "@/lib/utils";
 import { User } from "@/server/userActions";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { IntRight } from "../icons";
-import { formatNumber } from "@/lib/utils";
 
 export default function AllIntegrationsDisplay({
   children,
@@ -61,7 +61,7 @@ export default function AllIntegrationsDisplay({
                 <PopoverTrigger
                   asChild
                   onMouseEnter={() => setDropdownOpen((prev) => !prev)}
-                  className="w-full ring-1 p-1.5 text-sm ring-green-800 rounded-md font-gilroyMedium text-green-900"
+                  className="w-full ring-1 p-1.5 text-sm ring-green-800 rounded-md cursor-pointer font-gilroyMedium text-green-900"
                 >
                   <span>{`₹${formatNumber(
                     data?.totalCostPerUser ?? 0
@@ -167,14 +167,14 @@ export default function AllIntegrationsDisplay({
                           {integration?.description?.slice(0, 60)}...
                         </p>
                       </div>
-                      {showArrow ? (
-                        <Link
-                          href={`/integrations/installed?platform=${integration?.platform}`}
-                          onClick={() => setOpen(false)}
-                        >
-                          <IntRight className="size-16" />
-                        </Link>
-                      ) : null}
+                      {/* {showArrow ? ( */}
+                      <Link
+                        href={`/integrations/installed/${integration?.platform}`}
+                        onClick={() => setOpen(false)}
+                      >
+                        <IntRight className="size-16" />
+                      </Link>
+                      {/* ) : null} */}
                     </div>
                   </>
                 ))}
@@ -200,14 +200,12 @@ export default function AllIntegrationsDisplay({
                           {integration?.description?.slice(0, 60)}...
                         </p>
                       </div>
-                      {showArrow ? (
-                        <Link
-                          href={`/integrations/installed?platform=${integration?.platform}`}
-                          onClick={() => setOpen(false)}
-                        >
-                          <IntRight className="size-16" />
-                        </Link>
-                      ) : null}
+                      <Link
+                        href={`/integrations/installed/${integration?.platform}`}
+                        onClick={() => setOpen(false)}
+                      >
+                        <IntRight className="size-16" />
+                      </Link>
                     </div>
                   </>
                 ))}

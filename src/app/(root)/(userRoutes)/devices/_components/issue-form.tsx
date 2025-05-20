@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import IssueFormIcons from "@/icons/IssueFormIcons";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import NavBarIcons from "@/icons/NavBarIcons";
+import { getImageUrl } from "@/components/utils/upload";
 
 interface IssueFormProps {
   device: Device;
@@ -35,7 +36,7 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     title: "",
     description: "",
     priority: "",
-    images: [],
+    images: [] as string[],
   });
 
   const [errors, setErrors] = useState({
@@ -44,6 +45,21 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     priority: "",
     images: "",
   });
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const simulateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 100); // Simulates progress eivery 100ms
+  };
 
   const validateStepOne = () => {
     const newErrors = {
@@ -58,9 +74,9 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
 
   const validateStepTwo = () => {
     const newErrors = {
-      priority: formData?.priority ? "" : "Priority is required",
+      priority: formData.priority ? "" : "Priority is required",
       images:
-        formData?.images.length > 0 ? "" : "At least two image is required",
+        formData.images.length >= 2 ? "" : "At least two images are required",
     };
 
     setErrors((prev) => ({ ...prev, ...newErrors }));
@@ -68,26 +84,58 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
     return !Object.values(newErrors).some((err) => err);
   };
 
-  const handleIssueImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIssueImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const validFiles = Array.from(files).filter((file) => {
-        const isValidSize = file.size <= 1024 * 1024; // 1MB
-        const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
-          file.type
-        );
-        return isValidSize && isValidType;
-      });
 
-      const imagePreviews = validFiles?.map((file) => ({
-        name: file?.name,
-        url: URL.createObjectURL(file), // Generate a preview URL for each file
-      }));
+    if (!files || files.length === 0) return;
 
+    // Validate each file
+    const validFiles = Array.from(files).filter((file) => {
+      const isValidSize = file.size <= 1024 * 1024; // 1MB
+      const isValidType = ["image/jpeg", "image/png", "image/jpg"].includes(
+        file.type
+      );
+      return isValidSize && isValidType;
+    });
+
+    if (validFiles.length !== files.length) {
+      toast.error(
+        "Some files were invalid. Only JPG, JPEG, or PNG files under 1MB are allowed."
+      );
+    }
+
+    if (validFiles.length === 0) return;
+
+    setIsUploading(true);
+    simulateProgress();
+
+    try {
+      // Upload all valid files
+      const uploadPromises = validFiles.map((file) => getImageUrl({ file }));
+      const results = await Promise.all(uploadPromises);
+
+      // Add all new URLs to the images array
       setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...imagePreviews],
+        images: [...prev.images, ...results.map((res) => res.fileUrl)],
       }));
+
+      console.log(formData.images);
+
+      setErrors((prev) => ({
+        ...prev,
+        images: "",
+      }));
+    } catch (error) {
+      console.log(error);
+      toast.error("Some images failed to upload");
+      setErrors((prev) => ({
+        ...prev,
+        images: "Failed to upload some images. Please try again.",
+      }));
+    } finally {
+      setIsUploading(false);
+      setProgress(0);
     }
   };
 
@@ -144,7 +192,10 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
       description: formData.description,
       email: user.email,
       userId: user.userId,
+      images: formData.images,
     };
+
+    console.log(issue.images);
 
     setLoading(true);
     try {
@@ -380,32 +431,34 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                       Upload Images
                     </label>
                     <div className="flex flex-wrap gap-4">
-                      {/* Render uploaded images with a preview */}
-
                       {/* Add new upload button */}
                       <div
                         className="flex gap-2 items-center justify-start bg-[#E9F3FF] rounded-2xl border-dashed h-24 w-full border-2 px-2 py-6 border-[#52ABFF] cursor-pointer"
                         onClick={() => fileIssueImages?.current?.click()}
                       >
-                        {formData?.images?.map((image, index) => (
+                        {formData.images.map((imageUrl, index) => (
                           <div
                             key={index}
                             className="relative w-20 h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group"
                           >
                             <img
-                              src={image}
-                              alt={"issue-image "}
+                              src={imageUrl}
+                              alt={`issue-image-${index}`}
                               className="w-full h-full object-cover"
                             />
                             <button
-                              onClick={() => handleRemoveImage(index)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveImage(index);
+                              }}
                               className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               <X className="text-white size-4" />
                             </button>
                           </div>
                         ))}
-                        {formData?.images.length === 0 ? (
+
+                        {formData.images.length === 0 && (
                           <div className="flex flex-col justify-center items-center w-full mx-auto">
                             <UploadImageIcon className="text-blue-500 w-6 h-6" />
                             <span className="text-[#0EA5E9]">
@@ -415,7 +468,8 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                               JPG, JPEG, PNG less than 1MB
                             </p>
                           </div>
-                        ) : (
+                        )}
+                        {formData.images.length > 0 && (
                           <div className="w-24 h-[75px] bg-gray-100 flex justify-center items-center rounded-xl border border-dashed border-gray-600">
                             <div className="bg-gray-400 text-white text-3xl rounded-full flex items-center justify-center w-8 h-8">
                               <Plus className="text-white" />
@@ -431,8 +485,9 @@ export function IssueForm({ user, device, closeBtn }: IssueFormProps) {
                       style={{ display: "none" }}
                       onChange={handleIssueImages}
                       multiple
+                      accept="image/jpeg, image/png, image/jpg"
                     />
-                    {errors?.images && (
+                    {errors.images && (
                       <p className="text-destructive text-sm">
                         {errors.images}
                       </p>

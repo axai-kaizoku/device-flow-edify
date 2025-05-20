@@ -42,14 +42,17 @@ const SeatsCard = ({
         key={index}
         className="size-6 rounded-full overflow-hidden border border-white bg-neutral-200"
       >
-        {user.image && user.image.length > 0 ? (
+        {user?.image && user?.image?.length > 0 ? (
           <img
-            src={user.image}
-            alt={user.first_name || "User"}
+            src={user?.image}
+            alt={user?.first_name ?? "User"}
             className="size-6 object-cover"
           />
         ) : (
-          <GetAvatar name={user.first_name ?? ""} size={24} />
+          <GetAvatar
+            name={user.first_name ?? user?.name ?? "Guest"}
+            size={24}
+          />
         )}
       </div>
     ));

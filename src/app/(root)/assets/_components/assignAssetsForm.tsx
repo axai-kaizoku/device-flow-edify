@@ -1,27 +1,18 @@
 "use client";
-import Spinner from "@/components/Spinner";
-import {
-  Button,
-  buttonVariants,
-  LoadingButton,
-} from "@/components/buttons/Button";
-import { SelectInput } from "@/components/dropdown/select-input";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { GetAvatar } from "@/components/get-avatar";
 import { AsyncSelect } from "@/components/ui/async-select";
 import { Device, updateDevice } from "@/server/deviceActions";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import { fetchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const AssignAssetsForm = ({
   closeBtn,
   device,
-  onRefresh,
 }: {
   closeBtn: (boo: boolean) => void;
   device: Device;
-  onRefresh?: () => Promise<void>;
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,13 +28,21 @@ const AssignAssetsForm = ({
       setLoading(true);
       // @ts-ignore
       const res = await updateDevice(device?._id ?? "error", {
-        userId: user._id,
+        userId: user?._id,
       });
       querClient.invalidateQueries({
         queryKey: ["fetch-assets"],
         exact: false,
         refetchType: "all",
       });
+
+      querClient.invalidateQueries({
+        queryKey: ["user-timeline"],
+        type: "all",
+        refetchType: "all",
+        exact: false,
+      });
+
       setLoading(false);
     }
     closeBtn(false);
@@ -75,21 +74,6 @@ const AssignAssetsForm = ({
           </div>
         </div>
 
-        {/* <div className="pt-3 w-full">
-          <SelectInput
-            fetchOptions={searchUsers}
-            initialOptions={fetchUsers}
-            optionValue={{ firstV: "first_name", secondV: "email" }}
-            key={"assign-assets-form"}
-            placeholder="Search by name, email, etc."
-            // logic yet to be implemented
-            onSelect={(data: User) => {
-              setUser({ email: data.email!, _id: data._id! });
-            }}
-            label="Assigning To"
-            value={user?.email ?? ""}
-          />
-        </div> */}
         <div className="flex flex-col gap-2 pt-3">
           <AsyncSelect<User>
             fetcher={fetchUsers}
@@ -142,6 +126,8 @@ const AssignAssetsForm = ({
             </p>
           )}
         </div>
+        {/* {JSON.stringify(user)} */}
+        {/* {JSON.stringify(device?._id)} */}
         {user?.first_name ? (
           <div className=" w-full bg-[#f5f5f5]  rounded-md p-2.5 flex items-center gap-4 ">
             {user?.image && user?.image?.length > 0 ? (
@@ -182,25 +168,6 @@ const AssignAssetsForm = ({
           Cancel
         </Button>
 
-        {/* <button
-          className={buttonVariants({
-            variant: "primary",
-            className: "w-full",
-          })}
-          type="submit"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          <div className="flex items-center">
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                <span>Assign</span>
-              </>
-            )}
-          </div>
-        </button> */}
         <LoadingButton
           variant="primary"
           className="w-full"

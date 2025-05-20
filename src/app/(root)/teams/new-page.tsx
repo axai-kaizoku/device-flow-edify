@@ -1,9 +1,12 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { useDeferredValue } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
+import { ActionBar } from "@/components/action-bar/action-bar";
+import { ActionSearchBar } from "@/components/action-bar/action-search-bar";
 import { buttonVariants } from "@/components/buttons/Button";
+import { MoreFilters } from "@/components/filters/more-filters";
 import {
   Select,
   SelectContent,
@@ -11,41 +14,141 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fetchActiveTeams } from "@/server/teamActions";
+import { filterTeams } from "@/server/newFilterActions";
+import {
+  type FilterSelection,
+  type FilterTeamsArgs,
+} from "@/server/types/newFilterTypes";
 import { useQueryState } from "nuqs";
 import InvitePeople from "../people/[id]/_components/invite-people";
 import CreateTeam from "./_components/create-team";
 import TeamsMain from "./_components/teams-main";
 
 export const NewPageTeams = () => {
+  // const queryClient = useQueryClient();
+
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "active-teams",
   });
 
-  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
-  const actualSearchTerm = useDeferredValue(searchTerm);
+  const [rawSearch, setRawSearch] = useQueryState("searchQuery", {
+    defaultValue: "",
+  });
+  const [filters, setFilters] = useState<FilterSelection>({});
+
+  const tupleFilters = useMemo(
+    () =>
+      Object.entries(filters).flatMap(([k, vals]) =>
+        vals.map((v) => [k, "Equals", v])
+      ),
+    [filters]
+  );
+  // Filters
+  // const [filtersActive, setFiltersActive] = useState(false);
+  // const filterKey = activeTab;
+
+  // const { data, status } = useQuery({
+  //   queryKey: ["teams", activeTab],
+  //   queryFn: async () => {
+  //     const query = {
+  //       searchQuery: searchTerm ?? "",
+  //       isDeleted: activeTab === "active-teams" ? false : true,
+  //     };
+
+  //     return fetchActiveTeams(query);
+  //   },
+  //   staleTime: 1000 * 60 * 5,
+  //   refetchOnMount: false,
+  //   refetchOnWindowFocus: false,
+  // });
+
+  const searchTerm = useDeferredValue(rawSearch);
+
+  // const teamsQuery = useQuery({
+  //   queryKey: ["teams", activeTab, searchTerm, filtersActive],
+  //   queryFn: async () => {
+  //     const args: FilterTeamsArgs = {
+  //       type: activeTab.replace("-teams", "") as FilterTeamsArgs["type"],
+  //       searchQuery: searchTerm,
+  //       filters: [],
+  //     };
+  //     return filterTeams(args);
+  //   },
+  //   staleTime: 5 * 60 * 1000,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnMount: false,
+  // });
 
   const { data, status } = useQuery({
-    queryKey: ["teams", activeTab],
-    queryFn: async () => {
-      const query = {
-        searchQuery: actualSearchTerm ?? "",
-        isDeleted: activeTab === "active-teams" ? false : true,
-      };
-
-      return fetchActiveTeams(query);
-    },
-    staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
+    queryKey: [
+      "teams",
+      {
+        tab: activeTab,
+        search: searchTerm,
+        filters: tupleFilters,
+      },
+    ],
+    queryFn: () =>
+      filterTeams({
+        type: activeTab.replace("-teams", "") as FilterTeamsArgs["type"],
+        searchQuery: searchTerm,
+        filters: tupleFilters,
+      }),
     refetchOnWindowFocus: false,
   });
 
+  const handleFilterChange = (newFilter: FilterSelection) => {
+    setFilters(newFilter);
+  };
+
+  // const filterMutation = useMutation({
+  //   mutationFn: filterTeams,
+  //   onSuccess: () => teamsQuery.refetch(),
+  // });
+
+  // useEffect(() => {
+  //   // reset controls
+  //   setRawSearch("");
+  //   setFiltersActive(false);
+
+  //   // invalidate queries to ensure fresh data
+  //   queryClient.invalidateQueries({ queryKey: ["teams"] });
+  //   teamsQuery.refetch();
+  // }, [activeTab]);
+
+  // const handleFilterChange = (filters: FilterSelection) => {
+  //   // transform to tuple list
+  //   const tupleFilters: FilterTeamsArgs["filters"] = Object.entries(
+  //     filters
+  //   ).flatMap(([key, vals]) => vals.map((val) => [key, "Equals", val]));
+  //   setFiltersActive(true);
+
+  //   const args: FilterTeamsArgs = {
+  //     type: activeTab.replace("-assets", "") as FilterTeamsArgs["type"],
+  //     searchQuery: searchTerm,
+  //     filters: tupleFilters,
+  //   };
+  //   filterMutation.mutate(args);
+  // };
+
+  // const data = filtersActive ? filterMutation.data : teamsQuery.data;
+  // const status = filtersActive ? filterMutation.status : teamsQuery.status;
+
   return (
     <section className="w-full h-fit relative  overflow-y-auto hide-scrollbar">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex gap-4 sticky top-0 z-50 items-center justify-between p-3 rounded-[10px] border border-[#0000001A] bg-white">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        defaultValue="active-teams"
+        className="w-full"
+      >
+        <ActionBar>
           <div className="flex gap-2">
-            <Select value={activeTab} onValueChange={setActiveTab}>
+            <Select
+              value={activeTab}
+              onValueChange={setActiveTab}
+              defaultValue="active-teams"
+            >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-md">
                 <SelectValue placeholder="People" />
               </SelectTrigger>
@@ -64,40 +167,43 @@ export const NewPageTeams = () => {
                 </SelectItem>
               </SelectContent>
             </Select>
-            <div className="relative h-full"></div>
+            <MoreFilters
+              key={`${activeTab}teams-more`}
+              filterOptions={data?.filterOptions}
+              onFilterChange={handleFilterChange}
+              loading={status === "pending"}
+              isRadio
+            />
           </div>
-          <div className="flex gap-2">
-            {/* <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-lg px-2 py-2 h-full">
-              <div className="flex gap-2 justify-center items-center h-full">
-                <Search className=" size-[1.16rem]" />
-                <input
-                  type="text"
-                  value={searchTerm || ""}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search Teams..."
-                  className={`flex-grow h-full bg-transparent outline-none text-black placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] transition-all duration-1000 `}
-                />
-              </div>
-            </div> */}
 
+          <div className="flex gap-2 items-center">
+            <ActionSearchBar
+              type="text"
+              value={rawSearch || ""}
+              onChange={(e) => setRawSearch(e.target.value)}
+              placeholder="Search Teams..."
+            />
             {activeTab === "active-teams" && (
-              <InvitePeople>
-                <div className={buttonVariants({ variant: "outlineTwo" })}>
-                  <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
-                    Invite People
+              <>
+                <InvitePeople>
+                  <div className={buttonVariants({ variant: "outlineTwo" })}>
+                    <div className=" group-hover:text-white text-nowrap text-sm font-gilroyMedium">
+                      Invite People
+                    </div>
                   </div>
-                </div>
-              </InvitePeople>
+                </InvitePeople>
+
+                <CreateTeam>
+                  <div className={buttonVariants({ variant: "primary" })}>
+                    <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
+                      Create Team
+                    </span>
+                  </div>
+                </CreateTeam>
+              </>
             )}
-            <CreateTeam>
-              <div className={buttonVariants({ variant: "primary" })}>
-                <span className="text-sm  whitespace-nowrap group-hover:text-white font-gilroyMedium">
-                  Create Team
-                </span>
-              </div>
-            </CreateTeam>
           </div>
-        </div>
+        </ActionBar>
         <TabsContent value="active-teams">
           <TeamsMain teams={data} status={status} value="active-teams" />
         </TabsContent>

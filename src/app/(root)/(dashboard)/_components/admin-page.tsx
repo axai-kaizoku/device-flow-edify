@@ -17,7 +17,7 @@ import { AssetsCount } from "./admin-conponents/assets-count";
 import { AssetsHealth } from "./admin-conponents/assets-health";
 import { DashboardDetails } from "./admin-conponents/interface";
 import { ManageIssue } from "./admin-conponents/manage-issue";
-import { TrendingDevices } from "./admin-conponents/trending-devices";
+// import { TrendingDevices } from "./admin-conponents/trending-devices";
 import DashboardSkeleton from "./dashboard-skeleton";
 import { Subscriptions } from "./subscriptions/interface";
 import TotalSpendingCard from "./subscriptions/totalSpendingCard";
@@ -125,11 +125,14 @@ export default function AdminDashboard() {
             {/* Left Column - ManageIssue */}
             <div className="w-[calc(35%-12px)] flex flex-col gap-3">
               <ManageIssue dashboardData={dashboardData} />
-              <img
+              {/* <img
                 src="/media/dashboard/Today_sales.svg"
                 alt=""
                 className="mt-1"
-              />
+              /> */}
+            </div>
+            <div className="w-[calc(35%-12px)]">
+              <AssetsCount dashboardData={dashboardData} />
             </div>
 
             {/* Middle Column - AssetsHealth & AssetsCount */}
@@ -137,9 +140,6 @@ export default function AdminDashboard() {
               <div className="w-[calc(35%-12px)] flex flex-col gap-4">
                 <div className="w-full">
                   <AssetsHealth dashboardData={dashboardData} />
-                </div>
-                <div className="w-full">
-                  <AssetsCount dashboardData={dashboardData} />
                 </div>
               </div>
             ) : (
@@ -167,9 +167,9 @@ export default function AdminDashboard() {
             )}
 
             {/* Right Column - TrendingDevices */}
-            <div className="w-[calc(30%-12px)] flex flex-col gap-1.5 lg:gap-6 rounded-[2px]">
+            {/* <div className="w-[calc(30%-12px)] flex flex-col gap-1.5 lg:gap-6 rounded-[2px]">
               <TrendingDevices dashboardData={dashboardData} />
-            </div>
+            </div> */}
           </div>
 
           {/* Feedback */}
