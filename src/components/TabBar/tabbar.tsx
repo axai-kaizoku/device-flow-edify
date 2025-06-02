@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Tab {
-  id: string;
-  label: string;
+  id?: string;
+  label?: string;
   content?: React.ReactNode;
-  number?: number;
+  number?: number | string;
 }
 
 interface TabBarProps {
-  tabs: Tab[];
+  tabs?: Tab[];
   defaultActiveTab?: string;
   className?: string;
   tabClassName?: string;

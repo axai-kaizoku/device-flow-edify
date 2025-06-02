@@ -19,7 +19,7 @@ export type Address = {
   pinCode?: string;
 };
 
-export const getAddress = cache(async function (): Promise<Address[]> {
+export const getAddress = async (): Promise<Address[]> => {
   try {
     const res = await callAPIWithToken<Address[]>(
       `${baseUrl}/edifybackend/v1/address`,
@@ -29,7 +29,7 @@ export const getAddress = cache(async function (): Promise<Address[]> {
   } catch (e) {
     throw new Error((e as AxiosError)?.message);
   }
-});
+};
 
 export async function createAddress(address: Address): Promise<Address> {
   try {

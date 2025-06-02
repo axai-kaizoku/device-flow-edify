@@ -1,6 +1,5 @@
 "use server";
 
-import { cache } from "react";
 import { Address } from "./addressActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { BASEURL } from "./main";
@@ -46,7 +45,7 @@ export type Org = {
   total_purchased?: number;
 };
 
-export const getGSuiteAuthUrl = cache(
+export const getGSuiteAuthUrl = 
   async ({
     bulkUpload,
     price,
@@ -70,10 +69,9 @@ export const getGSuiteAuthUrl = cache(
       body
     )}`;
     return url;
-  }
-);
+  };
 
-export const getGSuiteAuthUrlLogin = cache(
+export const getGSuiteAuthUrlLogin = 
   async ({
     redirectUri,
   }: {
@@ -88,10 +86,9 @@ export const getGSuiteAuthUrlLogin = cache(
       body
     )}`;
     return url;
-  }
-);
+  };
 
-export const getCurrentOrg = cache(async function <Org>() {
+export const getCurrentOrg = async <Org>() => {
   try {
     const sess = await getSession();
     const orgId = sess?.user?.user?.orgId?._id;
@@ -105,7 +102,7 @@ export const getCurrentOrg = cache(async function <Org>() {
   } catch (e) {
     throw new Error("Failed to fetch org");
   }
-});
+};
 
 export async function updateOrg({
   id,

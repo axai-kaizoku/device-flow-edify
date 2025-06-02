@@ -1,4 +1,4 @@
-import ReportPreview from "@/app/(root)/(userRoutes)/diagnostic/_components/report-preview";
+import ReportPreview from "@/app/(root)/diagnostic/_components/report-preview";
 import { formatDate } from "@/app/(root)/people/[id]/_components/user-timeline-table";
 import { buttonVariants } from "@/components/buttons/Button";
 import { Table } from "@/components/wind/Table";
@@ -8,7 +8,11 @@ const QCSection = ({ data }: { data: any }) => {
   if (!data || data.length === 0) {
     return (
       <div className="flex justify-center items-center text-gray-500 p-4">
-        <img src="/media/no-qc-report.svg" alt="" className="size-[450px]" />
+        <img
+          src="/media/no-qc-report.webp"
+          alt=""
+          className="h-[450px] w-[380px]"
+        />
       </div>
     );
   }

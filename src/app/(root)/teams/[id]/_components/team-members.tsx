@@ -12,6 +12,9 @@ import { useRouter } from "next/navigation";
 import AddTeamMember from "./add-team-member";
 import MoveTeamMember from "./move-team-member";
 import { RemoveTeamMember } from "./remove-team-member";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete02Icon } from "@hugeicons/core-free-icons";
+import { Badge } from "@/components/ui/badge";
 
 const TeamMembers = ({
   teamData,
@@ -47,7 +50,7 @@ const TeamMembers = ({
       {status !== "pending" && data?.users?.length === 0 ? (
         <div className="flex flex-col  justify-center items-center py-4">
           <img
-            src="/media/no_data/people.svg"
+            src="/media/no_data/people.webp"
             alt="No-People Logo"
             className="h-[53vh]"
           />
@@ -75,11 +78,13 @@ const TeamMembers = ({
                 Team Members
               </h2>
 
-              <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full">
+              {/* <span className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6] text-xs px-2 py-1 rounded-full"> */}
+              <Badge className="bg-[#F9F5FF] font-gilroySemiBold text-[#6941C6]">
                 {data?.total
                   ? `${data?.total} ${data?.total > 1 ? "Members" : "Member"}`
                   : "N/A"}
-              </span>
+              </Badge>
+              {/* </span> */}
             </div>
           )}
           {/* {JSON.stringify(data)} */}
@@ -105,10 +110,10 @@ const TeamMembers = ({
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={() => router.push(`/people/${data?._id}`)}
                       >
-                        <GetAvatar name={data?.first_name ?? ""} />
+                        <GetAvatar name={data?.first_name ?? ""} size={30} />
 
                         <div className="relative group">
-                          <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                          <div className="font-gilroyMedium text-sm text-black truncate max-w-[150px]">
                             {data?.first_name?.length! > 12
                               ? `${data?.first_name!.slice(0, 12)}...`
                               : data?.first_name}
@@ -159,9 +164,9 @@ const TeamMembers = ({
                     title: "Assets assigned",
                     render: (user: User) =>
                       user?.devices && user?.devices?.length > 0 ? (
-                        <div className="flex justify-center items-center w-fit px-3 rounded-lg bg-[#ECFDF3] text-[#027A48]">
+                        <Badge className={`bg-[#ECFDF3] text-[#027A48]`}>
                           {`${user?.devices?.length} Assigned`}
-                        </div>
+                        </Badge>
                       ) : (
                         <div>-</div>
                       ),
@@ -219,7 +224,11 @@ const TeamMembers = ({
                     render: (data) => (
                       <div className="flex justify-start items-center gap-5 2xl:gap-10 -ml-2">
                         <RemoveTeamMember userData={data}>
-                          <DeleteTableIcon className="size-6" />
+                          <HugeiconsIcon
+                            icon={Delete02Icon}
+                            size={22}
+                            className="text-[#656B70]"
+                          />
                         </RemoveTeamMember>
                         <MoveTeamMember userData={data}>
                           {/* <EditTableIcon className="size-5" /> */}

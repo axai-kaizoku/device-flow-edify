@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { checkForDuplicates, parseCSV } from "./CSVHelper";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { File01Icon } from "@hugeicons/core-free-icons";
 
 type dataProps = {
   closeBtn: () => void;
@@ -187,17 +189,18 @@ function BulkUpload({
           </div>
         ) : (
           <div className="w-full flex flex-col gap-2">
-            <div className="font-gilroyMedium text-base text-black">
-              Bulk Import
-            </div>
-
-            <div className="rounded-lg p-3  flex justify-between items-center border border-gray-200">
-              <div className="flex gap-2">
-                <Icons.file_csv />
+            <div className="rounded-md p-2 flex justify-between items-center border border-gray-200">
+              <div className="flex gap-2 items-center">
+                <HugeiconsIcon
+                  icon={File01Icon}
+                  className="text-blue-600 size-9"
+                />
                 <div className="flex flex-col ">
-                  <h1 className="text-base font-gilroySemiBold">Upload CSV</h1>
+                  <h1 className="text-[15px] font-gilroySemiBold">
+                    Upload CSV
+                  </h1>
                   <p
-                    className="text-[#007aff] text-xs cursor-pointer font-gilroyMedium hover:underline"
+                    className="text-[#007aff] text-[12px] cursor-pointer font-gilroyMedium hover:underline"
                     onClick={downloadSampleCSV}
                   >
                     Download sample CSV

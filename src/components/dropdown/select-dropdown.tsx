@@ -18,6 +18,7 @@ type SelectInputProps = {
   error?: string;
   className?: string;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 export const SelectDropdown = ({
@@ -28,6 +29,7 @@ export const SelectDropdown = ({
   label,
   error,
   className,
+  disabled = false,
 }: SelectInputProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
@@ -107,16 +109,21 @@ export const SelectDropdown = ({
           htmlFor={label}
           className="absolute start-4 top-0 block  -translate-y-1/2 bg-background font-gilroyMedium px-1 text-sm  text-foreground"
         >
-          {label.length !== 0 && `${label}*` }
+          {label.length !== 0 && `${label}*`}
         </label>
         <div
           id={label}
           className={cn(
-            "pr-10 px-4 py-2 text-black text-sm font-gilroyMedium h-10 flex border-input  items-center border rounded-md cursor-pointer",
-            "bg-white  h-10",
+            "pr-10 px-4 py-2 text-black text-sm font-gilroyMedium h-10 flex border-input items-center border rounded-md",
+            "bg-white h-10",
+            disabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "cursor-pointer",
             className
           )}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          onClick={() => {
+            if (!disabled) setIsDropdownOpen(!isDropdownOpen);
+          }}
         >
           {selectedOption && typeof selectedOption !== "string" ? (
             selectedOption.label

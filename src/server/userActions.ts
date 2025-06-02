@@ -60,10 +60,11 @@ export type Ticket = {
 export type NewUserResponse = {
   _id?: string;
   first_name?: string;
+  last_name?: string;
   email?: string;
   phone?: string;
   orgId?: string;
-  tickets: Ticket;
+  tickets?: Ticket[];
   role?: number;
   onboarding_date?: string;
   deleted_at?: string | null;
@@ -71,7 +72,12 @@ export type NewUserResponse = {
   createdAt?: string;
   updatedAt?: string;
   __v?: number;
-  teamId?: string;
+  teamId?: {
+    _id: string;
+    title: string;
+    employees_count?: string | number;
+    team_code?: string;
+  };
   date_of_birth?: string;
   designation?: string;
   employment_type?: string;
@@ -80,6 +86,7 @@ export type NewUserResponse = {
   reporting_manager?: {
     _id?: string;
     first_name?: string;
+
     date_of_birth?: string;
     gender?: string;
     email?: string;
@@ -182,7 +189,7 @@ export type NewUserResponse = {
 };
 
 export type User = {
-  deleted_at?: null;
+  deleted_at?: string | null;
   name?: string;
   _id?: string;
   integrations?: IntegrationType[];
@@ -198,13 +205,18 @@ export type User = {
   about?: string;
   interests_and_hobbies?: string;
   password?: string;
+  teamId?: {
+    _id?: string;
+    title?: string;
+    team_code?: string;
+  };
   email?: string;
   phone?: string;
   orgId?: Org;
   role?: number;
   designation?: string;
   image?: string;
-  team?: [{ _id: string; title: string }];
+  team?: [{ _id: string; title: string; team_code?: string }];
   employment_type?: string;
   created_at?: string;
   __v?: number;
@@ -212,7 +224,6 @@ export type User = {
   onboarding_date?: string;
   reporting_manager?: Manager;
   devices?: number | Device[];
-
   emp_id?: string;
 };
 
@@ -232,14 +243,14 @@ export type CreateUserArgs = {
   role?: number;
   designation?: string;
   image?: string;
-  team?: [{ _id: string; title: string; team_code: string }];
+  team?: [{ _id?: string; title?: string; team_code?: string }];
   teamId?: Team;
   employment_type?: string;
   date_of_birth?: string;
   onboarding_date?: string;
-  reporting_manager?: string;
+  reporting_manager?: string | Manager;
   emp_id?: string;
-  orgId?: string | null;
+  orgId?: string | Org | null;
 };
 
 export type Reportee = {
@@ -282,77 +293,77 @@ export type newAllUserResponse = {
   users: UserResponse;
 };
 
-export const fetchManager = cache(async function (token: string): Promise<any> {
-  try {
-    const requestBody = {
-      fields: [
-        "first_name",
-        "email",
-        "designation",
-        "employment_type",
-        "image",
-      ],
-      filters: [],
-      page: 1,
-      pageLimit: 1000,
-    };
+// export const fetchManager = async (token: string): Promise<any> => {
+//   try {
+//     const requestBody = {
+//       fields: [
+//         "first_name",
+//         "email",
+//         "designation",
+//         "employment_type",
+//         "image",
+//       ],
+//       filters: [],
+//       page: 1,
+//       pageLimit: 1000,
+//     };
 
-    const res: AxiosResponse = await axios({
-      url: `${baseUrl}/edifybackend/v1/user/filter`,
-      method: "POST",
-      data: { requestBody },
+//     const res: AxiosResponse = await axios({
+//       url: `${baseUrl}/edifybackend/v1/user/filter`,
+//       method: "POST",
+//       data: { requestBody },
 
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    return res.data.users;
-  } catch (e) {
-    throw new Error("Failed to fetch users");
-  }
-});
+//     return res.data.users;
+//   } catch (e) {
+//     throw new Error("Failed to fetch users");
+//   }
+// };
 
-export async function searchManager(
-  searchQuery: string,
-  token: string
-): Promise<any> {
-  try {
-    const requestBody = {
-      fields: [
-        "first_name",
-        "email",
-        "designation",
-        "employment_type",
-        "image",
-      ], // Specify fields to be fetched
-      filters: [], // You can add filters here as per requirement
-      page: 1,
-      pageLimit: 20, // Number of users to fetch per page
-    };
-    const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
+// export async function searchManager(
+//   searchQuery: string,
+//   token: string
+// ): Promise<any> {
+//   try {
+//     const requestBody = {
+//       fields: [
+//         "first_name",
+//         "email",
+//         "designation",
+//         "employment_type",
+//         "image",
+//       ], // Specify fields to be fetched
+//       filters: [], // You can add filters here as per requirement
+//       page: 1,
+//       pageLimit: 20, // Number of users to fetch per page
+//     };
+//     const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
+//       searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+//     }`;
 
-    const res: AxiosResponse = await axios({
-      url: apiUrl,
-      method: "POST",
-      data: { requestBody },
+//     const res: AxiosResponse = await axios({
+//       url: apiUrl,
+//       method: "POST",
+//       data: { requestBody },
 
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    return res?.data?.users;
-  } catch (e) {
-    throw new Error("Failed to fetch users");
-  }
-}
+//     return res?.data?.users;
+//   } catch (e) {
+//     throw new Error("Failed to fetch users");
+//   }
+// }
 
-export const fetchUsers = cache(async function (): Promise<User[]> {
+export const fetchUsers = async (): Promise<User[]> => {
   try {
     const requestBody = {
       fields: [
@@ -377,52 +388,7 @@ export const fetchUsers = cache(async function (): Promise<User[]> {
   } catch (e) {
     throw new Error("Failed to fetch users");
   }
-});
-
-export async function searchUsers(searchQuery: string): Promise<
-  {
-    _id: string;
-    first_name: string;
-    email: string;
-    employment_type: string;
-    designation: string;
-    image: string;
-    team: {
-      _id: string;
-      title: string;
-      team_code: string;
-    }[];
-    devices: number;
-  }[]
-> {
-  try {
-    const requestBody = {
-      fields: [
-        "first_name",
-        "email",
-        "designation",
-        "employment_type",
-        "image",
-      ], // Specify fields to be fetched
-      filters: [], // You can add filters here as per requirement
-      page: 1,
-      pageLimit: 10, // Number of users to fetch per page
-    };
-    const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    const res = await callAPIWithToken<UserResponse>(
-      apiUrl,
-      "POST", // Changed to POST as the new API requires it
-      requestBody // Pass the request body
-    );
-    // @ts-ignore
-    return res?.data?.users;
-  } catch (e) {
-    throw new Error("Failed to fetch users");
-  }
-}
+};
 
 export async function createUser(userData: CreateUserArgs): Promise<User> {
   try {
@@ -432,16 +398,6 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
       // password: "winuall123",
       orgId: sess?.user?.user?.orgId?._id,
     };
-
-    // if (!user.image) {
-    //   if (user.gender === "Male") {
-    //     user.image =
-    //       "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png";
-    //   } else {
-    //     user.image =
-    //       "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png";
-    //   }
-    // }
 
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user`, // API endpoint
@@ -459,7 +415,7 @@ export async function createUser(userData: CreateUserArgs): Promise<User> {
 
 export const getUserById = async (userId: string) => {
   try {
-    const res = await callAPIWithToken<User>(
+    const res = await callAPIWithToken<NewUserResponse>(
       `${baseUrl}/edifybackend/v1/user/${userId}`, // API endpoint
       "GET", // HTTP method
       null
@@ -591,10 +547,10 @@ export type UsersTeamResponse = {
   current_page: number;
   total_pages: number;
 };
-export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
+export const getUsersByTeamId = async (
   teamId: string,
   page: number
-): Promise<UsersTeamResponse> {
+): Promise<UsersTeamResponse> => {
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<UsersTeamResponse>(
@@ -614,34 +570,4 @@ export const getUsersByTeamId = cache(async function <UsersTeamResponse>(
   } catch (e) {
     throw new Error("Failed to fetch user");
   }
-});
-
-//Search api
-export async function userSearchAPI(query: string): Promise<UserResponse> {
-  try {
-    const url = `${baseUrl}/edifybackend/v1/user/search?query=${query}`;
-    const res = await callAPIWithToken<UserResponse>(url, "GET");
-
-    return res?.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error?.message || "Failed to search users");
-    }
-    throw new Error((error as AxiosError)?.message);
-  }
-}
-
-export const fetchUserHierarchy = cache(
-  async function (): Promise<HierarchyResponse> {
-    try {
-      const res = await callAPIWithToken<HierarchyResponse>(
-        `${baseUrl}/edifybackend/v1/user/hierarchy`, // Your API endpoint
-        "GET" // HTTP method
-      );
-      return res?.data; // Ensure the response is correctly mapped to data
-    } catch (e) {
-      console.error("Error fetching hierarchy:", e); // Log error from the API
-      throw new Error("Failed to fetch user hierarchy");
-    }
-  }
-);
+};

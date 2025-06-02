@@ -13,7 +13,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
-import { BlueTickCircle } from "../icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 
 export default function MappingDialogOne({
   children,
@@ -164,7 +165,7 @@ export default function MappingDialogOne({
           <div className="flex flex-col gap-1 text-start ">
             {descriptionDetails.map((item) => (
               <div className="flex items-start gap-1 py-0.5">
-                <BlueTickCircle />
+                <HugeiconsIcon icon={CheckmarkCircle02Icon} className="text-blue-600" />
                 <p className="text-sm font-gilroyMedium">{item}</p>
               </div>
             ))}

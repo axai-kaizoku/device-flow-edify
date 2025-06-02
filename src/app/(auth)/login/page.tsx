@@ -1,7 +1,7 @@
 "use client";
 import { useIsMobile } from "@/app/(root)/_landing-page/_components/IsMobileView";
-import LoginForm from "./_components/login-form";
 import { useRouter } from "next/navigation";
+import LoginForm from "./_components/login-form";
 
 export default function Login() {
   const isMobile = useIsMobile();
@@ -9,7 +9,7 @@ export default function Login() {
   return (
     <>
       {isMobile ? (
-        <div className="px-6 mx-auto w-full flex justify-center items-center h-screen">
+        <div className="px-6 mx-auto w-full flex justify-center items-center h-[80vh]">
           <div className="mx-auto text-center h-fit">
             <div className="flex justify-center">
               <img
@@ -32,21 +32,24 @@ export default function Login() {
             </div>
 
             <div className="w-full flex justify-center">
-              <div className="mt-7 text-xs font-gilroyMedium px-4 py-2 rounded-[6.826px] bg-[#1D1F20] text-white w-fit cursor-pointer" onClick={()=> router.push('/')}>
+              <div
+                className="mt-7 text-xs font-gilroyMedium px-4 py-2 rounded-[6.826px] bg-[#1D1F20] text-white w-fit cursor-pointer"
+                onClick={() => router.push("/")}
+              >
                 Go to Home
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="w-full h-screen justify-around flex flex-col lg:flex-row p-8 max-lg:p-2">
+        <div className="w-full h-[96vh] justify-around flex flex-col lg:flex-row p-8 max-lg:p-2">
           <div className="w-[46%] h-full max-lg:hidden">
             <img
               src="/media/Loginpage.webp"
               alt="edify-background"
               width={"100%"}
               className="object-contain"
-              style={{ height: 720 }}
+              style={{ height: 690 }}
             />
           </div>
           <div className="w-[42%] relative h-full justify-center items-center flex flex-col max-lg:w-full">
@@ -74,9 +77,6 @@ export default function Login() {
             </div>
             <div className="w-[76%] max-lg:w-full h-fit max-lg:mt-4">
               <LoginForm />
-            </div>
-            <div className="flex text-xs lg:text-sm absolute max-lg:w-full bottom-10 text-[#9E9E9E] left-9 max-lg:left-4 max-lg:text-center justify-items-start">
-              Copyright 2024 Edify All rights Reserved
             </div>
           </div>
         </div>

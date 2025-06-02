@@ -32,8 +32,6 @@ export async function middleware(req: NextRequest) {
     "/store/view-all",
     "/store/cart",
     "/store/cart/checkout",
-    "/issues",
-    "/issues/(.*)",
   ];
 
   // If already logged in redirect to home page

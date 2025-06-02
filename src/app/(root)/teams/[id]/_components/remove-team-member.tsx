@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { updateUser, User } from "@/server/userActions";
 import { toast } from "sonner";
 import Spinner, { spinnerVariants } from "@/components/Spinner";

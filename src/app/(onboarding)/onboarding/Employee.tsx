@@ -25,6 +25,7 @@ import { notFound } from "next/navigation";
 import { useState } from "react";
 import BulkUpload from "./BulkUpload";
 import { GsuiteDialogOnboarding } from "@/components/bulk-upload/gsuite-bulk-upload-onboarding";
+import Image from "next/image";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
@@ -266,7 +267,7 @@ export const Employee = ({ setSteps }: any) => {
                 />
                 <div className="rounded-lg p-3  w-full flex justify-between items-center border border-gray-200">
                   <div className="flex gap-2">
-                    <Icons.g_suit_display />
+                    <Image src="/media/integrations-companies/google.webp" alt="GSuite" className="size-9" width={35} height={30}/>
 
                     <div className="flex flex-col ">
                       <h1 className="text-base font-gilroySemiBold">GSuite</h1>

@@ -5,7 +5,11 @@ export async function globalSearch(searchQuery: string) {
   try {
     const apiUrl = `${BASEURL}/edifybackend/v1/globalSearch/`;
     const body = { searchQuery };
-    const response = await callAPIWithToken(apiUrl, "POST", body);
+    const response = await callAPIWithToken<Record<string, any[]>>(
+      apiUrl,
+      "POST",
+      body
+    );
 
     return response.data;
   } catch (err: any) {

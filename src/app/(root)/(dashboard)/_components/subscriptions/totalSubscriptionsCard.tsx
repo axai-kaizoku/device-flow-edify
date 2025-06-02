@@ -1,19 +1,17 @@
 "use client";
-import { UserData } from "@/app/store/authSlice";
-import { Button, buttonVariants } from "@/components/buttons/Button";
-import { useSelector } from "react-redux";
-import { Pie, Cell, PieChart } from "recharts";
-import { PlatformCount, Subscriptions } from "./interface";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { buttonVariants } from "@/components/buttons/Button";
 import { formatNumber } from "@/lib/utils";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Cell, Pie, PieChart } from "recharts";
+import { PlatformCount, Subscriptions } from "./interface";
+import { Badge } from "@/components/ui/badge";
 
 export default function TotalSubscriptionsCard({
   integrationData,
 }: {
   integrationData: Subscriptions;
 }) {
-  const user: UserData = useSelector((state: any) => state.auth.userData);
   const COLORS = ["#7086FD", "#F7B64F", "#63bc48", "#FF928A"];
   const router = useRouter();
 
@@ -27,7 +25,7 @@ export default function TotalSubscriptionsCard({
     return (
       <div className="w-[50%]  bg-white  rounded-md border border-black/10 flex flex-col justify-center items-center px-3 py-5 gap-6 lg:p-7">
         <img
-          src="/media/dashboard/subscription-empty.jpg"
+          src="/media/dashboard/subscription-empty.webp"
           width={200}
           height={150}
         />
@@ -59,9 +57,9 @@ export default function TotalSubscriptionsCard({
           <span className="text-black font-gilroy text-sm font-gilroySemiBold ">
             Subscriptions
           </span>
-          <div className="rounded-full px-2 font-gilroySemiBold py-0.5 bg-[#F9F5FF] text-[#6941C6] text-xs text-center">
+          <Badge className="bg-[#F9F5FF] text-[#6941C6] font-gilroySemiBold">
             {integrationData?.platformCounts?.length} Subscriptions
-          </div>
+          </Badge>
         </div>
 
         <div className="flex gap-2">
@@ -108,7 +106,7 @@ export default function TotalSubscriptionsCard({
                         }}
                       />
                       <span className="text-black font-gilroySemiBold text-xs xl:text-sm ">
-                        {response.platform}
+                        {response?.platform}
                       </span>
                     </div>
                   );
@@ -134,7 +132,7 @@ export default function TotalSubscriptionsCard({
                   return (
                     <div className="flex gap-4 w-full items-center">
                       <span className="text-black font-gilroySemiBold text-xs xl:text-sm ">
-                        {response.count} Seats
+                        {response?.count} Seats
                       </span>
                     </div>
                   );
@@ -149,7 +147,7 @@ export default function TotalSubscriptionsCard({
           <div className="py-3 animate-marquee whitespace-nowrap w-full flex">
             <div className="flex items-center gap-2 w-full">
               <img
-                src="media/integrations-companies/slack-icon.png "
+                src="media/integrations-companies/slack-icon.webp "
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -158,7 +156,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/drop-box-icon.png "
+                src="media/integrations-companies/drop-box-icon.webp "
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -167,7 +165,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/figma-icon.png "
+                src="media/integrations-companies/figma-icon.webp "
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -176,7 +174,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/gmail-icon.png "
+                src="media/integrations-companies/gmail-icon.webp "
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -185,7 +183,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/gsuite-icon.png "
+                src="media/integrations-companies/gsuite-icon.webp "
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -197,7 +195,7 @@ export default function TotalSubscriptionsCard({
           <div className="absolute top-0 py-3 animate-marquee2 whitespace-nowrap flex">
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/slack-icon.png"
+                src="media/integrations-companies/slack-icon.webp"
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -206,7 +204,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/drop-box-icon.png"
+                src="media/integrations-companies/drop-box-icon.webp"
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -215,7 +213,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/figma-icon.png"
+                src="media/integrations-companies/figma-icon.webp"
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -224,7 +222,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/gmail-icon.png"
+                src="media/integrations-companies/gmail-icon.webp"
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">
@@ -233,7 +231,7 @@ export default function TotalSubscriptionsCard({
             </div>
             <div className="flex items-center gap-2 w-full mx-4 ">
               <img
-                src="media/integrations-companies/gsuite-icon.png"
+                src="media/integrations-companies/gsuite-icon.webp"
                 className="size-3"
               />
               <span className="text-black font-gilroySemiBold text-xs ">

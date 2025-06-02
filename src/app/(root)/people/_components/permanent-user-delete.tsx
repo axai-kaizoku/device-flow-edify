@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
-import { permanentDeleteUser, updateUser } from "@/server/userActions";
+import { permanentDeleteUser } from "@/server/userActions";
 import { toast } from "sonner";
 import WarningDelete from "@/icons/WarningDelete";
 import { useQueryClient } from "@tanstack/react-query";

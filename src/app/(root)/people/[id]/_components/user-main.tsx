@@ -1,4 +1,10 @@
 "use client";
+import ProfileSkeleton from "@/app/(root)/(userRoutes)/_components/profile-main-skeleton";
+import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
+import { UserData } from "@/app/store/authSlice";
+import { GetAvatar } from "@/components/get-avatar";
+import { StoreBannerCard } from "@/components/store-banner";
+import { NewUserResponse } from "@/server/userActions";
 import {
   Building2,
   Cake,
@@ -9,23 +15,16 @@ import {
   NotepadText,
   Smartphone,
 } from "lucide-react";
-import React from "react";
-import AssetsSection from "./assets-section";
-import { User } from "@/server/userActions";
-import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { useRouter } from "next/navigation";
-import { UserData } from "@/app/store/authSlice";
 import { useSelector } from "react-redux";
-import { StoreBannerCard } from "@/components/store-banner";
-import ProfileSkeleton from "@/app/(root)/(userRoutes)/_components/profile-main-skeleton";
-import { GetAvatar } from "@/components/get-avatar";
+import AssetsSection from "./assets-section";
 
-const UserGrid = ({ user }: { user: User }) => {
+const UserGrid = ({ user }: { user: NewUserResponse }) => {
   const router = useRouter();
   const data: UserData = useSelector((state: any) => state.auth.userData);
 
   const renderMembers = () => {
-    if (user?.teamId?.employees_count === 0) {
+    if (user?.team?.userCount === 0) {
       return Array(3)
         .fill(null)
         .map((_, index) => <MemberIcon key={index} isPlaceholder={true} />);
@@ -47,26 +46,7 @@ const UserGrid = ({ user }: { user: User }) => {
             <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-lg px-6 py-4">
               <div className="flex justify-start gap-4 items-start w-full ">
                 <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
-                  {/* <img
-                    src={
-                      user?.image && user?.image?.length > 0
-                        ? user?.image
-                        : user?.gender?.toLowerCase()?.includes("female")
-                        ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                    }
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  /> */}
-                  {/* {user?.image && user?.image?.length > 0 ? (
-                    <img
-                      src={user?.image}
-                      alt={user?.first_name}
-                      className="size-full object-cover rounded-full flex-shrink-0"
-                    />
-                  ) : ( */}
                   <GetAvatar name={user?.first_name ?? ""} size={90} />
-                  {/* )} */}
                 </div>
 
                 <div className="flex flex-col">
@@ -247,9 +227,7 @@ const UserGrid = ({ user }: { user: User }) => {
 
                     <div className="flex flex-col relative w-full">
                       <h1 className="text-lg font-gilroySemiBold dark:text-gray-200">
-                        {`${user?.reporting_manager?.first_name ?? "-"} ${
-                          user?.reporting_manager?.last_name ?? ""
-                        }`}
+                        {`${user?.reporting_manager?.first_name ?? "-"} `}
                       </h1>
                       <div
                         className="absolute text-[#CDCDCD] text-xs top-4 -right-3 cursor-pointer"

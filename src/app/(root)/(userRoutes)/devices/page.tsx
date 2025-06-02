@@ -1,15 +1,15 @@
-"use client";
 import { CombinedContainer } from "@/components/container/container";
-import DeviceContainer from "./_components/deviceContainer";
+import { Metadata } from "next";
 import { DeviceIssueEmployee } from "./_components/new-device-container";
+
+export const metadata: Metadata = {
+  title: "Devices",
+};
 
 export default function Devices() {
   return (
-    <>
-      <CombinedContainer title="Assets">
-        {/* <DeviceContainer /> */}
-        <DeviceIssueEmployee />
-      </CombinedContainer>
-    </>
+    <CombinedContainer title="Assets">
+      <DeviceIssueEmployee />
+    </CombinedContainer>
   );
 }

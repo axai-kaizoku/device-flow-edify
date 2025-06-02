@@ -10,17 +10,8 @@ import {
   buttonVariants,
   LoadingButton,
 } from "@/components/buttons/Button";
-import Spinner from "@/components/Spinner";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Device,
-  fetchDevices,
-  fetchUnassignedDevices,
-  searchDevices,
-  updateDevice,
-} from "@/server/deviceActions";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import { Device, fetchDevices, updateDevice } from "@/server/deviceActions";
+import { fetchUsers, User } from "@/server/userActions";
 import AssetsIconWhite from "@/icons/AssetsIconWhite";
 import { AsyncSelect } from "@/components/ui/async-select";
 import { GetAvatar } from "@/components/get-avatar";
@@ -107,42 +98,6 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-7 relative h-full"
             >
-              {/* Device select input */}
-              {/* <div className="z-10 pt-3">
-                <SelectInput
-                  key={"assign-device"}
-                  value={formData?.device?.custom_model ?? ""}
-                  placeholder="Search by name, serial no, etc"
-                  fetchOptions={searchDevices}
-                  initialOptions={fetchDevices}
-                  onSelect={(data: Device) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      device: {
-                        _id: data?._id,
-                        device_name: data?.device_name,
-                        custom_model: data?.custom_model,
-                        ram: data?.ram,
-                        storage: data?.storage,
-                        image: data?.image,
-                        serial_no: data?.serial_no,
-                      },
-                    }))
-                  }
-                  optionValue={{ firstV: "custom_model", secondV: "serial_no" }}
-                  label="Device assigned*"
-                  className={cn(
-                    formErrors.device.length > 0
-                      ? "border-destructive/80 border"
-                      : ""
-                  )}
-                />
-                {formErrors.device && (
-                  <p className="text-destructive text-xs font-gilroySemiBold">
-                    {formErrors.device}
-                  </p>
-                )}
-              </div> */}
               <div className="flex flex-col gap-2 pt-3">
                 <AsyncSelect<Device>
                   fetcher={fetchDevices}
@@ -211,13 +166,18 @@ export default function ReAssign({ children }: { children: React.ReactNode }) {
 
               {formData?.device?.custom_model && (
                 <div className=" w-full bg-[#f5f5f5]  rounded-lg p-3 flex items-center gap-4 ">
-                  <img
+                  {/* <img
                     src={
                       formData?.device?.image?.[0]?.url ??
                       "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
                     }
                     alt="team-image"
                     className="w-16 h-16 p-1 border object-contain rounded-full "
+                  /> */}
+                  <GetAvatar
+                    name={formData?.device?.custom_model}
+                    isDeviceAvatar
+                    size={64}
                   />
                   <div className="w-full flex flex-col justify-center ">
                     <h1 className="text-black font-gilroySemiBold text-xl">

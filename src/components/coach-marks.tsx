@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AssetCoachMark from "./assets-coach-mark";
 import TicketsCoachMark from "./ticket-coach-marks";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 function CoachMarks() {
   const [step, setStep] = useState(0); // 0: Asset, 1: Tickets, 2: Done
@@ -27,10 +28,12 @@ function CoachMarks() {
   if (!shouldShow) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
-      {step === 0 && <AssetCoachMark onNext={handleNext} />}
-      {step === 1 && <TicketsCoachMark onNext={handleNext} />}
-    </div>
+    <Dialog open={shouldShow} onOpenChange={setShouldShow}>
+      <DialogContent className="p-4 rounded-lg max-w-sm w-fit focus:outline-none focus-visible:outline-none">
+        {step === 0 && <AssetCoachMark onNext={handleNext} />}
+        {step === 1 && <TicketsCoachMark onNext={handleNext} />}
+      </DialogContent>
+    </Dialog>
   );
 }
 

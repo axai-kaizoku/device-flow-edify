@@ -1,7 +1,9 @@
 "use client";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { createDevices } from "@/server/deviceActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createPayload } from "../../(root)/assets/_components/addDevices/_components/createPayload";
 import {
   DevicePage1,
@@ -17,11 +19,7 @@ import MobileForm from "../../(root)/assets/_components/addDevices/MobileForm";
 import MobileForm2 from "../../(root)/assets/_components/addDevices/MobileForm2";
 import MonitorForm from "../../(root)/assets/_components/addDevices/MonitorForm";
 import MouseForm from "../../(root)/assets/_components/addDevices/mouseForm";
-// import { useAlert } from "@/hooks/useAlert";
-import { Button, LoadingButton } from "@/components/buttons/Button";
-import { toast } from "sonner";
 import DeviceTypeOnboarding from "./DeviceTypeOnboarding";
-// import AssignAssetsForm from "../assignAssetsForm";
 type FormProps = {
   closeBtn: () => void; // Define the type for closeBtn
 };
@@ -292,7 +290,7 @@ export const DeviceComponent = ({
             variant="primary"
             type="button"
             onClick={() => {
-              localStorage.setItem('employee-count', '3')
+              localStorage.setItem("employee-count", "3");
               router.push("/");
             }}
           >

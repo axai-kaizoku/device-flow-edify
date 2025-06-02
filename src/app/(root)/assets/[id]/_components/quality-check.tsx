@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import QualityCheckModal from "./quality-check-modal";
 
-const QualityCheck = ({ qualityCheckDetails, onClose, data }: any) => {
+const QualityCheck = ({ data }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {

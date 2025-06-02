@@ -46,7 +46,7 @@ export const DeleteTeam = ({
           refetchType: "all",
         });
         router.refresh();
-        // router.push("/teams?tab=active-teams");
+        router.push("/teams?tab=active-teams");
         toast.success("Team Deleted Successfully!");
       } catch (e: any) {
         showAlert({

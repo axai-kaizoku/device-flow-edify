@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Button,
   buttonVariants,
@@ -23,13 +24,12 @@ import {
   UserByIntegration,
 } from "@/server/integrationActions";
 import { User } from "@/server/userActions";
-import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { IntBack } from "../icons";
 import AllIntegrationsDisplay from "./all-integration-display";
 
 interface UserByIntegrationsProps {
@@ -56,7 +56,9 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
         className="flex gap-2 items-center mb-2 cursor-pointer hover:underline"
         onClick={() => router.back()}
       >
-        <IntBack />
+        <div className="rounded-full bg-gray-100 p-1 flex justify-center items-center">
+          <HugeiconsIcon icon={ArrowLeft01Icon} className="text-black size-5" />
+        </div>
         <span className="text-gray-500 font-gilroyMedium text-base">
           Installed
         </span>
@@ -95,20 +97,13 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                   title: "Name",
                   render: (record: UserByIntegration) => (
                     <div className="w-28 flex items-center gap-2">
-                      {record?.image && record?.image?.length > 0 ? (
-                        <img
-                          src={record?.image}
-                          alt={record?.name}
-                          className="size-10 object-cover rounded-full flex-shrink-0"
-                        />
-                      ) : (
-                        <GetAvatar
-                          name={record?.first_name ?? record?.name ?? "Guest"}
-                        />
-                      )}
+                      <GetAvatar
+                        name={record?.first_name ?? record?.name ?? "Guest"}
+                        size={30}
+                      />
 
                       <div className="relative group">
-                        <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                        <div className="font-gilroyMedium text-sm text-black truncate max-w-[150px]">
                           {(() => {
                             const name =
                               record?.first_name ?? record?.name ?? "Guest";
@@ -170,23 +165,23 @@ const SeatsSection: React.FC<UserByIntegrationsProps> = ({
                       return <span className="text-gray-400">-</span>;
                     }
 
-                    const firstThree = filteredIntegrations.slice(0, 3);
+                    const firstThree = filteredIntegrations?.slice(0, 3);
                     const extraCount = filteredIntegrations.length - 3;
 
                     return (
                       <AllIntegrationsDisplay
-                        data={record}
+                        data={record as unknown as User}
                         allIntegrations={filteredIntegrations}
                         showArrow={false}
                       >
                         <div className="flex items-center gap-2 -space-x-5">
-                          {firstThree.map((i, index) => (
+                          {firstThree?.map((i, index) => (
                             <div
                               key={index}
                               className="flex justify-center items-center p-1.5 bg-white rounded-full border"
                             >
                               <img
-                                src={i.image ?? ""}
+                                src={i?.image ?? ""}
                                 width={16}
                                 height={16}
                                 className=" object-contain "
@@ -249,31 +244,20 @@ const MapGuestUser = ({
     mutationFn: mapIntegrationUsers,
     mutationKey: ["map-integration-single-user"],
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["get-integration-by-id"],
-        exact: false,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["fetch-people"],
-        exact: false,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["user-by-integrations", "all-data"],
-        exact: true,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["all-integrations", "discover"],
-        exact: true,
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["all-integrations"],
-        exact: false,
-        refetchType: "all",
-      });
+      const queriesToInvalidate = [
+        { queryKey: ["get-integration-by-id"], exact: false },
+        { queryKey: ["fetch-people"], exact: false },
+        { queryKey: ["user-by-integrations", "all-data"], exact: true },
+        { queryKey: ["all-integrations", "discover"], exact: true },
+        { queryKey: ["all-integrations"], exact: false },
+      ];
+
+      await Promise.all(
+        queriesToInvalidate.map(({ queryKey, exact }) =>
+          queryClient.invalidateQueries({ queryKey, exact, refetchType: "all" })
+        )
+      );
+
       toast.success("User mapped successfully");
       setOpen(false);
     },

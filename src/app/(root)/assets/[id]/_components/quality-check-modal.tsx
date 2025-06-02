@@ -18,12 +18,13 @@ const QualityCheckModal = ({ qualityCheckDetails, onClose }) => {
           {qualityCheckDetails && qualityCheckDetails.length > 0 ? (
             qualityCheckDetails.map((detail, index) => (
               <div key={index} className="space-y-2">
-                
                 <div className="grid grid-cols-2 gap-4 h-[40%] overflow-auto">
                   {Object.entries(detail).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
                       <span className="font-gilroyMedium">{key}:</span>
-                      <span className="font-gilroySemiBold">{value}</span>
+                      <span className="font-gilroySemiBold">
+                        {String(value)}
+                      </span>
                     </div>
                   ))}
                 </div>

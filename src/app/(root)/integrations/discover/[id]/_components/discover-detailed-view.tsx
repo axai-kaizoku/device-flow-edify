@@ -13,9 +13,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ConnectIntegration } from "../../../_components/connect-integration";
 import { IntegrationCompanyCard } from "../../../_components/discover/integration-company-card";
-import { BlueLink, IntBack } from "../../../_components/icons";
 import MappingDialogOne from "../../../_components/installed/mapping-dialog-one";
 import MappingDialogTwo from "./mapping-dialog-two";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft01Icon, LinkSquare01Icon } from "@hugeicons/core-free-icons";
 
 function DiscoverDetailedView({ id }: { id: string }) {
   const router = useRouter();
@@ -27,18 +28,11 @@ function DiscoverDetailedView({ id }: { id: string }) {
   const { data, status } = useQuery({
     queryKey: ["get-integration-by-id", id],
     queryFn: () => getIntegrationById({ id }),
-    // staleTime: 1000 * 60 * 5,
-    // refetchOnMount: false,
-    // refetchOnWindowFocus: false,
   });
 
   const { data: companies } = useQuery({
     queryKey: ["all-integrations"],
     queryFn: allIntegrationsAvailable,
-    // staleTime: 1000 * 60 * 5,
-
-    // refetchOnMount: false,
-    // refetchOnWindowFocus: false,
   });
 
   const shuffledCompanies = useMemo(() => {
@@ -187,7 +181,9 @@ function DiscoverDetailedView({ id }: { id: string }) {
               onClick={() => router.push("/integrations/discover")}
               className="text-[#7f7f7f] cursor-pointer hover:underline pl-5 flex items-center gap-2 text-base font-gilroyMedium"
             >
-              <IntBack />
+              <div className="rounded-full bg-gray-100 p-1 flex justify-center items-center">
+                <HugeiconsIcon icon={ArrowLeft01Icon} className="text-black size-5"/>
+              </div>
               Discover
             </h1>
             <div className="flex gap-4 p-6 w-full">
@@ -264,7 +260,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                   </Link>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-base font-gilroySemiBold">Category</h1>
+                  <h1 className="text-base font-gilroySemiBold">Category</h1>\
                   <p className="text-base text-[#8A8F98] font-gilroyMedium">
                     {[
                       { label: "Cloud", key: "isCloud" },
@@ -276,7 +272,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                       { label: "Popular", key: "isPopular" },
                       { label: "Newly Added", key: "isNewlyAdded" },
                     ]
-                      .filter(({ key }) => data?.[key as keyof typeof data])
+                      .filter(({ key }) => data?.tags?.includes(key))
                       .map(({ label }) => label)
                       .join(", ")}
                   </p>
@@ -361,7 +357,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                         className="text-[#007aff] hover:underline flex items-center  gap-1"
                       >
                         Click here
-                        <BlueLink />
+                        <HugeiconsIcon icon={LinkSquare01Icon} className="text-[#007aff] size-5"/>
                       </Link>
                     </div>
                   )}

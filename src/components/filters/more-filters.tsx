@@ -151,13 +151,12 @@ export const MoreFilters = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="relative">
+      <DropdownMenuTrigger className="relative focus:outline-none">
         <div
           aria-label="Filters"
-          // onClick={() => mutate({} as TVariables)}
           className={buttonVariants({
-            variant: "outline",
-            className: "font-gilroyMedium",
+            className:
+              "rounded-lg cursor-pointer text-sm bg-white h-10 text-black  w-fit font-gilroyMedium border hover:border-black",
           })}
         >
           More Filters
@@ -204,7 +203,7 @@ export const MoreFilters = ({
               );
             })}
 
-        {status !== "pending" && filterOptions?.warranty_status && (
+        {!loading && filterOptions?.warranty_status && (
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="capitalize px-3 py-2">
               Warranty

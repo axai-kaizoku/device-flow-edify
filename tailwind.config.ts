@@ -13,7 +13,7 @@ const config: Config = {
         "inner-click": "3px 2px 22px 1px rgba(0, 0, 0, 0.24)",
       },
       scale: {
-        "98": "0.98", // Slightly scale down on click
+        "98": "0.98",
       },
       fontFamily: {
         gilroyRegular: ["var(--font-gilroy-regular)", "sans-serif"],

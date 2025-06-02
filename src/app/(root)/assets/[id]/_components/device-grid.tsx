@@ -1,6 +1,6 @@
 import { GetAvatar } from "@/components/get-avatar";
 import { StoreBannerCard } from "@/components/store-banner";
-import { getUserById, User } from "@/server/userActions";
+import { getUserById, NewUserResponse, User } from "@/server/userActions";
 
 // Helper to format a date string into the required "en-GB" format.
 const formatDate = (dateStr?: string): string => {
@@ -26,12 +26,12 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
   const isAssigned = Boolean(data?.userId && data.userId.length > 0);
 
   // Fetch the assigned user if applicable.
-  let assignedTo: User = {} as User;
+  let assignedTo: NewUserResponse = {} as NewUserResponse;
   if (isAssigned) {
     try {
-      assignedTo = await getUserById(data.userId);
+      assignedTo = await getUserById(data?.userId);
     } catch (error) {
-      assignedTo = {} as User;
+      assignedTo = {} as NewUserResponse;
     }
   }
 
@@ -50,7 +50,7 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
   // Assigned Info fields for the Assigned Info card.
   const assignedInfoFields = [
     { label: "Role", value: assignedTo?.designation ?? "-" },
-    { label: "Department", value: assignedTo?.teamId?.description ?? "-" },
+    { label: "Department", value: assignedTo?.team?.description ?? "-" },
     { label: "Employment Type", value: assignedTo?.employment_type ?? "-" },
     { label: "Team", value: assignedTo?.teamId?.title ?? "-" },
     { label: "Email ID", value: assignedTo?.email ?? "-" },
@@ -58,7 +58,7 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
     {
       label: "Reporting Manager",
       value: `${assignedTo?.reporting_manager?.first_name ?? "-"} ${
-        assignedTo?.reporting_manager?.last_name ?? ""
+        assignedTo?.reporting_manager?.first_name ?? ""
       }`,
     },
     {
@@ -102,15 +102,6 @@ export const DeviceGrid = async ({ data }: { data: any }) => {
           <div className="rounded-lg w-[52%] h-full border border-[#C3C3C34F] bg-white px-6 py-4 2xl:p-7 flex flex-col gap-3">
             <h1 className="font-gilroyMedium text-base">Device Info</h1>
             <div className="flex gap-2 items-center">
-              {/* <div className="bg-gray-100 rounded-full py-3 px-2"> */}
-              {/* <img
-                  src={
-                    "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
-                  }
-                  alt="Device"
-                  className="w-7 h-5 "
-                />
-              </div> */}
               <img
                 src={
                   "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"

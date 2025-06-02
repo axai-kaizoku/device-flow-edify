@@ -43,41 +43,8 @@ export const NewPageTeams = () => {
       ),
     [filters]
   );
-  // Filters
-  // const [filtersActive, setFiltersActive] = useState(false);
-  // const filterKey = activeTab;
-
-  // const { data, status } = useQuery({
-  //   queryKey: ["teams", activeTab],
-  //   queryFn: async () => {
-  //     const query = {
-  //       searchQuery: searchTerm ?? "",
-  //       isDeleted: activeTab === "active-teams" ? false : true,
-  //     };
-
-  //     return fetchActiveTeams(query);
-  //   },
-  //   staleTime: 1000 * 60 * 5,
-  //   refetchOnMount: false,
-  //   refetchOnWindowFocus: false,
-  // });
 
   const searchTerm = useDeferredValue(rawSearch);
-
-  // const teamsQuery = useQuery({
-  //   queryKey: ["teams", activeTab, searchTerm, filtersActive],
-  //   queryFn: async () => {
-  //     const args: FilterTeamsArgs = {
-  //       type: activeTab.replace("-teams", "") as FilterTeamsArgs["type"],
-  //       searchQuery: searchTerm,
-  //       filters: [],
-  //     };
-  //     return filterTeams(args);
-  //   },
-  //   staleTime: 5 * 60 * 1000,
-  //   refetchOnWindowFocus: false,
-  //   refetchOnMount: false,
-  // });
 
   const { data, status } = useQuery({
     queryKey: [
@@ -100,39 +67,6 @@ export const NewPageTeams = () => {
   const handleFilterChange = (newFilter: FilterSelection) => {
     setFilters(newFilter);
   };
-
-  // const filterMutation = useMutation({
-  //   mutationFn: filterTeams,
-  //   onSuccess: () => teamsQuery.refetch(),
-  // });
-
-  // useEffect(() => {
-  //   // reset controls
-  //   setRawSearch("");
-  //   setFiltersActive(false);
-
-  //   // invalidate queries to ensure fresh data
-  //   queryClient.invalidateQueries({ queryKey: ["teams"] });
-  //   teamsQuery.refetch();
-  // }, [activeTab]);
-
-  // const handleFilterChange = (filters: FilterSelection) => {
-  //   // transform to tuple list
-  //   const tupleFilters: FilterTeamsArgs["filters"] = Object.entries(
-  //     filters
-  //   ).flatMap(([key, vals]) => vals.map((val) => [key, "Equals", val]));
-  //   setFiltersActive(true);
-
-  //   const args: FilterTeamsArgs = {
-  //     type: activeTab.replace("-assets", "") as FilterTeamsArgs["type"],
-  //     searchQuery: searchTerm,
-  //     filters: tupleFilters,
-  //   };
-  //   filterMutation.mutate(args);
-  // };
-
-  // const data = filtersActive ? filterMutation.data : teamsQuery.data;
-  // const status = filtersActive ? filterMutation.status : teamsQuery.status;
 
   return (
     <section className="w-full h-fit relative  overflow-y-auto hide-scrollbar">

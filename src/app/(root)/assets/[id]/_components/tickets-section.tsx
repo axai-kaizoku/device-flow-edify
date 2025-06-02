@@ -1,11 +1,8 @@
 import { buttonVariants } from "@/components/buttons/Button";
 import { Table } from "@/components/wind/Table";
-import { useRouter } from "next/navigation";
-import React from "react";
+import Link from "next/link";
 
 const TicketsTable = ({ data }: { data: any[] }) => {
-  const router = useRouter();
-
   if (!data || data.length === 0) {
     return (
       <div className="flex justify-center items-center text-gray-500 p-4">
@@ -90,13 +87,13 @@ const TicketsTable = ({ data }: { data: any[] }) => {
           {
             title: "",
             render: (record) => (
-              <div
+              <Link
+                href={`/tickets/${record._id}`}
                 className={buttonVariants({ variant: "outlineTwo" })}
                 style={{ cursor: "pointer" }}
-                onClick={() => router.push(`/issues/${record._id}`)}
               >
                 View
-              </div>
+              </Link>
             ),
           },
         ]}

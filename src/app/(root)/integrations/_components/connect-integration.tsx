@@ -23,12 +23,15 @@ import { cn } from "@/lib/utils";
 import { IntegrationType } from "@/server/integrationActions";
 import { getGSuiteAuthUrl } from "@/server/orgActions";
 import { UseMutationResult } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormField } from "../../settings/_components/form-field";
-import { BlueTickCircle, BothSideArrows } from "./icons";
 import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowLeftRightIcon,
+  CheckmarkCircle02Icon,
+} from "@hugeicons/core-free-icons";
 
 export const ConnectIntegration = ({
   loading,
@@ -179,7 +182,11 @@ export const ConnectIntegration = ({
               className="size-10 object-cover"
               alt="Edify logo"
             />
-            <BothSideArrows />
+            
+            <div className="transform rotate-180 text-gray-500">
+              <HugeiconsIcon icon={ArrowLeftRightIcon} />
+            </div>
+
             <img
               src={integrationData?.companyLogo ?? ""}
               alt="Integration logo"
@@ -293,7 +300,10 @@ export const ConnectIntegration = ({
         <div className="flex flex-col gap-1 text-start h-[9vh] overflow-y-auto ">
           {integrationData?.permissions.map((item, index) => (
             <div key={index} className="flex items-center gap-1 py-0.5">
-              <BlueTickCircle />
+              <HugeiconsIcon
+                icon={CheckmarkCircle02Icon}
+                className="text-blue-600"
+              />
               <p className="text-sm font-gilroyMedium">{item}</p>
             </div>
           ))}

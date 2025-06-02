@@ -2,7 +2,8 @@ import { GetAvatar } from "@/components/get-avatar"; // adjust path if needed
 import { cn } from "@/lib/utils";
 import { IntegrationUsers } from "@/server/integrationActions";
 import { User } from "@/server/userActions";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 interface SeatsCardProps {
   type: "total" | "unmapped" | "unused";
@@ -75,7 +76,7 @@ const SeatsCard = ({
           {renderMembers()}
         </div>
         <div className="rounded-full bg-[#F6F6F6] size-5 flex justify-center items-center">
-          <ChevronRight className="size-3.5 ml-0.5" />
+          <HugeiconsIcon icon={ArrowRight01Icon} className="size-3.5 ml-0.5 stroke-black font-gilroySemiBold"/>
         </div>
       </div>
     </div>

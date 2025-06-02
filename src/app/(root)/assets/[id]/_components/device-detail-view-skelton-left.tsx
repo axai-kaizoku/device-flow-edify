@@ -30,7 +30,7 @@ function DeviceDetailLeftSkelton() {
         </div>
 
         {/* Open issues alert */}
-        <div className="bg-[#FFEDED] px-2 py-3 gap-2 flex items-center rounded-[5px]">
+        <div className="bg-muted px-2 py-3 gap-2 flex items-center rounded-[5px]">
           <div className="h-4 w-4 bg-gray-300 rounded-full" />
           <div className="h-4 w-32 bg-gray-300 rounded" />
         </div>

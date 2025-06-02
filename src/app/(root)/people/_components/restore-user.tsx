@@ -20,11 +20,9 @@ import { useQueryClient } from "@tanstack/react-query";
 export const RestoreUser = ({
   id,
   children,
-  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -80,7 +78,6 @@ export const RestoreUser = ({
                     exact: false,
                     refetchType: "all",
                   });
-
                 } catch (e: any) {
                   toast.error("Some Error Occured! Please try again later.");
                 } finally {

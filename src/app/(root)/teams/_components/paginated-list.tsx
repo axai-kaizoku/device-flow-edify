@@ -14,7 +14,7 @@ export default function PaginatedList({
   renderButtons,
 }: PaginatedListProps) {
   return (
-    <div className=" py-2 w-full min-h-0 max-h-[70vh] h-full ">
+    <div className=" py-2 w-full min-h-[70vh] max-h-[70vh] h-full ">
       <div className="flex gap-4 flex-wrap w-full ">
         {/* {JSON.stringify(teams?.)} */}
         {teams?.teams?.map(

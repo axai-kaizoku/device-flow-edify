@@ -11,9 +11,9 @@ import {
   isYesterday as isYesterdayFn,
 } from "date-fns";
 
-import { Attachment } from "@/app/(root)/issues/[id]/_components/chat-interface";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import { Attachment } from "@/app/(root)/tickets/_components/[id]/chat-interface/chat-interface";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

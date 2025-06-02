@@ -1,11 +1,9 @@
 "use client";
-import React from "react";
-import { DashboardDetails } from "./interface";
 import ExcellentDeviceIcon from "@/icons/ExcellentDeviceIcon";
-import UnassignedDeviceIcon from "@/icons/UnassignedDeviceIcon";
 import FairDeviceIcon from "@/icons/FairDeviceIcon";
 import { useRouter } from "next/navigation";
-import { Pie, Cell, PieChart } from "recharts";
+import Image from "next/image";
+import { DashboardDetails } from "./interface";
 
 export function AssetsHealth({
   dashboardData,
@@ -54,9 +52,9 @@ export function AssetsHealth({
 
   // Sort the original deviceConditionData for the list display
   const sortedDeviceConditionData = dashboardData?.deviceConditionData
-    ?.map(item => ({
+    ?.map((item) => ({
       ...item,
-      order: CONDITION_ORDER[item._id] || 99
+      order: CONDITION_ORDER[item._id] || 99,
     }))
     .sort((a, b) => a.order - b.order);
 
@@ -137,7 +135,7 @@ export function AssetsHealth({
                 color: "#6FD195",
               },
               {
-                icon: <UnassignedDeviceIcon />,
+                icon: <Image src="/media/dashboard/unassigned.webp" alt="Unassigned" width={28} height={28}/>,
                 label: "Good Device",
                 color: "#FFAE4C",
               },

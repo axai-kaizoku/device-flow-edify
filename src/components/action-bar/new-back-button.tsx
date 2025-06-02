@@ -8,7 +8,7 @@ export const NewBackButton = () => {
   const router = useRouter();
   return (
     <div
-      className="rounded-md cursor-pointer border border-gray-300 hover:border-black p-2.5"
+      className="rounded-md cursor-pointer border border-[#E5E5E5] py-[9px] hover:border-black p-2"
       onClick={() => router.back()}
     >
       <HugeiconsIcon icon={ArrowLeft01Icon} className="size-4" />

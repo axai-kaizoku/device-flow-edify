@@ -40,8 +40,6 @@ export const DiscoverSection = ({ data, status }: DiscoverSectionProps) => {
 
   return (
     <div className="flex flex-col gap-5 w-full h-[60vh]">
-      {/* <TotalSpends /> */}
-      {/* <MappingDialogueOne>hi</MappingDialogueOne> */}
       <section className="flex gap-4 h-full">
         <CategoriesFilter data={data} onSelect={setSelectedCategory} />
 
@@ -61,16 +59,20 @@ export const DiscoverSection = ({ data, status }: DiscoverSectionProps) => {
 
               <IntegrationCompaniesSecx
                 categoryName="Newly Added"
-                categoryCompanies={data?.filter((item) => item?.isNewlyAdded)}
+                categoryCompanies={data?.filter((item) =>
+                  item.tags.includes("isNewlyAdded")
+                )}
               />
 
               <IntegrationCompaniesSecx
                 categoryName="Popular"
-                categoryCompanies={data?.filter((item) => item?.isPopular)}
+                categoryCompanies={data?.filter((item) =>
+                  item.tags.includes("isPopular")
+                )}
               />
             </>
           ) : (
-            ""
+            <></>
           )}
         </div>
       </section>

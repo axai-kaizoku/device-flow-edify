@@ -1,17 +1,15 @@
 "use client";
 
 import { Button, LoadingButton } from "@/components/buttons/Button";
-import { SelectInput } from "@/components/dropdown/select-input";
 import { GetAvatar } from "@/components/get-avatar";
 import { Input } from "@/components/inputs/Input";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
 import { AsyncSelect } from "@/components/ui/async-select";
 import { useAlert } from "@/hooks/useAlert";
 import UploadImageIcon from "@/icons/UploadImageIcon";
 import { cn } from "@/lib/utils";
 import { getImageUrl } from "@/components/utils/upload";
 import { createTeam, updateTeam } from "@/server/teamActions";
-import { fetchUsers, searchUsers, User } from "@/server/userActions";
+import { fetchUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";

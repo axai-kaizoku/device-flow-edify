@@ -1,7 +1,7 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
-import { User } from "@/server/userActions";
+import { NewUserResponse, User } from "@/server/userActions";
 import Link from "next/link";
 
 export default function ManageAssets({
@@ -9,7 +9,7 @@ export default function ManageAssets({
   userData,
 }: {
   children: React.ReactNode;
-  userData: User;
+  userData: NewUserResponse;
 }) {
   return (
     <Sheet>
@@ -29,32 +29,6 @@ export default function ManageAssets({
                 href={`/assets/${deviceData._id}`}
                 className="w-[97%]  flex items-center "
               >
-                {/* <div className=" w-full bg-[#f5f5f5]  rounded-3xl p-3 flex items-center gap-4 ">
-                  <img
-                    src={
-                      deviceData?.image?.[0]?.url ??
-                      "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
-                    }
-                    alt="device-image"
-                    className="w-20 h-20 p-1  object-contain border rounded-full "
-                  />
-                  <div className=" w-full flex flex-col justify-center ">
-                    <h1 className="text-black font-gilroySemiBold text-lg 2xl:text-2xl">
-                      {deviceData?.custom_model ?? "-"}
-                    </h1>
-
-                    <h1 className="text-[#7C7C7C] flex  items-center text-base 2xl:text-lg font-gilroyMedium">
-                      {deviceData?.ram ?? "RAM"}
-                      <span className="flex text-2xl mx-1 -mt-3">.</span>
-                      {deviceData?.storage ?? "Storage"}
-                      <span className="flex text-2xl mx-1 -mt-3">.</span>
-                      {deviceData?.serial_no ?? "Serial number"}
-                    </h1>
-                    <p className="text-[#027A48] rounded-full w-fit bg-[#ECFDF3] text-sm 2xl:text-base font-gilroyMedium flex justify-center items-center px-2 py-0.5">
-                      Active
-                    </p>
-                  </div>
-                </div> */}
                 <div className=" w-full bg-[#f5f5f5]  rounded-lg p-3 flex items-center gap-4 ">
                   <div className="rounded-full border object-contain py-4 px-2">
                     <img

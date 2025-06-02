@@ -2,11 +2,8 @@
 import { redirect } from "next/navigation";
 import { callAPIWithToken, getSession } from "./helper";
 import { AxiosError } from "axios";
-import { cache } from "react";
 import { BASEURL } from "./main";
-import { IssueData } from "./issueActions";
 import { Ticket } from "./userActions";
-import { usersFields } from "./filterActions";
 export type QCDetail = {
   serial_no: string;
   scannedBy: string;
@@ -86,7 +83,7 @@ export type StoreDevice = {
   }[];
   latest_release?: boolean;
   is_trending?: boolean;
-  issues: IssueData[];
+  issues?: IssueData[];
   is_charger_provided?: boolean;
   description?: string;
   config?: { key: string; value: string }[];
@@ -172,29 +169,6 @@ export const createDevices = async (
     }
   }
 };
-
-//Getting Devices
-
-export const getAllDevices = cache(
-  async function (): Promise<getAllDevicesProp> {
-    try {
-      const res = await callAPIWithToken<getAllDevicesProp>(
-        `${BASEURL}/edifybackend/v1/devices`,
-        "GET"
-      );
-
-      // Validate response structure
-      if (!res?.data || !Array.isArray(res?.data)) {
-        throw new Error("Invalid API response structure");
-      }
-
-      return res?.data;
-    } catch (e) {
-      // Optionally, handle specific error scenarios
-      throw new Error((e as AxiosError)?.message || "Failed to fetch devices");
-    }
-  }
-);
 
 //Update Devices
 export const updateDevice = async (
@@ -306,18 +280,6 @@ export const bulkAssetsUnassign = async (deviceIds: string[]): Promise<any> => {
   }
 };
 
-//Search api
-export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
-  try {
-    const url = `${BASEURL}/edifybackend/v1/devices/search?query=${query}`;
-    const res = await callAPIWithToken<DeviceResponse>(url, "GET");
-
-    return res?.data;
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
-  }
-}
-
 // Get Device by ID
 // export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
 //   try {
@@ -335,7 +297,7 @@ export async function deviceSearchAPI(query: string): Promise<DeviceResponse> {
 // });
 
 // Get Device by ID
-export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
+export const getDeviceById = async (deviceId: string): Promise<any> => {
   try {
     // Make the GET request to fetch a single device by ID
     const res = await callAPIWithToken<Device>(
@@ -348,72 +310,63 @@ export const getDeviceById = cache(async (deviceId: string): Promise<any> => {
   } catch (error) {
     throw new Error((error as AxiosError)?.message);
   }
-});
+};
 
 // Getting Devices by User ID
 
-export const getDevicesByUserId = cache(
-  async (): Promise<getAllDevicesProp> => {
-    const sess = await getSession(); // Fetch session details
+export const getDevicesByUserId = async (): Promise<getAllDevicesProp> => {
+  const sess = await getSession(); // Fetch session details
 
-try{
-  if (sess?.user && sess?.user?.user.userId) {
-   if (sess?.user?.user?.role === 1 ) {
+  try {
+    if (sess?.user && sess?.user?.user.userId) {
+      if (sess?.user?.user?.role === 1) {
         // Make the GET request to fetch Devices of user ID
 
-
         const res = await callAPIWithToken<getAllDevicesProp>(
-           `${BASEURL}/edifybackend/v1/devices/userDetails`,
+          `${BASEURL}/edifybackend/v1/devices/userDetails`,
           "GET"
         );
+        // console.log(res?.data);
 
         // Return the list of Devices
         return res.data;
-    } else {
-   const requestBody = {
-      fields: [
-        "device_name",
-        "custom_model",
-        "serial_no",
-        "ram",
-        "storage",
-        "image",
-      ],
-      filters: [],
-      page: 1,
-      pageLimit: 100000,
-    };
+      } else {
+        const requestBody = {
+          fields: [
+            "device_name",
+            "custom_model",
+            "processor",
+            "brand",
+            "os",
+            "device_condition",
+            "serial_no",
+            "ram",
+            "storage",
+            "image",
+          ],
+          filters: [],
+          page: 1,
+          pageLimit: 100000,
+        };
 
-    const res = await callAPIWithToken<DeviceResponse>(
-      `${BASEURL}/edifybackend/v1/devices/filter`,
-      "POST", // Changed to POST as the new API requires it
-      requestBody // Pass the request body
-    );
+        const res = await callAPIWithToken<DeviceResponse>(
+          `${BASEURL}/edifybackend/v1/devices/filter`,
+          "POST", // Changed to POST as the new API requires it
+          requestBody // Pass the request body
+        );
 
-    return res?.data?.devices;
-    }}
- 
-    } catch (error) {
-      throw new Error((error as AxiosError)?.message);
+        // console.log(res?.data?.devices);
+
+        return res?.data?.devices;
+      }
     }
-  }
-);
-
-//pagination
-export const paginatedDevices = async (page: string): Promise<any> => {
-  try {
-    const res = await callAPIWithToken<DeviceResponse>(
-      `${BASEURL}/edifybackend/v1/devices/paginated?page=${page}`,
-      "GET"
-    );
-    return res?.data;
   } catch (error) {
     throw new Error((error as AxiosError)?.message);
   }
 };
 
 // SearchInput initial Fetch
-export const fetchDevices = cache(async function (): Promise<any> {
+export const fetchDevices = async (): Promise<any> => {
   try {
     const requestBody = {
       fields: [
@@ -439,9 +392,9 @@ export const fetchDevices = cache(async function (): Promise<any> {
   } catch (e) {
     throw new Error("Failed to fetch devices");
   }
-});
+};
 
-export const fetchUnassignedDevices = cache(async function (): Promise<any> {
+export const fetchUnassignedDevices = async (): Promise<any> => {
   try {
     const requestBody = {
       fields: [
@@ -468,38 +421,4 @@ export const fetchUnassignedDevices = cache(async function (): Promise<any> {
   } catch (e) {
     throw new Error("Failed to fetch devices");
   }
-});
-
-// SearchInput Search
-
-export async function searchDevices(searchQuery: string): Promise<any> {
-  try {
-    const requestBody = {
-      fields: [
-        "device_name",
-        "custom_model",
-        "serial_no",
-        "ram",
-        "storage",
-        "image",
-      ],
-      filters: [], // You can add filters here as per requirement
-      page: 1,
-      pageLimit: 10, // Number of users to fetch per page
-    };
-
-    const apiUrl = `${BASEURL}/edifybackend/v1/devices/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    const res = await callAPIWithToken<DeviceResponse>(
-      apiUrl,
-      "POST", // Changed to POST as the new API requires it
-      requestBody // Pass the request body
-    );
-
-    return res?.data?.devices;
-  } catch (e) {
-    throw new Error("Failed to fetch devices");
-  }
-}
+};

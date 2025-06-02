@@ -1,235 +1,537 @@
 "use client";
-
-import { LoadingButton } from "@/components/buttons/Button";
-import {
-  CSSProperties,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Button as PrimaryButton } from "@/components/buttons/Button";
+import { GetAvatar } from "@/components/get-avatar";
+import { AIResponse } from "@/components/ui/kibo-ui/ai/response";
+import { useSession } from "@/lib/providers/session-provider";
 import { cn } from "@/lib/utils";
-import { notifyAIAgents } from "@/server/orgActions";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import {
+  createNewChat,
+  getAllChats,
+  getChatById,
+} from "@/server/aiAgentsActions";
+import { BASEURL } from "@/server/main";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { useQueryState } from "nuqs";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ShinyText } from "../../_landing-page/meet-ai-agents";
+import { MessageListWrapper } from "../../tickets/_components/[id]/chat-interface/message-list.wrapper";
+import { ParsedMessageContent } from "../../tickets/_components/[id]/chat-interface/new-rich-editor/parsed-message-content";
+import { TextEditor } from "./text-editor";
+
+interface ChatMessage {
+  type: "user" | "model";
+  message: string;
+  timestamp: string;
+  isStreaming?: boolean;
+  isCurrentMessage?: boolean;
+}
+
+interface Chat {
+  _id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  title?: string;
+  closedAt?: string;
+  chats?: ChatMessage[];
+}
 
 export const AiAgentsMain = () => {
-  const [hasNotified, setHasNotified] = useState(false);
+  const [activeChat, setActiveChat] = useQueryState("chat", {
+    defaultValue: "new",
+  });
+  const session = useSession();
+  const [streamingMessage, setStreamingMessage] = useState<string>("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingChatId, setStreamingChatId] = useState<string | null>(null);
 
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const queryClient = useQueryClient();
+
+  // Cleanup EventSource on unmount
   useEffect(() => {
-    const status = localStorage.getItem("ai-agents-notify");
-    setHasNotified(status === "1");
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
   }, []);
 
-  const mutation = useMutation({
-    mutationFn: () => notifyAIAgents(),
-    onSuccess: () => {
-      toast.success("Success! You'll be notified soon 🎉");
-      localStorage.setItem("ai-agents-notify", "1");
-      setHasNotified(true);
+  // Fetch all chats
+  const { data: allChats, status: allChatsStatus } = useQuery({
+    queryKey: ["ai-agents", "all-chats"],
+    queryFn: getAllChats,
+  });
+
+  // Fetch single chat data - only when not "new"
+  const {
+    data: currentChatData,
+    isLoading: isChatLoading,
+    refetch: currentChatRefetch,
+  } = useQuery({
+    queryKey: ["ai-agents", "chat", activeChat],
+    queryFn: () => getChatById({ id: activeChat }),
+    enabled: activeChat !== "new",
+  });
+
+  // Create new chat mutation
+  const newChatMutation = useMutation({
+    mutationFn: createNewChat,
+    onSuccess: (newChat) => {
+      if (newChat?._id) {
+        setActiveChat(newChat._id);
+        queryClient.invalidateQueries({ queryKey: ["ai-agents", "all-chats"] });
+      }
     },
   });
 
-  return (
-    <section className="w-full min-h-[78vh] h-fit relative  overflow-hidden">
-      <div className="flex flex-col gap-4 sticky top-0 z-50 mb-4  items-center justify-center p-3 rounded-[10px] border border-[#0000001A] bg-white w-full h-full">
-        <NeonGradientCard
-          borderRadius={30}
-          borderSize={0.01}
-          className="size-36 flex items-center justify-center text-center bg-black"
-        >
-          <span className="pointer-events-none z-10 flex items-center justify-center w-full h-full text-white text-center text-7xl font-gilroyBold leading-none tracking-tighter text-transparent drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-            AI{" "}
-          </span>
-        </NeonGradientCard>
-        <h1 className="text-xl mt-20 font-gilroyBold text-center">
-          AI Agents are cooking
-        </h1>
-        <p className="text-center text-black/50 font-gilroyMedium">
-          We're rolling out all agents shortly—get
-          <br /> ready for the full experience.
-        </p>
+  // Stream AI response using Server-Sent Events
+  const streamAIResponse = useCallback(
+    async (chatId: string, question: string) => {
+      return new Promise<string>((resolve, reject) => {
+        setStreamingMessage("");
+        setIsStreaming(true);
+        setStreamingChatId(chatId);
 
-        <LoadingButton
-          disabled={hasNotified}
-          loading={mutation.isPending}
-          onClick={() => mutation.mutate()}
-          variant={hasNotified ? "outline" : "primary"}
-          className="w-fit rounded-lg disabled:opacity-100"
-        >
-          {hasNotified ? "Notified" : "Notify me"}
-        </LoadingButton>
-      </div>
-    </section>
+        let fullMessage = "";
+
+        const fetchStream = async () => {
+          try {
+            const response = await fetch(`${BASEURL}/edifybackend/v1/genAI`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.session?.user?.user?.token}`,
+              },
+              body: JSON.stringify({ chatId, question }),
+            });
+
+            if (response?.status === 400) {
+              currentChatRefetch();
+            }
+
+            if (!response.ok) {
+              currentChatRefetch();
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            if (!response.body) {
+              throw new Error("Readable stream not supported");
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            try {
+              while (true) {
+                const { value, done } = await reader.read();
+
+                if (done) {
+                  break;
+                }
+
+                const chunk = decoder.decode(value, { stream: true });
+
+                // Accumulate the full message
+                fullMessage += chunk;
+
+                // Update streaming message state
+                setStreamingMessage(fullMessage);
+              }
+
+              // Finalize message after streaming is complete
+              const currentChat = queryClient.getQueryData<Chat>([
+                "ai-agents",
+                "chat",
+                chatId,
+              ]);
+              if (currentChat) {
+                const aiMessage: ChatMessage = {
+                  type: "model",
+                  message: fullMessage,
+                  timestamp: new Date().toISOString(),
+                  isCurrentMessage: true,
+                };
+
+                queryClient.setQueryData<Chat>(["ai-agents", "chat", chatId], {
+                  ...currentChat,
+                  chats: [...(currentChat.chats || []), aiMessage],
+                });
+              }
+
+              // Invalidate queries to refresh data
+              queryClient.invalidateQueries({
+                queryKey: ["ai-agents", "all-chats"],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["ai-agents", "chat", chatId],
+              });
+
+              resolve(fullMessage);
+            } finally {
+              reader.releaseLock();
+            }
+          } catch (error) {
+            currentChatRefetch();
+            reject(error);
+          } finally {
+            setIsStreaming(false);
+            setStreamingChatId(null);
+          }
+        };
+
+        fetchStream();
+      });
+    },
+    [queryClient, streamingMessage]
   );
-};
 
-interface NeonColorsProps {
-  firstColor: string;
-  secondColor: string;
-  thirdColor: string;
-}
+  // Handle sending message with proper chat creation flow
+  const handleSendMessage = async (content: string) => {
+    if (!content.trim()) return;
 
-interface NeonGradientCardProps {
-  /**
-   * @default <div />
-   * @type ReactElement
-   * @description
-   * The component to be rendered as the card
-   * */
-  as?: ReactElement;
-  /**
-   * @default ""
-   * @type string
-   * @description
-   * The className of the card
-   */
-  className?: string;
+    let targetChatId = activeChat;
 
-  /**
-   * @default ""
-   * @type ReactNode
-   * @description
-   * The children of the card
-   * */
-  children?: ReactNode;
-
-  /**
-   * @default 5
-   * @type number
-   * @description
-   * The size of the border in pixels
-   * */
-  borderSize?: number;
-
-  /**
-   * @default 20
-   * @type number
-   * @description
-   * The size of the radius in pixels
-   * */
-  borderRadius?: number;
-
-  /**
-   * @default "{ firstColor: '#ff00aa', secondColor: '#00FFF1' ... }"
-   * @type string
-   * @description
-   * The colors of the neon gradient
-   * */
-  neonColors?: NeonColorsProps;
-
-  [key: string]: any;
-}
-
-const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
-  className,
-  children,
-  borderSize = 2,
-  borderRadius = 20,
-  neonColors = {
-    firstColor: "#3AC2FC",
-    secondColor: "#FD3F6B",
-    thirdColor: "#FBAA32",
-  },
-  ...props
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const { offsetWidth, offsetHeight } = containerRef.current;
-        setDimensions({ width: offsetWidth, height: offsetHeight });
+    try {
+      // If it's a new chat, create one first
+      if (activeChat === "new") {
+        const newChat = await newChatMutation.mutateAsync();
+        if (newChat?._id) {
+          targetChatId = newChat._id;
+          setActiveChat(newChat._id);
+        } else {
+          throw new Error("Failed to create new chat");
+        }
       }
-    };
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+      // Add user message to cache immediately
+      const currentChat = queryClient.getQueryData<Chat>([
+        "ai-agents",
+        "chat",
+        targetChatId,
+      ]);
+      const userMessage: ChatMessage = {
+        type: "user",
+        message: content,
+        timestamp: new Date().toISOString(),
+      };
 
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
+      if (currentChat) {
+        queryClient.setQueryData<Chat>(["ai-agents", "chat", targetChatId], {
+          ...currentChat,
+          chats: [...(currentChat.chats || []), userMessage],
+        });
+      } else {
+        // If no current chat data, create initial structure
+        queryClient.setQueryData<Chat>(["ai-agents", "chat", targetChatId], {
+          _id: targetChatId,
+          chats: [userMessage],
+        });
+      }
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const { offsetWidth, offsetHeight } = containerRef.current;
-      setDimensions({ width: offsetWidth, height: offsetHeight });
+      // Start streaming AI response
+      await streamAIResponse(targetChatId, content);
+    } catch (error) {
+      setIsStreaming(false);
+      setStreamingChatId(null);
+      setStreamingMessage("");
     }
-  }, [children]);
+  };
+
+  // Handle chat selection
+  const handleChatSelect = (chatId: string) => {
+    // Close any active streaming
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      setIsStreaming(false);
+      setStreamingChatId(null);
+      setStreamingMessage("");
+    }
+    setActiveChat(chatId);
+  };
+
+  // Suggested prompts
+  const suggestedPrompts = [
+    "How many members are in my company?",
+    "How many teams are there?",
+    "List unassigned devices in a table format.",
+    "Show active members in my company.",
+    "List all subscriptions in my company.",
+  ];
+
+  // Get current messages
+  const currentMessages = currentChatData?.chats ?? [];
+
+  // Render chat content based on active chat
+  const renderChatContent = () => {
+    if (activeChat === "new") {
+      return (
+        <div className="flex-1 mt-0 justify-center items-center w-full flex flex-col-reverse h-full bg-white border border-[#E5E5E5] rounded-[10px]">
+          <div className="w-full flex justify-center px-4 pb-10 pt-5">
+            <div className="w-[90%]">
+              <TextEditor
+                onSendMessage={handleSendMessage}
+                loading={isStreaming}
+                isClosed={isStreaming}
+              />
+            </div>
+          </div>
+          <MessageListWrapper className="justify-center">
+            <div className="w-full h-full items-center justify-center flex flex-col gap-0">
+              <h1 className="text-xl text-center font-gilroySemiBold">
+                Hey, How may I help you?
+              </h1>
+              <p className="text-[#808080] text-center py-1 text-[13px] font-gilroyMedium">
+                I'm here to assist you with anything you need — feel free to ask
+                questions, get
+                <br /> support, or explore options!
+              </p>
+              <p className="text-[#808080] py-5 text-center text-[13px] font-gilroyMedium">
+                Try these prompts
+              </p>
+              <div className="flex justify-center gap-2 pb-2 items-center flex-wrap">
+                {suggestedPrompts.slice(0, 2).map((prompt, index) => (
+                  <PrimaryButton
+                    key={index}
+                    className="rounded-md"
+                    variant="outlineTwo"
+                    onClick={() => handleSendMessage(prompt)}
+                    disabled={isStreaming}
+                  >
+                    {prompt}
+                  </PrimaryButton>
+                ))}
+              </div>
+              <div className="flex gap-2 justify-center items-center flex-wrap">
+                {suggestedPrompts.slice(2).map((prompt, index) => (
+                  <PrimaryButton
+                    key={index + 2}
+                    className="rounded-md"
+                    variant="outlineTwo"
+                    onClick={() => handleSendMessage(prompt)}
+                    disabled={isStreaming}
+                  >
+                    {prompt}
+                  </PrimaryButton>
+                ))}
+              </div>
+            </div>
+          </MessageListWrapper>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-0 w-full h-full flex flex-col-reverse bg-white border border-[#E5E5E5] rounded-[10px]">
+        <div className="w-full flex justify-center px-4 pb-10 pt-5">
+          <div className="w-[90%]">
+            <TextEditor
+              onSendMessage={handleSendMessage}
+              loading={isStreaming}
+            />
+          </div>
+        </div>
+        <MessageListWrapper outerDivClassName="flex-1 relative h-[50vh] w-full justify-center items-center">
+          <div className="absolute top-0 h-20  bg-gradient-to-b from-white/100 via-white/80 from-10% via-50% to-90% to-white/5  w-full left-0 rounded-t-xl"></div>
+          {isChatLoading ? (
+            <div className="flex items-center justify-center h-[50vh]">
+              <Loader2 className="size-6 animate-spin" />
+            </div>
+          ) : (
+            <div className="w-full flex justify-center mt-10">
+              <div className="space-y-4 w-[90%]">
+                {currentMessages.map((msg, index) => (
+                  <div
+                    key={`${msg.timestamp}-${index}`}
+                    className={cn(
+                      "flex items-start gap-1 pt-3",
+                      msg.type === "model"
+                        ? "flex-row w-full"
+                        : "flex-row-reverse"
+                    )}
+                  >
+                    {msg.type !== "model" ? (
+                      <GetAvatar
+                        name={
+                          msg.type === "model"
+                            ? "Lysa AI"
+                            : `${session?.session?.user?.user?.firstName} (Me)`
+                        }
+                        size={24}
+                        isDeviceAvatar={msg.type === "model"}
+                        className={msg.type === "model" ? "bg-blue-100" : ""}
+                      />
+                    ) : (
+                      <div
+                        className={`flex items-center bg-green-800 justify-center rounded-full font-gilroyMedium flex-shrink-0`}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          color: "#fff",
+                          fontSize: 24 * 0.4,
+                        }}
+                      >
+                        AI
+                      </div>
+                    )}
+
+                    <div
+                      className={cn(
+                        "space-y-2",
+                        msg.type !== "model" ? "w-fit" : "w-full" // fixed width only for user
+                      )}
+                    >
+                      {/* <div
+                        className={cn(
+                          "flex items-center gap-2",
+                          msg.type === "model" ? "flex-row" : "flex-row-reverse"
+                        )}
+                      >
+                        <span className="font-gilroySemiBold capitalize text-sm">
+                          {msg.type === "model"
+                            ? "Lysa AI"
+                            : `${session?.session?.user?.user?.firstName} (Me)`}
+                        </span>
+                        <span className="text-xs font-gilroyRegular text-muted-foreground">
+                          {formatChatTimestamp(msg.timestamp)}
+                        </span>
+                      </div> */}
+                      <div
+                        className={cn(
+                          `flex font-gilroyMedium break-words text-sm px-2 pb-2 rounded-md`,
+                          msg.type === "model"
+                            ? "bg-white text-left"
+                            : "bg-muted/40 text-right pt-2 ml-auto"
+                        )}
+                      >
+                        {msg.type === "model" ? (
+                          <AIResponse className="font-gilroyMedium w-[75%] text-sm">
+                            {msg.message}
+                          </AIResponse>
+                        ) : (
+                          <ParsedMessageContent
+                            content={[msg.message]}
+                            className="font-gilroyMedium text-[#333] w-fit text-pretty"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Show streaming message only for current chat */}
+                {isStreaming && streamingChatId === activeChat && (
+                  <div className="flex items-start gap-3 pt-3">
+                    <div
+                      className={`flex items-center bg-green-800 justify-center rounded-full font-gilroyMedium flex-shrink-0`}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        color: "#fff",
+                        fontSize: 24 * 0.4,
+                      }}
+                    >
+                      AI
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        {/* <span className="font-gilroySemiBold text-sm">
+                          Lysa AI
+                        </span> */}
+                        {/* <span className="text-xs font-gilroyRegular text-muted-foreground">
+                          AI is responding...
+                        </span> */}
+                        <ShinyText
+                          text="AI is responding..."
+                          speed={2}
+                          className="text-sm font-gilroyMedium"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-3 p-2 pl-4 break-words font-gilroyMedium rounded-md bg-white">
+                        <AIResponse className="font-gilroyMedium w-[75%] text-sm">
+                          {streamingMessage}
+                        </AIResponse>
+                        {/* <StreamingAIResponse
+                          textStream={streamingMessage}
+                          speed={30}
+                          fadeDuration={500}
+                          segmentDelay={60}
+                          className="font-gilroyMedium text-sm"
+                        /> */}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </MessageListWrapper>
+      </div>
+    );
+  };
 
   return (
-    <div
-      ref={containerRef}
-      style={
-        {
-          "--border-size": `${borderSize}px`,
-          "--border-radius": `${borderRadius}px`,
-          "--neon-first-color": neonColors.firstColor,
-          "--neon-second-color": neonColors.secondColor,
-          "--neon-third-color": neonColors.thirdColor,
-          "--card-width": `${dimensions.width}px`,
-          "--card-height": `${dimensions.height}px`,
-          "--card-content-radius": `${borderRadius - borderSize}px`,
-          "--pseudo-element-width": `${dimensions.width + borderSize * 2.2}px`,
-          "--pseudo-element-height": `${dimensions.height + borderSize * 2}px`,
-          "--before-blur": `${dimensions.width / 2}px`, // Increased blur strength
-          "--after-blur": `${dimensions.width / 2.3}px`, // Increased blur strength
-          "--gradient-extend": "0.01%", // Extend the gradient beyond the container
-        } as CSSProperties
-      }
-      className={cn(
-        "relative z-10 size-full rounded-[var(--border-radius)]",
-        className
-      )}
-      {...props}
-    >
-      <div
-        className={cn(
-          "relative size-full min-h-[inherit] rounded-[var(--card-content-radius)] bg-[#101010] p-6",
-          "before:absolute before:-left-[calc(var(--gradient-extend)+var(--border-size))] before:-top-[calc(var(--gradient-extend)+var(--border-size))] before:-z-10 before:block",
-          "before:h-[calc(var(--pseudo-element-height)+var(--gradient-extend)*0)] before:w-[calc(var(--pseudo-element-width)+var(--gradient-extend)*)] before:rounded-[var(--border-radius)] before:blur-[var(--before-blur)] before:content-['']",
-          "before:bg-[conic-gradient(from_0deg_at_50%_50%,var(--neon-first-color)_0deg,var(--neon-second-color)_120deg,var(--neon-third-color)_240deg,var(--neon-first-color)_360deg)]",
-          "before:animate-spin-slow",
-          "after:absolute after:-left-[calc(var(--gradient-extend)+var(--border-size))] after:-top-[calc(var(--gradient-extend)+var(--border-size))] after:-z-10 after:block",
-          "after:h-[calc(var(--pseudo-element-height)+var(--gradient-extend)*0.001)] after:w-[calc(var(--pseudo-element-width)+var(--gradient-extend)*0)] after:rounded-[var(--border-radius)] after:blur-[var(--after-blur)] after:content-['']",
-          "after:bg-[conic-gradient(from_0deg_at_50%_50%,var(--neon-first-color)_0deg,var(--neon-second-color)_120deg,var(--neon-third-color)_240deg,var(--neon-first-color)_360deg)]",
-          "after:animate-spin-slow-reverse",
-          "flex justify-center items-center w-full h-full"
-        )}
-      >
-        {children}
-      </div>
+    <div className="flex hide-scrollbar flex-col w-full justify-center items-start min-h-[83vh] max-h-full 2xl:min-h-0 2xl:max-h-screen">
+      <section className="flex rounded-md p-5 gap-4 w-[99%] overflow-y-auto h-[86dvh] 2xl:h-[88vh]">
+        <div className="w-full h-full flex gap-4">
+          <div className="bg-white flex flex-col gap-3 items-start justify-start border w-72 border-[#E5E5E5] rounded-[10px] p-4">
+            <div className="flex items-center justify-between w-full mb-3">
+              <h1 className="text-xl text-black font-gilroySemiBold">
+                AI Agent
+              </h1>
+            </div>
 
-      {/* Define the animations in the style tag */}
-      <style jsx>{`
-        @keyframes spin-slow {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes spin-slow-reverse {
-          0% {
-            transform: rotate(360deg);
-          }
-          100% {
-            transform: rotate(0deg);
-          }
-        }
-        .before\:animate-spin-slow::before {
-          animation: spin-slow 4s linear infinite;
-        }
-        .after\:animate-spin-slow-reverse::after {
-          animation: spin-slow-reverse 15s linear infinite;
-        }
-      `}</style>
+            <button
+              onClick={() => handleChatSelect("new")}
+              className={cn(
+                "w-full items-center bg-neutral-50 text-sm font-gilroyMedium hover:bg-neutral-100 flex p-2 rounded-md transition-colors"
+              )}
+            >
+              New Chat
+            </button>
+
+            <div className="flex flex-col w-full gap-2 mt-3">
+              {allChatsStatus === "pending" && (
+                <Loader2 className="mx-auto size-4 animate-spin" />
+              )}
+              {allChatsStatus === "error" && (
+                <p className="text-center text-xs font-gilroyMedium text-destructive/80">
+                  An error occurred while loading chats.
+                </p>
+              )}
+
+              {allChatsStatus === "success" &&
+                allChats &&
+                allChats.length > 0 && (
+                  <>
+                    <span className="font-gilroyMedium text-sm">
+                      Recent Searches
+                    </span>
+
+                    <div className="w-full h-[55vh] flex flex-col gap-2 overflow-y-auto hide-scrollbar">
+                      {allChats.map((chatItem) => (
+                        <button
+                          key={chatItem._id}
+                          onClick={() => handleChatSelect(chatItem._id || "")}
+                          className={cn(
+                            "w-full bg-neutral-50 font-gilroyMedium text-sm hover:bg-neutral-100 text-left justify-start p-2 rounded-md transition-colors",
+                            activeChat === chatItem._id && "bg-neutral-100"
+                          )}
+                        >
+                          <span className="truncate">
+                            {chatItem?.title || "New Chat"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+            </div>
+          </div>
+
+          <div className="flex-1">{renderChatContent()}</div>
+        </div>
+      </section>
     </div>
   );
 };
-
-export { NeonGradientCard };

@@ -1,16 +1,13 @@
 "use client";
-import { UserData } from "@/app/store/authSlice";
-import { useSelector } from "react-redux";
+import { formatNumber } from "@/lib/utils";
 import { Subscriptions, TeamWiseStat } from "./interface";
 import MultiLevelProgressBar from "./MultiLevelProgress";
-import { formatNumber } from "@/lib/utils";
 
 export default function TotalSpendingCard({
   integrationData,
 }: {
   integrationData: Subscriptions;
 }) {
-  const user: UserData = useSelector((state: any) => state.auth.userData);
   const colors = ["#7086FD", "#F7B64F", "#63bc48", "#FF928A"];
   const totalCount = integrationData?.teamWiseStats?.reduce(
     (acc, item) => acc + item.userCount,
@@ -33,7 +30,7 @@ export default function TotalSpendingCard({
     return (
       <div className="w-[50%]  bg-white  rounded-md border border-black/10 flex flex-col justify-center items-center px-3 py-5 gap-6 lg:p-7">
         <img
-          src="/media/dashboard/spending-empty.jpg"
+          src="/media/dashboard/spending-empty.webp"
           width={200}
           height={150}
         />
@@ -59,9 +56,7 @@ export default function TotalSpendingCard({
     >
       <div className="flex justify-start items-center gap-4">
         <h1 className="font-gilroyBold text-5xl  font-bold  text-black">
-
           ₹{formatNumber(integrationData?.totalSeatsPrice ?? 0)}
-
         </h1>
       </div>
       <div className="border mt-4 border-gray-200 border-dashed"></div>
@@ -92,13 +87,13 @@ export default function TotalSpendingCard({
                 />
                 <div className="flex gap-2 flex-col">
                   <span className="text-black font-gilroySemiBold text-xs xl:text-sm">
-                    {res.title.split(" ")[0]}
+                    {res?.title.split(" ")[0]}
                   </span>
                   <span className="text-black font-gilroySemiBold text-xs xl:text-sm  ">
-                    {res.userCount} Seats
+                    {res?.userCount} Seats
                   </span>
                   <span className="text-black font-gilroySemiBold text-xs xl:text-sm">
-                    ₹{formatNumber(res.totalPrice ?? 0)}/Month
+                    ₹{formatNumber(res?.totalPrice ?? 0)}/Month
                   </span>
                 </div>
               </div>

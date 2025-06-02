@@ -1,9 +1,9 @@
 import { Device } from "@/server/deviceActions";
-import { User } from "@/server/userActions";
+import { NewUserResponse, User } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const AssetsSection = ({ user }: { user: User }) => {
+const AssetsSection = ({ user }: { user: NewUserResponse }) => {
   const totalAssets = user?.devices?.length;
   const router = useRouter();
   return (
@@ -23,7 +23,7 @@ const AssetsSection = ({ user }: { user: User }) => {
         {/* Assets */}
 
         <div className="flex flex-col  gap-1">
-          {user?.devices?.slice(0, 2).map((device: Device) => (
+          {user?.devices?.slice(0, 2).map((device) => (
             <div className="flex justify-start items-center gap-4 py-4 border-b">
               <div className="">
                 <img
@@ -56,7 +56,7 @@ const AssetsSection = ({ user }: { user: User }) => {
 
           <div className="text-center mt-2 cursor-pointer">
             <div
-              className="text-white cursor-pointer bg-black font-gilroySemiBold text-base w-full mt-2 py-2 rounded-full"
+              className="text-white cursor-pointer bg-black font-gilroySemiBold text-base w-full mt-2 py-2 rounded-md"
               onClick={() => {
                 router.push("/devices");
               }}

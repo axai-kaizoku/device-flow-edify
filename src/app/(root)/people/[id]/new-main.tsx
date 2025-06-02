@@ -1,28 +1,55 @@
 "use client";
 import { GetAvatar } from "@/components/get-avatar";
 import TabBar from "@/components/TabBar/tabbar";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { userActivityLog } from "@/server/activityActions";
-import { NewUserResponse } from "@/server/userActions";
+import { NewUserResponse, updateUser, User } from "@/server/userActions";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert02Icon,
   Calendar03Icon,
   Call02Icon,
   CheeseCake02Icon,
+  Edit04Icon,
   Mail01Icon,
   Tag01Icon,
   User03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { memo, useEffect, useMemo, useState } from "react";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import Dropdown from "../../assets/[id]/_components/accordian";
 import UserTicketsTable from "./_components/user-table-data";
 import UserTimelineTable from "./_components/user-timeline-table";
-import { memo } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
+import { Button } from "@/components/buttons/Button";
+
+const editUserSchema = z.object({
+  email: z.string().email(),
+  phone: z.string().min(10),
+  gender: z.enum(["Male", "Female"]),
+  dob: z.date(),
+});
 
 function UserMain({ user }: { user: NewUserResponse }) {
   const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+
   const sections = [
     {
       key: "subscriptions",
@@ -41,88 +68,181 @@ function UserMain({ user }: { user: NewUserResponse }) {
       show: !!user?.team,
     },
   ];
-  const userId = user?._id;
 
   const { data: userTimeLineData, status } = useQuery({
-    queryKey: ["user-timeline", userId],
-    queryFn: async () => await userActivityLog(userId),
-    enabled: !!userId,
+    queryKey: ["user-timeline", user?._id],
+    queryFn: () => userActivityLog(user?._id),
+    enabled: !!user?._id,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
-  const openTicketsCount =
-    user?.tickets?.filter((ticket) => ticket?.status?.toLowerCase() === "open")
-      .length || "";
+  const openTicketsCount = useMemo(() => {
+    return (
+      user?.tickets?.filter(
+        (ticket) => ticket?.status?.toLowerCase() === "open"
+      ).length || 0
+    );
+  }, [user?.tickets]);
 
-  const tabs = [
-    {
-      id: "timeline",
-      label: "Timeline",
-      content: <UserTimelineTable data={userTimeLineData} />,
-    },
-    {
-      id: "tickets",
-      label: "Tickets",
-      content: <UserTicketsTable data={user?.tickets} />,
-      number: openTicketsCount,
-    },
-  ];
+  const tabs = useMemo(() => {
+    const baseTabs = [
+      {
+        id: "timeline",
+        label: "Timeline",
+        content: <UserTimelineTable data={userTimeLineData} />,
+      },
+      {
+        id: "tickets",
+        label: "Tickets",
+        content: <UserTicketsTable data={user?.tickets} />,
+        ...(openTicketsCount > 0 ? { number: openTicketsCount } : {}),
+      },
+    ];
+
+    return baseTabs;
+  }, [userTimeLineData, user?.tickets, openTicketsCount]);
+
   const firstVisibleSection = sections.find((s) => s.show)?.key;
+
+  const editUserMutation = useMutation({
+    mutationFn: (input: { id: string; user: User }) =>
+      updateUser(input.id, input.user),
+    onSuccess: () => {
+      setIsEditing(false);
+      toast.success("User details updated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to update user");
+    },
+  });
+
+  const form = useForm({
+    resolver: zodResolver(editUserSchema),
+    defaultValues: {
+      dob: user?.date_of_birth ? new Date(user?.date_of_birth) : undefined,
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
+      gender: user?.gender ?? "",
+    },
+  });
+
+  const { control, register, watch, getValues, formState, reset } = form;
+
+  const handleEditSaveClick = async () => {
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+
+    const isValid = await form.trigger();
+    if (!isValid) {
+      toast.error("Please fix the validation errors before saving.");
+      return;
+    }
+
+    const newData = getValues();
+    const originalData = {
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
+      gender: user?.gender ?? "",
+      dob: user?.date_of_birth ? new Date(user.date_of_birth) : undefined,
+    };
+
+    // Compare original and new values
+    const hasChanges = Object.keys(originalData).some((key) => {
+      const newVal = newData[key];
+      const oldVal = originalData[key];
+      return newVal instanceof Date && oldVal instanceof Date
+        ? newVal.getTime() !== oldVal.getTime()
+        : newVal !== oldVal;
+    });
+
+    if (hasChanges) {
+      editUserMutation.mutate({
+        id: user._id,
+        user: {
+          email: newData.email,
+          phone: newData.phone,
+          gender: newData.gender,
+          date_of_birth: newData?.dob ? new Date(newData?.dob) : null,
+        },
+      });
+    } else {
+      toast.info("No changes made");
+      setIsEditing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        email: user.email ?? "",
+        phone: user.phone ?? "",
+        gender: user.gender ?? "Male",
+        dob: user.date_of_birth ? new Date(user.date_of_birth) : "", // required format for <input type="date">
+      });
+    }
+  }, [user, reset]);
 
   return (
     <div className="rounded-[10px] flex h-[80vh] my-4 border border-[#0000001A] bg-white overflow-hidden ">
+      {/* {JSON.stringify(user)} */}
       <div className="w-[40%] h-full hide-scrollbar border border-r border-l-0 border-t-0 border-b-0 border-[rgba(0, 0, 0, 0.05)] overflow-y-auto">
         <div className="p-6 flex flex-col gap-6 mb-6">
           <div className="flex  gap-3 items-center">
             <GetAvatar name={user?.first_name} size={60} />
             <div className="flex flex-col gap-0.5">
               <h1 className="font-gilroySemiBold text-lg">
-                {user?.first_name ?? "-"}
+                {user?.first_name ?? "-"}{" "}
+                {user?.deleted_at === null ? (
+                  <Badge className="bg-[#ECFDF3] text-[#027A48]">Active</Badge>
+                ) : (
+                  // <span className="rounded-full text-center -mt-5 font-gilroyMedium h-fit  bg-[#FFEFEF] text-[#FF0000] py-0.5 px-2 text-xs">
+                  <Badge className="bg-[#FFEFEF] text-[#FF0000]">
+                    Inactive
+                  </Badge>
+                  // </span>
+                )}
               </h1>
               <h3 className="capitalize text-[15px] text-gray-600 font-gilroyMedium">
                 {user?.designation ?? "-"}
               </h3>
             </div>
-            {user?.deleted_at === null ? (
-              <span className="rounded-full -mt-6 text-center  font-gilroyMedium h-fit  bg-[#ECFDF3] text-[#027A48] py-0.5 px-2 text-xs">
-                Active
-              </span>
-            ) : (
-              <span className="rounded-full text-center -mt-5  font-gilroyMedium h-fit  bg-[#FFEFEF] text-[#FF0000] py-0.5 px-2 text-xs">
-                Inactive
-              </span>
-            )}
           </div>
           <div className="">
             <div className="flex gap-3">
-              <h1 className="text-[15px] text-black items-center text-nowrap font-gilroyMedium flex gap-2">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  className="text-[#808080] size-4"
-                />
-                Joined on
-                <span className="pl-[1px]">
-                  {user?.onboarding_date
-                    ? new Date(user.onboarding_date).toLocaleDateString(
-                        "en-GB",
-                        {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        }
-                      )
-                    : "Not available"}
-                </span>
-              </h1>
+              {user?.onboarding_date ? (
+                <h1 className="text-[15px] text-black items-center text-nowrap font-gilroyMedium flex gap-2">
+                  <HugeiconsIcon
+                    icon={Calendar03Icon}
+                    className="text-[#808080] size-4"
+                  />
+                  Joined on
+                  <span className="pl-[1px]">
+                    {user?.onboarding_date
+                      ? new Date(user.onboarding_date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          }
+                        )
+                      : "Not available"}
+                  </span>
+                </h1>
+              ) : null}
 
-              <h1 className="text-[15px] text-black  items-center font-gilroyMedium flex gap-2">
-                <HugeiconsIcon
-                  icon={Tag01Icon}
-                  className="text-[#808080] size-4"
-                />{" "}
-                {user?.employment_type ?? "-"}
-              </h1>
+              {user.employment_type ? (
+                <h1 className="text-[15px] text-black  items-center font-gilroyMedium flex gap-2">
+                  <HugeiconsIcon
+                    icon={Tag01Icon}
+                    className="text-[#808080] size-4"
+                  />{" "}
+                  {user?.employment_type ?? "-"}
+                </h1>
+              ) : null}
             </div>
             <h1 className="text-[15px] text-gray-600 mt-3  items-center font-gilroyMedium flex gap-2">
               <HugeiconsIcon
@@ -187,105 +307,271 @@ function UserMain({ user }: { user: NewUserResponse }) {
             >
               <div className="flex flex-col gap-2 mb-1">
                 {user?.devices?.map((item) => (
-                  <div
-                    key={item._id}
-                    className="flex flex-col gap-3 w-full mb-1 cursor-pointer"
-                    onClick={() => router.push(`/assets/${item?._id}`)}
-                  >
-                    <div className="border-gray-200 hover:border-black  border p-3 flex justify-between items-center rounded-md">
-                      <div className="flex gap-2">
-                        <GetAvatar name={item?.custom_model} size={40} />
-                        <div>
-                          <h1 className="text-[15px] font-gilroyMedium">
-                            {item?.custom_model}”
-                          </h1>
-                          <h3 className="text-gray-600 text-xs font-gilroyMedium">
-                            {item?.serial_no ?? "-"} | {item?.ram ?? "-"} |{" "}
-                            {item?.storage ?? "-"}
-                          </h3>
-                        </div>
-                      </div>
-
-                      {item.issues?.length > 0 && (
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation(); // prevent parent click
-                            router.push("/issues");
-                          }}
-                          className="font-gilroySemiBold flex items-center justify-center gap-1 text-xs rounded-sm h-fit hover:bg-gray-100 hover:rounded-md p-1 text-[#FF0000]"
-                        >
-                          <HugeiconsIcon
-                            icon={Alert02Icon}
-                            className="text-[#FF0000] size-5"
+                  <Link href={`/assets/${item?._id}`} key={item?._id}>
+                    <div className="flex flex-col gap-3 w-full mb-1 cursor-pointer">
+                      <div className="border-gray-200 hover:border-black  border p-3 flex justify-between items-center rounded-md">
+                        <div className="flex gap-2">
+                          <GetAvatar
+                            name={item?.custom_model}
+                            size={40}
+                            isDeviceAvatar
                           />
-                          {item.issues.length}{" "}
-                          {item.issues.length === 1 ? "issue" : "issues"}
+                          <div>
+                            <h1 className="text-[15px] font-gilroyMedium">
+                              {item?.custom_model}”
+                            </h1>
+                            <h3 className="text-gray-600 text-xs font-gilroyMedium">
+                              {[
+                                item?.serial_no?.trim(),
+                                item?.ram?.trim(),
+                                Array.isArray(item?.storage) &&
+                                item?.storage.length > 0
+                                  ? item?.storage.join(" / ")
+                                  : null,
+                              ]
+                                .filter(Boolean)
+                                .join(" | ")}
+                            </h3>
+                          </div>
                         </div>
-                      )}
+
+                        {item.issues?.length > 0 && (
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push("/tickets");
+                            }}
+                            className="font-gilroySemiBold flex items-center justify-center gap-1 text-xs rounded-sm h-fit hover:bg-gray-100 hover:rounded-md p-1 text-[#FF0000]"
+                          >
+                            <HugeiconsIcon
+                              icon={Alert02Icon}
+                              className="text-[#FF0000] size-5"
+                            />
+                            {item.issues.length}{" "}
+                            {item.issues.length === 1 ? "issue" : "issues"}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </Dropdown>
           )}
 
-          <Dropdown
-            onFirst={firstVisibleSection === "about"}
-            title="About"
-            headerClassName="bg-[#F6F6F6]"
-          >
-            <div className="space-y-3 mt-5">
-              {[
-                {
-                  icon: Mail01Icon,
-                  label: "Email:",
-                  value: user?.email ?? "-",
-                  valueColor: "text-[#025CE5]",
-                },
-                {
-                  icon: Call02Icon,
-                  label: "Phone:",
-                  value: user?.phone ?? "-",
-                },
-                {
-                  icon: User03Icon,
-                  label: "Gender:",
-                  value: user?.gender ?? "-",
-                },
-                {
-                  icon: CheeseCake02Icon,
-                  label: "Date of Birth:",
-                  value: user?.date_of_birth
-                    ? new Date(user.date_of_birth).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })
-                    : "-",
-                },
-              ].map(({ icon, label, value, valueColor = "" }, index) => (
-                <div key={index} className="flex  gap-3 pl-3">
-                  <div className="flex items-start gap-1 min-w-28">
-                    <HugeiconsIcon
-                      icon={icon}
-                      className="text-[#a09f9f] size-4"
-                    />
-                    <span className="text-[#a09f9f] font-gilroyMedium text-sm">
-                      {label}
-                    </span>
-                  </div>
+          <div className={`rounded-lg overflow-hidden`}>
+            <div
+              className={`flex justify-between items-center px-3 py-3 h-11 transition-colors bg-[#F6F6F6] rounded-lg `}
+            >
+              <div className="flex items-center select-none gap-2">
+                <h3 className="font-gilroyMedium text-sm text-black leading-[18.952px]">
+                  {"About"}
+                </h3>
 
-                  <div className="flex-1">
-                    <p className={`text-sm font-gilroyMedium ${valueColor}`}>
-                      {value}
-                    </p>
+                {!isEditing && (
+                  <HugeiconsIcon
+                    icon={Edit04Icon}
+                    className="size-4 text-[#0051FF]"
+                    onClick={() => {
+                      if (!isAboutOpen) {
+                        setIsAboutOpen(true);
+                      }
+                      setIsEditing((prev) => !prev);
+                    }}
+                  />
+                )}
+              </div>
+              {isEditing && (
+                <div className="flex gap-1 select-none items-center">
+                  <Button
+                    onClick={() => setIsEditing(false)}
+                    className="p-0.5 px-1 rounded border h-fit w-fit text-black text-xs"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleEditSaveClick()}
+                    className="p-0.5 px-1 rounded bg-[#008910] text-white border h-fit w-fit text-xs"
+                  >
+                    Save
+                  </Button>
+                </div>
+              )}
+
+              {!isEditing &&
+                (isAboutOpen ? (
+                  <ChevronUp
+                    className="w-5 h-5 text-[#BFBFBF] cursor-pointer"
+                    onClick={() => setIsAboutOpen((prev) => !prev)}
+                  />
+                ) : (
+                  <ChevronDown
+                    className="w-5 h-5 text-[#BFBFBF] cursor-pointer"
+                    onClick={() => setIsAboutOpen((prev) => !prev)}
+                  />
+                ))}
+            </div>
+
+            <div
+              className={`transition-all duration-300 linear overflow-hidden ${
+                isAboutOpen ? "max-h-96" : "max-h-0"
+              }`}
+            >
+              <FormProvider {...form}>
+                <div className={`mt-3 bg-white `}>
+                  <div className="space-y-3 mt-5 font-gilroyMedium">
+                    <div className="flex gap-3 items-center pl-3">
+                      <HugeiconsIcon
+                        icon={Mail01Icon}
+                        className="text-[#a09f9f] size-4"
+                      />
+                      <span className="text-[#a09f9f] min-w-28 text-sm">
+                        Email:
+                      </span>
+                      <Controller
+                        name="email"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            name="email"
+                            type="text"
+                            readOnly={!isEditing}
+                            className={cn(
+                              "text-sm font-gilroyMedium text-[13px] rounded px-1.5 py-0.5 focus:outline-none",
+                              isEditing
+                                ? "border text-[13px]"
+                                : "border border-transparent",
+                              formState.errors.email && "border-destructive/80"
+                            )}
+                            {...field}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-3 items-center pl-3">
+                      <HugeiconsIcon
+                        icon={Call02Icon}
+                        className="text-[#a09f9f] size-4"
+                      />
+                      <span className="text-[#a09f9f] min-w-28 text-sm">
+                        Phone:
+                      </span>
+                      <Controller
+                        name="phone"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            type="text"
+                            readOnly={!isEditing}
+                            className={cn(
+                              "text-sm font-gilroyMedium text-[13px]  rounded px-1.5 py-0.5 focus:outline-none",
+                              isEditing
+                                ? "border text-[13px]"
+                                : "border border-transparent",
+                              formState.errors.phone && "border-destructive/80"
+                            )}
+                            value={field.value}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+                              const phoneRegex = /^[0-9]{0,10}$/;
+
+                              if (phoneRegex.test(inputValue)) {
+                                field.onChange(inputValue);
+                              }
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-3 items-center pl-3">
+                      <HugeiconsIcon
+                        icon={User03Icon}
+                        className="text-[#a09f9f] size-4"
+                      />
+
+                      <span className="text-[#a09f9f] min-w-28 text-sm">
+                        Gender:
+                      </span>
+                      <Controller
+                        name="gender"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <SelectTrigger
+                              showArrow={isEditing}
+                              className={cn(
+                                "m-0 h-fit rounded text-[13px] [&_svg]:size-3 disabled:text-black px-1.5 py-0.5 w-fit",
+                                isEditing
+                                  ? "border"
+                                  : "border border-transparent pointer-events-none",
+                                formState.errors.gender &&
+                                  "border-destructive/80"
+                              )}
+                            >
+                              <SelectValue className="disabled:text-black" />
+                            </SelectTrigger>
+                            <SelectContent className="p-0 m-0 w-fit min-w-0 max-w-fit font-gilroyMedium">
+                              <SelectItem
+                                value="Male"
+                                className="p-0.5 px-1 rounded text-[13px]"
+                              >
+                                Male
+                              </SelectItem>
+                              <SelectItem
+                                value="Female"
+                                className="p-0.5 px-1 rounded  text-[13px]"
+                              >
+                                Female
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-3 items-center pl-3">
+                      <HugeiconsIcon
+                        icon={CheeseCake02Icon}
+                        className="text-[#a09f9f] size-4"
+                      />
+                      <span className="text-[#a09f9f] min-w-28 text-sm">
+                        DOB:
+                      </span>
+                      <Controller
+                        name="dob"
+                        control={control}
+                        render={({ field }) => (
+                          <DateTimePicker
+                            showIcon={false}
+                            displayFormat={{ hour24: "dd/MM/yyyy" }}
+                            value={field.value}
+                            onChange={field.onChange}
+                            granularity="day"
+                            className={cn(
+                              "md:text-[13px] h-fit px-1.5  py-0.5 rounded m-0 w-fit min-w-0",
+                              isEditing
+                                ? "border"
+                                : "border border-transparent pointer-events-none",
+                              formState.errors.dob && "border-destructive/80"
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
-              ))}
+              </FormProvider>
             </div>
-          </Dropdown>
+          </div>
 
-          {/* Teams */}
           {user?.team && (
             <Dropdown
               onFirst={firstVisibleSection === "teams"}
@@ -293,27 +579,24 @@ function UserMain({ user }: { user: NewUserResponse }) {
               headerClassName="bg-[#F6F6F6]"
             >
               <div className="flex flex-col gap-3 w-full mb-4">
-                <div
-                  onClick={() => {
-                    router.push(`/teams/${user?.team?._id}`);
-                  }}
-                  className="border-gray-200 hover:border-black cursor-pointer border p-3 flex justify-between items-center rounded-md"
-                >
-                  <div className="flex gap-2">
-                    <GetAvatar name={user?.team?.title} />
-                    <div>
-                      <h1 className="text-[15px] font-gilroyMedium">
-                        {user?.team?.title}
-                      </h1>
-                      <h3 className="text-gray-600 text-xs font-gilroyMedium">
-                        {user?.team?.userCount}{" "}
-                        <span className="pl-1">
-                          {user?.team?.userCount === 1 ? "member" : "members"}
-                        </span>
-                      </h3>
+                <Link href={`/teams/${user?.team?._id}`}>
+                  <div className="border-gray-200 hover:border-black cursor-pointer border p-3 flex justify-between items-center rounded-md">
+                    <div className="flex gap-2">
+                      <GetAvatar name={user?.team?.title} />
+                      <div>
+                        <h1 className="text-[15px] font-gilroyMedium">
+                          {user?.team?.title}
+                        </h1>
+                        <h3 className="text-gray-600 text-xs font-gilroyMedium">
+                          {user?.team?.userCount}{" "}
+                          <span className="pl-1">
+                            {user?.team?.userCount === 1 ? "member" : "members"}
+                          </span>
+                        </h3>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </Dropdown>
           )}

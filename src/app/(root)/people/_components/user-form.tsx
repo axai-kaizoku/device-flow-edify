@@ -31,33 +31,22 @@ import { AsyncSelect } from "@/components/ui/async-select";
 import { Icons } from "../icons";
 import { bulkUploadKeys, employments, genders } from "./helper/utils";
 import { getImageUrl } from "@/components/utils/upload";
+import Image from "next/image";
 
 interface UserFormProps {
   closeBtn: (state: boolean) => void;
   isEditForm?: boolean;
   userData?: CreateUserArgs | User;
-  onRefresh?: () => Promise<void>;
   setOpenGsuiteModal?: any;
   openGsuiteModal?: any;
-  errorsGsuite?: any;
-  onGSuitSubmit?: any;
-  formDataGsuite?: any;
-  handleChange?: any;
-  buttonLoading?: boolean;
 }
 
 export const UserForm = ({
   closeBtn,
   isEditForm,
   userData,
-  onRefresh,
   setOpenGsuiteModal,
   openGsuiteModal,
-  errorsGsuite,
-  onGSuitSubmit,
-  formDataGsuite,
-  handleChange,
-  buttonLoading,
 }: UserFormProps) => {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -89,23 +78,23 @@ export const UserForm = ({
       ? userData?.role === 4
         ? "CEO"
         : userData.role === 3
-          ? "Upper Management"
-          : "Employee"
+        ? "Upper Management"
+        : "Employee"
       : "",
     emp_id: userData ? userData?.emp_id : "",
     image: userData ? userData?.image : "",
     designation: userData ? userData?.designation : "",
     team: userData?.team[0]?._id
       ? // @ts-ignore
-      { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
+        { name: userData?.team[0]?.title, value: userData?.team[0]?._id }
       : { name: "", value: "" },
     reportM: userData?.reporting_manager
       ? {
-        // @ts-ignore
-        name: userData?.reporting_manager?.email,
-        // @ts-ignore
-        value: userData?.reporting_manager?._id,
-      }
+          // @ts-ignore
+          name: userData?.reporting_manager?.email,
+          // @ts-ignore
+          value: userData?.reporting_manager?._id,
+        }
       : { name: "", value: "" },
     gender: userData ? userData?.gender : "",
     offerLetter: userData ? userData?.offerLetter : "",
@@ -130,10 +119,6 @@ export const UserForm = ({
     onboarding: "",
     emp_id: "",
   });
-
-  useEffect(() => {
-    setLoading(buttonLoading);
-  }, [buttonLoading]);
 
   const validateStepOne = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -463,7 +448,7 @@ export const UserForm = ({
               />
               <div className="rounded-lg p-3  w-full flex justify-between items-center border border-gray-200">
                 <div className="flex gap-2">
-                  <Icons.g_suit_display />
+                  <Image src="/media/integrations-companies/google.webp" alt="GSuite" className="size-9" width={35} height={30}/>
 
                   <div className="flex flex-col ">
                     <h1 className="text-base font-gilroySemiBold">GSuite</h1>
@@ -474,8 +459,9 @@ export const UserForm = ({
                 </div>
                 <button
                   disabled={loading}
-                  className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${loading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={` bg-black rounded-md text-white font-gilroyMedium  text-sm py-2 px-6 hover:bg-gray-800 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   onClick={() => {
                     setOpenGsuiteModal(true);
                   }}
@@ -507,8 +493,9 @@ export const UserForm = ({
                 </>
               )}
               <div
-                className={`overflow-y-auto flex flex-col gap-2 pt-2 ${isEditForm && "h-[65.5vh]"
-                  } h-[40vh] hide-scrollbar`}
+                className={`overflow-y-auto flex flex-col gap-2 pt-2 ${
+                  isEditForm && "h-[65.5vh]"
+                } h-[40vh] hide-scrollbar`}
               >
                 <FormField
                   label="Name"
@@ -657,6 +644,7 @@ export const UserForm = ({
                   <div className="flex-1">
                     <FormField
                       label="Email"
+                      disabled={isEditForm}
                       id="email"
                       error={errors.email}
                       name="email"
@@ -796,6 +784,7 @@ export const UserForm = ({
                         managementType: data?.value,
                       }))
                     }
+                    disabled={formData?.managementType !== "Employee"}
                     label="Management Type"
                     value={`${formData?.managementType ?? ""}`}
                     placeholder="eg: Employee"
@@ -884,8 +873,8 @@ export const UserForm = ({
                       value={
                         formData?.onboarding
                           ? new Date(formData.onboarding)
-                            .toISOString()
-                            .split("T")[0]
+                              .toISOString()
+                              .split("T")[0]
                           : ""
                       }
                       type="date"

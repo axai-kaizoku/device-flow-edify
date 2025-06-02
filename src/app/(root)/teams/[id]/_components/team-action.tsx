@@ -26,10 +26,10 @@ const TeamActions: React.FC<TeamActionsProps> = ({
         />
       </div> */}
       <div className="flex items-center gap-2">
-        <div className="flex  items-center rounded-md border border-[rgba(0,0,0,0.2)] py-2 px-4 gap-1 ">
+        <div className="flex  items-center rounded-md border py-[7px] px-4 gap-1 ">
           <div className=" text-[#7F7F7F] text-nowrap text-sm font-gilroySemiBold">
             Team Code:{" "}
-            <span className="text-black">{team?.team_code ?? "-"}</span>
+            <span className="text-black">{team?.team_code ?? ""}</span>
           </div>
         </div>
       </div>

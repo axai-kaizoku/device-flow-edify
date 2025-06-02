@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken, getSession } from "./helper";
 import { BASEURL } from "./main";
-import { MentionType } from "@/app/(root)/issues/[id]/_components/new-rich-editor/rich-text-editor";
 import { User } from "./userActions";
+import { MentionType } from "@/app/(root)/tickets/_components/[id]/chat-interface/new-rich-editor/rich-text-editor";
 
 export type GlobalSearchUserTeams = {
   users: {
@@ -39,7 +39,7 @@ export async function fetchUsersTeams(query: string) {
 
 export type ChatPayload = {
   dialogue: {
-    message: string | MentionType[];
+    message: (string | MentionType)[];
     attachments: string[];
   };
   ticketId: string;
@@ -144,6 +144,7 @@ export type TicketData = {
   openedByDetails: OpenedByDetails;
   deviceDetails: DeviceDetails;
   commentsByDate: CommentByDate[];
+  reOpenedAt?: string | null;
 };
 
 export const createTicket = async (
@@ -175,9 +176,9 @@ export const getTicketById = async function (ticketId: string) {
       null
     );
 
-    console.log(ticketId, "from server");
+    // console.log(ticketId, "from server");
 
-    console.log(res.data, "from server");
+    // console.log(res.data, "from server");
 
     return res.data;
   } catch (error) {
@@ -213,7 +214,7 @@ export const removeTags = async function ({
   ticketId: string;
 }) {
   try {
-    console.log(tag_id, ticketId);
+    // console.log(tag_id, ticketId);
     const res = await callAPIWithToken<any>(
       `${BASEURL}/edifybackend/v1/ticket/remTag`,
       "PATCH",
@@ -281,9 +282,9 @@ export const getAllTickets = async function ({
       "GET",
       null
     );
-    console.log(status);
+    // console.log(status);
 
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (error) {
     throw new Error("Failed to fetch Ticket");
@@ -297,11 +298,79 @@ export const getAllTicketsEmployee = async function () {
       "GET",
       null
     );
-    console.log(status);
+    // console.log(status);
 
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (error) {
     throw new Error("Failed to fetch Ticket");
+  }
+};
+
+export const aiChatAction = async function ({
+  ticketId,
+  prompt,
+}: {
+  ticketId: string;
+  prompt?: string;
+}) {
+  try {
+    const apiUrl = `${BASEURL}/edifybackend/v1/ai-chat/${ticketId}`;
+    const body = { prompt };
+    const response = await callAPIWithToken<Record<string, any[]>>(
+      apiUrl,
+      "POST",
+      body
+    );
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch Chat");
+  }
+};
+
+type ChatResponse = {
+  ticketId: string;
+  chats: {
+    user?: string;
+    agent?: string;
+    timestamp: string;
+    _id: string;
+  }[];
+};
+
+export const aiChatHistory = async function ({
+  ticketId,
+}: {
+  ticketId: string;
+}): Promise<ChatResponse> {
+  try {
+    const apiUrl = `${BASEURL}/edifybackend/v1/ai-chat/chat/${ticketId}`;
+
+    const response = await callAPIWithToken<ChatResponse>(apiUrl, "GET");
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch Chat");
+  }
+};
+
+export const switchToHumanChat = async function ({
+  ticketId,
+}: {
+  ticketId: string;
+}) {
+  try {
+    const apiUrl = `${BASEURL}/edifybackend/v1/ticket/aiSwitch/${ticketId}`;
+
+    const response = await callAPIWithToken<ChatResponse>(
+      apiUrl,
+      "PATCH",
+      null
+    );
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to switch chat");
   }
 };

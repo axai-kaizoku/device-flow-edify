@@ -7,6 +7,8 @@ import {
 import { toast } from "sonner";
 
 import { useRef, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { File01Icon } from "@hugeicons/core-free-icons";
 type dataProps = {
   requiredKeys: string[];
   bulkApi: (formData: any) => Promise<any>;
@@ -218,7 +220,7 @@ function BulkUpload({
 
             <div className="rounded-lg p-3  flex justify-between items-center border border-gray-200">
               <div className="flex gap-2">
-                <Icons.file_csv />
+                <HugeiconsIcon icon={File01Icon} className="text-blue-600 size-9"/>
                 <div className="flex flex-col ">
                   <h1 className="text-base font-gilroySemiBold">Upload CSV</h1>
                   <p

@@ -7,8 +7,8 @@ import {
   AsyncMultiSelectCombobox,
   BaseOption,
 } from "@/components/ui/async-multi-select-combobox";
-import { Team } from "@/server/teamActions";
-import { bulkMoveUsers, fetchUsers, User } from "@/server/userActions";
+import { fetchNotInTeamPeople, Team } from "@/server/teamActions";
+import { bulkMoveUsers, User } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
 import { cache, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ import { toast } from "sonner";
 type UserOption = BaseOption & User;
 
 const fetchUserOptions = cache(async (): Promise<UserOption[]> => {
-  const users = await fetchUsers();
+  const users = await fetchNotInTeamPeople();
 
   return users?.map((u) => ({
     ...u,
@@ -41,6 +41,7 @@ export default function AddTeamMember({
 
   const [error, setError] = useState("");
   const queryClient = useQueryClient();
+
   useEffect(() => {
     setError("");
     setSelectedEmails([]);

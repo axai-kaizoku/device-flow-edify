@@ -2,8 +2,8 @@
 import React, { useEffect } from "react";
 import { DashboardDetails } from "./interface";
 import ExcellentDeviceIcon from "@/icons/ExcellentDeviceIcon";
-import UnassignedDeviceIcon from "@/icons/UnassignedDeviceIcon";
 import FairDeviceIcon from "@/icons/FairDeviceIcon";
+import Image from "next/image";
 
 export function AssetsHealth({
   dashboardData,
@@ -47,7 +47,7 @@ export function AssetsHealth({
                       className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]"
                     >
                       <div className="relative z-0 flex items-center  text-center">
-                        <UnassignedDeviceIcon />
+                        <Image src="/media/dashboard/unassigned.webp" alt="Unassigned" width={28} height={28}/>
                       </div>
                       <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
                         {response.count || 0}
@@ -87,7 +87,7 @@ export function AssetsHealth({
               </div>
               <div className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
                 <div className="relative z-0 flex items-center  text-center">
-                  <UnassignedDeviceIcon />
+                  <Image src="/media/dashboard/unassigned.webp" alt="Unassigned" width={28} height={28}/>
                 </div>
                 <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
                   0

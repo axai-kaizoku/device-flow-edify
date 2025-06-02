@@ -1,5 +1,4 @@
 import { Device } from "../deviceActions";
-import { Issues } from "../issueActions";
 import { Team } from "../teamActions";
 import { User } from "../userActions";
 
@@ -23,25 +22,6 @@ export type FilterAssetsArgs = {
   page?: number;
   pageLimit?: number;
   type?: "assigned" | "unassigned" | "inactive";
-};
-
-export type FilterIssuesResponse = {
-  issues: Issues[];
-  total: number;
-  per_page: number;
-  current_page: number;
-  total_pages: number;
-  filterOptions: {
-    [key: string]: string[];
-  };
-};
-
-export type FilterIssuesArgs = {
-  filters?: string[][];
-  searchQuery?: string;
-  page?: number;
-  pageLimit?: number;
-  type?: "open" | "closed";
 };
 
 export type FilterTeamsResponse = {

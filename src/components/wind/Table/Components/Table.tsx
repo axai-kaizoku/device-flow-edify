@@ -1,26 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Paginator, usePaginator } from "@/components/wind/Paginator/index";
 // import { Icon } from '@/components/wind/Icons/index';
+import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { Checkbox } from "@/components/wind/Checkbox/index";
+import { Skeleton } from "../../Skeleton";
+import { SortArrow } from "../Icons/SortArrow";
 import {
+  RowSelectionText,
+  SortArrowContainer,
+  SortIconTextContainer,
   TableBody,
   TableCell,
   TableContainer,
-  TableTag,
   TableFooter,
   TableHeader,
   TableHeadRow,
   TableRow,
-  RowSelectionText,
-  SortArrowContainer,
-  SortIconTextContainer,
+  TableTag,
 } from "../styles/style";
-import { deepCopy, returnTrueValue } from "./utility";
-import { Checkbox } from "@/components/wind/Checkbox/index";
 import { EmptyTable } from "./EmptyTable";
-import { SortArrow } from "../Icons/SortArrow";
-import { Skeleton } from "../../Skeleton";
-import DeviceFlowLoader from "@/components/deviceFlowLoader";
+import { deepCopy, returnTrueValue } from "./utility";
 
 export const Table = ({
   data,
@@ -40,13 +39,6 @@ export const Table = ({
     []
   );
   const [selectedRowCount, setSelectedRowCount] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const { activePageData, pageRange } = usePaginator(
-    initialData,
-    pageNumber,
-    pagination?.itemsPerPage,
-    pagination?.type === "serverSide"
-  );
   const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 
   // Reference
@@ -504,20 +496,6 @@ export const Table = ({
             <TableFooter>
               {selectedRowCount > 0 && (
                 <RowSelectionText>{`${selectedRowCount} rows selected`}</RowSelectionText>
-              )}
-              {pagination && (
-                <Paginator
-                  currentPage={pageNumber}
-                  totalPage={
-                    pagination?.totalPages
-                      ? pagination?.totalPages
-                      : pageRange.length
-                  }
-                  onChangePage={(e) => {
-                    setPageNumber(e);
-                    pagination?.onClickPage && pagination?.onClickPage(e);
-                  }}
-                />
               )}
             </TableFooter>
           )}

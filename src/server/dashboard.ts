@@ -5,7 +5,7 @@ import { BASEURL } from "./main";
 
 const baseUrl = BASEURL;
 
-export const getTotalIntegrationData = cache(async function <Org>() {
+export const getTotalIntegrationData = async <Org>() =>{
   try {
     const session = await getSession();
     const orgID = session?.user?.user?.orgId?._id;
@@ -22,9 +22,9 @@ export const getTotalIntegrationData = cache(async function <Org>() {
   } catch (e) {
     throw new Error("Failed to fetch org");
   }
-});
+};
 
-export const getDashboard = cache(async function <Org>() {
+export const getDashboard = async <Org>() =>{
   try {
     const res = await callAPIWithToken<Org>(
       `${baseUrl}/edifybackend/v1/organisation/dashboard`, // API endpoint
@@ -36,7 +36,7 @@ export const getDashboard = cache(async function <Org>() {
   } catch (e) {
     throw new Error("Failed to fetch org");
   }
-});
+};
 
 // Feedback API
 

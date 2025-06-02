@@ -9,18 +9,18 @@ import {
   fetchUnassignedDevices,
   updateDevice,
 } from "@/server/deviceActions";
-import { User } from "@/server/userActions";
+import { NewUserResponse } from "@/server/userActions";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function AssignDevice({
   children,
   userData,
 }: {
   children: React.ReactNode;
-  userData: User;
+  userData: NewUserResponse;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -197,6 +197,7 @@ export default function AssignDevice({
                 <Button
                   variant="outlineTwo"
                   className="w-full"
+                  type="button"
                   onClick={() => setOpen(false)}
                 >
                   Close

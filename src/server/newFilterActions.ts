@@ -1,11 +1,9 @@
-import { devicesFields, issueFields, usersFields } from "./filterActions";
+import { devicesFields, usersFields } from "./filterActions";
 import { callAPIWithToken } from "./helper";
 import { BASEURL } from "./main";
 import type {
   FilterAssetsArgs,
   FilterAssetsResponse,
-  FilterIssuesArgs,
-  FilterIssuesResponse,
   FilterPeopleArgs,
   FilterPeopleResponse,
   FilterTeamsArgs,
@@ -41,7 +39,7 @@ export const filterAssets = async ({
           : [["userId", "null"]];
     } else if (type === "inactive") {
       payloadBody["isDeleted"] = true;
-      payloadBody["filters"] = [];
+      payloadBody["filters"] = filters?.length > 0 ? [...filters] : [];
     }
 
     console.log({ ...payloadBody, searchQuery }, "payload");
@@ -54,56 +52,11 @@ export const filterAssets = async ({
       payloadBody
     );
 
-    console.log(res?.data, "FILTER RESPONSE ");
+    // console.log(res?.data, "FILTER RESPONSE ");
 
     return res?.data;
   } catch (error) {
-    console.error(error);
-    throw new Error("Error filtering assets");
-  }
-};
-
-export const filterIssues = async ({
-  filters = [],
-  searchQuery = "",
-  page = 1,
-  pageLimit = 1,
-  type = "open",
-}: FilterIssuesArgs) => {
-  try {
-    const payloadBody = {
-      fields: issueFields,
-      pageLimit,
-      page,
-    };
-
-    if (type === "open") {
-      payloadBody["filters"] =
-        filters?.length > 0
-          ? [...filters, ["status", "Equals", "Open"]]
-          : [["status", "Equals", "Open"]];
-    } else if (type === "closed") {
-      payloadBody["filters"] =
-        filters?.length > 0
-          ? [...filters, ["status", "Equals", "Closed"]]
-          : [["status", "Equals", "Closed"]];
-    }
-
-    console.log(payloadBody, "issue payload");
-
-    const res = await callAPIWithToken<FilterIssuesResponse>(
-      `${baseUrl}/edifybackend/v1/issue/filter/${
-        searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-      }`,
-      "POST",
-      payloadBody
-    );
-
-    console.log(res?.data, "FILTER RESPONSE ");
-
-    return res?.data;
-  } catch (error) {
-    console.error(error);
+    // console.error(error);
     throw new Error("Error filtering assets");
   }
 };

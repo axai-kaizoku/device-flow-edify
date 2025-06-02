@@ -23,9 +23,10 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/buttons/Button";
 import { getGSuiteAuthUrl } from "@/server/orgActions";
-import { BothSideArrows } from "@/app/(root)/integrations/_components/icons";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ArrowLeftRightIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export const GsuiteDialog = ({
   open,
@@ -134,7 +135,11 @@ export const GsuiteDialog = ({
               className="size-10"
               alt="Edify logo"
             />
-            <BothSideArrows />
+
+            <div className="transform rotate-180 text-gray-500">
+              <HugeiconsIcon icon={ArrowLeftRightIcon} />
+            </div>
+
             <img
               src={
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg2FNWBQeuQDT6OE9MR5aAR1Gq-DBTiQbNLQ&s"
@@ -146,7 +151,7 @@ export const GsuiteDialog = ({
         </div>
 
         {/* Title and description */}
-        <DialogTitle className="text-lg font-gilroySemiBold">
+        <DialogTitle className="text-[13px] font-gilroySemiBold">
           Connect Deviceflow to Gsuite
         </DialogTitle>
         <div className="h-[1px] bg-gray-200 mb-3"></div>
@@ -177,7 +182,7 @@ export const GsuiteDialog = ({
               </SelectItem>
             </SelectContent>
           </Select>
-          <div>
+          <div className="relative">
             <Input
               value={customPrice}
               readOnly={!isCustom}
@@ -196,6 +201,9 @@ export const GsuiteDialog = ({
                 errors.pricing ? "border-destructive/80" : "border"
               )}
             />
+            <div className="absolute right-3 top-[50%] text-xs font-gilroyMedium -translate-y-1/2 transform text-black">
+              /month
+            </div>
             <p
               className={cn(
                 "mt-0.5 text-xs text-start font-gilroyMedium text-destructive transition-all duration-300",

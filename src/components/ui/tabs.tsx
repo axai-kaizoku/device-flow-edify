@@ -60,24 +60,26 @@ const Tabs = ({
     if (!isControlled) setInternalActiveTab(newValue);
     onValueChange?.(newValue);
   };
+  const isComponent = (child: React.ReactNode, name: string) =>
+    React.isValidElement(child) && (child.type as any).displayName === name;
 
   return (
     <div className={className}>
       {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          if (child.type === TabsList) {
-            return React.cloneElement(
-              child as React.ReactElement<TabsListProps>,
-              { activeTab, setActiveTab }
-            );
-          }
-          if (child.type === TabsContent) {
-            return React.cloneElement(
-              child as React.ReactElement<TabsContentProps>,
-              { activeTab }
-            );
-          }
+        // if (React.isValidElement(child)) {
+        if (isComponent(child, "TabsList")) {
+          return React.cloneElement(
+            child as React.ReactElement<TabsListProps>,
+            { activeTab, setActiveTab }
+          );
         }
+        if (isComponent(child, "TabsContent")) {
+          return React.cloneElement(
+            child as React.ReactElement<TabsContentProps>,
+            { activeTab }
+          );
+        }
+        // }
         return child;
       })}
     </div>
@@ -87,6 +89,25 @@ const Tabs = ({
 // TabsList Component
 const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
   ({ className, activeTab, setActiveTab, children, ...props }, ref) => {
+    const cloneTriggers = (child: React.ReactNode): React.ReactNode => {
+      if (React.isValidElement(child)) {
+        if ((child.type as any).displayName === "TabsTrigger") {
+          return React.cloneElement(
+            child as React.ReactElement<TabsTriggerProps>,
+            { activeTab, setActiveTab }
+          );
+        }
+
+        // If the child has its own children (e.g. a <div>), recurse
+        if (child.props?.children) {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            children: React.Children.map(child.props.children, cloneTriggers),
+          });
+        }
+      }
+      return child;
+    };
+
     return (
       <div
         ref={ref}
@@ -96,17 +117,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
         )}
         {...props}
       >
-        {React.Children.map(children, (child) => {
-          if (React.isValidElement(child)) {
-            if (child.type === TabsTrigger) {
-              return React.cloneElement(
-                child as React.ReactElement<TabsTriggerProps>,
-                { activeTab, setActiveTab }
-              );
-            }
-          }
-          return child;
-        })}
+        {React.Children.map(children, cloneTriggers)}
       </div>
     );
   }
@@ -124,9 +135,9 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
         role="tab"
         aria-selected={isActive}
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium outline-offset-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50",
-          isActive && "bg-background text-foreground shadow-sm shadow-black/5",
-          !isActive && "hover:text-muted-foreground",
+          "inline-flex p-3 text-black whitespace-nowrap rounded-md text-[13px]  font-gilroyMedium  font-medium outline-offset-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50",
+          isActive && "bg-[#FAFAFA] rounded-[6px] w-full ",
+          !isActive && "hover:bg-[#FAFAFA]",
           className
         )}
         onClick={() => setActiveTab?.(value)}

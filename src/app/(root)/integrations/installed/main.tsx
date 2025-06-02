@@ -19,7 +19,7 @@ export default function InstalledPage() {
         <InstalledSkeleton />
       ) : (
         <>
-          <section className="w-full h-fit relative p-5 bg-white rounded-md border overflow-y-auto hide-scrollbar">
+          <section className="w-full h-[90vh] relative p-5 bg-white rounded-md border overflow-y-auto hide-scrollbar">
             <TotalSpends />
             <InstalledSection data={data} status={status} />
           </section>

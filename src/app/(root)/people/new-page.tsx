@@ -74,7 +74,6 @@ export const NewPage = () => {
         page,
         pageLimit,
       }),
-    // staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
@@ -94,16 +93,12 @@ export const NewPage = () => {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: ({ selectedIds }: { selectedIds: string[] }) => {
-      const deleteType = activeTab === "active-users" ? "soft" : "hard";
+      const deleteType = "soft";
       return bulkDeleteUsers(selectedIds, deleteType);
     },
     onSuccess: () => {
       setDeleteOpen(false);
-      toast.success(
-        `Users ${
-          activeTab === "active-users" ? "deactivated" : "permanently deleted"
-        } successfully!`
-      );
+      toast.success(`Users deactivated successfully!`);
       setSelectedIds([]);
 
       queryClient.invalidateQueries({
@@ -138,7 +133,7 @@ export const NewPage = () => {
         }}
         defaultValue="active-users"
         className="w-full"
-        key={`${activeTab}people tabs`}
+        key={`${activeTab}-users-peopleasdf`}
       >
         <ActionBar key={`${activeTab}people-action-bar`}>
           <div className="flex gap-2">
@@ -213,10 +208,10 @@ export const NewPage = () => {
             )}
           </div>
         </ActionBar>
-        <TabsContent value="active-users" key={"active-users"}>
+        <TabsContent value="active-users" key={"active-users-people8"}>
           <UserMain
             peopleText="Active People"
-            key={"Active People"}
+            key={"Active People people active"}
             data={data}
             status={status}
             selectedIds={selectedIds}

@@ -6,7 +6,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { connectGsuiteIntegration, getIntegrationById } from "@/server/integrationActions";
+import {
+  connectGsuiteIntegration,
+  getIntegrationById,
+} from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
@@ -20,14 +23,15 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/buttons/Button";
 import { getGSuiteAuthUrl } from "@/server/orgActions";
-import { BothSideArrows } from "@/app/(root)/integrations/_components/icons";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeftRightIcon } from "@hugeicons/core-free-icons";
 
 export const GsuiteDialogOnboarding = ({
   open,
   setOpen,
-  onSuccess
+  onSuccess,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,9 +46,6 @@ export const GsuiteDialogOnboarding = ({
     // refetchOnMount: false,
     // refetchOnWindowFocus: false,
   });
-  
-
-  
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -64,24 +65,22 @@ export const GsuiteDialogOnboarding = ({
     integrationData?.price?.[0]?.price ?? ""
   );
 
+  useEffect(() => {
+    if (integrationId) {
+      getGsuiteResponse();
+    }
+  }, [integrationId]);
 
-useEffect(() => {
-  if(integrationId){
-    getGsuiteResponse()
-  }
-}, [integrationId])
+  const getGsuiteResponse = async () => {
+    const result = await connectGsuiteIntegration({ id: integrationId });
 
-const getGsuiteResponse = async () => {
-  const result = await connectGsuiteIntegration({ id: integrationId });
-
-  if (result.success) {
-   onSuccess?.()
-   toast.success('Import Success')
-  } else {
-    toast.error(result.error)
-  }
-}
-
+    if (result.success) {
+      onSuccess?.();
+      toast.success("Import Success");
+    } else {
+      toast.error(result.error);
+    }
+  };
 
   useEffect(() => {
     // Only set the selected plan if it's not already set
@@ -139,7 +138,9 @@ const getGsuiteResponse = async () => {
               className="size-10"
               alt="Edify logo"
             />
-            <BothSideArrows />
+            <div className="transform rotate-180 text-gray-500">
+              <HugeiconsIcon icon={ArrowLeftRightIcon} />
+            </div>
             <img
               src={
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg2FNWBQeuQDT6OE9MR5aAR1Gq-DBTiQbNLQ&s"

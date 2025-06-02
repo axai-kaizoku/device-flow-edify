@@ -1,6 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import { UserIcon, Wallet01FreeIcons } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import React from "react";
 export type CardInterface = {
   src?: string;
   name?: string;
@@ -23,9 +23,10 @@ function ConnectionCard({
           alt="logo-slack"
           className="object-contain size-14"
         />
-        <div className="text-[#2E8016] font-gilroySemiBold bg-[#E2FBE6] rounded-full text-sm py-1 px-4 absolute top-4 right-4">
+
+        <Badge className="text-[#2E8016] font-gilroySemiBold bg-[#E2FBE6] absolute top-4 right-4">
           Connected
-        </div>
+        </Badge>
       </div>
       <h1 className="text-xl/5 -mb-1 font-gilroySemiBold">{name ?? "Slack"}</h1>
       <p className="text-[#7F7F7F] text-sm font-gilroyMedium line-clamp-2">
@@ -38,30 +39,12 @@ function ConnectionCard({
             icon={Wallet01FreeIcons}
             className="text-neutral-400 size-4"
           />
-          {/* <img
-            src="/media/integrations/purse.png"
-            className="size-5"
-            alt="Amount-logo"
-          /> */}
           <h1 className="text-sm font-gilroyMedium">₹{amount}/Month</h1>
         </div>
         <div className="flex gap-2 items-center">
-          {/* <img
-            src="/media/integrations/user.png"
-            className="size-5"
-            alt="User-logo"
-          /> */}
           <HugeiconsIcon icon={UserIcon} className="text-neutral-400 size-4" />
           <h1 className="text-sm font-gilroyMedium">{seats} Seats</h1>
         </div>
-        {/* <div className="flex gap-2 items-center justify-center">
-          <img
-            src="/media/integrations/settings.png"
-            className="size-5"
-            alt="Settings-logo"
-          />
-          <h1 className="text-sm font-gilroyMedium">Manage</h1>
-        </div> */}
       </div>
     </div>
   );

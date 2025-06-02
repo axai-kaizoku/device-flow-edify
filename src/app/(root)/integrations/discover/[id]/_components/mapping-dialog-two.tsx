@@ -11,14 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { mapIntegrationUsers } from "@/server/integrationActions";
-import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { IntBack } from "../../../_components/icons";
 
 type UsersType = {
   _id: string;
@@ -214,10 +213,15 @@ export default function MappingDialogTwo({
           className="rounded-2xl bg-white p-4 shadow-lg max-w-md w-full"
         >
           <DialogTitle className="text-base flex gap-3 items-center font-gilroyMedium pl-2">
-            <IntBack
+            <div
+              className="rounded-full cursor-pointer bg-gray-100 p-1 flex justify-center items-center"
               onClick={() => setNextSteps && setNextSteps(1)}
-              className="cursor-pointer"
-            />
+            >
+              <HugeiconsIcon
+                icon={ArrowLeft01Icon}
+                className="text-black size-5"
+              />
+            </div>
             Map Users
           </DialogTitle>
 

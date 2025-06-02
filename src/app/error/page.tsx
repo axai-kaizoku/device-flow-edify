@@ -3,7 +3,7 @@ export default function Error() {
     <div className="flex flex-col justify-center items-center h-[95vh] sm:h-screen w-full">
       <div className="relative w-full h-[65%] flex justify-center items-center">
         <img
-          src="/media/error.svg"
+          src="/media/error.webp"
           alt="500-error"
           className="w-48 absolute z-[1] h-48 sm:w-60 sm:h-60 md:w-[500px] md:h-[350px] lg:w-[650px] lg:h-[420px]  object-contain"
         />

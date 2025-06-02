@@ -1,9 +1,9 @@
 "use server";
-import { cache } from "react";
 
 import { FilterApiParams } from "./filterActions";
 import { callAPIWithToken, getSession } from "./helper";
 import { BASEURL } from "./main";
+import { User } from "./userActions";
 
 const baseUrl = BASEURL;
 
@@ -52,14 +52,14 @@ const teamFields = [
   "manager",
 ];
 
-export const fetchTeams = cache(async function ({
+export const fetchTeams = async ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
   pageLimit = 200000,
   page = 1,
   isDeleted = false,
-}: FilterApiParams = {}): Promise<Team[]> {
+}: FilterApiParams = {}): Promise<Team[]> => {
   try {
     const payload = {
       fields,
@@ -91,15 +91,15 @@ export const fetchTeams = cache(async function ({
         "Failed to filter teams. Please try again later."
     );
   }
-});
-export const fetchActiveTeams = cache(async function ({
+};
+export const fetchActiveTeams = async ({
   filters = [],
   fields = teamFields,
   searchQuery = "",
   pageLimit = 10000,
   page = 1,
   isDeleted,
-}: FilterApiParams = {}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -131,46 +131,7 @@ export const fetchActiveTeams = cache(async function ({
         "Failed to filter teams. Please try again later."
     );
   }
-});
-
-export const fetchInactiveTeams = cache(async function ({
-  filters = [],
-  fields = teamFields,
-  searchQuery = "",
-  pageLimit = 10000,
-  page = 1,
-  isDeleted = true,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      pageLimit,
-      page,
-      isDeleted,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/teams/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<TeamsResponse>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data;
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter teams. Please try again later."
-    );
-  }
-});
+};
 
 export async function createTeam(
   title: string,
@@ -197,7 +158,7 @@ export async function createTeam(
   }
 }
 
-export const getTeamById = cache(async function (teamId: string) {
+export const getTeamById = async (teamId: string) => {
   try {
     const res = await callAPIWithToken<Team>(
       `${baseUrl}/edifybackend/v1/teams/${teamId}`, // API endpoint
@@ -209,7 +170,7 @@ export const getTeamById = cache(async function (teamId: string) {
   } catch (e) {
     throw new Error("Failed to fetch team");
   }
-});
+};
 
 export async function updateTeam(
   id: string,
@@ -239,5 +200,18 @@ export async function deleteTeam<Team>(teamId: string) {
     return res?.data;
   } catch (e: any) {
     throw e;
+  }
+}
+
+export async function fetchNotInTeamPeople() {
+  try {
+    const res = await callAPIWithToken<{ users: User[] }>(
+      `${BASEURL}/edifybackend/v1/teams/not-in-team`,
+      "GET"
+    );
+    // console.log(res?.data);
+    return res.data?.users;
+  } catch (error) {
+    throw new Error("Failed to fetch people");
   }
 }

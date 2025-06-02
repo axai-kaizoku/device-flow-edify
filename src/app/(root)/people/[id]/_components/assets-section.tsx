@@ -1,9 +1,9 @@
 import { Button } from "@/components/buttons/Button";
 import { Device } from "@/server/deviceActions";
-import { User } from "@/server/userActions";
+import { NewUserResponse, User } from "@/server/userActions";
 import ManageAssets from "./manage-assets";
 
-const AssetsSection = ({ user }: { user: User }) => {
+const AssetsSection = ({ user }: { user: NewUserResponse }) => {
   const totalAssets = user?.devices?.length;
   return (
     <>
@@ -20,7 +20,7 @@ const AssetsSection = ({ user }: { user: User }) => {
         </div>
 
         <div className="flex flex-col gap-1">
-          {user?.devices?.slice(0, 2).map((device: Device) => (
+          {user?.devices?.slice(0, 2).map((device) => (
             <div className="flex justify-start items-center gap-4 py-4 border-b">
               <div className="rounded-full border object-contain py-5 px-2">
                 <img

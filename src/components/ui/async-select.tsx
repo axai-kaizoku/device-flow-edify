@@ -28,7 +28,7 @@ export interface Option {
 
 export interface AsyncSelectProps<T> {
   /** Async function to fetch options */
-  fetcher: (query?: string) => Promise<T[]>;
+  fetcher: (query?: string | any) => Promise<T[]>;
   /** Preload all data ahead of time */
   preload?: boolean;
   /** Function to filter options */

@@ -1,3 +1,5 @@
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -17,7 +19,7 @@ export const StoreBannerCardBig = () => {
             href="/store"
             className="flex absolute top-6 right-4 cursor-pointer w-fit justify-center font-gilroyMedium items-center bg-black text-white rounded-full text-base gap-1 py-1 px-4"
           >
-            Visit <ChevronRightIcon className="size-4" />
+            Visit <HugeiconsIcon icon={ArrowRight01Icon} className="size-5" />
           </Link>
         </div>
         <div className="flex gap-4">
@@ -31,7 +33,7 @@ export const StoreBannerCardBig = () => {
       </div>
       <div className="absolute right-0 bottom-0">
         <img
-          src="/media/store-item/store-banner-img.png"
+          src="/media/store-item/store-banner-img.webp"
           alt="Store Banner "
           className="object-contain w-48 2xl:w-60 min-h-min bottom-0 overflow-hidden rounded-br-2xl"
         />

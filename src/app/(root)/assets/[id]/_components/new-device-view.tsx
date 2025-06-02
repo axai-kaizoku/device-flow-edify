@@ -1,45 +1,32 @@
-import { cn } from "@/lib/utils";
-import {
-  CalendarRange,
-  Loader2,
-  Tag,
-  Tickets,
-  TriangleAlert,
-  User2,
-} from "lucide-react";
-import React, { useState } from "react";
-import AssetDetailIcons from "./icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Alert01Icon,
+  Calendar03Icon,
   Call02Icon,
   Mail01Icon,
-  Message01Icon,
-  Search01Icon,
   ShieldEnergyIcon,
-  SmartPhone01Icon,
   StarAward02Icon,
+  Tag01Icon,
   User03Icon,
 } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
-import TabBar from "@/components/TabBar/tabbar";
-import QCSection from "./qc-section";
-import TicketsTable from "./tickets-section";
-import { TimelineDemo } from "./timeline-section";
-import { Device } from "@/server/deviceActions";
-import { formatDate } from "@/app/(root)/people/[id]/_components/user-timeline-table";
-import { GetAvatar } from "@/components/get-avatar";
-import { useQuery } from "@tanstack/react-query";
-import { assetActivityLog } from "@/server/activityActions";
-import Dropdown from "./accordian";
-import DeviceDetailViewSkeltonLeft from "./device-detail-view-skelton-left";
 import {
   TabSkelton,
   TimelineSkelton,
 } from "@/app/(root)/(userRoutes)/_components/profile-main-skeleton";
+import { formatDate } from "@/app/(root)/people/[id]/_components/user-timeline-table";
+import { GetAvatar } from "@/components/get-avatar";
+import TabBar from "@/components/TabBar/tabbar";
+import { assetActivityLog } from "@/server/activityActions";
+import { Device } from "@/server/deviceActions";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import AssetCoachMark from "@/components/assets-coach-mark";
-import TicketsCoachMark from "@/components/ticket-coach-marks";
+import Dropdown from "./accordian";
+import DeviceDetailViewSkeltonLeft from "./device-detail-view-skelton-left";
+import QCSection from "./qc-section";
+import TicketsTable from "./tickets-section";
+import { TimelineDemo } from "./timeline-section";
+import Link from "next/link";
 
 const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
   const { data: deviceTimeLineData, status: timeLineStatus } = useQuery({
@@ -48,6 +35,10 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
     enabled: !!data?._id,
     staleTime: 0,
   });
+
+  const openTicketsCount =
+    data?.tickets?.filter((ticket) => ticket?.status?.toLowerCase() === "open")
+      .length ?? 0;
 
   const tabs = [
     {
@@ -59,18 +50,15 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
       id: "tickets",
       label: "Tickets",
       content: <TicketsTable data={data?.tickets ?? []} />,
-      number:
-        data?.tickets?.filter(
-          (ticket) => ticket?.status?.toLowerCase() === "open"
-        ).length ?? "",
+      ...(openTicketsCount > 0 ? { number: openTicketsCount } : {}),
     },
     {
       id: "qc",
       label: "QC Reports",
       content: <QCSection data={data?.qcDetails ?? []} />,
-      // number: qcData.length
     },
   ];
+
   const sections = [
     {
       key: "device_profile",
@@ -105,7 +93,11 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                 {/* Name, serial no, image, status */}
                 <div className="flex gap-3 items-center">
                   {/* Image */}
-                  <GetAvatar name={data?.custom_model || "-"} size={60} />
+                  <GetAvatar
+                    name={data?.custom_model || "-"}
+                    size={60}
+                    isDeviceAvatar
+                  />
                   {/* Name, serial no */}
                   <div className="flex-col gap-1">
                     <div className="flex gap-3 items-center">
@@ -150,12 +142,13 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                       <p className=" font-gilroyMedium text-sm ">
                         Assigned to:
                       </p>
-                      <p className="text-sm font-gilroyMedium underline ">
-                        {data?.userName || "-"}
-                      </p>
+                      <Link href={`/people/${data?.userId}`}>
+                        <p className="text-sm font-gilroyMedium underline ">
+                          {data?.userName || "-"}
+                        </p>
+                      </Link>
                     </div>
                     <div className="flex gap-1 items-center">
-                      {/* <AssetDetailIcons.warranty className="text-[#a09f9f] size-4" /> */}
                       <HugeiconsIcon
                         icon={ShieldEnergyIcon}
                         className="text-[#a09f9f] size-4"
@@ -173,9 +166,14 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                   </div>
                   <div className="flex gap-6 items-center">
                     <div className="flex gap-1 items-center">
-                      <CalendarRange className="text-[#a09f9f] size-4" />
+                      <HugeiconsIcon
+                        icon={Calendar03Icon}
+                        className="text-[#a09f9f] size-4"
+                      />
+                      {/* Here we need to add createdAt,  */}
                       <p className="text-sm font-gilroyMedium leading-5">
-                        {formatDate(data?.assigned_at)
+                        Added on{" "}
+                        {formatDate(data?.createdAt)
                           .split(",")
                           .slice(0, 2)
                           .join(",") || "-"}
@@ -183,13 +181,17 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                     </div>
                     {data?.device_condition && data.device_condition !== "" && (
                       <div className="flex gap-1 items-center">
-                        <Tag className="text-[#a09f9f] size-4" />
+                        <HugeiconsIcon
+                          icon={Tag01Icon}
+                          className="text-[#a09f9f] size-4"
+                        />
+
                         {data.device_condition === "Excellent" ? (
                           <p className="text-[#2E8016] text-sm font-gilroyMedium">
                             Excellent
                           </p>
                         ) : data.device_condition === "Fair" ? (
-                          <p className="text-orange-400 text-sm font-gilroyMedium">
+                          <p className="text-yellow-400 text-sm font-gilroyMedium">
                             Fair
                           </p>
                         ) : data.device_condition === "Good" ? (
@@ -201,22 +203,19 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                     )}
                   </div>
                 </div>
-                {openIssues.length > 0 && (
-                  <div
-                    onClick={() =>
-                      router.push(`/assets/${data?._id}?tab=tickets`)
-                    }
-                    className="bg-[#FFEDED] cursor-pointer px-2 py-3 gap-2 flex items-center rounded-[5px]"
-                  >
-                    <HugeiconsIcon
-                      icon={Alert01Icon}
-                      className="text-[#FF0000] size-4"
-                    />
-                    <p className="text-[#FF0000] text-sm  font-gilroyMedium">
-                      {openIssues.length} Open{" "}
-                      {openIssues.length === 1 ? "issue" : "issues"}
-                    </p>
-                  </div>
+                {openIssues?.length > 0 && (
+                  <Link href={`/assets/${data?._id}?tab=tickets`}>
+                    <div className="bg-[#FFEDED] cursor-pointer px-2 py-3 gap-2 flex items-center rounded-[5px]">
+                      <HugeiconsIcon
+                        icon={Alert01Icon}
+                        className="text-[#FF0000] size-4"
+                      />
+                      <p className="text-[#FF0000] text-sm  font-gilroyMedium">
+                        {openIssues.length} Open{" "}
+                        {openIssues.length === 1 ? "issue" : "issues"}
+                      </p>
+                    </div>
+                  </Link>
                 )}
 
                 {/* Device Profile */}
@@ -230,7 +229,7 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                     {[
                       {
                         label: "Device Type:",
-                        value: data?.device_type || "-",
+                        value: data?.device_type?.trim() || "",
                       },
                       {
                         label: "Temporary Date:",
@@ -239,7 +238,7 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                               .split(",")
                               .slice(0, 2)
                               .join(",")
-                          : "-",
+                          : "",
                       },
                       {
                         label: "Device Condition:",
@@ -250,25 +249,31 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                             ? "Fair"
                             : data?.device_condition === "Good"
                             ? "Good"
-                            : "-",
+                            : "",
                         valueColor: "text-[#2E8016]",
                       },
-                    ].map(({ label, value, valueColor = "" }, index) => (
-                      <div key={index} className="flex items-start gap-2 pl-3">
-                        <div className="flex items-start gap-2 min-w-[120px]">
-                          <span className="text-[#a09f9f] font-gilroyMedium text-sm">
-                            {label}
-                          </span>
-                        </div>
-                        <p
-                          className={`text-sm font-gilroyMedium ${valueColor}`}
+                    ]
+                      .filter(({ value }) => value && value !== "-") // Only keep non-empty, meaningful values
+                      .map(({ label, value, valueColor = "" }, index) => (
+                        <div
+                          key={index}
+                          className="flex items-start gap-2 pl-3"
                         >
-                          {value}
-                        </p>
-                      </div>
-                    ))}
+                          <div className="flex items-start gap-2 min-w-[120px]">
+                            <span className="text-[#a09f9f] font-gilroyMedium text-sm">
+                              {label}
+                            </span>
+                          </div>
+                          <p
+                            className={`text-sm font-gilroyMedium ${valueColor}`}
+                          >
+                            {value}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 </Dropdown>
+
                 {/* Assignee Information */}
                 {data?.userId !== null && (
                   <Dropdown
@@ -281,43 +286,48 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                         {
                           icon: User03Icon,
                           label: "Name:",
-                          value: data?.userName || "-",
+                          value: data?.userName?.trim() || "",
                           className: "underline",
                         },
                         {
                           icon: Mail01Icon,
                           label: "Email:",
-                          value: data?.email || "-",
+                          value: data?.email?.trim() || "",
                           className: "text-[#025CE5]",
                         },
                         {
                           icon: Call02Icon,
                           label: "Phone:",
-                          value: data?.phone || "-",
+                          value: data?.phone?.trim() || "",
                         },
                         {
                           icon: StarAward02Icon,
                           label: "Designation:",
-                          value: data?.designation || "-",
+                          value: data?.designation?.trim() || "",
                         },
-                      ].map(({ icon, label, value, className = "" }, idx) => (
-                        <div key={idx} className="flex items-start gap-2 pl-3">
-                          <div className="min-w-[160px] flex items-center gap-2 ">
-                            <HugeiconsIcon
-                              icon={icon}
-                              className="text-[#a09f9f] size-4"
-                            />
-                            <span className="text-[#a09f9f] font-gilroyMedium text-sm ">
-                              {label}
-                            </span>
-                          </div>
-                          <p
-                            className={`text-sm font-gilroyMedium  text-black ${className}`}
+                      ]
+                        .filter(({ value }) => value && value !== "-")
+                        .map(({ icon, label, value, className = "" }, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-2 pl-3"
                           >
-                            {value}
-                          </p>
-                        </div>
-                      ))}
+                            <div className="min-w-[160px] flex items-center gap-2 ">
+                              <HugeiconsIcon
+                                icon={icon}
+                                className="text-[#a09f9f] size-4"
+                              />
+                              <span className="text-[#a09f9f] font-gilroyMedium text-sm ">
+                                {label}
+                              </span>
+                            </div>
+                            <p
+                              className={`text-sm font-gilroyMedium text-black ${className}`}
+                            >
+                              {value}
+                            </p>
+                          </div>
+                        ))}
                     </div>
                   </Dropdown>
                 )}
@@ -333,56 +343,67 @@ const NewDeviceView = ({ data, status }: { data: Device; status: string }) => {
                     {[
                       {
                         label: "Model Name:",
-                        value: data?.custom_model || "-",
+                        value: data?.custom_model?.trim() || "",
                       },
                       {
                         label: "Serial Number:",
-                        value: data?.serial_no || "-",
+                        value: data?.serial_no?.trim() || "",
                       },
                       {
                         label: "Brand:",
-                        value: data?.brand || "-",
+                        value: data?.brand?.trim() || "",
                       },
                       {
                         label: "Processor:",
-                        value: data?.processor || "-",
+                        value: data?.processor?.trim() || "",
                       },
                       {
                         label: "OS:",
-                        value: data?.os || "-",
+                        value: data?.os?.trim() || "",
                       },
                       {
                         label: "Storage:",
-                        value: data?.storage || "-",
+                        value:
+                          Array.isArray(data?.storage) &&
+                          data?.storage?.length > 0
+                            ? data?.storage.join(", ")
+                            : "",
                       },
                       {
                         label: "Purchased On:",
-                        value:
-                          formatDate(data?.device_purchase_date)
-                            ?.split(",")
-                            .slice(0, 2)
-                            .join(",") || "-",
+                        value: data?.device_purchase_date
+                          ? formatDate(data.device_purchase_date)
+                              .split(",")
+                              .slice(0, 2)
+                              .join(",")
+                          : "",
                       },
                       {
                         label: "Warranty Expiry:",
-                        value:
-                          formatDate(data?.warranty_expiary_date)
-                            ?.split(",")
-                            .slice(0, 2)
-                            .join(",") || "-",
+                        value: data?.warranty_expiary_date
+                          ? formatDate(data.warranty_expiary_date)
+                              .split(",")
+                              .slice(0, 2)
+                              .join(",")
+                          : "",
                       },
-                    ].map(({ label, value }, index) => (
-                      <div key={index} className="flex items-start gap-2 pl-3">
-                        <div className="min-w-[140px]">
-                          <span className="text-[#a09f9f] font-gilroyMedium text-sm ">
-                            {label}
-                          </span>
+                    ]
+                      ?.filter(({ value }) => value && value !== "-")
+                      ?.map(({ label, value }, index) => (
+                        <div
+                          key={index}
+                          className="flex items-start gap-2 pl-3"
+                        >
+                          <div className="min-w-[140px]">
+                            <span className="text-[#a09f9f] font-gilroyMedium text-sm ">
+                              {label}
+                            </span>
+                          </div>
+                          <p className="text-[15px] font-gilroyMedium ">
+                            {value}
+                          </p>
                         </div>
-                        <p className="text-[15px] font-gilroyMedium ">
-                          {value}
-                        </p>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </Dropdown>
               </div>

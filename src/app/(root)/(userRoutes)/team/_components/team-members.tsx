@@ -1,10 +1,6 @@
 "use client";
 import { SetStateAction, useEffect, useState } from "react";
-import {
-  getUsersByTeamId,
-  User,
-  UsersTeamResponse,
-} from "@/server/userActions";
+import { getUsersByTeamId, User } from "@/server/userActions";
 import { Table } from "@/components/wind/Table";
 import Pagination from "@/app/(root)/teams/_components/pagination";
 import { Icons } from "@/app/(root)/people/icons";
@@ -15,12 +11,12 @@ const TeamMembers = ({
   setUsers,
   id,
 }: {
-  users: UsersTeamResponse;
-  setUsers: React.Dispatch<SetStateAction<UsersTeamResponse | null>>;
+  users: User;
+  setUsers: React.Dispatch<SetStateAction<User | null>>;
   id: string;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [data, setData] = useState<UsersTeamResponse>();
+  const [data, setData] = useState<User>();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +26,7 @@ const TeamMembers = ({
 
   useEffect(() => {
     const fetch = async () => {
-      const res: UsersTeamResponse = await getUsersByTeamId(id, 1);
+      const res: User = await getUsersByTeamId(id, 1);
       setData(res);
     };
     fetch();
@@ -39,7 +35,7 @@ const TeamMembers = ({
   const handlePageChange = async (page: number) => {
     setIsLoading(true);
     try {
-      const res: UsersTeamResponse = await getUsersByTeamId(id, page);
+      const res: User = await getUsersByTeamId(id, page);
       setData(res);
       setCurrentPage(page);
     } catch (error) {
@@ -78,11 +74,10 @@ const TeamMembers = ({
                 selectedIds={selectedIds}
                 isLoading={isLoading}
                 setSelectedIds={setSelectedIds}
-                checkboxSelection={{
-                  uniqueField: "_id",
-                  //logic yet to be done
-                  onSelectionChange: (e) => console.log(e),
-                }}
+                // checkboxSelection={{
+                //   uniqueField: "_id",
+                //   onSelectionChange: (e) => console.log(e),
+                // }}
                 columns={[
                   {
                     title: "Name",

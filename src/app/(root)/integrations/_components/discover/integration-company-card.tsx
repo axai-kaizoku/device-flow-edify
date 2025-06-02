@@ -1,4 +1,7 @@
+import { Badge } from "@/components/ui/badge";
 import { AllIntegrationAvailable } from "@/server/integrationActions";
+import { LinkSquare01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 
 export const IntegrationCompanyCard = ({
@@ -47,20 +50,15 @@ export const IntegrationCompanyCard = ({
                 onClick={(e) => e.stopPropagation()}
                 className="ml-2"
               >
-                <img
-                  src="/media/discover-filters/open-link.svg"
-                  alt="open link"
-                  width={16}
-                  height={16}
-                />
+                <HugeiconsIcon icon={LinkSquare01Icon} className="size-4" />
               </a>
             </span>
           </div>
         </div>
         {company?.isConnected ? (
-          <div className="bg-[#E2FBE6] text-[#2E8016] text-[12px] font-gilroyMedium rounded-full flex justify-center items-center px-2.5 py-0.5 absolute top-0 right-0">
+          <Badge className="bg-[#E2FBE6] text-[#2E8016] absolute top-0 right-0">
             Installed
-          </div>
+          </Badge>
         ) : (
           <div></div>
         )}

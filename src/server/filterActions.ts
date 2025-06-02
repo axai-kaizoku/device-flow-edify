@@ -1,9 +1,7 @@
-import { Device, StoreDevice } from "./deviceActions";
+import { StoreDevice } from "./deviceActions";
 import { callAPIWithToken } from "./helper";
-import { Issues } from "./issueActions";
 import { BASEURL } from "./main";
-import { User, UserResponse } from "./userActions";
-import { cache } from "react";
+import { UserResponse } from "./userActions";
 
 const baseUrl = BASEURL;
 
@@ -31,14 +29,6 @@ export interface inactiveFilterApiParams {
   pageLimit?: number;
   page?: number;
   isDeleted?: boolean;
-}
-
-export interface IssueResponse {
-  issues: Issues[];
-  total_pages?: number;
-  current_page?: number;
-  total?: number;
-  per_page?: number;
 }
 
 export const devicesFilterFields = [
@@ -127,87 +117,14 @@ export const usersFields = [
   "deleted_at",
 ];
 
-export const deletedUsers = cache(async function ({
-  filters = [],
-  fields = usersFields,
-  searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
-      isDeleted: true,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<User[]>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter Users. Please try again later."
-    );
-  }
-});
-
-export const filterUsers = cache(async function ({
-  filters = [],
-  fields = usersFields,
-  searchQuery = "",
-  page = 1,
-  pageLimit = 5,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      page,
-      pageLimit,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
-
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter Users. Please try again later."
-    );
-  }
-});
-
-export const activeUsers = cache(async function ({
+export const activeUsers = async ({
   filters = [],
   fields = usersFields,
   searchQuery = "",
   isDeleted,
   page = 1,
   pageLimit = 20,
-}: activeFilterApiParams = {}): Promise<any> {
+}: activeFilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -237,91 +154,16 @@ export const activeUsers = cache(async function ({
         "Failed to filter Users. Please try again later."
     );
   }
-});
-export const inActiveUsers = cache(async function ({
-  filters = [],
-  fields = usersFields,
-  searchQuery = "",
-  page = 1,
-  pageLimit = 5,
-  isDeleted = true,
-}: inactiveFilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      page,
-      pageLimit,
-      isDeleted,
-    };
+};
 
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/user/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<UserResponse>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter Users. Please try again later."
-    );
-  }
-});
-
-export const filterDevice = cache(async function ({
-  filters = [],
-  fields = devicesFields,
-  searchQuery = "",
-  pageLength = 5,
-  page = 1,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      pageLimit: pageLength,
-      page,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/devices/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
-
-    // Check and return response data
-    if (res && res?.data) {
-      return res?.data;
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter devices. Please try again later."
-    );
-  }
-});
-
-export const assignedAssets = cache(async function ({
+export const assignedAssets = async ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
   page = 1,
   pageLimit = 20,
   isDeleted,
-}: FilterApiParams = {}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -351,15 +193,15 @@ export const assignedAssets = cache(async function ({
         "Failed to filter devices. Please try again later."
     );
   }
-});
+};
 
-export const unAssignedAssets = cache(async function ({
+export const unAssignedAssets = async ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
   page = 1,
   pageLimit = 50000000,
-}: FilterApiParams = {}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -391,16 +233,16 @@ export const unAssignedAssets = cache(async function ({
         "Failed to filter devices. Please try again later."
     );
   }
-});
+};
 
-export const inActiveAssets = cache(async function ({
+export const inActiveAssets = async ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
   page = 1,
   pageLimit = 5000000,
   isDeleted = true,
-}: inactiveFilterApiParams = {}): Promise<any> {
+}: inactiveFilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -430,164 +272,4 @@ export const inActiveAssets = cache(async function ({
         "Failed to filter devices. Please try again later."
     );
   }
-});
-
-export const deletedDevices = cache(async function ({
-  filters = [],
-  fields = devicesFields,
-  searchQuery = "",
-  pageLength = 20,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      page_length: pageLength,
-      isDeleted: true,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/devices/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<Device[]>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter devices. Please try again later."
-    );
-  }
-});
-
-export const issueFields = [
-  "description",
-  "title",
-  "issueId",
-  "status",
-  "createdAt",
-  "updatedAt",
-  "priority",
-  "userName",
-  "serial_no",
-  "email",
-];
-
-export const openIssues = cache(async function ({
-  filters,
-  fields = issueFields,
-  searchQuery = "",
-  page = 1,
-  pageLimit = 100000000,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      pageLimit,
-      page,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/issue/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter issues. Please try again later."
-    );
-  }
-});
-
-export const closedIssues = cache(async function ({
-  filters = [["status", "Equals", "Closed"]],
-  fields = issueFields,
-  searchQuery = "",
-  page = 1,
-  pageLimit = 100000000,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      pageLimit,
-      page,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/issue/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter issues. Please try again later."
-    );
-  }
-});
-
-export const filterIssues = cache(async function ({
-  filters = [["status", "Equals", "Open"]],
-  fields = issueFields,
-  searchQuery = "",
-  pageLimit = 10000,
-  page = 1,
-}: FilterApiParams = {}): Promise<any> {
-  try {
-    const payload = {
-      fields,
-      filters: filters?.length > 0 ? filters : [],
-      pageLimit,
-      page,
-    };
-
-    // Construct the URL with an optional search query
-    const apiUrl = `${baseUrl}/edifybackend/v1/issue/filter${
-      searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
-    }`;
-
-    // API call
-    const res = await callAPIWithToken<IssueResponse>(apiUrl, "POST", payload);
-    // Check if response has data
-    if (res && res?.data) {
-      return res?.data; // Return the filtered data
-    } else {
-      throw new Error("No data received from the API");
-    }
-  } catch (error: any) {
-    // Throw more specific error message
-    throw new Error(
-      error?.response?.data?.message ||
-        "Failed to filter issues. Please try again later."
-    );
-  }
-});
+};

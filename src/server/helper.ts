@@ -11,7 +11,7 @@ export const getSession = async () => {
 
 export const getTokenFromSession = async () => {
   const session = await getServerSession(authOptions);
-  // console.log(session, "session from helper");
+  // console.log(session?.user?.user?.orgId, "session from helper");
   const token = session?.user?.user.token;
   return token;
 };
@@ -87,7 +87,7 @@ export const callAPI = async <T>(
       data: method !== "GET" ? body : undefined,
       headers,
     });
-
+    console.log(`[API] ${method} ${url}`);
     return {
       data: response.data,
       status: response.status,

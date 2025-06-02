@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { LogoCompanyModal } from "./logo-company";
 import Link from "next/link";
 import EmployeeIconGreen from "@/icons/EmployeeIconGreen";
-import SettingsEdit from "@/icons/SettingsEdit";
 import AssetsIconGreen from "@/icons/AssetsIconGreen";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { PencilEdit01Icon } from "@hugeicons/core-free-icons";
 
 function SettingsHeader({ data }: { data: Org }) {
   return (
@@ -29,7 +30,9 @@ function SettingsHeader({ data }: { data: Org }) {
             </div>
             {/* Modal trigger for editing the logo */}
             <LogoCompanyModal id={data?._id!} logo={data?.logo}>
-              <SettingsEdit className="absolute left-[4.7rem] bottom-8 cursor-pointer" />
+              <div className="border border-blue-600 rounded-full p-1 absolute left-[4.7rem] bottom-8 cursor-pointer bg-white">
+                <HugeiconsIcon icon={PencilEdit01Icon} className="text-blue-600"/>
+              </div>
             </LogoCompanyModal>
 
             <div className="flex flex-col gap-1">

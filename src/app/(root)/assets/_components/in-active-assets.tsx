@@ -11,12 +11,11 @@ import { Table } from "@/components/wind/Table";
 import { PermanentAssetsDelete } from "./permanent-assets-delete";
 import { RestoreDevice } from "./restore-assets";
 import { inActiveAssets } from "@/server/filterActions";
-import { assetsIcons } from "../icons";
 import CreateDevice from "./addDevices/_components/create-device";
 import DeleteTableIcon from "@/icons/DeleteTableIcon";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
 import { DeleteModal } from "../../people/_components/deleteUserModal";
+import { AssetsIcons } from "../icons";
 
 function InActiveAssets({
   data,
@@ -78,9 +77,9 @@ function InActiveAssets({
   return (
     <>
       <div className="rounded-[33px] border border-[#C3C3C34F] p-3 bg-white/80 backdrop-blur-[22.8px]  flex flex-col gap-5">
-        {!isLoading && data?.devices.length === 0 ? (
+        {!isLoading && data?.devices.length !== 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-4">
-            <assetsIcons.no_assets_display />
+            <AssetsIcons.no_assets_display />
             <CreateDevice>
               <div className="py-1.5 px-8 text-sm rounded-full text-white font-gilroySemiBold bg-black">
                 Add Device

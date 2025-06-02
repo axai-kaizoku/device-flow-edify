@@ -161,7 +161,7 @@ const UserByIntegrations = ({
 
                       return (
                         <AllIntegrationsDisplay
-                          data={record}
+                          data={record as unknown as User}
                           allIntegrations={filteredIntegrations}
                         >
                           <div className="flex items-center gap-2 -space-x-5">
@@ -209,6 +209,7 @@ export default UserByIntegrations;
 import { GetAvatar } from "@/components/get-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
+import { User } from "@/server/userActions";
 
 function IntegrationHeaderSkeleton() {
   return (

@@ -2,16 +2,17 @@
 
 import { buttonVariants } from "@/components/buttons/Button";
 import { Skeleton } from "@/components/ui/skeleton";
-import EditPencilIcon from "@/icons/EditPencilIcon";
 import RestoreIcon from "@/icons/RestoreIcon";
 import { TeamsResponse } from "@/server/teamActions";
-import { Trash2 } from "lucide-react";
 import { DeleteTeam } from "../[id]/_components/delete-team";
 import EditTeam from "../[id]/_components/edit-team";
 import CreateTeam from "./create-team";
 import PaginatedList from "./paginated-list";
 import { PermanentTeamDelete } from "./permanent-team";
 import { RestoreTeam } from "./restore-team";
+import Image from "next/image";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete02Icon, PencilEdit01Icon } from "@hugeicons/core-free-icons";
 
 interface TeamsMainProps {
   teams: TeamsResponse | null;
@@ -39,7 +40,7 @@ export default function TeamsMain({
       {teams?.teams?.length === 0 ? (
         <div className="flex flex-col gap-6 justify-center items-center py-10">
           <div className="flex  font-gilroySemiBold flex-col   justify-center items-center ">
-            <img src="/media/no_data/team.svg" alt="No-Teams Logo" />
+            <Image src="/media/no_data/team.webp" width={450} height={450} alt="No Teams" />
           </div>
           <CreateTeam onRefresh={onRefresh}>
             <button
@@ -63,7 +64,7 @@ export default function TeamsMain({
                 <>
                   <PermanentTeamDelete id={team?._id!} onRefresh={onRefresh}>
                     <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                      <Trash2 className="size-4 cursor-pointer" />
+                      <HugeiconsIcon icon={Delete02Icon} className="size-4 cursor-pointer font-gilroySemiBold"/>
                     </div>
                   </PermanentTeamDelete>
 
@@ -77,12 +78,12 @@ export default function TeamsMain({
                 <>
                   <DeleteTeam id={team._id!} onRefresh={onRefresh}>
                     <div className="group duration-300 flex-col hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                      <Trash2 className="size-4 cursor-pointer" />
+                      <HugeiconsIcon icon={Delete02Icon} className="size-4 cursor-pointer"/>
                     </div>
                   </DeleteTeam>
                   <EditTeam {...team} onRefresh={onRefresh}>
                     <div className="group duration-300 hover:border-black transition-all ease-in-out size-10 border-gray-300 rounded-full justify-center items-center flex border">
-                      <EditPencilIcon className="size-4 text-gray-600 group-hover:text-black cursor-pointer" />
+                      <HugeiconsIcon icon={PencilEdit01Icon} className="size-[18px] cursor-pointer"/>
                     </div>
                   </EditTeam>
                 </>
@@ -99,7 +100,7 @@ function TeamsGridSkeleton() {
   return (
     <div className="py-2 w-full">
       <div className="flex gap-x-4 gap-y-4 flex-wrap w-full">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
             className="border border-[rgba(171,171,171,0.19)] bg-[#FCFCFC] backdrop-blur-[14.1px]

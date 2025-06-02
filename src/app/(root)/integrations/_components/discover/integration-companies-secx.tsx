@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { IntegrationCompanyCard } from "./integration-company-card";
 import { AllIntegrationAvailable } from "@/server/integrationActions";
 

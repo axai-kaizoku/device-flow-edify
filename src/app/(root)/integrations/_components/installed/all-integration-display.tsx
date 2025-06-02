@@ -13,7 +13,7 @@ import {
 
 import { formatNumber } from "@/lib/utils";
 import { User } from "@/server/userActions";
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -83,9 +83,15 @@ export default function AllIntegrationsDisplay({
                           >
                             <div className=" flex justify-between items-center w-full gap-x-12">
                               <span>{p?.platform}</span>{" "}
-                              <span>{`₹${formatNumber(
-                                parseInt(p?.price ?? 0)
-                              )}/month`}</span>
+                              <span>
+                                {`₹${
+                                  Array.isArray(p?.price)
+                                    ? formatNumber(
+                                        parseInt(p.price[0]?.price || "0")
+                                      )
+                                    : formatNumber(p?.price ?? 0)
+                                }/month`}
+                              </span>
                             </div>
                           </div>
                           <div className="w-full flex justify-center items-center">
@@ -111,9 +117,15 @@ export default function AllIntegrationsDisplay({
                             <div className=" flex justify-between items-center w-full gap-x-12">
                               <span>{p?.platform}</span>{" "}
                               {/* <span>{`₹${p?.price}/month`}</span> */}
-                              <span>{`₹${formatNumber(
-                                parseInt(p?.price ?? 0)
-                              )}/month`}</span>
+                              <span>
+                                {`₹${
+                                  Array.isArray(p?.price)
+                                    ? formatNumber(
+                                        parseInt(p.price[0]?.price || "0")
+                                      )
+                                    : formatNumber(p?.price ?? 0)
+                                }/month`}
+                              </span>
                             </div>
                           </div>
                           <div className="w-full flex justify-center items-center">
@@ -204,7 +216,12 @@ export default function AllIntegrationsDisplay({
                         href={`/integrations/installed/${integration?.platform}`}
                         onClick={() => setOpen(false)}
                       >
-                        <IntRight className="size-16" />
+                        <div className="bg-gray-100 p-1 justify-center items-center rounded-full flex">
+                          <HugeiconsIcon
+                            icon={ArrowRight01Icon}
+                            className="size-6 stroke-[2]"
+                          />
+                        </div>
                       </Link>
                     </div>
                   </>

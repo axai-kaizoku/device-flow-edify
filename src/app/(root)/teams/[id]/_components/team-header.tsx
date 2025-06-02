@@ -1,18 +1,10 @@
+import { GetAvatar } from "@/components/get-avatar";
 import { Team } from "@/server/teamActions";
-import React from "react";
 
 const TeamHeader = ({ image, title, description, active_manager }: Team) => {
   return (
     <div className="flex gap-4 pl-3  items-center">
-      <img
-        src={
-          image && image.length > 0
-            ? image
-            : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012942444.png"
-        }
-        alt="team-image"
-        className="size-16 object-cover rounded-full"
-      />
+      <GetAvatar name={title} size={64} />
       <div className="flex flex-col gap-y-2">
         <h1 className="text-lg flex gap-3 items-center font-gilroySemiBold text-black">
           {title ?? "_"}

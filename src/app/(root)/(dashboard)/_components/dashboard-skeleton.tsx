@@ -1,114 +1,126 @@
-"use client";
-import { CombinedContainer } from "@/components/container/container";
-import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
-import { toast } from "sonner";
-import FeedBackIcon from "@/icons/FeedBackIcon";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardSkeleton() {
-  const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
-  const userData = useSelector((state: RootState) => state.auth.userData);
-
   return (
-    <CombinedContainer
-      title="Admin Dashboard"
-      className="max-[1410px]:pt-8 pt-0"
-    >
-      <div className="flex justify-center items-center mb-7 gap-3 h-full">
-        {/* Main Content Area (75% width) */}
-        <div
-          style={{ width: "75%" }}
-          className="flex justify-between gap-3 flex-wrap"
-        >
-          {/* First Row */}
-          <div
-            style={{ width: "49%" }}
-            className="h-40 bg-gray-300 rounded-3xl animate-pulse"
-          ></div>
-          <div
-            style={{ width: "49%" }}
-            className="h-40 bg-gray-300 rounded-3xl animate-pulse"
-          ></div>
-
-          {/* Second Row */}
-          <div className="flex gap-3 w-[300%] mt-3">
-            <div className="flex-1 h-92 bg-gray-300 rounded-3xl animate-pulse"></div>
-
-            <div className="flex flex-col gap-3 w-1/4">
-              <div className="h-48 bg-gray-300 rounded-3xl animate-pulse"></div>
-              <div className="h-48 bg-gray-300 rounded-3xl animate-pulse"></div>
+    <div className="w-full p-4">
+      <div className="pt-0 w-full">
+        <Skeleton className="h-6 w-40 rounded mb-3" />
+        <div className="flex w-full gap-3">
+          <div className="w-[50%] bg-white rounded-md border border-black/10 flex flex-col justify-start px-3 py-5 lg:p-7">
+            <Skeleton className="h-12 w-3/4 rounded mb-4" />
+            <div className="border-t mt-4 border-gray-200 border-dashed"></div>
+            <div className="flex gap-2 items-center mt-5">
+              <Skeleton className="h-10 w-10 rounded" />
+              <Skeleton className="h-5 w-20 rounded" />
             </div>
-
-            <div className="flex-1 h-96 bg-gray-300 rounded-3xl animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Sidebar Area (25% width) */}
-        <div style={{ width: "25%" }} className="flex flex-col gap-6">
-          <div className="h-96 bg-gray-300 rounded-3xl animate-pulse"></div>
-          <div className="h-44 bg-gray-300 rounded-3xl animate-pulse"></div>
-        </div>
-      </div>
-
-      {/* Feedback Button (same as original) */}
-      <div
-        className="bg-black cursor-pointer p-2 rounded-lg w-fit flex gap-1 items-center text-base text-white font-gilroySemiBold px-3 fixed bottom-10 right-11 z-[300]"
-        style={{ boxShadow: "0px 0px 13.154px 0px rgba(0, 0, 0, 0.40)" }}
-        onClick={toggleModal}
-      >
-        <FeedBackIcon />
-        <div>Feedback</div>
-      </div>
-
-      {/* Feedback Modal (same as original) */}
-      {isModalOpen && (
-        <div
-          className="fixed bottom-24 right-11 bg-white p-5 rounded-2xl shadow-lg w-[413px]"
-          style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)" }}
-        >
-          <button
-            className="absolute top-5 right-4 text-gray-500 hover:text-gray-700"
-            onClick={toggleModal}
-          >
-            <X className="text-black" />
-          </button>
-          <h2 className="text-lg font-gilroySemiBold mb-4 w-full text-center">
-            Feedback
-          </h2>
-          <div className="text-sm text-gray-600 gap-2 flex flex-col w-full">
-            <div className="text-xl text-black font-gilroySemiBold text-center">
-              Share your feedback!
-            </div>
-
-            <div className="flex justify-center">
-              <div className="text-sm text-[#363636] font-gilroyMedium w-[70%] text-center">
-                Your input is important for us. We take customer feedback very
-                seriously.
-              </div>
-            </div>
-
-            {/* Emoji Feedback Section */}
-            <div className="flex justify-center gap-6 my-5">
-              {[1, 2, 3, 4, 5].map((_, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse"></div>
-                  <div className="w-10 h-4 mt-1 bg-gray-300 rounded animate-pulse"></div>
+            <Skeleton className="w-full mt-5 h-[10px] flex rounded-full overflow-hidden" />
+            <div className="flex gap-2 items-center justify-between mt-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex gap-2 flex-col w-1/3">
+                  <Skeleton className="h-4 w-20 rounded" />
+                  <Skeleton className="h-4 w-16 rounded" />
+                  <Skeleton className="h-4 w-24 rounded" />
                 </div>
               ))}
             </div>
-
-            <div className="h-32 bg-gray-300 rounded animate-pulse"></div>
-
-            <div className="bg-gray-300 h-10 rounded-[10px] mt-5 animate-pulse"></div>
+          </div>
+          <div className="flex flex-col gap-2 w-[50%]">
+            <div className="w-full bg-white rounded-[10px] border border-black/10 flex flex-col justify-start px-3 py-5 lg:p-7">
+              <div className="flex gap-2 items-center mb-4">
+                <Skeleton className="h-4 w-24 rounded" />
+                <Skeleton className="h-5 w-32 rounded-full" />
+              </div>
+              <div className="flex gap-2 justify-between w-full">
+                <Skeleton className="size-40 w-60 flex justify-center items-center rounded-full" />
+                <div className="flex gap-2 w-full">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="flex flex-col mt-3 gap-4 w-full">
+                      {[...Array(3)].map((_, j) => (
+                        <div key={j} className="flex gap-2 w-full items-center">
+                          <Skeleton className="h-3 w-3 rounded-full" />
+                          <Skeleton className="h-4 w-16 rounded" />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="w-full h-[70px] bg-white rounded-[10px] border border-black/10 flex p-3">
+              <div className="flex items-center gap-4 w-full overflow-hidden">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2 flex-shrink-0"
+                  >
+                    <Skeleton className="size-3 rounded" />
+                    <Skeleton className="h-4 w-16 rounded" />
+                  </div>
+                ))}
+              </div>
+              <Skeleton className="w-24 h-8 rounded ml-auto" />
+            </div>
           </div>
         </div>
-      )}
-    </CombinedContainer>
+      </div>
+
+      <div className="pt-0 w-full mt-4">
+        <Skeleton className="h-6 w-40 rounded mb-3" />
+        <div className="flex flex-row justify-between items-stretch mb-7 gap-3 w-full">
+          <div className="w-[calc(35%-12px)] flex flex-col gap-3">
+            <div className="flex-1 min-w-[250px] max-w-full rounded-[10px] border border-solid bg-white pb-[13px] px-5 pt-[13px]">
+              <div className="flex justify-between items-center mb-4">
+                <Skeleton className="h-4 w-20 rounded" />
+                <Skeleton className="h-6 w-20 rounded" />
+              </div>
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="w-full flex flex-col gap-2 mb-4">
+                  <Skeleton className="h-5 w-3/4 rounded" />
+                  <Skeleton className="h-4 w-1/2 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-[calc(35%-12px)]">
+            <div className="flex w-full items-start rounded-[10px] border border-solid border-gray-200 bg-white px-4 pt-2 pb-4">
+              <div className="flex flex-col gap-4 w-full">
+                <div className="flex items-center">
+                  <Skeleton className="h-4 w-24 rounded" />
+                  <Skeleton className="h-5 w-32 rounded-full ml-auto" />
+                </div>
+                <div className="flex gap-2">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-col border p-2 rounded-md items-start gap-2 w-1/3"
+                    >
+                      <Skeleton className="size-14 rounded" />
+                      <Skeleton className="h-5 w-10 rounded" />
+                      <Skeleton className="h-4 w-16 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[calc(35%-12px)]">
+            <div className="font-gilroy flex flex-col gap-4 rounded-[10px] border border-solid border-gray-200 bg-white px-5 pb-9 pt-3.5">
+              <Skeleton className="h-4 w-32 rounded" />
+              <Skeleton className="w-full h-[37px] rounded-lg overflow-hidden" />
+              <div className="flex gap-5 justify-start items-center">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex gap-2 flex-col">
+                    <Skeleton className="h-4 w-20 rounded" />
+                    <Skeleton className="h-4 w-16 rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

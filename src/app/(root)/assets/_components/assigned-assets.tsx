@@ -2,15 +2,18 @@ import { Device, StoreDevice } from "@/server/deviceActions";
 
 import { buttonVariants } from "@/components/buttons/Button";
 import { GetAvatar } from "@/components/get-avatar";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table } from "@/components/wind/Table";
 import { FilterAssetsResponse } from "@/server/types/newFilterTypes";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import CreateDevice from "./addDevices/_components/create-device";
 import { AssignAsset } from "./assign-asset";
 import { RestoreDevice } from "./restore-assets";
+import { cn } from "@/lib/utils";
 
 function AssignedAssets({
   data,
@@ -34,7 +37,13 @@ function AssignedAssets({
       <>
         {data?.devices?.length === 0 ? (
           <div className="flex flex-col gap-6 justify-center items-center py-10">
-            <img src="/media/no_data/assets.svg" alt="No-Assets Logo" />
+            {/* <assetsIcons.no_assets_display /> */}
+            <Image
+              src="/media/no_data/assets.svg"
+              alt="No-Assets Logo"
+              width={500}
+              height={500}
+            />
             {assetsText === "Inactive Assets" ? (
               <></>
             ) : (
@@ -66,9 +75,9 @@ function AssignedAssets({
                   <h1 className="text-base pl-6 font-gilroyMedium">
                     {assetsText}
                   </h1>
-                  <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                  <Badge className="bg-[#F9F5FF] text-[#6941C6]">
                     {data?.total} Assets
-                  </h1>
+                  </Badge>
                 </div>
               )}
 
@@ -95,10 +104,14 @@ function AssignedAssets({
                   selectedIds={selectedIds}
                   isLoading={status === "pending"}
                   setSelectedIds={setSelectedIds}
-                  checkboxSelection={{
-                    uniqueField: "_id",
-                    onSelectionChange: handleSelectionChange,
-                  }}
+                  {...(assetsText !== "Inactive Assets"
+                    ? {
+                        checkboxSelection: {
+                          uniqueField: "_id",
+                          onSelectionChange: handleSelectionChange,
+                        },
+                      }
+                    : {})}
                   columns={(() => {
                     const baseColumns = [
                       {
@@ -111,22 +124,14 @@ function AssignedAssets({
                               router.prefetch(`/assets/${data?._id}`)
                             }
                           >
-                            {/* <div className="bg-gray-100 rounded-full py-3 px-2 flex-shrink-0">
-                              <img
-                                src={
-                                  "https://static.vecteezy.com/system/resources/thumbnails/012/807/215/small/silhouette-of-the-laptop-for-sign-icon-symbol-apps-website-pictogram-logo-art-illustration-or-graphic-design-element-format-png.png"
-                                }
-                                alt="Device"
-                                className="w-7 h-5 flex-shrink-0"
-                              />
-                            </div> */}
                             <GetAvatar
                               name={data?.custom_model ?? ""}
+                              isDeviceAvatar
                               size={30}
                             />
 
                             <div className="relative group">
-                              <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                              <div className="font-gilroyMedium text-sm text-black truncate max-w-[150px]">
                                 {data?.custom_model?.length! > 12
                                   ? `${data?.custom_model!.slice(0, 12)}...`
                                   : data?.custom_model}
@@ -227,11 +232,9 @@ function AssignedAssets({
                               color = "text-[#FF8000] text-xs bg-[#FFFACB]";
                           }
                           return record?.device_condition ? (
-                            <span
-                              className={`${color} px-3 py-1.5 w-fit flex justify-center items-center rounded-full`}
-                            >
+                            <Badge className={`${color}`}>
                               {record?.device_condition}
-                            </span>
+                            </Badge>
                           ) : (
                             "-"
                           );
@@ -248,15 +251,15 @@ function AssignedAssets({
                               new Date()
                             : false;
                           return (
-                            <span
-                              className={`${
+                            <Badge
+                              className={cn(
                                 isWarrantyActive
-                                  ? "text-[#027A48] text-xs bg-[#ECFDF3]"
-                                  : "text-[#F00] text-xs bg-[#FFE0E0]"
-                              } px-3 py-1.5 w-fit flex justify-center items-center rounded-full`}
+                                  ? "text-[#027A48] bg-[#ECFDF3]"
+                                  : "text-[#F00] bg-[#FFE0E0]"
+                              )}
                             >
                               {isWarrantyActive ? "Active" : "Inactive"}
-                            </span>
+                            </Badge>
                           );
                         },
                       },

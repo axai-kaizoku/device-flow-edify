@@ -1,4 +1,5 @@
-import { Search } from "lucide-react";
+import { Search01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export const ActionSearchBar = (
   props: React.InputHTMLAttributes<HTMLInputElement>
@@ -6,7 +7,7 @@ export const ActionSearchBar = (
   return (
     <div className="flex items-center border border-[rgba(0,0,0,0.2)] rounded-md px-2 py-2 h-full">
       <div className="flex gap-2 justify-center items-center h-full">
-        <Search className=" size-[1.16rem]" />
+        <HugeiconsIcon icon={Search01Icon} className="size-[1.16rem] font-gilroySemiBold"/>
         <input
           {...props}
           type="text"

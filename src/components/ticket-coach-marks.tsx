@@ -1,6 +1,7 @@
-import { AssetsIcons } from "@/app/(root)/assets/icons";
-import { Button } from "./buttons/Button";
+import Image from "next/image";
 import { useState } from "react";
+import { Button } from "./buttons/Button";
+import { DialogClose } from "./ui/dialog";
 
 function TicketsCoachMark({ onNext }: { onNext: () => void }) {
   const [show, setShow] = useState(true);
@@ -15,15 +16,21 @@ function TicketsCoachMark({ onNext }: { onNext: () => void }) {
   };
 
   return (
-    <div className="bg-white flex flex-col items-center py-6 px-7 gap-3 rounded-2xl max-w-sm w-full">
+    <div className="bg-white flex flex-col items-center gap-3 rounded-2xl max-w-sm w-full">
       <div className="text-start flex flex-col gap-4">
-        <AssetsIcons.ticketsCoachMarks className="mx-auto rounded-xl" />
-        <h1 className="text-lg font-gilroySemiBold text-gray-800">
+        <Image
+          src="/media/coach-2.webp"
+          alt="CoachMark"
+          width={300}
+          height={300}
+          className="w-full h-full rounded-xl"
+        />
+        <h1 className="text-lg mb-3 font-gilroySemiBold text-gray-800">
           Smart Ticketing Panel
         </h1>
       </div>
 
-      <p className="text-sm text-gray-600 font-gilroyMedium text-start leading-relaxed">
+      <p className="text-sm text-[#00000080] font-gilroyMedium text-start leading-relaxed">
         Easily manage and track all your service requests from one centralized
         panel. Whether it's an IT issue, maintenance task, or support request —
         you can create, assign, prioritize, and resolve tickets effortlessly.
@@ -37,9 +44,15 @@ function TicketsCoachMark({ onNext }: { onNext: () => void }) {
         >
           Need a Demo?
         </Button>
-        <Button onClick={onNext} variant="primary" className="w-full text-sm">
-          Got it
-        </Button>
+        <DialogClose asChild>
+          <Button
+            onClick={onNext}
+            variant="primary"
+            className="w-full text-sm focus-visible:ring-0 focus-visible:ring-transparent"
+          >
+            Got it
+          </Button>
+        </DialogClose>
       </div>
     </div>
   );

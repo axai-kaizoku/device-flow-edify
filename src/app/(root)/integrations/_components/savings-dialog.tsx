@@ -7,8 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BlueTickCircle } from "./icons";
 import { useState } from "react";
+import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export default function SavingsDialog({
   children,
@@ -63,7 +64,10 @@ export default function SavingsDialog({
           <div className="flex flex-col gap-1 text-start ">
             {descriptionDetails.map((item) => (
               <div key={item} className="flex items-center gap-1 py-0.5">
-                <BlueTickCircle />
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  className="text-blue-600"
+                />
                 <p className="text-sm font-gilroyMedium">{item}</p>
               </div>
             ))}

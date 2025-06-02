@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/buttons/Button";
+import Spinner, { spinnerVariants } from "@/components/Spinner";
 import {
   Dialog,
   DialogContent,
@@ -8,25 +10,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteUser } from "@/server/userActions";
-import { Button } from "@/components/buttons/Button";
-import { Icons } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlert";
-import { toast } from "sonner";
-import Spinner, { spinnerVariants } from "@/components/Spinner";
 import WarningDelete from "@/icons/WarningDelete";
+import { deleteUser } from "@/server/userActions";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const DeleteUser = ({
   id,
   children,
-  onRefresh,
 }: {
   id: string;
   children: React.ReactNode;
-  onRefresh?: () => Promise<void>;
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);

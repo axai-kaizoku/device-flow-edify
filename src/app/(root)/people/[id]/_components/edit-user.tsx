@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/side-sheet";
 
 import { useState } from "react";
 import { UserForm } from "../../_components/user-form";
-import { CreateUserArgs } from "@/server/userActions";
+import { CreateUserArgs, NewUserResponse } from "@/server/userActions";
 
 export default function EditUser({
   children,
@@ -11,7 +11,7 @@ export default function EditUser({
   onRefresh,
 }: {
   children: React.ReactNode;
-  userData?: CreateUserArgs;
+  userData?: NewUserResponse;
   onRefresh?: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
@@ -26,8 +26,8 @@ export default function EditUser({
           userData={userData}
           onRefresh={onRefresh}
         />
-        {/* <DatetimePickerDisplayFormat />
-        <EmployeeForm
+        {/* <DatetimePickerDisplayFormat /> */}
+        {/* <EmployeeForm
           onSubmit={(data) => console.log("Form submitted:", data)}
           isEditing
           defaultValues={userData}

@@ -2,17 +2,16 @@
 import { AxiosError } from "axios";
 import { Device, StoreDevicesRes } from "./deviceActions";
 import { callAPIWithToken, getSession } from "./helper";
-import { cache } from "react";
 import { devicesFields, FilterApiParams } from "./filterActions";
 import { BASEURL } from "./main";
 
-export const searchStoreDevices = cache(async function ({
+export const searchStoreDevices = async ({
   filters = [],
   fields = devicesFields,
   searchQuery = "",
   pageLength = 9000000,
   page = 1,
-}: FilterApiParams = {}): Promise<any> {
+}: FilterApiParams = {}): Promise<any> => {
   try {
     const payload = {
       fields,
@@ -41,70 +40,64 @@ export const searchStoreDevices = cache(async function ({
         "Failed to filter devices. Please try again later."
     );
   }
-});
+};
 
-export const getStoreDevices = cache(
-  async function (): Promise<StoreDevicesRes> {
-    const payload = {
-      fields: devicesFields,
-      filters: [],
-    };
-    try {
-      const res = await callAPIWithToken<StoreDevicesRes>(
-        `${BASEURL}/edifybackend/v1/devices/assets`,
-        "POST",
-        payload
-      );
+export const getStoreDevices = async (): Promise<StoreDevicesRes> => {
+  const payload = {
+    fields: devicesFields,
+    filters: [],
+  };
+  try {
+    const res = await callAPIWithToken<StoreDevicesRes>(
+      `${BASEURL}/edifybackend/v1/devices/assets`,
+      "POST",
+      payload
+    );
 
-      return res?.data;
-    } catch (e) {
-      // redirect('/login');
-      throw new Error((e as AxiosError)?.message);
-    }
+    return res?.data;
+  } catch (e) {
+    // redirect('/login');
+    throw new Error((e as AxiosError)?.message);
   }
-);
+};
 
-export const getTrendingDevice = cache(
-  async function (): Promise<StoreDevicesRes> {
-    const payload = {
-      fields: devicesFields,
-      filters: [],
-    };
-    try {
-      const res = await callAPIWithToken<StoreDevicesRes>(
-        `${BASEURL}/edifybackend/v1/devices/assets?query=trending`,
-        "POST",
-        payload
-      );
+export const getTrendingDevice = async (): Promise<StoreDevicesRes> => {
+  const payload = {
+    fields: devicesFields,
+    filters: [],
+  };
+  try {
+    const res = await callAPIWithToken<StoreDevicesRes>(
+      `${BASEURL}/edifybackend/v1/devices/assets?query=trending`,
+      "POST",
+      payload
+    );
 
-      return res?.data;
-    } catch (e) {
-      // redirect('/login');
-      throw new Error((e as AxiosError)?.message);
-    }
+    return res?.data;
+  } catch (e) {
+    // redirect('/login');
+    throw new Error((e as AxiosError)?.message);
   }
-);
+};
 
-export const getLatestReleases = cache(
-  async function (): Promise<StoreDevicesRes> {
-    const payload = {
-      fields: devicesFields,
-      filters: [],
-    };
-    try {
-      const res = await callAPIWithToken<StoreDevicesRes>(
-        `${BASEURL}/edifybackend/v1/devices/assets?query=latest`,
-        "POST",
-        payload
-      );
+export const getLatestReleases = async (): Promise<StoreDevicesRes> => {
+  const payload = {
+    fields: devicesFields,
+    filters: [],
+  };
+  try {
+    const res = await callAPIWithToken<StoreDevicesRes>(
+      `${BASEURL}/edifybackend/v1/devices/assets?query=latest`,
+      "POST",
+      payload
+    );
 
-      return res?.data;
-    } catch (e) {
-      // redirect('/login');
-      throw new Error((e as AxiosError)?.message);
-    }
+    return res?.data;
+  } catch (e) {
+    // redirect('/login');
+    throw new Error((e as AxiosError)?.message);
   }
-);
+};
 
 export const createDeviceReview = async function ({
   comment,

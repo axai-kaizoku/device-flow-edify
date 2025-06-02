@@ -1,13 +1,12 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { parseAsFloat, useQueryState } from "nuqs";
 import { useEffect, useRef, useState } from "react";
 import { Address } from "./Address";
 import { CompanyDetails } from "./CompanyDetails";
-import { Teams } from "./Teams";
-import { Employee } from "./Employee";
 import { DeviceComponent } from "./Device";
-import { useRouter } from "next/navigation";
-import { parseAsFloat, useQueryState } from "nuqs";
-import Link from "next/link";
+import { Employee } from "./Employee";
+import { Teams } from "./Teams";
 
 export default function Page() {
   const router = useRouter();

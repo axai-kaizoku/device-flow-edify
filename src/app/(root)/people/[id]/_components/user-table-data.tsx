@@ -31,7 +31,7 @@ const UserTicketsTable = ({ data }) => {
           {
             title: "Ticket ID",
             render: (record) => (
-              <div className="font-gilroySemiBold text-sm text-black truncate">
+              <div className="font-gilroySemiBold text-sm text-black truncate cursor-pointer" onClick={()=>{ router.push(`/tickets/${record?._id}`)}}>
                 {record?.code}
               </div>
             ),
@@ -97,7 +97,7 @@ const UserTicketsTable = ({ data }) => {
                 })}
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  router.push(`/issues/${record._id}`);
+                  router.push(`/tickets/${record._id}`);
                 }}
               >
                 View

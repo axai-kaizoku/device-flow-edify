@@ -12,7 +12,6 @@ import {
   SmartPhone01Icon,
   Store02Icon,
   Ticket02Icon,
-  TvIssueIcon,
   UserGroupIcon,
   UserMultipleIcon,
 } from "@hugeicons/core-free-icons";
@@ -20,6 +19,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { buttonVariants } from "../buttons/Button";
+import { FeedbackDialog } from "./feedback.dialog";
 
 export default function SidebarNavigation({ session }: Props) {
   const [storeExpanded, setStoreExpanded] = useState(false);
@@ -56,7 +57,7 @@ export default function SidebarNavigation({ session }: Props) {
       icon: <HugeiconsIcon icon={SmartPhone01Icon} className="mr-3 size-5" />,
     },
     {
-      href: "/issues",
+      href: "/tickets",
       label: "Tickets",
       icon: <HugeiconsIcon icon={Ticket02Icon} className="mr-3 size-5" />,
     },
@@ -72,11 +73,6 @@ export default function SidebarNavigation({ session }: Props) {
         <HugeiconsIcon icon={ChartRelationshipIcon} className="mr-3 size-5" />
       ),
     },
-    // {
-    //   href: "/reports",
-    //   label: "Reports",
-    //   icon: <HugeiconsIcon icon={File02Icon} className="mr-3 size-5" />,
-    // },
   ];
 
   const peopleLinks = [
@@ -122,8 +118,8 @@ export default function SidebarNavigation({ session }: Props) {
   ];
 
   return (
-    <div className="flex  h-screen">
-      <div className="w-64 bg-white border-r">
+    <div className="flex h-screen relative">
+      <div className="w-64 bg-white border-r h-full">
         <div className="p-4">
           <div className="flex items-center mb-6 pl-2">
             <img
@@ -132,8 +128,7 @@ export default function SidebarNavigation({ session }: Props) {
               className="2xl:w-[140px] w-[120px] 2xl:h-8 h-7"
             />
           </div>
-
-          {[2, 3, 4].includes(session?.user?.user?.role) ? (
+          {session?.user?.user?.role !== 1 ? (
             <nav className="space-y-1.5">
               {links.map((link, index) => {
                 // const isActive = pathname.startsWith(link.href);
@@ -360,6 +355,18 @@ export default function SidebarNavigation({ session }: Props) {
             </nav>
           )}
         </div>
+      </div>
+      <div className="absolute w-44 bottom-6 left-5">
+        <FeedbackDialog>
+          <div
+            className={buttonVariants({
+              variant: "primary",
+              className: "w-fit px-0",
+            })}
+          >
+            Feedback
+          </div>
+        </FeedbackDialog>
       </div>
     </div>
   );

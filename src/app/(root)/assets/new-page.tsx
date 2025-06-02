@@ -93,16 +93,11 @@ function NewPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (ids: string[]) => {
-      const deleteType = activeTab === "inactive-assets" ? "hard" : "soft";
+      const deleteType = "soft";
       return bulkDeleteAssets(ids, deleteType);
     },
     onSuccess: (_res, ids) => {
-      const deleteType = activeTab === "inactive-assets" ? "hard" : "soft";
-      toast.success(
-        `Assets ${
-          deleteType === "soft" ? "deactivated" : "permanently deleted"
-        } successfully!`
-      );
+      toast.success(`Assets deactivated successfully!`);
       setSelectedIds([]);
       setDeleteOpen(false);
 

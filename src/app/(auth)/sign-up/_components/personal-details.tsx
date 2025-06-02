@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
-import { FormField } from "@/app/(root)/settings/_components/form-field";
-import { Icons } from "@/components/icons";
-import { SelectDropdown } from "@/components/dropdown/select-dropdown";
+"use client";
+
 import { genders } from "@/app/(root)/people/_components/helper/utils";
+import { FormField } from "@/app/(root)/settings/_components/form-field";
+import { SelectDropdown } from "@/components/dropdown/select-dropdown";
+import SignUpIcon from "@/icons/SignUpIcon";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
-import SignUpIcon from "@/icons/SignUpIcon";
+import React, { useRef, useState } from "react";
 
 function PersonalDetails({ setSteps, setUser, user }: any) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -70,8 +71,13 @@ function PersonalDetails({ setSteps, setUser, user }: any) {
 
   return (
     <>
-      <div className="absolute flex gap-1 text-[#7F7F7F] items-center ml-8 mt-10 font-gilroyMedium cursor-pointer" onClick={()=>{setSteps((prev:number)=> prev-1)}}>
-        <ChevronLeft/>
+      <div
+        className="absolute flex gap-1 text-[#7F7F7F] items-center ml-8 mt-10 font-gilroyMedium cursor-pointer"
+        onClick={() => {
+          setSteps((prev: number) => prev - 1);
+        }}
+      >
+        <ChevronLeft />
         <div>Back</div>
       </div>
       <div className="w-full h-screen justify-evenly items-center flex flex-col lg:flex-row p-8">

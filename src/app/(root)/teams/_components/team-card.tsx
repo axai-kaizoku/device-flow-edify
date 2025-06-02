@@ -89,15 +89,7 @@ export const TeamCard = ({
         {/* Header Section */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            {image && image?.length > 0 ? (
-              <img
-                src={image}
-                alt={title}
-                className="size-12 object-cover rounded-full flex-shrink-0"
-              />
-            ) : (
-              <GetAvatar name={title ?? ""} />
-            )}
+            <GetAvatar name={title ?? ""} />
 
             <div className="-mt-1 flex-col flex">
               <h1 className="text-base  font-gilroySemiBold">

@@ -1,17 +1,10 @@
 import { employments } from "@/app/(root)/people/_components/helper/utils";
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { SelectDropdown } from "@/components/dropdown/select-dropdown";
-// import { SelectInput } from "@/components/dropdown/select-input";
 import { cn } from "@/lib/utils";
 import { signupEmployee } from "@/server/signupActions";
 import { ChevronLeft } from "lucide-react";
-// import {
-//   fetchManager,
-//   fetchUsers,
-//   searchManager,
-//   searchUsers,
-// } from "@/server/userActions";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function OrganisationDetails({ setSteps, token, user }: any) {
   const [loading, setLoading] = useState(false);
@@ -19,17 +12,12 @@ function OrganisationDetails({ setSteps, token, user }: any) {
     onboarding_date: "",
     employment_type: "",
     designation: "",
-    // reporting_manager: {
-    //   name: "",
-    //   value: "",
-    // },
   });
 
   const [errors, setErrors] = useState({
     onboarding_date: "",
     employment_type: "",
     designation: "",
-    // reporting_manager: "",
   });
 
   const validateFields = (): boolean => {

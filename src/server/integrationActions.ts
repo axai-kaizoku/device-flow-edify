@@ -49,6 +49,7 @@ export type IntegrationType = {
   price?: { plan: string; price: string; _id: string }[];
   permissions?: string[];
   wiki?: string;
+  tags?: string[];
 };
 
 export type SeatsResponse = {
@@ -57,41 +58,30 @@ export type SeatsResponse = {
 };
 
 export type UserByIntegration = {
-  _id: string;
-  email: string;
-  name: string;
-  integrations: IntegrationType[];
-  teamName: string | null;
-  reporting_manager: string;
-  first_name: string;
-  last_name: string | null;
-  phone: string;
-  role: number;
-  designation: string;
-  employment_type: string;
-  about: string | null;
-  interests_and_hobbies: string | null;
-  date_of_birth: string;
-  image: string | null;
-  qcUniqueId: string | null;
-  gender: string;
-  marital_status: string | null;
-  physically_handicapped: string | null;
-  deleted_at: string | null;
-  onboarding_date: string;
+  _id?: string;
+  email?: string;
+  name?: string;
+  integrations?: IntegrationType[];
+  teamName?: string | null;
+  reporting_manager?: string;
+  first_name?: string;
+  last_name?: string | null;
+  phone?: string;
+  role?: number;
+  designation?: string;
+  employment_type?: string;
+  about?: string | null;
+  interests_and_hobbies?: string | null;
+  date_of_birth?: string;
+  image?: string | null;
+  qcUniqueId?: string | null;
+  gender?: string;
+  marital_status?: string | null;
+  physically_handicapped?: string | null;
+  deleted_at?: string | null;
+  onboarding_date?: string;
 };
 
-export const getTotalSeats = async (): Promise<any> => {
-  try {
-    const res = await callAPIWithToken<SeatsResponse>(
-      `${apiUrl}/edifybackend/v1/integration/totalSeats`,
-      "GET"
-    );
-    return res?.data;
-  } catch (error) {
-    throw new Error((error as AxiosError)?.message);
-  }
-};
 
 export const allIntegrationsAvailable = async () => {
   try {

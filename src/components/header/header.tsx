@@ -2,11 +2,12 @@
 import CreateDevice from "@/app/(root)/assets/_components/addDevices/_components/create-device";
 import ReAssign from "@/app/(root)/assets/_components/re-assign";
 import { Props } from "@/app/(root)/layout";
-import CreateUser from "@/app/(root)/people/_components/create-user";
+import CreateUserDialog from "@/app/(root)/people/_components/add-user-form/create-user.dialog";
 import { login } from "@/app/store/authSlice";
-import { RootState } from "@/app/store/store";
-import ViewProfileIcon from "@/icons/ViewProfileIcon";
+
 import {
+  LinkSquare01Icon,
+  Logout02Icon,
   PlusSignIcon,
   RefreshIcon,
   Settings02Icon,
@@ -15,15 +16,16 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LogOut, Search, Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 
+import { useDebounce } from "@/hooks/use-debounce";
+import { globalSearch } from "@/server/globalSearch";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import GlobalSearch from "./global-search";
-import { useDebounce } from "@/hooks/use-debounce";
-import { globalSearch } from "@/server/globalSearch";
+import SettingsDialog from "../settings/settings.dialog";
 
 export default function Header({ session }: Props) {
   const [isHovered, setIsHovered] = useState(false);
@@ -49,36 +51,16 @@ export default function Header({ session }: Props) {
   const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null); // Tracks user input
-  const [isFocused, setIsFocused] = useState(false); // Tracks focus state
 
-  const placeholders = ["Assets", "People", "Teams", "Issues"];
-  const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholders[0]);
-  const [animationState, setAnimationState] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    let index = 0;
-
-    const interval = setInterval(() => {
-      // Start the animation
-      if (!isFocused && inputValue === "") {
-        setAnimationState(true);
-
-        // Update placeholder after animation
-        setTimeout(() => {
-          index = (index + 1) % placeholders.length;
-          setCurrentPlaceholder(placeholders[index]);
-          setAnimationState(false); // Reset animation state
-        }, 1000); // Match the animation duration
-      }
-    }, 3000); // Change every 3 seconds
-
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
 
   const pathParts = pathname.split("/").filter(Boolean);
   const pageName =
-    pathname === "/" ? "Dashboard" : pathname.includes("issues") ? "Tickets" : pathParts[0].replace(/-/g, " ");
+    pathname === "/"
+      ? "Dashboard"
+      : pathname.includes("issues")
+      ? "Tickets"
+      : pathParts[0].replace(/-/g, " ");
 
   // Closing dropdown on outside click
   useEffect(() => {
@@ -121,12 +103,7 @@ export default function Header({ session }: Props) {
     }
   }, [session, dispatch]);
 
-  const {
-    data: searchData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: searchData, isLoading } = useQuery({
     queryKey: ["global-search", debouncedInput],
     queryFn: () => globalSearch(debouncedInput),
     enabled: inputValue.trim().length > 0,
@@ -137,7 +114,6 @@ export default function Header({ session }: Props) {
   const handleLogout = () => {
     signOut();
     queryClient.clear();
-    localStorage.clear();
     sessionStorage.clear();
   };
 
@@ -145,14 +121,12 @@ export default function Header({ session }: Props) {
     <>
       {session ? (
         <header className="bg-white border border-b border-t-0 border-l-0 border-r-0  top-0 font-gilroyRegular py-12 w-full h-14 bg-transparent backdrop-blur-3xl z-20 flex justify-between items-center px-12 pl-4">
-          <h1 className="font-gilroyMedium  w-40 capitalize text-base text-[#c8c8c8]">
+          <h1 className="font-gilroyMedium w-40 capitalize text-base text-[#c8c8c8]">
             {pageName}
           </h1>
 
-          {/* Middle Search and Actions */}
           <div className="flex justify-center items-center ">
             <div className="flex items-center gap-x-2 bg-transparent  bg-opacity-90  px-1 py-1">
-              {/* Search Bar */}
               {session?.user?.user?.role !== 1 ? (
                 <div className="bg-transparent overflow-hidden border flex justify-between items-center  border-[rgba(0,0,0,0.2)] rounded-md px-2 py-1.5">
                   <div className="flex gap-2 items-center">
@@ -161,8 +135,6 @@ export default function Header({ session }: Props) {
                       type="text"
                       placeholder={`Search anything...`}
                       onChange={(e) => setInputValue(e.target.value)} // Update input value
-                      onFocus={() => setIsFocused(true)} // Mark as focused
-                      onBlur={() => setIsFocused(false)} // Remove focus
                       className={`flex-grow bg-transparent outline-none text-black 
                         placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] 
                         transition-all duration-1000
@@ -182,7 +154,6 @@ export default function Header({ session }: Props) {
                 >
                   {isLoading ? (
                     <div className="flex justify-center p-4">
-                      {/* simple spinner */}
                       <Loader2 className="size-4 animate-spin" />
                     </div>
                   ) : (
@@ -192,9 +163,8 @@ export default function Header({ session }: Props) {
               )}
 
               {/* Action Buttons */}
-              {[2, 3, 4].includes(session?.user?.user?.role) ? (
+              {session?.user?.user?.role !== 1 ? (
                 <>
-                  {" "}
                   <CreateDevice>
                     <div className="flex gap-x-1.5 cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)]  p-2 px-3  hover:bg-black hover:text-white hover:border-white group">
                       <HugeiconsIcon
@@ -220,7 +190,7 @@ export default function Header({ session }: Props) {
                       </div>
                     </div>
                   </ReAssign>
-                  <CreateUser>
+                  <CreateUserDialog>
                     <div className="flex gap-x-1.5 cursor-pointer items-center rounded-md border border-[rgba(0,0,0,0.2)] p-2 px-3 gap-1 hover:bg-black hover:text-white hover:border-white group">
                       <HugeiconsIcon
                         icon={UserIcon}
@@ -231,37 +201,30 @@ export default function Header({ session }: Props) {
                         Add Employee
                       </div>
                     </div>
-                  </CreateUser>{" "}
+                  </CreateUserDialog>{" "}
                 </>
               ) : (
-                ""
+                <></>
               )}
             </div>
           </div>
 
-          {/* Right Icons Section */}
           <div className="flex items-center space-x-4">
-            {/* Settings Icon */}
-            {[2, 3, 4].includes(session?.user?.user?.role) && (
-              <button
-                onClick={() => router.push("/settings")}
-                className=" bg-white hover:bg-black rounded-full hover:text-white flex items-center justify-center p-2"
-                onMouseEnter={() => {
-                  handleMouseEnter("/settings");
-                }}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                {/* <Settings className="size-5" /> */}
-                <HugeiconsIcon icon={Settings02Icon} className="size-6" />
-              </button>
-            )}
-            {/* Query Icon */}
-            {/* <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
-              <CircleHelp className="size-5" />
-            </button> */}
+            {/* {session?.user?.user?.role !== 1 && (
+              <SettingsDialog>
+                <button
+                  className=" bg-white hover:bg-black rounded-full hover:text-white flex items-center justify-center p-2"
+                  onMouseEnter={() => {
+                    handleMouseEnter("/settings");
+                  }}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  <HugeiconsIcon icon={Settings02Icon} className="size-6" />
+                </button>
+              </SettingsDialog>
+            )} */}
 
-            {/* Profile Icon */}
-            {[2, 3, 4].includes(session?.user?.user?.role) ? (
+            {session?.user?.user?.role !== 1 ? (
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
@@ -277,16 +240,15 @@ export default function Header({ session }: Props) {
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
                         onClick={() => {
-                          if ([2, 3, 4].includes(session?.user?.user?.role)) {
-                            router.push(`/people/${session.user.user.userId}`);
-                          } else {
-                            router.push("/profile");
-                          }
+                          router.push(`/people/${session.user.user.userId}`);
                           setDropdownVisible(false);
                         }}
                         className="w-full py-2 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
-                        <ViewProfileIcon />
+                        <HugeiconsIcon
+                          icon={LinkSquare01Icon}
+                          className="size-4"
+                        />
                         View Profile{" "}
                       </button>
                     </div>
@@ -295,13 +257,10 @@ export default function Header({ session }: Props) {
 
                     <div className="block mx-1 text-black my-1 rounded-[5px] hover:bg-[#EEEEEE] w-[95%] cursor-pointer">
                       <button
-                        onClick={() =>
-                          // signOut({redirect: true,callbackUrl: "https://gcp-api.edify.club"})
-                          signOut()
-                        }
+                        onClick={() => handleLogout()}
                         className="w-full py-2 pr-6 text-sm 2xl:text-base flex justify-center items-center gap-1.5"
                       >
-                        <LogOut className="size-4" />
+                        <HugeiconsIcon icon={Logout02Icon} className="size-4" />
                         <div>Logout</div>
                       </button>
                     </div>
@@ -313,7 +272,7 @@ export default function Header({ session }: Props) {
                 className="p-2 bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full cursor-pointer mx-auto"
                 onClick={handleLogout}
               >
-                <LogOut className="w-5 h-5" />
+                <HugeiconsIcon icon={Logout02Icon} className="size-5" />
               </div>
             )}
           </div>

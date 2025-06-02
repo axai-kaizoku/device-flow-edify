@@ -2,19 +2,17 @@ import { Table } from "@/components/wind/Table";
 import { User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import EditUser from "../[id]/_components/edit-user";
 
 import { buttonVariants } from "@/components/buttons/Button";
 import { GetAvatar } from "@/components/get-avatar";
-import EditTableIcon from "@/icons/EditTableIcon";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
-import CreateUser from "./create-user";
+import CreateUserDialog from "./add-user-form/create-user.dialog";
 import { RestoreUser } from "./restore-user";
+import { Badge } from "@/components/ui/badge";
 
 export default function UserMain({
   data,
   peopleText = "Total People",
-  onRefresh,
   selectedIds,
   setSelectedIds,
   handleSelectionChange,
@@ -39,7 +37,7 @@ export default function UserMain({
               <img src="/media/no_data/people.svg" alt="No-People Logo" />
             </div>
             {peopleText === "Active People" && (
-              <CreateUser>
+              <CreateUserDialog>
                 <button
                   className={buttonVariants({
                     variant: "primary",
@@ -48,7 +46,7 @@ export default function UserMain({
                 >
                   Add Member
                 </button>
-              </CreateUser>
+              </CreateUserDialog>
             )}
           </div>
         ) : (
@@ -59,29 +57,14 @@ export default function UserMain({
                   <h1 className="text-base font-gilroyMedium pl-6">
                     {peopleText}
                   </h1>
-                  <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]">
+                  {/* <h1 className="text-xs font-gilroyMedium  flex justify-center items-center rounded-full px-2 bg-[#F9F5FF] text-[#6941C6]"> */}
+                  <Badge className="bg-[#F9F5FF] text-[#6941C6] text-xs">
                     {data?.total} People
-                  </h1>
+                  </Badge>
+                  {/* </h1> */}
                 </div>
-
-                {/* {selectedIds.length > 0 && (
-                  <DeleteModal
-                    handleBulkDelete={handleBulkDelete}
-                    open={open}
-                    setOpen={setOpen}
-                  >
-                    <button
-                      // onClick={handleBulkDelete}
-                      className="bg-black text-base flex items-center gap-2 text-white px-3 py-1 font-gilroyMedium w-fit mr-8 rounded-lg"
-                    >
-                      Delete
-                    </button>
-                  </DeleteModal>
-                  // {selectedIds.length} Users
-                )} */}
               </div>
               <Suspense>
-                {/* {JSON.stringify(data?.users)} */}
                 <div className="flex flex-col h-full w-full">
                   <Table
                     key={peopleText}
@@ -89,10 +72,14 @@ export default function UserMain({
                     selectedIds={selectedIds}
                     isLoading={status === "pending"}
                     setSelectedIds={setSelectedIds}
-                    checkboxSelection={{
-                      uniqueField: "_id",
-                      onSelectionChange: handleSelectionChange,
-                    }}
+                    {...(peopleText === "Active People"
+                      ? {
+                          checkboxSelection: {
+                            uniqueField: "_id",
+                            onSelectionChange: handleSelectionChange,
+                          },
+                        }
+                      : {})}
                     columns={[
                       {
                         title: "Name",
@@ -101,10 +88,13 @@ export default function UserMain({
                             className="w-28 justify-start flex items-center gap-2 cursor-pointer"
                             onClick={() => router.push(`/people/${user?._id}`)}
                           >
-                            <GetAvatar name={user?.first_name ?? ""} />
+                            <GetAvatar
+                              name={user?.first_name ?? ""}
+                              size={30}
+                            />
 
                             <div className="relative group">
-                              <div className="font-gilroySemiBold text-sm text-black truncate max-w-[150px]">
+                              <div className="font-gilroyMedium text-sm text-black truncate max-w-[150px]">
                                 {user?.first_name?.length! > 12
                                   ? `${user?.first_name!.slice(0, 12)}...`
                                   : user?.first_name}
@@ -172,14 +162,7 @@ export default function UserMain({
                           </div>
                         ),
                       },
-                      // {
-                      //   title: "Team",
-                      //   render: (data) => (
-                      //     <div className="">
-                      //       {data?.team?.[0]?.title ?? "-"}
-                      //     </div>
-                      //   ),
-                      // },
+
                       {
                         title:
                           peopleText === "Active People" ? "Subscriptions" : "",
@@ -233,11 +216,11 @@ export default function UserMain({
                       },
                       {
                         title: "Devices assigned",
-                        render: (data: User) =>
+                        render: (data) =>
                           data?.devices && data?.devices > 0 ? (
-                            <div className="flex justify-center items-center w-fit px-3 rounded-full bg-[#ECFDF3] text-[#027A48] py-0.5">
+                            <Badge className="bg-[#ECFDF3] font-gilroyMedium text-[#027A48]">
                               {`${data?.devices} Assigned`}
-                            </div>
+                            </Badge>
                           ) : (
                             <div>-</div>
                           ),
@@ -261,9 +244,16 @@ export default function UserMain({
                                   <DeleteTableIcon className="size-6" />
                                 </DeleteUser>
                               )} */}
-                              <EditUser userData={data}>
-                                <EditTableIcon className="size-5" />
-                              </EditUser>
+                              <div
+                                onClick={() => {
+                                  router.push(`/people/${data?._id}`);
+                                }}
+                                className={`${buttonVariants({
+                                  variant: "outlineTwo",
+                                })} text-[13px]`}
+                              >
+                                View
+                              </div>
                             </div>
                           ) : (
                             <div className="flex gap-5 -ml-2 justify-center items-center">
@@ -274,10 +264,7 @@ export default function UserMain({
                                 <DeleteTableIcon className="size-6" />
                               </PermanentUserDelete> */}
 
-                              <RestoreUser
-                                id={data?._id!}
-                                onRefresh={onRefresh}
-                              >
+                              <RestoreUser id={data?._id!}>
                                 <div
                                   className={buttonVariants({
                                     variant: "outlineTwo",

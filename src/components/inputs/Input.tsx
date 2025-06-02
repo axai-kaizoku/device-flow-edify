@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { Icons } from "../icons";
 import CalanderIcon from "@/icons/CalanderIcon";
+import { cn } from "@/lib/utils";
 
 export const Input = React.forwardRef<
   HTMLInputElement,

@@ -31,7 +31,7 @@ export interface BaseOption {
  */
 export interface AsyncMultiSelectProps<T extends BaseOption> {
   /** Async fetcher function, receives debounced query */
-  fetcher: (query: { searchQuery: string }) => Promise<{
+  fetcher: (query: string) => Promise<{
     users?: T[];
     teams?: T[];
   }>;
@@ -119,7 +119,7 @@ AsyncMultiSelectProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const debounced = useDebounce(searchTerm, preload ? 0 : 300);
 
-  console.log(debounced);
+  // console.log(debounced);
 
   // Initial mount effect
   useEffect(() => {
@@ -244,6 +244,7 @@ AsyncMultiSelectProps<T>) {
               //         .filter(Boolean)
               //     )
               //   :
+              // @ts-ignore
               renderSelectedItem(value.filter(Boolean))
             : placeholder}
           <span className="flex items-center gap-2">

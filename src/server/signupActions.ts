@@ -1,8 +1,6 @@
 "use server";
 
-import { AxiosError } from "axios";
 import { callAPI, callAPIWithToken, getSession } from "./helper";
-import { cache } from "react";
 import { User } from "./userActions";
 import { BASEURL } from "./main";
 
@@ -19,7 +17,7 @@ type RequestDemoProps = {
   phone: string;
 };
 
-export const createSignupLink = cache(async function (teamId: string) {
+export const createSignupLink = async (teamId: string) => {
   try {
     const sess = await getSession();
     const res = await callAPIWithToken<{ message: string; link: string }>(
@@ -35,7 +33,7 @@ export const createSignupLink = cache(async function (teamId: string) {
   } catch (e) {
     throw new Error("Failed to create link");
   }
-});
+};
 
 type ValidationResponse = {
   message: string;
@@ -49,7 +47,7 @@ type ValidationResponse = {
   };
 };
 
-export const validateToken = cache(async (token: string) => {
+export const validateToken = async (token: string) => {
   try {
     const res = await callAPI<ValidationResponse>(
       `${BASEURL}/edifybackend/v1/auth/validate/temp-link`, // API endpoint
@@ -62,7 +60,7 @@ export const validateToken = cache(async (token: string) => {
   } catch (e) {
     throw new Error("Failed to create link");
   }
-});
+};
 
 export const signupReqOTP = async (email: string) => {
   try {

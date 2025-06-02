@@ -29,7 +29,6 @@ const Dropdown = ({
 
   return (
     <div className={` rounded-lg overflow-hidden ${className}`}>
-      {/* Header */}
       <div
         className={`flex justify-between items-center px-3 py-3 cursor-pointer bg-[#F6F6F6] transition-colors rounded-lg ${headerClassName}`}
         onClick={toggleDropdown}
@@ -47,7 +46,6 @@ const Dropdown = ({
         )}
       </div>
 
-      {/* Content */}
       <div
         className={`transition-all duration-300 linear overflow-hidden ${
           isOpen ? "max-h-96" : "max-h-0"

@@ -1,8 +1,9 @@
 "use client";
 import { MemberIcon } from "@/app/(root)/teams/_components/member-icon";
 import { UserData } from "@/app/store/authSlice";
+import { GetAvatar } from "@/components/get-avatar";
 import { StoreBannerCard } from "@/components/store-banner";
-import { User, getUserById } from "@/server/userActions";
+import { NewUserResponse, User, getUserById } from "@/server/userActions";
 import {
   Building2,
   Cake,
@@ -12,20 +13,19 @@ import {
   NotepadText,
   Smartphone,
 } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProfileSkeleton from "./profile-main-skeleton";
 import AssetsSection from "./user-assets";
 
 const UserGrid = ({ user: data }: { user: UserData }) => {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<NewUserResponse | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (data?.userId) {
-          const fetchedData: User = await getUserById(data.userId);
+          const fetchedData: NewUserResponse = await getUserById(data.userId);
           setUser(fetchedData);
         }
       } catch (error) {
@@ -37,10 +37,10 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
   }, [data]);
 
   const renderMembers = () => {
-    if (user?.teamId?.employees_count === 0) {
+    if (user?.team?.userCount === 0) {
       return Array(3)
-        .fill(null)
-        .map((_, index) => <MemberIcon key={index} isPlaceholder={true} />);
+        ?.fill(null)
+        ?.map((_, index) => <MemberIcon key={index} isPlaceholder={true} />);
     }
     return (
       <>
@@ -59,18 +59,7 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
             <div className="w-96 max-[1370px]:w-[350px] max-[1270px]:w-[340px] h-40 flex items-center bg-white bg-opacity-80 backdrop-blur-[22.8px] border border-[rgba(195,195,195,0.31)] rounded-lg px-6 py-4">
               <div className="flex justify-start gap-4 items-start w-full ">
                 <div className="w-[90px] h-[90px] rounded-full t overflow-hidden flex-shrink-0">
-                  <img
-                    src={
-                      user?.image && user.image.length > 0
-                        ? user?.image
-                        : user?.gender === "Male"
-                        ? "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png"
-                        : "https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012892650.png"
-                    }
-                    // Replace with your profile image URL
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                  <GetAvatar name={user?.first_name} size={90} />
                 </div>
 
                 <div className="flex flex-col">
@@ -176,15 +165,9 @@ const UserGrid = ({ user: data }: { user: UserData }) => {
                   </div>
                   <div className="flex justify-start gap-4 items-start w-full">
                     <div className="w-[78px] h-[78px] rounded-full overflow-hidden flex-shrink-0">
-                      <img
-                        // src={user?.reporting_manager?.image}
-                        src={
-                          user?.reporting_manager?.image ??
-                          `https://api-files-connect-saas.s3.ap-south-1.amazonaws.com/uploads/1737012636473.png`
-                        }
-                        // Replace with your profile image URL
-                        alt="Profile"
-                        className="w-full h-full object-cover"
+                      <GetAvatar
+                        name={user?.reporting_manager?.first_name}
+                        size={78}
                       />
                     </div>
 

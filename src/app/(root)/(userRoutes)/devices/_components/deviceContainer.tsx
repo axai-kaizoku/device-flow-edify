@@ -3,17 +3,11 @@
 import { useQueryState } from "nuqs";
 
 import { Search } from "lucide-react"; // Importing icons from lucide-react
-
-import Spinner from "@/components/Spinner";
 import Devices from "./devicesPage";
-import Issue from "./issuePage";
 import { getAllDevicesProp, getDevicesByUserId } from "@/server/deviceActions";
-import { Icons } from "@/components/icons";
 
-import { getAllResponse, getIssueByUserId } from "@/server/issueActions";
 import { Tab } from "@/app/(root)/teams/_components/Tab";
 import { useEffect, useState } from "react";
-import { notFound } from "next/navigation";
 import { useAlert } from "@/hooks/useAlert";
 import DeviceFlowLoader from "@/components/deviceFlowLoader";
 
@@ -23,8 +17,6 @@ function DeviceContainer() {
   });
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
-
-  const [issues, setIssues] = useState<getAllResponse>([]);
   const [devices, setDevices] = useState<getAllDevicesProp>([]);
 
   useEffect(() => {
@@ -34,9 +26,6 @@ function DeviceContainer() {
         if (type === "devices") {
           const devicesData: getAllDevicesProp = await getDevicesByUserId();
           setDevices(devicesData);
-        } else if (type === "issues") {
-          const issueData: getAllResponse = await getIssueByUserId();
-          setIssues(issueData);
         }
       } catch (error) {
         // console.error(`Error fetching ${type} data:`, error);
@@ -76,21 +65,7 @@ function DeviceContainer() {
           }
           </>
         );
-      case "issues":
-        return (
-          <>
-          {
-            loading ? (
-              <div className="flex justify-center items-center w-full h-[500px]">
-                <DeviceFlowLoader />
-              </div>
-            ): (
-              <Issue issues={issues} />
-            )
-          }  
-          </>
-        );
-
+      
       default:
         return null;
     }
@@ -101,11 +76,6 @@ function DeviceContainer() {
       key: "devices",
       label: "Assets Assigned",
       component: <Devices devices={devices} />,
-    },
-    {
-      key: "issues",
-      label: "Issues Raised",
-      component: <Issue issues={issues} />,
     },
   ];
   return (

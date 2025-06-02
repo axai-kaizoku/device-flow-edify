@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
-import { callAPIWithToken, getSession } from "./helper";
+import { callAPI, callAPIWithToken, getSession } from "./helper";
 import { BASEURL } from "./main";
-import { cache } from "react";
 
 // export async function qualityCheck(userId:string) {
 //   const sess = await getSession();
@@ -29,16 +28,12 @@ export async function qualityCheck() {
     throw new Error(error?.response || "Failed to get quality check");
   }
 }
+
 export async function uniqueIdGeneration() {
   try {
-    const session = await getSession();
-
-    const payload = {
-      userId: session.user.user.userId ?? "",
-    };
     const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/unique-id`;
 
-    const response = await callAPIWithToken(apiUrl, "POST", payload);
+    const response = await callAPIWithToken(apiUrl, "GET");
     return response?.data;
   } catch (error: any) {
     throw new Error(error?.response || "Failed to get unique id");
@@ -65,7 +60,13 @@ export type QcReportResponse = {
   totalPages: number;
 };
 
-export async function qcReportTable(page: number, limit: number) {
+export async function fetchQcReportsEmployee({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) {
   try {
     const session = await getSession();
     const payload = {
@@ -74,6 +75,7 @@ export async function qcReportTable(page: number, limit: number) {
       limit,
     };
     const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/show-employee`;
+    console.log("employee");
 
     const response = await callAPIWithToken<QcReportResponse>(
       apiUrl,
@@ -85,7 +87,14 @@ export async function qcReportTable(page: number, limit: number) {
     throw new Error(error?.response || "Failed to get qc reports");
   }
 }
-export async function qcReportTableAdmin(page: number, limit: number) {
+
+export async function fetchQcReportsAdmin({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) {
   try {
     const session = await getSession();
     const payload = {
@@ -94,6 +103,7 @@ export async function qcReportTableAdmin(page: number, limit: number) {
       limit,
     };
     const apiUrl = `${qcUrl}/edifybackend/v1/quality-check/show-admin`;
+    console.log("admin");
 
     const response = await callAPIWithToken<QcReportResponse>(
       apiUrl,
@@ -125,11 +135,11 @@ export type ReportData = {
   };
 };
 
-export async function downloadReport({ userId }: { userId: string }) {
+export async function downloadReport({ userId }: { userId?: string }) {
   try {
     const session = await getSession();
     let apiUrl = "";
-    if (session.user.user.role == 1) {
+    if (session?.user?.user?.role === 1) {
       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/employee-report/${userId}`;
     } else {
       apiUrl = `${qcUrl}/edifybackend/v1/quality-check/admin-report/${userId}`;
@@ -142,7 +152,44 @@ export async function downloadReport({ userId }: { userId: string }) {
   }
 }
 
-export const getQcDataById = cache(async function (qcId: string) {
+export async function getAISummaryReport({ data }: { data: any }) {
+  try {
+    const url =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000/api/proxy"
+        : `https://deviceflow.ai/api/proxy`;
+    const res = await callAPI<{}>(
+      url,
+      "POST",
+      { ...data },
+      {
+        Authorization:
+          "Bearer mOgvFKFWg9LLGIHqvqRe6HVgIkHUYUjGidJhAdRdMP9WCAzZoo1YSdIBk5QsZX66",
+        "Content-Type": "application/json",
+      }
+    );
+
+    return res.data;
+  } catch {
+    throw new Error("Failed to generate ai summary");
+  }
+}
+// const handleAISummaryReport = async (recordData) => {
+//   const res = await downloadReport({ userId: recordData?._id });
+//   const resData = await fetch("/api/proxy", {
+//     method: "POST",
+//     headers: {
+//       Authorization:
+//         "Bearer mOgvFKFWg9LLGIHqvqRe6HVgIkHUYUjGidJhAdRdMP9WCAzZoo1YSdIBk5QsZX66",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ ...res.data }),
+//   });
+//   const data = await resData.json();
+//   setAiSummaryData(data);
+// };
+
+export const getQcDataById = async (qcId: string) => {
   try {
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/quality-check/admin-report/${qcId}`,
@@ -154,4 +201,4 @@ export const getQcDataById = cache(async function (qcId: string) {
     console.error("API error:", e); // 👈 Add this
     throw new Error((e as AxiosError)?.message);
   }
-});
+};

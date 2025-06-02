@@ -3,7 +3,6 @@
 import PaginatedList from "./paginated-list";
 import { RestoreTeam } from "./restore-team";
 import { PermanentTeamDelete } from "./permanent-team";
-import { Icons } from "@/components/icons";
 import { TeamsResponse } from "@/server/teamActions";
 import { teamIcons } from "../icons";
 import CreateTeam from "./create-team";

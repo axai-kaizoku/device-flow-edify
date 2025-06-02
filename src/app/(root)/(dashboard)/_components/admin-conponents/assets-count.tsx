@@ -1,8 +1,6 @@
-import React from "react";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { DashboardDetails } from "./interface";
-import AssignedDeviceIcon from "@/icons/AssignedDeviceIcon";
-import UnassignedDeviceIcon from "@/icons/UnassignedDeviceIcon";
-import InactiveDeviceIcon from "@/icons/InactiveDeviceIcon";
 export function AssetsCount({
   dashboardData,
 }: {
@@ -21,18 +19,23 @@ export function AssetsCount({
             <div className="text-sm font-gilroySemiBold leading-[23px]">
               Asset Count
             </div>
-            <div className="rounded-[17px] bg-purple-50 px-2 py-0.5 text-center text-xs font-gilroyMedium leading-[19px] text-purple-700">
+            <Badge className="text-purple-700 bg-purple-50">
               {(dashboardData?.deviceStatusData?.[0]?.assigned || 0) +
                 (dashboardData?.deviceStatusData?.[0]?.inactive || 0) +
                 (dashboardData?.deviceStatusData?.[0]?.un_assigned || 0)}{" "}
               Total Assets
-            </div>
+            </Badge>
           </div>
         </div>
         <div className="flex flex-wrap items-start justify-center gap-x-2 gap-y-5 text-center text-[11px] font-gilroyMedium leading-[17px] text-slate-600 min-[461px]:flex-nowrap">
           <div className="flex w-1/3 flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
             <div className="relative z-0 flex items-center text-center">
-              <AssignedDeviceIcon />
+              <Image
+                src="/media/dashboard/assigned.webp"
+                alt="Assigned"
+                width={28}
+                height={28}
+              />
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
               {dashboardData?.deviceStatusData?.[0]?.assigned || 0}
@@ -41,7 +44,12 @@ export function AssetsCount({
           </div>
           <div className="w-1/3 flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
             <div className="relative z-0 flex items-center  text-center">
-              <UnassignedDeviceIcon />
+              <Image
+                src="/media/dashboard/unassigned.webp"
+                alt="Unassigned"
+                width={28}
+                height={28}
+              />
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
               {dashboardData?.deviceStatusData?.[0]?.un_assigned || 0}
@@ -50,7 +58,12 @@ export function AssetsCount({
           </div>
           <div className=" w-1/3 flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
             <div className="relative z-0 flex items-center  text-center">
-              <InactiveDeviceIcon />
+              <Image
+                src="/media/dashboard/inactive.webp"
+                alt="Inactive"
+                width={28}
+                height={28}
+              />
             </div>
             <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
               {dashboardData?.deviceStatusData?.[0]?.inactive || 0}

@@ -39,58 +39,62 @@ export const Pagination = ({
   };
 
   return (
-    <div
-      className={`flex items-center justify-between font-gilroyRegular ${className}`}
-    >
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600 font-gilroyRegular">
-          Rows per page:
-        </span>
-        <Select
-          value={pageLimit.toString()}
-          onValueChange={(value) => {
-            onPageLimitChange(Number(value));
-            onPageChange(1); // Reset to first page when changing page size
-          }}
+    <>
+      {total !== 0 ? (
+        <div
+          className={`flex items-center justify-between font-gilroyRegular ${className}`}
         >
-          <SelectTrigger className="w-20 h-8 font-gilroyRegular">
-            <SelectValue placeholder={pageLimit} />
-          </SelectTrigger>
-          <SelectContent className="font-gilroyMedium">
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-            <SelectItem value="200">200</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 font-gilroyRegular">
+              Rows per page:
+            </span>
+            <Select
+              value={pageLimit.toString()}
+              onValueChange={(value) => {
+                onPageLimitChange(Number(value));
+                onPageChange(1); // Reset to first page when changing page size
+              }}
+            >
+              <SelectTrigger className="w-20 h-8 font-gilroyRegular">
+                <SelectValue placeholder={pageLimit} />
+              </SelectTrigger>
+              <SelectContent className="font-gilroyMedium">
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="200">200</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-      <div className="flex items-center gap-4">
-        <span className="text-sm text-gray-600 font-gilroyMedium">
-          {items?.length ? (page - 1) * pageLimit + 1 : 0} -{" "}
-          {Math.min(page * pageLimit, total || 0)} of {total || 0}
-        </span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600 font-gilroyMedium">
+              {items?.length ? (page - 1) * pageLimit + 1 : 0} -{" "}
+              {Math.min(page * pageLimit, total || 0)} of {total || 0}
+            </span>
 
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrevious}
-            disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition-colors"
-            aria-label="Previous page"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={page >= totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition-colors"
-            aria-label="Next page"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handlePrevious}
+                disabled={page === 1}
+                className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition-colors"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={page >= totalPages}
+                className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition-colors"
+                aria-label="Next page"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      ) : null}
+    </>
   );
 };
 

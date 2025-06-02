@@ -1,6 +1,5 @@
-import AssignedDeviceIcon from "@/icons/AssignedDeviceIcon";
 import { DashboardDetails } from "./interface";
-import UnassignedDeviceIcon from "@/icons/UnassignedDeviceIcon";
+import Image from "next/image";
 
 export const Members = ({
   dashboardData,
@@ -22,7 +21,7 @@ export const Members = ({
       <div className="flex flex-wrap items-start justify-center gap-x-5 gap-y-5 text-center text-[11px] font-gilroyMedium leading-[17px] text-slate-600 min-[461px]:flex-nowrap">
         <div className="flex w-[127px]  flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
           <div className="relative z-0 flex items-center text-center">
-            <AssignedDeviceIcon/>
+            <Image src="/media/dashboard/assigned.webp" alt="Assigned" width={28} height={28}/>
           </div>
           <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
             {dashboardData?.userData[0].activeUsers || 0}
@@ -31,7 +30,7 @@ export const Members = ({
         </div>
         <div className="w-[127px]  flex flex-col items-start gap-y-[5.4px] rounded-[11px] border-x-[1.1px] border-t-[1.1px] border-solid border-x-[gainsboro] border-y-[gainsboro] bg-white pb-[10px] pl-3.5  pt-3.5 [border-bottom-width:1.1px]">
           <div className="relative z-0 flex items-center text-center">
-            <UnassignedDeviceIcon/>
+            <Image src="/media/dashboard/unassigned.webp" alt="Unassigned" width={28} height={28}/>
           </div>
           <div className="pt-1.5 text-[17px] font-gilroySemiBold leading-[23px]">
             {dashboardData?.userData[0].inactiveUsers || 0}

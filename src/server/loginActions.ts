@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 import { callAPI } from "./helper";
 import { BASEURL } from "./main";
 
-type RequestOTPProps = {
+export type RequestOtpResponse = {
   message: string;
   userId?: string;
 };
@@ -18,43 +18,50 @@ type RequestDemoProps = {
   type: string;
 };
 
-export async function requestOtp(email: string): Promise<RequestOTPProps> {
-  const { data } = await callAPI<RequestOTPProps>(
-    `${BASEURL}/edifybackend/v1/auth/request-password-reset`,
-    "POST",
-    { email },
-    {
-      "Content-Type": "application/json",
-    }
-  );
-  // console.log(data, "req otp");
+export async function requestOtp(email: string): Promise<RequestOtpResponse> {
+  try {
+    const { data } = await callAPI<RequestOtpResponse>(
+      `${BASEURL}/edifybackend/v1/auth/request-password-reset`,
+      "POST",
+      { email },
+      {
+        "Content-Type": "application/json",
+      }
+    );
 
-  return data;
+    return data;
+  } catch {
+    throw new Error("Failed to request otp");
+  }
 }
 
-type ResetPassProps = {
+type ResetPassResponse = {
   message: string;
 };
 export async function resetPassword(
   userId: string,
   otp: string,
   password: string
-): Promise<ResetPassProps> {
-  const { data } = await callAPI<ResetPassProps>(
-    `${BASEURL}/edifybackend/v1/auth/verify-otp`,
-    "POST",
-    {
-      userId,
-      otp,
-      newPassword: password,
-    },
-    {
-      "Content-Type": "application/json",
-    }
-  );
-  // console.log(data, "reset pass");
+): Promise<ResetPassResponse> {
+  try {
+    const { data } = await callAPI<ResetPassResponse>(
+      `${BASEURL}/edifybackend/v1/auth/verify-otp`,
+      "POST",
+      {
+        userId,
+        otp,
+        newPassword: password,
+      },
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    // console.log(data, "reset pass");
 
-  return data;
+    return data;
+  } catch {
+    throw new Error("Failed to verify otp");
+  }
 }
 
 export async function requestForDemo({
