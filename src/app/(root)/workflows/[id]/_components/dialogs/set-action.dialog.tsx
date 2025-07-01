@@ -77,6 +77,7 @@ function SetActionDialog({
   // Options for the action select field
   const actionOptions = [
     { value: "send_email", label: "Send Email" },
+    { value: "create_account", label: "Create Account" },
     { value: "create_doc", label: "Create Document" },
     { value: "schedule_event", label: "Schedule Calendar Event" },
     { value: "update_spreadsheet", label: "Update Spreadsheet" },
