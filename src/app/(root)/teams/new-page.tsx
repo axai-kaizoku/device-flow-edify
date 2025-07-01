@@ -1,12 +1,12 @@
 "use client";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { ActionBar } from "@/components/action-bar/action-bar";
 import { ActionSearchBar } from "@/components/action-bar/action-search-bar";
 import { buttonVariants } from "@/components/buttons/Button";
-import { MoreFilters } from "@/components/filters/more-filters";
+import { FilterOptions, MoreFilters } from "@/components/filters/more-filters";
 import {
   Select,
   SelectContent,
@@ -35,6 +35,9 @@ export const NewPageTeams = () => {
     defaultValue: "",
   });
   const [filters, setFilters] = useState<FilterSelection>({});
+  const [cachedFilterOptions, setCachedFilterOptions] = useState<FilterOptions>(
+    {}
+  );
 
   const tupleFilters = useMemo(
     () =>
@@ -64,6 +67,16 @@ export const NewPageTeams = () => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    if (
+      status === "success" &&
+      data?.filterOptions &&
+      Object.keys(cachedFilterOptions).length === 0
+    ) {
+      setCachedFilterOptions(data.filterOptions);
+    }
+  }, [status, data, cachedFilterOptions]);
+
   const handleFilterChange = (newFilter: FilterSelection) => {
     setFilters(newFilter);
   };
@@ -72,7 +85,11 @@ export const NewPageTeams = () => {
     <section className="w-full h-fit relative  overflow-y-auto hide-scrollbar">
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={(tab) => {
+          setRawSearch("");
+          setFilters({});
+          setActiveTab(tab);
+        }}
         defaultValue="active-teams"
         className="w-full"
       >
@@ -80,7 +97,11 @@ export const NewPageTeams = () => {
           <div className="flex gap-2">
             <Select
               value={activeTab}
-              onValueChange={setActiveTab}
+              onValueChange={(tab) => {
+                setRawSearch("");
+                setFilters({});
+                setActiveTab(tab);
+              }}
               defaultValue="active-teams"
             >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-md">
@@ -103,7 +124,7 @@ export const NewPageTeams = () => {
             </Select>
             <MoreFilters
               key={`${activeTab}teams-more`}
-              filterOptions={data?.filterOptions}
+              filterOptions={cachedFilterOptions}
               onFilterChange={handleFilterChange}
               loading={status === "pending"}
               isRadio

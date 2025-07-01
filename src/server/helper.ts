@@ -11,8 +11,9 @@ export const getSession = async () => {
 
 export const getTokenFromSession = async () => {
   const session = await getServerSession(authOptions);
-  // console.log(session?.user?.user?.orgId, "session from helper");
   const token = session?.user?.user.token;
+  // console.log(session?.user, "session from helper");
+
   return token;
 };
 

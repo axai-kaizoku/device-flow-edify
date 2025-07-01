@@ -19,11 +19,13 @@ type SelectInputProps = {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
+  seperator?: boolean;
 };
 
 export const SelectDropdown = ({
   value,
   options,
+  seperator,
   onSelect,
   placeholder = "Select",
   label,
@@ -135,7 +137,7 @@ export const SelectDropdown = ({
             </span>
           )}
           <div className="absolute inset-y-0 right-0 flex items-center pointer-events-none">
-            <div className="h-7 w-[1.5px] bg-[#DCDCDC]" />
+            {seperator && <div className="h-7 w-[1.5px] bg-[#DCDCDC]" />}
             <DropdownArrowUp
               className={cn(
                 "size-[10px] ml-4 mr-3.5 ",
@@ -154,7 +156,7 @@ export const SelectDropdown = ({
                     optionRefs.current[index] = el;
                   }}
                   className={cn(
-                    "pl-2 py-1 text-gray-700 text-sm hover:rounded-md font-gilroyMedium m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
+                    "pl-2 py-2 text-gray-700 text-sm hover:rounded-md font-gilroyMedium m-0.5 hover:text-gray-800 border-b border-[#F3F3F3] cursor-pointer hover:bg-[#EEEEEE] rounded-br-none rounded-bl-none",
                     highlightedIndex === index
                       ? "bg-[#EEEEEE] text-gray-800 rounded-md m-0.5 border-spacing-y-1.5"
                       : ""
@@ -165,7 +167,7 @@ export const SelectDropdown = ({
                 </div>
               ))
             ) : (
-              <div className="px-4 py-3 text-gray-500">
+              <div className="px-4 py-3 text-gray-500 font-gilroyMedium">
                 No options available
               </div>
             )}

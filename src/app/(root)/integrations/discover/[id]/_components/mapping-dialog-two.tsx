@@ -5,6 +5,7 @@ import { AsyncSelect } from "@/components/ui/async-select";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
   DialogTrigger,
@@ -88,7 +89,7 @@ export default function MappingDialogTwo({
 
   // Filter out the integration records which have a null userId
   const filteredData = response?.data
-    ? response?.data?.data?.filter((u) => u?.userId === null)
+    ? response?.data?.filter((u) => u?.userId === null)
     : [];
 
   const getUsers = async (query: string = ""): Promise<UsersType[]> => {
@@ -224,9 +225,11 @@ export default function MappingDialogTwo({
             </div>
             Map Users
           </DialogTitle>
-
+          <DialogDescription className="sr-only">
+            Mapping dialog two
+          </DialogDescription>
           <div className="w-full space-y-4 px-2 h-full max-h-[40vh] overflow-y-auto">
-            {filteredData.map((mapping, index) => (
+            {filteredData?.map((mapping, index) => (
               <div
                 key={mapping?._id || index}
                 className="flex items-center justify-between gap-x-5"
@@ -286,11 +289,9 @@ export default function MappingDialogTwo({
               </div>
             ))}
           </div>
-
           {error && (
             <p className="text-red-500 text-sm text-center mt-2">{error}</p>
           )}
-
           <div className="h-[1px] bg-gray-200  -mx-4"></div>
           <DialogFooter className="flex w-full items-center justify-between mt-1 mb-1 px-2">
             <Button

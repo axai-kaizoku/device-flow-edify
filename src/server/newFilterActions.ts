@@ -8,9 +8,10 @@ import type {
   FilterPeopleResponse,
   FilterTeamsArgs,
   FilterTeamsResponse,
+  FilterTicketsArgs,
+  FilterTicketsResponse,
 } from "./types/newFilterTypes";
 
-// const baseUrl = "https://5e6e-34-47-179-100.ngrok-free.app";
 const baseUrl = BASEURL;
 
 export const filterAssets = async ({
@@ -19,12 +20,14 @@ export const filterAssets = async ({
   page = 1,
   pageLimit = 1,
   type = "assigned",
+  sortOption
 }: FilterAssetsArgs) => {
   try {
     const payloadBody = {
       fields: devicesFields,
       pageLimit,
       page,
+      sortOption
     };
 
     if (type === "assigned") {
@@ -42,7 +45,7 @@ export const filterAssets = async ({
       payloadBody["filters"] = filters?.length > 0 ? [...filters] : [];
     }
 
-    console.log({ ...payloadBody, searchQuery }, "payload");
+    // console.log({ ...payloadBody, searchQuery }, "payload");
 
     const res = await callAPIWithToken<FilterAssetsResponse>(
       `${baseUrl}/edifybackend/v1/devices/filter/${
@@ -91,7 +94,7 @@ export const filterTeams = async ({
       payloadBody["isDeleted"] = true;
     }
 
-    console.log({ ...payloadBody, searchQuery }, "payload");
+    // console.log({ ...payloadBody, searchQuery }, "payload");
 
     const res = await callAPIWithToken<FilterTeamsResponse>(
       `${baseUrl}/edifybackend/v1/teams/filter/${
@@ -101,7 +104,7 @@ export const filterTeams = async ({
       payloadBody
     );
 
-    console.log(res?.data, "FILTER RESPONSE ");
+    // console.log(res?.data, "FILTER RESPONSE ");
 
     return res?.data;
   } catch (error) {
@@ -114,8 +117,9 @@ export const filterPeople = async ({
   filters = [],
   searchQuery = "",
   page = 1,
-  pageLimit = 1,
+  pageLimit = 100000000,
   type = "active",
+  sortOption
 }: FilterPeopleArgs) => {
   try {
     const payloadBody = {
@@ -123,6 +127,7 @@ export const filterPeople = async ({
       pageLimit,
       page,
       filters,
+      sortOption
     };
 
     if (type === "active") {
@@ -131,7 +136,7 @@ export const filterPeople = async ({
       payloadBody["isDeleted"] = true;
     }
 
-    console.log({ ...payloadBody, searchQuery, type }, "payload");
+    // console.log({ ...payloadBody, searchQuery, type }, "payload");
 
     const res = await callAPIWithToken<FilterPeopleResponse>(
       `${baseUrl}/edifybackend/v1/user/filter/${
@@ -141,11 +146,51 @@ export const filterPeople = async ({
       payloadBody
     );
 
-    console.log(res?.data, "FILTER RESPONSE ");
+    // console.log(res?.data, "FILTER RESPONSE ");
 
     return res?.data;
   } catch (error) {
     console.error(error);
     throw new Error("Error filtering people");
+  }
+};
+
+export const filterTickets = async ({
+  filters = [],
+  searchQuery = "",
+  page = 1,
+  pageLimit = 1,
+  type = "open",
+}: FilterTicketsArgs) => {
+  try {
+    const payloadBody = {
+      fields: [],
+      pageLimit,
+      page,
+      filters,
+    };
+
+    if (type === "open") {
+      payloadBody["status"] = "open";
+    } else if (type === "closed") {
+      payloadBody["status"] = "close";
+    }
+
+    // console.log({ ...payloadBody, searchQuery, type }, "payload");
+
+    const res = await callAPIWithToken<FilterTicketsResponse>(
+      `${baseUrl}/edifybackend/v1/ticket/filter/${
+        searchQuery ? `?searchQuery=${encodeURIComponent(searchQuery)}` : ""
+      }`,
+      "POST",
+      payloadBody
+    );
+
+    // console.log(res?.data, "FILTER RESPONSE ");
+
+    return res?.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error filtering tickets");
   }
 };

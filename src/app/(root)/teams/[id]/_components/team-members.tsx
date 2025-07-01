@@ -15,6 +15,8 @@ import { RemoveTeamMember } from "./remove-team-member";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { Badge } from "@/components/ui/badge";
+import React from "react";
+import { AltIntegration } from "@/app/(root)/integrations/_components/icons";
 
 const TeamMembers = ({
   teamData,
@@ -93,6 +95,7 @@ const TeamMembers = ({
            */}
           <>
             <div className="flex flex-col">
+              {/* {JSON.stringify(data?.users)} */}
               <Table
                 data={data?.users ?? []}
                 selectedIds={selectedIds}
@@ -177,9 +180,8 @@ const TeamMembers = ({
                       // const filteredIntegrations = (
                       //   record?.subscriptions ?? []
                       // ).filter((i) => i.platform !== selectedPlatform);
-                      const integrations = record?.subscriptions?.filter(
-                        (int) => int.image
-                      );
+                      const integrations =
+                        record?.subscriptions?.filter((p) => p.platform) ?? [];
 
                       if (integrations?.length === 0) {
                         return <span className="text-gray-400">-</span>;
@@ -193,22 +195,28 @@ const TeamMembers = ({
                           data={record}
                           allIntegrations={integrations}
                         >
-                          <div className="flex items-center gap-2 -space-x-5">
-                            {firstThree?.map((i, index) => (
-                              <div
-                                key={index}
-                                className="flex justify-center items-center p-1.5 bg-white rounded-full border"
-                              >
-                                <img
-                                  src={i.image ?? ""}
-                                  width={16}
-                                  height={16}
-                                  className=" object-contain "
-                                  alt="Integration"
-                                />
-                              </div>
-                            ))}
-
+                          <div className="flex items-center gap-0">
+                            <div className="flex items-center gap-2 -space-x-5">
+                              {firstThree.map((i, index) => (
+                                <React.Fragment key={index}>
+                                  {i?.image ? (
+                                    <div className="flex justify-center items-center p-1.5 bg-white rounded-full border">
+                                      <img
+                                        src={i.image ?? ""}
+                                        width={16}
+                                        height={16}
+                                        className=" object-contain "
+                                        alt="Integration"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1.5">
+                                      <AltIntegration className={"size-4"} />
+                                    </div>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </div>
                             {extraCount > 0 && (
                               <span className="text-sm text-gray-500 font-gilroySemiBold">
                                 +{extraCount}

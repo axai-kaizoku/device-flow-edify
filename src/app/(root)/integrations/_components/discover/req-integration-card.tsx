@@ -24,8 +24,8 @@ export const RequestIntegrationCard = () => {
     );
   };
   return (
-    <div className="rounded-2xl bg-black p-6 flex flex-col w-full max-w-[19rem] 2xl:max-w-[22rem] gap-5">
-      <h1 className="text-[#BFBFBF] text-2xl 2xl:text-3xl w-[70%]  font-gilroySemiBold">
+    <div className="rounded-2xl bg-black p-6 flex flex-col w-[19rem] gap-5">
+      <h1 className="text-[#BFBFBF] text-2xl text-start 2xl:text-3xl w-[70%]  font-gilroySemiBold">
         Can&apos;t <span className="text-white">find</span> your integration?
       </h1>
       <div className="flex -space-x-3">{renderIcons()}</div>

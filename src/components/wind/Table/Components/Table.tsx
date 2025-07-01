@@ -6,6 +6,8 @@ import { Checkbox } from "@/components/wind/Checkbox/index";
 import { Skeleton } from "../../Skeleton";
 import { SortArrow } from "../Icons/SortArrow";
 import {
+  CollapsibleContent,
+  ExpandIcon,
   RowSelectionText,
   SortArrowContainer,
   SortIconTextContainer,
@@ -20,6 +22,7 @@ import {
 } from "../styles/style";
 import { EmptyTable } from "./EmptyTable";
 import { deepCopy, returnTrueValue } from "./utility";
+import { ChevronDown, ChevronUp } from "lucide-react"; // Import icons for expand/collapse
 
 export const Table = ({
   data,
@@ -32,6 +35,7 @@ export const Table = ({
   selectedIds,
   setSelectedIds,
   isLoading,
+  collapsible,
 }: TableProps) => {
   const [activeColumn, setActiveColumn] = useState<string>("");
   const [initialData, setInitialData] = useState<Array<any>>([]);
@@ -40,10 +44,34 @@ export const Table = ({
   );
   const [selectedRowCount, setSelectedRowCount] = useState<number>(0);
   const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set()); // Track expanded rows
 
   // Reference
 
   // Reference
+
+  const toggleRowExpand = (rowId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowId)) {
+        newSet.delete(rowId);
+      } else {
+        newSet.add(rowId);
+      }
+      return newSet;
+    });
+  };
+
+  // Check if a row is expanded
+  const isRowExpanded = (rowId: string) => expandedRows.has(rowId);
+
+  // Check if a row has nested data that can be expanded
+  const hasNestedData = (record: any) => {
+    if (!collapsible) return false;
+    const nestedData = record[collapsible.nestedDataField];
+    return nestedData && Array.isArray(nestedData) && nestedData.length > 1; // Only return true if more than 1 invoice
+  };
 
   // Skeleton Table Component
   const SkeletonTable = ({
@@ -334,42 +362,110 @@ export const Table = ({
     setColumnData(sortTypeUpdatedArray);
   };
 
+  // In Table.tsx - Update the handleTableBodyRender function
   const handleTableBodyRender = (record) => {
+    const rowId =
+      record?._id || record?.integrationId || JSON.stringify(record);
+    const canExpand = hasNestedData(record);
+    const isExpanded = isRowExpanded(rowId);
+    const nestedData = canExpand ? record[collapsible.nestedDataField] : [];
+
     return (
-      <TableRow>
-        <>
-          {checkboxSelection && (
-            <TableCell>
-              <Checkbox
-                value="master"
-                size="lg"
-                checked={selectedRowIds.has(
-                  record?.[`${checkboxSelection?.uniqueField}`]
-                )}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleCheckBox(
-                    record?.[`${checkboxSelection?.uniqueField}`],
-                    e.target.checked
-                  )
-                }
-              ></Checkbox>
-            </TableCell>
-          )}
-          {columnData?.map((colData: ColumnType, index: number) => {
-            return colData?.dataIndex ? (
-              //Render by dataIndex
-              // <TableCell align={colData.textAlign}>
-              <TableCell align={"left"}>{record[colData?.dataIndex]}</TableCell>
-            ) : (
-              //Customized Render (for icons, images, action button etc..)
-              // <TableCell align={colData.textAlign}>
-              <TableCell align={"left"}>
-                {colData.render(record, index)}
+      <>
+        {/* Main row */}
+        <TableRow key={`row-${rowId}`}>
+          <>
+            {checkboxSelection && (
+              <TableCell>
+                <Checkbox
+                  value="master"
+                  size="lg"
+                  checked={selectedRowIds.has(
+                    record?.[`${checkboxSelection?.uniqueField}`]
+                  )}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleCheckBox(
+                      record?.[`${checkboxSelection?.uniqueField}`],
+                      e.target.checked
+                    )
+                  }
+                />
               </TableCell>
-            );
-          })}
-        </>
-      </TableRow>
+            )}
+            {columnData?.map((colData: ColumnType, index: number) => {
+              const isExpandColumn = collapsible
+                ? (collapsible.expandColumnIndex === undefined &&
+                    index === 0) ||
+                  index === collapsible.expandColumnIndex
+                : false;
+
+              return (
+                <TableCell key={`${rowId}-${index}`} align={"left"}>
+                  <div className="flex items-center gap-2">
+                    {colData?.dataIndex ? (
+                      <span>
+                        {colData.render
+                          ? colData.render(record, index, isExpanded, {
+                              expandedRows,
+                              setExpandedRows,
+                              rowId,
+                            })
+                          : record[colData?.dataIndex]}
+                      </span>
+                    ) : (
+                      colData.render(record, index, isExpanded, {
+                        expandedRows,
+                        setExpandedRows,
+                        rowId,
+                      })
+                    )}
+
+                    {isExpandColumn && canExpand && (
+                      <ExpandIcon
+                        onClick={(e) => toggleRowExpand(rowId, e)}
+                        className={isExpanded ? "expanded" : ""}
+                      >
+                        {isExpanded ? (
+                          <ChevronUp size={14} />
+                        ) : (
+                          <ChevronDown size={14} />
+                        )}
+                      </ExpandIcon>
+                    )}
+                  </div>
+                </TableCell>
+              );
+            })}
+          </>
+        </TableRow>
+
+        {/* Expanded nested rows */}
+        {isExpanded &&
+          nestedData.map((nestedItem, nestedIndex) => (
+            <TableRow
+              key={`${rowId}-nested-${nestedIndex}`}
+              className="nested-row"
+            >
+              {checkboxSelection && <TableCell />}
+              {columnData.map((colData, colIndex) => (
+                <TableCell
+                  key={`${rowId}-nested-${nestedIndex}-${colIndex}`}
+                  align={"left"}
+                >
+                  {colData?.dataIndex ? (
+                    <span>{nestedItem[colData?.dataIndex]}</span>
+                  ) : (
+                    colData.render(nestedItem, nestedIndex, false, {
+                      expandedRows,
+                      setExpandedRows,
+                      rowId,
+                    })
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+      </>
     );
   };
 
@@ -534,6 +630,14 @@ export interface TableProps {
     //callback to return all selected rows
     onSelectionChange?: (selectedItems: any) => void;
   };
+  collapsible?: {
+    // Field name that contains nested data
+    nestedDataField: string;
+    // Function to render nested data
+    renderNestedData: (data: any, index: number) => React.ReactNode;
+    // Which column should show the expand/collapse icon (defaults to first column)
+    expandColumnIndex?: number;
+  };
   emptyTableMessage?: string;
   className?: string;
 }
@@ -547,7 +651,16 @@ export interface ColumnType {
   dataIndex?: string;
 
   //used to render action buttons
-  render?: (record, index?: number) => React.ReactNode;
+  render?: (
+    record: any,
+    index?: number,
+    isExpanded?: boolean,
+    context?: {
+      expandedRows: Set<string>;
+      setExpandedRows: React.Dispatch<React.SetStateAction<Set<string>>>;
+      rowId: string;
+    }
+  ) => React.ReactNode;
 
   //Sorting type
   sortBy?: SortByType | string;

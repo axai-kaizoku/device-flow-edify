@@ -187,17 +187,17 @@ export const getTicketById = async function (ticketId: string) {
 };
 
 export const addTags = async function ({
-  tag,
+  tags,
   ticketId,
 }: {
-  tag: string[];
+  tags: string[];
   ticketId: string;
 }) {
   try {
     const res = await callAPIWithToken<any>(
       `${BASEURL}/edifybackend/v1/ticket/addTag`,
       "PATCH",
-      { tag, ticketId }
+      { tag: tags, ticketId }
     );
 
     return res.data;
@@ -363,11 +363,7 @@ export const switchToHumanChat = async function ({
   try {
     const apiUrl = `${BASEURL}/edifybackend/v1/ticket/aiSwitch/${ticketId}`;
 
-    const response = await callAPIWithToken<ChatResponse>(
-      apiUrl,
-      "PATCH",
-      null
-    );
+    const response = await callAPIWithToken<ChatResponse>(apiUrl, "PATCH", {});
 
     return response.data;
   } catch (error) {

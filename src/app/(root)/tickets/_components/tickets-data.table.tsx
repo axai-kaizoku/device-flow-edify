@@ -9,9 +9,10 @@ import Link from "next/link";
 import { useState } from "react";
 import TicketsClosedHeader from "./tickets-closed.header";
 import TicketsOpenHeader from "./tickets-open.header";
+import { FilterTicketsResponse } from "@/server/types/newFilterTypes";
 
 interface TicketsTableDisplayProps {
-  data: any;
+  data: FilterTicketsResponse;
   countIssues?: any;
   setIssues?: (data: any) => void;
   onRefresh?: () => Promise<void>;
@@ -30,7 +31,7 @@ function TicketsDataTable({
 
   return (
     <>
-      {status !== "pending" && data?.length === 0 ? (
+      {status !== "pending" && data?.tickets.length === 0 ? (
         <div className="flex  font-gilroySemiBold flex-col  gap-6 justify-center items-center py-10">
           <img src="/media/no_data/issue.svg" alt="No-Issue Logo" />
         </div>
@@ -55,7 +56,7 @@ function TicketsDataTable({
 
           <div className="flex flex-col">
             <Table
-              data={data?.map((d, i) => ({ ...d, serialNo: i + 1 })) ?? []}
+              data={data?.tickets ?? []}
               selectedIds={selectedIds}
               setSelectedIds={setSelectedIds}
               isLoading={status === "pending"}
@@ -77,24 +78,18 @@ function TicketsDataTable({
                     <div className="w-full flex justify-start">
                       <div>
                         {data?.severity === "Critical" ? (
-                          // <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-alert-foreground text-failure">
                           <Badge className="bg-alert-foreground text-failure">
                             Critical
                           </Badge>
-                        ) : // </h1>
-                        data?.severity === "Medium" ? (
-                          // <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-[#FFFACB] text-[#FF8000]">
+                        ) : data?.severity === "Medium" ? (
                           <Badge className="bg-[#FFFACB] text-[#FF8000]">
                             Medium
                           </Badge>
-                        ) : // </h1>
-                        data?.severity === "Low" ? (
-                          // <h1 className="px-2 py-1 justify-center items-center font-gilroyMedium flex text-xs rounded-full bg-success-foreground text-success-second">
+                        ) : data?.severity === "Low" ? (
                           <Badge className="bg-success-foreground text-success-second">
                             Low
                           </Badge>
                         ) : (
-                          // </h1>
                           <div>-</div>
                         )}
                       </div>
@@ -123,54 +118,56 @@ function TicketsDataTable({
                     if (issuesText?.toLowerCase().includes("open")) {
                       const onboardingDate = record?.openedOn;
 
-                      // Check if onboardingDate is null, undefined, or empty
                       if (!onboardingDate) {
                         return <div>-</div>;
                       }
 
                       const date = new Date(onboardingDate);
 
-                      // Check if the date is valid
                       if (isNaN(date.getTime())) {
                         return <div>-</div>;
                       }
 
-                      const formattedDate = date.toLocaleDateString("en-GB", {
+                      const formattedDateTime = date.toLocaleString("en-GB", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
                       });
 
-                      return <div>{formattedDate}</div>;
+                      return <div>{formattedDateTime}</div>;
                     } else {
                       const updateIssue = record?.closedAt;
 
-                      // Check if updateIssue is null, undefined, or empty
                       if (!updateIssue) {
                         return <div>-</div>;
                       }
 
                       const date = new Date(updateIssue);
 
-                      // Check if the date is valid
                       if (isNaN(date.getTime())) {
                         return <div>-</div>;
                       }
 
-                      const formattedDate = date.toLocaleDateString("en-GB", {
+                      const formattedDateTime = date.toLocaleString("en-GB", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
                       });
 
-                      return <div>{formattedDate}</div>;
+                      return <div>{formattedDateTime}</div>;
                     }
                   },
                 },
                 {
                   title: "Assigned To",
                   render: (record) => {
-                    const opts = record?.assignedTo || []; // Assuming `opts` comes from `record`
+                    const opts = record?.assignedTo || [];
                     const first = opts.slice(0, 1);
                     const remaining = opts.length > 1 ? opts.length - 1 : 0;
 

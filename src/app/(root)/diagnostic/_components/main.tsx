@@ -26,6 +26,7 @@ export const Main = ({ isAdmin }: { isAdmin: boolean }) => {
       {
         page,
         pageLimit,
+        isAdmin,
       },
     ],
     queryFn: () =>
@@ -61,6 +62,7 @@ export const Main = ({ isAdmin }: { isAdmin: boolean }) => {
       ) : null}
       {/* <div className="mt-2 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70"> */}
       <QcTable
+        key={`${isAdmin}-76898`}
         isAdmin={isAdmin}
         data={data}
         isError={isError}

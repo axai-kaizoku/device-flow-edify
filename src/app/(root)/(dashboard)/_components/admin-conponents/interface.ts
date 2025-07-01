@@ -1,7 +1,7 @@
 export interface DashboardDetails {
   deviceConditionData: DeviceConditionDaum[];
   deviceStatusData: DeviceStatusDaum[];
-  issueData: IssueDaum[];
+  ticketData: IssueDaum[];
   userData: UserDaum[];
   teamsData: TeamsDaum[];
   orders: Order[];
@@ -65,6 +65,9 @@ export interface IssueDaum {
   priority: string;
   deleted_at: any;
   closed_on: any;
+  openedOn: string;
+  category: string;
+  code: string;
   createdAt: string;
   issueId: string;
   updatedAt: string;

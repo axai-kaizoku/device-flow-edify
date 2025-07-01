@@ -1,0 +1,27 @@
+/* Ensure the editor content is visible and interactive */
+.ProseMirror {
+  min-height: 6rem;
+  padding: 2px;
+  outline: none;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* Placeholder styling */
+.ProseMirror p.is-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #a1a1a1;
+  pointer-events: none;
+  height: 0;
+  font-style: var(--font-gilroy-medium);
+}
+
+/* Ensure text is visible */
+.ProseMirror p {
+  color: #222222;
+  margin: 0;
+  padding: 0;
+}

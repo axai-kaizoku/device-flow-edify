@@ -151,8 +151,8 @@ function AssignedAssets({
                             <>
                               <div className="relative group">
                                 <div className=" text-sm truncate max-w-[150px]">
-                                  {record?.userName?.length! > 12
-                                    ? `${record?.userName!.slice(0, 12)}...`
+                                  {record?.userName?.length! > 24
+                                    ? `${record?.userName!.slice(0, 24)}...`
                                     : record?.userName}
                                 </div>
                                 {record?.userName?.length > 12 && (

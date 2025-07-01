@@ -6,7 +6,7 @@ const categories = [
   { key: "users", label: "People", route: "people" },
   { key: "teams", label: "Teams", route: "teams" },
   { key: "devices", label: "Assets", route: "assets" },
-  { key: "issues", label: "Issues", route: "issues" },
+  { key: "issues", label: "Issues", route: "tickets" },
   { key: "integrations", label: "Integrations", route: "integrations" },
 ];
 
@@ -97,6 +97,7 @@ const IntegrationItem = ({ item }: { item: any }) => (
 const IssueItem = ({ item }: { item: any }) => {
   return (
     <div className="flex items-start gap-3 text-sm font-gilroyMedium">
+      {JSON.stringify(item)}
       <GetAvatar name={item?.title} />
 
       <div>

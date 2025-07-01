@@ -1,5 +1,6 @@
-import { Main } from "../_components/main";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <Main isAdmin />;
+  return redirect("/diagnostic/all-reports");
 }
+

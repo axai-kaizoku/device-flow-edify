@@ -292,6 +292,7 @@ export default function CreateUserDialog({
                   bulkApi={bulkUploadUsers}
                   closeBtn={() => setOpen(false)}
                   requiredKeys={bulkUploadKeys}
+                  type="user"
                   sampleData={{
                     first_name: "XXXX YYYY",
                     designation: "Engineer",

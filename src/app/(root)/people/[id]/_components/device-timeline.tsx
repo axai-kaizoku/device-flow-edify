@@ -9,11 +9,11 @@ import {
 import Link from "next/link";
 
 const DeviceCard = ({ target, deviceLink }) => (
-  <Link href={deviceLink}>
-    <div className="border-[#E5E5E5] hover:border-black border p-2 flex justify-between items-center rounded-md w-[18rem]">
+  <Link href={deviceLink} className="w-fit">
+    <div className="border-[#E5E5E5]  hover:border-black border p-2 flex justify-between items-center rounded-md w-[22rem]">
       <div className="flex gap-2">
-        {/* {JSON.stringify(target)} */}
-        <GetAvatar name={target?.deviceName || "-"} isDeviceAvatar size={40} />
+         {/*{JSON.stringify(target)}*/}
+        <GetAvatar name={target?.deviceName || ""} isDeviceAvatar size={40} />
         <div>
           <h1 className="text-sm text-black font-gilroyMedium">
             {target?.deviceName || "-"}
@@ -50,19 +50,19 @@ const ActionText = ({
   switch (action) {
     case "assign-device":
       return (
-        <>
+        <div className="flex flex-wrap gap-1">
           <Link href={deviceLink}>
-            <span className="text-black"> {target?.custom_model || "-"}</span>
+            <span className="text-black"> {target?.deviceName || "-"}</span>
           </Link>{" "}
           assigned to{" "}
-          <span className="underline text-black">
+          <span className="underline text-black ">
             <Link href={userLink}>{userName || "-"}</Link>
           </span>{" "}
           by{" "}
           <span className="text-black">
             <Link href={actorLink}>{actorName || "-"}</Link>
           </span>
-        </>
+        </div>
       );
     case "re-assign-device":
       return (
@@ -157,7 +157,7 @@ const ActionText = ({
       );
     case "device-added":
       return (
-        <>
+        <div className="flex gap-1 flex-wrap">
           <span className="text-black">
             <Link href={deviceLink}>{target?.deviceName || "-"}</Link>
           </span>{" "}
@@ -166,7 +166,7 @@ const ActionText = ({
             {" "}
             <Link href={actorLink}>{actorName || "-"} </Link>
           </span>
-        </>
+        </div>
       );
     case "added-to-shelf":
       return (
@@ -261,7 +261,7 @@ export default function DeviceTimeLine({
   return (
     <TimelineItem key={log?._id}>
       <TimelineHeading>
-        <div className="text-sm font-gilroyMedium text-[#808080]">
+        <div className="text-sm  font-gilroyMedium  text-[#808080]">
           <ActionText
             action={action}
             deviceLink={deviceLink}
@@ -278,7 +278,7 @@ export default function DeviceTimeLine({
       <TimelineDot status={statusMap[action]} />
       <TimelineLine />
 
-      <TimelineContent className="w-full flex flex-col gap-2 mt-1">
+      <TimelineContent className="w-full  flex flex-col gap-2 mt-1">
         <DeviceCard
           target={target}
           deviceLink={`/assets/${target?.deviceId}`}

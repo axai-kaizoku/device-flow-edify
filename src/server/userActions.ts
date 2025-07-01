@@ -370,6 +370,7 @@ export const fetchUsers = async (): Promise<User[]> => {
         "first_name",
         "email",
         "designation",
+        "role",
         "employment_type",
         "image",
       ], // Specify fields to be fetched

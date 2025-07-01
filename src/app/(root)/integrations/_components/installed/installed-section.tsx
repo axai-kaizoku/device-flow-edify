@@ -19,11 +19,12 @@ export const InstalledSection = ({
         {data && data?.data?.length > 0 && (
           <>
             <p className="text-lg font-gilroySemiBold pt-3">Connected</p>
-            <div className="grid justify-items-center gap-7 grid-cols-3">
+            <div className="grid justify-items-center gap-7 grid-cols-3 mb-10">
               {data?.data?.map((company) => {
                 return (
                   <Link
                     key={company?._id}
+                    className="w-full"
                     href={`/integrations/installed/${company?.platform}`}
                   >
                     <ConnectionCard

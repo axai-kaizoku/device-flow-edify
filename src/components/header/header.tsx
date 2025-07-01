@@ -138,7 +138,6 @@ export default function Header({ session }: Props) {
                       className={`flex-grow bg-transparent outline-none text-black 
                         placeholder-black placeholder:font-gilroyMedium placeholder:text-[15px] 
                         transition-all duration-1000
-                        
                       `}
                     />
                   </div>
@@ -210,7 +209,7 @@ export default function Header({ session }: Props) {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* {session?.user?.user?.role !== 1 && (
+            {session?.user?.user?.role !== 1 && (
               <SettingsDialog>
                 <button
                   className=" bg-white hover:bg-black rounded-full hover:text-white flex items-center justify-center p-2"
@@ -222,7 +221,10 @@ export default function Header({ session }: Props) {
                   <HugeiconsIcon icon={Settings02Icon} className="size-6" />
                 </button>
               </SettingsDialog>
-            )} */}
+            )}
+            {/* <button className=" bg-white hover:bg-black hover:text-white flex items-center justify-center rounded-full p-2">
+              <CircleHelp className="size-5" />
+            </button> */}
 
             {session?.user?.user?.role !== 1 ? (
               <div className="relative">

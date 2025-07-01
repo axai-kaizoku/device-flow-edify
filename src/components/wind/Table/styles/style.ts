@@ -35,7 +35,14 @@ export const TableRow = styled(TableHeadRow)`
   height: 60px;
   background: ${Colors.white_1};
   padding: 0;
+  &.nested-row {
+    background-color: #f9f9f9;
+    td {
+      padding-left: 15px; /* Indent nested rows */
+    }
+  }
 `;
+
 
 export const TableFooter = styled.footer`
   display: flex;
@@ -53,7 +60,7 @@ export const TableFooter = styled.footer`
 `;
 export const TableBody = styled.tbody``;
 export const TableContainer = styled.div`
-  height: 55vh;
+  height: 60vh;
 
   overflow: overlay;
   text-align: center;
@@ -183,4 +190,29 @@ export const EmptyTableContainer = styled.div`
 
 export const MarginVertical20 = styled.div`
   margin-top: 20px;
+`;
+
+
+export const ExpandIcon = styled.div`
+  display: inline-flex;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  
+  
+`;
+
+export const CollapsibleContent = styled.div`
+  padding: 16px;
+  background: #f9f9f9;
+  border-top: 1px solid #eee;
+  
+  .nested-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 `;

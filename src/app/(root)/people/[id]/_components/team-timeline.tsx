@@ -10,8 +10,8 @@ import {
 } from "@/components/timeline/timeline";
 
 const TeamCard = ({ target, teamLink, teamName }) => (
-  <Link href={teamLink || "#"}>
-    <div className="border-[#E5E5E5] hover:border-black border p-2 flex justify-between items-center rounded-md w-[80%]">
+  <Link href={teamLink || "#"} className="w-fit">
+    <div className="border-[#E5E5E5] hover:border-black border p-2 flex justify-between items-center rounded-md w-[22rem]">
       <div className="flex gap-2">
         <GetAvatar name={teamName || "Team"} size={40} />
         <div>
@@ -97,7 +97,7 @@ const ActionText = ({
       );
     case "moved-from-team":
       return (
-        <>
+        <div className="flex gap-1 flex-wrap">
           <span className="text-black">
             <Link href={userLink}>{userName || "-"}</Link>
           </span>
@@ -115,7 +115,7 @@ const ActionText = ({
           <span className="text-black">
             <Link href={actorLink}>{actorName || "-"} </Link>
           </span>
-        </>
+        </div>
       );
     case "remove-from-team":
       return (

@@ -1,14 +1,15 @@
 import { Table } from "@/components/wind/Table";
 import { User, UserResponse } from "@/server/userActions";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
-import { buttonVariants } from "@/components/buttons/Button";
 import { GetAvatar } from "@/components/get-avatar";
 import AllIntegrationsDisplay from "../../integrations/_components/installed/all-integration-display";
 import CreateUserDialog from "./add-user-form/create-user.dialog";
 import { RestoreUser } from "./restore-user";
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/buttons/Button";
+import { AltIntegration } from "@/app/(root)/integrations/_components/icons";
 
 export default function UserMain({
   data,
@@ -38,14 +39,9 @@ export default function UserMain({
             </div>
             {peopleText === "Active People" && (
               <CreateUserDialog>
-                <button
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-full",
-                  })}
-                >
+                <Button variant="primary" className="w-fit">
                   Add Member
-                </button>
+                </Button>
               </CreateUserDialog>
             )}
           </div>
@@ -95,8 +91,8 @@ export default function UserMain({
 
                             <div className="relative group">
                               <div className="font-gilroyMedium text-sm text-black truncate max-w-[150px]">
-                                {user?.first_name?.length! > 12
-                                  ? `${user?.first_name!.slice(0, 12)}...`
+                                {user?.first_name?.length! > 24
+                                  ? `${user?.first_name!.slice(0, 24)}...`
                                   : user?.first_name}
                               </div>
                               <div className="absolute left-0 mt-1 hidden w-max max-w-xs p-2 bg-white text-black text-xs rounded shadow-lg border group-hover:block">
@@ -109,7 +105,9 @@ export default function UserMain({
                       {
                         title: "Employee ID",
                         render: (record: User) => (
-                          <div>{record?.emp_id ?? "-"}</div>
+                          <div className="text-center">
+                            {record?.emp_id ?? "-"}
+                          </div>
                         ),
                       },
                       {
@@ -169,10 +167,10 @@ export default function UserMain({
                         render: (record: User) => {
                           if (peopleText === "Active People") {
                             const integrations = record?.integrations?.filter(
-                              (int) => int.image
+                              (p) => p.platform
                             );
 
-                            if (integrations?.length === 0) {
+                            if (integrations.length === 0) {
                               return <span className="text-gray-400">-</span>;
                             }
 
@@ -185,22 +183,31 @@ export default function UserMain({
                                 data={record}
                                 allIntegrations={integrations}
                               >
-                                <div className="flex items-center gap-2 -space-x-5">
-                                  {firstThree?.map((i, index) => (
-                                    <div
-                                      key={index}
-                                      className="flex justify-center items-center p-1.5 bg-white rounded-full border"
-                                    >
-                                      <img
-                                        src={i.image ?? ""}
-                                        width={16}
-                                        height={16}
-                                        className=" object-contain "
-                                        alt="Integration"
-                                      />
-                                    </div>
-                                  ))}
-
+                                {/* {JSON.stringify(firstThree)} */}
+                                <div className="flex items-center gap-0">
+                                  <div className="flex items-center gap-2 -space-x-5">
+                                    {firstThree.map((i, index) => (
+                                      <React.Fragment key={index}>
+                                        {i?.image ? (
+                                          <div className="flex justify-center items-center p-1.5 bg-white rounded-full border">
+                                            <img
+                                              src={i.image ?? ""}
+                                              width={16}
+                                              height={16}
+                                              className=" object-contain "
+                                              alt="Integration"
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1.5">
+                                            <AltIntegration
+                                              className={"size-4"}
+                                            />
+                                          </div>
+                                        )}
+                                      </React.Fragment>
+                                    ))}
+                                  </div>
                                   {extraCount > 0 && (
                                     <span className="text-sm text-gray-500 font-gilroySemiBold">
                                       +{extraCount}
@@ -278,13 +285,6 @@ export default function UserMain({
                       },
                     ]}
                   />
-                  {/* <div className="mt-2">
-                    <Pagination
-                      current_page={currentPage}
-                      total_pages={data?.total_pages!}
-                      onPageChange={handlePageChange}
-                    />
-                  </div> */}
                 </div>
               </Suspense>
             </div>

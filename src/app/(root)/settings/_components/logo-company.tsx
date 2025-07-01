@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState, useRef } from "react";
-import {updateOrg } from "@/server/orgActions";
+import { updateOrg } from "@/server/orgActions";
 import { Icons } from "@/components/icons";
 import NotFound from "@/app/not-found";
 import { toast } from "sonner";
@@ -106,7 +106,7 @@ export const LogoCompanyModal = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="rounded-2xl">
         <DialogHeader>
           <DialogTitle>New profile picture</DialogTitle>
           <DialogDescription>

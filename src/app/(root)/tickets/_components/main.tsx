@@ -13,37 +13,91 @@ import {
 
 import { ActionBar } from "@/components/action-bar/action-bar";
 import { ActionSearchBar } from "@/components/action-bar/action-search-bar";
-import { useQueryState } from "nuqs";
-import TicketsDataTable from "./tickets-data.table";
-import { getAllTickets } from "@/server/ticketActions";
-import { useDebounce } from "@/hooks/use-debounce";
 import { buttonVariants } from "@/components/buttons/Button";
+import { FilterOptions, MoreFilters } from "@/components/filters/more-filters";
+import { Pagination, PaginationSkeleton } from "@/components/pagination";
+import { filterTickets } from "@/server/newFilterActions";
+import {
+  FilterSelection,
+  FilterTicketsArgs,
+} from "@/server/types/newFilterTypes";
+import { useQueryState } from "nuqs";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import RaiseTicket from "./raise-ticket.dialog";
+import TicketsDataTable from "./tickets-data.table";
 
 function Main({ isAdmin = false }: { isAdmin: boolean }) {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "open",
   });
-  const [searchTerm, setSearchTerm] = useQueryState("searchQuery");
-  const actualSearchTerm = useDebounce(searchTerm, 300);
+  const [rawSearch, setRawSearch] = useQueryState("searchQuery", {
+    defaultValue: "",
+  });
+  const [page, setPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState(20);
+  const [filters, setFilters] = useState<FilterSelection>({});
+  const [cachedFilterOptions, setCachedFilterOptions] = useState<FilterOptions>(
+    {}
+  );
+
+  const searchTerm = useDeferredValue(rawSearch);
+
+  const tupleFilters = useMemo(
+    () =>
+      Object?.entries(filters).flatMap(([k, vals]) =>
+        vals.map((v) => [k, "Equals", v])
+      ),
+    [filters]
+  );
 
   const { data, status } = useQuery({
-    queryKey: ["fetch-all-tickets", activeTab, actualSearchTerm],
-    queryFn: async () => {
-      const query = {
-        searchQuery: actualSearchTerm ?? "",
-        status: activeTab,
-      };
-
-      return getAllTickets(query);
-    },
+    queryKey: [
+      "fetch-all-tickets",
+      {
+        tab: activeTab,
+        search: searchTerm,
+        page,
+        pageLimit,
+        filters: tupleFilters,
+      },
+    ],
+    queryFn: () =>
+      filterTickets({
+        type: activeTab as FilterTicketsArgs["type"],
+        searchQuery: searchTerm,
+        filters: tupleFilters,
+        page,
+        pageLimit,
+      }),
+    refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (
+      status === "success" &&
+      data?.filterOptions &&
+      Object.keys(cachedFilterOptions).length === 0
+    ) {
+      setCachedFilterOptions(data.filterOptions);
+    }
+  }, [status, data, cachedFilterOptions]);
+
+  const handleFilterChange = (newFilter: FilterSelection) => {
+    setPage(1); // reset to first page
+    setFilters(newFilter);
+  };
 
   return (
     <section className="w-full h-fit relative overflow-hidden">
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={(tab) => {
+          setRawSearch("");
+          setPage(1);
+          setPageLimit(20);
+          setFilters({});
+          setActiveTab(tab);
+        }}
         defaultValue="open"
         className="w-full"
       >
@@ -51,7 +105,13 @@ function Main({ isAdmin = false }: { isAdmin: boolean }) {
           <div className="flex gap-2">
             <Select
               value={activeTab}
-              onValueChange={setActiveTab}
+              onValueChange={(tab) => {
+                setRawSearch("");
+                setPage(1);
+                setPageLimit(20);
+                setFilters({});
+                setActiveTab(tab);
+              }}
               defaultValue="open"
             >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] ">
@@ -61,18 +121,27 @@ function Main({ isAdmin = false }: { isAdmin: boolean }) {
                 <SelectItem value="open" className="w-full py-2.5 rounded-lg">
                   Open Tickets
                 </SelectItem>
-                <SelectItem value="close" className="w-full py-2.5 rounded-lg">
+                <SelectItem value="closed" className="w-full py-2.5 rounded-lg">
                   Closed Tickets
                 </SelectItem>
               </SelectContent>
             </Select>
+            <MoreFilters
+              filterOptions={cachedFilterOptions}
+              loading={status === "pending"}
+              key={activeTab}
+              onFilterChange={handleFilterChange}
+            />
           </div>
           <div className="flex gap-2 items-center">
             <div className="flex gap-2">
               <ActionSearchBar
                 placeholder="Search Tickets..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={rawSearch}
+                onChange={(e) => {
+                  setRawSearch(e.target.value);
+                  setPage(1);
+                }}
               />
             </div>
             <RaiseTicket>
@@ -96,7 +165,7 @@ function Main({ isAdmin = false }: { isAdmin: boolean }) {
             countIssues={data}
           />
         </TabsContent>
-        <TabsContent value="close">
+        <TabsContent value="closed">
           <TicketsDataTable
             isAdmin={isAdmin}
             data={data}
@@ -106,6 +175,25 @@ function Main({ isAdmin = false }: { isAdmin: boolean }) {
           />
         </TabsContent>
       </Tabs>
+      {status === "pending" ? (
+        <>
+          <PaginationSkeleton className="mt-3" />
+        </>
+      ) : (
+        <Pagination
+          page={page}
+          pageLimit={pageLimit}
+          total={data?.total || 0}
+          totalPages={data?.total_pages || 1}
+          items={data?.tickets || []}
+          onPageChange={setPage}
+          onPageLimitChange={(l) => {
+            setPageLimit(l);
+            // setPage(1);
+          }}
+          className="mt-3"
+        />
+      )}
     </section>
   );
 }

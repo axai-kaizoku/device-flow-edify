@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return redirect("/integrations/discover");
+  return redirect("integrations/discover");
 }

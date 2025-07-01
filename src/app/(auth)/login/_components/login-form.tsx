@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Button,
-  buttonVariants,
-  LoadingButton,
-} from "@/components/buttons/Button";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -138,7 +134,7 @@ export default function LoginForm() {
               variant="primary"
               className="w-full rounded-md font-gilroyMedium"
             >
-              Submit
+              Login
             </LoadingButton>
             <Button
               type="button"
@@ -150,10 +146,6 @@ export default function LoginForm() {
                 router.push("/");
                 router.refresh();
               }}
-              // className={buttonVariants({
-              //   variant: "outline",
-              //   // className: "w-full h-10",
-              // })}
               variant="outlineTwo"
               className="h-10 w-full rounded-md"
             >

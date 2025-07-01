@@ -14,6 +14,7 @@ import {
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Attachment } from "@/app/(root)/tickets/_components/[id]/chat-interface/chat-interface";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -57,9 +58,12 @@ export function generateAvatarFromName(name: string) {
 }
 
 export function formatNumber(n: number): string {
-  if (n >= 100000) {
+  if (n >= 100000 && n < 10000000) {
     const val = (n / 100000).toFixed(2);
     return `${parseFloat(val)}L`;
+  } else if (n >= 10000000) {
+    const val = (n / 10000000).toFixed(2);
+    return `${parseFloat(val)}Cr`;
   }
 
   // Format with Indian commas and no decimal
@@ -132,23 +136,26 @@ export function isImageAttachment(
 export async function downloadAttachmentsAsZip(
   attachments: (string | Attachment)[]
 ) {
-  const zip = new JSZip();
-  const folder = zip.folder("attachments");
+  try {
+    const zip = new JSZip();
+    const folder = zip.folder("attachments");
+    const promises = attachments.map(async (att, index) => {
+      const url = typeof att === "string" ? att : att.url!;
+      const name =
+        typeof att === "string"
+          ? url.split("/").pop()!
+          : att.name || `file-${index}`;
+      const response = await fetch(url);
+      const blob = await response.blob();
+      folder?.file(name, blob);
+    });
 
-  const promises = attachments.map(async (att, index) => {
-    const url = typeof att === "string" ? att : att.url!;
-    const name =
-      typeof att === "string"
-        ? url.split("/").pop()!
-        : att.name || `file-${index}`;
-    const response = await fetch(url);
-    const blob = await response.blob();
-    folder?.file(name, blob);
-  });
-
-  await Promise.all(promises);
-  const content = await zip.generateAsync({ type: "blob" });
-  saveAs(content, "attachments.zip");
+    await Promise.all(promises);
+    const content = await zip.generateAsync({ type: "blob" });
+    saveAs(content, "attachments.zip");
+  } catch (error) {
+    toast.error("Failed to download. Please try again later.");
+  }
 }
 
 export function isToday(date: Date): boolean {

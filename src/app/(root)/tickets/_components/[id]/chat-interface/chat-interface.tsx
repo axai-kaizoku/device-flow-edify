@@ -136,6 +136,7 @@ export default function ChatInterface({ data }: { data: TicketData }) {
     setMessages(allMessages);
     setLoading(false);
   }, [data, chatData]);
+
   const hasSystemComment = data?.commentsByDate
     ?.flatMap((group) =>
       group.messages.map((raw) => ({
@@ -276,12 +277,12 @@ export default function ChatInterface({ data }: { data: TicketData }) {
         ? await messageMutation.mutateAsync({
             payload: {
               dialogue: { message: apiMessage, attachments: uploadedUrls },
-              ticketId: data._id,
+              ticketId: data?._id,
             },
           })
         : !data?.reOpenedAt && // Then send to AI and get response
           (await aiMutation.mutateAsync({
-            ticketId: data._id,
+            ticketId: data?._id,
             prompt: content.replace(/<[^>]+>/g, ""),
           }));
     } catch (error) {
@@ -335,7 +336,7 @@ export default function ChatInterface({ data }: { data: TicketData }) {
             message: ["Requesting connection to human agent"],
             attachments: [],
           },
-          ticketId: data._id,
+          ticketId: data?._id,
         },
       });
 
@@ -372,7 +373,7 @@ export default function ChatInterface({ data }: { data: TicketData }) {
               isConnectedToHuman={isConnectedToHuman}
               chatLength={chatLength}
               mutation={aiMutation}
-              ticketId={data._id}
+              ticketId={data?._id}
               loading={loading || messageMutation.isPending || isAiResponding}
               onConnectToHuman={handleConnectToHuman}
             />

@@ -433,6 +433,7 @@ export const UserForm = ({
                 bulkApi={bulkUploadUsers}
                 closeBtn={() => closeBtn(false)}
                 requiredKeys={bulkUploadKeys}
+                type="user"
                 sampleData={{
                   first_name: "XXXX YYYY",
                   designation: "Engineer",

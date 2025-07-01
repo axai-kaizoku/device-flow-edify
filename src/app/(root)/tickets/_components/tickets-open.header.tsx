@@ -1,17 +1,24 @@
 import { Badge } from "@/components/ui/badge";
+import { FilterTicketsResponse } from "@/server/types/newFilterTypes";
 
-function TicketsOpenHeader({ countIssues: data }: { countIssues: any }) {
+function TicketsOpenHeader({
+  countIssues: data,
+}: {
+  countIssues: FilterTicketsResponse;
+}) {
   const criticalCount =
-    data?.filter((item) => item.severity === "Critical" && !item?.closedAt)
-      .length || 0;
+    data?.tickets?.filter(
+      (item) => item.severity === "Critical" && !item?.closedAt
+    ).length || 0;
 
   const mediumCount =
-    data?.filter((item) => item.severity === "Medium" && !item?.closedAt)
-      .length || 0;
+    data?.tickets?.filter(
+      (item) => item.severity === "Medium" && !item?.closedAt
+    ).length || 0;
 
   const lowCount =
-    data?.filter((item) => item.severity === "Low" && !item?.closedAt).length ||
-    0;
+    data?.tickets?.filter((item) => item.severity === "Low" && !item?.closedAt)
+      .length || 0;
 
   return (
     <div className="flex gap-3">

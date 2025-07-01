@@ -32,10 +32,6 @@ export default function Page() {
         router.push("/");
       }
     }
-
-    // if (sessionStorage.getItem("employee-count") === "2") {
-    //   router.push("/");
-    // }
   }, [router]);
 
   useEffect(() => {

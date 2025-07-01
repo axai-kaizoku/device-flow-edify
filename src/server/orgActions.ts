@@ -35,6 +35,9 @@ type Joinee = {
 export type Org = {
   _id?: string;
   name?: string;
+  gstNo?: string;
+  org_address?: string;
+  phone?: string;
   logo?: string;
   email?: string;
   legal_entity_name?: string;
@@ -45,48 +48,46 @@ export type Org = {
   total_purchased?: number;
 };
 
-export const getGSuiteAuthUrl = 
-  async ({
-    bulkUpload,
+export const getGSuiteAuthUrl = async ({
+  bulkUpload,
+  price,
+  redirectUri,
+  onboarding,
+}: {
+  bulkUpload: boolean;
+  price: {};
+  redirectUri: string;
+  onboarding?: boolean;
+}) => {
+  const sess = await getSession();
+  const body = {
+    token: sess?.user?.user?.token,
+    bulkUpload: bulkUpload,
     price,
-    redirectUri,
-    onboarding,
-  }: {
-    bulkUpload: boolean;
-    price: {};
-    redirectUri: string;
-    onboarding?: boolean;
-  }) => {
-    const sess = await getSession();
-    const body = {
-      token: sess?.user?.user?.token,
-      bulkUpload: bulkUpload,
-      price,
-      redirectUri: redirectUri,
-      onboarding: onboarding
-    };
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
-      body
-    )}`;
-    return url;
+    redirectUri: redirectUri,
+    onboarding: onboarding,
   };
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
+    body
+  )}`;
+  return url;
+};
 
-export const getGSuiteAuthUrlLogin = 
-  async ({
-    redirectUri,
-  }: {
-    redirectUri: string;
-  }) => {
-    const sess = await getSession();
-    const body = {
-      token: sess?.user?.user?.token,
-      redirectUri: redirectUri,
-    };
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
-      body
-    )}`;
-    return url;
+export const getGSuiteAuthUrlLogin = async ({
+  redirectUri,
+}: {
+  redirectUri: string;
+}) => {
+  const sess = await getSession();
+  const body = {
+    token: sess?.user?.user?.token,
+    redirectUri: redirectUri,
   };
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=412478416030-gf7v408b3i0nmh8hrtl1850g1ojk02u9.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgcp-api.edify.club%2Fedifybackend%2Fv1%2Fintegration%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fadmin.directory.user.readonly&access_type=offline&prompt=consent&state=${JSON.stringify(
+    body
+  )}`;
+  return url;
+};
 
 export const getCurrentOrg = async <Org>() => {
   try {
@@ -107,10 +108,18 @@ export const getCurrentOrg = async <Org>() => {
 export async function updateOrg({
   id,
   title,
+  name,
   description,
   logo,
+  gstNo,
+
+  legal_entity_name,
 }: {
   id?: string;
+  phone?: string;
+  gstNo?: string;
+  name?: string;
+  legal_entity_name?: string;
   title?: string;
   description?: string;
   logo?: string | null;
@@ -123,6 +132,9 @@ export async function updateOrg({
         title,
         description,
         logo,
+        gstNo,
+        name,
+        legal_entity_name,
       }
     );
     return res?.data;

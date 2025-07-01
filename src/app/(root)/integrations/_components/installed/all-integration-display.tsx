@@ -17,7 +17,7 @@ import { ArrowRight01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { IntRight } from "../icons";
+import { AltIntegration, IntRight } from "../icons";
 
 export default function AllIntegrationsDisplay({
   children,
@@ -39,7 +39,7 @@ export default function AllIntegrationsDisplay({
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full">
+        <DialogContent className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem]  w-full max-h-[30rem] overflow-y-auto">
           <div className="flex justify-between items-center pb-5">
             <DialogTitle className="text-lg font-gilroySemiBold">
               <div className="flex gap-2 items-center">
@@ -157,20 +157,26 @@ export default function AllIntegrationsDisplay({
               </Popover>
             </div>
           </div>
-          <div className="space-y-4 -mt-5">
+          <div className="space-y-4 h-full overflow-y-auto hide-scrollbar ">
             {isIntegrationFilter ? (
               <>
                 {data?.integrations?.map((integration, index) => (
                   <>
                     <div
                       key={index}
-                      className="flex items-center  justify-center rounded-lg border gap-4 border-b p-4 "
+                      className="flex rounded-lg border gap-4 border-b p-4 "
                     >
-                      <img
-                        src={integration?.image}
-                        alt={integration?.platform}
-                        className="size-12  object-contain "
-                      />
+                      {integration?.image ? (
+                        <img
+                          src={integration.image}
+                          alt={integration?.platform}
+                          className="size-12 object-contain"
+                        />
+                      ) : (
+                        <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1">
+                          <AltIntegration className={"size-12"} />
+                        </div>
+                      )}
                       <div className="text-left">
                         <h4 className="font-gilroySemiBold">
                           {integration?.platform}
@@ -197,20 +203,32 @@ export default function AllIntegrationsDisplay({
                   <>
                     <div
                       key={index}
-                      className="flex items-center  justify-center rounded-lg border gap-4 border-b p-4 "
+                      className="flex justify-between items-center rounded-lg border gap-4 border-b p-4 "
                     >
-                      <img
-                        src={integration?.image}
-                        alt={integration?.platform}
-                        className="size-12  object-contain "
-                      />
-                      <div className="text-left">
-                        <h4 className="font-gilroySemiBold">
-                          {integration?.platform}
-                        </h4>
-                        <p className="text-sm text-gray-500 font-gilroyMedium">
-                          {integration?.description?.slice(0, 60)}...
-                        </p>
+                      <div
+                        className="flex items-center gap-3
+                      "
+                      >
+                        {" "}
+                        {integration?.image ? (
+                          <img
+                            src={integration.image}
+                            alt={integration?.platform}
+                            className="size-12 object-contain"
+                          />
+                        ) : (
+                          <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1">
+                            <AltIntegration className={"size-12"} />
+                          </div>
+                        )}
+                        <div className="text-left">
+                          <h4 className="font-gilroySemiBold">
+                            {integration?.platform}
+                          </h4>
+                          <p className="text-sm text-gray-500 font-gilroyMedium">
+                            {integration?.description?.slice(0, 60)}...
+                          </p>
+                        </div>
                       </div>
                       <Link
                         href={`/integrations/installed/${integration?.platform}`}

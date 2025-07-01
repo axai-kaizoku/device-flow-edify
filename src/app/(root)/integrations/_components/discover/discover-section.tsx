@@ -4,6 +4,10 @@ import { CategoriesFilter } from "./categories-filter";
 import { DiscoverSectionSkeleton } from "./discover-skelton";
 import { IntegrationCompaniesSecx } from "./integration-companies-secx";
 import { StoreBannerCardBig } from "./store-banner-card-big";
+import { RequestIntegrationCard } from "./req-integration-card";
+import RequestIntegration from "../request-integration";
+import { Button } from "@/components/buttons/Button";
+import CustomIntegration from "../custom-integration";
 
 interface DiscoverSectionProps {
   data: AllIntegrationAvailable[] | undefined;
@@ -50,11 +54,14 @@ export const DiscoverSection = ({ data, status }: DiscoverSectionProps) => {
           />
           {selectedCategory?.title === "All Integrations" ? (
             <>
-              <div className="flex justify-between items-center w-full h-[30vh]">
+              <div className="flex justify-between gap-5 items-center w-full h-[30vh]">
                 <div className="h-full w-full">
                   <StoreBannerCardBig />
                 </div>
-                {/* <RequestIntegrationCard /> */}
+                <RequestIntegration>
+                  {" "}
+                  <RequestIntegrationCard />
+                </RequestIntegration>
               </div>
 
               <IntegrationCompaniesSecx

@@ -164,7 +164,7 @@ export const ConnectIntegration = ({
 
     if (plan === "Custom Plan") {
       setIsCustom(true);
-      setCustomPrice(""); // or keep previous customPrice if you want
+      setCustomPrice("");
     } else {
       setIsCustom(false);
       const selected = integrationData.price.find((p) => p.plan === plan);
@@ -173,7 +173,13 @@ export const ConnectIntegration = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+        setFormData({});
+      }}
+    >
       <DialogContent className="rounded-2xl bg-white shadow-lg max-w-md p-6 text-center">
         <div className="flex justify-center">
           <div className="flex gap-6 justify-center items-center">
@@ -182,7 +188,7 @@ export const ConnectIntegration = ({
               className="size-10 object-cover"
               alt="Edify logo"
             />
-            
+
             <div className="transform rotate-180 text-gray-500">
               <HugeiconsIcon icon={ArrowLeftRightIcon} />
             </div>

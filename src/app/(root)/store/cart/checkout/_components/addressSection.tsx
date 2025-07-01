@@ -1,6 +1,6 @@
 "use client";
-import CreateAddress from "@/app/(root)/settings/_components/create-address";
-import EditAddress from "@/app/(root)/settings/_components/edit-address";
+import CreateAddress from "../../checkout/_components/create-address";
+import EditAddress from "../../checkout/_components/edit-address";
 import { toast } from "sonner";
 import { Address } from "@/server/addressActions";
 import { updateCartAddress } from "@/server/cartActions";

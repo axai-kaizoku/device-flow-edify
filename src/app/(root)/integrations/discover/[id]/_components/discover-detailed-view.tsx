@@ -17,6 +17,7 @@ import MappingDialogOne from "../../../_components/installed/mapping-dialog-one"
 import MappingDialogTwo from "./mapping-dialog-two";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, LinkSquare01Icon } from "@hugeicons/core-free-icons";
+import { toast } from "sonner";
 
 function DiscoverDetailedView({ id }: { id: string }) {
   const router = useRouter();
@@ -98,6 +99,9 @@ function DiscoverDetailedView({ id }: { id: string }) {
       setNextSteps(1);
       setShowConnectModal(false);
     },
+    onError: () => {
+      toast.error("Failed to integrate !");
+    },
   });
 
   const gSuiteMutation = useMutation({
@@ -151,28 +155,33 @@ function DiscoverDetailedView({ id }: { id: string }) {
         <DiscoverDetailedViewSkeleton />
       ) : (
         <>
-          {/* <GsuiteDialog open={gsuite} setOpen={setGsuite} /> */}
           <ConnectIntegration
             integrationData={data}
             mutation={mutation}
             open={showConnectModal}
             setOpen={setShowConnectModal}
             gSuiteMutation={gSuiteMutation}
-            loading={gSuiteMutation.status === "pending"}
+            loading={
+              data?.platform.toLowerCase().includes("suite")
+                ? gSuiteMutation.status === "pending"
+                : mutation.status === "pending"
+            }
             // open={nextSteps === 1}
           />
           <MappingDialogOne
             open={nextSteps === 1}
-            // setOpen={setOpenOne}
-            response={gSuiteMutation?.data ?? mutation.data}
+            response={
+              gSuiteMutation?.data ? gSuiteMutation?.data : mutation?.data
+            }
             platform={data?.platform}
             setNextSteps={setNextSteps}
           />
 
           <MappingDialogTwo
             open={nextSteps === 2}
-            // setOpen={setOpenTwo}
-            response={gSuiteMutation?.data ?? mutation.data}
+            response={
+              gSuiteMutation?.data ? gSuiteMutation?.data : mutation?.data
+            }
             platform={data?.platform}
             setNextSteps={setNextSteps}
           />
@@ -182,7 +191,10 @@ function DiscoverDetailedView({ id }: { id: string }) {
               className="text-[#7f7f7f] cursor-pointer hover:underline pl-5 flex items-center gap-2 text-base font-gilroyMedium"
             >
               <div className="rounded-full bg-gray-100 p-1 flex justify-center items-center">
-                <HugeiconsIcon icon={ArrowLeft01Icon} className="text-black size-5"/>
+                <HugeiconsIcon
+                  icon={ArrowLeft01Icon}
+                  className="text-black size-5"
+                />
               </div>
               Discover
             </h1>
@@ -260,7 +272,7 @@ function DiscoverDetailedView({ id }: { id: string }) {
                   </Link>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-base font-gilroySemiBold">Category</h1>\
+                  <h1 className="text-base font-gilroySemiBold">Category</h1>
                   <p className="text-base text-[#8A8F98] font-gilroyMedium">
                     {[
                       { label: "Cloud", key: "isCloud" },
@@ -357,7 +369,10 @@ function DiscoverDetailedView({ id }: { id: string }) {
                         className="text-[#007aff] hover:underline flex items-center  gap-1"
                       >
                         Click here
-                        <HugeiconsIcon icon={LinkSquare01Icon} className="text-[#007aff] size-5"/>
+                        <HugeiconsIcon
+                          icon={LinkSquare01Icon}
+                          className="text-[#007aff] size-5"
+                        />
                       </Link>
                     </div>
                   )}

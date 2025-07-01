@@ -51,30 +51,18 @@ export const TeamCard = ({
   buttons,
   team_code,
 }: TeamCardProps) => {
-  const defaultImage =
-    "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
-
   const renderMembers = () => {
     const members = active_employees || [];
     const maxMembersToShow = 3;
 
-    // Render up to 3 members, including placeholders for missing ones
     return Array.from({ length: maxMembersToShow }, (_, index) => {
       const member = members[index];
       if (member) {
-        // Render a member with an image (or default fallback)
-        return (
-          <MemberIcon
-            key={member?._id || index}
-            src={member?.image || defaultImage}
-            isPlaceholder={!member?.image}
-          />
-        );
+        return <GetAvatar name={member.first_name} size={28} />;
       } else {
-        // Render a placeholder if no member exists for this slot
         return <MemberIcon key={`placeholder-${index}`} isPlaceholder={true} />;
       }
-    });
+    }).reverse();
   };
 
   return (
@@ -124,7 +112,7 @@ export const TeamCard = ({
               ? "No Members Yet"
               : `${employees_count} Active Members`}
           </h1>
-          <div className="flex -space-x-5">{renderMembers()}</div>
+          <div className="flex -space-x-5 items-center">{renderMembers()}</div>
         </div>
       </Link>
 

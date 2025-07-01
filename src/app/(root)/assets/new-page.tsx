@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreFilters } from "@/components/filters/more-filters";
+import { FilterOptions, MoreFilters } from "@/components/filters/more-filters";
 import { Pagination, PaginationSkeleton } from "@/components/pagination";
 
 import { ActionBar } from "@/components/action-bar/action-bar";
@@ -21,6 +21,16 @@ import type {
   FilterSelection,
 } from "@/server/types/newFilterTypes";
 
+import { Button } from "@/components/buttons/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown";
+import { ArrowUpDownIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useQueryState } from "nuqs";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
@@ -28,6 +38,7 @@ import { toast } from "sonner";
 import { DeleteModal } from "../people/_components/deleteUserModal";
 import CreateDevice from "./_components/addDevices/_components/create-device";
 import AssignedAssets from "./_components/assigned-assets";
+import BulkAssignAssets from "./_components/bulk-assign-dialog";
 
 function NewPage() {
   const queryClient = useQueryClient();
@@ -40,6 +51,10 @@ function NewPage() {
   const [page, setPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(20);
   const [filters, setFilters] = useState<FilterSelection>({});
+  const [cachedFilterOptions, setCachedFilterOptions] = useState<FilterOptions>(
+    {}
+  );
+  const [sortBy, setSortBy] = useState<"Ascending" | "Descending">("Ascending");
 
   const searchTerm = useDeferredValue(rawSearch);
 
@@ -60,6 +75,7 @@ function NewPage() {
         page,
         pageLimit,
         filters: tupleFilters,
+        sortOption: sortBy,
       },
     ],
     queryFn: () =>
@@ -69,16 +85,21 @@ function NewPage() {
         filters: tupleFilters,
         page,
         pageLimit,
+        sortOption: sortBy,
       }),
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    setRawSearch("");
-    setPage(1);
-    setPageLimit(20);
-    setFilters({});
-  }, [activeTab]);
+    if (
+      status === "success" &&
+      data?.filterOptions &&
+      Object.keys(cachedFilterOptions).length === 0
+    ) {
+      console.log(data?.filterOptions);
+      setCachedFilterOptions(data.filterOptions);
+    }
+  }, [status, data, cachedFilterOptions]);
 
   const handleFilterChange = (newFilter: FilterSelection) => {
     setPage(1); // reset to first page
@@ -152,13 +173,22 @@ function NewPage() {
     setSelectedIds(selected);
   };
 
+  const onSortChange = (direction: "Ascending" | "Descending") => {
+    setPage(1);
+    setSortBy(direction);
+  };
+
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs
         value={activeTab}
         onValueChange={(tab) => {
-          setActiveTab(tab);
           setSelectedIds([]);
+          setRawSearch("");
+          setPage(1);
+          setPageLimit(20);
+          setFilters({});
+          setActiveTab(tab);
         }}
         defaultValue="assigned-assets"
         className="w-full"
@@ -167,7 +197,14 @@ function NewPage() {
           <div className="flex gap-2 justify-center items-center">
             <Select
               value={activeTab}
-              onValueChange={setActiveTab}
+              onValueChange={(tab) => {
+                setSelectedIds([]);
+                setRawSearch("");
+                setPage(1);
+                setPageLimit(20);
+                setFilters({});
+                setActiveTab(tab);
+              }}
               defaultValue="assigned-assets"
             >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-md">
@@ -196,12 +233,44 @@ function NewPage() {
               </SelectContent>
             </Select>
             <MoreFilters
-              filterOptions={data?.filterOptions}
+              filterOptions={cachedFilterOptions}
               loading={status === "pending"}
               key={activeTab}
               // mutationFn={filterAssets}
               onFilterChange={handleFilterChange}
             />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outlineTwo"
+                  size="sm"
+                  className="font-gilroyMedium text-sm py-[19px]"
+                >
+                  <HugeiconsIcon
+                    icon={ArrowUpDownIcon}
+                    className="size-4"
+                  />
+                  Sort By
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-[200px] font-gilroyMedium"
+              >
+                <DropdownMenuRadioGroup
+                  value={sortBy}
+                  onValueChange={onSortChange}
+                >
+                  <DropdownMenuRadioItem value="Ascending">
+                    Ascending
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Descending">
+                    Descending
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="flex gap-2 items-center justify-center">
@@ -214,16 +283,29 @@ function NewPage() {
               }}
             />
             {activeTab !== "inactive-assets" && (
-              <CreateDevice>
-                <div
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-full",
-                  })}
-                >
-                  Add Device
-                </div>
-              </CreateDevice>
+              <>
+                <CreateDevice>
+                  <div
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
+                  >
+                    Add Device
+                  </div>
+                </CreateDevice>
+
+                <BulkAssignAssets>
+                  <div
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
+                  >
+                    Bulk Assign
+                  </div>
+                </BulkAssignAssets>
+              </>
             )}
 
             {selectedIds.length > 0 && (

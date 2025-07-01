@@ -6,7 +6,6 @@ import {
   ArrowDown01Icon,
   ChartRelationshipIcon,
   DashboardSquare01Icon,
-  File02Icon,
   Home12Icon,
   SearchVisualIcon,
   SmartPhone01Icon,
@@ -14,6 +13,7 @@ import {
   Ticket02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  WorkflowSquare06Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
@@ -25,14 +25,14 @@ import { FeedbackDialog } from "./feedback.dialog";
 export default function SidebarNavigation({ session }: Props) {
   const [storeExpanded, setStoreExpanded] = useState(false);
   const [integrationsExpanded, setIntegrationsExpanded] = useState(false);
+  const [diagonisticExpanded, setDiagonisticExpanded] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (pathname.includes("integrations")) {
-      setIntegrationsExpanded(true);
-    }
-  }, []);
+    setIntegrationsExpanded(pathname.includes("integrations"));
+    setDiagonisticExpanded(pathname.includes("diagnostic"));
+  }, [pathname]);
 
   const links = [
     {
@@ -56,6 +56,7 @@ export default function SidebarNavigation({ session }: Props) {
       label: "Assets",
       icon: <HugeiconsIcon icon={SmartPhone01Icon} className="mr-3 size-5" />,
     },
+
     {
       href: "/tickets",
       label: "Tickets",
@@ -71,6 +72,13 @@ export default function SidebarNavigation({ session }: Props) {
       label: "Integrations",
       icon: (
         <HugeiconsIcon icon={ChartRelationshipIcon} className="mr-3 size-5" />
+      ),
+    },
+    {
+      href: "/workflows",
+      label: "Workflows",
+      icon: (
+        <HugeiconsIcon icon={WorkflowSquare06Icon} className="mr-3 size-5" />
       ),
     },
   ];
@@ -211,21 +219,32 @@ export default function SidebarNavigation({ session }: Props) {
                     // const isActive = pathname === link.href;
                     // const isActive = pathname.startsWith(link.href);
                     const isIntegrationsParent = link.href === "/integrations";
+                    const isDiagonisticParent = link.href === "/diagnostic";
                     const isChildOfIntegrations =
                       pathname.startsWith("/integrations/") &&
                       !pathname.endsWith("/integrations");
 
                     const isActive =
-                      !isIntegrationsParent && pathname.startsWith(link.href);
+                      (!isIntegrationsParent || !isDiagonisticParent) &&
+                      pathname.startsWith(link.href);
                     return (
                       <div key={index}>
                         <Link
                           href={link.href}
                           onMouseEnter={() => router.prefetch(link.href)}
                           onClick={
-                            link.href === "/integrations"
-                              ? () =>
-                                  setIntegrationsExpanded(!integrationsExpanded) // Add state for integrations
+                            link.href === "/integrations" ||
+                            link.href === "/integrations/discover"
+                              ? () => {
+                                  setIntegrationsExpanded(true);
+                                  setDiagonisticExpanded(false);
+                                }
+                              : link.href === "/diagnostic" ||
+                                link.href === "/diagnostic/all-reports"
+                              ? () => {
+                                  setDiagonisticExpanded(true);
+                                  setIntegrationsExpanded(false);
+                                }
                               : undefined
                           }
                           className={cn(
@@ -237,7 +256,7 @@ export default function SidebarNavigation({ session }: Props) {
                         >
                           {link.icon}
                           {link.label}
-                          {(link.label === "Tickets" ||
+                          {/* {(link.label === "Tickets" ||
                             link.label === "Assets") && (
                             <div className="bg-[#ECFDF3] flex justify-center items-center ml-2 py-1 px-2 rounded-md">
                               <div className="inset-0 flex items-center justify-center">
@@ -246,7 +265,7 @@ export default function SidebarNavigation({ session }: Props) {
                                 </span>
                               </div>
                             </div>
-                          )}
+                          )}  */}
 
                           {isIntegrationsParent && (
                             <HugeiconsIcon
@@ -257,8 +276,54 @@ export default function SidebarNavigation({ session }: Props) {
                               )}
                             />
                           )}
+
+                          {isDiagonisticParent && (
+                            <HugeiconsIcon
+                              icon={ArrowDown01Icon}
+                              className={cn(
+                                "ml-auto transition-transform duration-150 size-4",
+                                diagonisticExpanded ? "rotate-0" : "-rotate-90"
+                              )}
+                            />
+                          )}
                         </Link>
 
+                        {/* ---Diagonistic--- */}
+
+                        {isDiagonisticParent && diagonisticExpanded && (
+                          <>
+                            <Link
+                              onMouseEnter={() =>
+                                router.prefetch("/diagnostic/all-reports")
+                              }
+                              href="/diagnostic/all-reports"
+                              className={cn(
+                                "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
+                                pathname.includes("all-reports")
+                                  ? "bg-gray-100 hover:bg-gray-100"
+                                  : "hover:bg-gray-50"
+                              )}
+                            >
+                              All Reports
+                            </Link>
+                            <Link
+                              onMouseEnter={() =>
+                                router.prefetch("/diagnostic/my-reports")
+                              }
+                              href="/diagnostic/my-reports"
+                              className={cn(
+                                "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
+                                pathname.includes("my-reports")
+                                  ? "bg-gray-100 hover:bg-gray-100"
+                                  : "hover:bg-gray-50"
+                              )}
+                            >
+                              My Reports
+                            </Link>
+                          </>
+                        )}
+
+                        {/* Integrations */}
                         {isIntegrationsParent && integrationsExpanded && (
                           <>
                             <Link
@@ -288,6 +353,20 @@ export default function SidebarNavigation({ session }: Props) {
                               )}
                             >
                               Installed
+                            </Link>
+                            <Link
+                              onMouseEnter={() =>
+                                router.prefetch("/integrations/invoices")
+                              }
+                              href="/integrations/invoices"
+                              className={cn(
+                                "flex items-center pl-11 py-2 my-1 text-sm font-gilroyMedium rounded-md text-gray-900",
+                                pathname.includes("invoices")
+                                  ? "bg-gray-100 hover:bg-gray-100"
+                                  : "hover:bg-gray-50"
+                              )}
+                            >
+                              Invoices
                             </Link>
                           </>
                         )}

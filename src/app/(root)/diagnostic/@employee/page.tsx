@@ -47,7 +47,7 @@ export default function Page() {
   const downloadLinks = [
     {
       title: "Windows",
-      href: "https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.0/Check.Mate.Setup.5.0.0.exe",
+      href: "https://github.com/Harsh-winuall/QC-Release/releases/download/Windows/Check.Mate.Setup.5.0.0.exe",
     },
     {
       title: "Apple M Series",

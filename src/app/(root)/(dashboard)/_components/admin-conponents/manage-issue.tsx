@@ -31,19 +31,19 @@ export function ManageIssue({
           </div>
         </div>
         <div className="self-stretch pr-[0.8px] mt-3 flex flex-col gap-5">
-          {(dashboardData?.issueData?.length || 0) > 0 ? (
-            dashboardData?.issueData?.slice(0, 3).map((response, index) => {
-              const date = new Date(response?.createdAt);
+          {(dashboardData?.ticketData?.length || 0) > 0 ? (
+            dashboardData?.ticketData?.slice(0, 3).map((response, index) => {
+              const date = new Date(response?.openedOn);
               const formattedDate = date.toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
               });
               return (
-                <div className="w-full flex flex-col" key={`issue-${index}`}>
+                <div className="w-full flex flex-col cursor-pointer" key={`issue-${index}`} onClick={() => router.push(`/tickets/${response?._id}`)}>
                   <div className="flex justify-between">
                     <div className="font-gilroySemiBold text-base text-[#092C4C]">
-                      {response?.title}
+                      {response?.category}
                     </div>
 
                     {/* <span className="text-xs font-gilroyMedium cursor-pointer px-3 py-2 border border-[#E5E5E5] rounded-[6px]" onClick={() => router.push(`/tickets/${response._id}`)}>
@@ -53,7 +53,7 @@ export function ManageIssue({
                   </div>
 
                   <div className="text-[#7E92A2] text-sm font-gilroyRegular -mt-1">
-                    {formattedDate}, {response?.issueId}
+                    {formattedDate}, {response?.code}
                   </div>
                 </div>
               );

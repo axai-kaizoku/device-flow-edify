@@ -33,7 +33,7 @@ export const IntegrationCompanyCard = ({
               <Link
                 href={`/integrations/discover/${company._id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="hover:underline truncate w-fit"
+                className="hover:underline truncate w-fit max-w-32"
               >
                 {(() => {
                   const website = company?.website.split("//")[1];

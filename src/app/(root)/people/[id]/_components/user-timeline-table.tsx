@@ -68,7 +68,7 @@ function UserTimelineTable({ data }: { data: any }) {
                     <TimelineLine done />
                     <TimelineContent className="space-y-3">
                       <Link href={issueLink}>
-                        <div className="border hover:border-black border-gray-200 w-[18rem]  rounded-md p-2 space-y-1">
+                        <div className="border hover:border-black border-gray-200 w-[22rem]  rounded-md p-2 space-y-1">
                           <h1 className="text-sm font-gilroyMedium text-black">
                             {target?.issueTitle || "-"}
                           </h1>
@@ -114,7 +114,7 @@ function UserTimelineTable({ data }: { data: any }) {
                     <TimelineLine done />
                     <TimelineContent className="space-y-3">
                       <Link href={issueLink}>
-                        <div className="border hover:border-black border-gray-200 w-[18rem] rounded-md p-2 space-y-3">
+                        <div className="border hover:border-black border-gray-200 w-[22rem] rounded-md p-2 space-y-3">
                           <h1 className="text-sm font-gilroyMedium text-black">
                             {target?.ticketCategory || "-"}
                           </h1>
@@ -190,7 +190,7 @@ function UserTimelineTable({ data }: { data: any }) {
 
                   <TimelineContent className="space-y-3">
                     <Link href={issueLink}>
-                      <div className="border hover:border-black border-gray-200 w-[18rem] rounded-md p-2 space-y-1">
+                      <div className="border hover:border-black border-gray-200 w-[22rem] rounded-md p-2 space-y-1">
                         <h1 className="text-sm font-gilroyMedium text-black">
                           {target?.ticketCategory || "-"}
                         </h1>
@@ -208,25 +208,27 @@ function UserTimelineTable({ data }: { data: any }) {
               {/* QC */}
               {action === "quality-check" && (
                 <TimelineItem key={log._id}>
-                  <TimelineHeading className="text-sm text-gray-400 flex gap-1 font-gilroyMedium">
-                    Diagonistic done on{" "}
-                    <Link href={`/assets/${target?.deviceId}`}>
-                      <span className="underline text-black">
-                        {target?.deviceName || "-"}
-                      </span>
-                    </Link>
-                    <span className="text-gray-400">done by</span>{" "}
-                    <span className="underline text-black">
-                      <Link href={`/people/${target?.userId}`}>
-                        {target?.userName || "-"}
+                  <TimelineHeading className="text-sm  text-gray-400 flex gap-1 font-gilroyMedium text-wrap">
+                    <div>
+                      Diagonistic done on{" "}
+                      <Link href={`/assets/${target?.deviceId}`}>
+                        <span className="underline text-black">
+                          {target?.deviceName || "-"}
+                        </span>
                       </Link>
-                    </span>
+                      <span className="text-gray-400">done by</span>{" "}
+                      <span className="underline text-black">
+                        <Link href={`/people/${target?.userId}`}>
+                          {target?.userName || "-"}
+                        </Link>
+                      </span>
+                    </div>
                   </TimelineHeading>
 
                   <TimelineDot status="new-scan" />
                   <TimelineLine done />
 
-                  <TimelineContent className="space-y-3">
+                  <TimelineContent className="space-y-3 mt-2">
                     <div className="border border-gray-200 flex justify-between items-center w-[22rem] rounded-md p-2">
                       <h1 className="flex gap-2 justify-center items-center text-sm text-black font-gilroyMedium">
                         <HugeiconsIcon

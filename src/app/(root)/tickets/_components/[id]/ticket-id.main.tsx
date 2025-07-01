@@ -34,8 +34,6 @@ function SingleIssue({ params, isAdmin = false }: IssuePageProps) {
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-2 items-center">
             <div className="flex  items-center rounded-md border py-[7px] px-4 gap-1 ">
-              {/* <div className="flex w-fit rounded-md border border-[rgba(0,0,0,0.2)] py-2 px-4 gap-1"> */}
-
               <div className="text-[#7F7F7F] text-nowrap text-sm font-gilroySemiBold">
                 Ticket ID:{" "}
                 <span className="text-black">{data?.[0]?.code ?? ""}</span>

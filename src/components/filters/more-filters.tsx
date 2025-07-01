@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MutationFunction, useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { buttonVariants } from "../buttons/Button";
 
@@ -23,7 +22,7 @@ type FilterSelection = {
   [key: string]: (string | boolean)[];
 };
 
-type FilterOptions = {
+export type FilterOptions = {
   [key: string]: (string | boolean)[];
 };
 /**
@@ -35,7 +34,7 @@ type FilterOptions = {
  */
 export const MoreFilters = ({
   filterOptions,
-  loading,
+  loading: isPending,
   onFilterChange,
   isRadio = false,
 }: {
@@ -50,6 +49,10 @@ export const MoreFilters = ({
   // const mutation = useMutation({ mutationFn: filterAssets });
   // const { data: opts, status, mutate } = useMutation({ mutationFn });
   const [selectedFilters, setSelectedFilters] = useState<FilterSelection>({});
+
+  const loading = useMemo(() => {
+    return Object?.keys(filterOptions)?.length === 0 && isPending;
+  }, [filterOptions, isPending]);
   // console.log(opts, "mutationData");
 
   // const [selectedFilters, setSelectedFilters] = useState<FilterSelection>({});

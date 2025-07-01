@@ -7,8 +7,6 @@ import { useSession } from "@/lib/providers/session-provider";
 import { getUserById } from "@/server/userActions";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { FormProvider } from "react-hook-form";
-import { z } from "zod";
 import ProfileSkeleton from "../../(userRoutes)/_components/profile-main-skeleton";
 import { RestoreUser } from "../_components/restore-user";
 import AssignDevice from "./_components/assign-device";

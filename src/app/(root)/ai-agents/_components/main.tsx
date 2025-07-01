@@ -274,6 +274,9 @@ export const AiAgentsMain = () => {
                 loading={isStreaming}
                 isClosed={isStreaming}
               />
+              <p className="font-gilroyMedium text-[10px] -mb-6 mt-1 text-[#ccc] text-right">
+                FlowGPT can make mistakes.
+              </p>
             </div>
           </div>
           <MessageListWrapper className="justify-center">
@@ -329,6 +332,9 @@ export const AiAgentsMain = () => {
               onSendMessage={handleSendMessage}
               loading={isStreaming}
             />
+            <p className="font-gilroyMedium text-[10px] -mb-6 mt-1 text-[#ccc] text-right">
+              FlowGPT can make mistakes.
+            </p>
           </div>
         </div>
         <MessageListWrapper outerDivClassName="flex-1 relative h-[50vh] w-full justify-center items-center">
@@ -381,21 +387,6 @@ export const AiAgentsMain = () => {
                         msg.type !== "model" ? "w-fit" : "w-full" // fixed width only for user
                       )}
                     >
-                      {/* <div
-                        className={cn(
-                          "flex items-center gap-2",
-                          msg.type === "model" ? "flex-row" : "flex-row-reverse"
-                        )}
-                      >
-                        <span className="font-gilroySemiBold capitalize text-sm">
-                          {msg.type === "model"
-                            ? "Lysa AI"
-                            : `${session?.session?.user?.user?.firstName} (Me)`}
-                        </span>
-                        <span className="text-xs font-gilroyRegular text-muted-foreground">
-                          {formatChatTimestamp(msg.timestamp)}
-                        </span>
-                      </div> */}
                       <div
                         className={cn(
                           `flex font-gilroyMedium break-words text-sm px-2 pb-2 rounded-md`,
@@ -435,12 +426,6 @@ export const AiAgentsMain = () => {
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
-                        {/* <span className="font-gilroySemiBold text-sm">
-                          Lysa AI
-                        </span> */}
-                        {/* <span className="text-xs font-gilroyRegular text-muted-foreground">
-                          AI is responding...
-                        </span> */}
                         <ShinyText
                           text="AI is responding..."
                           speed={2}
@@ -451,13 +436,6 @@ export const AiAgentsMain = () => {
                         <AIResponse className="font-gilroyMedium w-[75%] text-sm">
                           {streamingMessage}
                         </AIResponse>
-                        {/* <StreamingAIResponse
-                          textStream={streamingMessage}
-                          speed={30}
-                          fadeDuration={500}
-                          segmentDelay={60}
-                          className="font-gilroyMedium text-sm"
-                        /> */}
                       </div>
                     </div>
                   </div>
@@ -477,7 +455,7 @@ export const AiAgentsMain = () => {
           <div className="bg-white flex flex-col gap-3 items-start justify-start border w-72 border-[#E5E5E5] rounded-[10px] p-4">
             <div className="flex items-center justify-between w-full mb-3">
               <h1 className="text-xl text-black font-gilroySemiBold">
-                AI Agent
+                FlowGPT
               </h1>
             </div>
 
@@ -518,7 +496,7 @@ export const AiAgentsMain = () => {
                             activeChat === chatItem._id && "bg-neutral-100"
                           )}
                         >
-                          <span className="truncate">
+                          <span className="line-clamp-1">
                             {chatItem?.title || "New Chat"}
                           </span>
                         </button>

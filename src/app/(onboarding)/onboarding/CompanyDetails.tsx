@@ -1,7 +1,6 @@
 import { FormField } from "@/app/(root)/settings/_components/form-field";
 import { LogoCompanyModal } from "@/app/(root)/settings/_components/logo-company";
 import { Button, LoadingButton } from "@/components/buttons/Button";
-import CompanyLogo from "@/icons/CompanyLogo";
 import UploadIcon from "@/icons/UploadIcon";
 import { Org, getCurrentOrg, updateOrg } from "@/server/orgActions";
 import React, { useEffect, useRef, useState } from "react";
@@ -61,7 +60,6 @@ export function CompanyDetails({ setSteps }: any) {
           </div>
           <div className="relative flex-1 flex-col rounded-[25px] px-5 py-5 bg-white gap-2 h-[136px]  items-center">
             <div className="w-full flex justify-center">
-              {/* Display the logo */}
               {company?.logo ? (
                 <img
                   src={company.logo}
@@ -69,10 +67,9 @@ export function CompanyDetails({ setSteps }: any) {
                   className="size-28 rounded-full border object-cover"
                 />
               ) : (
-                <CompanyLogo className="w-28 h-28 text-gray-400" />
+                <div className="size-28 rounded-full border bg-white" />
               )}
             </div>
-            {/* Modal trigger for editing the logo */}
             <LogoCompanyModal
               id={company?._id!}
               logo={company?.logo}

@@ -243,6 +243,25 @@ export const bulkUploadDevices = async (
   }
 };
 
+export const bulkAssignDevices = async (
+  formData: FormData
+): Promise<Device | any> => {
+  try {
+    // Call the API with multipart/form-data
+    const response = await callAPIWithToken<Device | any>(
+      `${BASEURL}/edifybackend/v1/devices/bulk-upload-assign`,
+      "POST",
+      formData,
+      {
+        "Content-Type": "multipart/form-data",
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const bulkDeleteAssets = async (
   deviceIds: string[],
   type: string

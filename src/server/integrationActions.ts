@@ -1,7 +1,7 @@
 "use server";
 
 import { AxiosError } from "axios";
-import { callAPIWithToken } from "./helper";
+import { callAPIWithToken, getSession } from "./helper";
 import { User } from "./userActions";
 import { BASEURL } from "./main";
 
@@ -24,6 +24,7 @@ export type AllIntegrationAvailable = IntegrationType;
 
 export type IntegrationType = {
   _id: string;
+  url?: string;
   id: string;
   platform: string;
   __v: number;
@@ -81,7 +82,6 @@ export type UserByIntegration = {
   deleted_at?: string | null;
   onboarding_date?: string;
 };
-
 
 export const allIntegrationsAvailable = async () => {
   try {
@@ -188,6 +188,7 @@ export const connectGsuiteIntegration = async ({ id }: { id: string }) => {
 
 export type IntegrationUsers = {
   allUsers: User[];
+
   missingIntegrationUsers: User[];
   totalSeats?: number;
   unmappedSeats: number;
@@ -208,7 +209,6 @@ export const getUsersOfIntegration = async ({
       "POST",
       body
     );
-    // console.log(res.data);
     return res?.data;
   } catch (error) {
     console.error(error);
@@ -275,3 +275,97 @@ export const getConnectedIntegrations = async () => {
     throw new Error((error as AxiosError)?.message);
   }
 };
+
+export async function fetchInvoices({
+  page,
+  pageLimit,
+  startDate,
+  integrationIds,
+  endDate,
+  searchQuery = "",
+}: {
+  page: number;
+  pageLimit: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  integrationIds?: string[];
+  searchQuery?: string;
+}) {
+  try {
+    // const session = await getSession();
+    const payload = {
+      page,
+      pageLimit,
+      integrationIds,
+      startDate: startDate || null,
+      endDate: endDate || null,
+      searchQuery: searchQuery || "",
+    };
+    const apiURL = `${apiUrl}/edifybackend/v1/integration/filter`;
+
+    const response = await callAPIWithToken<any>(apiURL, "POST", payload);
+    return response?.data;
+  } catch (error: any) {
+    throw new Error(error?.response || "Failed to get Invoices");
+  }
+}
+
+export async function downloadInvoice({
+  integrationIds,
+  startDate,
+  endDate,
+}: {
+  integrationIds: string[];
+  startDate: string;
+  endDate: string;
+}) {
+  try {
+    const payload = {
+      integrationIds,
+      startDate: startDate || null,
+      endDate: endDate || null,
+    };
+    const apiURL = `${apiUrl}/edifybackend/v1/integration/get-invoices`;
+
+    const response = await callAPIWithToken<any>(apiURL, "POST", payload);
+    return response?.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function uploadInvoice({
+  integrationPlatform,
+  invoiceNumber,
+  invoiceUrl,
+  invoiceDate,
+  integrationId,
+  invoiceAmount,
+}: {
+  integrationId: string;
+  invoiceDate: string;
+  integrationPlatform: string;
+  invoiceNumber: string;
+  invoiceUrl: string;
+  invoiceAmount?: number | null;
+}) {
+  try {
+    const payload = {
+      integrationId,
+      integrationPlatform,
+      invoiceNumber,
+      invoiceUrl,
+      invoiceDate: invoiceDate || null,
+      invoiceAmount: invoiceAmount || null,
+    };
+    // console.log(payload)
+    const apiURL = `${apiUrl}/edifybackend/v1/integration/invoices`;
+
+    const response = await callAPIWithToken<any>(apiURL, "POST", payload);
+    return response?.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

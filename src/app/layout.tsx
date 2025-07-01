@@ -99,7 +99,7 @@ export default async function RootLayout({
         {/* {session?.user && <KbarWrapper userRole={userRole} />}{" "} */}
         <Providers>{children}</Providers>
         <InternetCheck />
-        {userRole && <CoachMarks />}
+        {/* {userRole && <CoachMarks />} */}
       </body>
     </html>
   );

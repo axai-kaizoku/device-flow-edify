@@ -11,13 +11,13 @@ import {
   Calendar03Icon,
   Call02Icon,
   CheeseCake02Icon,
-  Edit04Icon,
+  PencilEdit01Icon,
   Mail01Icon,
   Tag01Icon,
   User03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { memo, useEffect, useMemo, useState } from "react";
@@ -37,9 +37,11 @@ import {
 } from "@/components/ui/select";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Button } from "@/components/buttons/Button";
+import { AltIntegration } from "../../integrations/_components/icons";
 
 const editUserSchema = z.object({
   email: z.string().email(),
+  name: z.string(),
   phone: z.string().min(10),
   gender: z.enum(["Male", "Female"]),
   dob: z.date(),
@@ -47,6 +49,7 @@ const editUserSchema = z.object({
 
 function UserMain({ user }: { user: NewUserResponse }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
@@ -109,6 +112,10 @@ function UserMain({ user }: { user: NewUserResponse }) {
     mutationFn: (input: { id: string; user: User }) =>
       updateUser(input.id, input.user),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-user-by-id", user?._id],
+        type: "all",
+      });
       setIsEditing(false);
       toast.success("User details updated successfully");
     },
@@ -121,6 +128,7 @@ function UserMain({ user }: { user: NewUserResponse }) {
     resolver: zodResolver(editUserSchema),
     defaultValues: {
       dob: user?.date_of_birth ? new Date(user?.date_of_birth) : undefined,
+      name: user?.first_name ?? "",
       email: user?.email ?? "",
       phone: user?.phone ?? "",
       gender: user?.gender ?? "",
@@ -145,6 +153,7 @@ function UserMain({ user }: { user: NewUserResponse }) {
     const originalData = {
       email: user?.email ?? "",
       phone: user?.phone ?? "",
+      name: user?.first_name ?? "",
       gender: user?.gender ?? "",
       dob: user?.date_of_birth ? new Date(user.date_of_birth) : undefined,
     };
@@ -163,6 +172,7 @@ function UserMain({ user }: { user: NewUserResponse }) {
         id: user._id,
         user: {
           email: newData.email,
+          first_name: newData.name,
           phone: newData.phone,
           gender: newData.gender,
           date_of_birth: newData?.dob ? new Date(newData?.dob) : null,
@@ -178,6 +188,7 @@ function UserMain({ user }: { user: NewUserResponse }) {
     if (user) {
       reset({
         email: user.email ?? "",
+        name: user.first_name ?? "",
         phone: user.phone ?? "",
         gender: user.gender ?? "Male",
         dob: user.date_of_birth ? new Date(user.date_of_birth) : "", // required format for <input type="date">
@@ -198,11 +209,9 @@ function UserMain({ user }: { user: NewUserResponse }) {
                 {user?.deleted_at === null ? (
                   <Badge className="bg-[#ECFDF3] text-[#027A48]">Active</Badge>
                 ) : (
-                  // <span className="rounded-full text-center -mt-5 font-gilroyMedium h-fit  bg-[#FFEFEF] text-[#FF0000] py-0.5 px-2 text-xs">
                   <Badge className="bg-[#FFEFEF] text-[#FF0000]">
                     Inactive
                   </Badge>
-                  // </span>
                 )}
               </h1>
               <h3 className="capitalize text-[15px] text-gray-600 font-gilroyMedium">
@@ -234,7 +243,7 @@ function UserMain({ user }: { user: NewUserResponse }) {
                 </h1>
               ) : null}
 
-              {user.employment_type ? (
+              {user?.employment_type ? (
                 <h1 className="text-[15px] text-black  items-center font-gilroyMedium flex gap-2">
                   <HugeiconsIcon
                     icon={Tag01Icon}
@@ -257,28 +266,40 @@ function UserMain({ user }: { user: NewUserResponse }) {
           </div>
 
           {/* Subscriptions */}
-          {user?.subscriptions?.filter((item) => item?.price > 0)?.length >
+          {user?.subscriptions?.filter((item) => item?.platform)?.length >
             0 && (
             <Dropdown
               onFirst={firstVisibleSection === "subscriptions"}
               title="Subscriptions"
               headerClassName="bg-[#F6F6F6]"
+              contentClassName="h-full"
             >
-              <div className="flex flex-col gap-3 w-full mb-1">
+              <div className="flex flex-col gap-3 w-full min-h-0 h-full max-h-[12rem] overflow-y-auto hide-scrollbar mb-1">
                 {user?.subscriptions
-                  ?.filter((item) => item?.price > 0)
+                  ?.filter((item) => item?.platform)
                   ?.map((item) => (
                     <Link
                       href={`/integrations/installed/${item?.platform}`}
-                      key={item.id}
+                      key={item?.id}
                     >
                       <div className="border-gray-200 border hover:border-black p-3 flex justify-between items-center rounded-md">
                         <div className="flex gap-2 items-center">
-                          <img
+                          {/* <img
                             src={item?.image}
                             alt={item?.platform}
                             className="size-10 rounded"
-                          />
+                          /> */}
+                          {item?.image ? (
+                            <img
+                              src={item.image ?? ""}
+                              className=" rounded size-10 "
+                              alt={item?.platform}
+                            />
+                          ) : (
+                            <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1.5">
+                              <AltIntegration className={"size-10"} />
+                            </div>
+                          )}
                           <div>
                             <h1 className="text-[15px] font-gilroyMedium">
                               {item?.platform}
@@ -370,8 +391,8 @@ function UserMain({ user }: { user: NewUserResponse }) {
 
                 {!isEditing && (
                   <HugeiconsIcon
-                    icon={Edit04Icon}
-                    className="size-4 text-[#0051FF]"
+                    icon={PencilEdit01Icon}
+                    className="size-4 text-[#0051FF] cursor-pointer"
                     onClick={() => {
                       if (!isAboutOpen) {
                         setIsAboutOpen(true);
@@ -420,6 +441,35 @@ function UserMain({ user }: { user: NewUserResponse }) {
               <FormProvider {...form}>
                 <div className={`mt-3 bg-white `}>
                   <div className="space-y-3 mt-5 font-gilroyMedium">
+                    {isEditing && (
+                      <div className="flex gap-3 items-center pl-3">
+                        <HugeiconsIcon
+                          icon={Mail01Icon}
+                          className="text-[#a09f9f] size-4"
+                        />
+                        <span className="text-[#a09f9f] min-w-28 text-sm">
+                          Name:
+                        </span>
+                        <Controller
+                          name="name"
+                          control={control}
+                          render={({ field }) => (
+                            <input
+                              name="name"
+                              type="text"
+                              className={cn(
+                                "text-sm font-gilroyMedium text-[13px] w-56 rounded px-1.5 py-0.5 focus:outline-none",
+                                isEditing
+                                  ? "border text-[13px]"
+                                  : "border-transparent",
+                                formState.errors.name && "border-destructive/80"
+                              )}
+                              {...field}
+                            />
+                          )}
+                        />
+                      </div>
+                    )}
                     <div className="flex gap-3 items-center pl-3">
                       <HugeiconsIcon
                         icon={Mail01Icon}
@@ -435,12 +485,12 @@ function UserMain({ user }: { user: NewUserResponse }) {
                           <input
                             name="email"
                             type="text"
-                            readOnly={!isEditing}
+                            readOnly={true}
                             className={cn(
-                              "text-sm font-gilroyMedium text-[13px] rounded px-1.5 py-0.5 focus:outline-none",
+                              "text-sm font-gilroyMedium text-[13px] w-56 rounded px-1.5 py-0.5 focus:outline-none",
                               isEditing
-                                ? "border text-[13px]"
-                                : "border border-transparent",
+                                ? " text-[13px]"
+                                : " border-transparent",
                               formState.errors.email && "border-destructive/80"
                             )}
                             {...field}

@@ -1,0 +1,130 @@
+"use client";
+
+import type React from "react";
+
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { PencilEdit01Icon, Delete01Icon } from "@hugeicons/core-free-icons";
+import { ConfirmationModal } from "./confirmation-popup";
+import SetConditionDialog from "../dialogs/set-condition.dialog";
+
+interface EditPathProps {
+  children: React.ReactNode;
+  type: "edit" | "set";
+  onEditCondition: () => void;
+  onAddPath: () => void;
+  appType: any;
+  onRename: () => void;
+  onDuplicate: () => void;
+  onDelete: () => void;
+}
+
+const EditPath = ({
+  children,
+  type,
+  appType,
+  onEditCondition,
+  onAddPath,
+  onRename,
+  onDuplicate,
+  onDelete,
+}: EditPathProps) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-56 font-gilroyMedium rounded-[10px]"
+        align="start"
+      >
+        <DropdownMenuGroup className="flex flex-col gap-0.5">
+          <SetConditionDialog>
+            <DropdownMenuItem
+              className="flex items-center"
+              onSelect={(e) => {
+                e.preventDefault();
+                onEditCondition();
+              }}
+            >
+              <img
+                src="/media/edit-condition.svg"
+                alt="duplicate"
+                width={16}
+                height={16}
+              />
+              {type === "edit" ? "Edit" : "Set"} Condition
+            </DropdownMenuItem>
+          </SetConditionDialog>
+          {appType !== "PATH" ? (
+            <DropdownMenuItem className="cursor-pointer" onClick={onAddPath}>
+              <img
+                src="/media/workflows/add-path.svg"
+                alt="add path"
+                width={16}
+                height={16}
+              />
+              Add another path
+            </DropdownMenuItem>
+          ) : (
+            ""
+          )}
+
+          <DropdownMenuItem
+            className="flex items-center cursor-pointer"
+            onClick={onRename}
+          >
+            <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
+            Rename
+          </DropdownMenuItem>
+          {appType !== "PATH" ? (
+            <DropdownMenuItem className="cursor-pointer" onClick={onDuplicate}>
+              <img
+                src="/media/duplicate.svg"
+                alt="duplicate"
+                width={16}
+                height={16}
+              />
+              Duplicate
+            </DropdownMenuItem>
+          ) : (
+            ""
+          )}
+
+          <ConfirmationModal
+            open={open}
+            setOpen={setOpen}
+            functionToBeExecuted={() => {
+              onDelete();
+              setOpen(false);
+            }}
+            title="Are you sure?"
+            description="Are you sure you want to delete the path?"
+            type="failure"
+            successBtnText="Delete"
+          >
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                setOpen(true);
+              }}
+              className="text-red-500 font-gilroyMedium w-full cursor-pointer"
+            >
+              <HugeiconsIcon icon={Delete01Icon} size={16} />
+              Delete Path
+            </DropdownMenuItem>
+          </ConfirmationModal>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export default EditPath;

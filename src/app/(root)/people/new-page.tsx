@@ -4,11 +4,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { buttonVariants } from "@/components/buttons/Button";
-import { MoreFilters } from "@/components/filters/more-filters";
+import { FilterOptions, MoreFilters } from "@/components/filters/more-filters";
 import { Pagination, PaginationSkeleton } from "@/components/pagination";
 
 import { ActionBar } from "@/components/action-bar/action-bar";
 import { ActionSearchBar } from "@/components/action-bar/action-search-bar";
+import { Button } from "@/components/buttons/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown";
 import {
   Select,
   SelectContent,
@@ -22,6 +30,8 @@ import type {
   FilterSelection,
 } from "@/server/types/newFilterTypes";
 import { bulkDeleteUsers } from "@/server/userActions";
+import { ArrowUpDownIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueryState } from "nuqs";
 import { toast } from "sonner";
 import BulkMove from "../teams/[id]/_components/new-bulk-move";
@@ -37,11 +47,15 @@ export const NewPage = () => {
   const [rawSearch, setRawSearch] = useQueryState("searchQuery", {
     defaultValue: "",
   });
+  const [sortBy, setSortBy] = useState<"Ascending" | "Descending">("Ascending");
 
   const [page, setPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(20);
 
   const [filters, setFilters] = useState<FilterSelection>({});
+  const [cachedFilterOptions, setCachedFilterOptions] = useState<FilterOptions>(
+    {}
+  );
 
   const searchTerm = useDeferredValue(rawSearch);
 
@@ -49,8 +63,8 @@ export const NewPage = () => {
 
   const tupleFilters = useMemo(
     () =>
-      Object.entries(filters).flatMap(([k, vals]) =>
-        vals.map((v) => [k, "Equals", v])
+      Object?.entries(filters)?.flatMap(([k, vals]) =>
+        vals?.map((v) => [k, "Equals", v])
       ),
     [filters]
   );
@@ -64,6 +78,7 @@ export const NewPage = () => {
         page,
         pageLimit,
         filters: tupleFilters,
+        sortOption: sortBy,
       },
     ],
     queryFn: () =>
@@ -73,16 +88,20 @@ export const NewPage = () => {
         filters: tupleFilters,
         page,
         pageLimit,
+        sortOption: sortBy,
       }),
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    setRawSearch("");
-    setPage(1);
-    setPageLimit(20);
-    setFilters({});
-  }, [activeTab]);
+    if (
+      status === "success" &&
+      data?.filterOptions &&
+      Object.keys(cachedFilterOptions).length === 0
+    ) {
+      setCachedFilterOptions(data.filterOptions);
+    }
+  }, [status, data, cachedFilterOptions]);
 
   const handleFilterChange = (newFilter: FilterSelection) => {
     setPage(1); // reset to first page
@@ -123,13 +142,22 @@ export const NewPage = () => {
     setSelectedIds(selected);
   };
 
+  const onSortChange = (direction: "Ascending" | "Descending") => {
+    setPage(1);
+    setSortBy(direction);
+  };
+
   return (
     <section className="w-full h-fit relative  overflow-hidden">
       <Tabs
         value={activeTab}
         onValueChange={(tab) => {
-          setActiveTab(tab);
           setSelectedIds([]);
+          setRawSearch("");
+          setPage(1);
+          setPageLimit(20);
+          setFilters({});
+          setActiveTab(tab);
         }}
         defaultValue="active-users"
         className="w-full"
@@ -139,7 +167,14 @@ export const NewPage = () => {
           <div className="flex gap-2">
             <Select
               value={activeTab}
-              onValueChange={setActiveTab}
+              onValueChange={(tab) => {
+                setSelectedIds([]);
+                setRawSearch("");
+                setPage(1);
+                setPageLimit(20);
+                setFilters({});
+                setActiveTab(tab);
+              }}
               defaultValue="active-users"
             >
               <SelectTrigger className="w-fit font-gilroyMedium flex bg-white border border-[#DEDEDE] rounded-lg">
@@ -162,10 +197,38 @@ export const NewPage = () => {
             </Select>{" "}
             <MoreFilters
               key={`${activeTab}people`}
-              filterOptions={data?.filterOptions}
+              filterOptions={cachedFilterOptions}
               loading={status === "pending"}
               onFilterChange={handleFilterChange}
             />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outlineTwo"
+                  size="sm"
+                  className="font-gilroyMedium text-sm py-[19px]"
+                >
+                  <HugeiconsIcon icon={ArrowUpDownIcon} className="size-4" />
+                  Sort By
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-[200px] font-gilroyMedium"
+              >
+                <DropdownMenuRadioGroup
+                  value={sortBy}
+                  onValueChange={onSortChange}
+                >
+                  <DropdownMenuRadioItem value="Ascending">
+                    Ascending
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Descending">
+                    Descending
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="flex gap-2">
             <ActionSearchBar

@@ -4,7 +4,7 @@ import { Main } from "../../_components/main";
 export default function Page() {
   return (
     <div className="w-full space-y-3 h-fit">
-      <ActionBar showBackBtn key={`diagnostics-action-bar-emp`}>
+      <ActionBar showBackBtn key={`diagnostics-action-admin-bar-emp`}>
         <></>
       </ActionBar>
       <Main isAdmin={false} />

@@ -1,6 +1,4 @@
-import { Icons } from "@/components/icons";
 import StoreBanners from "@/icons/StoreBanners";
-import React from "react";
 
 function StoreBanner() {
   return (
@@ -20,9 +18,7 @@ function StoreBanner() {
             <span>& New Devices</span>{" "}
           </h1>
           <h1 className="text-2xl gap-2 font-gilroyMedium text-[#7F7F7F] flex flex-col justify-center items-center">
-            <span>
-            Affordable, reliable, and ready for work.
-            </span>
+            <span>Affordable, reliable, and ready for work.</span>
           </h1>
         </div>
         {/*Icons content*/}

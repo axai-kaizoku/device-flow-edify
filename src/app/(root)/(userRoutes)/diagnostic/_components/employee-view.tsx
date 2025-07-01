@@ -66,7 +66,7 @@ const EmployeeView = ({
                 className="border flex flex-col px-1 py-1 border-[#344054] bg-white rounded-2xl z-30 absolute gap-4 top-12"
               >
                 <a
-                  href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.0/Check.Mate.Setup.5.0.0.exe"
+                  href="https://github.com/Harsh-winuall/QC-Release/releases/download/Windows/Check.Mate.Setup.5.0.0.exe"
                   className="py-2 cursor-pointer px-11 w-full text-center hover:bg-gray-50 rounded-xl text-sm text-[#344054] font-gilroyMedium"
                   onClick={() => {
                     handleLinkClick();
@@ -157,7 +157,7 @@ const EmployeeView = ({
                             className="border flex flex-col px-1 w-1/4 py-1 border-[#344054] bg-white rounded-2xl z-50 absolute gap-4 top-12"
                           >
                             <a
-                              href="https://github.com/Harsh-winuall/QC-Release/releases/download/5.0.0/Check.Mate.Setup.5.0.0.exe"
+                              href="https://github.com/Harsh-winuall/QC-Release/releases/download/Windows/Check.Mate.Setup.5.0.0.exe"
                               className="py-2 cursor-pointer px-11 w-full text-center hover:bg-gray-50 rounded-xl text-sm text-[#344054] font-gilroyMedium"
                               onClick={() => {
                                 handleLinkClick();

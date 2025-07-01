@@ -6,7 +6,11 @@ import {
   IntegrationUsers,
   UserByIntegration,
 } from "@/server/integrationActions";
-import { UserIcon, Wallet01FreeIcons } from "@hugeicons/core-free-icons";
+import {
+  Settings03Icon,
+  UserIcon,
+  Wallet01FreeIcons,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import AllIntegrationsDisplay from "./all-integration-display";
@@ -34,11 +38,18 @@ const UserByIntegrations = ({
       ) : (
         <div className="flex justify-between items-center mb-6 ">
           <div className="flex gap-6 items-center w-full">
-            <img
-              src={integrationData?.image ?? ""}
-              alt={integrationData?.platform}
-              className="w-28 h-28 object-cover"
-            />
+            {" "}
+            {integrationData?.image ? (
+              <img
+                src={integrationData.image}
+                alt={integrationData?.platform}
+                className="size-16 object-cover rounded-xl"
+              />
+            ) : (
+              <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-4">
+                <AltIntegration />
+              </div>
+            )}
             <div className="flex flex-col gap-5 w-full">
               <h1 className="text-3xl font-gilroyBold">
                 {integrationData?.platform}
@@ -71,7 +82,6 @@ const UserByIntegrations = ({
           </div>
         </div>
       )}
-      {/* {JSON.stringify(users)} */}
       <div>
         <div className="rounded-lg border border-[#F6F6F6] bg-[rgba(255,255,255,0.80)] backdrop-blur-[22.8px] pt-5 pb-2 flex flex-col gap-5">
           <div className="flex justify-between items-center">
@@ -150,7 +160,8 @@ const UserByIntegrations = ({
                   {
                     title: "All Integrations",
                     render: (record: UserByIntegration) => {
-                      const filteredIntegrations = record?.integrations ?? [];
+                      const filteredIntegrations =
+                        record?.integrations?.filter((p) => p.platform) ?? [];
 
                       if (filteredIntegrations.length === 0) {
                         return <span className="text-gray-400">-</span>;
@@ -164,22 +175,28 @@ const UserByIntegrations = ({
                           data={record as unknown as User}
                           allIntegrations={filteredIntegrations}
                         >
-                          <div className="flex items-center gap-2 -space-x-5">
-                            {firstThree.map((i, index) => (
-                              <div
-                                key={index}
-                                className="flex justify-center items-center p-1.5 bg-white rounded-full border"
-                              >
-                                <img
-                                  src={i.image ?? ""}
-                                  width={16}
-                                  height={16}
-                                  className=" object-contain "
-                                  alt="Integration"
-                                />
-                              </div>
-                            ))}
-
+                          <div className="flex items-center gap-0">
+                            <div className="flex items-center gap-2 -space-x-5">
+                              {firstThree.map((i, index) => (
+                                <React.Fragment key={index}>
+                                  {i?.image ? (
+                                    <div className="flex justify-center items-center p-1.5 bg-white rounded-full border">
+                                      <img
+                                        src={i.image}
+                                        alt={i?.platform}
+                                        width={16}
+                                        height={16}
+                                        className="size-4 object-contain"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="bg-[#D4E9FF80] rounded-[16px] flex justify-center items-center p-1.5">
+                                      <AltIntegration className={"size-4"} />
+                                    </div>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </div>
                             {extraCount > 0 && (
                               <span className="text-sm text-gray-500 font-gilroySemiBold">
                                 +{extraCount}
@@ -210,6 +227,8 @@ import { GetAvatar } from "@/components/get-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
 import { User } from "@/server/userActions";
+import { AltIntegration } from "../icons";
+import React from "react";
 
 function IntegrationHeaderSkeleton() {
   return (
