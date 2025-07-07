@@ -13,15 +13,67 @@ import { Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { TestRun } from "../../_components/test-run";
 import { SearchToolbar } from "./search-toolbar";
-import { Workflow } from "./types/types";
+import { WorkflowTreeResponse } from "@/server/workflowActions/workflow";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  deleteWorkflow,
+  updateWorkflow,
+} from "@/server/workflowActions/workflow";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-function WorkflowHeader({ workflow }: { workflow: Workflow }) {
-  const [enabled, setEnabled] = useState(false);
-  const [onboard, setOnboard] = useState(false);
+function WorkflowHeader({ workflow }: { workflow: WorkflowTreeResponse }) {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [isRenaming, setIsRenaming] = useState(false);
-  const [flowName, setFlowName] = useState("Onboarding Flow");
+  const [flowName, setFlowName] = useState(workflow?.data?.workflow?.name);
+
+  const enabled = workflow?.data?.workflow?.status === "published";
 
   const inputRef = useRef<HTMLInputElement>(null);
+  // console.log(workflow);
+
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: (data: { name?: string; status?: string }) =>
+      updateWorkflow(workflow?.data?.workflow?._id, data),
+    onMutate: async (newData) => {
+      // Optimistically update the status
+      if (newData.status) {
+        await queryClient.invalidateQueries({
+          queryKey: ["workflow-by-id", workflow?.data?.workflow?._id],
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", workflow?.data?.workflow?._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-all-workflows"],
+      });
+      toast.success("Workflow updated successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update workflow");
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteWorkflow(workflow?.data?.workflow?._id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workflow-by-id"] });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-all-workflows"],
+      });
+      router.replace("/workflows");
+      toast.success("Workflow deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete workflow");
+    },
+  });
 
   useEffect(() => {
     if (isRenaming) inputRef.current?.focus();
@@ -31,7 +83,9 @@ function WorkflowHeader({ workflow }: { workflow: Workflow }) {
 
   const handleBlur = () => {
     setIsRenaming(false);
-    // 🔄 Save logic can go here (e.g. call API)
+    if (flowName !== workflow?.data?.workflow?.name) {
+      updateMutation.mutate({ name: flowName });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -39,6 +93,22 @@ function WorkflowHeader({ workflow }: { workflow: Workflow }) {
       inputRef.current?.blur();
     }
   };
+
+  const handleStatusChange = (checked: boolean) => {
+    const status = checked ? "published" : "draft";
+    updateMutation.mutate({ status });
+  };
+
+  const handlePublish = () => {
+    if (!enabled) {
+      updateMutation.mutate({ status: "published" });
+    }
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
+  };
+
   return (
     <ActionBar
       showBackBtn
@@ -48,13 +118,14 @@ function WorkflowHeader({ workflow }: { workflow: Workflow }) {
         <div className="flex gap-3">
           <Button
             variant="outlineTwo"
-            onClick={() => setEnabled((prev) => !prev)}
             className="flex items-center h-9 gap-2 w-28 hover:border-[#0000001A]"
+            disabled={updateMutation.isPending}
           >
             <Switch
               checked={enabled}
               className="cursor-pointer"
-              onChange={() => setEnabled((prev) => !prev)}
+              onChange={(e) => handleStatusChange(e.target.checked)}
+              isLoading={updateMutation.isPending}
             />
             {enabled ? <>Enabled</> : <>Disabled</>}
           </Button>
@@ -83,10 +154,10 @@ function WorkflowHeader({ workflow }: { workflow: Workflow }) {
           ) : (
             <h1 className="text-[15px] font-gilroySemiBold flex gap-1 justify-center items-center">
               {flowName}
-              <WorkFlowOptions onRename={handleRename}>
+              <WorkFlowOptions onRename={handleRename} onDelete={handleDelete}>
                 <span
                   className="cursor-pointer"
-                  onClick={() => setOnboard(!onboard)}
+                  // onClick={() => setOnboard(!onboard)}
                 >
                   <HugeiconsIcon
                     icon={ArrowDown01Icon}
@@ -121,8 +192,13 @@ function WorkflowHeader({ workflow }: { workflow: Workflow }) {
           >
             <HugeiconsIcon icon={Redo03Icon} className="size-5" />
           </Button>
-          <TestRun workflowId={workflow._id} />
-          <Button variant="primary" className="h-9">
+          <TestRun workflowId={workflow?.data?.workflow?._id ?? ""} />
+          <Button
+            variant="primary"
+            className="h-9"
+            onClick={handlePublish}
+            disabled={enabled || updateMutation.isPending}
+          >
             Publish
           </Button>
         </div>

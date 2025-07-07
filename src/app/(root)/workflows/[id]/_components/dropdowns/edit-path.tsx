@@ -24,10 +24,12 @@ interface EditPathProps {
   onRename: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  parentData: any;
 }
 
 const EditPath = ({
   children,
+  parentData,
   type,
   appType,
   onEditCondition,
@@ -46,7 +48,7 @@ const EditPath = ({
         align="start"
       >
         <DropdownMenuGroup className="flex flex-col gap-0.5">
-          <SetConditionDialog>
+          <SetConditionDialog parentData={parentData} onDelete={onDelete}>
             <DropdownMenuItem
               className="flex items-center"
               onSelect={(e) => {

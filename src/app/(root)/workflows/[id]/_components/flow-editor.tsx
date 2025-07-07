@@ -3,33 +3,40 @@
 import {
   Background,
   BackgroundVariant,
-  Controls,
   Edge,
   ReactFlow,
   useEdgesState,
   useNodesState,
   useReactFlow,
 } from "@xyflow/react";
-import { Workflow } from "./types/types";
 
 import "@xyflow/react/dist/style.css";
 
-import { CreateFlowNode } from "./workflow/create-node";
-import { AppTaskType, TaskType } from "./types/task";
-import { NodeComponent } from "./nodes/node-component";
-import React, {
+import { SplitEdge } from "@/app/(root)/workflows/[id]/_components/edges/split-edge";
+import { EdgeType } from "@/app/(root)/workflows/[id]/_components/types/edge";
+import { WorkflowTreeResponse } from "@/server/workflowActions/workflow";
+import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
 } from "react";
-import { AppNode } from "./types/app-node";
-import { TaskRegistry } from "./workflow/task/registry";
-import { EdgeType } from "@/app/(root)/workflows/[id]/_components/types/edge";
 import { NormalEdge } from "./edges/normal-edge";
-import { SplitEdge } from "@/app/(root)/workflows/[id]/_components/edges/split-edge";
-import { CreateFlowEdge } from "@/app/(root)/workflows/[id]/_components/workflow/create-edge";
-import { useSaveWorkflowMutation } from "@/app/(root)/workflows/_components/test-run";
+import { NodeComponent } from "./nodes/node-component";
+import { AppNode } from "./types/app-node";
+import { TaskType } from "./types/task";
+import {
+  BackendWorkflowResponse,
+  transformBackendToReactFlow,
+} from "./utils/data-transformer";
+
+import {
+  updateConnectorPosition,
+  updateNodePosition,
+  updatePathPosition,
+} from "@/server/workflowActions/workflowById/workflowPositions";
+import { useFlowActions } from "./hooks/use-flow-actions";
 
 interface FlowContextType {
   handleAddNode: (
@@ -37,8 +44,19 @@ interface FlowContextType {
     nodeType: TaskType,
     appType?: string
   ) => void;
+  handleAddNodeForPath: (
+    sourceNodeId: string,
+    branchId: string,
+    nodeType: TaskType,
+    appType?: string
+  ) => void;
   handleAddSplitPath: (sourceNodeId: string) => void;
-  handleDeleteNode: (nodeId: string) => void;
+  handleAddSplitPathForPath: (
+    sourceNodeId: string,
+    branchId: string,
+    nodeType: TaskType,
+    splitAppName: string
+  ) => void;
   handleAddNodeFromHandle: (
     sourceNodeId: string,
     handleId: string,
@@ -65,7 +83,6 @@ const nodeTypes = {
 };
 
 const edgeTypes = {
-  // default: PrimaryEdge
   [EdgeType.NORMAL]: NormalEdge,
   [EdgeType.SPLIT]: SplitEdge,
 };
@@ -73,30 +90,106 @@ const edgeTypes = {
 const snapGrid: [number, number] = [30, 30];
 const fitViewOptions = { padding: 1 };
 
-export const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
+export const FlowEditor = ({
+  workflow,
+}: {
+  workflow: WorkflowTreeResponse;
+}) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const { setViewport, toObject, screenToFlowPosition } = useReactFlow();
-  const saveMutation = useSaveWorkflowMutation();
+  // const queryClient = useQueryClient();
+  const { setViewport } = useReactFlow();
 
-  const getHandleIds = (nodeType: TaskType) => {
-    const task = TaskRegistry[nodeType];
-    return {
-      input: task?.inputs?.[0]?.name || "input",
-      output: task?.outputs?.[0]?.name || "output",
-    };
-  };
+  const {
+    handleAddNode,
+    handleAddNodeForPath,
+    handleAddSplitPath,
+    handleAddSplitPathForPath,
+    handleAddNodeFromHandle,
+  } = useFlowActions(workflow, nodes);
+
+  const { transformedNodes, transformedEdges } = useMemo(() => {
+    if (!workflow?.data) return { transformedNodes: [], transformedEdges: [] };
+
+    try {
+      const backendData = workflow.data;
+      const { nodes: transformedNodes, edges: transformedEdges } =
+        transformBackendToReactFlow(
+          backendData as unknown as BackendWorkflowResponse
+        );
+      return { transformedNodes, transformedEdges };
+    } catch (error) {
+      console.error("Error transforming workflow data:", error);
+      return { transformedNodes: [], transformedEdges: [] };
+    }
+  }, [workflow?.data]);
+
+  // Handle node drag end - update positions via API
+  const onNodeDragStop = useCallback(
+    async (event: React.MouseEvent, node: AppNode): Promise<void> => {
+      const nodeData = node.data;
+
+      try {
+        switch (nodeData.type) {
+          case TaskType.APP:
+          case TaskType.START:
+          case TaskType.INSTRUCTION:
+            // Regular node position update
+            await updateNodePosition({
+              nodeId: node.id,
+              position: node.position,
+            });
+            break;
+
+          case TaskType.SPLIT:
+            // Split node - update connector position
+            // Get the parent node ID from splitData
+            const parentNodeId =
+              nodeData.splitData?._id || nodeData.backendData?.parentNodeId;
+            if (parentNodeId) {
+              await updateConnectorPosition({
+                nodeId: parentNodeId,
+                connectorPosition: node.position,
+              });
+            }
+            break;
+
+          case TaskType.PATH:
+            // Path node - update branch position
+            const branchData = nodeData.branchData;
+            const pathParentNodeId =
+              branchData?.parentNodeId || nodeData.backendData?.parentNodeId;
+            const branchId = branchData?._id;
+
+            if (pathParentNodeId && branchId) {
+              await updatePathPosition({
+                nodeId: pathParentNodeId,
+                branchId: branchId,
+                branchPosition: node?.position,
+              });
+            }
+            break;
+
+          default:
+            console.warn(
+              "Unknown node type for position update:",
+              nodeData.type
+            );
+        }
+      } catch (error) {
+        console.error("Error updating node position:", error);
+        // Optionally show a toast notification here
+      }
+    },
+    []
+  );
 
   const hasOutgoingConnection = useCallback(
     (nodeId: string, nodeType: TaskType) => {
       const outgoingEdges = edges.filter((edge) => edge.source === nodeId);
-
-      // Split nodes can have multiple connections, so we don't hide the button
       if (nodeType === TaskType.SPLIT) {
         return false; // Always show add button for split nodes
       }
-
-      // For other nodes, hide button if there's any outgoing connection
       return outgoingEdges.length > 0;
     },
     [edges]
@@ -120,334 +213,31 @@ export const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
     [edges]
   );
 
-  // Get all downstream nodes and edges from a given node
-  const getDownstreamNodesAndEdges = useCallback(
-    (nodeId: string): { nodeIds: string[]; edgeIds: string[] } => {
-      const visitedNodes = new Set<string>();
-      const nodeIds: string[] = [];
-      const edgeIds: string[] = [];
-
-      const traverse = (currentNodeId: string) => {
-        if (visitedNodes.has(currentNodeId)) return;
-        visitedNodes.add(currentNodeId);
-
-        // Find all outgoing edges from current node
-        const outgoingEdges = edges.filter(
-          (edge) => edge.source === currentNodeId
-        );
-
-        outgoingEdges.forEach((edge) => {
-          edgeIds.push(edge.id);
-          nodeIds.push(edge.target);
-          traverse(edge.target); // Recursively traverse downstream
-        });
-      };
-
-      traverse(nodeId);
-      return { nodeIds, edgeIds };
-    },
-    [edges]
-  );
-
-  // Handle cascading delete
-  const handleDeleteNode = useCallback(
-    (nodeId: string) => {
-      console.log("Deleting node:", nodeId);
-
-      // Get all downstream nodes and edges
-      const { nodeIds: downstreamNodeIds, edgeIds: downstreamEdgeIds } =
-        getDownstreamNodesAndEdges(nodeId);
-
-      // Get all edges connected to the node being deleted (incoming and outgoing)
-      const connectedEdges = edges.filter(
-        (edge) => edge.source === nodeId || edge.target === nodeId
-      );
-      const connectedEdgeIds = connectedEdges.map((edge) => edge.id);
-
-      // Combine all edge IDs to delete
-      const allEdgeIdsToDelete = [
-        ...new Set([...downstreamEdgeIds, ...connectedEdgeIds]),
-      ];
-
-      // Combine all node IDs to delete (including the original node)
-      const allNodeIdsToDelete = [...new Set([nodeId, ...downstreamNodeIds])];
-
-      console.log("Deleting nodes:", allNodeIdsToDelete);
-      console.log("Deleting edges:", allEdgeIdsToDelete);
-
-      // Remove nodes
-      setNodes((nds) =>
-        nds.filter((node) => !allNodeIdsToDelete.includes(node.id))
-      );
-
-      // Remove edges
-      setEdges((eds) =>
-        eds.filter((edge) => !allEdgeIdsToDelete.includes(edge.id))
-      );
-    },
-    [edges, setNodes, setEdges, getDownstreamNodesAndEdges]
-  );
-
   useEffect(() => {
-    try {
-      const flow = JSON.parse(workflow.definition);
-      if (!flow) return;
-      setNodes(flow.nodes ?? []);
-      setEdges(flow.edges ?? []);
-      if (!flow.viewport) return;
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setViewport({ x, y, zoom });
-    } catch (error) {}
-  }, [workflow.definition]);
-
-  // Handle adding new node from specific handle
-  const handleAddNodeFromHandle = useCallback(
-    (
-      sourceNodeId: string,
-      handleId: string,
-      nodeType: TaskType,
-      appType?: string
-    ) => {
-      const sourceNode = nodes.find((n) => n.id === sourceNodeId);
-      if (!sourceNode) return;
-
-      // Check if this specific handle already has a connection
-      // if (hasConnectionFromHandle(sourceNodeId, handleId)) {
-      //   console.log("Handle already has a connection");
-      //   return;
-      // }
-
-      // Calculate position based on handle position
-      let newPosition = {
-        x: sourceNode.position.x + 300,
-        y: sourceNode.position.y,
-      };
-
-      // Adjust position based on handle for split nodes
-      if (sourceNode.data.type === TaskType.SPLIT) {
-        switch (handleId) {
-          case "branch-0": // top
-            const existingTopConnections = edges.filter(
-              (edge) =>
-                edge.source === sourceNodeId && edge.sourceHandle === "branch-0"
-            ).length;
-            newPosition = {
-              x: sourceNode.position.x + 200,
-              y: sourceNode.position.y - 150 - existingTopConnections * 100,
-            };
-            break;
-          case "branch-1": // right
-            newPosition = {
-              x: sourceNode.position.x + 300,
-              y: sourceNode.position.y,
-            };
-            break;
-          case "branch-2": // bottom
-            const existingBottomConnections = edges.filter(
-              (edge) =>
-                edge.source === sourceNodeId && edge.sourceHandle === "branch-2"
-            ).length;
-            newPosition = {
-              x: sourceNode.position.x + 200,
-              y: sourceNode.position.y + 150 + existingBottomConnections * 100,
-            };
-            break;
-        }
-      }
-
-      const newNode = CreateFlowNode({
-        nodeType,
-        position: newPosition,
-        pathName: "path absc",
-      });
-
-      // Add the new node
-      setNodes((nds) => [...nds, newNode]);
-
-      // Get proper handle IDs
-      const targetHandleIds = getHandleIds(nodeType);
-
-      // Automatically create edge with correct handle IDs
-      const newEdge = CreateFlowEdge({
-        source: sourceNodeId,
-        target: newNode.id,
-        sourceHandle: handleId,
-        targetHandle: targetHandleIds.input,
-        edgeType: EdgeType.NORMAL,
-      });
-
-      setEdges((eds) => [...eds, newEdge]);
-    },
-    [nodes, setNodes, setEdges, edges]
-  );
-
-  // Handle adding new node with automatic edge creation
-  const handleAddNode = useCallback(
-    (sourceNodeId: string, nodeType: TaskType, appType?: string) => {
-      const sourceNode = nodes.find((n) => n.id === sourceNodeId);
-      if (!sourceNode) return;
-
-      const sourceNodeType = sourceNode.data.type;
-      if (
-        sourceNodeType !== TaskType.SPLIT &&
-        hasOutgoingConnection(sourceNodeId, sourceNodeType)
-      ) {
-        console.log("Node already has a connection and cannot have more");
-        return;
-      }
-
-      // Calculate position for new node
-      const newPosition = {
-        x: sourceNode.position.x + 300,
-        y: sourceNode.position.y,
-      };
-
-      const newNode = CreateFlowNode({
-        nodeType,
-        position: newPosition,
-        appType: appType as AppTaskType,
-      });
-
-      // Add the new node
-      setNodes((nds) => [...nds, newNode]);
-
-      const sourceHandleIds = getHandleIds(sourceNode.data.type);
-      const targetHandleIds = getHandleIds(nodeType);
-
-      // For split nodes, use branch handles
-      let sourceHandle = sourceHandleIds.output;
-      if (sourceNodeType === TaskType.SPLIT) {
-        const connectionCount = getConnectionCount(sourceNodeId);
-        sourceHandle = `branch-${connectionCount}`;
-      }
-
-      // Automatically create edge
-      const newEdge = CreateFlowEdge({
-        source: sourceNodeId,
-        target: newNode.id,
-        sourceHandle: sourceHandle,
-        targetHandle: targetHandleIds.input,
-        edgeType: EdgeType.NORMAL,
-      });
-
-      setEdges((eds) => [...eds, newEdge]);
-    },
-    [nodes, setNodes, setEdges, hasOutgoingConnection, getConnectionCount]
-  );
-
-  // Handle split path creation
-  const handleAddSplitPath = useCallback(
-    (sourceNodeId: string) => {
-      const sourceNode = nodes.find((n) => n.id === sourceNodeId);
-      if (!sourceNode) return;
-
-      const sourceNodeType = sourceNode.data.type;
-      if (
-        sourceNodeType !== TaskType.SPLIT &&
-        hasOutgoingConnection(sourceNodeId, sourceNodeType)
-      ) {
-        console.log("Node already has a connection and cannot have more");
-        return;
-      }
-
-      // Create split node
-      // main split box
-      const splitPosition = {
-        x: sourceNode.position.x + 300,
-        y: sourceNode.position.y - 10,
-      };
-
-      const splitNode = CreateFlowNode({
-        nodeType: TaskType.SPLIT,
-        position: splitPosition,
-      });
-
-      // Create two path nodes
-      const pathANode = CreateFlowNode({
-        nodeType: TaskType.PATH,
-        position: {
-          x: splitPosition.x + 100,
-          y: splitPosition.y - 150,
-        },
-        pathName: "path a",
-      });
-
-      const pathBNode = CreateFlowNode({
-        nodeType: TaskType.PATH,
-        position: {
-          x: splitPosition.x + 100,
-          y: splitPosition.y + 170,
-        },
-        pathName: "path b",
-      });
-
-      // Add all nodes
-      setNodes((nds) => [...nds, splitNode, pathANode, pathBNode]);
-
-      const sourceHandleIds = getHandleIds(sourceNode.data.type);
-      const splitHandleIds = getHandleIds(TaskType.SPLIT);
-      const pathHandleIds = getHandleIds(TaskType.PATH);
-
-      // Create edges
-      const edges = [
-        CreateFlowEdge({
-          source: sourceNodeId,
-          target: splitNode.id,
-          sourceHandle: sourceHandleIds.output,
-          targetHandle: splitHandleIds.input,
-          edgeType: EdgeType.NORMAL,
-        }),
-        CreateFlowEdge({
-          source: splitNode.id,
-          target: pathANode.id,
-          sourceHandle: "branch-0",
-          targetHandle: pathHandleIds.input,
-          edgeType: EdgeType.SPLIT,
-        }),
-        CreateFlowEdge({
-          source: splitNode.id,
-          target: pathBNode.id,
-          sourceHandle: "branch-2",
-          targetHandle: pathHandleIds.input,
-          edgeType: EdgeType.SPLIT,
-        }),
-      ];
-
-      setEdges((eds) => [...eds, ...edges]);
-    },
-    [nodes, setNodes, setEdges, hasOutgoingConnection]
-  );
+    setNodes(transformedNodes);
+    setEdges(transformedEdges as unknown as Edge[]);
+  }, [transformedNodes, transformedEdges, setNodes, setEdges]);
 
   return (
     <main className="h-full w-full">
       <FlowContext.Provider
         value={{
           handleAddNode,
+          handleAddNodeForPath,
           handleAddSplitPath,
+          handleAddSplitPathForPath,
           getConnectionCount,
           hasOutgoingConnection,
           handleAddNodeFromHandle,
           hasConnectionFromHandle,
-          handleDeleteNode,
         }}
       >
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={(changes) => {
-            onNodesChange(changes);
-            saveMutation.mutate({
-              id: workflow._id,
-              definition: JSON.stringify(toObject()),
-            });
-          }}
-          onEdgesChange={(changes) => {
-            onEdgesChange(changes);
-            saveMutation.mutate({
-              id: workflow._id,
-              definition: JSON.stringify(toObject()),
-            });
-          }}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeDragStop={onNodeDragStop}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           snapToGrid
@@ -455,8 +245,16 @@ export const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
           // fitView
           fitViewOptions={fitViewOptions}
           defaultEdgeOptions={{ animated: false, deletable: false }}
+          nodesDraggable={true}
+          nodesConnectable={false}
+          elementsSelectable={true}
+          selectNodesOnDrag={false}
+          panOnDrag={true}
+          zoomOnScroll={true}
+          zoomOnPinch={true}
+          zoomOnDoubleClick={false}
+          preventScrolling={false}
         >
-          <Controls position="top-left" fitViewOptions={fitViewOptions} />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </FlowContext.Provider>

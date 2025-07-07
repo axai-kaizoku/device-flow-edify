@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -13,7 +13,9 @@ import {
 import {
   Dialog,
   DialogClose,
+  DialogContent,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
   SideDialogContent,
@@ -36,6 +38,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ConfirmationModal } from "../dropdowns/confirmation-popup";
+import { AppTaskType } from "../types/task";
+import { ChangeAppDialog } from "./change-app.dialog";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getServices,
+  updateAppAction,
+} from "@/server/workflowActions/workflowById/workflowNodes";
+import ChangeAppDropdown from "../dropdowns/change-app-dropdown";
 
 // Define schema for the action form
 const actionSchema = z.object({
@@ -48,6 +58,7 @@ type ActionFormValues = z.infer<typeof actionSchema>;
 
 function SetActionDialog({
   children,
+  onChangeApp,
   data,
   onDelete,
   open,
@@ -55,33 +66,68 @@ function SetActionDialog({
 }: {
   children: React.ReactNode;
   open: boolean;
+  onChangeApp: (app: AppTaskType) => void;
   data?: any;
   onDelete: () => void;
   setOpen: (open: boolean) => void;
 }) {
+  const queryClient = useQueryClient();
+  const { data: services, status: servicesStatus } = useQuery({
+    queryKey: ["get-node-services", data?.backendData?.template?.name],
+    queryFn: () => getServices(data?.backendData?.template?.name),
+  });
+  const [loading, setLoading] = useState(false);
+
+
+  const setActionMutation = useMutation({
+    mutationFn: updateAppAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", data?.backendData?.workflowId],
+        exact: false,
+      });
+      toast.success("App Condition set Successfully");
+    },
+    onError: () => {
+      toast.error("Failed to set App Condition");
+    },
+  });
+
   const form = useForm<ActionFormValues>({
     defaultValues: {
-      description: "",
-      action: "",
+      description: data?.backendData?.template?.description || "",
+      action: data?.backendData?.templateKey || "",
       parameters: {},
     },
     resolver: zodResolver(actionSchema),
   });
 
-  const handleSubmit = (data: ActionFormValues) => {
-    console.log("Form submitted:", data);
-    toast.success("Action saved successfully");
-    setOpen(false);
+  const handleSubmit = (formData: ActionFormValues) => {
+    setLoading(true);
+    try{
+      setActionMutation.mutate({
+        nodeId: data.backendData.parentNodeId,
+        templateKey: formData.action,
+        workflowId: data.backendData.workflowId,
+        description: formData.description
+      });
+      console.log("Form submitted:", data);
+      setOpen(false);
+    }
+    catch(error){
+      toast.error("Something went wrong");
+    }
+    finally{
+      setLoading(false)
+    }
   };
 
   // Options for the action select field
-  const actionOptions = [
-    { value: "send_email", label: "Send Email" },
-    { value: "create_account", label: "Create Account" },
-    { value: "create_doc", label: "Create Document" },
-    { value: "schedule_event", label: "Schedule Calendar Event" },
-    { value: "update_spreadsheet", label: "Update Spreadsheet" },
-  ];
+  const actionOptions =
+    services?.map((service, index) => ({
+      value: service?.key,
+      label: service?.service,
+    })) || [];
 
   return (
     <Dialog
@@ -108,7 +154,6 @@ function SetActionDialog({
           />
         </DialogTitle>
         <div className="p-6 h-[28.6rem] w-full overflow-y-auto hide-scrollbar">
-          {/* <pre>{JSON.stringify(data)}</pre> */}
           <Form {...form}>
             <form
               id="set-action-form"
@@ -124,11 +169,19 @@ function SetActionDialog({
                     className="size-10"
                   />
                 </div>
-                <div className="flex flex-col gap-2 justify-between h-full">
-                  <p className="font-gilroySemiBold text-sm text-[#222222]">
-                    Google Workspace
-                  </p>
-                  <p className="text-xs w-fit font-gilroyMedium text-black border border-gray-100 py-0.5 px-2 rounded-md">
+
+                <div className="flex flex-col gap-1 w-full">
+                  <div className="flex justify-between items-center w-full">
+                    <p className="font-gilroySemiBold text-sm text-[#222222]">
+                      {data.appType}
+                    </p>
+                    <ChangeAppDropdown data={data}>
+                      <p className="text-xs font-gilroyMedium border rounded-[5px] border-[#CCCCCC] px-1 py-0.5 cursor-pointer">
+                        Change
+                      </p>
+                    </ChangeAppDropdown>
+                  </div>
+                  <p className="text-xs font-gilroyMedium w-fit text-black border border-gray-100 py-0.5 px-2 rounded-md">
                     Action
                   </p>
                 </div>
@@ -224,6 +277,7 @@ function SetActionDialog({
             type="submit"
             variant="primary"
             className="text-[13px] w-fit"
+            loading={loading}
           >
             Continue
           </LoadingButton>

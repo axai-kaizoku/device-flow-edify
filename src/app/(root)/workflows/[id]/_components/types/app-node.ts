@@ -2,10 +2,11 @@ import { Node } from "@xyflow/react";
 import { TaskParam, TaskType } from "./task";
 
 export interface AppNodeData {
-  type: TaskType;
-  pathName: string;
-  appType: string;
-  inputs: Record<string, string>;
+  type?: TaskType;
+  pathName?: string;
+  appType?: string;
+  position?: any;
+  inputs?: Record<string, string>;
   [key: string]: any;
 }
 

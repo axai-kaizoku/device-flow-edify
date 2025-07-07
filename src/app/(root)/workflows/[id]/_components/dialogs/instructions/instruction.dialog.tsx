@@ -42,10 +42,14 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { EditConditionForm } from "./edit-condition.form";
 import { EmailTemplate } from "./email-templete";
 import { ConfirmationModal } from "../../dropdowns/confirmation-popup";
+import { AppTaskType } from "../../types/task";
+import { ChangeAppDialog } from "../change-app.dialog";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getServices } from "@/server/workflowActions/workflowById/workflowNodes";
 
 const schema = z.object({
-  description: z.string(),
-  action: z.string(),
+  description: z.string().optional(),
+  action: z.string().optional(),
 });
 
 export type InstructionValues = z.infer<typeof schema>;
@@ -53,31 +57,37 @@ export type InstructionValues = z.infer<typeof schema>;
 export const InstructionDialog = ({
   children,
   onDelete,
+  onChangeApp,
   data,
   open,
   setOpen,
 }: {
   children: React.ReactNode;
+  onChangeApp: (app: AppTaskType) => void;
   data?: any;
   open: boolean;
   onDelete: () => void;
   setOpen: (open: boolean) => void;
 }) => {
-  const form = useForm<InstructionValues>({
-    defaultValues: {
-      description: "",
-      action: undefined,
-    },
-    resolver: zodResolver(schema),
-  });
   const [isEditScreen, setIsEditScreen] = useState(false);
-
+  const queryClient = useQueryClient();
+  const { data: services, status: servicesStatus } = useQuery({
+    queryKey: ["get-node-services", data?.backendData?.template?.name],
+    queryFn: () => getServices(data?.backendData?.template?.name),
+  });
+  console.log(data);
   const handleSubmit = (data: InstructionValues) => {
     console.log("Form submitted:", data);
     toast.success("Conditions saved successfully");
     setOpen(false);
   };
-
+  const form = useForm<InstructionValues>({
+    defaultValues: {
+      description: services?.[0]?.description,
+      action: services?.[0]?.service,
+    },
+    resolver: zodResolver(schema),
+  });
   return (
     <Dialog
       open={open}
@@ -117,7 +127,6 @@ export const InstructionDialog = ({
           )}
         </DialogTitle>
         <div className="px-6 py-5 h-[28.6rem] w-full overflow-y-auto hide-scrollbar">
-          {/* <pre>{JSON.stringify(data)}</pre> */}
           {!isEditScreen ? (
             <Form {...form}>
               <form
@@ -134,14 +143,16 @@ export const InstructionDialog = ({
                     />
                   </div>
 
-                  <div className="flex flex-col w-full">
+                  <div className="flex flex-col gap-1 w-full">
                     <div className="flex justify-between items-center w-full">
                       <p className="font-gilroySemiBold text-sm text-[#222222]">
                         Send instructions
                       </p>
-                      <p className="text-xs font-gilroyMedium border rounded-[5px] border-[#CCCCCC] px-1 py-0.5 cursor-pointer">
-                        Change
-                      </p>
+                      <ChangeAppDialog onChangeApp={onChangeApp}>
+                        <p className="text-xs font-gilroyMedium border rounded-[5px] border-[#CCCCCC] px-1 py-0.5 cursor-pointer">
+                          Change
+                        </p>
+                      </ChangeAppDialog>
                     </div>
                     <p className="text-xs font-gilroyMedium w-fit text-black border border-gray-100 py-0.5 px-2 rounded-md">
                       Action
@@ -194,18 +205,13 @@ export const InstructionDialog = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="font-gilroyMedium">
-                              {[
-                                {
-                                  label: "Send Onboarding mail",
-                                  value: "Send Onboarding mail",
-                                },
-                              ].map((option) => (
+                              {services?.map((option) => (
                                 <SelectItem
-                                  key={option.value}
-                                  value={option.value}
+                                  key={option.service}
+                                  value={option.service}
                                   className="text-left"
                                 >
-                                  {option.label}
+                                  {option.service}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -238,7 +244,7 @@ export const InstructionDialog = ({
               </form>
             </Form>
           ) : (
-            <EditConditionForm />
+            <EditConditionForm currentNodeData={data?.backendData} />
           )}
         </div>
 

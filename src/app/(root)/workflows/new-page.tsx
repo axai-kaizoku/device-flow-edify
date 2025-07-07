@@ -5,7 +5,6 @@ import { Button } from "@/components/buttons/Button";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createWorkFlow, fetchAllWorkflows } from "./[id]/_components/api";
 import Main from "./_components/main";
 import {
   Select,
@@ -16,20 +15,26 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useQueryState } from "nuqs";
+import {
+  allWorkflows,
+  createWorkflow,
+} from "@/server/workflowActions/workflow";
 export const NewPageWorkflows = () => {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "all-workflows",
   });
   const queryClient = useQueryClient();
   const { data, status } = useQuery({
-    queryKey: ["fetch-all-workflows"],
-    queryFn: () => fetchAllWorkflows(),
+    queryKey: ["fetch-all-workflows", activeTab],
+    queryFn: () => allWorkflows(),
   });
 
   const mutation = useMutation({
-    mutationFn: () => createWorkFlow(),
+    mutationFn: () => createWorkflow(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fetch-all-workflows"] });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-all-workflows", activeTab],
+      });
       toast.success("Created new workflow !");
     },
     onError: () => {
@@ -77,10 +82,10 @@ export const NewPageWorkflows = () => {
                 Draft Workflows
               </SelectItem>
               <SelectItem
-                value="inactive-workflows"
+                value="active-workflows"
                 className="w-full py-2.5 rounded-lg"
               >
-                Inactive Workflows
+                Active Workflows
               </SelectItem>
             </SelectContent>
           </Select>
@@ -95,14 +100,21 @@ export const NewPageWorkflows = () => {
             </Button>
           </div>
         </ActionBar>
+
         <TabsContent value="all-workflows">
-          <Main data={data} status={status === "pending"} />
+          <Main data={data?.data ?? []} status={status === "pending"} />
         </TabsContent>
         <TabsContent value="draft-workflows">
-          <Main data={data} status={status === "pending"} />
+          <Main
+            data={data?.data?.filter((wf) => wf.status === "draft")}
+            status={status === "pending"}
+          />
         </TabsContent>
-        <TabsContent value="inactive-workflows">
-          <Main data={data} status={status === "pending"} />
+        <TabsContent value="active-workflows">
+          <Main
+            data={data?.data?.filter((wf) => wf.status === "published")}
+            status={status === "pending"}
+          />
         </TabsContent>
       </Tabs>
     </section>

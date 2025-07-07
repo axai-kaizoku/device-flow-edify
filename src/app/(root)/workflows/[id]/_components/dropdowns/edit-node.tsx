@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import {
   DropdownMenu,
@@ -19,35 +19,14 @@ import { AppTaskType } from "../types/task";
 import { ConfirmationModal } from "@/app/(root)/workflows/[id]/_components/dropdowns/confirmation-popup";
 import SetActionDialog from "@/app/(root)/workflows/[id]/_components/dialogs/set-action.dialog";
 import { InstructionDialog } from "@/app/(root)/workflows/[id]/_components/dialogs/instructions/instruction.dialog";
-import { useReactFlow } from "@xyflow/react";
-
-const appData = [
-  {
-    icon: "/media/integrations-companies/google.webp",
-    name: "Gmail",
-    type: AppTaskType.GOOGLE,
-  },
-  {
-    icon: "/media/integrations-companies/gmail-icon.webp",
-    name: "Zoom",
-    type: AppTaskType.ZOOM,
-  },
-  {
-    icon: "/media/integrations-companies/hubspot.webp",
-    name: "HubSpot",
-    type: AppTaskType.HUBSPOT,
-  },
-  {
-    icon: "/media/integrations-companies/github.webp",
-    name: "Github",
-    type: AppTaskType.GITHUB,
-  },
-  {
-    icon: "/media/integrations-companies/notion.webp",
-    name: "Notion",
-    type: AppTaskType.NOTION,
-  },
-];
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  changeApp,
+  getAllAppsAndServices,
+  WorkflowAppType,
+} from "@/server/workflowActions/workflowById/workflowNodes";
+import { appsToIgnore } from "./add-popup";
+import { toast } from "sonner";
 
 interface EditNodeProps {
   children: React.ReactNode;
@@ -74,6 +53,32 @@ const EditNode = ({
 }: EditNodeProps) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const queryClient = useQueryClient();
+  // console.log(data)
+
+  const { data: apps } = useQuery({
+    queryKey: ["all-apps-workflow"],
+    queryFn: () => getAllAppsAndServices({}),
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const changeAppMutation = useMutation({
+    mutationFn: ({ nodeId, appName }: { nodeId: string; appName: string }) => {
+      return changeApp({ nodeId, appName });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workflow-by-id"] });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to change app");
+    },
+  });
+
+  const availableApps = useMemo(() => {
+    return apps?.filter((app) => !appsToIgnore.includes(app.name));
+  }, [apps]);
 
   return (
     <DropdownMenu>
@@ -85,34 +90,11 @@ const EditNode = ({
         align="start"
       >
         <DropdownMenuGroup>
-          {type === "app" ? (
-            <SetActionDialog
-              onDelete={onDelete}
-              data={data}
-              open={openEdit}
-              setOpen={setOpenEdit}
-            >
-              <DropdownMenuItem
-                className="flex items-center cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onEditAction();
-                  setOpenEdit(true);
-                }}
-              >
-                <img
-                  src="/media/edit-condition.svg"
-                  alt="edit action"
-                  width={16}
-                  height={16}
-                />
-                Edit Action
-              </DropdownMenuItem>
-            </SetActionDialog>
-          ) : (
+          {data.appType === "Instructions" ? (
             <InstructionDialog
               data={data}
               onDelete={onDelete}
+              onChangeApp={onChangeApp}
               open={openEdit}
               setOpen={setOpenEdit}
             >
@@ -133,6 +115,33 @@ const EditNode = ({
                 Edit Action
               </DropdownMenuItem>
             </InstructionDialog>
+          ) : (
+            <>
+              <SetActionDialog
+                onDelete={onDelete}
+                onChangeApp={onChangeApp}
+                data={data}
+                open={openEdit}
+                setOpen={setOpenEdit}
+              >
+                <DropdownMenuItem
+                  className="flex items-center cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onEditAction();
+                    setOpenEdit(true);
+                  }}
+                >
+                  <img
+                    src="/media/edit-condition.svg"
+                    alt="edit action"
+                    width={16}
+                    height={16}
+                  />
+                  Edit Action
+                </DropdownMenuItem>
+              </SetActionDialog>
+            </>
           )}
 
           <DropdownMenuSub>
@@ -148,20 +157,25 @@ const EditNode = ({
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent className="w-40 flex flex-col gap-2">
-                {appData?.map((data, index) => (
+                {availableApps?.map((app: WorkflowAppType, index) => (
                   <DropdownMenuItem
                     key={index}
                     className="flex items-center cursor-pointer"
-                    onClick={() => onChangeApp(data.type)}
+                    onClick={() => {
+                      changeAppMutation.mutate({
+                        appName: app?.name,
+                        nodeId: data?.backendData?._id,
+                      });
+                    }}
                   >
                     <img
-                      src={data?.icon || "/placeholder.svg"}
-                      alt="App"
+                      src={app?.image ?? "/logo.png"}
+                      alt={app?.name ?? "app"}
                       className="w-4 h-4"
                       width={16}
                       height={16}
                     />
-                    <p className="font-gilroyMedium">{data?.name}</p>
+                    <p className="font-gilroyMedium">{app?.name}</p>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuSubContent>

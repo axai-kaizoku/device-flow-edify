@@ -8,7 +8,7 @@ export default function Main({
   data,
   status: isPending,
 }: {
-  data: any[];
+  data: any;
   status: boolean;
 }) {
   if (isPending) {
@@ -32,7 +32,7 @@ export default function Main({
           </div>
         </div>
       ) : (
-        <PaginatedList data={data!} />
+        <PaginatedList data={data} />
       )}
     </>
   );

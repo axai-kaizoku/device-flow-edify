@@ -19,22 +19,22 @@ import { getImageUrl } from "@/components/utils/upload";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { FileEmpty02Icon } from "@hugeicons/core-free-icons";
 import { X } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { setConfigInstruction } from "@/server/workflowActions/workflowById/workflowNodes";
 
 const schema = z.object({
-  description: z.string(),
-  action: z.string(),
-  to: z.string().optional(),
+  to: z.union([z.string().optional(), z.array(z.string().optional())]),
   subject: z.string().optional(),
-  attachments: z.string().optional(),
-  cc: z.string().optional(),
+
+  cc: z.union([z.string().optional(), z.array(z.string().optional())]),
   body: z.string().optional(),
   attachment: z.string().optional(),
 });
-
 type InstructionValues = z.infer<typeof schema>;
 
 export const EditConditionForm = ({
   formData,
+  currentNodeData,
   isEdit,
   setNext,
 }: {
@@ -48,12 +48,11 @@ export const EditConditionForm = ({
     attachment: "";
   };
   isEdit?: boolean;
+  currentNodeData: any;
   setNext?: (next: number) => void;
 }) => {
   const form = useForm<InstructionValues>({
     defaultValues: {
-      description: isEdit ? formData.description : "",
-      action: isEdit ? formData.action : undefined,
       to: isEdit ? formData.to : "",
       cc: isEdit ? formData.cc : "",
       subject: isEdit ? formData.subject : "",
@@ -104,6 +103,7 @@ export const EditConditionForm = ({
 
     try {
       const result = await getImageUrl({ file });
+      console.log(result);
       form.setValue("attachment", result.fileUrl);
     } catch (error) {
       // console.error(error);
@@ -117,14 +117,41 @@ export const EditConditionForm = ({
   const handleRemoveFile = () => {
     form.setValue("attachment", "");
   };
-
+  const mutation = useMutation({
+    mutationFn: setConfigInstruction,
+    onSuccess: () => {
+      toast.success("COnfiguration added");
+    },
+    onError: () => {
+      toast.error("Failed to add configuration");
+    },
+  });
   const handleSubmit = (data: InstructionValues) => {
-    console.log("Form submitted:", data);
+    const attachmentUrl = data.attachment;
+
+    // Build the final HTML with attachment link if present
+    const htmlWithAttachment = attachmentUrl
+      ? `${
+          data.body || ""
+        }<br/><br/>Attachment: <a href="${attachmentUrl}" target="_blank">${attachmentUrl}</a>`
+      : data.body || "";
+
+    console.log("Submitting with html:", htmlWithAttachment);
+
+    mutation.mutate({
+      currentNodeId: currentNodeData._id,
+      cc: Array.isArray(data?.cc) ? data.cc : data.cc ? [data.cc] : [],
+      html: htmlWithAttachment, // ✅ include the attachment in the html
+      subject: data?.subject,
+    });
+
     toast.success("Conditions saved successfully");
+    form.reset();
   };
 
   return (
     <Form {...form}>
+      {JSON.stringify(currentNodeData)}
       <form
         id="edit-condition-form"
         onSubmit={form.handleSubmit(handleSubmit)}
@@ -141,8 +168,9 @@ export const EditConditionForm = ({
               <FormItem>
                 <FormControl>
                   <Input
+                    disabled
                     {...field}
-                    placeholder="Add email"
+                    placeholder="{Add email}"
                     className="placeholder:text-[13px] placeholder:text-[#CCCCCC] placeholder:font-gilroyMedium font-gilroyMedium"
                   />
                 </FormControl>
@@ -219,7 +247,6 @@ export const EditConditionForm = ({
             )}
           />
         </div>
-
         <FormField
           control={form.control}
           name="attachment"

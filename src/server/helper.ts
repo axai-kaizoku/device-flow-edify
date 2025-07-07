@@ -12,7 +12,7 @@ export const getSession = async () => {
 export const getTokenFromSession = async () => {
   const session = await getServerSession(authOptions);
   const token = session?.user?.user.token;
-  // console.log(session?.user, "session from helper");
+  console.log(session?.user, "session from helper");
 
   return token;
 };
@@ -50,10 +50,9 @@ export async function callAPIWithToken<T>(
     const response: AxiosResponse<T> = await axios({
       url,
       method,
-      data:
-        method === "POST" || method === "PUT" || method === "PATCH"
-          ? body
-          : undefined,
+      data: ["POST", "PUT", "PATCH", "DELETE"].includes(method)
+        ? body
+        : undefined,
       headers: defaultHeaders,
     });
 
