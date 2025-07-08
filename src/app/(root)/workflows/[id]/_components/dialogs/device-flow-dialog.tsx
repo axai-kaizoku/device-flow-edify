@@ -3,6 +3,7 @@ import { LoadingButton } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogClose,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
   DialogTrigger,
@@ -78,6 +79,9 @@ function DeviceFlowDialog({
             className="text-[#0C941C] size-4"
           />
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          deviceflow description
+        </DialogDescription>
         <div className="px-6 pt-6 pb-0 h-full w-full overflow-y-auto hide-scrollbar">
           <Form {...form}>
             <form

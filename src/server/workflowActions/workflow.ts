@@ -136,3 +136,20 @@ export const getWorkflowById = async (id: string) => {
     throw new Error("Error fetching workflow");
   }
 };
+
+
+export const testRunWorkflow = async (id: string) => {
+  try {
+    const res = await callAPIWithToken<any>(
+      `${BASEURL}/edifybackend/v1/workflow/workflow/test-run`,
+      "POST",
+      {
+        workflowId: id
+      }
+    );
+
+    return res?.data;
+  } catch {
+    throw new Error("Error fetching workflow Test Run");
+  }
+};

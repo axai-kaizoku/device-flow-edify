@@ -2,7 +2,7 @@
 import { Button } from "@/components/buttons/Button";
 import { PlayCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
 import { toast } from "sonner";
 import { updateWorkFlowById } from "../[id]/_components/api";
@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Stepper,
   StepperIndicator,
@@ -22,7 +22,8 @@ import {
   StepperSeparator,
   StepperTrigger,
 } from "@/components/ui/stepper";
-import { Check, LoaderCircle } from "lucide-react";
+import { Check, LoaderCircle, XIcon } from "lucide-react";
+import { testRunWorkflow } from "@/server/workflowActions/workflow";
 
 export const useSaveWorkflowMutation = () => {
   return useMutation({
@@ -36,6 +37,7 @@ export const TestRun = ({ workflowId }: { workflowId: string }) => {
   const saveMutation = useSaveWorkflowMutation();
   return (
     <TestRunDialog
+      workflowId={workflowId}
       disabled={saveMutation.isPending}
       handlePublish={() => {
         const workflowDefination = JSON.stringify(toObject());
@@ -60,97 +62,185 @@ export const TestRun = ({ workflowId }: { workflowId: string }) => {
   );
 };
 
-const workflowData = [
-  {
-    name: "Google workspace",
-    isRunning: true,
-  },
-  {
-    name: "Google workspace",
-    isRunning: true,
-  },
-  {
-    name: "Google workspace",
-    isRunning: false,
-  },
-  {
-    name: "Google workspace",
-    isRunning: true,
-  },
-  {
-    name: "Google workspace",
-    isRunning: true,
-  },
-  {
-    name: "Google workspace",
-    isRunning: true,
-  },
-];
+const STEP_DELAY_MS = 3000;
 
 export const TestRunDialog = ({
   children,
   handlePublish,
   disabled,
+  workflowId,
 }: {
   children: React.ReactNode;
   handlePublish: () => void;
   disabled: boolean;
+  workflowId: string;
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [loadingStepIndex, setLoadingStepIndex] = useState<number | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [failedStepIndex, setFailedStepIndex] = useState<number | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Add at the top inside TestRunDialog
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const { data: workflowData, status } = useQuery({
+    queryKey: ["test-run-workflow", workflowId],
+    queryFn: () => testRunWorkflow(workflowId),
+    enabled: !!workflowId,
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (!isDialogOpen || !workflowData) return;
+
+    const steps = workflowData.results;
+    let stepIndex = 0;
+
+    const runNextStep = () => {
+      if (stepIndex >= steps.length || failedStepIndex !== null) {
+        setLoadingStepIndex(null);
+        return;
+      }
+
+      const step = steps[stepIndex];
+
+      // Set loading indicator
+      setLoadingStepIndex(stepIndex);
+
+      timerRef.current = setTimeout(() => {
+        if (step.executable === false) {
+          setFailedStepIndex(stepIndex);
+          setLoadingStepIndex(null);
+          return;
+        }
+
+        setCompletedSteps((prev) => [...prev, stepIndex]);
+        setCurrentStep((prev) => prev + 1);
+
+        stepIndex++;
+        runNextStep();
+      }, STEP_DELAY_MS);
+    };
+
+    // Reset on open
+    setCurrentStep(0);
+    setCompletedSteps([]);
+    setFailedStepIndex(null);
+    runNextStep();
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isDialogOpen, workflowData]);
+
+  // Scroll the current step into view on step change
+  useEffect(() => {
+    const el = stepRefs.current[currentStep];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [currentStep, loadingStepIndex]);
+
+  if (status === "pending") {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md min-h-0 h-full font-gilroyMedium max-h-80 rounded-lg">
-        <DialogTitle className="font-normal font-gilroyMedium">
+      <DialogContent className="font-gilroyMedium max-w-sm   rounded-[10px] p-0 ">
+        <DialogTitle className="font-gilroySemiBold px-5 pt-5 text-black text-sm  ">
           Test Workflow
         </DialogTitle>
+        {/* {JSON.stringify(workflowData)} */}
+        <div className="h-[1px] w-full bg-gray-300 "></div>
         <Stepper
           value={currentStep}
           onValueChange={setCurrentStep}
           orientation="vertical"
-          className="space-y-1"
+          className="px-5 overflow-y-auto min-h-0 h-fit max-h-[11rem]"
         >
-          {workflowData.map((step, i) => (
-            <div className="flex gap-1" key={i}>
-              <StepperItem
-                key={i}
-                step={i}
-                className="[&:not(:last-child)]:flex-1 h-fit w-fit flex gap-1"
+          {workflowData?.results?.map((step, i) => {
+            const isCompleted = completedSteps.includes(i) || i < currentStep;
+            const isFailed = failedStepIndex === i;
+            const isLoading = loadingStepIndex === i;
+
+            return (
+              <div
+                className="flex gap-2.5 justify-start"
+                ref={(el) => (stepRefs.current[i] = el)}
+                key={step.nodeId}
               >
-                <StepperTrigger asChild>
-                  <StepperIndicator asChild>
-                    <span className="transition-all group-data-[loading=true]/step:scale-50 group-data-[state=completed]/step:scale-50 group-data-[loading=true]/step:opacity-0 group-data-[state=completed]/step:opacity-0">
-                      {/* {step.name} */}
-                    </span>
-                    <Check
-                      className="absolute scale-50 opacity-0 transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100"
-                      size={16}
-                      strokeWidth={2}
-                      aria-hidden="true"
-                    />
-                    <span className="absolute scale-50 opacity-0 transition-all group-data-[loading=true]/step:scale-100 group-data-[loading=true]/step:opacity-100">
-                      <LoaderCircle
-                        className="animate-spin"
-                        size={16}
-                        strokeWidth={2}
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </StepperIndicator>
-                </StepperTrigger>
-                {i < workflowData.length && <StepperSeparator />}
-              </StepperItem>
-              {step.name}
-            </div>
-          ))}
+                <StepperItem
+                  key={i}
+                  step={i}
+                  id={i}
+                  loading={isLoading}
+                  completed={isCompleted || isFailed}
+                  executable={step.executable}
+                  className="[&:not(:last-child)]:flex-1/2 h-fit w-fit flex gap-1"
+                >
+                  <StepperTrigger asChild>
+                    <StepperIndicator asChild>
+                      <span className="transition-all group-data-[loading=true]/step:scale-50 group-data-[state=completed]/step:scale-50 group-data-[loading=true]/step:opacity-0 group-data-[state=completed]/step:opacity-0">
+                        {/* {step.name} */}
+                      </span>
+                      {loadingStepIndex !== i ? (
+                        step.executable ? (
+                          <Check
+                            className="absolute scale-50 opacity-0 transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100"
+                            size={14}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <XIcon
+                            className="absolute scale-0 opacity-0 text-white transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100 group-data-[state=active]/step:scale-100 group-data-[state=active]/step:opacity-100"
+                            size={16}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                          />
+                        )
+                      ) : (
+                        <span className="absolute scale-50 opacity-0 transition-all group-data-[loading=true]/step:scale-100 group-data-[loading=true]/step:opacity-100">
+                          <LoaderCircle
+                            className="animate-spin"
+                            size={14}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                          />
+                        </span>
+                      )}
+                    </StepperIndicator>
+                  </StepperTrigger>
+                  {i < workflowData.results.length - 1 && (
+                    <StepperSeparator executable={step.executable} />
+                  )}
+                </StepperItem>
+
+                <div className="flex flex-col">
+                  <p>{step?.appName || "Sample Step"}</p>
+                  {!step?.executable && (
+                    <p>
+                      {(isFailed || (isCompleted && !step.executable)) && (
+                        <span className="text-xs text-red-500 font-gilroyMedium">
+                          {step.reason}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </Stepper>
-        <div className="flex justify-center space-x-2">
+        {/* <div className="flex justify-center space-x-2">
           <Button
             variant="outline"
             className="w-20"
             onClick={() => setCurrentStep((prev) => prev - 1)}
-            disabled={currentStep === 1}
+            disabled={currentStep === 0}
           >
             Prev step
           </Button>
@@ -158,18 +248,19 @@ export const TestRunDialog = ({
             variant="outline"
             className="w-20"
             onClick={() => setCurrentStep((prev) => prev + 1)}
-            disabled={currentStep > workflowData.length}
+            disabled={currentStep >= (workflowData?.results.length || 0) - 1}
           >
             Next step
           </Button>
-        </div>
+        </div> */}
+
         {/* <div className="w-full h-full overflow-y-auto hide-scrollbar">
           {workflowData.map((action) => (
             <div key={action.name}>{action.name}</div>
           ))}
         </div> */}
         <DialogFooter>
-          <div className="flex w-full gap-2">
+          <div className="flex w-full gap-2 p-5 pt-0">
             <DialogClose className="w-full flex-1" asChild>
               <Button variant="outlineTwo" className="w-full flex-1">
                 Close
@@ -178,7 +269,7 @@ export const TestRunDialog = ({
             <Button
               onClick={handlePublish}
               className="w-full flex-1"
-              disabled={disabled}
+              disabled={workflowData?.status === "partial"}
               variant="primary"
             >
               Publish

@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { string, z } from "zod";
+import { z } from "zod";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Add01Icon,
-  ArrowLeft02Icon,
-  CheckmarkCircle02Icon,
-  Delete01Icon,
-} from "@hugeicons/core-free-icons";
+import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Dialog,
   DialogClose,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
   DialogTrigger,
@@ -28,7 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Select,
   SelectContent,
@@ -37,15 +31,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
 import { addPathCondition } from "@/server/workflowActions/workflowById/workflowPaths";
-import { ConfirmationModal } from "../dropdowns/confirmation-popup";
 import { getConditionsOfPath } from "@/server/workflowActions/workflowById/workflowPositions";
+import {
+  Add01Icon,
+  ArrowLeft02Icon,
+  CheckmarkCircle02Icon,
+  Delete01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ConfirmationModal } from "../dropdowns/confirmation-popup";
 
 // Define schema for a single condition item
 const conditionItemSchema = z.object({
@@ -68,12 +64,16 @@ function SetConditionDialog({
   children,
   parentData,
   onDelete,
+  open,
+  setOpen,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   parentData: any;
   onDelete: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const form = useForm<ConditionFormValues>({
     defaultValues: {
@@ -101,16 +101,22 @@ function SetConditionDialog({
       });
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "conditions",
   });
 
   const handleSubmit = async (data: ConditionFormValues) => {
+    console.log(data, "condition data");
+
     const existingConditions = parentData?.branchData?.condition ?? [];
-    console.log(parentData);
+
+    console.log(parentData, "condition parent data");
+
     const promises = data?.conditions?.map(async (cond, idx) => {
       const existing = existingConditions[idx];
+
       if (existing?._id) {
         // Update existing condition
         return mutation.mutateAsync({
@@ -149,7 +155,8 @@ function SetConditionDialog({
       toast.error("Failed to update conditions");
     }
   };
-  const { data } = useQuery({
+
+  const { data: ifCondtionsData } = useQuery<any>({
     queryKey: [
       "if-condition-template-key",
       parentData?.branchData?.parentTemplateKey,
@@ -159,28 +166,24 @@ function SetConditionDialog({
         templateKey: parentData?.branchData?.parentTemplateKey,
       }),
     staleTime: Infinity,
+    refetchOnMount: false,
   });
-  console.log(parentData?.branchData?.parentTemplateKey);
+
   const fieldOptions =
-    data?.outputFields?.map((field) => ({
+    ifCondtionsData?.outputFields?.map((field) => ({
       value: field,
       label: field,
     })) || [];
-  console.log(fieldOptions);
-  // const fieldOptions = [
-  //   { value: "status", label: "Status" },
-  //   { value: "priority", label: "Priority" },
-  //   { value: "due_date", label: "Due Date" },
-  // ];
 
   const conditionOptions = [
-    { value: "=", label: "Equals" },
+    { value: "==", label: "Equals" },
     { value: "!=", label: "Not Equals" },
     { value: ">", label: "Greater Than" },
     { value: "<", label: "Less Than" },
   ];
+
   const hasConditions = conditionOptions.length > 0;
-  console.log(parentData);
+
   return (
     <>
       <Dialog
@@ -207,6 +210,9 @@ function SetConditionDialog({
               className="text-[#0C941C] size-4"
             />
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            paths description
+          </DialogDescription>
 
           <div className="p-6 h-[28.6rem] w-full overflow-y-auto hide-scrollbar">
             <Form {...form}>
@@ -443,6 +449,8 @@ function SetConditionDialog({
               form="set-condition-form"
               variant="primary"
               className="text-[13px] w-fit"
+              onClick={(e) => e.stopPropagation()}
+              loading={mutation?.isPending}
             >
               Continue
             </LoadingButton>

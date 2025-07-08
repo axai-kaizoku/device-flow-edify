@@ -26,10 +26,8 @@ import { NormalEdge } from "./edges/normal-edge";
 import { NodeComponent } from "./nodes/node-component";
 import { AppNode } from "./types/app-node";
 import { TaskType } from "./types/task";
-import {
-  BackendWorkflowResponse,
-  transformBackendToReactFlow,
-} from "./utils/data-transformer";
+import { transformBackendToReactFlow } from "./utils/data-transformer";
+import { type BackendWorkflowResponse } from "./utils/types";
 
 import {
   updateConnectorPosition,

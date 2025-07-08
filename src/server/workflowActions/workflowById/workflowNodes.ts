@@ -251,3 +251,43 @@ export const setConfigInstruction = async ({
     throw new Error((e as AxiosError)?.message);
   }
 };
+
+export const getAllCustomEmailTemplates = async (): Promise<any> => {
+  try {
+    const res = await callAPIWithToken<any>(
+      `${BASEURL}/edifybackend/v1/workflow/customtemplate/`,
+      "GET",
+      {}
+    );
+
+    // console.log("getAllCustomTemplates response:", res);
+    return res?.data;
+  } catch (e) {
+    throw new Error((e as AxiosError)?.message);
+  }
+};
+
+export const createCustomEmailTemplate = async ({
+  name,
+  config,
+}: {
+  name: string;
+  config: {
+    cc?: string[];
+    subject?: string;
+    html?: string;
+  };
+}): Promise<any> => {
+  try {
+    const res = await callAPIWithToken<any>(
+      `${BASEURL}/edifybackend/v1/workflow/customtemplate/create`,
+      "POST",
+      { name, config }
+    );
+
+    // console.log("createCustomEmailTemplate response:", res);
+    return res?.data;
+  } catch (e) {
+    throw new Error((e as AxiosError)?.message);
+  }
+};

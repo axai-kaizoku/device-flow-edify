@@ -9,6 +9,7 @@ import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { MenuBar } from "./editor-menu-bar";
+import { cn } from "@/lib/utils";
 
 export const EmailTextEditor = ({
   content,
@@ -41,9 +42,9 @@ export const EmailTextEditor = ({
       onChange?.(html);
     },
     editorProps: {
-      attributes: {
-        class: "prose focus:outline-none min-h-[6rem] p-4",
-      },
+      // attributes: {
+      //   class: "prose focus:outline-none min-h-[6rem] p-4",
+      // },
     },
     onFocus: () => {
       // Ensure the editor gets focus when clicked
@@ -54,12 +55,14 @@ export const EmailTextEditor = ({
   return (
     <>
       <MenuBar editor={editor} />
-      <div onClick={() => editor?.commands.focus()} className="cursor-text">
-        <EditorContent
-          editor={editor}
-          className="break-words text-sm font-gilroyMedium prose-sm max-w-none max-h-[5rem] overflow-y-auto bg-background focus:outline-none p-2 hide-scrollbar w-full"
-        />
-      </div>
+      {/* <div onClick={() => editor?.commands.focus()} className="cursor-text"> */}
+      <EditorContent
+        editor={editor}
+        className={cn(
+          "break-words text-sm font-gilroyMedium prose-sm max-w-none max-h-[5rem] overflow-y-auto bg-background focus:outline-none p-2 hide-scrollbar w-full"
+        )}
+      />
+      {/* </div> */}
     </>
   );
 };

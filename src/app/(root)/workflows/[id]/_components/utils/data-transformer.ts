@@ -1,88 +1,30 @@
 import type { AppNode } from "../types/app-node";
 import { EdgeType, type EdgeData } from "../types/edge";
 import { TaskType } from "../types/task";
-import { TaskRegistry } from "../workflow/task/registry";
-
-// Backend API types
-export interface BackendNode {
-  _id: string;
-  orgId: string;
-  workflowId: string;
-  templateKey: string;
-  position: { x: number; y: number };
-  connectorPosition?: { x: number; y: number };
-  next: string | null;
-  branches: BackendBranch[];
-  appName?: string;
-  image?: string;
-  description?: string;
-  config?: Record<string, any>;
-  serviceDescription?: string;
-  createdAt: string;
-  updatedAt: string;
-  [key: string]: any;
-}
-
-export interface BackendBranch {
-  branchId: string;
-  label: string;
-  branchPosition: { x: number; y: number };
-  branchDescription?: string;
-  condition: any;
-  target: BackendNode | null;
-  branchDirection?: "Top" | "Bottom" | "Right" | null;
-}
-
-export interface BackendWorkflowResponse {
-  workflow: {
-    _id: string;
-    name: string;
-    status: string;
-    startNode: string;
-  };
-  tree: BackendNode;
-  apps: Array<{
-    name: string;
-    image: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string | null;
-  }>;
-}
-
-const getTaskTypeFromTemplateKey = (templateKey: string): TaskType => {
-  switch (templateKey) {
-    case "start":
-      return TaskType.START;
-    case "split":
-      return TaskType.SPLIT;
-    case "path":
-      return TaskType.PATH;
-    default:
-      return TaskType.APP;
-  }
-};
-
-const getHandleIds = (taskType: TaskType) => {
-  const task = TaskRegistry[taskType];
-  return {
-    input: task?.inputs?.[0]?.name || "input",
-    output: task?.outputs?.[0]?.name || "output",
-  };
-};
+import { getHandleIds, getTaskTypeFromTemplateKey } from "./helper";
+import { BackendBranch, BackendNode, BackendWorkflowResponse } from "./types";
 
 // Transform backend data to React Flow format
 export const transformBackendToReactFlow = (
   backendData: BackendWorkflowResponse
 ) => {
   const nodes: AppNode[] = [];
-  const edges: Edge<EdgeData>[] = [];
+  const edges: EdgeData[] = [];
   const processedNodes = new Set<string>();
   const fakeSplitApps = new Map<string, string>();
 
-  const processNode = (node: BackendNode) => {
+  // Track parent-child relationships for Device Flow detection
+  const parentChildMap = new Map<string, string>(); // childId -> parentId
+  const nodeTemplateMap = new Map<string, string>(); // nodeId -> templateKey
+
+  const processNode = (node: BackendNode, parentNode?: BackendNode) => {
     if (processedNodes.has(node._id)) return;
     processedNodes.add(node._id);
+
+    if (parentNode) {
+      parentChildMap.set(node._id, parentNode._id);
+    }
+    nodeTemplateMap.set(node._id, node.templateKey);
 
     console.log("Processing node:", {
       id: node._id,
@@ -95,6 +37,18 @@ export const transformBackendToReactFlow = (
 
     const taskType = getTaskTypeFromTemplateKey(node.templateKey);
     const handleIds = getHandleIds(taskType);
+
+    const isDeviceFlowWithStartParent =
+      node.appName === "Device Flow" && parentNode?.templateKey === "start";
+
+    console.log("Device Flow check:", {
+      nodeId: node._id,
+      appName: node.appName,
+      isDeviceFlow: node.appName === "Device Flow",
+      parentTemplateKey: parentNode?.templateKey,
+      isStartParent: parentNode?.templateKey === "start",
+      isDeviceFlowWithStartParent,
+    });
 
     // **DETECT FAKE SPLIT APP: has appName "Split" AND has connectorPosition**
     const isFakeSplitApp = node.appName === "Split" && node.connectorPosition;
@@ -114,27 +68,6 @@ export const transformBackendToReactFlow = (
       // This represents the fake Split app as a split connector in the UI
       const splitConnectorId = `${node._id}-split`;
       const splitHandleIds = getHandleIds(TaskType.SPLIT);
-
-      /**
-       * I guess this is a point where we need to create an edge from path to split connector
-       */
-      // const edgeToSplit: EdgeData = {
-      //   id: `${node._id}-to-${splitConnectorId}`,
-      //   source: node._id,
-      //   target: splitConnectorId,
-      //   sourceHandle: handleIds.output,
-      //   targetHandle: splitHandleIds.input,
-      //   type: EdgeType.NORMAL,
-      //   animated: false,
-      //   data: {
-      //     type: EdgeType.NORMAL,
-      //     sourceHandle: handleIds.output,
-      //     canAddPath: false,
-      //     isTopOrBottom: false,
-      //   },
-      // };
-
-      // edges.push(edgeToSplit);
 
       // Store the mapping for later edge creation
       fakeSplitApps.set(node._id, splitConnectorId);
@@ -198,6 +131,8 @@ export const transformBackendToReactFlow = (
           ifCondition: node.ifCondition,
           configData: node.config,
           branches: node.branches,
+          // Add the Device Flow with start parent boolean
+          isDeviceFlowWithStartParent: isDeviceFlowWithStartParent,
           template: node.appName
             ? {
                 name: node.appName,
@@ -216,7 +151,9 @@ export const transformBackendToReactFlow = (
       "✅ Created regular node:",
       reactFlowNode.id,
       "type:",
-      taskType
+      taskType,
+      "isDeviceFlowWithStartParent:",
+      isDeviceFlowWithStartParent
     );
 
     // Handle branches
@@ -254,7 +191,7 @@ export const transformBackendToReactFlow = (
         nodes.push(splitNode);
 
         // Create edge from current node to split node
-        const edgeToSplit: Edge<EdgeData> = {
+        const edgeToSplit: EdgeData = {
           id: `${node._id}-to-${splitNodeId}`,
           source: node._id,
           target: splitNodeId,
@@ -291,7 +228,7 @@ export const transformBackendToReactFlow = (
               });
 
               // Process the fake split app first to ensure it exists
-              processNode(branch.target);
+              processNode(branch.target, node);
 
               // Get the split connector ID for the fake app
               const splitConnectorId = fakeSplitApps.get(branch.target._id);
@@ -299,7 +236,7 @@ export const transformBackendToReactFlow = (
                 const splitHandleIds = getHandleIds(TaskType.SPLIT);
 
                 // **CREATE EDGE FROM CURRENT NODE TO FAKE SPLIT APP CONNECTOR**
-                const edgeToFakeSplit: Edge<EdgeData> = {
+                const edgeToFakeSplit: EdgeData = {
                   id: `${node._id}-to-${splitConnectorId}`,
                   source: node._id,
                   target: splitConnectorId,
@@ -328,14 +265,14 @@ export const transformBackendToReactFlow = (
               }
             } else {
               // Process the target node
-              processNode(branch.target);
+              processNode(branch.target, node);
 
               const targetTaskType = getTaskTypeFromTemplateKey(
                 branch.target.templateKey
               );
               const targetHandleIds = getHandleIds(targetTaskType);
 
-              const edge: Edge<EdgeData> = {
+              const edge: EdgeData = {
                 id: `${node._id}-to-${branch.target._id}`,
                 source: node._id,
                 target: branch.target._id,
@@ -446,7 +383,7 @@ export const transformBackendToReactFlow = (
         console.log("✅ Created path node:", pathNodeId);
 
         // Create edge from split to path
-        const edgeToPath: Edge<EdgeData> = {
+        const edgeToPath: EdgeData = {
           id: `${splitNodeId}-to-${pathNodeId}`,
           source: splitNodeId,
           target: pathNodeId,
@@ -489,7 +426,7 @@ export const transformBackendToReactFlow = (
             });
 
             // Process the fake split app first
-            processNode(branch.target);
+            processNode(branch.target, node);
 
             // Get the split connector ID for the fake app
             const splitConnectorId = fakeSplitApps.get(branch.target._id);
@@ -497,7 +434,7 @@ export const transformBackendToReactFlow = (
               const splitHandleIds = getHandleIds(TaskType.SPLIT);
 
               // **CREATE EDGE FROM PATH TO FAKE SPLIT APP CONNECTOR**
-              const edgeFromPathToFakeSplit: Edge<EdgeData> = {
+              const edgeFromPathToFakeSplit: EdgeData = {
                 id: `${pathNodeId}-to-${splitConnectorId}`,
                 source: pathNodeId,
                 target: splitConnectorId,
@@ -525,14 +462,14 @@ export const transformBackendToReactFlow = (
               );
             }
           } else {
-            processNode(branch.target);
+            processNode(branch.target, node);
 
             const targetTaskType = getTaskTypeFromTemplateKey(
               branch.target.templateKey
             );
             const targetHandleIds = getHandleIds(targetTaskType);
 
-            const edgeFromPath: Edge<EdgeData> = {
+            const edgeFromPath: EdgeData = {
               id: `${pathNodeId}-to-${branch.target._id}`,
               source: pathNodeId,
               target: branch.target._id,
@@ -576,6 +513,17 @@ export const transformBackendToReactFlow = (
   console.log("🎯 Transformation complete:");
   console.log("Total nodes created:", nodes.length);
   console.log("Total edges created:", edges.length);
+  console.log(
+    "Device Flow nodes with start parents:",
+    nodes
+      .filter((n) => n.data.backendData?.isDeviceFlowWithStartParent)
+      .map((n) => ({
+        id: n.id,
+        appType: n.data.appType,
+        isDeviceFlowWithStartParent:
+          n.data.backendData?.isDeviceFlowWithStartParent,
+      }))
+  );
   console.log(
     "Nodes:",
     nodes.map((n) => ({

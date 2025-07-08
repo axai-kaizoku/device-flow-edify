@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -64,7 +65,7 @@ function SetActionDialog({
   open,
   setOpen,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   open: boolean;
   onChangeApp: (app: AppTaskType) => void;
   data?: any;
@@ -77,7 +78,6 @@ function SetActionDialog({
     queryFn: () => getServices(data?.backendData?.template?.name),
   });
   const [loading, setLoading] = useState(false);
-
 
   const setActionMutation = useMutation({
     mutationFn: updateAppAction,
@@ -104,21 +104,19 @@ function SetActionDialog({
 
   const handleSubmit = (formData: ActionFormValues) => {
     setLoading(true);
-    try{
+    try {
       setActionMutation.mutate({
         nodeId: data.backendData.parentNodeId,
         templateKey: formData.action,
         workflowId: data.backendData.workflowId,
-        description: formData.description
+        description: formData.description,
       });
       console.log("Form submitted:", data);
       setOpen(false);
-    }
-    catch(error){
+    } catch (error) {
       toast.error("Something went wrong");
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,6 +151,9 @@ function SetActionDialog({
             className="text-[#0C941C] size-4"
           />
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          app description
+        </DialogDescription>
         <div className="p-6 h-[28.6rem] w-full overflow-y-auto hide-scrollbar">
           <Form {...form}>
             <form
@@ -164,8 +165,8 @@ function SetActionDialog({
               <div className="flex gap-2 items-center">
                 <div className="rounded-lg p-1.5 border border-gray-100 flex-shrink-0">
                   <img
-                    src="/media/integrations-companies/google.webp"
-                    alt="Google Workspace"
+                    src={data?.backendData?.template?.image}
+                    alt={data?.backendData?.template?.name}
                     className="size-10"
                   />
                 </div>
@@ -231,7 +232,7 @@ function SetActionDialog({
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
-                                className="text-left"
+                                className="text-left capitalize"
                               >
                                 {option.label}
                               </SelectItem>
@@ -278,6 +279,7 @@ function SetActionDialog({
             variant="primary"
             className="text-[13px] w-fit"
             loading={loading}
+            onClick={(e) => e.stopPropagation()}
           >
             Continue
           </LoadingButton>

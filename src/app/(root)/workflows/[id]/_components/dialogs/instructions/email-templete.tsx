@@ -5,82 +5,113 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 export const EmailTemplate = ({
   setIsEdit,
+  currentConfig,
 }: {
   setIsEdit: (val: boolean) => void;
-}) => (
-  <div>
-    <div className="bg-[#F9F9F9] rounded p-4 flex flex-col gap-3 text-[13px] font-gilroyMedium">
-      <div className="flex items-end justify-start gap-2">
-        <span className="text-[#A5A5A5]">To:</span>
-        <div>
-          <Input
-            readOnly
-            value={"{Employee email}"}
-            className="w-28 max-w-fit px-1 py-0 h-fit md:text-[13px]"
-          />
-        </div>
-      </div>
-      <div className="flex items-end justify-start gap-2">
-        <span className="text-[#A5A5A5]">From:</span>
-        <div>lalityasahu02@gmail.com</div>
-      </div>
-      <div className="flex items-end justify-start gap-2">
-        <span className="text-[#A5A5A5]">Subject:</span>
-        <div className="flex items-end gap-2">
-          Welcome to the team
-          <Input
-            readOnly
-            value={"{Employee name}"}
-            className="w-[7.2rem] max-w-fit px-1 py-0 h-fit md:text-[13px]"
-          />
-        </div>
-      </div>
+  currentConfig: any;
+}) => {
+  const configData = currentConfig?.configData || {};
+  const { to, cc, subject, html } = configData;
 
-      <div className="flex items-center justify-start gap-2">
-        <span className="text-[#A5A5A5]">Body:</span>
-        <div className="flex items-end gap-2">
-          <div>
-            <div className="flex gap-2 items-end">
-              Hii
-              <Input
-                readOnly
-                value={"{Employee name}"}
-                className="w-[7.2rem] max-w-fit px-1 py-0 h-fit md:text-[13px]"
-              />
-              ,
-            </div>
-            Hope you are doing well ! Welcome to the team. Thanks
+  // Extract attachment details
+  let fileName: string | null = null;
+  let attachmentUrl: string | null = null;
+  let bodyContent = html || "";
+
+  if (html) {
+    const attachmentRegex = /<a\s+href="([^"]+)"[^>]*>.*<\/a>/i;
+    const match = html.match(attachmentRegex);
+
+    if (match) {
+      attachmentUrl = match[1];
+      const rawFileName = decodeURIComponent(
+        attachmentUrl.split("/").pop() || ""
+      );
+      fileName = rawFileName.replace(/^\d+-/, ""); // remove leading numbers
+
+      // Remove attachment block & hr from the body HTML
+      bodyContent = html
+        .replace(attachmentRegex, "")
+        .replace(/<hr[^>]*>/i, "")
+        .trim();
+    }
+  }
+
+  return (
+    <div>
+      <div className="bg-[#F9F9F9] rounded p-4 flex flex-col gap-3 text-[13px] font-gilroyMedium">
+        <div className="flex items-end justify-start gap-2">
+          <span className="text-[#A5A5A5]">To:</span>
+          <div>{Array.isArray(to) ? to.join(", ") : "{Employee email}"}</div>
+        </div>
+
+        <div className="flex items-end justify-start gap-2">
+          <span className="text-[#A5A5A5]">From:</span>
+          <div>contact@deviceflow.ai</div>
+        </div>
+
+        <div className="flex items-end justify-start gap-2">
+          <span className="text-[#A5A5A5]">CC:</span>
+          <div>{Array.isArray(cc) ? cc.join(", ") : "N/A"}</div>
+        </div>
+
+        <div className="flex items-end justify-start gap-2">
+          <span className="text-[#A5A5A5]">Subject:</span>
+          <div>{subject || "N/A"}</div>
+        </div>
+
+        <div className="flex items-start justify-start gap-2">
+          <span className="text-[#A5A5A5]">Body:</span>
+          <div
+            className="flex-1 prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: bodyContent || "<p>No body content provided.</p>",
+            }}
+          />
+        </div>
+
+        {fileName && attachmentUrl && (
+          <div className="flex items-end justify-start gap-2">
+            <span className="text-[#A5A5A5]">Attachment:</span>
+            <a
+              href={attachmentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#0062FF] break-all hover:underline"
+            >
+              <div>{fileName}</div>
+            </a>
           </div>
-        </div>
+        )}
       </div>
-      <div className="flex items-end justify-start gap-2">
-        <span className="text-[#A5A5A5]">Attachments:</span>
-        <div className="text-[#0062FF]">onboarding.pdf</div>
-      </div>
-    </div>
 
-    <div className="flex mt-3 gap-3">
-      <Button
-        className="text-[#FF0000] w-full flex-1"
-        type="button"
-        variant="outlineTwo"
-      >
-        <HugeiconsIcon icon={Delete01Icon} size={16} />
-        Delete
-      </Button>
-      <Button
-        className="text-[#0062FF] w-full flex-1"
-        type="button"
-        variant="outlineTwo"
-        onClick={() => setIsEdit(true)}
-      >
-        <HugeiconsIcon
-          icon={PencilEdit01Icon}
-          className="text-black"
-          size={18}
-        />
-        Edit
-      </Button>
+      <div className="flex mt-3 gap-3">
+        <Button
+          className="text-[#FF0000] w-full flex-1"
+          type="button"
+          variant="outlineTwo"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <HugeiconsIcon icon={Delete01Icon} size={16} />
+          Delete
+        </Button>
+        <Button
+          className="text-[#0062FF] w-full flex-1"
+          type="button"
+          variant="outlineTwo"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEdit(true);
+          }}
+        >
+          <HugeiconsIcon
+            icon={PencilEdit01Icon}
+            className="text-black"
+            size={18}
+          />
+          Edit
+        </Button>
+      </div>
     </div>
-  </div>
-);
+  );
+};

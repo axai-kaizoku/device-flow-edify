@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CheckIcon, LoaderCircle } from "lucide-react";
+import { CheckIcon, LoaderCircle, XIcon } from "lucide-react";
 import * as React from "react";
 import { createContext, useContext } from "react";
 
@@ -17,6 +17,7 @@ type StepItemContextValue = {
   state: StepState;
   isDisabled: boolean;
   isLoading: boolean;
+  executable?: boolean | null;
 };
 
 type StepState = "active" | "completed" | "inactive" | "loading";
@@ -108,6 +109,7 @@ interface StepperItemProps extends React.HTMLAttributes<HTMLDivElement> {
   completed?: boolean;
   disabled?: boolean;
   loading?: boolean;
+  executable?: boolean | null;
 }
 
 const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
@@ -117,6 +119,7 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
       completed = false,
       disabled = false,
       loading = false,
+      executable = null,
       className,
       children,
       ...props
@@ -136,7 +139,7 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
 
     return (
       <StepItemContext.Provider
-        value={{ step, state, isDisabled: disabled, isLoading }}
+        value={{ step, state, isDisabled: disabled, isLoading, executable }}
       >
         <div
           ref={ref}
@@ -198,13 +201,26 @@ const StepperIndicator = React.forwardRef<
   HTMLDivElement,
   StepperIndicatorProps
 >(({ asChild = false, className, children, ...props }, ref) => {
-  const { state, step, isLoading } = useStepItem();
+  const { state, step, isLoading, executable } = useStepItem();
 
   return (
     <div
       ref={ref}
       className={cn(
-        "relative flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground data-[state=active]:bg-primary data-[state=completed]:bg-primary data-[state=active]:text-primary-foreground data-[state=completed]:text-primary-foreground",
+        "relative flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium transition-all",
+        // Default and inactive
+        "data-[state=inactive]:bg-[#E5E5E5]",
+        // Override bg on loading manually (via `data-loading`)
+        "group-data-[loading=true]/step:bg-[#E5E5E5]",
+
+        // Completed or active: green or red depending on executable
+        executable === false
+          ? "data-[state=completed]:bg-red-600 data-[state=active]:bg-red-600"
+          : "data-[state=completed]:bg-[#0C941C] data-[state=active]:bg-[#0C941C]",
+
+        // White icon/text for completed/active
+        "data-[state=completed]:text-white",
+        "data-[state=active]:text-white",
         className
       )}
       data-state={state}
@@ -214,15 +230,27 @@ const StepperIndicator = React.forwardRef<
         children
       ) : (
         <>
-          <span className="transition-all group-data-[loading=true]/step:scale-0 group-data-[state=completed]/step:scale-0 group-data-[loading=true]/step:opacity-0 group-data-[state=completed]/step:opacity-0 group-data-[loading=true]/step:transition-none">
-            {step}
+          <span className="transition-all group-data-[loading=true]/step:scale-0 group-data-[state=completed]/step:scale-0 group-data-[state=active]/step:scale-0 group-data-[loading=true]/step:opacity-0 group-data-[state=completed]/step:opacity-0 group-data-[state=active]/step:opacity-0 group-data-[loading=true]/step:transition-none">
+            {step + 1}
           </span>
-          <CheckIcon
-            className="absolute scale-0 opacity-0 transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100"
-            size={16}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
+          {(state === "completed" || state === "active") && executable && (
+            <CheckIcon
+              className="absolute scale-0 opacity-0 text-white transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100 group-data-[state=active]/step:scale-100 group-data-[state=active]/step:opacity-100"
+              size={16}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+          )}
+          {(state === "completed" || state === "active") &&
+            executable === false &&
+            !isLoading && (
+              <XIcon
+                className="absolute scale-0 opacity-0 text-white transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100 group-data-[state=active]/step:scale-100 group-data-[state=active]/step:opacity-100"
+                size={16}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            )}
           {isLoading && (
             <span className="absolute transition-all">
               <LoaderCircle
@@ -263,21 +291,40 @@ const StepperDescription = React.forwardRef<
 StepperDescription.displayName = "StepperDescription";
 
 // StepperSeparator
+interface StepperSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
+  executable?: boolean | null;
+}
+
 const StepperSeparator = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  StepperSeparatorProps
+>(({ className, executable, ...props }, ref) => {
+  const { isLoading } = useStepItem();
+
   return (
     <div
       ref={ref}
       className={cn(
-        "m-0.5 bg-muted group-data-[orientation=horizontal]/stepper:h-0.5 group-data-[orientation=vertical]/stepper:h-1 group-data-[orientation=horizontal]/stepper:w-full group-data-[orientation=vertical]/stepper:w-0.5 group-data-[orientation=horizontal]/stepper:flex-1 group-data-[state=completed]/step:bg-primary",
+        "m-0.5 group-data-[orientation=horizontal]/stepper:h-0.5 group-data-[orientation=vertical]/stepper:h-1 group-data-[orientation=horizontal]/stepper:w-full group-data-[orientation=vertical]/stepper:w-0.5 group-data-[orientation=horizontal]/stepper:flex-1 group-data-[orientation=vertical]/stepper:flex-none transition-all",
+
+        // Base inactive color
+        "group-data-[state=inactive]/step:bg-[#E5E5E5]",
+
+        // ✅ Override with light gray while loading
+        isLoading && "group-data-[loading=true]/step:bg-[#E5E5E5]",
+
+        // Completed/Active color logic
+        executable === false
+          ? "group-data-[state=completed]/step:bg-red-600 group-data-[state=active]/step:bg-red-600"
+          : "group-data-[state=completed]/step:bg-[#0C941C] group-data-[state=active]/step:bg-[#0C941C]",
+
         className
       )}
       {...props}
     />
   );
 });
+
 StepperSeparator.displayName = "StepperSeparator";
 
 export {

@@ -64,10 +64,10 @@ export const ConfirmationModal = ({
 
           {/* Footer Buttons */}
           <DialogFooter className="flex w-full items-center justify-between ">
-            <DialogClose asChild>
+            <DialogClose asChild onClick={(e) => e.stopPropagation()}>
               <Button
                 className="w-1/2 rounded-md border border-[#D0D5DD] bg-[#FFF] shadow-sm text-[#344054]"
-                // onClick={() => setOpen(false)}
+                onClick={(e) => e.stopPropagation()}
               >
                 Cancel
               </Button>
@@ -76,7 +76,10 @@ export const ConfirmationModal = ({
               className={`w-1/2 rounded-md ${
                 type === "failure" ? "bg-[#D92D20]" : "bg-[#039855]"
               } text-white capitalize`}
-              onClick={functionToBeExecuted}
+              onClick={(e) => {
+                e.stopPropagation();
+                functionToBeExecuted?.();
+              }}
             >
               {successBtnText}
             </Button>

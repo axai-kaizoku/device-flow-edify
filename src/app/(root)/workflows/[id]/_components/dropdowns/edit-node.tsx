@@ -102,6 +102,7 @@ const EditNode = ({
                 className="flex items-center cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   onEditAction();
                   setOpenEdit(true);
                 }}
@@ -128,6 +129,7 @@ const EditNode = ({
                   className="flex items-center cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     onEditAction();
                     setOpenEdit(true);
                   }}
@@ -145,7 +147,13 @@ const EditNode = ({
           )}
 
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="flex items-center gap-3">
+            <DropdownMenuSubTrigger
+              className="flex items-center gap-3"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               <img
                 src="/media/workflows/change-app.svg"
                 alt="change app"
@@ -156,7 +164,13 @@ const EditNode = ({
               Change app
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent className="w-40 flex flex-col gap-2">
+              <DropdownMenuSubContent
+                className="w-40 flex flex-col gap-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
                 {availableApps?.map((app: WorkflowAppType, index) => (
                   <DropdownMenuItem
                     key={index}
@@ -182,7 +196,14 @@ const EditNode = ({
             </DropdownMenuPortal>
           </DropdownMenuSub>
           {canDuplicate ? (
-            <DropdownMenuItem className="cursor-pointer" onClick={onDuplicate}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={(e) => {
+                onDuplicate?.();
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               <img
                 src="/media/duplicate.svg"
                 alt="duplicate"
@@ -208,7 +229,11 @@ const EditNode = ({
             <DropdownMenuItem
               onSelect={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 setOpen(true);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
               }}
               className="text-red-500 font-gilroyMedium w-full cursor-pointer"
             >

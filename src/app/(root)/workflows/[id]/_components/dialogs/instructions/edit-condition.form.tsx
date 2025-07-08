@@ -19,8 +19,9 @@ import { getImageUrl } from "@/components/utils/upload";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { FileEmpty02Icon } from "@hugeicons/core-free-icons";
 import { X } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setConfigInstruction } from "@/server/workflowActions/workflowById/workflowNodes";
+import IfConditionDialog from "./if-condition-dialog";
 
 const schema = z.object({
   to: z.union([z.string().optional(), z.array(z.string().optional())]),
@@ -36,6 +37,7 @@ export const EditConditionForm = ({
   formData,
   currentNodeData,
   isEdit,
+  isNew,
   setNext,
 }: {
   formData?: {
@@ -48,24 +50,37 @@ export const EditConditionForm = ({
     attachment: "";
   };
   isEdit?: boolean;
+  isNew?: boolean;
   currentNodeData: any;
   setNext?: (next: number) => void;
 }) => {
+  // const form = useForm<InstructionValues>({
+  //   defaultValues: {
+  //     to: isNew ? "" : isEdit ? currentNodeData.configData.to : "",
+  //     cc: isNew ? "" : isEdit ? currentNodeData.configData.cc : "",
+  //     subject: isNew ? "" : isEdit ? currentNodeData.configData.subject : "",
+  //     body: isNew ? "" : isEdit ? currentNodeData.configData.html : "",
+  //     attachment: "",
+  //   },
+  //   resolver: zodResolver(schema),
+  // });
   const form = useForm<InstructionValues>({
     defaultValues: {
-      to: isEdit ? formData.to : "",
-      cc: isEdit ? formData.cc : "",
-      subject: isEdit ? formData.subject : "",
-      body: isEdit ? formData.body : "",
+      to: isNew ? "" : isEdit ? currentNodeData?.configData?.to : "",
+      cc: isNew ? "" : isEdit ? currentNodeData?.configData?.cc : "",
+      subject: isNew ? "" : isEdit ? currentNodeData?.configData?.subject : "",
+      body: isNew ? "" : isEdit ? currentNodeData?.configData?.html : "",
       attachment: "",
     },
     resolver: zodResolver(schema),
   });
-  const [isEditScreen, setIsEditScreen] = useState(false);
+
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const attachmentFile = useRef<HTMLInputElement | null>(null);
-
+  const queryClient = useQueryClient();
   const simulateProgress = () => {
     setProgress(0);
     const interval = setInterval(() => {
@@ -120,7 +135,11 @@ export const EditConditionForm = ({
   const mutation = useMutation({
     mutationFn: setConfigInstruction,
     onSuccess: () => {
-      toast.success("COnfiguration added");
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", currentNodeData?.workflowId],
+        exact: false,
+      });
+      toast.success("Conditions saved successfully");
     },
     onError: () => {
       toast.error("Failed to add configuration");
@@ -129,29 +148,38 @@ export const EditConditionForm = ({
   const handleSubmit = (data: InstructionValues) => {
     const attachmentUrl = data.attachment;
 
-    // Build the final HTML with attachment link if present
-    const htmlWithAttachment = attachmentUrl
-      ? `${
-          data.body || ""
-        }<br/><br/>Attachment: <a href="${attachmentUrl}" target="_blank">${attachmentUrl}</a>`
-      : data.body || "";
+    let htmlWithAttachment = data.body || "";
+
+    if (attachmentUrl) {
+      const urlParts = attachmentUrl.split("/");
+      const rawFileName = urlParts[urlParts.length - 1] || "";
+      const decodedFileName = decodeURIComponent(rawFileName);
+
+      // Remove leading numbers with optional dash (e.g., "1751885660332-")
+      const cleanedFileName = decodedFileName.replace(/^\d+-/, "");
+
+      htmlWithAttachment += `
+        
+       
+         
+          <a href="${attachmentUrl}" target="_blank">File Name: ${cleanedFileName}</a>
+        `;
+    }
 
     console.log("Submitting with html:", htmlWithAttachment);
 
     mutation.mutate({
       currentNodeId: currentNodeData._id,
       cc: Array.isArray(data?.cc) ? data.cc : data.cc ? [data.cc] : [],
-      html: htmlWithAttachment, // ✅ include the attachment in the html
+      html: htmlWithAttachment,
       subject: data?.subject,
     });
 
-    toast.success("Conditions saved successfully");
     form.reset();
   };
 
   return (
     <Form {...form}>
-      {JSON.stringify(currentNodeData)}
       <form
         id="edit-condition-form"
         onSubmit={form.handleSubmit(handleSubmit)}
@@ -180,6 +208,64 @@ export const EditConditionForm = ({
           />
         </div>
 
+        <div className="space-y-2 relative">
+          <FormLabel className="font-gilroyMedium text-sm">
+            Subject<span className="text-red-500">*</span>
+          </FormLabel>
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      ref={inputRef}
+                      placeholder="e.g. Onboarding {First Name} {Last Name} on {Team}"
+                      className="placeholder:text-[13px] placeholder:text-[#CCCCCC] placeholder:font-gilroyMedium font-gilroyMedium pr-10"
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "{" || (e.shiftKey && e.key === "[")) {
+                          e.preventDefault();
+                          setDropdownOpen(true);
+                        }
+                      }}
+                    />
+
+                    <IfConditionDialog
+                      data={currentNodeData.ifCondition}
+                      open={dropdownOpen}
+                      onOpenChange={setDropdownOpen}
+                      onSelect={(val) => {
+                        const current = field.value || "";
+                        const updated = `${current} {${val}}`;
+                        field.onChange(updated);
+                        setDropdownOpen(false);
+
+                        // ✅ Refocus the input after a small delay
+                        setTimeout(() => {
+                          inputRef.current?.focus();
+                        }, 0);
+                      }}
+                    >
+                      <img
+                        src="/media/curly-braces.svg"
+                        className="absolute top-1/2 -translate-y-1/2 right-3  cursor-pointer"
+                        alt="Curly-braces"
+                      />
+                    </IfConditionDialog>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="space-y-2">
           <FormLabel className="font-gilroyMedium text-sm">
             CC<span className="text-red-500">*</span>
@@ -192,33 +278,7 @@ export const EditConditionForm = ({
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Add email"
-                    className="placeholder:text-[13px] placeholder:text-[#CCCCCC] placeholder:font-gilroyMedium font-gilroyMedium"
-                    value={field.value || ""}
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <FormLabel className="font-gilroyMedium text-sm">
-            Subject<span className="text-red-500">*</span>
-          </FormLabel>
-          <FormField
-            control={form.control}
-            name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter text"
+                    placeholder="{Add email}"
                     className="placeholder:text-[13px] placeholder:text-[#CCCCCC] placeholder:font-gilroyMedium font-gilroyMedium"
                     value={field.value || ""}
                     onChange={(e) => {
@@ -257,11 +317,11 @@ export const EditConditionForm = ({
                 <>
                   <div className="flex flex-wrap gap-4">
                     <div
-                      className="flex flex-wrap gap-2 items-center justify-start bg-[#E9F3FF] rounded-md border-dashed min-h-16 w-full border-[1px] px-2 py-2 border-[#52ABFF] cursor-pointer"
+                      className="flex flex-wrap gap-2 items-center justify-start bg-[#E9F3FF] rounded-md border-dashed min-h-14 w-full border-[1px] px-2 py-2 border-[#52ABFF] cursor-pointer"
                       onClick={() => attachmentFile.current?.click()}
                     >
                       {isUploading ? (
-                        <div className="w-full  flex flex-col items-center justify-center gap-2">
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2">
                           <div className="w-3/4 h-2 bg-gray-200 rounded-full">
                             <div
                               className="h-2 bg-black rounded-full"
@@ -276,19 +336,40 @@ export const EditConditionForm = ({
                           </span>
                         </div>
                       ) : field?.value ? (
-                        <div className="relative w-full h-20 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group">
+                        <div className="relative w-full h-14 border-2 border-dashed rounded-xl overflow-hidden flex items-center justify-center bg-gray-100 group">
                           <div className="flex items-center justify-center gap-2 py-2">
                             <div className="bg-blue-500 text-white p-2 rounded-full">
                               <HugeiconsIcon icon={FileEmpty02Icon} />
                             </div>
                             <div className="flex flex-col">
                               <p className="text-sm font-medium text-center">
-                                {field.value.split("/").pop().substring(0, 30)}
-                                ..
+                                {(() => {
+                                  const url = field.value;
+                                  if (!url) return "No file selected";
+
+                                  const rawFileName =
+                                    url.split("/").pop() || "";
+                                  const decodedFileName =
+                                    decodeURIComponent(rawFileName);
+
+                                  // Remove initial numbers with optional dash (e.g., "1751885660332-")
+                                  const cleanedFileName =
+                                    decodedFileName.replace(/^\d+-/, "");
+
+                                  const maxLength = 30;
+                                  return cleanedFileName.length > maxLength
+                                    ? `${cleanedFileName.substring(
+                                        0,
+                                        maxLength
+                                      )}…`
+                                    : cleanedFileName;
+                                })()}
                               </p>
+
                               <p className="text-xs text-gray-500">Logo</p>
                             </div>
                           </div>
+
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -300,7 +381,7 @@ export const EditConditionForm = ({
                           </button>
                         </div>
                       ) : (
-                        <div className="flex flex-col justify-center items-center w-full mx-auto">
+                        <div className="flex flex-col h-14 justify-center items-center w-full mx-auto">
                           <div className="font-gilroySemiBold text-xs gap-1 flex items-center">
                             <span className="text-[#0EA5E9]">
                               Click to upload
@@ -309,7 +390,7 @@ export const EditConditionForm = ({
                               or drag and drop
                             </span>
                           </div>
-                          <p className="text-[10px] text-[#A3A3A3]">
+                          <p className="text-[10px] text-[#A3A3A3] font-gilroyRegular">
                             JPG, JPEG, PNG less than 5MB
                           </p>
                         </div>
@@ -322,7 +403,7 @@ export const EditConditionForm = ({
                     ref={attachmentFile}
                     style={{ display: "none" }}
                     onChange={handleFileUpload}
-                    accept="image/jpeg, image/png, image/jpg"
+                    accept="image/jpeg, image/png, image/jpg, application/pdf"
                   />
                 </>
               </FormControl>

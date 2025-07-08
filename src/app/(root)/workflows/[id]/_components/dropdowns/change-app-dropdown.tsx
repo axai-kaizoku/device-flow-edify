@@ -32,7 +32,7 @@ interface ChangeAppDropdownProps {
   data: any;
 }
 
-const ChangeAppDropdown = ({children, data}: ChangeAppDropdownProps) => {
+const ChangeAppDropdown = ({ children, data }: ChangeAppDropdownProps) => {
   const { data: apps } = useQuery({
     queryKey: ["all-apps-workflow"],
     queryFn: () => getAllAppsAndServices({}),
@@ -60,7 +60,9 @@ const ChangeAppDropdown = ({children, data}: ChangeAppDropdownProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+        {children}
+      </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-[400px] mt-8 rounded-[10px] font-gilroyMedium"
         align="end"

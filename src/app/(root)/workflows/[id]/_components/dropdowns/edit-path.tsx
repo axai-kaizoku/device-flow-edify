@@ -19,10 +19,7 @@ interface EditPathProps {
   children: React.ReactNode;
   type: "edit" | "set";
   onEditCondition: () => void;
-  onAddPath: () => void;
-  appType: any;
   onRename: () => void;
-  onDuplicate: () => void;
   onDelete: () => void;
   parentData: any;
 }
@@ -31,30 +28,36 @@ const EditPath = ({
   children,
   parentData,
   type,
-  appType,
   onEditCondition,
-  onAddPath,
   onRename,
-  onDuplicate,
   onDelete,
 }: EditPathProps) => {
   const [open, setOpen] = useState(false);
+  const [conditionOpen, setConditionOpen] = useState(false);
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+        {children}
+      </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-56 font-gilroyMedium rounded-[10px]"
         align="start"
       >
         <DropdownMenuGroup className="flex flex-col gap-0.5">
-          <SetConditionDialog parentData={parentData} onDelete={onDelete}>
+          <SetConditionDialog
+            parentData={parentData}
+            onDelete={onDelete}
+            open={conditionOpen}
+            setOpen={setConditionOpen}
+          >
             <DropdownMenuItem
               className="flex items-center"
               onSelect={(e) => {
                 e.preventDefault();
                 onEditCondition();
               }}
+              onClick={(e) => e.stopPropagation()}
             >
               <img
                 src="/media/edit-condition.svg"
@@ -65,40 +68,17 @@ const EditPath = ({
               {type === "edit" ? "Edit" : "Set"} Condition
             </DropdownMenuItem>
           </SetConditionDialog>
-          {appType !== "PATH" ? (
-            <DropdownMenuItem className="cursor-pointer" onClick={onAddPath}>
-              <img
-                src="/media/workflows/add-path.svg"
-                alt="add path"
-                width={16}
-                height={16}
-              />
-              Add another path
-            </DropdownMenuItem>
-          ) : (
-            ""
-          )}
 
           <DropdownMenuItem
             className="flex items-center cursor-pointer"
-            onClick={onRename}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRename?.();
+            }}
           >
             <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
             Rename
           </DropdownMenuItem>
-          {appType !== "PATH" ? (
-            <DropdownMenuItem className="cursor-pointer" onClick={onDuplicate}>
-              <img
-                src="/media/duplicate.svg"
-                alt="duplicate"
-                width={16}
-                height={16}
-              />
-              Duplicate
-            </DropdownMenuItem>
-          ) : (
-            ""
-          )}
 
           <ConfirmationModal
             open={open}
@@ -117,6 +97,7 @@ const EditPath = ({
                 e.preventDefault();
                 setOpen(true);
               }}
+              onClick={(e) => e.stopPropagation()}
               className="text-red-500 font-gilroyMedium w-full cursor-pointer"
             >
               <HugeiconsIcon icon={Delete01Icon} size={16} />

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Dialog,
-  DialogClose,
+  DialogDescription,
   DialogFooter,
   DialogTitle,
   DialogTrigger,
@@ -39,13 +39,15 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { EditConditionForm } from "./edit-condition.form";
-import { EmailTemplate } from "./email-templete";
+import {
+  getServices,
+  updateAppAction,
+} from "@/server/workflowActions/workflowById/workflowNodes";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ConfirmationModal } from "../../dropdowns/confirmation-popup";
 import { AppTaskType } from "../../types/task";
-import { ChangeAppDialog } from "../change-app.dialog";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getServices } from "@/server/workflowActions/workflowById/workflowNodes";
+import { EditConditionForm } from "./edit-condition.form";
+import { EmailTemplate } from "./email-templete";
 
 const schema = z.object({
   description: z.string().optional(),
@@ -62,25 +64,59 @@ export const InstructionDialog = ({
   open,
   setOpen,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onChangeApp: (app: AppTaskType) => void;
   data?: any;
   open: boolean;
   onDelete: () => void;
   setOpen: (open: boolean) => void;
 }) => {
-  const [isEditScreen, setIsEditScreen] = useState(false);
   const queryClient = useQueryClient();
+  const [isEditScreen, setIsEditScreen] = useState(false);
+  const [isNew, setIsNew] = useState(false);
+
   const { data: services, status: servicesStatus } = useQuery({
     queryKey: ["get-node-services", data?.backendData?.template?.name],
     queryFn: () => getServices(data?.backendData?.template?.name),
+    staleTime: Infinity,
+    refetchOnMount: false,
   });
-  console.log(data);
-  const handleSubmit = (data: InstructionValues) => {
-    console.log("Form submitted:", data);
-    toast.success("Conditions saved successfully");
-    setOpen(false);
+  // console.log(services, "get-node-service");
+
+  const setActionMutation = useMutation({
+    mutationFn: updateAppAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", data?.backendData?.workflowId],
+        exact: false,
+      });
+      toast.success("Instruction Condition set Successfully");
+    },
+    onError: () => {
+      toast.error("Failed to set App Condition");
+    },
+  });
+
+  const handleSubmit = (formData: InstructionValues) => {
+    try {
+      setActionMutation.mutate({
+        nodeId: data.backendData.parentNodeId,
+        templateKey: formData.action,
+        workflowId: data.backendData.workflowId,
+        description: formData.description,
+      });
+      console.log("Submitting updateAppAction payload:", {
+        nodeId: data.backendData.parentNodeId,
+        templateKey: formData.action,
+        workflowId: data.backendData.workflowId,
+        description: formData.description,
+      });
+      setOpen(false);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
+
   const form = useForm<InstructionValues>({
     defaultValues: {
       description: services?.[0]?.description,
@@ -88,6 +124,7 @@ export const InstructionDialog = ({
     },
     resolver: zodResolver(schema),
   });
+
   return (
     <Dialog
       open={open}
@@ -110,6 +147,9 @@ export const InstructionDialog = ({
                 } else {
                   setOpen(false);
                 }
+                if (isNew) {
+                  setIsNew(false);
+                }
               }}
             />
             Configure
@@ -126,6 +166,9 @@ export const InstructionDialog = ({
             />
           )}
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          instruction description
+        </DialogDescription>
         <div className="px-6 py-5 h-[28.6rem] w-full overflow-y-auto hide-scrollbar">
           {!isEditScreen ? (
             <Form {...form}>
@@ -148,11 +191,6 @@ export const InstructionDialog = ({
                       <p className="font-gilroySemiBold text-sm text-[#222222]">
                         Send instructions
                       </p>
-                      <ChangeAppDialog onChangeApp={onChangeApp}>
-                        <p className="text-xs font-gilroyMedium border rounded-[5px] border-[#CCCCCC] px-1 py-0.5 cursor-pointer">
-                          Change
-                        </p>
-                      </ChangeAppDialog>
                     </div>
                     <p className="text-xs font-gilroyMedium w-fit text-black border border-gray-100 py-0.5 px-2 rounded-md">
                       Action
@@ -207,11 +245,11 @@ export const InstructionDialog = ({
                             <SelectContent className="font-gilroyMedium">
                               {services?.map((option) => (
                                 <SelectItem
-                                  key={option.service}
-                                  value={option.service}
+                                  key={option.key}
+                                  value={option.key}
                                   className="text-left"
                                 >
-                                  {option.service}
+                                  {option?.service}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -223,7 +261,10 @@ export const InstructionDialog = ({
                   </div>
 
                   {form.getValues("action") ? (
-                    <EmailTemplate setIsEdit={setIsEditScreen} />
+                    <EmailTemplate
+                      setIsEdit={setIsEditScreen}
+                      currentConfig={data?.backendData}
+                    />
                   ) : null}
 
                   <div className="border-t border-dashed border-[#0000001A] w-full h-px mt-0 mb-5" />
@@ -231,7 +272,11 @@ export const InstructionDialog = ({
                   <Button
                     type="button"
                     variant="outlineTwo"
-                    onClick={() => setIsEditScreen(true)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsEditScreen(true);
+                      setIsNew(true);
+                    }}
                     className="w-full font-gilroyMedium text-xs items-center flex py-1"
                   >
                     <HugeiconsIcon
@@ -244,7 +289,12 @@ export const InstructionDialog = ({
               </form>
             </Form>
           ) : (
-            <EditConditionForm currentNodeData={data?.backendData} />
+            <EditConditionForm
+              currentNodeData={data?.backendData}
+              isEdit={isEditScreen}
+              isNew={isNew}
+              key={`edit-form-${data?.backendData?._id}`}
+            />
           )}
         </div>
 
@@ -266,6 +316,7 @@ export const InstructionDialog = ({
                     type="button"
                     className="flex gap-2 items-center text-[13px] text-red-500"
                     variant="outlineTwo"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <HugeiconsIcon icon={Delete01Icon} className="size-4" />
                     Delete Node
@@ -278,6 +329,8 @@ export const InstructionDialog = ({
                 form="set-condition-form"
                 variant="primary"
                 className="text-[13px] w-fit"
+                onClick={(e) => e.stopPropagation()}
+                loading={setActionMutation?.isPending}
               >
                 Continue
               </LoadingButton>
@@ -288,10 +341,8 @@ export const InstructionDialog = ({
               form="edit-condition-form"
               variant="primary"
               className="text-[13px] w-fit"
-              onClick={() => {
-                // setIsEditScreen(false);
-                // form.reset();
-              }}
+              loading={setActionMutation.isPending}
+              onClick={(e) => e.stopPropagation()}
             >
               Save & Continue
             </LoadingButton>

@@ -1,39 +1,42 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import {
+  Delete01FreeIcons,
+  MoreVerticalIcon,
+  PlayCircleIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Handle, type NodeProps, Position, useReactFlow } from "@xyflow/react";
 import React, { memo, useRef, useState } from "react";
 import type { AppNodeData } from "../types/app-node";
 import { TaskRegistry } from "../workflow/task/registry";
 import { NodeCard } from "./node-card";
 import { NodeHeader } from "./node-header";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Delete01FreeIcons,
-  MoreVerticalIcon,
-  PlayCircleIcon,
-} from "@hugeicons/core-free-icons";
 
-import { Button } from "@/components/ui/button";
-import { useFlowContext } from "../flow-editor";
-import AddPopUp from "../dropdowns/add-popup";
-import EditPath from "../dropdowns/edit-path";
-import { AppTaskType, TaskType } from "../types/task";
-import { PlusIcon } from "lucide-react";
-import { WorkFlowIcons } from "../../../_components/icons";
 import { ConfirmationModal } from "@/app/(root)/workflows/[id]/_components/dropdowns/confirmation-popup";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteBranch,
-  deleteSplit,
   updatePathNameOrNextNode,
 } from "@/server/workflowActions/workflowById/workflowPaths";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
+import { WorkFlowIcons } from "../../../_components/icons";
 import DeviceFlowDialog from "../dialogs/device-flow-dialog";
-import { Badge } from "@/components/ui/badge";
-import { addNodeAfterNode } from "../utils/backend-actions";
+import AddPopUp from "../dropdowns/add-popup";
+import EditPath from "../dropdowns/edit-path";
+import { useFlowContext } from "../flow-editor";
 import { useSplitDeletion } from "../hooks/use-split-deletion";
+import { AppTaskType, TaskType } from "../types/task";
+import { addNodeAfterNode } from "../utils/backend-actions";
+import { InstructionDialog } from "../dialogs/instructions/instruction.dialog";
+import SetActionDialog from "../dialogs/set-action.dialog";
+import SetConditionDialog from "../dialogs/set-condition.dialog";
+import { useDeleteNode } from "../hooks/use-delete-node";
 
 export const NodeComponent = memo((props: NodeProps) => {
   const queryClient = useQueryClient();
@@ -42,6 +45,10 @@ export const NodeComponent = memo((props: NodeProps) => {
   const [rename, setRename] = useState(false);
   const [label, setLabel] = useState(nodeData.pathName ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Dialog states
+  type DialogType = "APP" | "INSTRUCTION" | "PATH" | null;
+  const [openDialog, setOpenDialog] = useState<DialogType>(null);
 
   const {
     handleAddNode,
@@ -58,6 +65,8 @@ export const NodeComponent = memo((props: NodeProps) => {
     nodeData.backendData?.workflowId || ""
   );
 
+  const { deleteNodeMutation } = useDeleteNode();
+
   // Get proper handle IDs from task registry
   const getInputHandleId = () => {
     return task?.inputs?.[0]?.name || "input";
@@ -68,17 +77,6 @@ export const NodeComponent = memo((props: NodeProps) => {
   };
 
   const [splitDelete, setSplitDelete] = React.useState(false);
-
-  // const deleteSplitMutation = useMutation({
-  //   mutationFn: (splitId: string) => deleteSplit(splitId),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["workflow-by-id"] });
-  //     setSplitDelete(false);
-  //   },
-  //   onError: (error: any) => {
-  //     toast.error(error?.message || "Failed to delete the Split Path");
-  //   },
-  // });
 
   const handleDuplicateMutation = useMutation({
     mutationFn: async ({
@@ -247,11 +245,7 @@ export const NodeComponent = memo((props: NodeProps) => {
     console.log("Edit condition clicked for path:", props.id);
   };
 
-  const handleAddPath = () => {
-    console.log("Add path clicked for path:", props.id);
-  };
-
-  const updatePath = useMutation({
+  const renamePathMutation = useMutation({
     mutationFn: updatePathNameOrNextNode,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -277,7 +271,7 @@ export const NodeComponent = memo((props: NodeProps) => {
 
   const handleBlur = () => {
     setRename(false);
-    updatePath.mutate({
+    renamePathMutation.mutate({
       branchId: nodeData?.branchData?._id,
       label: label,
       nodeId: nodeData.branchData.parentNodeId,
@@ -287,16 +281,12 @@ export const NodeComponent = memo((props: NodeProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       inputRef.current?.blur();
-      updatePath.mutate({
+      renamePathMutation.mutate({
         branchId: nodeData?.branchData?._id,
         label: label,
         nodeId: nodeData.branchData.parentNodeId,
       });
     }
-  };
-
-  const handleDuplicatePath = () => {
-    handleAddNode(props.id, nodeData.type);
   };
 
   const deletePathMutation = useMutation({
@@ -330,7 +320,25 @@ export const NodeComponent = memo((props: NodeProps) => {
     setSplitDelete(false);
   };
 
-  const isFakeSplitApp = nodeData.backendData?.isFakeSplitApp === true;
+  // Handle node click to open dialogs
+  const handleNodeClick = (nodeData?: any) => {
+    // console.log(nodeData);
+
+    if (nodeData?.type === "PATH") {
+      setOpenDialog("PATH");
+    }
+
+    if (nodeData?.appType === "Instructions") {
+      setOpenDialog("INSTRUCTION");
+    } else if (
+      nodeData?.appType !== "Instructions" &&
+      nodeData?.type === "APP"
+    ) {
+      setOpenDialog("APP");
+    }
+  };
+
+  const closeDialog = () => setOpenDialog(null);
 
   switch (task) {
     case TaskRegistry.START:
@@ -370,12 +378,9 @@ export const NodeComponent = memo((props: NodeProps) => {
     case TaskRegistry.APP:
       return (
         <div className="relative">
-          {nodeData.appType === "Device Flow" ? (
-            <DeviceFlowDialog
-              data={nodeData}
-              open={!!props.selected}
-              onChangeApp={handleChangeApp}
-            >
+          {nodeData.appType === "Device Flow" &&
+          nodeData?.backendData?.isDeviceFlowWithStartParent ? (
+            <DeviceFlowDialog data={nodeData} onChangeApp={handleChangeApp}>
               <NodeCard
                 className={cn(
                   !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
@@ -409,7 +414,7 @@ export const NodeComponent = memo((props: NodeProps) => {
                 </div>
                 <div className="p-2">
                   <Input
-                    value={"Send onboarding mail"}
+                    value={"Onboard user on deviceflow"}
                     disabled
                     className="text-sm bg-[#00000003] disabled:cursor-auto select-none"
                   />
@@ -433,115 +438,79 @@ export const NodeComponent = memo((props: NodeProps) => {
               </NodeCard>
             </DeviceFlowDialog>
           ) : (
-            <NodeCard
-              className={cn(
-                !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
-                "rounded-xl w-[260px]"
-              )}
-              nodeId={props.id}
-              isSelected={!!props.selected}
-            >
-              <NodeHeader
-                canDuplicate={!hasOutgoingConnection(props.id, nodeData.type)}
-                taskType={nodeData.type}
-                nodeData={nodeData}
-                nodeId={props.id}
-                onEditAction={handleEditAction}
+            <>
+              <SetActionDialog
+                onDelete={() => deleteNodeMutation.mutate(props.id)}
                 onChangeApp={handleChangeApp}
-                onDuplicate={handleDuplicateNode}
+                data={nodeData}
+                open={openDialog === "APP"}
+                setOpen={closeDialog}
               />
-              <div className="p-2">
-                <Input
-                  value={
-                    (nodeData?.backendData?.serviceDescription.length > 28
-                      ? `${nodeData?.backendData?.serviceDescription.substring(
-                          0,
-                          28
-                        )}...`
-                      : nodeData?.backendData?.serviceDescription) ||
-                    "No action selected"
-                  }
-                  disabled
-                  className="text-sm bg-[#00000003] disabled:cursor-auto select-none line-clamp-1 overflow-hidden"
+              <InstructionDialog
+                data={nodeData}
+                onDelete={() => {
+                  deleteNodeMutation.mutate(props.id);
+                }}
+                onChangeApp={handleChangeApp}
+                open={openDialog === "INSTRUCTION"}
+                setOpen={closeDialog}
+              />
+              <NodeCard
+                className={cn(
+                  !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
+                  "rounded-xl w-[260px] cursor-pointer"
+                )}
+                nodeId={props.id}
+                isSelected={!!props.selected}
+                onClick={() => {
+                  handleNodeClick(nodeData);
+                }}
+              >
+                <NodeHeader
+                  canDuplicate={!hasOutgoingConnection(props.id, nodeData.type)}
+                  taskType={nodeData.type}
+                  nodeData={nodeData}
+                  nodeId={props.id}
+                  onEditAction={handleEditAction}
+                  onChangeApp={handleChangeApp}
+                  onDuplicate={handleDuplicateNode}
                 />
-              </div>
-              <Handle
-                id={getInputHandleId()}
-                type="target"
-                position={Position.Left}
-                className={cn(
-                  "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-left-0 !w-2.5 !h-2.5"
-                )}
-              />
-              <Handle
-                id={getOutputHandleId()}
-                type="source"
-                position={Position.Right}
-                className={cn(
-                  "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-right-0 !w-2.5 !h-2.5"
-                )}
-              />
-            </NodeCard>
+                <div className="p-2">
+                  <Input
+                    value={
+                      (nodeData?.backendData?.serviceDescription.length > 28
+                        ? `${nodeData?.backendData?.serviceDescription.substring(
+                            0,
+                            28
+                          )}...`
+                        : nodeData?.backendData?.serviceDescription) ||
+                      "No action selected"
+                    }
+                    disabled
+                    className="text-sm bg-[#00000003] disabled:cursor-auto select-none line-clamp-1 overflow-hidden"
+                  />
+                </div>
+                <Handle
+                  id={getInputHandleId()}
+                  type="target"
+                  position={Position.Left}
+                  className={cn(
+                    "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-left-0 !w-2.5 !h-2.5"
+                  )}
+                />
+                <Handle
+                  id={getOutputHandleId()}
+                  type="source"
+                  position={Position.Right}
+                  className={cn(
+                    "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-right-0 !w-2.5 !h-2.5"
+                  )}
+                />
+              </NodeCard>
+            </>
           )}
 
           {/* AddButton if no outgoing connection */}
-          {!hasOutgoingConnection(props.id, nodeData.type) && (
-            <AddButton
-              className="-right-12 top-1/2 -translate-y-1/2"
-              nodeData={nodeData}
-            />
-          )}
-        </div>
-      );
-
-    case TaskRegistry.INSTRUCTION:
-      return (
-        <div className="relative">
-          <NodeCard
-            className={cn(
-              !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
-              "rounded-xl w-[260px]"
-            )}
-            nodeId={props.id}
-            isSelected={!!props.selected}
-          >
-            <NodeHeader
-              canDuplicate={!hasOutgoingConnection(props.id, nodeData.type)}
-              taskType={nodeData.type}
-              nodeData={nodeData}
-              nodeId={props.id}
-              onEditAction={handleEditAction}
-              onChangeApp={handleChangeApp}
-              onDuplicate={handleDuplicateNode}
-            />
-
-            <div className="p-2">
-              <Input
-                value={
-                  nodeData?.backendData?.templateKey || "No action selected"
-                }
-                disabled
-                className="text-sm bg-[#00000003] disabled:cursor-auto select-none"
-              />
-            </div>
-            <Handle
-              id={getInputHandleId()}
-              type="target"
-              position={Position.Left}
-              className={cn(
-                "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-left-0 !w-2.5 !h-2.5"
-              )}
-            />
-            <Handle
-              id={getOutputHandleId()}
-              type="source"
-              position={Position.Right}
-              className={cn(
-                "!bg-[#0062FF] !ring-2 !ring-[#D4E4FF] !-right-0 !w-2.5 !h-2.5"
-              )}
-            />
-          </NodeCard>
-
           {!hasOutgoingConnection(props.id, nodeData.type) && (
             <AddButton
               className="-right-12 top-1/2 -translate-y-1/2"
@@ -692,11 +661,6 @@ export const NodeComponent = memo((props: NodeProps) => {
             <ConfirmationModal
               open={splitDelete}
               setOpen={setSplitDelete}
-              // functionToBeExecuted={() => {
-              //   deleteSplitMutation.mutate(
-              //     (props.data as { splitData: { _id: string } })?.splitData?._id
-              //   );
-              // }}
               functionToBeExecuted={handleSplitDeleteClick}
               title="Are you sure?"
               description="Are you sure you want to delete the node?"
@@ -719,12 +683,21 @@ export const NodeComponent = memo((props: NodeProps) => {
     case TaskRegistry.PATH:
       return (
         <div className="relative">
+          <SetConditionDialog
+            onDelete={() => handleDeletePath()}
+            parentData={nodeData}
+            open={openDialog === "PATH"}
+            setOpen={closeDialog}
+          />
           <NodeCard
             className={cn(
               !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
               "rounded-lg flex items-center justify-between min-w-20 w-full max-w-fit  p-2 bg-blue-50 border-blue-300"
             )}
             nodeId={props.id}
+            onClick={() => {
+              handleNodeClick(nodeData);
+            }}
             isSelected={!!props.selected}
           >
             <div className="text-center cursor-pointer">
@@ -752,15 +725,17 @@ export const NodeComponent = memo((props: NodeProps) => {
             </div>
             <EditPath
               parentData={nodeData}
-              appType={nodeData.type}
               type={"set"}
               onEditCondition={handleEditCondition}
-              onAddPath={handleAddPath}
               onRename={handleRenamePath}
-              onDuplicate={handleDuplicatePath}
               onDelete={handleDeletePath}
             >
-              <HugeiconsIcon icon={MoreVerticalIcon} size={16} />
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="cursor-pointer"
+              >
+                <HugeiconsIcon icon={MoreVerticalIcon} size={16} />
+              </div>
             </EditPath>
 
             <Handle

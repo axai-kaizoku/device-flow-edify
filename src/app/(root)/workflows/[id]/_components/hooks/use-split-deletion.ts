@@ -43,7 +43,7 @@ export const useSplitDeletion = (workflowId: string) => {
       queryClient.invalidateQueries({
         queryKey: ["workflow-by-id", workflowId],
       });
-      toast.success("Split path deleted successfully");
+      // toast.success("Split path deleted successfully");
     },
     onError: (error: any) => {
       toast.error(error?.message || "Failed to delete the Split Path");
