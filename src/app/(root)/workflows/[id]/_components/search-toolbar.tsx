@@ -6,19 +6,22 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 interface SearchToolbarProps {
   placeholder?: string;
   onSearch?: (value: string) => void;
-
+  value?: string;
+  isLoading?: boolean;
   searchIcon: React.ReactNode;
 }
 
 export function SearchToolbar({
   placeholder = "Search...",
   onSearch,
-
+  value = "",
   searchIcon,
+  isLoading = false,
 }: SearchToolbarProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -58,7 +61,11 @@ export function SearchToolbar({
                   onClick={() => setIsOpen(true)}
                   asChild
                 >
-                  {searchIcon}
+                  {isLoading ? (
+                    <Loader2 className="size-4 animate-spin text-gray-400" />
+                  ) : (
+                    searchIcon
+                  )}
                 </Button>
               </div>
             ) : (
@@ -68,6 +75,7 @@ export function SearchToolbar({
                     className="h-9"
                     autoFocus
                     placeholder={placeholder}
+                    value={value}
                     onChange={(e) => onSearch?.(e.target.value)}
                   />
                 </div>

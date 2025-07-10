@@ -9,24 +9,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { getImageUrl } from "@/components/utils/upload";
+import {
+  createCustomEmailTemplate,
+  setConfigInstruction,
+} from "@/server/workflowActions/workflowById/workflowNodes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FileEmpty02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { EmailTextEditor } from "./text-editor/email-text-editor";
-import { getImageUrl } from "@/components/utils/upload";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { FileEmpty02Icon } from "@hugeicons/core-free-icons";
-import { X } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { setConfigInstruction } from "@/server/workflowActions/workflowById/workflowNodes";
+import { useUpdateAppActions } from "../../hooks/use-update-app-actions";
 import IfConditionDialog from "./if-condition-dialog";
+import { EmailTextEditor } from "./text-editor/email-text-editor";
 
 const schema = z.object({
   to: z.union([z.string().optional(), z.array(z.string().optional())]),
   subject: z.string().optional(),
-
   cc: z.union([z.string().optional(), z.array(z.string().optional())]),
   body: z.string().optional(),
   attachment: z.string().optional(),
@@ -34,42 +37,32 @@ const schema = z.object({
 type InstructionValues = z.infer<typeof schema>;
 
 export const EditConditionForm = ({
-  formData,
   currentNodeData,
+  defaultService,
+  currentService: currentServiceData,
   isEdit,
   isNew,
-  setNext,
+  setIsEditScreen,
 }: {
-  formData?: {
-    description: "";
-    action: "";
-    to: "";
-    cc: "";
-    subject: "";
-    body: "";
-    attachment: "";
-  };
+  defaultService: any;
+  currentService: any;
   isEdit?: boolean;
   isNew?: boolean;
   currentNodeData: any;
-  setNext?: (next: number) => void;
+  setIsEditScreen?: (edit: boolean) => void;
 }) => {
-  // const form = useForm<InstructionValues>({
-  //   defaultValues: {
-  //     to: isNew ? "" : isEdit ? currentNodeData.configData.to : "",
-  //     cc: isNew ? "" : isEdit ? currentNodeData.configData.cc : "",
-  //     subject: isNew ? "" : isEdit ? currentNodeData.configData.subject : "",
-  //     body: isNew ? "" : isEdit ? currentNodeData.configData.html : "",
-  //     attachment: "",
-  //   },
-  //   resolver: zodResolver(schema),
-  // });
+  const queryClient = useQueryClient();
+  const { updateAppActionsMutation } = useUpdateAppActions(
+    currentNodeData?.workflowId
+  );
+  const currentService = JSON.parse(currentServiceData);
+
   const form = useForm<InstructionValues>({
     defaultValues: {
-      to: isNew ? "" : isEdit ? currentNodeData?.configData?.to : "",
-      cc: isNew ? "" : isEdit ? currentNodeData?.configData?.cc : "",
-      subject: isNew ? "" : isEdit ? currentNodeData?.configData?.subject : "",
-      body: isNew ? "" : isEdit ? currentNodeData?.configData?.html : "",
+      to: isNew ? "" : isEdit ? currentService?.config?.to : "",
+      cc: isNew ? "" : isEdit ? currentService?.config?.cc : "",
+      subject: isNew ? "" : isEdit ? currentService?.config?.subject : "",
+      body: isNew ? "" : isEdit ? currentService?.config?.html : "",
       attachment: "",
     },
     resolver: zodResolver(schema),
@@ -80,7 +73,6 @@ export const EditConditionForm = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const attachmentFile = useRef<HTMLInputElement | null>(null);
-  const queryClient = useQueryClient();
   const simulateProgress = () => {
     setProgress(0);
     const interval = setInterval(() => {
@@ -132,7 +124,8 @@ export const EditConditionForm = ({
   const handleRemoveFile = () => {
     form.setValue("attachment", "");
   };
-  const mutation = useMutation({
+
+  const updateMailTemplateMutation = useMutation({
     mutationFn: setConfigInstruction,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -145,7 +138,30 @@ export const EditConditionForm = ({
       toast.error("Failed to add configuration");
     },
   });
-  const handleSubmit = (data: InstructionValues) => {
+
+  const createNewTemplateMutation = useMutation({
+    mutationFn: async ({
+      name,
+      config,
+    }: {
+      name: string;
+      config: {
+        cc?: string[];
+        subject?: string;
+        html?: string;
+      };
+    }) => {
+      return await createCustomEmailTemplate({ name, config });
+    },
+    onSuccess: () => {
+      toast.success("Created custom template");
+    },
+    onError: () => {
+      toast.error("Failed to create new email template");
+    },
+  });
+
+  const handleSubmit = async (data: InstructionValues) => {
     const attachmentUrl = data.attachment;
 
     let htmlWithAttachment = data.body || "";
@@ -168,12 +184,84 @@ export const EditConditionForm = ({
 
     console.log("Submitting with html:", htmlWithAttachment);
 
-    mutation.mutate({
-      currentNodeId: currentNodeData._id,
-      cc: Array.isArray(data?.cc) ? data.cc : data.cc ? [data.cc] : [],
-      html: htmlWithAttachment,
-      subject: data?.subject,
-    });
+    if (isNew) {
+      const newConfigData = {
+        cc: Array.isArray(data?.cc) ? data.cc : data.cc ? [data.cc] : [],
+        html: htmlWithAttachment,
+        subject: data?.subject,
+      };
+
+      const configData = await createNewTemplateMutation.mutateAsync({
+        name: data?.subject,
+        config: newConfigData,
+      });
+
+      if (!configData || typeof configData !== "object") {
+        console.error("Invalid configData", configData);
+        toast.error("Failed to create template properly");
+        return;
+      }
+
+      console.log("configData", configData);
+      console.log("configData JSON", JSON.stringify(configData));
+
+      await updateAppActionsMutation.mutateAsync(
+        {
+          nodeId: currentNodeData?._id,
+          description: currentNodeData?.serviceDescription,
+          templateKey: configData?.key,
+          workflowId: currentNodeData?.workflowId,
+          customTempleteKey: JSON.stringify(configData),
+          config: newConfigData,
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["get-node-services", currentNodeData?.template?.name],
+            });
+            setIsEditScreen(false);
+          },
+        }
+      );
+    } else {
+      const modifiedConfigData = {
+        cc: Array.isArray(data?.cc) ? data.cc : data.cc ? [data.cc] : [],
+        html: htmlWithAttachment,
+        subject: data?.subject,
+      };
+
+      await updateMailTemplateMutation.mutateAsync({
+        currentNodeId: currentService?._id,
+        name: data?.subject,
+        ...modifiedConfigData,
+      });
+
+      const updatedTemplete = {
+        _id: currentService?._id,
+        key: defaultService?.key,
+        service: data?.subject,
+        custom: true,
+        config: modifiedConfigData,
+      };
+
+      await updateAppActionsMutation.mutateAsync(
+        {
+          nodeId: currentNodeData._id,
+          templateKey: defaultService?.key,
+          workflowId: currentNodeData?.workflowId,
+          customTempleteKey: JSON.stringify(updatedTemplete),
+          config: modifiedConfigData,
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["get-node-services", currentNodeData?.template?.name],
+            });
+            setIsEditScreen(false);
+          },
+        }
+      );
+    }
 
     form.reset();
   };
@@ -181,6 +269,7 @@ export const EditConditionForm = ({
   return (
     <Form {...form}>
       <form
+        key={JSON.stringify(currentService)}
         id="edit-condition-form"
         onSubmit={form.handleSubmit(handleSubmit)}
         className="w-full overflow-y-auto h-full hide-scrollbar"
@@ -207,6 +296,7 @@ export const EditConditionForm = ({
             )}
           />
         </div>
+        {/* <pre>{JSON.stringify(currentService)}</pre> */}
 
         <div className="space-y-2 relative">
           <FormLabel className="font-gilroyMedium text-sm">
@@ -229,6 +319,7 @@ export const EditConditionForm = ({
                         field.onChange(e.target.value);
                       }}
                       onKeyDown={(e) => {
+                        e.stopPropagation;
                         if (e.key === "{" || (e.shiftKey && e.key === "[")) {
                           e.preventDefault();
                           setDropdownOpen(true);

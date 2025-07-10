@@ -40,7 +40,6 @@ const formSchema = z.object({
 
 function DeviceFlowDialog({
   children,
-  onChangeApp,
   data,
   onDelete,
   open,
@@ -48,7 +47,6 @@ function DeviceFlowDialog({
 }: {
   children?: React.ReactNode;
   open?: boolean;
-  onChangeApp: (app: AppTaskType) => void;
   data?: any;
   onDelete?: () => void;
   setOpen?: (open: boolean) => void;

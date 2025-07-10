@@ -2,7 +2,7 @@
 import { Button } from "@/components/buttons/Button";
 import { PlayCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
 import { toast } from "sonner";
 import { updateWorkFlowById } from "../[id]/_components/api";
@@ -23,7 +23,10 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper";
 import { Check, LoaderCircle, XIcon } from "lucide-react";
-import { testRunWorkflow } from "@/server/workflowActions/workflow";
+import {
+  testRunWorkflow,
+  updateWorkflow,
+} from "@/server/workflowActions/workflow";
 
 export const useSaveWorkflowMutation = () => {
   return useMutation({
@@ -81,6 +84,7 @@ export const TestRunDialog = ({
   const [failedStepIndex, setFailedStepIndex] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const queryClient = useQueryClient();
   // Add at the top inside TestRunDialog
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -89,7 +93,38 @@ export const TestRunDialog = ({
     queryFn: () => testRunWorkflow(workflowId),
     enabled: !!workflowId,
     staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: true,
   });
+
+
+  const updateMutation = useMutation({
+    mutationFn: (data: { name?: string; status?: string }) =>
+      updateWorkflow(workflowId, data),
+    onMutate: async (newData) => {
+      // Optimistically update the status
+      if (newData.status) {
+        await queryClient.invalidateQueries({
+          queryKey: ["workflow-by-id", workflowId],
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", workflowId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-all-workflows"],
+      });
+      toast.success("Workflow updated successfully");
+      setIsDialogOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update workflow");
+    },
+  });
+
+  // console.log(workflowData);
 
   useEffect(() => {
     if (!isDialogOpen || !workflowData) return;
@@ -146,6 +181,11 @@ export const TestRunDialog = ({
     return <div>Loading...</div>;
   }
 
+  const allStepsCompleted =
+    workflowData?.results?.length === completedSteps.length &&
+    loadingStepIndex === null &&
+    failedStepIndex === null;
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -169,7 +209,9 @@ export const TestRunDialog = ({
             return (
               <div
                 className="flex gap-2.5 justify-start"
-                ref={(el) => (stepRefs.current[i] = el)}
+                ref={(el) => {
+                  stepRefs.current[i] = el;
+                }}
                 key={step.nodeId}
               >
                 <StepperItem
@@ -205,7 +247,7 @@ export const TestRunDialog = ({
                       ) : (
                         <span className="absolute scale-50 opacity-0 transition-all group-data-[loading=true]/step:scale-100 group-data-[loading=true]/step:opacity-100">
                           <LoaderCircle
-                            className="animate-spin"
+                            className="animate-spin text-black"
                             size={14}
                             strokeWidth={2}
                             aria-hidden="true"
@@ -267,9 +309,13 @@ export const TestRunDialog = ({
               </Button>
             </DialogClose>
             <Button
-              onClick={handlePublish}
+              onClick={() => {
+                updateMutation.mutate({ status: "published" });
+              }}
               className="w-full flex-1"
-              disabled={workflowData?.status === "partial"}
+              disabled={
+                !allStepsCompleted || workflowData?.status === "partial"
+              }
               variant="primary"
             >
               Publish

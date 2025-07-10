@@ -41,10 +41,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
   getServices,
-  updateAppAction,
+  setConfigInstruction,
+  updateNodeDescription,
 } from "@/server/workflowActions/workflowById/workflowNodes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ConfirmationModal } from "../../dropdowns/confirmation-popup";
+import { useUpdateAppActions } from "../../hooks/use-update-app-actions";
 import { AppTaskType } from "../../types/task";
 import { EditConditionForm } from "./edit-condition.form";
 import { EmailTemplate } from "./email-templete";
@@ -59,13 +61,11 @@ export type InstructionValues = z.infer<typeof schema>;
 export const InstructionDialog = ({
   children,
   onDelete,
-  onChangeApp,
   data,
   open,
   setOpen,
 }: {
   children?: React.ReactNode;
-  onChangeApp: (app: AppTaskType) => void;
   data?: any;
   open: boolean;
   onDelete: () => void;
@@ -74,56 +74,89 @@ export const InstructionDialog = ({
   const queryClient = useQueryClient();
   const [isEditScreen, setIsEditScreen] = useState(false);
   const [isNew, setIsNew] = useState(false);
+  console.log(data, "@DATA");
 
-  const { data: services, status: servicesStatus } = useQuery({
+  const { data: services } = useQuery({
     queryKey: ["get-node-services", data?.backendData?.template?.name],
     queryFn: () => getServices(data?.backendData?.template?.name),
     staleTime: Infinity,
     refetchOnMount: false,
   });
-  // console.log(services, "get-node-service");
 
-  const setActionMutation = useMutation({
-    mutationFn: updateAppAction,
+  const { updateAppActionsMutation } = useUpdateAppActions(
+    data?.backendData?.workflowId
+  );
+
+  console.log(services, "@get-node-service");
+
+  const form = useForm<InstructionValues>({
+    defaultValues: {
+      description: data?.backendData?.serviceDescription ?? "",
+      action: data?.backendData?.templateLabel ?? "",
+    },
+    resolver: zodResolver(schema),
+  });
+
+  const setConfigMutation = useMutation({
+    mutationFn: setConfigInstruction,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["workflow-by-id", data?.backendData?.workflowId],
+        queryKey: ["workflow-by-id", data?.workflowId],
         exact: false,
       });
-      toast.success("Instruction Condition set Successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-instruction-actions"],
+        exact: true,
+        type: "all",
+        refetchType: "all",
+      });
+      toast.success("Conditions saved successfully");
     },
     onError: () => {
-      toast.error("Failed to set App Condition");
+      toast.error("Failed to add configuration");
+    },
+  });
+
+  const updateDescriptionMutation = useMutation({
+    mutationFn: updateNodeDescription,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", data?.workflowId],
+        exact: false,
+        type: "all",
+        refetchType: "all",
+      });
+      // toast.success("Description updated");
+    },
+    onError: () => {
+      toast.error("Failed to update description");
     },
   });
 
   const handleSubmit = (formData: InstructionValues) => {
     try {
-      setActionMutation.mutate({
+      const backendData = data?.backendData;
+      if (backendData?.serviceDescription !== formData?.description) {
+        updateDescriptionMutation.mutate({
+          nodeId: backendData?._id,
+          description: formData?.description,
+        });
+      }
+
+      console.log("@FORMDATA", formData);
+
+      updateAppActionsMutation.mutate({
         nodeId: data.backendData.parentNodeId,
-        templateKey: formData.action,
+        templateKey: services[0].key,
         workflowId: data.backendData.workflowId,
-        description: formData.description,
+        customTempleteKey: formData?.action,
       });
-      console.log("Submitting updateAppAction payload:", {
-        nodeId: data.backendData.parentNodeId,
-        templateKey: formData.action,
-        workflowId: data.backendData.workflowId,
-        description: formData.description,
-      });
+
       setOpen(false);
     } catch (error) {
       toast.error("Something went wrong");
     }
   };
-
-  const form = useForm<InstructionValues>({
-    defaultValues: {
-      description: services?.[0]?.description,
-      action: services?.[0]?.service,
-    },
-    resolver: zodResolver(schema),
-  });
 
   return (
     <Dialog
@@ -238,15 +271,16 @@ export const InstructionDialog = ({
                               <SelectTrigger className="flex justify-between font-gilroyMedium placeholder:text-[#CCCCCC]">
                                 <SelectValue
                                   placeholder="Choose action"
-                                  className={"placeholder:text-[#CCCCCC]"}
+                                  className={"text-[#CCCCCC]"}
                                 />
                               </SelectTrigger>
                             </FormControl>
+
                             <SelectContent className="font-gilroyMedium">
-                              {services?.map((option) => (
+                              {services?.map((option, i) => (
                                 <SelectItem
-                                  key={option.key}
-                                  value={option.key}
+                                  key={`${option?.service}-${i}`}
+                                  value={JSON.stringify(option)}
                                   className="text-left"
                                 >
                                   {option?.service}
@@ -263,7 +297,9 @@ export const InstructionDialog = ({
                   {form.getValues("action") ? (
                     <EmailTemplate
                       setIsEdit={setIsEditScreen}
-                      currentConfig={data?.backendData}
+                      defaultService={services?.filter((val) => !val.custom)[0]}
+                      currentNodeData={data?.backendData}
+                      currentService={form.watch("action")}
                     />
                   ) : null}
 
@@ -291,8 +327,11 @@ export const InstructionDialog = ({
           ) : (
             <EditConditionForm
               currentNodeData={data?.backendData}
+              currentService={form.watch("action")}
               isEdit={isEditScreen}
+              defaultService={services?.filter((val) => !val.custom)[0]}
               isNew={isNew}
+              setIsEditScreen={setIsEditScreen}
               key={`edit-form-${data?.backendData?._id}`}
             />
           )}
@@ -330,7 +369,7 @@ export const InstructionDialog = ({
                 variant="primary"
                 className="text-[13px] w-fit"
                 onClick={(e) => e.stopPropagation()}
-                loading={setActionMutation?.isPending}
+                loading={setConfigMutation?.isPending}
               >
                 Continue
               </LoadingButton>
@@ -341,8 +380,11 @@ export const InstructionDialog = ({
               form="edit-condition-form"
               variant="primary"
               className="text-[13px] w-fit"
-              loading={setActionMutation.isPending}
-              onClick={(e) => e.stopPropagation()}
+              loading={setConfigMutation?.isPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                // setIsEditScreen(false);
+              }}
             >
               Save & Continue
             </LoadingButton>

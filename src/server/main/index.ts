@@ -1,5 +1,5 @@
 // const BASEURL = "https://gcp-api.edify.club";
-// const BASEURL = "https://staging.deviceflow.ai";
-const BASEURL = "https://262e5d3c7f91.ngrok-free.app";
+const BASEURL = "https://staging.deviceflow.ai";
+// const BASEURL = "https://9254aa94ebcc.ngrok-free.app";
 
 export { BASEURL };

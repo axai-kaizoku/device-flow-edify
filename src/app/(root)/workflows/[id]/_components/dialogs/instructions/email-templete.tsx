@@ -1,17 +1,36 @@
 import { Button } from "@/components/buttons/Button";
-import { Input } from "@/components/ui/input";
 import { Delete01Icon, PencilEdit01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useDeleteNode } from "../../hooks/use-delete-node";
+import { toast } from "sonner";
+import { ConfirmationModal } from "../../dropdowns/confirmation-popup";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUpdateAppActions } from "../../hooks/use-update-app-actions";
 
 export const EmailTemplate = ({
   setIsEdit,
-  currentConfig,
+  defaultService,
+  currentNodeData,
+  currentService,
 }: {
   setIsEdit: (val: boolean) => void;
-  currentConfig: any;
+  currentNodeData: any;
+  defaultService: any;
+  currentService: any;
 }) => {
-  const configData = currentConfig?.configData || {};
-  const { to, cc, subject, html } = configData;
+  const queryClient = useQueryClient();
+  const selectedService = JSON.parse(currentService) ?? {};
+  const {
+    config: { cc, subject, html },
+    _id,
+  } = selectedService;
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const { deleteNodeMutation } = useDeleteNode();
+  const { updateAppActionsMutation } = useUpdateAppActions(
+    currentNodeData?.workflowId
+  );
 
   // Extract attachment details
   let fileName: string | null = null;
@@ -42,7 +61,7 @@ export const EmailTemplate = ({
       <div className="bg-[#F9F9F9] rounded p-4 flex flex-col gap-3 text-[13px] font-gilroyMedium">
         <div className="flex items-end justify-start gap-2">
           <span className="text-[#A5A5A5]">To:</span>
-          <div>{Array.isArray(to) ? to.join(", ") : "{Employee email}"}</div>
+          <div>{"{Employee email}"}</div>
         </div>
 
         <div className="flex items-end justify-start gap-2">
@@ -84,24 +103,65 @@ export const EmailTemplate = ({
           </div>
         )}
       </div>
+      {/* <pre>{JSON.stringify(defaultService)}</pre> */}
+      {/* <pre>{JSON.stringify(isConfigChanged)}</pre> */}
+      {/* <pre>{JSON.stringify(currentConfig)}</pre> */}
 
-      <div className="flex mt-3 gap-3">
-        <Button
-          className="text-[#FF0000] w-full flex-1"
-          type="button"
-          variant="outlineTwo"
-          onClick={(e) => e.stopPropagation()}
+      <div className="flex mt-3 gap-3 mb-5">
+        <ConfirmationModal
+          open={confirmDelete}
+          setOpen={setConfirmDelete}
+          functionToBeExecuted={async () => {
+            if (selectedService.custom) {
+              await updateAppActionsMutation.mutateAsync({
+                nodeId: currentNodeData?._id,
+                templateKey: defaultService?.key,
+                workflowId: currentNodeData?.workflowId,
+                config: defaultService.config,
+                customTempleteKey: JSON.stringify(defaultService),
+              });
+
+              await deleteNodeMutation.mutateAsync(_id, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: [
+                      "get-node-services",
+                      currentNodeData?.template?.name,
+                    ],
+                  });
+                  setConfirmDelete(false);
+                },
+              });
+            } else {
+              toast.error("Cannot delete default template !");
+            }
+          }}
+          title="Are you sure?"
+          description="Are you sure you want to delete the template?"
+          type="failure"
+          successBtnText="Delete"
         >
-          <HugeiconsIcon icon={Delete01Icon} size={16} />
-          Delete
-        </Button>
+          <Button
+            className="text-[#FF0000] w-full flex-1"
+            type="button"
+            variant="outlineTwo"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <HugeiconsIcon icon={Delete01Icon} size={16} />
+            Delete
+          </Button>
+        </ConfirmationModal>
         <Button
           className="text-[#0062FF] w-full flex-1"
           type="button"
           variant="outlineTwo"
           onClick={(e) => {
             e.stopPropagation();
-            setIsEdit(true);
+            if (!selectedService.custom) {
+              toast.error("Cannot edit default template !");
+            } else {
+              setIsEdit(true);
+            }
           }}
         >
           <HugeiconsIcon

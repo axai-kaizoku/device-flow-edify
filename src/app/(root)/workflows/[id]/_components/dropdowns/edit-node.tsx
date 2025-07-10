@@ -33,7 +33,6 @@ interface EditNodeProps {
   state?: "connected" | "disconnected";
   type: "app" | "instruction";
   onEditAction: () => void;
-  onChangeApp: (appType: string) => void;
   onDuplicate: () => void;
   onDelete: () => void;
   canDuplicate: boolean;
@@ -46,7 +45,6 @@ const EditNode = ({
   onEditAction,
   type,
   data,
-  onChangeApp,
   onDuplicate,
   canDuplicate,
   onDelete,
@@ -94,7 +92,6 @@ const EditNode = ({
             <InstructionDialog
               data={data}
               onDelete={onDelete}
-              onChangeApp={onChangeApp}
               open={openEdit}
               setOpen={setOpenEdit}
             >
@@ -120,7 +117,6 @@ const EditNode = ({
             <>
               <SetActionDialog
                 onDelete={onDelete}
-                onChangeApp={onChangeApp}
                 data={data}
                 open={openEdit}
                 setOpen={setOpenEdit}

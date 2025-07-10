@@ -1,22 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowLeft02Icon,
-  CheckmarkCircle02Icon,
-  Delete01Icon,
-} from "@hugeicons/core-free-icons";
+import { Button, LoadingButton } from "@/components/buttons/Button";
+import React, { useCallback, useState } from "react";
 import {
   Dialog,
-  DialogClose,
-  DialogContent,
   DialogDescription,
   DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
   SideDialogContent,
@@ -30,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button, LoadingButton } from "@/components/buttons/Button";
 import {
   Select,
   SelectContent,
@@ -38,20 +25,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ConfirmationModal } from "../dropdowns/confirmation-popup";
-import { AppTaskType } from "../types/task";
-import { ChangeAppDialog } from "./change-app.dialog";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  getChannelsFromKey,
   getServices,
+  getSlackChannelMessage,
+  setConfigApp,
   updateAppAction,
 } from "@/server/workflowActions/workflowById/workflowNodes";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ArrowLeft02Icon,
+  CheckmarkCircle02Icon,
+  Delete01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import ChangeAppDropdown from "../dropdowns/change-app-dropdown";
+import { ConfirmationModal } from "../dropdowns/confirmation-popup";
 
 // Define schema for the action form
 const actionSchema = z.object({
   description: z.string().optional(),
   action: z.string().min(1, "Action is required"),
+  channel: z.string(),
   parameters: z.record(z.string()).optional(),
 });
 
@@ -59,7 +58,6 @@ type ActionFormValues = z.infer<typeof actionSchema>;
 
 function SetActionDialog({
   children,
-  onChangeApp,
   data,
   onDelete,
   open,
@@ -67,18 +65,22 @@ function SetActionDialog({
 }: {
   children?: React.ReactNode;
   open: boolean;
-  onChangeApp: (app: AppTaskType) => void;
   data?: any;
   onDelete: () => void;
   setOpen: (open: boolean) => void;
 }) {
   const queryClient = useQueryClient();
+  const [selectedActionKey, setSelectedActionKey] = useState<string | null>(
+    null
+  );
   const { data: services, status: servicesStatus } = useQuery({
     queryKey: ["get-node-services", data?.backendData?.template?.name],
     queryFn: () => getServices(data?.backendData?.template?.name),
+    staleTime: Infinity,
+    refetchOnMount: false,
   });
-  const [loading, setLoading] = useState(false);
 
+  // console.log(services);
   const setActionMutation = useMutation({
     mutationFn: updateAppAction,
     onSuccess: () => {
@@ -93,38 +95,93 @@ function SetActionDialog({
     },
   });
 
+  const setChannelMutation = useMutation({
+    mutationFn: setConfigApp,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id", data?.backendData?.workflowId],
+        exact: false,
+      });
+      // toast.success("App Condition set Successfully");
+    },
+    onError: () => {
+      // toast.error("Failed to set App Condition");
+    },
+  });
+
   const form = useForm<ActionFormValues>({
     defaultValues: {
       description: data?.backendData?.template?.description || "",
       action: data?.backendData?.templateKey || "",
       parameters: {},
+      channel: "",
     },
     resolver: zodResolver(actionSchema),
   });
 
   const handleSubmit = (formData: ActionFormValues) => {
-    setLoading(true);
     try {
+      selectedActionKey?.toLowerCase().split("_").includes("message")
+        ? setChannelMutation.mutate({
+            channelId: formData.channel,
+            currentNodeId: data?.backendData?.parentNodeId,
+          })
+        : selectedActionKey?.toLowerCase().split("_").includes("team")
+        ? setChannelMutation.mutate({
+            teamId: formData.channel,
+            currentNodeId: data?.backendData?.parentNodeId,
+          })
+        : null;
+
       setActionMutation.mutate({
         nodeId: data.backendData.parentNodeId,
         templateKey: formData.action,
         workflowId: data.backendData.workflowId,
         description: formData.description,
       });
-      console.log("Form submitted:", data);
+      // console.log("Form submitted:", data);
       setOpen(false);
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
     }
   };
+
+  const { data: channels, status: channelStatus } = useQuery({
+    queryKey: ["get-channel-services", selectedActionKey],
+    queryFn: () => getChannelsFromKey(selectedActionKey!),
+    enabled: !!selectedActionKey,
+  });
+
+  const selectedChannel = form.watch("channel");
+
+  const fetchSlackMessage = useCallback(() => {
+    return getSlackChannelMessage({ channelId: selectedChannel });
+  }, [selectedChannel]);
+
+  const { data: message, status } = useQuery({
+    queryKey: ["get-channel-message", selectedChannel],
+    queryFn: fetchSlackMessage,
+    enabled: !!selectedChannel,
+  });
+
+  // console.log(form.getValues("channel"));
+
+  // console.log(message);
+
+  // console.log(channels);
+  // console.log(selectedActionKey);
 
   // Options for the action select field
   const actionOptions =
     services?.map((service, index) => ({
       value: service?.key,
       label: service?.service,
+    })) || [];
+
+  const channelOptions =
+    channels?.data?.map((channel, index) => ({
+      value: channel?.id,
+      label: channel?.name,
     })) || [];
 
   return (
@@ -219,7 +276,10 @@ function SetActionDialog({
                     render={({ field }) => (
                       <FormItem>
                         <Select
-                          onValueChange={field.onChange}
+                          onValueChange={(val) => {
+                            field.onChange(val);
+                            setSelectedActionKey(val);
+                          }}
                           value={field.value}
                         >
                           <FormControl>
@@ -228,7 +288,7 @@ function SetActionDialog({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="font-gilroyMedium">
-                            {actionOptions.map((option) => (
+                            {actionOptions?.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
@@ -244,6 +304,68 @@ function SetActionDialog({
                     )}
                   />
                 </div>
+
+                {(selectedActionKey
+                  ?.toLowerCase()
+                  .split("_")
+                  .includes("message") ||
+                  selectedActionKey
+                    ?.toLowerCase()
+                    .split("_")
+                    .includes("team")) && (
+                  <>
+                    <div className="space-y-2">
+                      <FormLabel className="font-gilroyMedium text-sm">
+                        {selectedActionKey
+                          ?.toLowerCase()
+                          .split("_")
+                          .includes("message")
+                          ? "Channel"
+                          : "Team"}
+                      </FormLabel>
+                      <FormField
+                        control={form.control}
+                        name="channel"
+                        render={({ field }) => (
+                          <FormItem>
+                            <Select
+                              onValueChange={(val) => {
+                                field.onChange(val);
+                                form.setValue("channel", val);
+                                // setSelectedActionKey(val);
+                              }}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="flex justify-between font-gilroyMedium placeholder:text-[#CCCCCC]">
+                                  <SelectValue placeholder={`Choose options`} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="font-gilroyMedium">
+                                {channelOptions?.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    className="text-left capitalize"
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {!message?.isMember && (
+                      <p className="text-red-500 font-gilroyMedium text-xs">
+                        {message?.message}
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
             </form>
           </Form>
@@ -278,7 +400,7 @@ function SetActionDialog({
             type="submit"
             variant="primary"
             className="text-[13px] w-fit"
-            loading={loading}
+            loading={setActionMutation?.isPending}
             onClick={(e) => e.stopPropagation()}
           >
             Continue

@@ -78,7 +78,7 @@ export const updatePathPosition = async ({
 
 export const getConditionsOfPath = async ({ templateKey }) => {
   try {
-    console.log(templateKey);
+    // console.log(templateKey);
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/node/ifconditions?key=${templateKey}`,
       "GET"

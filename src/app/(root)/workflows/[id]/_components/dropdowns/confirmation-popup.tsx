@@ -37,7 +37,11 @@ export const ConfirmationModal = ({
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className={"w-full"} asChild>
+        <DialogTrigger
+          className={"w-full"}
+          asChild
+          onClick={(e) => e.stopPropagation()}
+        >
           {children}
         </DialogTrigger>
 

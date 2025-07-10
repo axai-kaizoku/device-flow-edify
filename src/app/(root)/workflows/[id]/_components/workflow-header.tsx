@@ -3,36 +3,68 @@ import WorkFlowOptions from "@/app/(root)/workflows/[id]/_components/dropdowns/w
 import { ActionBar } from "@/components/action-bar/action-bar";
 import { Button } from "@/components/buttons/Button";
 import { Switch } from "@/components/ui/switch";
-import {
-  ArrowDown01Icon,
-  Redo03Icon,
-  Undo03Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Search } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import { TestRun } from "../../_components/test-run";
-import { SearchToolbar } from "./search-toolbar";
-import { WorkflowTreeResponse } from "@/server/workflowActions/workflow";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDebounce } from "@/hooks/use-debounce";
 import {
   deleteWorkflow,
+  searchInWorkflow,
   updateWorkflow,
+  WorkflowTreeResponse,
 } from "@/server/workflowActions/workflow";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useReactFlow } from "@xyflow/react";
+import { ChevronDown, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { TestRun } from "../../_components/test-run";
+import { SearchToolbar } from "./search-toolbar";
 
-function WorkflowHeader({ workflow }: { workflow: WorkflowTreeResponse }) {
+function WorkflowHeader({
+  workflow,
+  onSearchResults,
+}: {
+  workflow: WorkflowTreeResponse;
+  onSearchResults?: (results: string[]) => void;
+}) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { getNodes } = useReactFlow();
+  // console.log(getNodes(), "zcxgfhjiokpl");
   const [isRenaming, setIsRenaming] = useState(false);
   const [flowName, setFlowName] = useState(workflow?.data?.workflow?.name);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const enabled = workflow?.data?.workflow?.status === "published";
 
   const inputRef = useRef<HTMLInputElement>(null);
   // console.log(workflow);
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+  const debouncedQuery = useDebounce(searchQuery, 300);
+  const { data: searchResults, isLoading: isSearching } = useQuery({
+    queryKey: [
+      "workflow-search",
+      workflow?.data?.workflow?._id,
+      debouncedQuery,
+    ],
+    queryFn: () =>
+      searchInWorkflow(debouncedQuery, workflow?.data?.workflow?._id),
+    enabled: !!debouncedQuery && debouncedQuery.length > 0,
+  });
+  useEffect(() => {
+    if (!onSearchResults) return;
+
+    if (searchResults?.results?.length) {
+      const matchingIds = searchResults.results.map((result) => result._id);
+      console.log(matchingIds);
+      onSearchResults(matchingIds);
+    } else if (debouncedQuery === "") {
+      onSearchResults([]);
+    }
+  }, [searchResults, debouncedQuery]);
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: { name?: string; status?: string }) =>
@@ -109,6 +141,8 @@ function WorkflowHeader({ workflow }: { workflow: WorkflowTreeResponse }) {
     deleteMutation.mutate();
   };
 
+  // console.log(debouncedQuery);
+
   return (
     <ActionBar
       showBackBtn
@@ -131,56 +165,60 @@ function WorkflowHeader({ workflow }: { workflow: WorkflowTreeResponse }) {
           </Button>
 
           <SearchToolbar
+            onSearch={handleSearch}
+            value={searchQuery}
+            isLoading={isSearching}
             searchIcon={
               <Button
                 variant="outlineTwo"
                 className="h-9 w-7 transition-opacity duration-300"
               >
-                <Search className="size-5" />
+                <Search
+                  className={`size-5 ${isSearching ? "animate-pulse" : ""}`}
+                />
               </Button>
             }
           />
         </div>
         <div className="flex items-center gap-2">
-          {isRenaming ? (
-            <input
-              ref={inputRef}
-              value={flowName}
-              onChange={(e) => setFlowName(e.target.value)}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              className="text-[15px] focus:outline-none font-gilroySemiBold   px-2 py-1 w-[180px]"
-            />
-          ) : (
-            <h1 className="text-[15px] font-gilroySemiBold flex gap-1 justify-center items-center">
-              {flowName}
+          <div className="flex gap-1 justify-center items-center">
+            {isRenaming ? (
+              <input
+                ref={inputRef}
+                value={flowName}
+                onChange={(e) => setFlowName(e.target.value)}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                className="text-[15px] font-gilroySemiBold px-1 py-0.5 focus:outline-none   w-auto min-w-[40px] bg-transparent"
+                style={{ width: `${flowName.length + 1}ch` }} // dynamic width
+              />
+            ) : (
+              <h1 className="text-[15px] font-gilroySemiBold">{flowName}</h1>
+            )}
+
+            {!isRenaming && (
               <WorkFlowOptions onRename={handleRename} onDelete={handleDelete}>
-                <span
-                  className="cursor-pointer"
-                  // onClick={() => setOnboard(!onboard)}
-                >
-                  <HugeiconsIcon
-                    icon={ArrowDown01Icon}
-                    className="text-[#CCCCCC] size-5"
-                  />
+                <span className="cursor-pointer">
+                  <ChevronDown className="text-[#CCCCCC] size-5" />
                 </span>
               </WorkFlowOptions>
-            </h1>
-          )}
+            )}
+          </div>
 
           <button
             className={`${
               enabled
                 ? "border border-[#0C941C] text-[#0C941C] bg-[#F9FFFA]"
                 : "border border-[#E5E5E5]"
-            }  rounded-lg text-xs font-gilroyMedium text-center  w-20 px-5 h-7`}
+            } rounded-lg text-xs font-gilroyMedium text-center w-20 px-5 h-7`}
           >
             {enabled ? <>Active</> : <>Draft</>}
           </button>
         </div>
+
         <div className="flex gap-2.5">
           {" "}
-          <Button
+          {/* <Button
             variant="outlineTwo"
             className="h-9 w-7 transition-opacity duration-300"
           >
@@ -191,7 +229,7 @@ function WorkflowHeader({ workflow }: { workflow: WorkflowTreeResponse }) {
             className="h-9 w-7 transition-opacity duration-300"
           >
             <HugeiconsIcon icon={Redo03Icon} className="size-5" />
-          </Button>
+          </Button> */}
           <TestRun workflowId={workflow?.data?.workflow?._id ?? ""} />
           <Button
             variant="primary"

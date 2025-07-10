@@ -308,7 +308,7 @@ AsyncMultiSelectProps<T>) {
               ))}
 
             {options.users?.length ? (
-              <CommandGroup heading="Users">
+              <CommandGroup heading={label === "Channels" ? "Channels" : "Users"}>
                 {options.users.map((opt) => (
                   <CommandItem
                     key={`user-${opt.value}`}

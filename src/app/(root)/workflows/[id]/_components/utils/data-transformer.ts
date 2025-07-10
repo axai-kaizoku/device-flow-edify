@@ -121,13 +121,14 @@ export const transformBackendToReactFlow = (
         backendData: {
           _id: node._id,
           workflowId: backendData.workflow._id,
-          serviceDescription: node.serviceDescription || "",
+          serviceDescription: node.description || "",
           parentNodeId: node._id,
           appPosition: {
             x: node.position.x,
             y: node.position.y,
           },
           templateKey: node.templateKey,
+          templateLabel: node?.serviceDescription,
           ifCondition: node.ifCondition,
           configData: node.config,
           branches: node.branches,

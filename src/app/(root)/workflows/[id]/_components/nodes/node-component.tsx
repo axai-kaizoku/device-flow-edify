@@ -207,27 +207,6 @@ export const NodeComponent = memo((props: NodeProps) => {
     );
   };
 
-  const handleChangeApp = (appType: string) => {
-    console.log(nodeData, "node-data");
-    // const node = getNode(props.id);
-    // node.type = appType;
-    setNodes((nds) =>
-      nds.map((nd) => {
-        if (nd.id === props.id) {
-          return {
-            ...nd,
-            data: {
-              ...nd.data,
-              type: "APP",
-              appType: appType,
-            },
-          };
-        }
-        return nd;
-      })
-    );
-  };
-
   const handleDuplicateNode = async () => {
     handleDuplicateMutation.mutate({
       nodeType: nodeData.type,
@@ -337,7 +316,7 @@ export const NodeComponent = memo((props: NodeProps) => {
       setOpenDialog("APP");
     }
   };
-
+  console.log(nodeData);
   const closeDialog = () => setOpenDialog(null);
 
   switch (task) {
@@ -380,7 +359,7 @@ export const NodeComponent = memo((props: NodeProps) => {
         <div className="relative">
           {nodeData.appType === "Device Flow" &&
           nodeData?.backendData?.isDeviceFlowWithStartParent ? (
-            <DeviceFlowDialog data={nodeData} onChangeApp={handleChangeApp}>
+            <DeviceFlowDialog data={nodeData}>
               <NodeCard
                 className={cn(
                   !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
@@ -441,7 +420,6 @@ export const NodeComponent = memo((props: NodeProps) => {
             <>
               <SetActionDialog
                 onDelete={() => deleteNodeMutation.mutate(props.id)}
-                onChangeApp={handleChangeApp}
                 data={nodeData}
                 open={openDialog === "APP"}
                 setOpen={closeDialog}
@@ -451,7 +429,6 @@ export const NodeComponent = memo((props: NodeProps) => {
                 onDelete={() => {
                   deleteNodeMutation.mutate(props.id);
                 }}
-                onChangeApp={handleChangeApp}
                 open={openDialog === "INSTRUCTION"}
                 setOpen={closeDialog}
               />
@@ -472,7 +449,6 @@ export const NodeComponent = memo((props: NodeProps) => {
                   nodeData={nodeData}
                   nodeId={props.id}
                   onEditAction={handleEditAction}
-                  onChangeApp={handleChangeApp}
                   onDuplicate={handleDuplicateNode}
                 />
                 <div className="p-2">

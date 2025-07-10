@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { callAPIWithToken } from "../helper";
 import { BASEURL } from "../main";
 export type Workflow = {
@@ -137,6 +138,21 @@ export const getWorkflowById = async (id: string) => {
   }
 };
 
+export const searchInWorkflow = async (searchQuery: string, id: string): Promise<any[]> => {
+  try {
+    const res = await callAPIWithToken<any[]>(
+      `${BASEURL}/edifybackend/v1/workflow/node/search/${id}`,
+      "POST",
+      { searchQuery }
+    );
+
+    // console.log("getActions response:", res);
+    return res?.data;
+  } catch (e) {
+    throw new Error((e as AxiosError)?.message);
+  }
+};
+ 
 
 export const testRunWorkflow = async (id: string) => {
   try {

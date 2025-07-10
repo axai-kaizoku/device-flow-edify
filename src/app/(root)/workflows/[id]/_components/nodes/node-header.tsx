@@ -14,7 +14,6 @@ interface NodeHeaderProps {
   nodeData?: AppNodeData;
   nodeId: string;
   onEditAction: () => void;
-  onChangeApp: any;
   onDuplicate: () => void;
   canDuplicate: boolean;
 }
@@ -25,7 +24,6 @@ export const NodeHeader = ({
   canDuplicate,
   nodeId,
   onEditAction,
-  onChangeApp,
   onDuplicate,
 }: NodeHeaderProps) => {
   const task = TaskRegistry[taskType];
@@ -60,7 +58,6 @@ export const NodeHeader = ({
               type="app"
               data={{ ...nodeData }}
               onEditAction={onEditAction}
-              onChangeApp={onChangeApp}
               onDuplicate={onDuplicate}
               onDelete={() => deleteNodeMutation.mutate(nodeId)}
             >
