@@ -128,8 +128,10 @@ export const transformBackendToReactFlow = (
             y: node.position.y,
           },
           templateKey: node.templateKey,
+          integrationId: node.integrationId,
           templateLabel: node?.serviceDescription,
           ifCondition: node.ifCondition,
+          isIntegrated: node.isIntegrated,
           configData: node.config,
           branches: node.branches,
           // Add the Device Flow with start parent boolean

@@ -479,7 +479,7 @@ export async function deleteUser<User>(userId: string) {
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user/${userId}`, // API endpoint
       "DELETE",
-      null
+      {}
     );
     return res?.data;
   } catch (e: any) {
@@ -494,7 +494,7 @@ export async function permanentDeleteUser<User>(userId: string) {
     const res = await callAPIWithToken<User>(
       `${baseUrl}/edifybackend/v1/user/${userId}?permanent=true`,
       "DELETE",
-      null
+      {}
     );
     return res?.data;
   } catch (e: any) {

@@ -97,7 +97,6 @@ export const TestRunDialog = ({
     refetchOnMount: true,
   });
 
-
   const updateMutation = useMutation({
     mutationFn: (data: { name?: string; status?: string }) =>
       updateWorkflow(workflowId, data),

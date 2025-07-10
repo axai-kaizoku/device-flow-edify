@@ -56,7 +56,7 @@ export const deleteSingleLocations = async ({
   try {
     const apiUrl = `${BASEURL}/edifybackend/v1/location/${locationId}`;
 
-    const response = await callAPIWithToken(apiUrl, "DELETE");
+    const response = await callAPIWithToken(apiUrl, "DELETE", {});
 
     return response.data;
   } catch (error) {

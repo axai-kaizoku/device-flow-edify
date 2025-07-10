@@ -112,11 +112,13 @@ export const getIntegrationById = async ({ id }: { id: string }) => {
 export const deleteIntegrationById = async ({ id }: { id: string }) => {
   try {
     // console.log((await getSession()).user.user.token);
-
+    console.log(id);
     const res = await callAPIWithToken<IntegrationType[]>(
       `${apiUrl}/edifybackend/v1/integration/unsubscribe/${id}`,
-      "DELETE"
+      "DELETE",
+      {}
     );
+    console.log(res.data);
     return res?.data;
   } catch (error) {
     throw new Error((error as AxiosError)?.message);

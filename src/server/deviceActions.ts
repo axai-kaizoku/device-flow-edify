@@ -196,7 +196,8 @@ export async function deleteDevice(
   try {
     const deletedDevice = await callAPIWithToken<Device>(
       `${BASEURL}/edifybackend/v1/devices/${deviceId}`,
-      "DELETE"
+      "DELETE",
+      {}
     );
 
     return deletedDevice?.data;
@@ -213,7 +214,8 @@ export async function permanentDeleteDevice(
   try {
     const deleletedDevice = await callAPIWithToken<Device>(
       `${BASEURL}/edifybackend/v1/devices/bulk-delete?permanent=true`,
-      "DELETE"
+      "DELETE",
+      {}
     );
 
     return deleletedDevice?.data;

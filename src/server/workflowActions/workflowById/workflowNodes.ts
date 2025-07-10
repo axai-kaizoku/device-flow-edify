@@ -148,13 +148,13 @@ export const updateAppAction = async ({
   };
 }) => {
   try {
-    console.log("Updating app action with params:", {
-      templateKey,
-      nodeId,
-      workflowId,
-      description,
-      customTempleteKey,
-    });
+    // console.log("Updating app action with params:", {
+    //   templateKey,
+    //   nodeId,
+    //   workflowId,
+    //   description,
+    //   customTempleteKey,
+    // });
 
     const body = {
       templateKey,
@@ -165,7 +165,7 @@ export const updateAppAction = async ({
       ...(config ? { config } : {}),
     };
 
-    console.log(body, "body for updateAppAction");
+    // console.log(body, "body for updateAppAction");
 
     const res = await callAPIWithToken<WorkflowNode>(
       `${BASEURL}/edifybackend/v1/workflow/node/create-nodes?service=true`,
@@ -173,7 +173,7 @@ export const updateAppAction = async ({
       body
     );
 
-    console.log("updateAppAction response:", res);
+    // console.log("updateAppAction response:", res);
     return res?.data;
   } catch (e) {
     throw new Error((e as AxiosError)?.message);
@@ -291,15 +291,15 @@ export const setConfigInstruction = async ({
   subject?: string;
 }) => {
   try {
-    console.log("Setting config instruction with params:", {
-      currentNodeId,
-      name,
-      config: {
-        cc: cc || [],
-        html,
-        subject,
-      },
-    });
+    // console.log("Setting config instruction with params:", {
+    //   currentNodeId,
+    //   name,
+    //   config: {
+    //     cc: cc || [],
+    //     html,
+    //     subject,
+    //   },
+    // });
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/workflowNode/setConfig/${currentNodeId}`,
       "PATCH",
@@ -312,7 +312,7 @@ export const setConfigInstruction = async ({
         },
       }
     );
-    console.log("setConfigInstruction response:", res.data);
+    // console.log("setConfigInstruction response:", res.data);
 
     return res.data;
   } catch (e) {
@@ -334,36 +334,6 @@ export const getAllCustomEmailTemplates = async (): Promise<any> => {
     throw new Error((e as AxiosError)?.message);
   }
 };
-
-// const customEmailTemplateResponse = {
-//     "data": {
-//         "results": {
-//             "orgId": "678a1a10959cf72ab3b66068",
-//             "workflowId": null,
-//             "isIntegrated": false,
-//             "appName": "Instructions",
-//             "serviceDescription": "Hii  {First Name}  {Last Name}.",
-//             "templateKey": "send_email",
-//             "config": {
-//                 "cc": [],
-//                 "html": "<p>Hii  {First Name}  {Last Name}.</p>",
-//                 "subject": "Hii  {First Name}  {Last Name}."
-//             },
-//             "configFields": [],
-//             "ifCondition": [],
-//             "requiredFields": [],
-//             "conditionalFields": [],
-//             "next": null,
-//             "deletedAt": null,
-//             "_id": "686e3d8c068023d5852df708",
-//             "branches": [],
-//             "createdAt": "2025-07-09T09:59:40.466Z",
-//             "updatedAt": "2025-07-09T09:59:40.466Z",
-//             "__v": 0
-//         }
-//     },
-//     "status": 200
-// }
 
 export type CustomEmailTemplate = {
   results: {
@@ -403,10 +373,10 @@ export const createCustomEmailTemplate = async ({
   };
 }) => {
   try {
-    console.log("Creating custom email template with params:", {
-      name,
-      config,
-    });
+    // console.log("Creating custom email template with params:", {
+    //   name,
+    //   config,
+    // });
 
     const res = await callAPIWithToken<CustomEmailTemplate>(
       `${BASEURL}/edifybackend/v1/workflow/customtemplate/create`,
@@ -422,7 +392,7 @@ export const createCustomEmailTemplate = async ({
       config: res?.data.results.config,
     };
 
-    console.log("createCustomEmailTemplate response:", customTemplate);
+    // console.log("createCustomEmailTemplate response:", customTemplate);
 
     return {
       _id: res?.data.results._id,

@@ -4,8 +4,12 @@ import { getConnectedIntegrations } from "@/server/integrationActions";
 import { useQuery } from "@tanstack/react-query";
 import { InstalledSection } from "../_components/installed/installed-section";
 import { TotalSpends } from "../_components/total-spends";
+import { usePathname } from "next/navigation";
+import path from "path";
 
 export default function InstalledPage() {
+  const pathName = usePathname();
+
   const { data, status } = useQuery({
     queryKey: ["all-integrations", "installed"],
     queryFn: async () => {
@@ -21,6 +25,7 @@ export default function InstalledPage() {
         <>
           <section className="w-full h-[90vh] relative p-5 bg-white rounded-md border overflow-y-auto hide-scrollbar">
             <TotalSpends />
+
             <InstalledSection data={data} status={status} />
           </section>
         </>

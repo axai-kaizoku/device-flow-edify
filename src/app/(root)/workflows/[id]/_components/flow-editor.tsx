@@ -162,6 +162,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
     setNodes(highlightedNodes);
     setEdges(transformedEdges as unknown as Edge[]);
   }, [highlightedNodes, transformedEdges, setNodes, setEdges, fitView]);
+
   // Handle node drag end - update positions via API
   const onNodeDragStop = useCallback(
     async (event: React.MouseEvent, node: AppNode): Promise<void> => {
@@ -255,7 +256,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
     setNodes(transformedNodes);
     setEdges(transformedEdges as unknown as Edge[]);
   }, [transformedNodes, transformedEdges, setNodes, setEdges]);
-
+  const proOptions = { hideAttribution: true };
   return (
     <main className="h-full w-full">
       <FlowContext.Provider
@@ -274,6 +275,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          proOptions={proOptions}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeDragStop={onNodeDragStop}

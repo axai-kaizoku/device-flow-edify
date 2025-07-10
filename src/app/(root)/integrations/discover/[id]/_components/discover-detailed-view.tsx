@@ -18,6 +18,7 @@ import MappingDialogTwo from "./mapping-dialog-two";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, LinkSquare01Icon } from "@hugeicons/core-free-icons";
 import { toast } from "sonner";
+import { useIntegrationMutation } from "./useIntegrationMutation";
 
 function DiscoverDetailedView({ id }: { id: string }) {
   const router = useRouter();
@@ -55,98 +56,18 @@ function DiscoverDetailedView({ id }: { id: string }) {
     setSelectedImage(src);
   };
 
-  const mutation = useMutation({
-    mutationFn: async ({
-      payload,
-    }: {
-      payload?: { platform?: string; credentials?: {}; store?: {}[] };
-    }) => {
-      return await connectIntegration({ payload });
-    },
+  const mutation = useIntegrationMutation({
+    mutationFn: ({ payload }) => connectIntegration({ payload }),
     mutationKey: ["add-integration-response"],
-    onMutate: () => {
-      setShowConnectModal(true);
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ["get-integration-by-id"],
-          exact: false,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["fetch-people"],
-          exact: false,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["user-by-integrations", "all-data"],
-          exact: true,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["all-integrations", "discover"],
-          exact: true,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["all-integrations"],
-          exact: false,
-          refetchType: "all",
-        }),
-      ]);
-
-      setNextSteps(1);
-      setShowConnectModal(false);
-    },
-    onError: () => {
-      toast.error("Failed to integrate !");
-    },
+    setNextSteps,
+    setShowConnectModal,
   });
 
-  const gSuiteMutation = useMutation({
-    mutationFn: async ({ id }: { id: string }) => {
-      return await connectGsuiteIntegration({ id });
-    },
+  const gSuiteMutation = useIntegrationMutation({
+    mutationFn: ({ id }) => connectGsuiteIntegration({ id }),
     mutationKey: ["gsuite-integration-response"],
-    onMutate: () => {
-      setShowConnectModal(true);
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ["get-integration-by-id"],
-          exact: false,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["fetch-people"],
-          exact: false,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["user-by-integrations", "all-data"],
-          exact: true,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["all-integrations", "discover"],
-          exact: true,
-          refetchType: "all",
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["all-integrations"],
-          exact: false,
-          refetchType: "all",
-        }),
-      ]);
-
-      setNextSteps(1);
-      setShowConnectModal(false);
-    },
-    onError: () => {
-      setShowConnectModal(false);
-    },
+    setNextSteps,
+    setShowConnectModal,
   });
 
   return (

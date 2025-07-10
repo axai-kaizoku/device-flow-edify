@@ -19,6 +19,7 @@ import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 
 export default function MappingDialogOne({
   children,
+  urlAddress,
   open,
   setOpen,
   response,
@@ -26,6 +27,7 @@ export default function MappingDialogOne({
   platform,
 }: {
   platform?: string;
+  urlAddress?: string;
   children?: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -81,9 +83,12 @@ export default function MappingDialogOne({
     setNextSteps(0);
     setLoading(false);
 
-    router.replace(`/integrations/installed/${platform}`, {
-      scroll: false,
-    });
+    router.replace(
+      urlAddress ? urlAddress : `/integrations/installed/${platform}`,
+      {
+        scroll: false,
+      }
+    );
 
     toast.success("Integration successfull !");
   };
@@ -207,7 +212,9 @@ export default function MappingDialogOne({
                   className="w-[48%] bg-white hover:bg-white hover:border-black cursor-pointer"
                   onClick={handleSkipClick}
                   onMouseEnter={() =>
-                    router.prefetch(`/integrations/installed/${platform}`)
+                    router.prefetch(
+                      urlAddress ?? `/integrations/installed/${platform}`
+                    )
                   }
                 >
                   Skip

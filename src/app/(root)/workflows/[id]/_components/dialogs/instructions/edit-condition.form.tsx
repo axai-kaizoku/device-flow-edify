@@ -390,8 +390,12 @@ export const EditConditionForm = ({
             name="body"
             render={({ field }) => (
               <FormItem>
-                <div className="rounded-md overflow-hidden border border-[#CCCCCC]">
-                  <EmailTextEditor onChange={(text) => field.onChange(text)} />
+                <div className="rounded-md overflow-hidden border border-[#CCCCCC] h-fit">
+                  <EmailTextEditor
+                    content={field.value}
+                    data={currentNodeData.ifCondition}
+                    onChange={(text) => field.onChange(text)}
+                  />
                 </div>
                 <FormMessage />
               </FormItem>

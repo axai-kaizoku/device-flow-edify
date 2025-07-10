@@ -12,7 +12,7 @@ import {
 } from "@/server/workflowActions/workflow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ function WorkflowHeader({
   // console.log(getNodes(), "zcxgfhjiokpl");
   const [isRenaming, setIsRenaming] = useState(false);
   const [flowName, setFlowName] = useState(workflow?.data?.workflow?.name);
-
+  const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const enabled = workflow?.data?.workflow?.status === "published";
@@ -148,6 +148,7 @@ function WorkflowHeader({
       showBackBtn
       outerClassName="rounded-b-none border-t-[#CECECE] border-l-[#CECECE] border-r-[#CECECE]"
     >
+      <div className="h-[1px] bg-[#CECECE] rotate-90 w-6 -ml-2"></div>
       <div className="flex  items-center justify-between  w-full">
         <div className="flex gap-3">
           <Button
@@ -198,8 +199,15 @@ function WorkflowHeader({
 
             {!isRenaming && (
               <WorkFlowOptions onRename={handleRename} onDelete={handleDelete}>
-                <span className="cursor-pointer">
-                  <ChevronDown className="text-[#CCCCCC] size-5" />
+                <span
+                  className="cursor-pointer"
+                  onClick={() => setOpen((prev) => !prev)}
+                >
+                  {open ? (
+                    <ChevronUp className="text-[#CCCCCC] size-5" />
+                  ) : (
+                    <ChevronDown className="text-[#CCCCCC] size-5" />
+                  )}
                 </span>
               </WorkFlowOptions>
             )}
@@ -210,7 +218,7 @@ function WorkflowHeader({
               enabled
                 ? "border border-[#0C941C] text-[#0C941C] bg-[#F9FFFA]"
                 : "border border-[#E5E5E5]"
-            } rounded-lg text-xs font-gilroyMedium text-center w-20 px-5 h-7`}
+            } rounded-lg text-xs font-gilroyMedium text-center w-fit px-4 h-7`}
           >
             {enabled ? <>Active</> : <>Draft</>}
           </button>

@@ -1,6 +1,6 @@
 /* Ensure the editor content is visible and interactive */
 .ProseMirror {
-  min-height: 6rem;
+  /* min-height: 6rem; */
   padding: 2px;
   outline: none;
 }

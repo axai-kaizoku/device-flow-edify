@@ -35,6 +35,7 @@ import { addPathCondition } from "@/server/workflowActions/workflowById/workflow
 import { getConditionsOfPath } from "@/server/workflowActions/workflowById/workflowPositions";
 import {
   Add01Icon,
+  AlertCircleIcon,
   ArrowLeft02Icon,
   CheckmarkCircle02Icon,
   Delete01Icon,
@@ -205,10 +206,17 @@ function SetConditionDialog({
               />
               Set Condition
             </div>
-            <HugeiconsIcon
-              icon={CheckmarkCircle02Icon}
-              className="text-[#0C941C] size-4"
-            />
+            {parentData?.branchData?.condition ? (
+              <HugeiconsIcon
+                icon={CheckmarkCircle02Icon}
+                className="text-[#0C941C] size-4"
+              />
+            ) : (
+              <HugeiconsIcon
+                icon={AlertCircleIcon}
+                className="text-[#F59E0B] size-4"
+              />
+            )}
           </DialogTitle>
           <DialogDescription className="sr-only">
             paths description

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   LeftToRightListBulletIcon,
   TextAlignCenterIcon,
@@ -125,6 +126,16 @@ export const MenuBar = ({ editor }: { editor: any }) => {
           }`}
         />
       </button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="xs"
+        onClick={() => editor?.chain().focus().insertContent("{").run()}
+        title="Mention"
+      >
+        {/* <AtSign className="size-3" /> */}
+        {`{ }`}
+      </Button>
     </div>
   );
 };

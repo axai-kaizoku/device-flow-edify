@@ -74,7 +74,7 @@ export async function deleteAddress<Address>(addressId: string) {
     const res = await callAPIWithToken<Address>(
       `${baseUrl}/edifybackend/v1/address/${addressId}`, // API endpoint
       "DELETE",
-      null
+      {}
     );
     return res?.data;
   } catch (e) {

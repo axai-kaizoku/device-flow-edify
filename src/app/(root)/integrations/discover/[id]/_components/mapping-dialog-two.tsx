@@ -16,7 +16,7 @@ import { ArrowLeft01Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -69,10 +69,12 @@ interface MappingDialogTwoProps {
   setNextSteps?: React.Dispatch<React.SetStateAction<number>>;
   response?: any;
   platform?: string;
+  urlAddress?: string;
 }
 
 export default function MappingDialogTwo({
   children,
+  urlAddress,
   open,
   setOpen,
   setNextSteps,
@@ -191,14 +193,18 @@ export default function MappingDialogTwo({
         userIntegrationId: mapping?._id, // adjust if different data is needed
       };
     });
+
     // Call the API with the payload
     mutation.mutate(
       { payload },
       {
         onSuccess: () => {
-          router.replace(`/integrations/installed/${platform}`, {
-            scroll: false,
-          });
+          router.replace(
+            urlAddress ? urlAddress : `/integrations/installed/${platform}`,
+            {
+              scroll: false,
+            }
+          );
           toast.success("Integration successfull !");
         },
       }
@@ -305,7 +311,9 @@ export default function MappingDialogTwo({
               className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
               onClick={handleMapping}
               onMouseEnter={() =>
-                router.prefetch(`/integrations/installed/${platform}`)
+                router.prefetch(
+                  urlAddress ?? `/integrations/installed/${platform}`
+                )
               }
             >
               {mutation.isPending ? (

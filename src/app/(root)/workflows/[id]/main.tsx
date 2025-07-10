@@ -6,9 +6,8 @@ import { Editor } from "./_components/editor";
 
 import { getWorkflowById } from "@/server/workflowActions/workflow";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import WorkflowHeader from "./_components/workflow-header";
-import { use, useCallback, useState } from "react";
-import { useDebounce } from "@/hooks/use-debounce";
 
 export const WorkflowByIdMain = ({ workflowId }: { workflowId: string }) => {
   const [searchResults, setSearchResults] = useState<string[]>([]);
@@ -16,6 +15,7 @@ export const WorkflowByIdMain = ({ workflowId }: { workflowId: string }) => {
     queryKey: ["workflow-by-id", workflowId],
     queryFn: () => getWorkflowById(workflowId),
   });
+  console.log(workflow, "@WORKFLOW");
   const handleSearchResults = useCallback((results: string[]) => {
     setSearchResults(results);
   }, []);

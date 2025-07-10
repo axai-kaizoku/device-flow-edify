@@ -47,7 +47,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ConfirmationModal } from "../../dropdowns/confirmation-popup";
 import { useUpdateAppActions } from "../../hooks/use-update-app-actions";
-import { AppTaskType } from "../../types/task";
 import { EditConditionForm } from "./edit-condition.form";
 import { EmailTemplate } from "./email-templete";
 
@@ -87,7 +86,7 @@ export const InstructionDialog = ({
     data?.backendData?.workflowId
   );
 
-  console.log(services, "@get-node-service");
+  // console.log(services, "@get-node-service");
 
   const form = useForm<InstructionValues>({
     defaultValues: {
@@ -96,6 +95,8 @@ export const InstructionDialog = ({
     },
     resolver: zodResolver(schema),
   });
+
+  const currentService = form.watch("action");
 
   const setConfigMutation = useMutation({
     mutationFn: setConfigInstruction,
@@ -143,13 +144,21 @@ export const InstructionDialog = ({
         });
       }
 
-      console.log("@FORMDATA", formData);
+      // console.log("@FORMDATA", formData);
+      const parsedConfig = JSON.parse(currentService);
+
+      console.log(parsedConfig, "@PARSEDCONFIG");
 
       updateAppActionsMutation.mutate({
         nodeId: data.backendData.parentNodeId,
         templateKey: services[0].key,
         workflowId: data.backendData.workflowId,
         customTempleteKey: formData?.action,
+        config: {
+          cc: parsedConfig?.config.cc,
+          html: parsedConfig?.config.html,
+          subject: parsedConfig?.config.subject,
+        },
       });
 
       setOpen(false);
@@ -294,12 +303,12 @@ export const InstructionDialog = ({
                     />
                   </div>
 
-                  {form.getValues("action") ? (
+                  {currentService ? (
                     <EmailTemplate
                       setIsEdit={setIsEditScreen}
                       defaultService={services?.filter((val) => !val.custom)[0]}
                       currentNodeData={data?.backendData}
-                      currentService={form.watch("action")}
+                      currentService={currentService}
                     />
                   ) : null}
 
@@ -327,7 +336,7 @@ export const InstructionDialog = ({
           ) : (
             <EditConditionForm
               currentNodeData={data?.backendData}
-              currentService={form.watch("action")}
+              currentService={currentService}
               isEdit={isEditScreen}
               defaultService={services?.filter((val) => !val.custom)[0]}
               isNew={isNew}

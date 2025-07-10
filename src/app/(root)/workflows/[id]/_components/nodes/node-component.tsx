@@ -2,12 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import {
+  AlertCircleIcon,
   Delete01FreeIcons,
   MoreVerticalIcon,
   PlayCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Handle, type NodeProps, Position, useReactFlow } from "@xyflow/react";
+import { Handle, type NodeProps, Position } from "@xyflow/react";
 import React, { memo, useRef, useState } from "react";
 import type { AppNodeData } from "../types/app-node";
 import { TaskRegistry } from "../workflow/task/registry";
@@ -27,16 +28,17 @@ import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import { WorkFlowIcons } from "../../../_components/icons";
 import DeviceFlowDialog from "../dialogs/device-flow-dialog";
-import AddPopUp from "../dropdowns/add-popup";
-import EditPath from "../dropdowns/edit-path";
-import { useFlowContext } from "../flow-editor";
-import { useSplitDeletion } from "../hooks/use-split-deletion";
-import { AppTaskType, TaskType } from "../types/task";
-import { addNodeAfterNode } from "../utils/backend-actions";
 import { InstructionDialog } from "../dialogs/instructions/instruction.dialog";
 import SetActionDialog from "../dialogs/set-action.dialog";
 import SetConditionDialog from "../dialogs/set-condition.dialog";
+import AddPopUp from "../dropdowns/add-popup";
+import EditPath from "../dropdowns/edit-path";
+import { useFlowContext } from "../flow-editor";
 import { useDeleteNode } from "../hooks/use-delete-node";
+import { useSplitDeletion } from "../hooks/use-split-deletion";
+import { AppTaskType, TaskType } from "../types/task";
+import { addNodeAfterNode } from "../utils/backend-actions";
+import ConnectIntegrationFlow from "./connect-integration-workflow";
 
 export const NodeComponent = memo((props: NodeProps) => {
   const queryClient = useQueryClient();
@@ -45,7 +47,7 @@ export const NodeComponent = memo((props: NodeProps) => {
   const [rename, setRename] = useState(false);
   const [label, setLabel] = useState(nodeData.pathName ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [showConnectModal, setShowConnectModal] = useState(false);
   // Dialog states
   type DialogType = "APP" | "INSTRUCTION" | "PATH" | null;
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
@@ -59,7 +61,6 @@ export const NodeComponent = memo((props: NodeProps) => {
     handleAddNodeFromHandle,
     hasConnectionFromHandle,
   } = useFlowContext();
-  const { setNodes } = useReactFlow();
 
   const { handleSplitDeletion } = useSplitDeletion(
     nodeData.backendData?.workflowId || ""
@@ -316,7 +317,7 @@ export const NodeComponent = memo((props: NodeProps) => {
       setOpenDialog("APP");
     }
   };
-  console.log(nodeData);
+
   const closeDialog = () => setOpenDialog(null);
 
   switch (task) {
@@ -358,6 +359,7 @@ export const NodeComponent = memo((props: NodeProps) => {
       return (
         <div className="relative">
           {nodeData.appType === "Device Flow" &&
+          nodeData.appType !== "Device Flow" &&
           nodeData?.backendData?.isDeviceFlowWithStartParent ? (
             <DeviceFlowDialog data={nodeData}>
               <NodeCard
@@ -393,7 +395,7 @@ export const NodeComponent = memo((props: NodeProps) => {
                 </div>
                 <div className="p-2">
                   <Input
-                    value={"Onboard user on deviceflow"}
+                    value={"Create user on deviceflow"}
                     disabled
                     className="text-sm bg-[#00000003] disabled:cursor-auto select-none"
                   />
@@ -435,6 +437,11 @@ export const NodeComponent = memo((props: NodeProps) => {
               <NodeCard
                 className={cn(
                   !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
+                  nodeData?.backendData?.isIntegrated === false &&
+                    nodeData.appType !== "Device Flow" &&
+                    nodeData.appType !== "Instructions" &&
+                    "border-red-500 shadow-sm shadow-red-400",
+                  "rounded-xl w-[260px] cursor-pointer",
                   "rounded-xl w-[260px] cursor-pointer"
                 )}
                 nodeId={props.id}
@@ -452,20 +459,44 @@ export const NodeComponent = memo((props: NodeProps) => {
                   onDuplicate={handleDuplicateNode}
                 />
                 <div className="p-2">
-                  <Input
-                    value={
-                      (nodeData?.backendData?.serviceDescription.length > 28
-                        ? `${nodeData?.backendData?.serviceDescription.substring(
-                            0,
-                            28
-                          )}...`
-                        : nodeData?.backendData?.serviceDescription) ||
-                      "No action selected"
-                    }
-                    disabled
-                    className="text-sm bg-[#00000003] disabled:cursor-auto select-none line-clamp-1 overflow-hidden"
-                  />
+                  {nodeData?.backendData?.isIntegrated === false &&
+                  nodeData?.appType !== "Device Flow" &&
+                  nodeData?.appType !== "Instructions" ? (
+                    <>
+                      <Button
+                        onClick={() => {
+                          setShowConnectModal(true);
+                          (e) => e.stopPropagation();
+                        }}
+                        className="w-full cursor-pointer"
+                        variant="outline"
+                      >
+                        Connect
+                      </Button>
+
+                      <ConnectIntegrationFlow
+                        data={nodeData?.backendData}
+                        setShowConnectModal={setShowConnectModal}
+                        showConnectModal={showConnectModal}
+                      />
+                    </>
+                  ) : (
+                    <Input
+                      value={
+                        nodeData?.backendData?.serviceDescription?.length > 28
+                          ? `${nodeData?.backendData?.serviceDescription?.slice(
+                              0,
+                              28
+                            )}...`
+                          : nodeData?.backendData?.serviceDescription ||
+                            "No action selected"
+                      }
+                      disabled
+                      className="text-sm bg-[#00000003] disabled:cursor-auto select-none line-clamp-1 overflow-hidden"
+                    />
+                  )}
                 </div>
+
                 <Handle
                   id={getInputHandleId()}
                   type="target"
@@ -644,10 +675,8 @@ export const NodeComponent = memo((props: NodeProps) => {
               successBtnText="Delete"
             >
               <Button
-                // size="sm"
                 variant="outline"
                 className="absolute hover:bg-white rounded-full px-12 py-1 -bottom-16 left-1/2 -translate-x-1/2 text-[#DC2626] hover:text-[#DC2626] border"
-                // onClick={() => handleDeleteNode(props.id)}
               >
                 <HugeiconsIcon icon={Delete01FreeIcons} size={16} /> Delete
               </Button>
@@ -668,7 +697,7 @@ export const NodeComponent = memo((props: NodeProps) => {
           <NodeCard
             className={cn(
               !!props.selected && "border-[#0062FF] ring ring-[#D4E4FF]",
-              "rounded-lg flex items-center justify-between min-w-20 w-full max-w-fit  p-2 bg-blue-50 border-blue-300"
+              "rounded-[5px] flex items-center justify-between min-w-20 w-full max-w-fit  p-2 bg-blue-50 border-[#0062FF]"
             )}
             nodeId={props.id}
             onClick={() => {
@@ -676,7 +705,13 @@ export const NodeComponent = memo((props: NodeProps) => {
             }}
             isSelected={!!props.selected}
           >
-            <div className="text-center cursor-pointer">
+            <div className="text-center cursor-pointer flex items-center">
+              {!nodeData?.branchData?.condition && (
+                <HugeiconsIcon
+                  icon={AlertCircleIcon}
+                  className="text-[#F59E0B] size-3.5 mr-1"
+                />
+              )}
               {rename ? (
                 <input
                   ref={inputRef}
@@ -693,7 +728,7 @@ export const NodeComponent = memo((props: NodeProps) => {
                   )}
                 />
               ) : (
-                <p className="text-xs font-medium text-blue-700">
+                <p className="text-xs font-gilroySemiBold text-[#0062FF]">
                   {/* {nodeData.pathName} */}
                   {nodeData.branchData?.label}
                 </p>
@@ -710,7 +745,11 @@ export const NodeComponent = memo((props: NodeProps) => {
                 onClick={(e) => e.stopPropagation()}
                 className="cursor-pointer"
               >
-                <HugeiconsIcon icon={MoreVerticalIcon} size={16} />
+                <HugeiconsIcon
+                  icon={MoreVerticalIcon}
+                  size={16}
+                  className="text-[#0062FF]"
+                />
               </div>
             </EditPath>
 

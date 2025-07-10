@@ -195,7 +195,7 @@ export async function deleteTeam<Team>(teamId: string) {
     const res = await callAPIWithToken<Team>(
       `${baseUrl}/edifybackend/v1/teams/${teamId}`, // API endpoint
       "DELETE",
-      null
+      {}
     );
     return res?.data;
   } catch (e: any) {

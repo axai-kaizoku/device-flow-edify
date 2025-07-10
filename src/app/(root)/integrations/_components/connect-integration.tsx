@@ -71,7 +71,7 @@ export const ConnectIntegration = ({
 }) => {
   const intId = useSearchParams().get("integrationId");
   const isGsuiteIntegration = integrationData?.platform
-    .toLowerCase()
+    ?.toLowerCase()
     .includes("suite");
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
@@ -206,9 +206,9 @@ export const ConnectIntegration = ({
         </DialogTitle>
 
         <div className="h-[1px] bg-gray-200 mb-3 -mx-6"></div>
-        {integrationData?.credentials.length > 0 ? (
+        {integrationData?.credentials?.length > 0 ? (
           <div className="flex flex-col gap-5">
-            {integrationData?.credentials.map((credential) => (
+            {integrationData?.credentials?.map((credential) => (
               <FormField
                 key={credential}
                 label={credential
@@ -304,7 +304,7 @@ export const ConnectIntegration = ({
           {integrationData?.platform} would like to
         </h1>
         <div className="flex flex-col gap-1 text-start h-[9vh] overflow-y-auto ">
-          {integrationData?.permissions.map((item, index) => (
+          {integrationData?.permissions?.map((item, index) => (
             <div key={index} className="flex items-center gap-1 py-0.5">
               <HugeiconsIcon
                 icon={CheckmarkCircle02Icon}

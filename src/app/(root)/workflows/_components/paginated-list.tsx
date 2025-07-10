@@ -72,11 +72,11 @@ export const WorkflowMainCard = ({
             <h2 className="text-lg font-gilroySemiBold">{name}</h2>
           </div>
           {!enabled ? (
-            <span className="text-[#2E8016] w-14 text-center text-xs py-1 font-gilroySemiBold bg-[#E2FBE6] rounded-full ">
+            <span className="text-[#2E8016] w-14 text-center text-xs py-1.5 font-gilroySemiBold bg-[#E2FBE6] rounded-full ">
               Active
             </span>
           ) : (
-            <span className=" text-xs py-1 w-14 text-center font-gilroySemiBold bg-[#F4F4F4] rounded-full">
+            <span className=" text-xs py-1.5 w-14 text-center font-gilroySemiBold bg-[#F4F4F4] rounded-full">
               Draft
             </span>
           )}

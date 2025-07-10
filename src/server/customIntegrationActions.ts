@@ -62,7 +62,8 @@ export const deleteCustomIntegration = async ({ id }: { id: string }) => {
 
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/integration/custom/${id}`,
-      "DELETE"
+      "DELETE",
+      {}
     );
     return res?.data;
   } catch (error) {
