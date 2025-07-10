@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { callAPIWithToken } from "./helper";
 import { cache } from "react";
-import { BASEURL } from "./main";
+import { useApiConfig } from "./main";
 
 // Define the structure of a Previous Order
 export type OrderResponse = {
@@ -94,6 +94,7 @@ export interface PreviousOrder {
 export const getPreviousOrders = cache(async function (): Promise<
   PreviousOrder[]
 > {
+  const { baseUrl: BASEURL } = useApiConfig();
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: PreviousOrder[] }>(
@@ -120,6 +121,8 @@ export const getSingleOrder = cache(async function ({
 }: {
   orderId: any;
 }): Promise<any[]> {
+  const { baseUrl: BASEURL } = useApiConfig();
+
   try {
     // API call to fetch previous orders
     const res = await callAPIWithToken<{ soldInventory: any[] }>(

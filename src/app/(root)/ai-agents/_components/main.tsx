@@ -9,7 +9,7 @@ import {
   getAllChats,
   getChatById,
 } from "@/server/aiAgentsActions";
-import { BASEURL } from "@/server/main";
+import { BASEURL, useApiConfig } from "@/server/main";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useQueryState } from "nuqs";
@@ -44,6 +44,7 @@ export const AiAgentsMain = () => {
   const [streamingMessage, setStreamingMessage] = useState<string>("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingChatId, setStreamingChatId] = useState<string | null>(null);
+  const { baseUrl: BASEURL } = useApiConfig();
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const queryClient = useQueryClient();

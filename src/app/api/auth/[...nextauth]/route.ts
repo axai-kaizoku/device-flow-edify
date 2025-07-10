@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { BASEURL } from "@/server/main";
+import { useApiConfig } from "@/server/main";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -15,6 +15,8 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const { baseUrl: BASEURL } = useApiConfig();
+
         const res = await fetch(`${BASEURL}/edifybackend/v1/auth/login`, {
           method: "POST",
           body: JSON.stringify(credentials),
@@ -39,6 +41,8 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ account, profile }) {
+      const { baseUrl: BASEURL } = useApiConfig();
+
       if (account?.provider === "google") {
         try {
           const res = await fetch(

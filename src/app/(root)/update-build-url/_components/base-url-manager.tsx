@@ -12,8 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useBaseUrl } from "@/contexts/base-url-context";
 import { CheckCircle, RotateCcw, Settings } from "lucide-react";
+import { useBaseUrl } from "@/server/main/base-url-context";
 
 export function BaseUrlManager() {
   const {
