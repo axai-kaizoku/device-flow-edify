@@ -40,21 +40,12 @@ export const ConnectIntegration = ({
   gSuiteMutation,
   open,
   setOpen,
-}: // onClick,
-{
+}: {
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  // onClick?: () => void;
   loading?: boolean;
   integrationData?: IntegrationType;
-  gSuiteMutation?: UseMutationResult<
-    any,
-    Error,
-    {
-      id: string;
-    },
-    unknown
-  >;
+  gSuiteMutation?: UseMutationResult<any, Error, unknown, void>;
   mutation?: UseMutationResult<
     any,
     Error,
@@ -180,7 +171,10 @@ export const ConnectIntegration = ({
         setFormData({});
       }}
     >
-      <DialogContent className="rounded-2xl bg-white shadow-lg max-w-md p-6 text-center">
+      <DialogContent
+        onClick={(e) => e.stopPropagation()}
+        className="rounded-2xl bg-white shadow-lg max-w-md p-6 text-center"
+      >
         <div className="flex justify-center">
           <div className="flex gap-6 justify-center items-center">
             <img
@@ -323,6 +317,7 @@ export const ConnectIntegration = ({
         <DialogFooter className="flex w-full h-10 -mt-3 -mb-2 items-center justify-between">
           {!isGsuiteIntegration ? (
             <Link
+              onClick={(e) => e.stopPropagation()}
               href={integrationData?.wiki}
               target="_blank"
               className={buttonVariants({
@@ -340,7 +335,10 @@ export const ConnectIntegration = ({
               variant="outlineTwo"
               type="button"
               disabled={mutation.isPending || loading}
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(false);
+              }}
             >
               Cancel
             </Button>
@@ -349,7 +347,8 @@ export const ConnectIntegration = ({
               loading={mutation.isPending || loading}
               disabled={mutation.isPending || loading}
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 isGsuiteIntegration ? onGSuitSubmit() : onSubmit();
               }}
             >

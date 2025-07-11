@@ -23,44 +23,49 @@ import {
   deleteBranch,
   updatePathNameOrNextNode,
 } from "@/server/workflowActions/workflowById/workflowPaths";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import { WorkFlowIcons } from "../../../_components/icons";
 import DeviceFlowDialog from "../dialogs/device-flow-dialog";
 import { InstructionDialog } from "../dialogs/instructions/instruction.dialog";
+import { NotIntegratedDialog } from "../dialogs/not-integrated-dialog";
 import SetActionDialog from "../dialogs/set-action.dialog";
 import SetConditionDialog from "../dialogs/set-condition.dialog";
-import AddPopUp from "../dropdowns/add-popup";
 import EditPath from "../dropdowns/edit-path";
-import { useFlowContext } from "../flow-editor";
 import { useDeleteNode } from "../hooks/use-delete-node";
+import { useFlowContext } from "../hooks/use-flow-context";
+import { useInvalidateWorkflow } from "../hooks/use-invalidate-workflow";
 import { useSplitDeletion } from "../hooks/use-split-deletion";
 import { AppTaskType, TaskType } from "../types/task";
 import { addNodeAfterNode } from "../utils/backend-actions";
+import { AddButton } from "./buttons/add-button";
+import { AddButtonForPath } from "./buttons/add-button-for-path";
 import ConnectIntegrationFlow from "./connect-integration-workflow";
 
 export const NodeComponent = memo((props: NodeProps) => {
-  const queryClient = useQueryClient();
   const nodeData = props.data as AppNodeData;
   const task = TaskRegistry[nodeData.type];
   const [rename, setRename] = useState(false);
   const [label, setLabel] = useState(nodeData.pathName ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
   const [showConnectModal, setShowConnectModal] = useState(false);
+
+  console.log(nodeData, "@NODE_");
+
   // Dialog states
-  type DialogType = "APP" | "INSTRUCTION" | "PATH" | null;
+  type DialogType = "APP" | "INSTRUCTION" | "PATH" | "NOT_CONNECTED_APP" | null;
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
 
   const {
-    handleAddNode,
-    handleAddNodeForPath,
-    handleAddSplitPath,
-    handleAddSplitPathForPath,
     hasOutgoingConnection,
     handleAddNodeFromHandle,
     hasConnectionFromHandle,
   } = useFlowContext();
+
+  const { invalidateWorkflow } = useInvalidateWorkflow(
+    nodeData.backendData?.workflowId || ""
+  );
 
   const { handleSplitDeletion } = useSplitDeletion(
     nodeData.backendData?.workflowId || ""
@@ -101,112 +106,13 @@ export const NodeComponent = memo((props: NodeProps) => {
         appType,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workflow-by-id"] });
+      invalidateWorkflow?.();
       setSplitDelete(false);
     },
     onError: (error: any) => {
       toast.error(error?.message || "Failed to duplicate");
     },
   });
-
-  // Add button component
-  const AddButton = ({
-    className = "",
-    nodeData,
-  }: {
-    className?: string;
-    nodeData: any;
-  }) => (
-    <AddPopUp
-      onAddInstruction={(appName) => {
-        handleAddNode(
-          nodeData?.backendData?.parentNodeId,
-          TaskType.INSTRUCTION,
-          appName
-        );
-      }}
-      onAddApp={(appType) =>
-        handleAddNode(
-          nodeData?.backendData?.parentNodeId,
-          TaskType.APP,
-          appType
-        )
-      }
-      onSplitPath={() => {
-        handleAddSplitPath(nodeData?.backendData?._id);
-      }}
-    >
-      <Button
-        size="sm"
-        variant="outline"
-        className={cn(
-          "absolute w-6 h-6 p-0 border-none hover:text-[#0062FF] text-[#0062FF] bg-[#EDF4FF] rounded-full hover:bg-blue-50",
-          className
-        )}
-        type={"button"}
-      >
-        <PlusIcon size={12} />
-      </Button>
-    </AddPopUp>
-  );
-
-  const AddButtonForPath = ({
-    className = "",
-    nodeData,
-  }: {
-    className?: string;
-    nodeData: any;
-  }) => (
-    <AddPopUp
-      onAddInstruction={(appName) => {
-        handleAddNodeForPath(
-          nodeData?.backendData?.parentNodeId,
-          nodeData?.branchData?.branchId,
-          TaskType.INSTRUCTION,
-          appName
-        );
-      }}
-      onAddApp={(appType) =>
-        handleAddNodeForPath(
-          nodeData?.backendData?.parentNodeId,
-          nodeData?.branchData?.branchId,
-          TaskType.APP,
-          appType
-        )
-      }
-      onSplitPath={(key) => {
-        // console.log(key);
-        handleAddSplitPathForPath(
-          nodeData?.backendData?.parentNodeId,
-          nodeData?.branchData?.branchId,
-          TaskType.SPLIT,
-          key
-        );
-      }}
-    >
-      <Button
-        size="sm"
-        variant="outline"
-        className={cn(
-          "absolute w-6 h-6 p-0 border-none hover:text-[#0062FF] text-[#0062FF] bg-[#EDF4FF] rounded-full hover:bg-blue-50",
-          className
-        )}
-        type={"button"}
-      >
-        <PlusIcon size={12} />
-      </Button>
-    </AddPopUp>
-  );
-
-  // Edit handlers
-  const handleEditAction = () => {
-    console.log(
-      "Edit action clicked for node:",
-      props.id,
-      "type:",
-      nodeData.type
-    );
-  };
 
   const handleDuplicateNode = async () => {
     handleDuplicateMutation.mutate({
@@ -221,18 +127,11 @@ export const NodeComponent = memo((props: NodeProps) => {
     });
   };
 
-  const handleEditCondition = () => {
-    console.log("Edit condition clicked for path:", props.id);
-  };
-
   const renamePathMutation = useMutation({
     mutationFn: updatePathNameOrNextNode,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["workflow-by-id"],
-      });
+      invalidateWorkflow?.();
     },
-
     onError: (error) => {
       toast.error(error.message || "Failed to update path name");
     },
@@ -273,7 +172,7 @@ export const NodeComponent = memo((props: NodeProps) => {
     mutationFn: ({ branchId, nodeId }: { branchId: string; nodeId: string }) =>
       deleteBranch({ branchId, nodeId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workflow-by-id"] });
+      invalidateWorkflow?.();
     },
     onError: () => {
       toast.error("Error deleting path");
@@ -286,7 +185,6 @@ export const NodeComponent = memo((props: NodeProps) => {
       branchId: nodeData.branchData?._id,
     });
   };
-  // console.log(nodeData);
 
   // Handle split deletion - pass nodeData for better context
   const handleSplitDeleteClick = () => {
@@ -303,6 +201,16 @@ export const NodeComponent = memo((props: NodeProps) => {
   // Handle node click to open dialogs
   const handleNodeClick = (nodeData?: any) => {
     // console.log(nodeData);
+
+    if (
+      nodeData?.appType !== "Instructions" &&
+      nodeData?.type === "APP" &&
+      nodeData?.appType !== "Device Flow" &&
+      nodeData?.backendData?.isIntegrated === false
+    ) {
+      setOpenDialog("NOT_CONNECTED_APP");
+      return;
+    }
 
     if (nodeData?.type === "PATH") {
       setOpenDialog("PATH");
@@ -359,7 +267,6 @@ export const NodeComponent = memo((props: NodeProps) => {
       return (
         <div className="relative">
           {nodeData.appType === "Device Flow" &&
-          nodeData.appType !== "Device Flow" &&
           nodeData?.backendData?.isDeviceFlowWithStartParent ? (
             <DeviceFlowDialog data={nodeData}>
               <NodeCard
@@ -420,12 +327,23 @@ export const NodeComponent = memo((props: NodeProps) => {
             </DeviceFlowDialog>
           ) : (
             <>
-              <SetActionDialog
-                onDelete={() => deleteNodeMutation.mutate(props.id)}
-                data={nodeData}
-                open={openDialog === "APP"}
-                setOpen={closeDialog}
-              />
+              {nodeData?.appType !== "Device Flow" &&
+              nodeData?.backendData?.isIntegrated === false ? (
+                <NotIntegratedDialog
+                  open={openDialog === "NOT_CONNECTED_APP"}
+                  type="failure"
+                  description="This App is not Integrated with Deviceflow. Please Integrate it first to continue."
+                  title="App not integrated"
+                  setOpen={closeDialog}
+                />
+              ) : (
+                <SetActionDialog
+                  onDelete={() => deleteNodeMutation.mutate(props.id)}
+                  data={nodeData}
+                  open={openDialog === "APP"}
+                  setOpen={closeDialog}
+                />
+              )}
               <InstructionDialog
                 data={nodeData}
                 onDelete={() => {
@@ -446,7 +364,8 @@ export const NodeComponent = memo((props: NodeProps) => {
                 )}
                 nodeId={props.id}
                 isSelected={!!props.selected}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   handleNodeClick(nodeData);
                 }}
               >
@@ -455,7 +374,6 @@ export const NodeComponent = memo((props: NodeProps) => {
                   taskType={nodeData.type}
                   nodeData={nodeData}
                   nodeId={props.id}
-                  onEditAction={handleEditAction}
                   onDuplicate={handleDuplicateNode}
                 />
                 <div className="p-2">
@@ -464,9 +382,12 @@ export const NodeComponent = memo((props: NodeProps) => {
                   nodeData?.appType !== "Instructions" ? (
                     <>
                       <Button
-                        onClick={() => {
+                        onClick={(e) => {
                           setShowConnectModal(true);
-                          (e) => e.stopPropagation();
+
+                          e.stopPropagation();
+                          e.nativeEvent.stopImmediatePropagation();
+                          setShowConnectModal(true);
                         }}
                         className="w-full cursor-pointer"
                         variant="outline"
@@ -729,7 +650,6 @@ export const NodeComponent = memo((props: NodeProps) => {
                 />
               ) : (
                 <p className="text-xs font-gilroySemiBold text-[#0062FF]">
-                  {/* {nodeData.pathName} */}
                   {nodeData.branchData?.label}
                 </p>
               )}
@@ -737,7 +657,6 @@ export const NodeComponent = memo((props: NodeProps) => {
             <EditPath
               parentData={nodeData}
               type={"set"}
-              onEditCondition={handleEditCondition}
               onRename={handleRenamePath}
               onDelete={handleDeletePath}
             >

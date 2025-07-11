@@ -18,7 +18,6 @@ import SetConditionDialog from "../dialogs/set-condition.dialog";
 interface EditPathProps {
   children: React.ReactNode;
   type: "edit" | "set";
-  onEditCondition: () => void;
   onRename: () => void;
   onDelete: () => void;
   parentData: any;
@@ -28,7 +27,6 @@ const EditPath = ({
   children,
   parentData,
   type,
-  onEditCondition,
   onRename,
   onDelete,
 }: EditPathProps) => {
@@ -55,7 +53,6 @@ const EditPath = ({
               className="flex items-center"
               onSelect={(e) => {
                 e.preventDefault();
-                onEditCondition();
               }}
               onClick={(e) => e.stopPropagation()}
             >

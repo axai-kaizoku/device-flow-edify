@@ -9,11 +9,11 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import { PlusIcon } from "lucide-react";
-import { useFlowContext } from "../flow-editor";
 import { TaskType } from "../types/task";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { EdgeType } from "@/app/(root)/workflows/[id]/_components/types/edge";
+import { useFlowContext } from "../hooks/use-flow-context";
 
 export const SplitEdge = (
   props: EdgeProps & {
@@ -28,6 +28,8 @@ export const SplitEdge = (
   const [edgePath, labelX, labelY] = getSmoothStepPath(props);
   const { handleAddNodeFromHandle } = useFlowContext();
   const { getEdges } = useReactFlow();
+
+  console.log(props, "@SPLIT_EDGE");
 
   const handleAddPathNode = () => {
     if (!props.source || !props.data?.sourceHandle) return;

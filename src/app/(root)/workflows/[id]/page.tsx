@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 
+import { WorkflowSkeleton } from "./_components/workflow-skeleton";
 import { WorkflowByIdMain } from "./main";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default async function Page({
   const id = (await params).id;
 
   return (
-    <Suspense fallback={<div>Loading..</div>}>
+    <Suspense fallback={<WorkflowSkeleton />}>
       <WorkflowByIdMain workflowId={id} />
     </Suspense>
   );

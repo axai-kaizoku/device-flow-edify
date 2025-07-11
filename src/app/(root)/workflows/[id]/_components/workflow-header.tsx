@@ -1,4 +1,5 @@
 "use client";
+
 import WorkFlowOptions from "@/app/(root)/workflows/[id]/_components/dropdowns/workflow-options";
 import { ActionBar } from "@/components/action-bar/action-bar";
 import { Button } from "@/components/buttons/Button";
@@ -8,13 +9,14 @@ import {
   deleteWorkflow,
   searchInWorkflow,
   updateWorkflow,
-  WorkflowTreeResponse,
+  type WorkflowTreeResponse,
 } from "@/server/workflowActions/workflow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { TestRun } from "../../_components/test-run";
 import { SearchToolbar } from "./search-toolbar";
@@ -29,21 +31,23 @@ function WorkflowHeader({
   const queryClient = useQueryClient();
   const router = useRouter();
   const { getNodes } = useReactFlow();
-  // console.log(getNodes(), "zcxgfhjiokpl");
+
   const [isRenaming, setIsRenaming] = useState(false);
   const [flowName, setFlowName] = useState(workflow?.data?.workflow?.name);
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showStatusChangeIndicator, setShowStatusChangeIndicator] =
+    useState(false);
 
   const enabled = workflow?.data?.workflow?.status === "published";
-
   const inputRef = useRef<HTMLInputElement>(null);
-  // console.log(workflow);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
   const debouncedQuery = useDebounce(searchQuery, 300);
+
   const { data: searchResults, isLoading: isSearching } = useQuery({
     queryKey: [
       "workflow-search",
@@ -54,9 +58,9 @@ function WorkflowHeader({
       searchInWorkflow(debouncedQuery, workflow?.data?.workflow?._id),
     enabled: !!debouncedQuery && debouncedQuery.length > 0,
   });
+
   useEffect(() => {
     if (!onSearchResults) return;
-
     if (searchResults?.results?.length) {
       const matchingIds = searchResults.results.map((result) => result._id);
       console.log(matchingIds);
@@ -65,6 +69,7 @@ function WorkflowHeader({
       onSearchResults([]);
     }
   }, [searchResults, debouncedQuery]);
+
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: { name?: string; status?: string }) =>
@@ -77,13 +82,20 @@ function WorkflowHeader({
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["workflow-by-id", workflow?.data?.workflow?._id],
       });
       queryClient.invalidateQueries({
         queryKey: ["fetch-all-workflows"],
       });
+
+      // Show indicator if status was changed to draft due to modifications
+      if (variables.status === "draft") {
+        setShowStatusChangeIndicator(true);
+        setTimeout(() => setShowStatusChangeIndicator(false), 3000);
+      }
+
       toast.success("Workflow updated successfully");
     },
     onError: (error) => {
@@ -141,15 +153,13 @@ function WorkflowHeader({
     deleteMutation.mutate();
   };
 
-  // console.log(debouncedQuery);
-
   return (
     <ActionBar
       showBackBtn
       outerClassName="rounded-b-none border-t-[#CECECE] border-l-[#CECECE] border-r-[#CECECE]"
     >
       <div className="h-[1px] bg-[#CECECE] rotate-90 w-6 -ml-2"></div>
-      <div className="flex  items-center justify-between  w-full">
+      <div className="flex items-center justify-between w-full">
         <div className="flex gap-3">
           <Button
             variant="outlineTwo"
@@ -164,6 +174,14 @@ function WorkflowHeader({
             />
             {enabled ? <>Enabled</> : <>Disabled</>}
           </Button>
+
+          {/* Status change indicator */}
+          {showStatusChangeIndicator && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-orange-50 border border-orange-200 rounded-lg text-orange-700 text-sm">
+              <AlertCircle className="size-4" />
+              <span>Status changed to draft due to modifications</span>
+            </div>
+          )}
 
           <SearchToolbar
             onSearch={handleSearch}
@@ -181,6 +199,7 @@ function WorkflowHeader({
             }
           />
         </div>
+
         <div className="flex items-center gap-2">
           <div className="flex gap-1 justify-center items-center">
             {isRenaming ? (
@@ -190,13 +209,12 @@ function WorkflowHeader({
                 onChange={(e) => setFlowName(e.target.value)}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
-                className="text-[15px] font-gilroySemiBold px-1 py-0.5 focus:outline-none   w-auto min-w-[40px] bg-transparent"
+                className="text-[15px] font-gilroySemiBold px-1 py-0.5 focus:outline-none w-auto min-w-[40px] bg-transparent"
                 style={{ width: `${flowName.length + 1}ch` }} // dynamic width
               />
             ) : (
               <h1 className="text-[15px] font-gilroySemiBold">{flowName}</h1>
             )}
-
             {!isRenaming && (
               <WorkFlowOptions onRename={handleRename} onDelete={handleDelete}>
                 <span
@@ -212,7 +230,6 @@ function WorkflowHeader({
               </WorkFlowOptions>
             )}
           </div>
-
           <button
             className={`${
               enabled
@@ -225,19 +242,6 @@ function WorkflowHeader({
         </div>
 
         <div className="flex gap-2.5">
-          {" "}
-          {/* <Button
-            variant="outlineTwo"
-            className="h-9 w-7 transition-opacity duration-300"
-          >
-            <HugeiconsIcon icon={Undo03Icon} className="size-5" />
-          </Button>
-          <Button
-            variant="outlineTwo"
-            className="h-9 w-7 transition-opacity duration-300"
-          >
-            <HugeiconsIcon icon={Redo03Icon} className="size-5" />
-          </Button> */}
           <TestRun workflowId={workflow?.data?.workflow?._id ?? ""} />
           <Button
             variant="primary"

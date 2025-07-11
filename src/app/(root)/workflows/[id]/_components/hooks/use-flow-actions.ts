@@ -1,20 +1,26 @@
 "use client";
 
-import { useCallback } from "react";
+import { createDoubleSplitPath } from "@/server/workflowActions/workflowById/workflowPaths";
 import { useQueryClient } from "@tanstack/react-query";
-import type { TaskType, AppTaskType } from "../types/task";
+import { useCallback } from "react";
+import type { AppNode } from "../types/app-node";
+import type { AppTaskType, TaskType } from "../types/task";
 import {
   addNodeAfterNode,
   addNodeAfterPath,
-  addSplitPathAfterPath,
   addNodeFromSplitPath,
+  addSplitPathAfterPath,
 } from "../utils/backend-actions";
-import { createDoubleSplitPath } from "@/server/workflowActions/workflowById/workflowPaths";
-import type { AppNode } from "../types/app-node";
+import { useChangeStatusToDraft } from "./use-change-to-draft";
 import { useNodePositions } from "./use-node-positions";
+import { useInvalidateWorkflow } from "./use-invalidate-workflow";
 
 export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
-  const queryClient = useQueryClient();
+  const { changeStatusToDraft } = useChangeStatusToDraft(workflow);
+  const { invalidateWorkflow } = useInvalidateWorkflow(
+    workflow.data.workflow._id
+  );
+
   const {
     getPositionForNewNode,
     getPositionForPathNode,
@@ -22,18 +28,14 @@ export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
     getPositionForHandleNode,
   } = useNodePositions(nodes);
 
-  const invalidateWorkflow = useCallback(() => {
-    queryClient.invalidateQueries({
-      queryKey: ["workflow-by-id", workflow.data.workflow._id],
-    });
-  }, [queryClient, workflow.data.workflow._id]);
-
   const handleAddNode = useCallback(
     async (sourceNodeId: string, nodeType: TaskType, appType?: string) => {
       if (!workflow?.data) return;
 
       try {
         const newPosition = getPositionForNewNode(sourceNodeId);
+
+        changeStatusToDraft();
 
         await addNodeAfterNode({
           sourceNodeId,
@@ -67,6 +69,8 @@ export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
           ? getPositionForPathNode(pathNode.id)
           : getPositionForNewNode(sourceNodeId);
 
+        changeStatusToDraft();
+
         await addNodeAfterPath({
           sourceNodeId,
           branchId,
@@ -98,6 +102,8 @@ export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
         const { splitPosition, pathAPosition, pathBPosition } =
           getPositionForSplitPath(sourceNodeId);
 
+        changeStatusToDraft();
+
         await createDoubleSplitPath({
           branchPositions: [pathAPosition, pathBPosition],
           connectorPosition: splitPosition,
@@ -127,6 +133,8 @@ export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
         const connectorPosition = pathNode
           ? getPositionForPathNode(pathNode.id, { x: 300, y: -10 })
           : getPositionForNewNode(sourceNodeId, { x: 300, y: -10 });
+
+        changeStatusToDraft();
 
         await addSplitPathAfterPath({
           sourceNodeId,
@@ -190,6 +198,8 @@ export const useFlowActions = (workflow: any, nodes: AppNode[]) => {
           default:
             branchDirection = "Right";
         }
+
+        changeStatusToDraft();
 
         await addNodeFromSplitPath({
           position: newPosition,

@@ -9,6 +9,7 @@ export const updateNodePosition = async ({
   position: { x: number; y: number };
 }) => {
   try {
+    console.log("@ Updating node position:", nodeId, position);
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/workflowNode/update-position?nodePosition=true`,
       "PATCH",
@@ -32,6 +33,8 @@ export const updateConnectorPosition = async ({
   nodeId: string;
   connectorPosition: { x: number; y: number };
 }) => {
+  console.log("@ Updating connector position:", nodeId, connectorPosition);
+
   try {
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/workflowNode/update-position?connectorPosition=true`,
@@ -59,6 +62,12 @@ export const updatePathPosition = async ({
   branchPosition: { x: number; y: number };
 }) => {
   try {
+    console.log(
+      "@ Updating branch position:",
+      nodeId,
+      branchId,
+      branchPosition
+    );
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/workflowNode/update-position?branchPosition=true`,
       "PATCH",
@@ -78,11 +87,11 @@ export const updatePathPosition = async ({
 
 export const getConditionsOfPath = async ({ templateKey }) => {
   try {
-    // console.log(templateKey);
     const res = await callAPIWithToken(
       `${BASEURL}/edifybackend/v1/workflow/node/ifconditions?key=${templateKey}`,
       "GET"
     );
+
     return res?.data;
   } catch (error) {
     console.error("Error getting the list ", error);

@@ -1,81 +1,34 @@
 "use client";
 
-import {
-  Background,
-  BackgroundVariant,
-  Edge,
-  ReactFlow,
-  useEdgesState,
-  useNodesState,
-  useReactFlow,
-} from "@xyflow/react";
-
-import "@xyflow/react/dist/style.css";
+import type React from "react";
 
 import { SplitEdge } from "@/app/(root)/workflows/[id]/_components/edges/split-edge";
 import { EdgeType } from "@/app/(root)/workflows/[id]/_components/types/edge";
-import { WorkflowTreeResponse } from "@/server/workflowActions/workflow";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react";
-import { NormalEdge } from "./edges/normal-edge";
-import { NodeComponent } from "./nodes/node-component";
-import { AppNode } from "./types/app-node";
-import { TaskType } from "./types/task";
-import { transformBackendToReactFlow } from "./utils/data-transformer";
-import { type BackendWorkflowResponse } from "./utils/types";
-
+import { type WorkflowTreeResponse } from "@/server/workflowActions/workflow";
 import {
   updateConnectorPosition,
   updateNodePosition,
   updatePathPosition,
 } from "@/server/workflowActions/workflowById/workflowPositions";
+import {
+  Background,
+  BackgroundVariant,
+  type Edge,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import { useCallback, useEffect, useMemo } from "react";
+import { NormalEdge } from "./edges/normal-edge";
 import { useFlowActions } from "./hooks/use-flow-actions";
-
-interface FlowContextType {
-  handleAddNode: (
-    sourceNodeId: string,
-    nodeType: TaskType,
-    appType?: string
-  ) => void;
-  handleAddNodeForPath: (
-    sourceNodeId: string,
-    branchId: string,
-    nodeType: TaskType,
-    appType?: string
-  ) => void;
-  handleAddSplitPath: (sourceNodeId: string) => void;
-  handleAddSplitPathForPath: (
-    sourceNodeId: string,
-    branchId: string,
-    nodeType: TaskType,
-    splitAppName: string
-  ) => void;
-  handleAddNodeFromHandle: (
-    sourceNodeId: string,
-    handleId: string,
-    nodeType: TaskType,
-    appType?: string
-  ) => void;
-  searchResults?: string[];
-  hasOutgoingConnection: (nodeId: string, nodeType: TaskType) => boolean;
-  getConnectionCount: (nodeId: string) => number;
-  hasConnectionFromHandle: (nodeId: string, handleId: string) => boolean;
-}
-
-const FlowContext = createContext<FlowContextType | null>(null);
-
-export const useFlowContext = () => {
-  const context = useContext(FlowContext);
-  if (!context) {
-    throw new Error("useFlowContext must be used within FlowContext.Provider");
-  }
-  return context;
-};
+import { FlowContext } from "./hooks/use-flow-context";
+import { NodeComponent } from "./nodes/node-component";
+import type { AppNode } from "./types/app-node";
+import { TaskType } from "./types/task";
+import { transformBackendToReactFlow } from "./utils/data-transformer";
+import type { BackendWorkflowResponse } from "./utils/types";
 
 const nodeTypes = {
   Node: NodeComponent,
@@ -87,7 +40,10 @@ const edgeTypes = {
 };
 
 const snapGrid: [number, number] = [30, 30];
+const proOptions = { hideAttribution: true };
 const fitViewOptions = { padding: 1 };
+const defaultEdgeOptions = { animated: false, deletable: false };
+
 interface FlowEditorProps {
   workflow: WorkflowTreeResponse;
   searchResults: string[];
@@ -96,7 +52,8 @@ interface FlowEditorProps {
 export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  // const queryClient = useQueryClient();
+
+  // Function to change status to draft if currently published
 
   const {
     handleAddNode,
@@ -105,10 +62,11 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
     handleAddSplitPathForPath,
     handleAddNodeFromHandle,
   } = useFlowActions(workflow, nodes);
+
   const { fitView } = useReactFlow();
+
   const { transformedNodes, transformedEdges } = useMemo(() => {
     if (!workflow?.data) return { transformedNodes: [], transformedEdges: [] };
-
     try {
       const backendData = workflow.data;
       const { nodes: transformedNodes, edges: transformedEdges } =
@@ -121,6 +79,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
       return { transformedNodes: [], transformedEdges: [] };
     }
   }, [workflow?.data]);
+
   const highlightedNodes = useMemo(() => {
     return transformedNodes.map((node) => {
       const isHighlighted = searchResults.includes(node.id);
@@ -146,13 +105,11 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
   // Update the useEffect to use highlightedNodes
   useEffect(() => {
     if (!transformedNodes?.length) return;
-
     // If there's an active search, zoom to matched nodes
     if (searchResults?.length > 0) {
       const matchedNodes = transformedNodes.filter((node) =>
         searchResults.includes(node.id)
       );
-
       if (matchedNodes.length > 0) {
         fitView({ nodes: matchedNodes, padding: 0.7, duration: 500 });
       }
@@ -163,11 +120,12 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
     setEdges(transformedEdges as unknown as Edge[]);
   }, [highlightedNodes, transformedEdges, setNodes, setEdges, fitView]);
 
-  // Handle node drag end - update positions via API
+  // Handle node drag end - update positions via API and change status to draft
   const onNodeDragStop = useCallback(
     async (event: React.MouseEvent, node: AppNode): Promise<void> => {
-      const nodeData = node.data;
+      // Change status to draft when node is moved
 
+      const nodeData = node.data;
       try {
         switch (nodeData.type) {
           case TaskType.APP:
@@ -179,7 +137,6 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
               position: node.position,
             });
             break;
-
           case TaskType.SPLIT:
             // Split node - update connector position
             // Get the parent node ID from splitData
@@ -192,14 +149,12 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
               });
             }
             break;
-
           case TaskType.PATH:
             // Path node - update branch position
             const branchData = nodeData.branchData;
             const pathParentNodeId =
               branchData?.parentNodeId || nodeData.backendData?.parentNodeId;
             const branchId = branchData?._id;
-
             if (pathParentNodeId && branchId) {
               await updatePathPosition({
                 nodeId: pathParentNodeId,
@@ -208,7 +163,6 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
               });
             }
             break;
-
           default:
             console.warn(
               "Unknown node type for position update:",
@@ -252,11 +206,18 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
     [edges]
   );
 
+  const workflowData = useMemo(() => {
+    return {
+      workflowId: workflow?.data?.workflow?._id,
+      status: workflow?.data?.workflow?.status,
+    };
+  }, [workflow]);
+
   useEffect(() => {
     setNodes(transformedNodes);
     setEdges(transformedEdges as unknown as Edge[]);
   }, [transformedNodes, transformedEdges, setNodes, setEdges]);
-  const proOptions = { hideAttribution: true };
+
   return (
     <main className="h-full w-full">
       <FlowContext.Provider
@@ -270,6 +231,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
           handleAddNodeFromHandle,
           hasConnectionFromHandle,
           searchResults,
+          workflowData,
         }}
       >
         <ReactFlow
@@ -284,7 +246,7 @@ export const FlowEditor = ({ workflow, searchResults }: FlowEditorProps) => {
           snapToGrid
           snapGrid={snapGrid}
           fitViewOptions={fitViewOptions}
-          defaultEdgeOptions={{ animated: false, deletable: false }}
+          defaultEdgeOptions={defaultEdgeOptions}
           nodesDraggable={true}
           nodesConnectable={false}
           elementsSelectable={true}

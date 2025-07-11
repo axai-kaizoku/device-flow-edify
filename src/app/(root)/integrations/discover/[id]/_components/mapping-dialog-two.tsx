@@ -151,6 +151,10 @@ export default function MappingDialogTwo({
         refetchType: "all",
       });
       await queryClient.invalidateQueries({
+        queryKey: ["workflow-by-id"],
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
         queryKey: ["fetch-people"],
         exact: false,
         refetchType: "all",
@@ -214,8 +218,11 @@ export default function MappingDialogTwo({
   return (
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps && setNextSteps(0)}>
-        <DialogTrigger>{children}</DialogTrigger>
+        <DialogTrigger onClick={(e) => e.stopPropagation()}>
+          {children}
+        </DialogTrigger>
         <DialogContent
+          onClick={(e) => e.stopPropagation()}
           onInteractOutside={(e) => e.preventDefault()}
           className="rounded-2xl bg-white p-4 shadow-lg max-w-md w-full"
         >
@@ -302,14 +309,20 @@ export default function MappingDialogTwo({
           <DialogFooter className="flex w-full items-center justify-between mt-1 mb-1 px-2">
             <Button
               className="w-[48%] rounded-lg text-sm bg-white text-black  font-gilroyMedium tracking-wide border hover:border-black"
-              onClick={clearAll}
+              onClick={(e) => {
+                e.stopPropagation();
+                clearAll();
+              }}
             >
               Clear All
             </Button>
             <Button
               disabled={mutation.isPending}
               className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
-              onClick={handleMapping}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMapping();
+              }}
               onMouseEnter={() =>
                 router.prefetch(
                   urlAddress ?? `/integrations/installed/${platform}`

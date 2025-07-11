@@ -2,12 +2,23 @@
 
 import { deleteNode } from "@/server/workflowActions/workflowById/workflowNodes";
 import { deleteSplit } from "@/server/workflowActions/workflowById/workflowPaths";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import { useChangeStatusToDraft } from "./use-change-to-draft";
+import { useFlowContext } from "./use-flow-context";
+import { useInvalidateWorkflow } from "./use-invalidate-workflow";
 
 export const useSplitDeletion = (workflowId: string) => {
-  const queryClient = useQueryClient();
+  const { workflowData } = useFlowContext();
+  const { invalidateWorkflow } = useInvalidateWorkflow(
+    workflowData?.workflowId
+  );
+  const { changeStatusToDraft } = useChangeStatusToDraft({
+    data: {
+      workflow: { _id: workflowData?.workflowId, status: workflowData?.status },
+    },
+  });
 
   const deleteSplitMutation = useMutation({
     mutationFn: async ({
@@ -27,6 +38,7 @@ export const useSplitDeletion = (workflowId: string) => {
         fakeAppId,
         nodeType: nodeData?.type,
       });
+      changeStatusToDraft?.();
 
       if (isFakeApp && fakeAppId) {
         // This split connector represents a fake Split app - delete the fake app
@@ -40,9 +52,7 @@ export const useSplitDeletion = (workflowId: string) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["workflow-by-id", workflowId],
-      });
+      invalidateWorkflow?.();
       // toast.success("Split path deleted successfully");
     },
     onError: (error: any) => {

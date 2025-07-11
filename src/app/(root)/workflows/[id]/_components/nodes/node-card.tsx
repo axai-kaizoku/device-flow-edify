@@ -14,7 +14,7 @@ export const NodeCard = ({
   nodeId: string;
   isSelected: boolean;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 }) => {
   const { getNode, setCenter } = useReactFlow();
   return (

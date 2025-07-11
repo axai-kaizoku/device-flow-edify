@@ -59,6 +59,10 @@ export default function MappingDialogOne({
       refetchType: "all",
     });
     await queryClient.invalidateQueries({
+      queryKey: ["workflow-by-id"],
+      exact: false,
+    });
+    await queryClient.invalidateQueries({
       queryKey: ["fetch-people"],
       exact: false,
       refetchType: "all",
@@ -96,8 +100,11 @@ export default function MappingDialogOne({
   return (
     <>
       <Dialog open={open} onOpenChange={() => setNextSteps(0)}>
-        <DialogTrigger>{children}</DialogTrigger>
+        <DialogTrigger onClick={(e) => e.stopPropagation()}>
+          {children}
+        </DialogTrigger>
         <DialogContent
+          onClick={(e) => e.stopPropagation()}
           onInteractOutside={(e) => e.preventDefault()}
           className="rounded-2xl bg-white p-6 shadow-lg max-w-[32rem] w-full text-center"
         >
@@ -199,7 +206,10 @@ export default function MappingDialogOne({
                 loading={loading}
                 disabled={loading}
                 className="w-full rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
-                onClick={handleSkipClick}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSkipClick();
+                }}
               >
                 Confirm
               </LoadingButton>
@@ -210,7 +220,11 @@ export default function MappingDialogOne({
                   disabled={loading}
                   variant="outline"
                   className="w-[48%] bg-white hover:bg-white hover:border-black cursor-pointer"
-                  onClick={handleSkipClick}
+                  // onClick={handleSkipClick}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSkipClick();
+                  }}
                   onMouseEnter={() =>
                     router.prefetch(
                       urlAddress ?? `/integrations/installed/${platform}`
@@ -221,7 +235,10 @@ export default function MappingDialogOne({
                 </LoadingButton>
                 <Button
                   className="w-[48%] rounded-lg text-sm bg-black text-white font-gilroyMedium tracking-wide hover:bg-neutral-900/80"
-                  onClick={() => setNextSteps(2)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNextSteps(2);
+                  }}
                 >
                   Map Users
                 </Button>

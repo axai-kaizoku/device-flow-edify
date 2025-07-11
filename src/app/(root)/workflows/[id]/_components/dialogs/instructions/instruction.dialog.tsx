@@ -73,7 +73,7 @@ export const InstructionDialog = ({
   const queryClient = useQueryClient();
   const [isEditScreen, setIsEditScreen] = useState(false);
   const [isNew, setIsNew] = useState(false);
-  console.log(data, "@DATA");
+  // console.log(data, "@DATA");
 
   const { data: services } = useQuery({
     queryKey: ["get-node-services", data?.backendData?.template?.name],
@@ -147,7 +147,7 @@ export const InstructionDialog = ({
       // console.log("@FORMDATA", formData);
       const parsedConfig = JSON.parse(currentService);
 
-      console.log(parsedConfig, "@PARSEDCONFIG");
+      // console.log(parsedConfig, "@PARSEDCONFIG");
 
       updateAppActionsMutation.mutate({
         nodeId: data.backendData.parentNodeId,

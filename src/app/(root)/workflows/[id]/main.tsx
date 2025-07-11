@@ -11,17 +11,21 @@ import WorkflowHeader from "./_components/workflow-header";
 
 export const WorkflowByIdMain = ({ workflowId }: { workflowId: string }) => {
   const [searchResults, setSearchResults] = useState<string[]>([]);
+
   const { data: workflow } = useSuspenseQuery({
     queryKey: ["workflow-by-id", workflowId],
     queryFn: () => getWorkflowById(workflowId),
   });
+
   console.log(workflow, "@WORKFLOW");
+
   const handleSearchResults = useCallback((results: string[]) => {
     setSearchResults(results);
   }, []);
+
   return (
     <ReactFlowProvider>
-      <CombinedContainer>
+      <CombinedContainer className="w-full">
         <section className="w-full h-full  ">
           <WorkflowHeader
             workflow={workflow}

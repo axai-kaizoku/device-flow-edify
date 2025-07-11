@@ -32,7 +32,6 @@ interface EditNodeProps {
   children: React.ReactNode;
   state?: "connected" | "disconnected";
   type: "app" | "instruction";
-  onEditAction: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
   canDuplicate: boolean;
@@ -42,7 +41,6 @@ interface EditNodeProps {
 const EditNode = ({
   children,
   state,
-  onEditAction,
   type,
   data,
   onDuplicate,
@@ -100,7 +98,6 @@ const EditNode = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onEditAction();
                   setOpenEdit(true);
                 }}
               >
@@ -113,7 +110,9 @@ const EditNode = ({
                 Edit Action
               </DropdownMenuItem>
             </InstructionDialog>
-          ) : (
+          ) :   data?.appType !== "Device Flow" &&
+            data?.type === "APP" &&
+            data?.backendData?.isIntegrated === false ? null : (
             <>
               <SetActionDialog
                 onDelete={onDelete}
@@ -126,7 +125,6 @@ const EditNode = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    onEditAction();
                     setOpenEdit(true);
                   }}
                 >
@@ -191,6 +189,7 @@ const EditNode = ({
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
+          
           {canDuplicate ? (
             <DropdownMenuItem
               className="cursor-pointer"

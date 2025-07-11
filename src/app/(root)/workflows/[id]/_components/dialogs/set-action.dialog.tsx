@@ -193,8 +193,13 @@ function SetActionDialog({
         form.reset();
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <SideDialogContent className="flex flex-col gap-0 overflow-y-visible rounded-xl p-0 max-w-md [&>button:last-child]:top-8">
+      <DialogTrigger onClick={(e) => e.stopPropagation()} asChild>
+        {children}
+      </DialogTrigger>
+      <SideDialogContent
+        className="flex flex-col gap-0 overflow-y-visible rounded-xl p-0 max-w-md [&>button:last-child]:top-8"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DialogTitle className="border-b px-6 py-3 text-sm font-gilroySemiBold flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <HugeiconsIcon
